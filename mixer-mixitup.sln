@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixItUp.WPF", "MixItUp.WPF\MixItUp.WPF.csproj", "{90395135-528E-4F2D-93D1-D822B32B5F80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixItUp.Base", "MixItUp.Base\MixItUp.Base.csproj", "{9D877984-4F1F-457F-A2B6-E619D8F53A67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D877984-4F1F-457F-A2B6-E619D8F53A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D877984-4F1F-457F-A2B6-E619D8F53A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D877984-4F1F-457F-A2B6-E619D8F53A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D877984-4F1F-457F-A2B6-E619D8F53A67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
