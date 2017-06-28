@@ -1,5 +1,5 @@
-# mixer-mixitup
-Mixer client for handling chat, interactivity, and other streamer assistance features
+# Mix It Up
+A desktop client for handling chat, interactivity, and other streamer assistance features for the Mixer streaming platform.
 
 ## What is this?
 
@@ -8,12 +8,18 @@ Mixer client for handling chat, interactivity, and other streamer assistance fea
 ## Feature roadmap
 
 ## How do I get started using it?
+Check out https://github.com/SaviorXTanren/mixer-mixitup/wiki for getting started information and detailed tutorials.
 
-## I found a bug, who do I contact?
+## I found a bug / have a feature request!
 Just head over to the https://github.com/SaviorXTanren/mixer-mixitup/issues page and create a new issue.
 
-## I have a new feature idea!
-Submit feature requests at the https://github.com/SaviorXTanren/mixer-mixitup/issues page or feel free to develop the feature yourself and submit a pull request at https://github.com/SaviorXTanren/mixer-mixitup/pulls! I'm happy to assist anyone if they're interested in developing something as well.
+## How do I contribute?
+Feel free to take a fork of the master branch and start plugging away! This app relies on the https://github.com/SaviorXTanren/mixer-client-csharp client API, so you'll need to use git's submodule feature to get everything cloned down. Open up a command prompt in the solution directory and run the following commands:
+```
+git submodule init
+git submodule update
+```
+Once that is done, the solution should be all set to go. Code up some changes/features and submit a pull request at https://github.com/SaviorXTanren/mixer-mixitup/pulls! I'm happy to assist anyone in developing a feature, feel free to shoot me a tweet [@SaviorXTanren](https://twitter.com/SaviorXTanren).
 
 ## License
 MIT License
