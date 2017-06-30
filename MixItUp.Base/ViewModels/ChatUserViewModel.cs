@@ -1,12 +1,14 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModels
 {
     public enum UserRole
     {
+        Banned,
         User,
         Pro,
         Subscriber,
@@ -21,7 +23,9 @@ namespace MixItUp.Base.ViewModels
 
         public string UserName { get; private set; }
 
-        public UserRole Role { get; private set; }
+        public IEnumerable<UserRole> Roles { get; private set; }
+
+        public UserRole PrimaryRole { get { return this.Roles.Max(); } }
 
         public ChatUserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { }
 
@@ -33,13 +37,27 @@ namespace MixItUp.Base.ViewModels
         {
             this.ID = id;
             this.UserName = username;
+            List<UserRole> roles = new List<UserRole>();
 
-            this.Role = UserRole.User;
-            if (userRoles.Any(r => r.Equals("Owner"))) { this.Role = UserRole.Streamer; }
-            else if (userRoles.Any(r => r.Equals("Staff"))) { this.Role = UserRole.Staff; }
-            else if (userRoles.Any(r => r.Equals("Mod"))) { this.Role = UserRole.Mod; }
-            else if (userRoles.Any(r => r.Equals("Subscriber"))) { this.Role = UserRole.Subscriber; }
-            else if (userRoles.Any(r => r.Equals("Pro"))) { this.Role = UserRole.Pro; }
+            roles.Add(UserRole.User);
+            if (userRoles.Any(r => r.Equals("Owner"))) { roles.Add(UserRole.Streamer); }
+            else if (userRoles.Any(r => r.Equals("Staff"))) { roles.Add(UserRole.Staff); }
+            else if (userRoles.Any(r => r.Equals("Mod"))) { roles.Add(UserRole.Mod); }
+            else if (userRoles.Any(r => r.Equals("Subscriber"))) { roles.Add(UserRole.Subscriber); }
+            else if (userRoles.Any(r => r.Equals("Pro"))) { roles.Add(UserRole.Pro); }
+            else if (userRoles.Any(r => r.Equals("Banned"))) { roles.Add(UserRole.Banned); }
+
+            this.Roles = roles;
+        }
+
+        public ChatUserModel GetModel()
+        {
+            return new ChatUserModel()
+            {
+                userId = this.ID,
+                userName = this.UserName,
+                userRoles = this.Roles.Select(r => r.ToString()).ToArray(),
+            };
         }
 
         public override bool Equals(object obj)

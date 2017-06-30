@@ -65,8 +65,10 @@ namespace MixItUp.WPF.Controls.Chat
             if (!this.Users.Contains(user))
             {
                 this.Users.Add(user);
-                this.Users = this.Users.OrderByDescending(u => u.Role).ThenBy(u => u.UserName).ToList();
+                this.Users = this.Users.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
                 this.UserControls.Insert(this.Users.IndexOf(user), new ChatUserControl(user));
+
+                this.UserCountTextBlock.Text = this.Users.Count.ToString();
             }
         }
 
@@ -77,6 +79,8 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 this.UserControls.Remove(userControl);
                 this.Users.Remove(userControl.User);
+
+                this.UserCountTextBlock.Text = this.Users.Count.ToString();
             }
         }
 
@@ -86,6 +90,87 @@ namespace MixItUp.WPF.Controls.Chat
             this.MessageControls.Add(new ChatMessageControl(message));
         }
 
+        private async void ChatClearMessagesButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await MixerAPIHandler.ChatClient.ClearMessages();
+        }
+
+        #region Context Menu Events
+
+        private async void MessageDeleteMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null)
+            {
+                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
+                await MixerAPIHandler.ChatClient.DeleteMessage(control.Message.ID);
+            }
+        }
+
+        private async void MessageUserPurgeMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null)
+            {
+                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
+                if (control.Message.User != null)
+                {
+                    await MixerAPIHandler.ChatClient.PurgeUser(control.Message.User.UserName);
+                }
+            }
+        }
+
+        private async void MessageUserTimeout1MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null)
+            {
+                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
+                if (control.Message.User != null)
+                {
+                    await MixerAPIHandler.ChatClient.TimeoutUser(control.Message.User.UserName, 60);
+                }
+            }
+        }
+
+        private async void MessageUserTimeout5MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null)
+            {
+                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
+                if (control.Message.User != null)
+                {
+                    await MixerAPIHandler.ChatClient.TimeoutUser(control.Message.User.UserName, 300);
+                }
+            }
+        }
+
+        private async void UserPurgeMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.UserList.SelectedItem != null)
+            {
+                ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
+                await MixerAPIHandler.ChatClient.PurgeUser(control.User.UserName);
+            }
+        }
+
+        private async void UserTimeout1MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.UserList.SelectedItem != null)
+            {
+                ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
+                await MixerAPIHandler.ChatClient.TimeoutUser(control.User.UserName, 60);
+            }
+        }
+
+        private async void UserTimeout5MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.UserList.SelectedItem != null)
+            {
+                ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
+                await MixerAPIHandler.ChatClient.TimeoutUser(control.User.UserName, 300);
+            }
+        }
+
+        #endregion Context Menu Events
+
         #region Chat Event Handlers
 
         private void ChatClient_DisconnectOccurred(object sender, WebSocketCloseStatus e)
@@ -93,7 +178,7 @@ namespace MixItUp.WPF.Controls.Chat
             // Show Re-Connecting...
         }
 
-        private void ChatClient_ClearMessagesOccurred(object sender, uint e)
+        private void ChatClient_ClearMessagesOccurred(object sender, EventArgs e)
         {
             this.AddMessage(new ChatMessageViewModel("--- MESSAGES CLEARED ---"));
         }

@@ -6,6 +6,21 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ContextMenu x:Key="MessagesListContextMenu">
+            <MenuItem x:Name="MessageDeleteMenuItem" Header="Delete" Click="MessageDeleteMenuItem_Click" />
+            <MenuItem x:Name="MessageUserPurgeMenuItem" Header="Purge" Click="MessageUserPurgeMenuItem_Click" />
+            <MenuItem x:Name="MessageUserTimeout1MenuItem" Header="Timeout (1 Min)" Click="MessageUserTimeout1MenuItem_Click" />
+            <MenuItem x:Name="MessageUserTimeout5MenuItem" Header="Timeout (5 Mins)" Click="MessageUserTimeout5MenuItem_Click" />
+        </ContextMenu>
+
+        <ContextMenu x:Key="UserListContextMenu">
+            <MenuItem x:Name="UserPurgeMenuItem" Header="Purge" Click="UserPurgeMenuItem_Click" />
+            <MenuItem x:Name="UserTimeout1MenuItem" Header="Timeout (1 Min)" Click="UserTimeout1MenuItem_Click" />
+            <MenuItem x:Name="UserTimeout5MenuItem" Header="Timeout (5 Mins)" Click="UserTimeout5MenuItem_Click" />
+        </ContextMenu>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
@@ -15,25 +30,24 @@
 
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="2" HorizontalAlignment="Center">
+                <Grid Grid.Column="0">
+                    <Button x:Name="ChatClearMessagesButton" Grid.Column="0" Width="80" Click="ChatClearMessagesButton_Click">Clear Chat</Button>
+                </Grid>
+
+                <Grid Grid.Column="1" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Image x:Name="TotalViewsImage" Grid.Column="0" />
-                    <TextBlock x:Name="TotalViewsCountTextBlock" Grid.Column="1" />
+                    <TextBlock Text="Viewers: " Grid.Column="0" />
 
-                    <Image x:Name="CurrentViewersImage" Grid.Column="3" />
-                    <TextBlock x:Name="CurrentViewersCountTextBlock" Grid.Column="4" />
+                    <TextBlock x:Name="UserCountTextBlock" Grid.Column="2" />
                 </Grid>
             </Grid>
 
@@ -51,7 +65,7 @@
 
                 <Grid Grid.Column="1">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ListView x:Name="UserList" />
+                        <ListView x:Name="UserList" ContextMenu="{StaticResource UserListContextMenu}" />
                     </ScrollViewer>
                 </Grid>
             </Grid>

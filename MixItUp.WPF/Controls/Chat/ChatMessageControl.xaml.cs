@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base.ViewModels;
+using MixItUp.WPF.Util;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -22,23 +22,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatMessageControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            switch (this.Message.User.Role)
-            {
-                case UserRole.Streamer:
-                case UserRole.Mod:
-                    this.UserTextBlock.Foreground = Brushes.Green;
-                    break;
-                case UserRole.Staff:
-                    this.UserTextBlock.Foreground = Brushes.Gold;
-                    break;
-                case UserRole.Subscriber:
-                case UserRole.Pro:
-                    this.UserTextBlock.Foreground = Brushes.Purple;
-                    break;
-                case UserRole.User:
-                    this.UserTextBlock.Foreground = Brushes.Blue;
-                    break;
-            }
+            this.UserTextBlock.Foreground = ColorHelper.GetColorForUser(this.Message.User);
         }
     }
 }
