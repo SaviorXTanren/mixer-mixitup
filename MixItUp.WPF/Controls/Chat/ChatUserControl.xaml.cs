@@ -28,6 +28,9 @@ namespace MixItUp.WPF.Controls.Chat
                 case UserRole.Mod:
                     this.UserNameTextBlock.Foreground = Brushes.Green;
                     break;
+                case UserRole.Staff:
+                    this.UserNameTextBlock.Foreground = Brushes.Gold;
+                    break;
                 case UserRole.Subscriber:
                 case UserRole.Pro:
                     this.UserNameTextBlock.Foreground = Brushes.Purple;

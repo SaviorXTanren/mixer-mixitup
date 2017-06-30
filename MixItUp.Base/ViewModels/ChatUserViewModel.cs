@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
+using System;
 using System.Linq;
 
 namespace MixItUp.Base.ViewModels
@@ -10,10 +11,11 @@ namespace MixItUp.Base.ViewModels
         Pro,
         Subscriber,
         Mod,
-        Streamer
+        Staff,
+        Streamer,
     }
 
-    public class ChatUserViewModel
+    public class ChatUserViewModel : IEquatable<ChatUserViewModel>
     {
         public uint ID { get; private set; }
 
@@ -34,10 +36,24 @@ namespace MixItUp.Base.ViewModels
 
             this.Role = UserRole.User;
             if (userRoles.Any(r => r.Equals("Owner"))) { this.Role = UserRole.Streamer; }
+            else if (userRoles.Any(r => r.Equals("Staff"))) { this.Role = UserRole.Staff; }
             else if (userRoles.Any(r => r.Equals("Mod"))) { this.Role = UserRole.Mod; }
             else if (userRoles.Any(r => r.Equals("Subscriber"))) { this.Role = UserRole.Subscriber; }
             else if (userRoles.Any(r => r.Equals("Pro"))) { this.Role = UserRole.Pro; }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ChatUserViewModel)
+            {
+                return this.Equals((ChatUserViewModel)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(ChatUserViewModel other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
 
         public override string ToString() { return this.UserName; }
     }

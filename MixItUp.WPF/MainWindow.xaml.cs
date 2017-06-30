@@ -28,7 +28,7 @@ namespace MixItUp.WPF
                 throw new ArgumentException("ClientID value isn't set in application configuration");
             }
 
-            await MixerAPIHandler.InitializeMixerClient(clientID,
+            bool mixerInitialized = await MixerAPIHandler.InitializeMixerClient(clientID,
                 new List<ClientScopeEnum>()
                 {
                     ClientScopeEnum.chat__chat,
@@ -45,6 +45,11 @@ namespace MixItUp.WPF
                     Process.Start("https://mixer.com/oauth/shortcode?code=" + code);
                 }
             );
+
+            if (mixerInitialized)
+            {
+                await this.Chat.Initialize(await MixerAPIHandler.MixerClient.Channels.GetChannel("ChannelOne"));
+            }
         }
     }
 }

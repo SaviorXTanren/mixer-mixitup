@@ -51,7 +51,7 @@
 
                 <Grid Grid.Column="1">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ListView x:Name="ViewersList" />
+                        <ListView x:Name="UserList" />
                     </ScrollViewer>
                 </Grid>
             </Grid>
