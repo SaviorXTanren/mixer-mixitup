@@ -1,17 +1,10 @@
-﻿using System;
+﻿using Mixer.Base;
+using MixItUp.Base;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
+using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MixItUp.WPF
 {
@@ -23,6 +16,35 @@ namespace MixItUp.WPF
         public MainWindow()
         {
             InitializeComponent();
+
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            string clientID = ConfigurationManager.AppSettings["ClientID"];
+            if (string.IsNullOrEmpty(clientID))
+            {
+                throw new ArgumentException("ClientID value isn't set in application configuration");
+            }
+
+            await MixerAPIHandler.InitializeMixerClient(clientID,
+                new List<ClientScopeEnum>()
+                {
+                    ClientScopeEnum.chat__chat,
+                    ClientScopeEnum.chat__connect,
+                    ClientScopeEnum.channel__details__self,
+                    ClientScopeEnum.channel__update__self,
+                    ClientScopeEnum.user__details__self,
+                    ClientScopeEnum.user__log__self,
+                    ClientScopeEnum.user__notification__self,
+                    ClientScopeEnum.user__update__self,
+                },
+                (string code) =>
+                {
+                    Process.Start("https://mixer.com/oauth/shortcode?code=" + code);
+                }
+            );
         }
     }
 }

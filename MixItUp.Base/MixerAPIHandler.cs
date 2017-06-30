@@ -11,9 +11,10 @@ namespace MixItUp.Base
         public static MixerClient MixerClient { get; private set; }
         public static ChatClient ChatClient { get; private set; }
 
-        public static async Task InitializeMixerClient(string clientID, IEnumerable<ClientScopeEnum> scopes, Action<string> codeCallback)
+        public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<ClientScopeEnum> scopes, Action<string> codeCallback)
         {
             MixerAPIHandler.MixerClient = await MixerClient.ConnectViaShortCode(clientID, scopes, codeCallback);
+            return (MixerAPIHandler.MixerClient != null);
         }
 
         public static async Task<bool> InitializeChatClient(ChannelModel channel)

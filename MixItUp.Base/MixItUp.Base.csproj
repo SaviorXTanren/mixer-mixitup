@@ -64,6 +64,8 @@
     <Compile Include="MixerAPIHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\NameAttribute.cs" />
+    <Compile Include="ViewModels\ChatMessageViewModel.cs" />
+    <Compile Include="ViewModels\ChatUserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\mixer-client-csharp\Mixer.Base\Mixer.Base.csproj">
