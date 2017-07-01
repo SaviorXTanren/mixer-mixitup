@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModels;
+﻿using Mixer.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using System.Windows.Controls;
 

@@ -1,8 +1,8 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
+using Mixer.Base.ViewModel.Chat;
 using MixItUp.Base;
-using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -41,22 +41,22 @@ namespace MixItUp.WPF.Controls.Chat
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
-                foreach (ChatUserModel user in await MixerAPIHandler.MixerClient.Chats.GetUsers(this.Channel))
+                foreach (ChatUserModel user in await MixerAPIHandler.MixerConnection.Chats.GetUsers(this.Channel))
                 {
                     this.AddUser(new ChatUserViewModel(user));
                 }
 
-                MixerAPIHandler.ChatClient.ClearMessagesOccurred += ChatClient_ClearMessagesOccurred;
-                MixerAPIHandler.ChatClient.DeleteMessageOccurred += ChatClient_DeleteMessageOccurred;
-                MixerAPIHandler.ChatClient.DisconnectOccurred += ChatClient_DisconnectOccurred;
-                MixerAPIHandler.ChatClient.MessageOccurred += ChatClient_MessageOccurred;
-                MixerAPIHandler.ChatClient.PollEndOccurred += ChatClient_PollEndOccurred;
-                MixerAPIHandler.ChatClient.PollStartOccurred += ChatClient_PollStartOccurred;
-                MixerAPIHandler.ChatClient.PurgeMessageOccurred += ChatClient_PurgeMessageOccurred;
-                MixerAPIHandler.ChatClient.UserJoinOccurred += ChatClient_UserJoinOccurred;
-                MixerAPIHandler.ChatClient.UserLeaveOccurred += ChatClient_UserLeaveOccurred;
-                MixerAPIHandler.ChatClient.UserTimeoutOccurred += ChatClient_UserTimeoutOccurred;
-                MixerAPIHandler.ChatClient.UserUpdateOccurred += ChatClient_UserUpdateOccurred;
+                MixerAPIHandler.ChatClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                MixerAPIHandler.ChatClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                MixerAPIHandler.ChatClient.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
+                MixerAPIHandler.ChatClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                MixerAPIHandler.ChatClient.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                MixerAPIHandler.ChatClient.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                MixerAPIHandler.ChatClient.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                MixerAPIHandler.ChatClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                MixerAPIHandler.ChatClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                MixerAPIHandler.ChatClient.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
+                MixerAPIHandler.ChatClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
             }
         }
 
@@ -173,17 +173,17 @@ namespace MixItUp.WPF.Controls.Chat
 
         #region Chat Event Handlers
 
-        private void ChatClient_DisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void ChatClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             // Show Re-Connecting...
         }
 
-        private void ChatClient_ClearMessagesOccurred(object sender, EventArgs e)
+        private void ChatClient_OnClearMessagesOccurred(object sender, EventArgs e)
         {
             this.AddMessage(new ChatMessageViewModel("--- MESSAGES CLEARED ---"));
         }
 
-        private void ChatClient_DeleteMessageOccurred(object sender, Guid messageID)
+        private void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
         {
             ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(messageID));
             if (message != null)
@@ -192,22 +192,22 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void ChatClient_MessageOccurred(object sender, ChatMessageEventModel e)
+        private void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
             this.AddMessage(new ChatMessageViewModel(e));
         }
 
-        private void ChatClient_PollEndOccurred(object sender, ChatPollEventModel e)
+        private void ChatClient_OnPollEndOccurred(object sender, ChatPollEventModel e)
         {
             
         }
 
-        private void ChatClient_PollStartOccurred(object sender, ChatPollEventModel e)
+        private void ChatClient_OnPollStartOccurred(object sender, ChatPollEventModel e)
         {
             
         }
 
-        private void ChatClient_PurgeMessageOccurred(object sender, uint userID)
+        private void ChatClient_OnPurgeMessageOccurred(object sender, uint userID)
         {
             IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(userID));
             if (userMessages != null)
@@ -219,24 +219,24 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void ChatClient_UserJoinOccurred(object sender, ChatUserEventModel e)
+        private void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel e)
         {
             ChatUserViewModel user = new ChatUserViewModel(e);
             this.AddUser(user);
         }
 
-        private void ChatClient_UserLeaveOccurred(object sender, ChatUserEventModel e)
+        private void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
         {
             ChatUserViewModel user = new ChatUserViewModel(e);
             this.RemoveUser(user);
         }
 
-        private void ChatClient_UserTimeoutOccurred(object sender, ChatUserEventModel e)
+        private void ChatClient_OnUserTimeoutOccurred(object sender, ChatUserEventModel e)
         {
             
         }
 
-        private void ChatClient_UserUpdateOccurred(object sender, ChatUserEventModel e)
+        private void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
         {
             ChatUserViewModel user = new ChatUserViewModel(e);
             this.RemoveUser(user);

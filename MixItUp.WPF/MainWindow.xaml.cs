@@ -48,7 +48,7 @@ namespace MixItUp.WPF
 
             if (mixerInitialized)
             {
-                await this.Chat.Initialize(await MixerAPIHandler.MixerClient.Channels.GetChannel("ChannelOne"));
+                await this.Chat.Initialize(await MixerAPIHandler.MixerConnection.Channels.GetChannel("ChannelOne"));
             }
         }
     }
