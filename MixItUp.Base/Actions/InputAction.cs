@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using System;
 using System.Threading.Tasks;
 using WindowsInput;
 using WindowsInput.Native;
@@ -415,16 +416,15 @@ namespace MixItUp.Base.Actions
 
         private InputSimulator simulator = new InputSimulator();
 
-        public InputAction(InputTypeEnum inputType)
-            : base("Input")
-        {
-            this.InputType = inputType;
-        }
+        public InputAction(InputTypeEnum inputType) : base("Input") { }
 
         public override Task Perform()
-        {           
-            VirtualKeyCode virtualCode = (VirtualKeyCode)((int)this.InputType);
-            simulator.Keyboard.KeyPress(virtualCode);
+        {
+            if (Enum.IsDefined(typeof(InputTypeEnum), this.InputType))
+            {
+                VirtualKeyCode virtualCode = (VirtualKeyCode)((int)this.InputType);
+                simulator.Keyboard.KeyPress(virtualCode);
+            }
             return Task.FromResult(0);
         }
     }

@@ -83,6 +83,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Interactive\InteractiveControl.xaml.cs">
+      <DependentUpon>InteractiveControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\OverlayWebServer.cs" />
     <Compile Include="Util\ColorHelper.cs" />
     <Page Include="Controls\Chat\ChatControl.xaml">
       <SubType>Designer</SubType>
@@ -93,6 +97,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat\ChatUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Interactive\InteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -171,7 +179,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\Interactive\" />
+    <Content Include="Overlay\OverlayPage.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

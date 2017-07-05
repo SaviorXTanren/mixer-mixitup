@@ -6,31 +6,30 @@ namespace MixItUp.Base.Actions
 {
     public class SoundAction : ActionBase
     {
-        public string SoundFilePath { get; private set; }
+        public string SoundFilePath { get; set; }
 
-        public SoundAction(string soundFilePath)
-            : base("Sound")
-        {
-            this.SoundFilePath = soundFilePath;
-        }
+        public float VolumeScale { get; set; }
+
+        public SoundAction() : base("Sound") { this.VolumeScale = 1.0f; }
 
         public override async Task Perform()
         {
             if (File.Exists(this.SoundFilePath))
             {
-                using (IWavePlayer wavePlayer = new WaveOut())
+                using (DirectSoundOut output = new DirectSoundOut())
                 {
                     using (AudioFileReader audioFileReader = new AudioFileReader(this.SoundFilePath))
                     {
-                        wavePlayer.Init(audioFileReader);
-                        wavePlayer.Play();
+                        output.Init(audioFileReader);
+                        output.Volume = this.VolumeScale;
+                        output.Play();
 
-                        while (wavePlayer.PlaybackState == PlaybackState.Playing)
+                        while (output.PlaybackState == PlaybackState.Playing)
                         {
                             await this.Wait500();
                         }
 
-                        wavePlayer.Stop();
+                        output.Stop();
                     }
                 }
             }

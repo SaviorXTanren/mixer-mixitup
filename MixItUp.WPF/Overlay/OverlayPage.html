@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        <script language="JavaScript">
+            function processResultAndRepeat(status, result)
+            {
+                if (status == 200)
+                {
+                    result = result.replace('"', '');
+                    var split = result.split('|');
+                    if (split.length == 2)
+                    {
+                        var filename = split[0];
+                        var time = parseInt(split[1]);
+
+                        var imageElement = document.createElement("img");
+                        imageElement.src = filename;
+
+                        var mainOverlayDiv = document.getElementById('mainOverlay');
+                        mainOverlayDiv.appendChild(imageElement);
+
+                        setTimeout(function () {
+                            mainOverlayDiv.removeChild(imageElement);
+                            sendGETRequest();
+                        }, time * 1000);
+                    }
+                }
+                else
+                {
+                    setTimeout(function () {
+                        sendGETRequest();
+                    }, 1000);
+                    sendGETRequest();
+                }
+            }
+
+            function sendGETRequest()
+            {
+                $.ajax({
+                    url: 'http://localhost:8000/',
+                    type: 'GET',
+                    data: 'ID=1'
+                })
+                .success(function (data, textStatus, jqXHR) {
+                    processResultAndRepeat(jqXHR.status, data);
+                })
+                .error(function (jqXHR, textStatus) {
+                    processResultAndRepeat(-1, '');
+                });
+            }
+
+            function sleep(milliseconds)
+            {
+                return new Promise(resolve => setTimeout(resolve, milliseconds));
+            }
+
+            sendGETRequest();
+        </script>
+    </head>
+    <body style="background-color:transparent">
+        <div id="mainOverlay" />
+    </body>
+</html>

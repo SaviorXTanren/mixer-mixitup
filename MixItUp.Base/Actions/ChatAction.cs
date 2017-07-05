@@ -4,13 +4,9 @@ namespace MixItUp.Base.Actions
 {
     public class ChatAction : ActionBase
     {
-        public string ChatText { get; private set; }
+        public string ChatText { get; set; }
 
-        public ChatAction(string chatText)
-            : base("Chat")
-        {
-            this.ChatText = chatText;
-        }
+        public ChatAction(string chatText) : base("Chat") { }
 
         public override async Task Perform()
         {

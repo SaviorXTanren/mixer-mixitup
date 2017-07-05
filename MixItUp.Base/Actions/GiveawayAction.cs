@@ -4,10 +4,7 @@ namespace MixItUp.Base.Actions
 {
     public class GiveawayAction : ActionBase
     {
-        public GiveawayAction()
-            : base("Giveaway")
-        {
-        }
+        public GiveawayAction() : base("Giveaway") { }
 
         public override Task Perform()
         {

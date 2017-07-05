@@ -4,10 +4,7 @@ namespace MixItUp.Base.Actions
 {
     public class OverlayAction : ActionBase
     {
-        public OverlayAction()
-            : base("Overlay")
-        {
-        }
+        public OverlayAction() : base("Overlay") { }
 
         public override Task Perform()
         {

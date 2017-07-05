@@ -4,10 +4,9 @@ namespace MixItUp.Base.Actions
 {
     public class CooldownAction : ActionBase
     {
-        public CooldownAction()
-            : base("Cooldown")
-        {
-        }
+        public int CooldownAmount { get; set; }
+
+        public CooldownAction() : base("Cooldown") { }
 
         public override Task Perform()
         {

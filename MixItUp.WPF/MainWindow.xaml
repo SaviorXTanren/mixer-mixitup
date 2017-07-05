@@ -5,9 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
+        xmlns:InteractiveControls="clr-namespace:MixItUp.WPF.Controls.Interactive"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <ChatControls:ChatControl x:Name="Chat" />
+        <TabControl>
+            <TabItem Header="Chat">
+                <ChatControls:ChatControl x:Name="Chat" />
+            </TabItem>
+            <TabItem Header="Interactive">
+                <InteractiveControls:InteractiveControl x:Name="Interactive" />
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
