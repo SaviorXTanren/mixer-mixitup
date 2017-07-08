@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Clients;
+using Mixer.Base.Util;
 
 namespace MixItUp.Base.Commands
 {
@@ -6,8 +7,8 @@ namespace MixItUp.Base.Commands
     {
         public ConstellationEventTypeEnum EventType { get; private set; }
 
-        public EventCommand(string name, ConstellationEventTypeEnum eventType)
-            : base(name)
+        public EventCommand(string name, string description, ConstellationEventTypeEnum eventType)
+            : base(name, "Event", EnumHelper.EnumToString(eventType), description)
         {
             this.EventType = eventType;
         }

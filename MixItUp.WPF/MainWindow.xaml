@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
         xmlns:InteractiveControls="clr-namespace:MixItUp.WPF.Controls.Interactive"
+        xmlns:EventsControls="clr-namespace:MixItUp.WPF.Controls.Events"
+        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
@@ -15,6 +17,12 @@
             </TabItem>
             <TabItem Header="Interactive">
                 <InteractiveControls:InteractiveControl x:Name="Interactive" />
+            </TabItem>
+            <TabItem Header="Events">
+                <EventsControls:EventsControl x:Name="Events" />
+            </TabItem>
+            <TabItem Header="Commands">
+                <CommandsControls:CommandsControl x:Name="Commands" />
             </TabItem>
         </TabControl>
     </Grid>

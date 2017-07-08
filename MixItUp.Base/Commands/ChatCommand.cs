@@ -2,12 +2,6 @@
 {
     public class ChatCommand : CommandBase
     {
-        public string Command { get; set; }
-
-        public ChatCommand(string name, string command)
-            : base(name)
-        {
-            this.Command = command;
-        }
+        public ChatCommand(string name, string command, string description) : base(name, "Chat", command, description) { }
     }
 }

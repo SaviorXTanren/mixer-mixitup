@@ -7,13 +7,22 @@ namespace MixItUp.Base.Commands
 {
     public class CommandBase
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+        public string Command { get; set; }
+
+        public string Description { get; set; }
 
         public List<ActionBase> Actions { get; set; }
 
-        public CommandBase(string name)
+        public CommandBase(string name, string type, string command, string description)
         {
             this.Name = name;
+            this.Type = type;
+            this.Command = command;
+            this.Description = description;
             this.Actions = new List<ActionBase>();
         }
 
