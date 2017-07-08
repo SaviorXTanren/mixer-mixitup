@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Mixer.Base.ViewModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -13,7 +14,7 @@ namespace MixItUp.Base.Actions
 
         public ExternalProgramAction() : base("External Program") { }
 
-        public override async Task Perform()
+        public override async Task Perform(UserViewModel user)
         {
             Process process = new Process();
             process.StartInfo.FileName = this.FilePath;

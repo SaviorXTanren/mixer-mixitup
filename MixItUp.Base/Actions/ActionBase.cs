@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Mixer.Base.ViewModel;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
@@ -11,7 +12,7 @@ namespace MixItUp.Base.Actions
             this.ActionType = actionType;
         }
 
-        public abstract Task Perform();
+        public abstract Task Perform(UserViewModel user);
 
         protected async Task Wait500()
         {

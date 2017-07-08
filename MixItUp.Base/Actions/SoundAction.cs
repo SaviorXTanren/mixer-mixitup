@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using Mixer.Base.ViewModel;
+using NAudio.Wave;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace MixItUp.Base.Actions
 
         public SoundAction() : base("Sound") { this.VolumeScale = 1.0f; }
 
-        public override async Task Perform()
+        public override async Task Perform(UserViewModel user)
         {
             if (File.Exists(this.SoundFilePath))
             {

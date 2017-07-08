@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using Mixer.Base.ViewModel;
 using System;
 using System.Threading.Tasks;
 using WindowsInput;
@@ -418,7 +419,7 @@ namespace MixItUp.Base.Actions
 
         public InputAction(InputTypeEnum inputType) : base("Input") { }
 
-        public override Task Perform()
+        public override Task Perform(UserViewModel user)
         {
             if (Enum.IsDefined(typeof(InputTypeEnum), this.InputType))
             {

@@ -9,30 +9,32 @@
             {
                 if (status == 200)
                 {
-                    result = result.replace('"', '');
-                    var split = result.split('|');
-                    if (split.length == 2)
+                    data = JSON.parse(result);
+
+                    var imageElement = document.createElement('img');
+                    imageElement.id = 'imageOverlay';
+                    imageElement.src = data.filePath;
+                    imageElement.style.cssText = 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
+                        data.vertical.toString() + '%; transform: translate(-50%, -50%);'
+                    if (data.width > 0)
                     {
-                        var filename = split[0];
-                        var time = parseInt(split[1]);
-
-                        var imageElement = document.createElement("img");
-                        imageElement.src = filename;
-
-                        var mainOverlayDiv = document.getElementById('mainOverlay');
-                        mainOverlayDiv.appendChild(imageElement);
-
-                        setTimeout(function () {
-                            mainOverlayDiv.removeChild(imageElement);
-                            sendGETRequest();
-                        }, time * 1000);
+                        imageElement.style.cssText += 'width: ' + data.width.toString();
                     }
+                    if (data.height > 0)
+                    {
+                        imageElement.style.cssText += 'height: ' + data.height.toString();
+                    }
+
+                    var mainOverlayDiv = document.getElementById('mainOverlay');
+                    mainOverlayDiv.appendChild(imageElement);
+
+                    setTimeout(function () {
+                        mainOverlayDiv.removeChild(imageElement);
+                        sendGETRequest();
+                    }, data.duration * 1000);
                 }
                 else
                 {
-                    setTimeout(function () {
-                        sendGETRequest();
-                    }, 1000);
                     sendGETRequest();
                 }
             }
@@ -42,7 +44,8 @@
                 $.ajax({
                     url: 'http://localhost:8000/',
                     type: 'GET',
-                    data: 'ID=1'
+                    data: 'ID=1',
+                    timeout: 2000,
                 })
                 .success(function (data, textStatus, jqXHR) {
                     processResultAndRepeat(jqXHR.status, data);

@@ -83,10 +83,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Events\EventControl.xaml.cs">
+      <DependentUpon>EventControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Interactive\InteractiveControl.xaml.cs">
       <DependentUpon>InteractiveControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Overlay\OverlayWebServer.cs" />
     <Compile Include="Util\ColorHelper.cs" />
     <Page Include="Controls\Chat\ChatControl.xaml">
       <SubType>Designer</SubType>
@@ -97,6 +99,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat\ChatUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Events\EventControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

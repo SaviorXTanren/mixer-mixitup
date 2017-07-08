@@ -27,6 +27,12 @@ namespace MixItUp.Base.Web
             this.listenerThread.Start();
         }
 
+        public void End()
+        {
+            this.listenerThread.Abort();
+            this.listener.Abort();
+        }
+
         protected virtual HttpStatusCode RequestReceived(string data, out string result)
         {
             result = string.Empty;
@@ -44,23 +50,27 @@ namespace MixItUp.Base.Web
 
         private void ListenerCallback(IAsyncResult result)
         {
-            var context = listener.EndGetContext(result);
-            Thread.Sleep(1000);
-            var data_text = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
+            try
+            {
+                var context = listener.EndGetContext(result);
+                Thread.Sleep(1000);
+                var data_text = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding).ReadToEnd();
 
-            var cleanedData = HttpUtility.UrlDecode(data_text);
+                var cleanedData = HttpUtility.UrlDecode(data_text);
 
-            string streamResult = string.Empty;
-            HttpStatusCode code = this.RequestReceived(cleanedData, out streamResult);
+                string streamResult = string.Empty;
+                HttpStatusCode code = this.RequestReceived(cleanedData, out streamResult);
 
-            context.Response.Headers["Access-Control-Allow-Origin"] = "*";
-            context.Response.StatusCode = (int)code;
-            context.Response.StatusDescription = code.ToString();
+                context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                context.Response.StatusCode = (int)code;
+                context.Response.StatusDescription = code.ToString();
 
-            byte[] buffer = Encoding.UTF8.GetBytes(streamResult);
-            context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+                byte[] buffer = Encoding.UTF8.GetBytes(streamResult);
+                context.Response.OutputStream.Write(buffer, 0, buffer.Length);
 
-            context.Response.Close();
+                context.Response.Close();
+            }
+            catch (Exception) { }
         }
     }
 }

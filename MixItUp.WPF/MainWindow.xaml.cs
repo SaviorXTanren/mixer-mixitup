@@ -18,6 +18,7 @@ namespace MixItUp.WPF
             InitializeComponent();
 
             this.Loaded += MainWindow_Loaded;
+            this.Closing += MainWindow_Closing;
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -50,6 +51,11 @@ namespace MixItUp.WPF
             {
                 await this.Chat.Initialize(await MixerAPIHandler.MixerConnection.Channels.GetChannel("ChannelOne"));
             }
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            MixerAPIHandler.Close();
         }
     }
 }

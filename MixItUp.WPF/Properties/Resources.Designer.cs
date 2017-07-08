@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MixItUp.WPF.Properties
+namespace MixItUp.Base.Properties
 {
 
 

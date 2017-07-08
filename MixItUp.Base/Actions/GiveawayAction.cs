@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Mixer.Base.ViewModel;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
@@ -6,7 +7,7 @@ namespace MixItUp.Base.Actions
     {
         public GiveawayAction() : base("Giveaway") { }
 
-        public override Task Perform()
+        public override Task Perform(UserViewModel user)
         {
             return Task.FromResult(0);
         }

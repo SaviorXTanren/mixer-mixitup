@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Mixer.Base.ViewModel;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
@@ -8,11 +9,11 @@ namespace MixItUp.Base.Actions
 
         public ChatAction(string chatText) : base("Chat") { }
 
-        public override async Task Perform()
+        public override async Task Perform(UserViewModel user)
         {
             if (MixerAPIHandler.ChatClient != null)
             {
-                await MixerAPIHandler.ChatClient.Whisper(null, this.ChatText);
+                await MixerAPIHandler.ChatClient.SendMessage(this.ChatText);
             }
         }
     }

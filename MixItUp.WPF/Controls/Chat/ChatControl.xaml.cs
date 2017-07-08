@@ -3,6 +3,8 @@ using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
 using Mixer.Base.ViewModel.Chat;
 using MixItUp.Base;
+using MixItUp.Base.Chat;
+using MixItUp.Base.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -84,10 +86,20 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void AddMessage(ChatMessageViewModel message)
+        private async Task AddMessage(ChatMessageViewModel message)
         {
             this.Messages.Add(message);
             this.MessageControls.Add(new ChatMessageControl(message));
+
+            if (MixerAPIHandler.ChannelSettings != null && ChatMessageCommand.IsCommand(message))
+            {
+                ChatMessageCommand messageCommand = new ChatMessageCommand(message);
+                ChatCommand command = MixerAPIHandler.ChannelSettings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
+                if (command != null)
+                {
+                    await command.Perform(message.User);
+                }
+            }
         }
 
         private async void ChatClearMessagesButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -178,9 +190,9 @@ namespace MixItUp.WPF.Controls.Chat
             // Show Re-Connecting...
         }
 
-        private void ChatClient_OnClearMessagesOccurred(object sender, EventArgs e)
+        private async void ChatClient_OnClearMessagesOccurred(object sender, EventArgs e)
         {
-            this.AddMessage(new ChatMessageViewModel("--- MESSAGES CLEARED ---"));
+            await this.AddMessage(new ChatMessageViewModel("--- MESSAGES CLEARED ---"));
         }
 
         private void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
@@ -192,9 +204,9 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
+        private async void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            this.AddMessage(new ChatMessageViewModel(e));
+            await this.AddMessage(new ChatMessageViewModel(e));
         }
 
         private void ChatClient_OnPollEndOccurred(object sender, ChatPollEventModel e)
