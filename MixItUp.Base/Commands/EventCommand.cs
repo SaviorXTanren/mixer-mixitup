@@ -1,14 +1,17 @@
 ﻿using Mixer.Base.Clients;
-using Mixer.Base.Util;
+using MixItUp.Base.Actions;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.Commands
 {
     public class EventCommand : CommandBase
     {
-        public ConstellationEventTypeEnum EventType { get; private set; }
+        public ConstellationEventTypeEnum EventType { get; set; }
 
-        public EventCommand(string name, string description, ConstellationEventTypeEnum eventType)
-            : base(name, "Event", EnumHelper.EnumToString(eventType), description)
+        public EventCommand() { }
+
+        public EventCommand(string name, string command, IEnumerable<ActionBase> actions, ConstellationEventTypeEnum eventType)
+            : base(name, CommandTypeEnum.Event, command, actions)
         {
             this.EventType = eventType;
         }

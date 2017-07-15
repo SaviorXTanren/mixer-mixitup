@@ -34,8 +34,8 @@ namespace MixItUp.WPF.Controls.Commands
         {
             if (MixerAPIHandler.ChannelSettings != null)
             {
-                this.commands.Clear();
                 this.CommandsListView.ItemsSource = this.commands;
+                this.commands.Clear();
 
                 foreach (CommandBase command in MixerAPIHandler.ChannelSettings.ChatCommands)
                 {
@@ -48,6 +48,11 @@ namespace MixItUp.WPF.Controls.Commands
                 }
 
                 foreach (CommandBase command in MixerAPIHandler.ChannelSettings.EventCommands)
+                {
+                    this.commands.Add(command);
+                }
+
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.TimerCommands)
                 {
                     this.commands.Add(command);
                 }
@@ -92,8 +97,11 @@ namespace MixItUp.WPF.Controls.Commands
                 MixerAPIHandler.ChannelSettings.ChatCommands.Remove((ChatCommand)command);
                 MixerAPIHandler.ChannelSettings.InteractiveCommands.Remove((InteractiveCommand)command);
                 MixerAPIHandler.ChannelSettings.EventCommands.Remove((EventCommand)command);
+                MixerAPIHandler.ChannelSettings.TimerCommands.Remove((TimerCommand)command);
 
                 this.CommandsListView.SelectedIndex = -1;
+
+                this.RefreshList();
             }
         }
 

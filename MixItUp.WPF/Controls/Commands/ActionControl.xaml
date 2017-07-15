@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Commands.ActionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0">Type:</TextBlock>
+            <ComboBox Grid.Column="2" x:Name="TypeComboBox" SelectionChanged="TypeComboBox_SelectionChanged" />
+        </Grid>
+
+        <Grid x:Name="ChatGrid" Grid.Row="2" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" TextWrapping="Wrap">Special Identifiers: $user = User who use the command, $arg1 = Argument 1, $arg2 = Argument 2, etc</TextBlock>
+
+            <TextBlock Grid.Row="2">Message:</TextBlock>
+            <TextBox Grid.Row="4" x:Name="ChatMessageTextBox" />
+        </Grid>
+
+        <Grid x:Name="CooldownGrid" Grid.Row="2" Visibility="Hidden">
+
+        </Grid>
+
+        <Grid x:Name="CurrencyGrid" Grid.Row="2" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0">Amount (+ adds/- subtracts):</TextBlock>
+            <TextBox Grid.Column="2" x:Name="CurrencyAmountTextBox" />
+        </Grid>
+
+        <Grid x:Name="ExternalProgramGrid" Grid.Row="2" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0">Program:</TextBlock>
+            <TextBox Grid.Column="2" Grid.Row="0" x:Name="ProgramFilePathTextBox" />
+            <Button Grid.Column="4" Grid.Row="0" x:Name="ProgramFileBrowseButton" Click="ProgramFileBrowseButton_Click">Browse</Button>
+
+            <TextBlock Grid.Column="0" Grid.Row="2">Arguments:</TextBlock>
+            <TextBox Grid.Column="2"  Grid.Row="2" x:Name="ProgramArgumentsTextBox" />
+        </Grid>
+
+        <Grid x:Name="GiveawayGrid" Grid.Row="2" Visibility="Hidden">
+
+        </Grid>
+
+        <Grid x:Name="InputGrid" Grid.Row="2" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0">Button:</TextBlock>
+            <ComboBox Grid.Column="2" x:Name="ButtonComboBox" />
+        </Grid>
+
+        <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Hidden">
+
+        </Grid>
+
+        <Grid x:Name="SoundGrid" Grid.Row="2" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0">File:</TextBlock>
+            <TextBox Grid.Column="2" Grid.Row="0" x:Name="SoundFilePathTextBox" />
+            <Button Grid.Column="4" Grid.Row="0" x:Name="SoundFileBrowseButton" Click="SoundFileBrowseButton_Click">Browse</Button>
+
+            <TextBlock Grid.Column="0" Grid.Row="2">Volume (0-100):</TextBlock>
+            <TextBox Grid.Column="2"  Grid.Row="2" x:Name="SoundVolumeTextBox" />
+        </Grid>
+
+        <Grid x:Name="WhisperGrid" Grid.Row="2" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0">Message:</TextBlock>
+            <TextBox Grid.Column="2" x:Name="WhisperMessageTextBox" />
+        </Grid>
+    </Grid>
+</UserControl>

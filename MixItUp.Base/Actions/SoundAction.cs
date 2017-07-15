@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.ViewModel;
 using NAudio.Wave;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -7,19 +8,24 @@ namespace MixItUp.Base.Actions
 {
     public class SoundAction : ActionBase
     {
-        public string SoundFilePath { get; set; }
+        public string FilePath { get; set; }
 
         public float VolumeScale { get; set; }
 
-        public SoundAction() : base("Sound") { this.VolumeScale = 1.0f; }
-
-        public override async Task Perform(UserViewModel user)
+        public SoundAction(string filePath, float volumeScale)
+            : base(ActionTypeEnum.Sound)
         {
-            if (File.Exists(this.SoundFilePath))
+            this.FilePath = filePath;
+            this.VolumeScale = volumeScale;
+        }
+
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (File.Exists(this.FilePath))
             {
                 using (DirectSoundOut output = new DirectSoundOut())
                 {
-                    using (AudioFileReader audioFileReader = new AudioFileReader(this.SoundFilePath))
+                    using (AudioFileReader audioFileReader = new AudioFileReader(this.FilePath))
                     {
                         output.Init(audioFileReader);
                         output.Volume = this.VolumeScale;
@@ -34,6 +40,15 @@ namespace MixItUp.Base.Actions
                     }
                 }
             }
+        }
+
+        public override SerializableAction Serialize()
+        {
+            return new SerializableAction()
+            {
+                Type = this.Type,
+                Values = new List<string>() { this.FilePath, this.VolumeScale.ToString() }
+            };
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Mixer.Base.Util;
 using Mixer.Base.ViewModel;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WindowsInput;
 using WindowsInput.Native;
@@ -413,20 +415,39 @@ namespace MixItUp.Base.Actions
 
     public class InputAction : ActionBase
     {
-        public InputTypeEnum InputType { get; private set; }
+        public List<InputTypeEnum> Inputs { get; set; }
 
         private InputSimulator simulator = new InputSimulator();
 
-        public InputAction(InputTypeEnum inputType) : base("Input") { }
-
-        public override Task Perform(UserViewModel user)
+        public InputAction(IEnumerable<InputTypeEnum> inputs)
+            : base(ActionTypeEnum.Input)
         {
-            if (Enum.IsDefined(typeof(InputTypeEnum), this.InputType))
+            this.Inputs = new List<InputTypeEnum>(inputs);
+        }
+
+        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        {
+            List<VirtualKeyCode> keyCodes = new List<VirtualKeyCode>();
+            foreach (InputTypeEnum input in this.Inputs)
             {
-                VirtualKeyCode virtualCode = (VirtualKeyCode)((int)this.InputType);
-                simulator.Keyboard.KeyPress(virtualCode);
+                if (Enum.IsDefined(typeof(InputTypeEnum), input))
+                {
+                    VirtualKeyCode virtualCode = (VirtualKeyCode)((int)input);
+                    keyCodes.Add(virtualCode);
+                }
             }
+
+            simulator.Keyboard.KeyPress(keyCodes.ToArray());
+
             return Task.FromResult(0);
+        }
+        public override SerializableAction Serialize()
+        {
+            return new SerializableAction()
+            {
+                Type = this.Type,
+                Values = this.Inputs.Select(i => i.ToString()).ToList()
+            };
         }
     }
 }

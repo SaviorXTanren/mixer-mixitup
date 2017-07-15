@@ -23,37 +23,33 @@ namespace MixItUp.Base
 
         public static ChannelSettings ChannelSettings { get; private set; }
 
-        public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<ClientScopeEnum> scopes, Action<string> codeCallback)
+        public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<ClientScopeEnum> scopes)
         {
-            if (MixerAPIHandler.OverlayServer == null)
-            {
-                MixerAPIHandler.OverlayServer = new OverlayWebServer();
-            }
-
-            MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaShortCode(clientID, scopes, codeCallback);
+            MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(clientID, scopes);
 
             MixerAPIHandler.ChannelSettings = new ChannelSettings();
+            if (File.Exists(ChannelSettings.ChannelSettingsFileName))
+            {
+                using (StreamReader reader = new StreamReader(File.OpenRead(ChannelSettings.ChannelSettingsFileName)))
+                {
+                    MixerAPIHandler.ChannelSettings = SerializerHelper.Deserialize<ChannelSettings>(await reader.ReadToEndAsync());
+                }
+            } 
+
+            if (MixerAPIHandler.OverlayServer == null)
+            {
+                MixerAPIHandler.OverlayServer = new OverlayWebServer("http://localhost:8080/");
+                MixerAPIHandler.OverlayServer.Start();
+            }
 
             return (MixerAPIHandler.MixerConnection != null);
         }
 
-        public static async Task InitializeSettings(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                using (StreamReader reader = new StreamReader(File.Open(filePath, FileMode.Open)))
-                {
-                    string data = await reader.ReadToEndAsync();
-                    MixerAPIHandler.ChannelSettings = SerializerHelper.Deserialize<ChannelSettings>(data);
-                }
-            }
-        }
-
-        public static async Task SaveSettings(string filePath)
+        public static async Task SaveSettings()
         {
             if (MixerAPIHandler.ChannelSettings != null)
             {
-                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
+                using (StreamWriter writer = new StreamWriter(File.Open(ChannelSettings.ChannelSettingsFileName, FileMode.Create)))
                 {
                     string data = SerializerHelper.Serialize<ChannelSettings>(MixerAPIHandler.ChannelSettings);
                     await writer.WriteAsync(data);
@@ -131,6 +127,8 @@ namespace MixItUp.Base
                 MixerAPIHandler.InteractiveClient.Disconnect();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
+
+            MixerAPIHandler.SaveSettings().Wait();
         }
     }
 }

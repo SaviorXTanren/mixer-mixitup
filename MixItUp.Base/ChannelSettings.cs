@@ -8,11 +8,14 @@ namespace MixItUp.Base
     [DataContract]
     public class ChannelSettings
     {
+        public const string ChannelSettingsFileName = "ChannelSettings.xml";
+
         public ChannelSettings()
         {
             this.ChatCommands = new List<ChatCommand>();
             this.InteractiveCommands = new List<InteractiveCommand>();
             this.EventCommands = new List<EventCommand>();
+            this.TimerCommands = new List<TimerCommand>();
         }
 
         [DataMember]
@@ -20,11 +23,14 @@ namespace MixItUp.Base
 
         [DataMember]
         public List<ChatCommand> ChatCommands { get; set; }
-        
+
         [DataMember]
         public List<InteractiveCommand> InteractiveCommands { get; set; }
 
         [DataMember]
         public List<EventCommand> EventCommands { get; set; }
+
+        [DataMember]
+        public List<TimerCommand> TimerCommands { get; set; }
     }
 }

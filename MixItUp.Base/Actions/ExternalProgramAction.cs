@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.ViewModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -12,9 +13,15 @@ namespace MixItUp.Base.Actions
 
         public bool ShowWindow { get; set; }
 
-        public ExternalProgramAction() : base("External Program") { }
+        public ExternalProgramAction(string filePath, string arguments, bool showWindow)
+            : base(ActionTypeEnum.ExternalProgram)
+        {
+            this.FilePath = filePath;
+            this.Arguments = arguments;
+            this.ShowWindow = showWindow;
+        }
 
-        public override async Task Perform(UserViewModel user)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
             Process process = new Process();
             process.StartInfo.FileName = this.FilePath;
@@ -26,6 +33,15 @@ namespace MixItUp.Base.Actions
             {
                 await this.Wait500();
             }
+        }
+
+        public override SerializableAction Serialize()
+        {
+            return new SerializableAction()
+            {
+                Type = this.Type,
+                Values = new List<string>() { this.FilePath, this.Arguments, this.ShowWindow.ToString() }
+            };
         }
     }
 }

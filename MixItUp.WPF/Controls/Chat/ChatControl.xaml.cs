@@ -97,7 +97,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatCommand command = MixerAPIHandler.ChannelSettings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
                 if (command != null)
                 {
-                    await command.Perform(message.User);
+                    await command.Perform(message.User, messageCommand.CommandArguments);
                 }
             }
         }
@@ -190,14 +190,14 @@ namespace MixItUp.WPF.Controls.Chat
             // Show Re-Connecting...
         }
 
-        private async void ChatClient_OnClearMessagesOccurred(object sender, EventArgs e)
+        private async void ChatClient_OnClearMessagesOccurred(object sender, ChatClearMessagesEventModel e)
         {
             await this.AddMessage(new ChatMessageViewModel("--- MESSAGES CLEARED ---"));
         }
 
-        private void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
+        private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
-            ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(messageID));
+            ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(e.id));
             if (message != null)
             {
                 message.Message.IsDeleted = true;
@@ -219,9 +219,9 @@ namespace MixItUp.WPF.Controls.Chat
             
         }
 
-        private void ChatClient_OnPurgeMessageOccurred(object sender, uint userID)
+        private void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
-            IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(userID));
+            IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(e.user_id));
             if (userMessages != null)
             {
                 foreach (ChatMessageControl message in userMessages)

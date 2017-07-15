@@ -19,7 +19,7 @@ namespace MixItUp.Base.Chat
         private IEnumerable<string> CommandPieces { get { return this.Message.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries); } }
 
         public ChatMessageCommand(ChatMessageViewModel chatMessage)
-            : base(chatMessage)
+            : base(chatMessage.ChatMessageEvent)
         {
             if (!ChatMessageCommand.IsCommand(chatMessage))
             {

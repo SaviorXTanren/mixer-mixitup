@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.ViewModel;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -8,11 +9,24 @@ namespace MixItUp.Base.Actions
     {
         public int Amount { get; set; }
 
-        public CurrencyAction() : base("Currency") { }
+        public CurrencyAction(int amount)
+            : base(ActionTypeEnum.Currency)
+        {
+            this.Amount = amount;
+        }
 
-        public override Task Perform(UserViewModel user)
+        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
             throw new NotImplementedException();
+        }
+
+        public override SerializableAction Serialize()
+        {
+            return new SerializableAction()
+            {
+                Type = this.Type,
+                Values = new List<string>() { this.Amount.ToString() }
+            };
         }
     }
 }

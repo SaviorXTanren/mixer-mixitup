@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Actions;
-using MixItUp.Base.Overlay;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Interactive
@@ -9,22 +8,17 @@ namespace MixItUp.WPF.Controls.Interactive
     /// </summary>
     public partial class InteractiveControl : UserControl
     {
-        private OverlayWebServer server;
-
         public InteractiveControl()
         {
             InitializeComponent();
 
-            this.server = new OverlayWebServer();
-            this.server.Start();
+            this.Loaded += InteractiveControl_Loaded;
+        }
 
-            OverlayAction action = new OverlayAction();
-            action.FilePath = "th.jpg";
-            action.Duration = 3;
-            action.Horizontal = 70;
-            action.Vertical = 70;
-
-            action.Perform(null).Wait();
+        private void InteractiveControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            OverlayAction action = new OverlayAction("th.jpg", 3, 70, 70);
+            action.Perform(null, null).Wait();
         }
     }
 }

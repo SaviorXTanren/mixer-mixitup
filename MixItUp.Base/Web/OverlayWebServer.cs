@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Web;
+﻿using Mixer.Base.Web;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -14,8 +14,10 @@ namespace MixItUp.Base.Overlay
         public int height;
     }
 
-    public class OverlayWebServer : RESTWebServer
+    public class OverlayWebServer : HttpListenerServerBase
     {
+        public OverlayWebServer(string address) : base(address) { }
+
         private OverlayImage overlayImage;
 
         public void SetOverlayImage(OverlayImage overlayImage)
@@ -23,7 +25,7 @@ namespace MixItUp.Base.Overlay
             this.overlayImage = overlayImage;
         }
 
-        protected override HttpStatusCode RequestReceived(string data, out string result)
+        protected override HttpStatusCode RequestReceived(HttpListenerRequest request, string data, out string result)
         {
             result = string.Empty;
             if (this.overlayImage != null)
