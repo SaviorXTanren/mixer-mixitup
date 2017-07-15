@@ -36,11 +36,9 @@ namespace MixItUp.Base.Actions
                     this.FileData = Convert.ToBase64String(byteData);
                 }
 
-                string filePath = string.Concat("file://" + this.FilePath.Replace("\\", "/"));
-
                 MixerAPIHandler.OverlayServer.SetOverlayImage(new OverlayImage()
                 {
-                    filePath = filePath,
+                    filePath = this.FilePath,
                     fileData = this.FileData,
                     duration = this.Duration,
                     horizontal = this.Horizontal,

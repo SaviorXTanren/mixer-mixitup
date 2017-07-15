@@ -94,6 +94,13 @@ namespace MixItUp.WPF.Controls.Commands
                             return new WhisperAction(this.WhisperMessageTextBox.Text);
                         }
                         break;
+                    case ActionTypeEnum.Wait:
+                        int waitAmount;
+                        if (!string.IsNullOrEmpty(this.WaitAmountTextBox.Text) && int.TryParse(this.WaitAmountTextBox.Text, out waitAmount) && waitAmount > 0)
+                        {
+                            return new WaitAction(waitAmount);
+                        }
+                        break;
                 }
             }
             return null;
@@ -148,6 +155,10 @@ namespace MixItUp.WPF.Controls.Commands
                         WhisperAction whisperAction = (WhisperAction)this.Action;
                         this.WhisperMessageTextBox.Text = whisperAction.ChatText;
                         break;
+                    case ActionTypeEnum.Wait:
+                        WaitAction waitAction = (WaitAction)this.Action;
+                        this.WaitAmountTextBox.Text = waitAction.WaitAmount.ToString();
+                        break;
                 }
 
                 this.Action = null;
@@ -156,15 +167,16 @@ namespace MixItUp.WPF.Controls.Commands
 
         private void TypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.ChatGrid.Visibility = Visibility.Hidden;
-            this.CooldownGrid.Visibility = Visibility.Hidden;
-            this.CurrencyGrid.Visibility = Visibility.Hidden;
-            this.ExternalProgramGrid.Visibility = Visibility.Hidden;
-            this.GiveawayGrid.Visibility = Visibility.Hidden;
-            this.InputGrid.Visibility = Visibility.Hidden;
-            this.OverlayGrid.Visibility = Visibility.Hidden;
-            this.SoundGrid.Visibility = Visibility.Hidden;
-            this.WhisperGrid.Visibility = Visibility.Hidden;
+            this.ChatGrid.Visibility = Visibility.Collapsed;
+            this.CooldownGrid.Visibility = Visibility.Collapsed;
+            this.CurrencyGrid.Visibility = Visibility.Collapsed;
+            this.ExternalProgramGrid.Visibility = Visibility.Collapsed;
+            this.GiveawayGrid.Visibility = Visibility.Collapsed;
+            this.InputGrid.Visibility = Visibility.Collapsed;
+            this.OverlayGrid.Visibility = Visibility.Collapsed;
+            this.SoundGrid.Visibility = Visibility.Collapsed;
+            this.WhisperGrid.Visibility = Visibility.Collapsed;
+            this.WaitGrid.Visibility = Visibility.Collapsed;
 
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
@@ -199,6 +211,9 @@ namespace MixItUp.WPF.Controls.Commands
                         break;
                     case ActionTypeEnum.Whisper:
                         this.WhisperGrid.Visibility = Visibility.Visible;
+                        break;
+                    case ActionTypeEnum.Wait:
+                        this.WaitGrid.Visibility = Visibility.Visible;
                         break;
                 }
             }

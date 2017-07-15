@@ -13,7 +13,13 @@
 
                     var imageElement = document.createElement('img');
                     imageElement.id = 'imageOverlay';
-                    imageElement.src = "data:image/png;base64," + data.fileData;
+
+                    var imageType = "data:image/png";
+                    if (data.filePath.endsWith("gif")) {
+                        imageType = "data:image/gif";
+                    }
+
+                    imageElement.src = imageType + ";base64," + data.fileData;
                     imageElement.style.cssText = 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
                         data.vertical.toString() + '%; transform: translate(-50%, -50%);'
 

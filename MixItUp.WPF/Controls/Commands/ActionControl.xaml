@@ -173,5 +173,16 @@
             <TextBlock Grid.Column="0">Message:</TextBlock>
             <TextBox Grid.Column="2" x:Name="WhisperMessageTextBox" />
         </Grid>
+
+        <Grid x:Name="WaitGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0">Duration (Sec):</TextBlock>
+            <TextBox Grid.Column="2" x:Name="WaitAmountTextBox" />
+        </Grid>
     </Grid>
 </UserControl>

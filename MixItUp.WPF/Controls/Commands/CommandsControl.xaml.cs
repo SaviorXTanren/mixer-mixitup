@@ -105,9 +105,10 @@ namespace MixItUp.WPF.Controls.Commands
             }
         }
 
-        private void Window_Closed(object sender, System.EventArgs e)
+        private async void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
+            await MixerAPIHandler.SaveSettings();
         }
     }
 }

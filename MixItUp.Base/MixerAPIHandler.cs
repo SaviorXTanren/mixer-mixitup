@@ -67,7 +67,7 @@ namespace MixItUp.Base
                 foreach (CommandBase command in MixerAPIHandler.ChannelSettings.EventCommands) { command.SerializeActions(); }
                 foreach (CommandBase command in MixerAPIHandler.ChannelSettings.TimerCommands) { command.SerializeActions(); }
 
-                using (StreamWriter writer = new StreamWriter(File.Open(ChannelSettings.ChannelSettingsFileName, FileMode.Create)))
+                using (StreamWriter writer = new StreamWriter(File.OpenWrite(ChannelSettings.ChannelSettingsFileName)))
                 {
                     string data = SerializerHelper.Serialize<ChannelSettings>(MixerAPIHandler.ChannelSettings);
                     await writer.WriteAsync(data);

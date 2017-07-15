@@ -16,7 +16,8 @@ namespace MixItUp.Base.Actions
         Input,
         Overlay,
         Sound,
-        Whisper
+        Whisper,
+        Wait,
     }
 
     public abstract class ActionBase
