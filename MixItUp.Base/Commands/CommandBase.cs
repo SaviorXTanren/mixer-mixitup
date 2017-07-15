@@ -54,10 +54,18 @@ namespace MixItUp.Base.Commands
                 arguments = new List<string>();
             }
 
+            List<Task> taskActionsToPerform = new List<Task>();
             foreach (ActionBase action in this.Actions)
             {
-                await action.Perform(user, arguments);
+                taskActionsToPerform.Add(action.Perform(user, arguments));
+
+                if (action.Type == ActionTypeEnum.Wait)
+                {
+                    await Task.WhenAll(taskActionsToPerform);
+                    taskActionsToPerform.Clear();
+                }
             }
+            await Task.WhenAll(taskActionsToPerform);
         }
 
         public void SerializeActions()

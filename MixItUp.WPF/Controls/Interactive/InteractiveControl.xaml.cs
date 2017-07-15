@@ -17,8 +17,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private void InteractiveControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            OverlayAction action = new OverlayAction("th.jpg", 3, 70, 70);
-            action.Perform(null, null).Wait();
+
         }
     }
 }
