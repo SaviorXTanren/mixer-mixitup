@@ -1,8 +1,9 @@
 ﻿using Mixer.Base.ViewModel;
-using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace MixItUp.Base.Actions
 {
@@ -10,36 +11,30 @@ namespace MixItUp.Base.Actions
     {
         public string FilePath { get; set; }
 
-        public float VolumeScale { get; set; }
+        public int VolumeScale { get; set; }
 
-        public SoundAction(string filePath, float volumeScale)
+        private MediaPlayer mediaPlayer;
+
+        public SoundAction(string filePath, int volumeScale)
             : base(ActionTypeEnum.Sound)
         {
             this.FilePath = filePath;
             this.VolumeScale = volumeScale;
         }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
             if (File.Exists(this.FilePath))
             {
-                using (DirectSoundOut output = new DirectSoundOut())
+                if (this.mediaPlayer == null)
                 {
-                    using (AudioFileReader audioFileReader = new AudioFileReader(this.FilePath))
-                    {
-                        output.Init(audioFileReader);
-                        output.Volume = this.VolumeScale;
-                        output.Play();
-
-                        while (output.PlaybackState == PlaybackState.Playing)
-                        {
-                            await this.Wait500();
-                        }
-
-                        output.Stop();
-                    }
+                    this.mediaPlayer = new MediaPlayer();
+                    this.mediaPlayer.Open(new Uri(this.FilePath));
                 }
+                this.mediaPlayer.Volume = ((double)this.VolumeScale / 100.0);
+                this.mediaPlayer.Play();
             }
+            return Task.FromResult(0);
         }
 
         public override SerializableAction Serialize()

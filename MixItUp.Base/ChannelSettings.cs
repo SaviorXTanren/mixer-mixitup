@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -12,6 +13,7 @@ namespace MixItUp.Base
 
         public ChannelSettings()
         {
+            this.UserData = new List<UserDataViewModel>();
             this.ChatCommands = new List<ChatCommand>();
             this.InteractiveCommands = new List<InteractiveCommand>();
             this.EventCommands = new List<EventCommand>();
@@ -20,6 +22,9 @@ namespace MixItUp.Base
 
         [DataMember]
         public ChannelModel Channel { get; set; }
+
+        [DataMember]
+        public List<UserDataViewModel> UserData { get; set; }
 
         [DataMember]
         public List<ChatCommand> ChatCommands { get; set; }

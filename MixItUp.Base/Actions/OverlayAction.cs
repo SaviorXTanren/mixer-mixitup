@@ -1,6 +1,8 @@
 ﻿using Mixer.Base.ViewModel;
 using MixItUp.Base.Overlay;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -12,6 +14,8 @@ namespace MixItUp.Base.Actions
 
         public int Horizontal { get; set; }
         public int Vertical { get; set; }
+
+        public string FileData { get; set; }
 
         public OverlayAction(string filePath, int duration, int horizontal, int vertical)
             : base(ActionTypeEnum.Overlay)
@@ -26,9 +30,18 @@ namespace MixItUp.Base.Actions
         {
             if (MixerAPIHandler.OverlayServer != null)
             {
+                if (this.FileData == null)
+                {
+                    byte[] byteData = File.ReadAllBytes(this.FilePath);
+                    this.FileData = Convert.ToBase64String(byteData);
+                }
+
+                string filePath = string.Concat("file://" + this.FilePath.Replace("\\", "/"));
+
                 MixerAPIHandler.OverlayServer.SetOverlayImage(new OverlayImage()
                 {
-                    filePath = this.FilePath,
+                    filePath = filePath,
+                    fileData = this.FileData,
                     duration = this.Duration,
                     horizontal = this.Horizontal,
                     vertical = this.Vertical

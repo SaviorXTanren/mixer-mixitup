@@ -1,4 +1,5 @@
-﻿using Mixer.Base.ViewModel;
+﻿using Mixer.Base.Util;
+using Mixer.Base.ViewModel;
 using MixItUp.Base.Actions;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -81,6 +82,7 @@ namespace MixItUp.Base.Commands
                     case ActionTypeEnum.Cooldown:
                         break;
                     case ActionTypeEnum.Currency:
+                        action = new CurrencyAction(int.Parse(serializedAction.Values[0]));
                         break;
                     case ActionTypeEnum.ExternalProgram:
                         action = new ExternalProgramAction(serializedAction.Values[0], serializedAction.Values[1], bool.Parse(serializedAction.Values[2]));
@@ -88,11 +90,13 @@ namespace MixItUp.Base.Commands
                     case ActionTypeEnum.Giveaway:
                         break;
                     case ActionTypeEnum.Input:
+                        action = new InputAction(new List<InputTypeEnum>() { EnumHelper.GetEnumValueFromString<InputTypeEnum>(serializedAction.Values[0]) });
                         break;
                     case ActionTypeEnum.Overlay:
+                        action = new OverlayAction(serializedAction.Values[0], int.Parse(serializedAction.Values[1]), int.Parse(serializedAction.Values[2]), int.Parse(serializedAction.Values[3]));
                         break;
                     case ActionTypeEnum.Sound:
-                        action = new SoundAction(serializedAction.Values[0], float.Parse(serializedAction.Values[1]));
+                        action = new SoundAction(serializedAction.Values[0], int.Parse(serializedAction.Values[1]));
                         break;
                     case ActionTypeEnum.Whisper:
                         action = new WhisperAction(serializedAction.Values[0]);

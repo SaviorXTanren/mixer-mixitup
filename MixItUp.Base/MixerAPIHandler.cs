@@ -27,14 +27,16 @@ namespace MixItUp.Base
         public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<ClientScopeEnum> scopes)
         {
             MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(clientID, scopes);
-
-            MixerAPIHandler.ChannelSettings = new ChannelSettings();
-            await MixerAPIHandler.LoadSettings();
-
-            if (MixerAPIHandler.OverlayServer == null)
+            if (MixerAPIHandler.MixerConnection != null)
             {
-                MixerAPIHandler.OverlayServer = new OverlayWebServer("http://localhost:8080/");
-                MixerAPIHandler.OverlayServer.Start();
+                MixerAPIHandler.ChannelSettings = new ChannelSettings();
+                await MixerAPIHandler.LoadSettings();
+
+                if (MixerAPIHandler.OverlayServer == null)
+                {
+                    MixerAPIHandler.OverlayServer = new OverlayWebServer("http://localhost:8001/");
+                    MixerAPIHandler.OverlayServer.Start();
+                }
             }
 
             return (MixerAPIHandler.MixerConnection != null);

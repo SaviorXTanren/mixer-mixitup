@@ -65,6 +65,18 @@ namespace MixItUp.WPF.Controls.Commands
                         }
                         break;
                     case ActionTypeEnum.Overlay:
+                        if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
+                        {
+                            int duration;
+                            int horizontal;
+                            int vertical;
+                            if (int.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0 &&
+                                int.TryParse(this.OverlayHorizontalTextBox.Text, out horizontal) && horizontal >= 0 && horizontal <= 100 &&
+                                int.TryParse(this.OverlayVerticalTextBox.Text, out vertical) && vertical >= 0 && vertical <= 100)
+                            {
+                                return new OverlayAction(this.OverlayImageFilePathTextBox.Text, duration, horizontal, vertical);
+                            }
+                        }
                         break;
                     case ActionTypeEnum.Sound:
                         if (!string.IsNullOrEmpty(this.SoundFilePathTextBox.Text) && !string.IsNullOrEmpty(this.SoundVolumeTextBox.Text))
@@ -72,7 +84,7 @@ namespace MixItUp.WPF.Controls.Commands
                             int volumeLevel;
                             if (int.TryParse(this.SoundVolumeTextBox.Text, out volumeLevel) && volumeLevel >= 0 && volumeLevel <= 100)
                             {
-                                return new SoundAction(this.SoundFilePathTextBox.Text, volumeLevel / 100);
+                                return new SoundAction(this.SoundFilePathTextBox.Text, volumeLevel);
                             }
                         }
                         break;
@@ -130,8 +142,7 @@ namespace MixItUp.WPF.Controls.Commands
                     case ActionTypeEnum.Sound:
                         SoundAction soundAction = (SoundAction)this.Action;
                         this.SoundFilePathTextBox.Text = soundAction.FilePath;
-                        int volume = (int)(soundAction.VolumeScale * 100);
-                        this.SoundVolumeTextBox.Text = volume.ToString();
+                        this.SoundVolumeTextBox.Text = soundAction.VolumeScale.ToString();
                         break;
                     case ActionTypeEnum.Whisper:
                         WhisperAction whisperAction = (WhisperAction)this.Action;

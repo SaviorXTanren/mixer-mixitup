@@ -13,7 +13,7 @@
 
                     var imageElement = document.createElement('img');
                     imageElement.id = 'imageOverlay';
-                    imageElement.src = data.filePath;
+                    imageElement.src = "data:image/png;base64," + data.fileData;
                     imageElement.style.cssText = 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
                         data.vertical.toString() + '%; transform: translate(-50%, -50%);'
 
@@ -34,9 +34,8 @@
             function sendGETRequest()
             {
                 $.ajax({
-                    url: 'http://localhost:8000/',
+                    url: 'http://localhost:8001/',
                     type: 'GET',
-                    data: 'ID=1',
                     timeout: 2000,
                 })
                 .success(function (data, textStatus, jqXHR) {
