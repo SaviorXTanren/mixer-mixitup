@@ -16,7 +16,7 @@
         <DataGrid x:Name="CommandsListView" Grid.Row="0" SelectionMode="Single" CanUserSortColumns="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionChanged="CommandsListView_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="Command" Binding="{Binding Command}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True" Width="2*" />
             </DataGrid.Columns>

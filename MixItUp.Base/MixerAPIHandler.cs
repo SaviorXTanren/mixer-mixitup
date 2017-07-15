@@ -125,7 +125,7 @@ namespace MixItUp.Base
             return false;
         }
 
-        public static void Close()
+        public static async Task Close()
         {
             if (MixerAPIHandler.OverlayServer != null)
             {
@@ -146,7 +146,7 @@ namespace MixItUp.Base
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
 
-            MixerAPIHandler.SaveSettings().Wait();
+            await MixerAPIHandler.SaveSettings();
         }
     }
 }

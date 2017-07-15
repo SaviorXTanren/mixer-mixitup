@@ -63,7 +63,6 @@
     <Compile Include="Actions\SerializableAction.cs" />
     <Compile Include="Actions\SoundAction.cs" />
     <Compile Include="Actions\WaitAction.cs" />
-    <Compile Include="Actions\WhisperAction.cs" />
     <Compile Include="ChannelSettings.cs" />
     <Compile Include="Chat\ChatMessageCommand.cs" />
     <Compile Include="Commands\ChatCommand.cs" />

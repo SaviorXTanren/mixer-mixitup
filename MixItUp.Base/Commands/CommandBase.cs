@@ -34,6 +34,9 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public List<SerializableAction> SerializedActions { get; set; }
 
+        [XmlIgnore]
+        public string TypeName { get { return EnumHelper.GetEnumName(this.Type); } }
+
         public CommandBase()
         {
             this.Actions = new List<ActionBase>();
@@ -85,7 +88,7 @@ namespace MixItUp.Base.Commands
                 switch (serializedAction.Type)
                 {
                     case ActionTypeEnum.Chat:
-                        action = new ChatAction(serializedAction.Values[0]);
+                        action = new ChatAction(serializedAction.Values[0], bool.Parse(serializedAction.Values[1]));
                         break;
                     case ActionTypeEnum.Cooldown:
                         break;
@@ -105,9 +108,6 @@ namespace MixItUp.Base.Commands
                         break;
                     case ActionTypeEnum.Sound:
                         action = new SoundAction(serializedAction.Values[0], int.Parse(serializedAction.Values[1]));
-                        break;
-                    case ActionTypeEnum.Whisper:
-                        action = new WhisperAction(serializedAction.Values[0]);
                         break;
                 }
 

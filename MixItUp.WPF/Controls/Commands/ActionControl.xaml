@@ -33,7 +33,24 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap">Special Identifiers: $user = User who use the command, $arg1 = Argument 1, $arg2 = Argument 2, etc</TextBlock>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Whisper To User:</TextBlock>
+                <CheckBox Grid.Column="2" x:Name="ChatWhisperCheckBox" />
+
+                <TextBlock Grid.Column="4">
+                    <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat-Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                        Chat Special Identifiers Reference
+                    </Hyperlink>
+                </TextBlock>
+            </Grid>
 
             <TextBlock Grid.Row="2">Message:</TextBlock>
             <TextBox Grid.Row="4" x:Name="ChatMessageTextBox" />
@@ -161,17 +178,6 @@
 
             <TextBlock Grid.Column="0" Grid.Row="2">Volume (0-100):</TextBlock>
             <TextBox Grid.Column="2"  Grid.Row="2" x:Name="SoundVolumeTextBox" />
-        </Grid>
-
-        <Grid x:Name="WhisperGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Message:</TextBlock>
-            <TextBox Grid.Column="2" x:Name="WhisperMessageTextBox" />
         </Grid>
 
         <Grid x:Name="WaitGrid" Grid.Row="2" Visibility="Collapsed">

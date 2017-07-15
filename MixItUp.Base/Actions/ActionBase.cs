@@ -16,7 +16,6 @@ namespace MixItUp.Base.Actions
         Input,
         Overlay,
         Sound,
-        Whisper,
         Wait,
     }
 

@@ -63,9 +63,9 @@ namespace MixItUp.WPF
             }
         }
 
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            MixerAPIHandler.Close();
+            await MixerAPIHandler.Close();
             Application.Current.Shutdown();
         }
     }

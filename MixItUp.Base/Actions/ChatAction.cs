@@ -9,9 +9,13 @@ namespace MixItUp.Base.Actions
     {
         public string ChatText { get; set; }
 
-        public ChatAction(string chatText) : base(ActionTypeEnum.Chat)
+        public bool IsWhisper { get; set; }
+
+        public ChatAction(string chatText, bool isWhisper)
+            : base(ActionTypeEnum.Chat)
         {
             this.ChatText = chatText;
+            this.IsWhisper = isWhisper;
         }
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
@@ -25,7 +29,14 @@ namespace MixItUp.Base.Actions
                     message = message.Replace("$arg" + (i + 1), arguments.ElementAt(i));
                 }
 
-                await MixerAPIHandler.ChatClient.SendMessage(message);
+                if (this.IsWhisper)
+                {
+                    await MixerAPIHandler.ChatClient.Whisper(user.UserName, this.ChatText);
+                }
+                else
+                {
+                    await MixerAPIHandler.ChatClient.SendMessage(message);
+                }
             }
         }
 
@@ -34,7 +45,7 @@ namespace MixItUp.Base.Actions
             return new SerializableAction()
             {
                 Type = this.Type,
-                Values = new List<string>() { this.ChatText }
+                Values = new List<string>() { this.ChatText, this.IsWhisper.ToString() }
             };
         }
     }

@@ -5,6 +5,8 @@ using Microsoft.Win32;
 using MixItUp.Base.Actions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Navigation;
+using System.Diagnostics;
 
 namespace MixItUp.WPF.Controls.Commands
 {
@@ -38,7 +40,7 @@ namespace MixItUp.WPF.Controls.Commands
                     case ActionTypeEnum.Chat:
                         if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
                         {
-                            return new ChatAction(this.ChatMessageTextBox.Text);
+                            return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperCheckBox.IsChecked.GetValueOrDefault());
                         }
                         break;
                     case ActionTypeEnum.Cooldown:
@@ -86,12 +88,6 @@ namespace MixItUp.WPF.Controls.Commands
                             {
                                 return new SoundAction(this.SoundFilePathTextBox.Text, volumeLevel);
                             }
-                        }
-                        break;
-                    case ActionTypeEnum.Whisper:
-                        if (!string.IsNullOrEmpty(this.WhisperMessageTextBox.Text))
-                        {
-                            return new WhisperAction(this.WhisperMessageTextBox.Text);
                         }
                         break;
                     case ActionTypeEnum.Wait:
@@ -151,10 +147,6 @@ namespace MixItUp.WPF.Controls.Commands
                         this.SoundFilePathTextBox.Text = soundAction.FilePath;
                         this.SoundVolumeTextBox.Text = soundAction.VolumeScale.ToString();
                         break;
-                    case ActionTypeEnum.Whisper:
-                        WhisperAction whisperAction = (WhisperAction)this.Action;
-                        this.WhisperMessageTextBox.Text = whisperAction.ChatText;
-                        break;
                     case ActionTypeEnum.Wait:
                         WaitAction waitAction = (WaitAction)this.Action;
                         this.WaitAmountTextBox.Text = waitAction.WaitAmount.ToString();
@@ -175,7 +167,6 @@ namespace MixItUp.WPF.Controls.Commands
             this.InputGrid.Visibility = Visibility.Collapsed;
             this.OverlayGrid.Visibility = Visibility.Collapsed;
             this.SoundGrid.Visibility = Visibility.Collapsed;
-            this.WhisperGrid.Visibility = Visibility.Collapsed;
             this.WaitGrid.Visibility = Visibility.Collapsed;
 
             if (this.TypeComboBox.SelectedIndex >= 0)
@@ -208,9 +199,6 @@ namespace MixItUp.WPF.Controls.Commands
                         break;
                     case ActionTypeEnum.Sound:
                         this.SoundGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.Whisper:
-                        this.WhisperGrid.Visibility = Visibility.Visible;
                         break;
                     case ActionTypeEnum.Wait:
                         this.WaitGrid.Visibility = Visibility.Visible;
@@ -253,6 +241,12 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 this.OverlayImageFilePathTextBox.Text = fileDialog.FileName;
             }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(e.Uri.AbsoluteUri);
+            e.Handled = true;
         }
     }
 }
