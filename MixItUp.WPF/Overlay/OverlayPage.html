@@ -16,14 +16,6 @@
                     imageElement.src = data.filePath;
                     imageElement.style.cssText = 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
                         data.vertical.toString() + '%; transform: translate(-50%, -50%);'
-                    if (data.width > 0)
-                    {
-                        imageElement.style.cssText += 'width: ' + data.width.toString();
-                    }
-                    if (data.height > 0)
-                    {
-                        imageElement.style.cssText += 'height: ' + data.height.toString();
-                    }
 
                     var mainOverlayDiv = document.getElementById('mainOverlay');
                     mainOverlayDiv.appendChild(imageElement);

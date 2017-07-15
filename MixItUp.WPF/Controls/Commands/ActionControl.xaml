@@ -24,7 +24,7 @@
             <ComboBox Grid.Column="2" x:Name="TypeComboBox" SelectionChanged="TypeComboBox_SelectionChanged" />
         </Grid>
 
-        <Grid x:Name="ChatGrid" Grid.Row="2" Visibility="Visible">
+        <Grid x:Name="ChatGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
@@ -39,11 +39,11 @@
             <TextBox Grid.Row="4" x:Name="ChatMessageTextBox" />
         </Grid>
 
-        <Grid x:Name="CooldownGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="CooldownGrid" Grid.Row="2" Visibility="Collapsed">
 
         </Grid>
 
-        <Grid x:Name="CurrencyGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="CurrencyGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
@@ -54,7 +54,7 @@
             <TextBox Grid.Column="2" x:Name="CurrencyAmountTextBox" />
         </Grid>
 
-        <Grid x:Name="ExternalProgramGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="ExternalProgramGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
@@ -76,11 +76,11 @@
             <TextBox Grid.Column="2"  Grid.Row="2" x:Name="ProgramArgumentsTextBox" />
         </Grid>
 
-        <Grid x:Name="GiveawayGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="GiveawayGrid" Grid.Row="2" Visibility="Collapsed">
 
         </Grid>
 
-        <Grid x:Name="InputGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="InputGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
@@ -88,14 +88,60 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0">Button:</TextBlock>
-            <ComboBox Grid.Column="2" x:Name="ButtonComboBox" />
+            <ComboBox Grid.Column="2" x:Name="InputButtonComboBox" />
         </Grid>
 
-        <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0">Image:</TextBlock>
+                <TextBox Grid.Column="2" Grid.Row="0" x:Name="OverlayImageFilePathTextBox" />
+                <Button Grid.Column="4" Grid.Row="0" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
+
+                <TextBlock Grid.Column="0" Grid.Row="2">Duration (Sec):</TextBlock>
+                <TextBox Grid.Column="2" Grid.Row="2" x:Name="OverlayDurationTextBox" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0">Horizontal Position Percentage:</TextBlock>
+                <TextBox Grid.Column="2" Grid.Row="0" x:Name="OverlayHorizontalTextBox" />
+
+                <TextBlock Grid.Column="0" Grid.Row="2">Vertical Position Percentage:</TextBlock>
+                <TextBox Grid.Column="2" Grid.Row="2" x:Name="OverlayVerticalTextBox" />
+            </Grid>
 
         </Grid>
 
-        <Grid x:Name="SoundGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="SoundGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
@@ -117,7 +163,7 @@
             <TextBox Grid.Column="2"  Grid.Row="2" x:Name="SoundVolumeTextBox" />
         </Grid>
 
-        <Grid x:Name="WhisperGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="WhisperGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />

@@ -3,6 +3,8 @@ using System.Windows;
 using Mixer.Base.Util;
 using Microsoft.Win32;
 using MixItUp.Base.Actions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MixItUp.WPF.Controls.Commands
 {
@@ -11,9 +13,15 @@ namespace MixItUp.WPF.Controls.Commands
     /// </summary>
     public partial class ActionControl : UserControl
     {
-        public ActionControl()
+        private ActionBase Action;
+
+        public ActionControl() : this(null) { }
+
+        public ActionControl(ActionBase action)
         {
             InitializeComponent();
+
+            this.Action = action;
 
             this.Loaded += ActionControl_Loaded;
         }
@@ -36,6 +44,11 @@ namespace MixItUp.WPF.Controls.Commands
                     case ActionTypeEnum.Cooldown:
                         break;
                     case ActionTypeEnum.Currency:
+                        int currencyAmount;
+                        if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount))
+                        {
+                            return new CurrencyAction(currencyAmount);
+                        }
                         break;
                     case ActionTypeEnum.ExternalProgram:
                         if (!string.IsNullOrEmpty(this.ProgramFilePathTextBox.Text))
@@ -46,6 +59,10 @@ namespace MixItUp.WPF.Controls.Commands
                     case ActionTypeEnum.Giveaway:
                         break;
                     case ActionTypeEnum.Input:
+                        if (this.InputButtonComboBox.SelectedIndex >= 0)
+                        {
+                            return new InputAction(new List<InputTypeEnum>() { EnumHelper.GetEnumValueFromString<InputTypeEnum>((string)this.InputButtonComboBox.SelectedItem) });
+                        }
                         break;
                     case ActionTypeEnum.Overlay:
                         break;
@@ -73,6 +90,57 @@ namespace MixItUp.WPF.Controls.Commands
         private void ActionControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>();
+
+            if (this.Action != null)
+            {
+                this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.Action.Type);
+                switch (this.Action.Type)
+                {
+                    case ActionTypeEnum.Chat:
+                        ChatAction chatAction = (ChatAction)this.Action;
+                        this.ChatMessageTextBox.Text = chatAction.ChatText;
+                        break;
+                    case ActionTypeEnum.Cooldown:
+                        CooldownAction cooldownAction = (CooldownAction)this.Action;
+                        
+                        break;
+                    case ActionTypeEnum.Currency:
+                        CurrencyAction currencyAction = (CurrencyAction)this.Action;
+                        this.CurrencyAmountTextBox.Text = currencyAction.Amount.ToString();
+                        break;
+                    case ActionTypeEnum.ExternalProgram:
+                        ExternalProgramAction externalAction = (ExternalProgramAction)this.Action;
+                        this.ProgramFilePathTextBox.Text = externalAction.FilePath;
+                        this.ProgramArgumentsTextBox.Text = externalAction.Arguments;
+                        break;
+                    case ActionTypeEnum.Giveaway:
+                        GiveawayAction giveawayAction = (GiveawayAction)this.Action;
+                        break;
+                    case ActionTypeEnum.Input:
+                        InputAction inputAction = (InputAction)this.Action;
+                        this.InputButtonComboBox.SelectedItem = EnumHelper.GetEnumName(inputAction.Inputs.First());
+                        break;
+                    case ActionTypeEnum.Overlay:
+                        OverlayAction overlayAction = (OverlayAction)this.Action;
+                        this.OverlayImageFilePathTextBox.Text = overlayAction.FilePath;
+                        this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
+                        this.OverlayHorizontalTextBox.Text = overlayAction.Horizontal.ToString();
+                        this.OverlayVerticalTextBox.Text = overlayAction.Vertical.ToString();
+                        break;
+                    case ActionTypeEnum.Sound:
+                        SoundAction soundAction = (SoundAction)this.Action;
+                        this.SoundFilePathTextBox.Text = soundAction.FilePath;
+                        int volume = (int)(soundAction.VolumeScale * 100);
+                        this.SoundVolumeTextBox.Text = volume.ToString();
+                        break;
+                    case ActionTypeEnum.Whisper:
+                        WhisperAction whisperAction = (WhisperAction)this.Action;
+                        this.WhisperMessageTextBox.Text = whisperAction.ChatText;
+                        break;
+                }
+
+                this.Action = null;
+            }
         }
 
         private void TypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -146,6 +214,18 @@ namespace MixItUp.WPF.Controls.Commands
             if (fileDialog.ShowDialog() == true)
             {
                 this.ProgramFilePathTextBox.Text = fileDialog.FileName;
+            }
+        }
+
+        private void OverlayImageFileBrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Filter = "All files (*.*)|*.*";
+            fileDialog.CheckFileExists = true;
+            fileDialog.CheckPathExists = true;
+            if (fileDialog.ShowDialog() == true)
+            {
+                this.OverlayImageFilePathTextBox.Text = fileDialog.FileName;
             }
         }
     }

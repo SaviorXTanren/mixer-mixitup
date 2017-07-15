@@ -49,7 +49,7 @@
             <ComboBox x:Name="TypeComboBox" Grid.Column="6" SelectionChanged="TypeComboBox_SelectionChanged" />
         </Grid>
 
-        <Grid x:Name="ChatCommandGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="ChatCommandGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
@@ -67,11 +67,11 @@
             <TextBox x:Name="ChatDescriptionTextBox" Grid.Column="6" />
         </Grid>
 
-        <Grid x:Name="InteractiveCommandGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="InteractiveCommandGrid" Grid.Row="2" Visibility="Collapsed">
 
         </Grid>
 
-        <Grid x:Name="EventCommandGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="EventCommandGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
@@ -86,7 +86,7 @@
             <ComboBox x:Name="EventTypeComboBox" Grid.Column="2" />
         </Grid>
 
-        <Grid x:Name="TimerCommandGrid" Grid.Row="2" Visibility="Hidden">
+        <Grid x:Name="TimerCommandGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
@@ -104,7 +104,7 @@
             <TextBox x:Name="TimerMinimumChatMessagesTextBox" Grid.Column="6" />
         </Grid>
 
-        <ListView x:Name="ActionsListView" Grid.Row="4" Visibility="Hidden" ItemContainerStyle="{StaticResource ListViewBorderedItem}" />
+        <ListView x:Name="ActionsListView" Grid.Row="4" Visibility="Collapsed" ItemContainerStyle="{StaticResource ListViewBorderedItem}" />
 
         <Grid Grid.Row="6" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>

@@ -2,6 +2,7 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Overlay;
 using MixItUp.Base.Util;
 using System;
@@ -28,13 +29,7 @@ namespace MixItUp.Base
             MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(clientID, scopes);
 
             MixerAPIHandler.ChannelSettings = new ChannelSettings();
-            if (File.Exists(ChannelSettings.ChannelSettingsFileName))
-            {
-                using (StreamReader reader = new StreamReader(File.OpenRead(ChannelSettings.ChannelSettingsFileName)))
-                {
-                    MixerAPIHandler.ChannelSettings = SerializerHelper.Deserialize<ChannelSettings>(await reader.ReadToEndAsync());
-                }
-            } 
+            await MixerAPIHandler.LoadSettings();
 
             if (MixerAPIHandler.OverlayServer == null)
             {
@@ -45,10 +40,31 @@ namespace MixItUp.Base
             return (MixerAPIHandler.MixerConnection != null);
         }
 
+        public static async Task LoadSettings()
+        {
+            if (File.Exists(ChannelSettings.ChannelSettingsFileName))
+            {
+                using (StreamReader reader = new StreamReader(File.OpenRead(ChannelSettings.ChannelSettingsFileName)))
+                {
+                    MixerAPIHandler.ChannelSettings = SerializerHelper.Deserialize<ChannelSettings>(await reader.ReadToEndAsync());
+                }
+
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.ChatCommands) { command.DeserializeActions(); }
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.InteractiveCommands) { command.DeserializeActions(); }
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.EventCommands) { command.DeserializeActions(); }
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.TimerCommands) { command.DeserializeActions(); }
+            }
+        }
+
         public static async Task SaveSettings()
         {
             if (MixerAPIHandler.ChannelSettings != null)
             {
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.ChatCommands) { command.SerializeActions(); }
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.InteractiveCommands) { command.SerializeActions(); }
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.EventCommands) { command.SerializeActions(); }
+                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.TimerCommands) { command.SerializeActions(); }
+
                 using (StreamWriter writer = new StreamWriter(File.Open(ChannelSettings.ChannelSettingsFileName, FileMode.Create)))
                 {
                     string data = SerializerHelper.Serialize<ChannelSettings>(MixerAPIHandler.ChannelSettings);

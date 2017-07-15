@@ -36,6 +36,39 @@ namespace MixItUp.WPF.Controls.Commands
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CommandTypeEnum>();
 
             this.ActionsListView.ItemsSource = this.actionControls;
+
+            if (this.Command != null)
+            {
+                this.NameTextBox.Text = this.Command.Name;
+                this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.Command.Type);
+                
+                switch (this.Command.Type)
+                {
+                    case CommandTypeEnum.Chat:
+                        ChatCommand chatCommand = (ChatCommand)this.Command;
+                        this.ChatCommandTextBox.Text = chatCommand.Command;
+                        this.ChatDescriptionTextBox.Text = chatCommand.Description;
+                        break;
+                    case CommandTypeEnum.Interactive:
+                        InteractiveCommand interactiveCommand = (InteractiveCommand)this.Command;
+
+                        break;
+                    case CommandTypeEnum.Event:
+                        EventCommand eventCommand = (EventCommand)this.Command;
+                        this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(eventCommand.EventType);
+                        break;
+                    case CommandTypeEnum.Timer:
+                        TimerCommand timerCommand = (TimerCommand)this.Command;
+                        this.TimerIntervalTextBox.Text = timerCommand.Interval.ToString();
+                        this.TimerMinimumChatMessagesTextBox.Text = timerCommand.MinimumMessages.ToString();
+                        break;
+                }
+
+                foreach (ActionBase action in this.Command.Actions)
+                {
+                    this.actionControls.Add(new ActionControl(action));
+                }
+            }
         }
 
         private void TypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -146,10 +179,13 @@ namespace MixItUp.WPF.Controls.Commands
 
             if (newCommand != null)
             {
-                MixerAPIHandler.ChannelSettings.ChatCommands.Remove((ChatCommand)this.Command);
-                MixerAPIHandler.ChannelSettings.InteractiveCommands.Remove((InteractiveCommand)this.Command);
-                MixerAPIHandler.ChannelSettings.EventCommands.Remove((EventCommand)this.Command);
-                MixerAPIHandler.ChannelSettings.TimerCommands.Remove((TimerCommand)this.Command);
+                if (this.Command != null)
+                {
+                    if (newCommand is ChatCommand) { MixerAPIHandler.ChannelSettings.ChatCommands.Remove((ChatCommand)this.Command); }
+                    else if (newCommand is InteractiveCommand) { MixerAPIHandler.ChannelSettings.InteractiveCommands.Remove((InteractiveCommand)this.Command); }
+                    else if (newCommand is EventCommand) { MixerAPIHandler.ChannelSettings.EventCommands.Remove((EventCommand)this.Command); }
+                    else if (newCommand is TimerCommand) { MixerAPIHandler.ChannelSettings.TimerCommands.Remove((TimerCommand)this.Command); }
+                }
 
                 if (newCommand is ChatCommand) { MixerAPIHandler.ChannelSettings.ChatCommands.Add((ChatCommand)newCommand); }
                 else if (newCommand is InteractiveCommand) { MixerAPIHandler.ChannelSettings.InteractiveCommands.Add((InteractiveCommand)newCommand); }

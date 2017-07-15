@@ -15,10 +15,10 @@
 
         <DataGrid x:Name="CommandsListView" Grid.Row="0" SelectionMode="Single" CanUserSortColumns="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" SelectionChanged="CommandsListView_SelectionChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Name}" Width="*" />
-                <DataGridTextColumn Header="Command" Binding="{Binding Command}" Width="*" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2*" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Command" Binding="{Binding Command}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True" Width="2*" />
             </DataGrid.Columns>
         </DataGrid>
 

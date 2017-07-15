@@ -13,18 +13,13 @@ namespace MixItUp.Base.Actions
         public int Horizontal { get; set; }
         public int Vertical { get; set; }
 
-        public int Width { get; set; }
-        public int Height { get; set; }
-
-        public OverlayAction(string filePath, int duration, int horizontal, int vertical, int width = -1, int height = -1)
+        public OverlayAction(string filePath, int duration, int horizontal, int vertical)
             : base(ActionTypeEnum.Overlay)
         {
             this.FilePath = filePath;
             this.Duration = duration;
             this.Horizontal = horizontal;
             this.Vertical = vertical;
-            this.Width = width;
-            this.Height = height;
         }
 
         public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
@@ -36,9 +31,7 @@ namespace MixItUp.Base.Actions
                     filePath = this.FilePath,
                     duration = this.Duration,
                     horizontal = this.Horizontal,
-                    vertical = this.Vertical,
-                    width = this.Width,
-                    height = this.Height
+                    vertical = this.Vertical
                 });
             }
             return Task.FromResult(0);
@@ -48,8 +41,7 @@ namespace MixItUp.Base.Actions
             return new SerializableAction()
             {
                 Type = this.Type,
-                Values = new List<string>() { this.FilePath, this.Duration.ToString(), this.Horizontal.ToString(), this.Vertical.ToString(),
-                    this.Width.ToString(), this.Height.ToString() }
+                Values = new List<string>() { this.FilePath, this.Duration.ToString(), this.Horizontal.ToString(), this.Vertical.ToString() }
             };
         }
     }

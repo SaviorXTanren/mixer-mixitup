@@ -31,58 +31,7 @@ namespace MixItUp.Base.Commands
         public List<ActionBase> Actions { get; set; }
 
         [DataMember]
-        public List<SerializableAction> SerializedActions
-        {
-            get
-            {
-                List<SerializableAction> serializedActions = new List<SerializableAction>();
-                foreach (ActionBase action in this.Actions)
-                {
-                    serializedActions.Add(action.Serialize());
-                }
-                return serializedActions;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    foreach (SerializableAction serializedAction in value)
-                    {
-                        ActionBase action = null;
-                        switch (action.Type)
-                        {
-                            case ActionTypeEnum.Chat:
-                                action = new ChatAction(serializedAction.Values[0]);
-                                break;
-                            case ActionTypeEnum.Cooldown:
-                                break;
-                            case ActionTypeEnum.Currency:
-                                break;
-                            case ActionTypeEnum.ExternalProgram:
-                                action = new ExternalProgramAction(serializedAction.Values[0], serializedAction.Values[1], bool.Parse(serializedAction.Values[2]));
-                                break;
-                            case ActionTypeEnum.Giveaway:
-                                break;
-                            case ActionTypeEnum.Input:
-                                break;
-                            case ActionTypeEnum.Overlay:
-                                break;
-                            case ActionTypeEnum.Sound:
-                                action = new SoundAction(serializedAction.Values[0], float.Parse(serializedAction.Values[1]));
-                                break;
-                            case ActionTypeEnum.Whisper:
-                                action = new WhisperAction(serializedAction.Values[0]);
-                                break;
-                        }
-
-                        if (action != null)
-                        {
-                            this.Actions.Add(action);
-                        }
-                    }
-                }
-            }
-        }
+        public List<SerializableAction> SerializedActions { get; set; }
 
         public CommandBase()
         {
@@ -107,6 +56,53 @@ namespace MixItUp.Base.Commands
             foreach (ActionBase action in this.Actions)
             {
                 await action.Perform(user, arguments);
+            }
+        }
+
+        public void SerializeActions()
+        {
+            this.SerializedActions = new List<SerializableAction>();
+            foreach (ActionBase action in this.Actions)
+            {
+                this.SerializedActions.Add(action.Serialize());
+            }
+        }
+
+        public void DeserializeActions()
+        {
+            foreach (SerializableAction serializedAction in this.SerializedActions)
+            {
+                ActionBase action = null;
+                switch (serializedAction.Type)
+                {
+                    case ActionTypeEnum.Chat:
+                        action = new ChatAction(serializedAction.Values[0]);
+                        break;
+                    case ActionTypeEnum.Cooldown:
+                        break;
+                    case ActionTypeEnum.Currency:
+                        break;
+                    case ActionTypeEnum.ExternalProgram:
+                        action = new ExternalProgramAction(serializedAction.Values[0], serializedAction.Values[1], bool.Parse(serializedAction.Values[2]));
+                        break;
+                    case ActionTypeEnum.Giveaway:
+                        break;
+                    case ActionTypeEnum.Input:
+                        break;
+                    case ActionTypeEnum.Overlay:
+                        break;
+                    case ActionTypeEnum.Sound:
+                        action = new SoundAction(serializedAction.Values[0], float.Parse(serializedAction.Values[1]));
+                        break;
+                    case ActionTypeEnum.Whisper:
+                        action = new WhisperAction(serializedAction.Values[0]);
+                        break;
+                }
+
+                if (action != null)
+                {
+                    this.Actions.Add(action);
+                }
             }
         }
     }
