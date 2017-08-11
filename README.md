@@ -2,10 +2,13 @@
 A desktop client for handling chat, interactivity, and other streamer assistance features for the Mixer streaming platform.
 
 ## What is this?
+Mix It Up is striving to be the "one stop shop" for all of your administrative needs when streaming to Mixer. Mix It Up will allow you to handle chat moderation, interactivity, constellation events, and create customized commands that work across chat, interactivity, and constellation events. Channel moderators will also be able to use the app to handle viewing and managing chat for any channel they have authorization for.
 
 ## Current functionality
+The app is currently in heavy development at this point with an ETA of an initial release sometime before the end of 2017
 
 ## Feature roadmap
+The app is currently in heavy development at this point with an ETA of an initial release sometime before the end of 2017
 
 ## How do I get started using it?
 Check out https://github.com/SaviorXTanren/mixer-mixitup/wiki for getting started information and detailed tutorials.
