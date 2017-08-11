@@ -20,6 +20,8 @@ namespace MixItUp.Base
         public static InteractiveClient InteractiveClient { get; private set; }
         public static ConstellationClient ConstellationClient { get; private set; }
 
+        public static IEnumerable<InteractiveGameListingModel> InteractiveGames { get; private set; }
+
         public static OverlayWebServer OverlayServer { get; private set; }
 
         public static ChannelSettings ChannelSettings { get; private set; }
@@ -123,6 +125,18 @@ namespace MixItUp.Base
             MixerAPIHandler.ConstellationClient = null;
 
             return false;
+        }
+
+        public static async Task<bool> RefreshInteractiveGames(ChannelModel channel)
+        {
+            if (MixerAPIHandler.MixerConnection == null)
+            {
+                throw new InvalidOperationException("Mixer client has not been initialized");
+            }
+
+            MixerAPIHandler.InteractiveGames = await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(channel);
+
+            return true;
         }
 
         public static async Task Close()

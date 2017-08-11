@@ -1,17 +1,24 @@
-﻿<Window x:Class="MixItUp.WPF.MainWindow"
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.StreamerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
         xmlns:InteractiveControls="clr-namespace:MixItUp.WPF.Controls.Interactive"
         xmlns:EventsControls="clr-namespace:MixItUp.WPF.Controls.Events"
         xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Mix It Up - Streamer" Height="600" Width="800">
     <Grid>
-        <TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <TabControl Grid.Row="0">
             <TabItem Header="Chat">
                 <ChatControls:ChatControl x:Name="Chat" />
             </TabItem>
@@ -25,5 +32,7 @@
                 <CommandsControls:CommandsControl x:Name="Commands" />
             </TabItem>
         </TabControl>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
     </Grid>
-</Window>
+</Windows:LoadingWindowBase>
