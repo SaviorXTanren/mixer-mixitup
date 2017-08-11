@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Chat;
+﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
 using Mixer.Base.ViewModel.Chat;
 using MixItUp.Base;
@@ -10,40 +9,42 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.Chat
 {
     /// <summary>
     /// Interaction logic for ChatControl.xaml
     /// </summary>
-    public partial class ChatControl : UserControl
+    public partial class ChatControl : MainControlBase
     {
-        public ChannelModel Channel { get; private set; }
-
-        public int ViewerCount { get; private set; }
-
         public ObservableCollection<ChatUserControl> UserControls = new ObservableCollection<ChatUserControl>();
         public List<ChatUserViewModel> Users = new List<ChatUserViewModel>();
 
         public ObservableCollection<ChatMessageControl> MessageControls = new ObservableCollection<ChatMessageControl>();
         public List<ChatMessageViewModel> Messages = new List<ChatMessageViewModel>();
 
+        private CancellationTokenSource channelRefreshCancellationTokenSource = new CancellationTokenSource();
+
         public ChatControl()
         {
             InitializeComponent();
         }
 
-        public async Task Initialize(ChannelModel channel)
+        protected override async Task InitializeInternal()
         {
-            this.Channel = channel;
-            if (await MixerAPIHandler.InitializeChatClient(this.Channel))
+            this.Window.Closing += Window_Closing;
+
+            if (await MixerAPIHandler.InitializeChatClient(this.Window.Channel))
             {
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
-                foreach (ChatUserModel user in await MixerAPIHandler.MixerConnection.Chats.GetUsers(this.Channel))
+                this.RefreshViewerCount();
+
+                foreach (ChatUserModel user in await MixerAPIHandler.MixerConnection.Chats.GetUsers(this.Window.Channel))
                 {
                     this.AddUser(new ChatUserViewModel(user));
                 }
@@ -59,6 +60,28 @@ namespace MixItUp.WPF.Controls.Chat
                 MixerAPIHandler.ChatClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
                 MixerAPIHandler.ChatClient.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
                 MixerAPIHandler.ChatClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(async () =>
+                {
+                    while (!this.channelRefreshCancellationTokenSource.Token.IsCancellationRequested)
+                    {
+                        try
+                        {
+                            await this.Window.RefreshChannel();
+                            this.RefreshViewerCount();
+
+                            this.channelRefreshCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                            await Task.Delay(1000 * 30);
+                        }
+                        catch (Exception) { }
+                    }
+
+                    this.channelRefreshCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                }, this.channelRefreshCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
 
@@ -70,7 +93,7 @@ namespace MixItUp.WPF.Controls.Chat
                 this.Users = this.Users.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
                 this.UserControls.Insert(this.Users.IndexOf(user), new ChatUserControl(user));
 
-                this.UserCountTextBlock.Text = this.Users.Count.ToString();
+                this.RefreshViewerCount();
             }
         }
 
@@ -82,7 +105,7 @@ namespace MixItUp.WPF.Controls.Chat
                 this.UserControls.Remove(userControl);
                 this.Users.Remove(userControl.User);
 
-                this.UserCountTextBlock.Text = this.Users.Count.ToString();
+                this.RefreshViewerCount();
             }
         }
 
@@ -102,9 +125,46 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
+        private void RefreshViewerCount()
+        {
+            this.ViewersCountTextBlock.Text = string.Format("Viewers: {0} (Users: {1})", this.Window.Channel.viewersCurrent, this.Users.Count);
+        }
+
         private async void ChatClearMessagesButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             await MixerAPIHandler.ChatClient.ClearMessages();
+        }
+
+        private async Task SendChatMessage()
+        {
+            if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
+            {
+                string message = this.ChatMessageTextBox.Text;
+                this.ChatMessageTextBox.Text = string.Empty;
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await MixerAPIHandler.ChatClient.SendMessage(message);
+                });
+            }
+        }
+
+        private async void ChatMessageTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                await this.SendChatMessage();
+                this.ChatMessageTextBox.Focus();
+            }
+        }
+
+        private async void SendChatMessageButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.SendChatMessage();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.channelRefreshCancellationTokenSource.Cancel();
         }
 
         #region Context Menu Events

@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.WPF.Windows;
 using System.Threading.Tasks;
@@ -11,21 +12,19 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class StreamerWindow : LoadingWindowBase
     {
-        private ChannelModel channel;
-
-        public StreamerWindow(ChannelModel channel)
+        public StreamerWindow(PrivatePopulatedUserModel user, ExpandedChannelModel channel)
         {
-            this.channel = channel;
-
             InitializeComponent();
 
-            this.SetStatusBar(this.StatusBar);
+            this.Initialize(user, channel, this.StatusBar);
         }
 
         protected override async Task OnLoaded()
         {
-            await MixerAPIHandler.InitializeChatClient(channel);
-            await MixerAPIHandler.InitializeConstellationClient();
+            await this.Chat.Initialize(this);
+            await this.Interactive.Initialize(this);
+            await this.Events.Initialize(this);
+            await this.Commands.Initialize(this);
         }
 
         protected override async Task OnClosing()

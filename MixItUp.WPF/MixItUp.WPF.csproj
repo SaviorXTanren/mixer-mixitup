@@ -79,6 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\MainControlBase.cs" />
     <Compile Include="Controls\Commands\ActionControl.xaml.cs">
       <DependentUpon>ActionControl.xaml</DependentUpon>
     </Compile>

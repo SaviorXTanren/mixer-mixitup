@@ -22,7 +22,10 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatMessageControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.UserTextBlock.Foreground = ColorHelper.GetColorForUser(this.Message.User);
+            if (this.Message.User != null)
+            {
+                this.UserTextBlock.Foreground = ColorHelper.GetColorForUser(this.Message.User);
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using MixItUp.WPF.Controls;
+﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.User;
+using MixItUp.Base;
+using MixItUp.WPF.Controls;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -7,7 +10,10 @@ namespace MixItUp.WPF.Windows
 {
     public class LoadingWindowBase : Window
     {
-        public LoadingStatusBar statusBar { get; private set; }
+        public PrivatePopulatedUserModel User { get; private set; }
+        public ExpandedChannelModel Channel { get; private set; }
+
+        private LoadingStatusBar statusBar;
 
         public LoadingWindowBase()
         {
@@ -15,7 +21,28 @@ namespace MixItUp.WPF.Windows
             this.Closing += LoadingWindowBase_Closing;
         }
 
-        public void SetStatusBar(LoadingStatusBar statusBar) { this.statusBar = statusBar; }
+        public void Initialize(PrivatePopulatedUserModel user, ExpandedChannelModel channel, LoadingStatusBar statusBar)
+        {
+            this.User = user;
+            this.Channel = channel;
+            this.statusBar = statusBar;
+        }
+
+        public async Task RefreshUser()
+        {
+            if (this.User != null)
+            {
+                this.User = await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
+            }
+        }
+
+        public async Task RefreshChannel()
+        {
+            if (this.Channel != null)
+            {
+                this.Channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel(this.Channel.user.username);
+            }
+        }
 
         public async Task RunAsyncOperation(Func<Task> action)
         {

@@ -21,7 +21,7 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
-            this.SetStatusBar(this.StatusBar);
+            this.Initialize(null, null, this.StatusBar);
         }
 
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
@@ -56,22 +56,33 @@ namespace MixItUp.WPF
 
             if (result)
             {
-                ChannelModel channel = await this.RunAsyncOperation(async () =>
+                PrivatePopulatedUserModel user = await this.RunAsyncOperation(async () =>
                 {
-                    UserModel user = await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
-                    return await MixerAPIHandler.MixerConnection.Channels.GetChannel(user.username);
+                    return await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
                 });
 
-                if (channel != null)
+                if (user != null)
                 {
-                    StreamerWindow window = new StreamerWindow(channel);
-                    this.Hide();
-                    window.Show();
-                    this.Close();
+                    ExpandedChannelModel channel = await this.RunAsyncOperation(async () =>
+                    {
+                        return await MixerAPIHandler.MixerConnection.Channels.GetChannel(user.username);
+                    });
+
+                    if (channel != null)
+                    {
+                        StreamerWindow window = new StreamerWindow(user, channel);
+                        this.Hide();
+                        window.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBoxHelper.ShowError("Unable to connect to channel.");
+                    }
                 }
                 else
                 {
-                    MessageBoxHelper.ShowError("Unable to connect to channel.");
+                    MessageBoxHelper.ShowError("Unable to get your user information.");
                 }
             }
             else
@@ -115,21 +126,33 @@ namespace MixItUp.WPF
 
             if (result)
             {
-                ChannelModel channel = await this.RunAsyncOperation(async () =>
+                PrivatePopulatedUserModel user = await this.RunAsyncOperation(async () =>
                 {
-                    return await MixerAPIHandler.MixerConnection.Channels.GetChannel(this.ModeratorChannelTextBox.Text);
+                    return await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
                 });
 
-                if (channel != null)
+                if (user != null)
                 {
-                    ModeratorWindow window = new ModeratorWindow(channel);
-                    this.Hide();
-                    window.Show();
-                    this.Close();
+                    ExpandedChannelModel channel = await this.RunAsyncOperation(async () =>
+                    {
+                        return await MixerAPIHandler.MixerConnection.Channels.GetChannel(this.ModeratorChannelTextBox.Text);
+                    });
+
+                    if (channel != null)
+                    {
+                        ModeratorWindow window = new ModeratorWindow(user, channel);
+                        this.Hide();
+                        window.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBoxHelper.ShowError("Unable to connect to channel. Please ensure the channel you entered is valid.");
+                    }
                 }
                 else
                 {
-                    MessageBoxHelper.ShowError("Unable to connect to channel. Please ensure the channel you entered is valid.");
+                    MessageBoxHelper.ShowError("Unable to get your user information.");
                 }
             }
             else

@@ -3,13 +3,14 @@ using MixItUp.Base.Commands;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Commands
 {
     /// <summary>
     /// Interaction logic for CommandsControl.xaml
     /// </summary>
-    public partial class CommandsControl : UserControl
+    public partial class CommandsControl : MainControlBase
     {
         private ObservableCollection<CommandBase> commands;
 
@@ -18,16 +19,16 @@ namespace MixItUp.WPF.Controls.Commands
             InitializeComponent();
 
             this.commands = new ObservableCollection<CommandBase>();
-
-            this.Loaded += CommandsControl_Loaded;
         }
 
-        private void CommandsControl_Loaded(object sender, RoutedEventArgs e)
+        protected override Task InitializeInternal()
         {
             this.EditCommandButton.IsEnabled = false;
             this.DeleteCommandButton.IsEnabled = false;
 
             this.RefreshList();
+
+            return Task.FromResult(0);
         }
 
         private void RefreshList()
