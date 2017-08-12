@@ -8,6 +8,40 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100" />
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer Grid.Column="0">
             
+        </ScrollViewer>
+
+        <Grid Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center">Event Type:</TextBlock>
+                <ComboBox Grid.Row="1" x:Name="EventTypeComboBox" HorizontalAlignment="Center" Width="150"
+                
+            </Grid>
+
+            <Button Grid.Row="2" x:Name="ExportDataButton" Click="ExportDataButton_Click" Width="80">Export Data</Button>
+        </Grid>
+        
     </Grid>
 </Controls:MainControlBase>
