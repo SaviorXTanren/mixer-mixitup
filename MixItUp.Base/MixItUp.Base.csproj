@@ -63,7 +63,7 @@
     <Compile Include="Actions\SerializableAction.cs" />
     <Compile Include="Actions\SoundAction.cs" />
     <Compile Include="Actions\WaitAction.cs" />
-    <Compile Include="ChannelSettings.cs" />
+    <Compile Include="SessionSettings.cs" />
     <Compile Include="Chat\ChatMessageCommand.cs" />
     <Compile Include="Commands\ChatCommand.cs" />
     <Compile Include="Commands\CommandBase.cs" />
@@ -73,6 +73,7 @@
     <Compile Include="MixerAPIHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\SerializerHelper.cs" />
+    <Compile Include="ViewModel\SubscribedEventViewModel.cs" />
     <Compile Include="ViewModel\UserDataViewModel.cs" />
     <Compile Include="Web\OverlayWebServer.cs" />
   </ItemGroup>

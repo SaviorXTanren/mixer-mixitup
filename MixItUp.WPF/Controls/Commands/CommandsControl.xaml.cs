@@ -33,27 +33,27 @@ namespace MixItUp.WPF.Controls.Commands
 
         private void RefreshList()
         {
-            if (MixerAPIHandler.ChannelSettings != null)
+            if (MixerAPIHandler.Settings != null)
             {
                 this.CommandsListView.ItemsSource = this.commands;
                 this.commands.Clear();
 
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.ChatCommands)
+                foreach (CommandBase command in MixerAPIHandler.Settings.ChatCommands)
                 {
                     this.commands.Add(command);
                 }
 
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.InteractiveCommands)
+                foreach (CommandBase command in MixerAPIHandler.Settings.InteractiveCommands)
                 {
                     this.commands.Add(command);
                 }
 
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.EventCommands)
+                foreach (CommandBase command in MixerAPIHandler.Settings.EventCommands)
                 {
                     this.commands.Add(command);
                 }
 
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.TimerCommands)
+                foreach (CommandBase command in MixerAPIHandler.Settings.TimerCommands)
                 {
                     this.commands.Add(command);
                 }
@@ -95,10 +95,10 @@ namespace MixItUp.WPF.Controls.Commands
                 CommandBase command = (CommandBase)this.CommandsListView.SelectedItem;
                 this.commands.Remove(command);
 
-                MixerAPIHandler.ChannelSettings.ChatCommands.Remove((ChatCommand)command);
-                MixerAPIHandler.ChannelSettings.InteractiveCommands.Remove((InteractiveCommand)command);
-                MixerAPIHandler.ChannelSettings.EventCommands.Remove((EventCommand)command);
-                MixerAPIHandler.ChannelSettings.TimerCommands.Remove((TimerCommand)command);
+                MixerAPIHandler.Settings.ChatCommands.Remove((ChatCommand)command);
+                MixerAPIHandler.Settings.InteractiveCommands.Remove((InteractiveCommand)command);
+                MixerAPIHandler.Settings.EventCommands.Remove((EventCommand)command);
+                MixerAPIHandler.Settings.TimerCommands.Remove((TimerCommand)command);
 
                 this.CommandsListView.SelectedIndex = -1;
 

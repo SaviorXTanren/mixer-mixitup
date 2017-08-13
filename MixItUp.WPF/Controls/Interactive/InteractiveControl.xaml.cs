@@ -1,4 +1,7 @@
-﻿namespace MixItUp.WPF.Controls.Interactive
+﻿using MixItUp.Base;
+using System.Threading.Tasks;
+
+namespace MixItUp.WPF.Controls.Interactive
 {
     /// <summary>
     /// Interaction logic for InteractiveControl.xaml
@@ -8,6 +11,12 @@
         public InteractiveControl()
         {
             InitializeComponent();
+        }
+
+        protected override Task InitializeInternal()
+        {
+            MixerAPIHandler.InitializeOverlayServer();
+            return Task.FromResult(0);
         }
     }
 }

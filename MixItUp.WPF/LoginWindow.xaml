@@ -7,7 +7,7 @@
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         mc:Ignorable="d"
-        Title="Mix It Up - Login" Height="250" Width="400">
+        Title="Mix It Up - Login" Height="250" Width="420">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
@@ -46,7 +46,7 @@
             <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="160" TextAlignment="Center">
                 If you are moderating a stream, type the channel and click the Moderator button
             </TextBlock>
-            <TextBox Grid.Row="2" x:Name="ModeratorChannelTextBox" />
+            <TextBox Grid.Row="2" x:Name="ModeratorChannelTextBox" KeyDown="ModeratorChannelTextBox_KeyDown" />
             <Button Grid.Row="4" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" Width="80" Height="30">Moderator</Button>
         </Grid>
 

@@ -4,6 +4,18 @@
              xmlns:local="clr-namespace:MixItUp.WPF"
              StartupUri="LoginWindow.xaml">
     <Application.Resources>
-         
+        
+        <Style x:Key="BorderedListViewItem" TargetType="ListViewItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <Border BorderBrush="Black" BorderThickness="1">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
     </Application.Resources>
 </Application>

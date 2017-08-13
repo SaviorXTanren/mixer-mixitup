@@ -114,10 +114,10 @@ namespace MixItUp.WPF.Controls.Chat
             this.Messages.Add(message);
             this.MessageControls.Add(new ChatMessageControl(message));
 
-            if (MixerAPIHandler.ChannelSettings != null && ChatMessageCommand.IsCommand(message))
+            if (MixerAPIHandler.Settings != null && ChatMessageCommand.IsCommand(message))
             {
                 ChatMessageCommand messageCommand = new ChatMessageCommand(message);
-                ChatCommand command = MixerAPIHandler.ChannelSettings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
+                ChatCommand command = MixerAPIHandler.Settings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
                 if (command != null)
                 {
                     await command.Perform(message.User, messageCommand.CommandArguments);

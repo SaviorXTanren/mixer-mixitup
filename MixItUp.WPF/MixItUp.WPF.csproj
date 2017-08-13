@@ -106,6 +106,7 @@
     </Compile>
     <Compile Include="Util\ColorHelper.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
+    <Compile Include="Util\NotifyPropertyChangedBase.cs" />
     <Compile Include="Windows\LoadingWindowBase.cs" />
     <Page Include="Controls\Chat\ChatControl.xaml">
       <SubType>Designer</SubType>

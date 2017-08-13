@@ -181,16 +181,16 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 if (this.Command != null)
                 {
-                    if (newCommand is ChatCommand) { MixerAPIHandler.ChannelSettings.ChatCommands.Remove((ChatCommand)this.Command); }
-                    else if (newCommand is InteractiveCommand) { MixerAPIHandler.ChannelSettings.InteractiveCommands.Remove((InteractiveCommand)this.Command); }
-                    else if (newCommand is EventCommand) { MixerAPIHandler.ChannelSettings.EventCommands.Remove((EventCommand)this.Command); }
-                    else if (newCommand is TimerCommand) { MixerAPIHandler.ChannelSettings.TimerCommands.Remove((TimerCommand)this.Command); }
+                    if (newCommand is ChatCommand) { MixerAPIHandler.Settings.ChatCommands.Remove((ChatCommand)this.Command); }
+                    else if (newCommand is InteractiveCommand) { MixerAPIHandler.Settings.InteractiveCommands.Remove((InteractiveCommand)this.Command); }
+                    else if (newCommand is EventCommand) { MixerAPIHandler.Settings.EventCommands.Remove((EventCommand)this.Command); }
+                    else if (newCommand is TimerCommand) { MixerAPIHandler.Settings.TimerCommands.Remove((TimerCommand)this.Command); }
                 }
 
-                if (newCommand is ChatCommand) { MixerAPIHandler.ChannelSettings.ChatCommands.Add((ChatCommand)newCommand); }
-                else if (newCommand is InteractiveCommand) { MixerAPIHandler.ChannelSettings.InteractiveCommands.Add((InteractiveCommand)newCommand); }
-                else if (newCommand is EventCommand) { MixerAPIHandler.ChannelSettings.EventCommands.Add((EventCommand)newCommand); }
-                else if (newCommand is TimerCommand) { MixerAPIHandler.ChannelSettings.TimerCommands.Add((TimerCommand)newCommand); }
+                if (newCommand is ChatCommand) { MixerAPIHandler.Settings.ChatCommands.Add((ChatCommand)newCommand); }
+                else if (newCommand is InteractiveCommand) { MixerAPIHandler.Settings.InteractiveCommands.Add((InteractiveCommand)newCommand); }
+                else if (newCommand is EventCommand) { MixerAPIHandler.Settings.EventCommands.Add((EventCommand)newCommand); }
+                else if (newCommand is TimerCommand) { MixerAPIHandler.Settings.TimerCommands.Add((TimerCommand)newCommand); }
             }
             else
             {

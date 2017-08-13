@@ -1,27 +1,39 @@
-﻿using System.IO;
-using System.Xml.Serialization;
+﻿using Newtonsoft.Json;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
     public static class SerializerHelper
     {
-        public static string Serialize<T>(T data)
+        public static async Task SerializeToFile<T>(string filePath, T data)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (StringWriter writer = new StringWriter())
+            using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
             {
-                serializer.Serialize(writer, data);
-                return writer.ToString();
+                await writer.WriteAsync(SerializerHelper.SerializeToString(data));
             }
         }
 
-        public static T Deserialize<T>(string data)
+        public static string SerializeToString<T>(T data)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (StringReader reader = new StringReader(data))
+            return JsonConvert.SerializeObject(data);
+        }
+
+        public static async Task<T> DeserializeFromFile<T>(string filePath)
+        {
+            if (File.Exists(filePath))
             {
-                return (T)serializer.Deserialize(reader);
+                using (StreamReader reader = new StreamReader(File.OpenRead(filePath)))
+                {
+                    return SerializerHelper.DeserializeFromString<T>(await reader.ReadToEndAsync());
+                }
             }
+            return default(T);
+        }
+
+        public static T DeserializeFromString<T>(string data)
+        {
+            return JsonConvert.DeserializeObject<T>(data);
         }
     }
 }

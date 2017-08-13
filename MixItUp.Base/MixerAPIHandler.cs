@@ -2,12 +2,9 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Overlay;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base
@@ -24,58 +21,17 @@ namespace MixItUp.Base
 
         public static OverlayWebServer OverlayServer { get; private set; }
 
-        public static ChannelSettings ChannelSettings { get; private set; }
+        public static SessionSettings Settings { get; private set; }
 
         public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<ClientScopeEnum> scopes)
         {
             MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(clientID, scopes);
-            if (MixerAPIHandler.MixerConnection != null)
-            {
-                MixerAPIHandler.ChannelSettings = new ChannelSettings();
-                await MixerAPIHandler.LoadSettings();
-
-                if (MixerAPIHandler.OverlayServer == null)
-                {
-                    MixerAPIHandler.OverlayServer = new OverlayWebServer("http://localhost:8001/");
-                    MixerAPIHandler.OverlayServer.Start();
-                }
-            }
-
             return (MixerAPIHandler.MixerConnection != null);
         }
 
-        public static async Task LoadSettings()
-        {
-            if (File.Exists(ChannelSettings.ChannelSettingsFileName))
-            {
-                using (StreamReader reader = new StreamReader(File.OpenRead(ChannelSettings.ChannelSettingsFileName)))
-                {
-                    MixerAPIHandler.ChannelSettings = SerializerHelper.Deserialize<ChannelSettings>(await reader.ReadToEndAsync());
-                }
+        public static async Task LoadSettings(ChannelModel channel) {  MixerAPIHandler.Settings = await SessionSettings.LoadSettings(channel); }
 
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.ChatCommands) { command.DeserializeActions(); }
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.InteractiveCommands) { command.DeserializeActions(); }
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.EventCommands) { command.DeserializeActions(); }
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.TimerCommands) { command.DeserializeActions(); }
-            }
-        }
-
-        public static async Task SaveSettings()
-        {
-            if (MixerAPIHandler.ChannelSettings != null)
-            {
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.ChatCommands) { command.SerializeActions(); }
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.InteractiveCommands) { command.SerializeActions(); }
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.EventCommands) { command.SerializeActions(); }
-                foreach (CommandBase command in MixerAPIHandler.ChannelSettings.TimerCommands) { command.SerializeActions(); }
-
-                using (StreamWriter writer = new StreamWriter(File.OpenWrite(ChannelSettings.ChannelSettingsFileName)))
-                {
-                    string data = SerializerHelper.Serialize<ChannelSettings>(MixerAPIHandler.ChannelSettings);
-                    await writer.WriteAsync(data);
-                }
-            }
-        }
+        public static async Task SaveSettings() { await MixerAPIHandler.Settings.SaveSettings(); }
 
         public static async Task<bool> InitializeChatClient(ChannelModel channel)
         {
@@ -139,6 +95,16 @@ namespace MixItUp.Base
             return true;
         }
 
+        public static bool InitializeOverlayServer()
+        {
+            if (MixerAPIHandler.OverlayServer == null)
+            {
+                MixerAPIHandler.OverlayServer = new OverlayWebServer("http://localhost:8001/");
+                MixerAPIHandler.OverlayServer.Start();
+            }
+            return true;
+        }
+
         public static async Task Close()
         {
             if (MixerAPIHandler.OverlayServer != null)
@@ -157,6 +123,13 @@ namespace MixItUp.Base
             {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 MixerAPIHandler.InteractiveClient.Disconnect();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            }
+
+            if (MixerAPIHandler.ConstellationClient != null)
+            {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                MixerAPIHandler.ConstellationClient.Disconnect();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
 

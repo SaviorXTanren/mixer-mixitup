@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace MixItUp.WPF
 {
@@ -88,6 +89,14 @@ namespace MixItUp.WPF
             else
             {
                 MessageBoxHelper.ShowError("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
+            }
+        }
+
+        private void ModeratorChannelTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.ModeratorLoginButton_Click(this, new RoutedEventArgs());
             }
         }
 
