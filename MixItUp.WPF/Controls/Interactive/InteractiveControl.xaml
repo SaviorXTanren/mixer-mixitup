@@ -6,8 +6,74 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Interactive"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" x:Name="NewGameButton" Click="NewGameButton_Click" Width="80">New Game</Button>
+                
+            <TextBlock Grid.Column="2">Interactive Games:</TextBlock>
+            <ComboBox Grid.Column="4" x:Name="InteractiveGamesComboBox" Width="350" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" />
+
+            <Button Grid.Column="6" x:Name="SaveChangedButton" Click="SaveChangedButton_Click" Width="80" IsEnabled="False">Save Changes</Button>
+            
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" x:Name="GameDetailsGrid" VerticalAlignment="Center" IsEnabled="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0">Name:</TextBlock>
+                <TextBox Grid.Row="1" x:Name="GameNameTextBox" />
+
+                <TextBlock Grid.Row="3">Description</TextBlock>
+                <TextBox Grid.Row="4" x:Name="GameDescriptionTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="100" />
+            </Grid>
+
+            <TabControl Grid.Column="1" x:Name="GameScenesTabControl" IsEnabled="False">
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Header" Value="{Binding Header}" />
+                        <Setter Property="Content" Value="{Binding Content}" />
+                    </Style>
+                </TabControl.ItemContainerStyle>
+            </TabControl>
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        
     </Grid>
 </Controls:MainControlBase>

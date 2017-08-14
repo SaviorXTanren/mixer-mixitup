@@ -51,6 +51,9 @@ namespace MixItUp.WPF
                     ClientScopeEnum.channel__details__self,
                     ClientScopeEnum.channel__update__self,
 
+                    ClientScopeEnum.interactive__manage__self,
+                    ClientScopeEnum.interactive__robot__self,
+
                     ClientScopeEnum.user__details__self,
                 });
             });
