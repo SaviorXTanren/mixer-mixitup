@@ -10,6 +10,8 @@ namespace MixItUp.WPF.Windows
 {
     public class LoadingWindowBase : Window
     {
+        private int asyncOperationCount = 0;
+
         public PrivatePopulatedUserModel User { get; private set; }
         public ExpandedChannelModel Channel { get; private set; }
 
@@ -46,24 +48,20 @@ namespace MixItUp.WPF.Windows
 
         public async Task RunAsyncOperation(Func<Task> action)
         {
-            this.IsEnabled = false;
-            this.statusBar.ShowProgressBar();
+            this.StartAsyncOperation();
 
             await action();
 
-            this.statusBar.HideProgressBar();
-            this.IsEnabled = true;
+            this.EndAsyncOperation();
         }
 
         public async Task<T> RunAsyncOperation<T>(Func<Task<T>> action)
         {
-            this.IsEnabled = false;
-            this.statusBar.ShowProgressBar();
+            this.StartAsyncOperation();
 
             T result = await action();
 
-            this.statusBar.HideProgressBar();
-            this.IsEnabled = true;
+            this.EndAsyncOperation();
 
             return result;
         }
@@ -86,6 +84,23 @@ namespace MixItUp.WPF.Windows
             {
                 await this.OnClosing();
             });
+        }
+
+        private void StartAsyncOperation()
+        {
+            this.asyncOperationCount++;
+            this.IsEnabled = false;
+            this.statusBar.ShowProgressBar();
+        }
+
+        private void EndAsyncOperation()
+        {
+            this.asyncOperationCount--;
+            if (this.asyncOperationCount == 0)
+            {
+                this.statusBar.HideProgressBar();
+                this.IsEnabled = true;
+            }
         }
     }
 }

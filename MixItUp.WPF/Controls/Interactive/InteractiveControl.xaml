@@ -59,12 +59,16 @@
             </Grid>
 
             <TabControl Grid.Column="1" x:Name="GameScenesTabControl" IsEnabled="False">
-                <TabControl.ItemContainerStyle>
-                    <Style TargetType="TabItem">
-                        <Setter Property="Header" Value="{Binding Header}" />
-                        <Setter Property="Content" Value="{Binding Content}" />
-                    </Style>
-                </TabControl.ItemContainerStyle>
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding sceneID}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <local:InteractiveBoardControl DataContext="{Binding}" />
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
             </TabControl>
         </Grid>
 

@@ -2,25 +2,13 @@
 using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
 using MixItUp.WPF.Util;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Interactive
 {
-    public class GameSceneTabItem : NotifyPropertyChangedBase
-    {
-        public InteractiveConnectedSceneGroupModel Scene { get; set; }
-
-        public GameSceneTabItem(InteractiveConnectedSceneGroupModel scene)
-        {
-            this.Scene = scene;
-        }
-
-        public string Header { get { return this.Scene.sceneID; } }
-
-        public string Content { get { return ""; } }
-    }
-
     /// <summary>
     /// Interaction logic for InteractiveControl.xaml
     /// </summary>
@@ -28,8 +16,8 @@ namespace MixItUp.WPF.Controls.Interactive
     {
         private ObservableCollection<InteractiveGameListingModel> interactiveGames = new ObservableCollection<InteractiveGameListingModel>();
 
-        private InteractiveGameListingModel SelectedGame;
-        private ObservableCollection<GameSceneTabItem> GameScenes = new ObservableCollection<GameSceneTabItem>();
+        private InteractiveGameListingModel selectedGame;
+        private ObservableCollection<InteractiveSceneModel> gameScenes = new ObservableCollection<InteractiveSceneModel>();
 
         public InteractiveControl()
         {
@@ -39,49 +27,61 @@ namespace MixItUp.WPF.Controls.Interactive
         protected override async Task InitializeInternal()
         {
             this.InteractiveGamesComboBox.ItemsSource = this.interactiveGames;
-            this.GameScenesTabControl.ItemsSource = this.GameScenes;
+            this.GameScenesTabControl.ItemsSource = this.gameScenes;
 
-            this.interactiveGames.Clear();
-            foreach (InteractiveGameListingModel game in await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(this.Window.Channel))
-            {
-                this.interactiveGames.Add(game);
-            }
+            await this.RefreshInteractiveGames();
         }
 
         private async Task Connect()
         {
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.InitializeInteractiveClient(this.Window.Channel, this.SelectedGame);
+                return await MixerAPIHandler.InitializeInteractiveClient(this.Window.Channel, this.selectedGame);
             });
 
             if (!result)
             {
-                this.SelectedGame = null;
+                this.selectedGame = null;
                 MessageBoxHelper.ShowError("Unable to connect to interactive with selected game. Please try again.");
                 return;
             }
-        }
-
-        private async Task RefreshSelectedInteractiveGame()
-        {
-            this.GameScenes.Clear();
-
-            this.GameNameTextBox.Text = this.SelectedGame.name;
-            this.GameDescriptionTextBox.Text = this.SelectedGame.description;
 
             InteractiveConnectedSceneGroupCollectionModel sceneCollection = await this.Window.RunAsyncOperation(async () =>
             {
                 return await MixerAPIHandler.InteractiveClient.GetScenes();
             });
+        }
 
-            if (sceneCollection != null)
+        private async Task RefreshInteractiveGames()
+        {
+            IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
             {
-                foreach (InteractiveConnectedSceneGroupModel scene in sceneCollection.scenes)
-                {
-                    this.GameScenes.Add(new GameSceneTabItem(scene));
-                }
+                return await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(this.Window.Channel);
+            });
+
+            this.interactiveGames.Clear();
+            foreach (InteractiveGameListingModel game in gameListings)
+            {
+                this.interactiveGames.Add(game);
             }
+        }
+
+        private async Task RefreshSelectedInteractiveGame()
+        {
+            this.gameScenes.Clear();
+
+            await this.RefreshInteractiveGames();
+
+            this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
+
+            this.GameNameTextBox.Text = this.selectedGame.name;
+            this.GameDescriptionTextBox.Text = this.selectedGame.description;
+
+            foreach (InteractiveSceneModel scene in this.selectedGame.versions.First().controls.scenes)
+            {
+                this.gameScenes.Add(scene);
+            }
+            this.GameScenesTabControl.SelectedIndex = 0;
 
             this.GameScenesTabControl.IsEnabled = true;
 
@@ -93,22 +93,22 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
-                this.SelectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
+                this.selectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
                 await this.RefreshSelectedInteractiveGame();
             }
         }
 
         private void NewGameButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.SelectedGame = null;
-            this.GameScenes.Clear();
+            this.selectedGame = null;
+            this.gameScenes.Clear();
 
             this.GameNameTextBox.Clear();
             this.GameDescriptionTextBox.Clear();
 
             InteractiveSceneModel scene = InteractiveGameHelper.CreateDefaultScene();
-            this.GameScenes.Add(new GameSceneTabItem(scene));
-            scene.controls.Add(InteractiveGameHelper.CreateButton("Test Button", "Test Button"));
+            this.gameScenes.Add(scene);
+            this.GameScenesTabControl.SelectedIndex = 0;
 
             this.GameScenesTabControl.IsEnabled = true;
 
@@ -124,16 +124,16 @@ namespace MixItUp.WPF.Controls.Interactive
                 return;
             }
 
-            foreach (GameSceneTabItem scene in this.GameScenes)
+            foreach (InteractiveSceneModel scene in this.gameScenes)
             {
-                if (scene.Scene.controls.Count == 0)
+                if (scene.buttons.Count == 0 && scene.joysticks.Count == 0)
                 {
-                    MessageBoxHelper.ShowError("The following scene does not contain any controls: " + scene.Scene.sceneID);
+                    MessageBoxHelper.ShowError("The following scene does not contain any controls: " + scene.sceneID);
                     return;
                 }
             }
 
-            if (this.SelectedGame == null)
+            if (this.selectedGame == null)
             {
                 InteractiveGameListingModel gameListing = await this.Window.RunAsyncOperation(async () =>
                 {
@@ -146,7 +146,7 @@ namespace MixItUp.WPF.Controls.Interactive
                     return;
                 }
 
-                this.SelectedGame = gameListing;
+                this.selectedGame = gameListing;
                 await this.RefreshSelectedInteractiveGame();
             }
             else
