@@ -8,6 +8,15 @@ namespace MixItUp.WPF.Controls.Interactive
     /// </summary>
     public partial class InteractiveBoardControl : UserControl
     {
+        private const int LargeWidth = 80;
+        private const int LargeHeight = 22;
+
+        private const int MediumWidth = 40;
+        private const int MediumHeight = 25;
+
+        private const int SmallWidth = 30;
+        private const int SmallHeight = 40;
+
         private InteractiveSceneModel scene;
 
         public InteractiveBoardControl()
