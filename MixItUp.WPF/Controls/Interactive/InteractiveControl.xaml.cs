@@ -70,14 +70,18 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             this.gameScenes.Clear();
 
-            await this.RefreshInteractiveGames();
+            InteractiveVersionModel version = await this.Window.RunAsyncOperation(async () =>
+            {
+                await this.RefreshInteractiveGames();
+                this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
 
-            this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
+                return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveVersionInfo(this.selectedGame.versions.First());
+            });
 
             this.GameNameTextBox.Text = this.selectedGame.name;
             this.GameDescriptionTextBox.Text = this.selectedGame.description;
 
-            foreach (InteractiveSceneModel scene in this.selectedGame.versions.First().controls.scenes)
+            foreach (InteractiveSceneModel scene in version.controls.scenes)
             {
                 this.gameScenes.Add(scene);
             }
