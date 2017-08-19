@@ -58,18 +58,27 @@
                 <TextBox Grid.Row="4" x:Name="GameDescriptionTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="100" />
             </Grid>
 
-            <TabControl Grid.Column="1" x:Name="GameScenesTabControl" IsEnabled="False">
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding sceneID}" />
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <local:InteractiveBoardControl DataContext="{Binding}" />
-                    </DataTemplate>
-                </TabControl.ContentTemplate>
-            </TabControl>
+            <Grid Grid.Column="1" x:Name="InteractiveBoardGrid" IsEnabled="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <ComboBox x:Name="SceneComboBox" Width="150" Grid.Column="1" SelectionChanged="SceneComboBox_SelectionChanged" DisplayMemberPath="sceneID" />
+                <ComboBox x:Name="BoardSizeComboBox" Width="100" Grid.Column="3" SelectionChanged="BoardSizeComboBox_SelectionChanged" DisplayMemberPath="Name" />
+
+                <Border x:Name="InteractiveBoardBorder" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="2">
+                    <Canvas x:Name="InteractiveBoardCanvas" Margin="10" />
+                </Border>
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="4">

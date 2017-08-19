@@ -79,9 +79,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Interactive\InteractiveBoardControl.xaml.cs">
-      <DependentUpon>InteractiveBoardControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControlBase.cs" />
     <Compile Include="Controls\Commands\ActionControl.xaml.cs">
       <DependentUpon>ActionControl.xaml</DependentUpon>
@@ -136,10 +133,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Events\EventsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Interactive\InteractiveBoardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
