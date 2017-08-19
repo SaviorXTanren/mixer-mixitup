@@ -33,10 +33,7 @@ namespace MixItUp.Base
 
         public static async Task<bool> InitializeChatClient(ChannelModel channel)
         {
-            if (MixerAPIHandler.MixerConnection == null)
-            {
-                throw new InvalidOperationException("Mixer client has not been initialized");
-            }
+            MixerAPIHandler.CheckMixerConnection();
 
             MixerAPIHandler.ChatClient = await ChatClient.CreateFromChannel(MixerAPIHandler.MixerConnection, channel);
             if (await MixerAPIHandler.ChatClient.Connect() && await MixerAPIHandler.ChatClient.Authenticate())
@@ -48,29 +45,9 @@ namespace MixItUp.Base
             return false;
         }
 
-        public static async Task<bool> InitializeInteractiveClient(ChannelModel channel, InteractiveGameListingModel game)
-        {
-            if (MixerAPIHandler.MixerConnection == null)
-            {
-                throw new InvalidOperationException("Mixer client has not been initialized");
-            }
-
-            MixerAPIHandler.InteractiveClient = await InteractiveClient.CreateFromChannel(MixerAPIHandler.MixerConnection, channel, game);
-            if (await MixerAPIHandler.InteractiveClient.Connect() && await MixerAPIHandler.InteractiveClient.Ready())
-            {
-                return true;
-            }
-
-            MixerAPIHandler.InteractiveClient = null;
-            return false;
-        }
-
         public static async Task<bool> InitializeConstellationClient()
         {
-            if (MixerAPIHandler.MixerConnection == null)
-            {
-                throw new InvalidOperationException("Mixer client has not been initialized");
-            }
+            MixerAPIHandler.CheckMixerConnection();
 
             MixerAPIHandler.ConstellationClient = await ConstellationClient.Create(MixerAPIHandler.MixerConnection);
             if (await MixerAPIHandler.ConstellationClient.Connect())
@@ -89,6 +66,34 @@ namespace MixItUp.Base
                 MixerAPIHandler.OverlayServer = new OverlayWebServer("http://localhost:8001/");
                 MixerAPIHandler.OverlayServer.Start();
             }
+            return true;
+        }
+
+        public static async Task<bool> ConnectInteractiveClient(ChannelModel channel, InteractiveGameListingModel game)
+        {
+            MixerAPIHandler.CheckMixerConnection();
+
+            MixerAPIHandler.InteractiveClient = await InteractiveClient.CreateFromChannel(MixerAPIHandler.MixerConnection, channel, game);
+            if (await MixerAPIHandler.InteractiveClient.Connect() && await MixerAPIHandler.InteractiveClient.Ready())
+            {
+                return true;
+            }
+
+            MixerAPIHandler.InteractiveClient = null;
+            return false;
+        }
+
+        public static async Task<bool> DisconnectInteractiveClient()
+        {
+            MixerAPIHandler.CheckMixerConnection();
+
+            if (MixerAPIHandler.InteractiveClient == null)
+            {
+                throw new InvalidOperationException("Interactive client is not connected");
+            }
+            await MixerAPIHandler.InteractiveClient.Disconnect();
+
+            MixerAPIHandler.InteractiveClient = null;
             return true;
         }
 
@@ -121,6 +126,14 @@ namespace MixItUp.Base
             }
 
             await MixerAPIHandler.SaveSettings();
+        }
+
+        private static void CheckMixerConnection()
+        {
+            if (MixerAPIHandler.MixerConnection == null)
+            {
+                throw new InvalidOperationException("Mixer client has not been initialized");
+            }
         }
     }
 }

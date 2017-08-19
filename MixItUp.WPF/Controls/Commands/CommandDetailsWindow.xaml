@@ -67,8 +67,22 @@
             <TextBox x:Name="ChatDescriptionTextBox" Grid.Column="6" />
         </Grid>
 
-        <Grid x:Name="InteractiveCommandGrid" Grid.Row="2" Visibility="Collapsed">
+        <Grid x:Name="InteractiveCommandGrid" Grid.Row="2" HorizontalAlignment="Center" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
+            <TextBlock Grid.Column="0">Command:</TextBlock>
+            <ComboBox x:Name="InteractiveCommandComboBox" Grid.Column="2" Width="200" DisplayMemberPath="controlID" />
+
+            <TextBlock Grid.Column="4">Event Type:</TextBlock>
+            <ComboBox x:Name="InteractiveCommandEventTypeComboBox" Grid.Column="6" Width="100" />
         </Grid>
 
         <Grid x:Name="EventCommandGrid" Grid.Row="2" Visibility="Collapsed">

@@ -68,26 +68,6 @@ namespace MixItUp.WPF.Controls.Interactive
             await this.RefreshInteractiveGames();
         }
 
-        private async Task Connect()
-        {
-            bool result = await this.Window.RunAsyncOperation(async () =>
-            {
-                return await MixerAPIHandler.InitializeInteractiveClient(this.Window.Channel, this.selectedGame);
-            });
-
-            if (!result)
-            {
-                this.selectedGame = null;
-                MessageBoxHelper.ShowError("Unable to connect to interactive with selected game. Please try again.");
-                return;
-            }
-
-            InteractiveConnectedSceneGroupCollectionModel sceneCollection = await this.Window.RunAsyncOperation(async () =>
-            {
-                return await MixerAPIHandler.InteractiveClient.GetScenes();
-            });
-        }
-
         private async Task RefreshInteractiveGames()
         {
             IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
@@ -121,8 +101,11 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 this.gameScenes.Add(scene);
             }
+
             this.selectedScene = this.gameScenes.First();
             this.SceneComboBox.SelectedIndex = 0;
+            this.BoardSizeComboBox.SelectedIndex = 0;
+
             this.RefreshScene();
 
             this.SaveChangedButton.IsEnabled = true;
@@ -149,6 +132,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.selectedScene = InteractiveGameHelper.CreateDefaultScene();
             this.gameScenes.Add(this.selectedScene);
             this.SceneComboBox.SelectedIndex = 0;
+            this.BoardSizeComboBox.SelectedIndex = 0;
 
             this.RefreshScene();
 
@@ -233,12 +217,7 @@ namespace MixItUp.WPF.Controls.Interactive
             int perBlockHeight = (int)this.InteractiveBoardCanvas.ActualHeight / (this.selectedBoardSize.Height);
             this.blockWidthHeight = Math.Min(perBlockWidth, perBlockHeight);
 
-            foreach (InteractiveButtonControlModel control in this.selectedScene.buttons)
-            {
-                this.BlockOutControlArea(control);
-            }
-
-            foreach (InteractiveJoystickControlModel control in this.selectedScene.joysticks)
+            foreach (InteractiveControlModel control in this.selectedScene.allControls)
             {
                 this.BlockOutControlArea(control);
             }

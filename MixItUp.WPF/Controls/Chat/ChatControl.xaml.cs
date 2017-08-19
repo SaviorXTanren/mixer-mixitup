@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Chat
     public partial class ChatControl : MainControlBase
     {
         public ObservableCollection<ChatUserControl> UserControls = new ObservableCollection<ChatUserControl>();
-        public List<ChatUserViewModel> Users = new List<ChatUserViewModel>();
+        public Dictionary<uint, ChatUserViewModel> Users = new Dictionary<uint, ChatUserViewModel>();
 
         public ObservableCollection<ChatMessageControl> MessageControls = new ObservableCollection<ChatMessageControl>();
         public List<ChatMessageViewModel> Messages = new List<ChatMessageViewModel>();
@@ -87,11 +87,11 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void AddUser(ChatUserViewModel user)
         {
-            if (!this.Users.Contains(user))
+            if (!this.Users.ContainsKey(user.ID))
             {
-                this.Users.Add(user);
-                this.Users = this.Users.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
-                this.UserControls.Insert(this.Users.IndexOf(user), new ChatUserControl(user));
+                this.Users.Add(user.ID, user);
+                var orderedUsers = this.Users.Values.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
+                this.UserControls.Insert(orderedUsers.IndexOf(user), new ChatUserControl(user));
 
                 this.RefreshViewerCount();
             }
@@ -103,13 +103,13 @@ namespace MixItUp.WPF.Controls.Chat
             if (userControl != null)
             {
                 this.UserControls.Remove(userControl);
-                this.Users.Remove(userControl.User);
+                this.Users.Remove(userControl.User.ID);
 
                 this.RefreshViewerCount();
             }
         }
 
-        private async Task AddMessage(ChatMessageViewModel message)
+        private void AddMessage(ChatMessageViewModel message)
         {
             this.Messages.Add(message);
             this.MessageControls.Add(new ChatMessageControl(message));
@@ -120,7 +120,9 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatCommand command = MixerAPIHandler.Settings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
                 if (command != null)
                 {
-                    await command.Perform(message.User, messageCommand.CommandArguments);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    command.Perform(message.User, messageCommand.CommandArguments);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
         }
@@ -250,9 +252,9 @@ namespace MixItUp.WPF.Controls.Chat
             // Show Re-Connecting...
         }
 
-        private async void ChatClient_OnClearMessagesOccurred(object sender, ChatClearMessagesEventModel e)
+        private void ChatClient_OnClearMessagesOccurred(object sender, ChatClearMessagesEventModel e)
         {
-            await this.AddMessage(new ChatMessageViewModel("--- MESSAGES CLEARED ---"));
+            this.AddMessage(new ChatMessageViewModel("--- MESSAGES CLEARED ---"));
         }
 
         private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
@@ -264,9 +266,9 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private async void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
+        private void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            await this.AddMessage(new ChatMessageViewModel(e));
+            this.AddMessage(new ChatMessageViewModel(e));
         }
 
         private void ChatClient_OnPollEndOccurred(object sender, ChatPollEventModel e)

@@ -50,7 +50,7 @@ namespace MixItUp.Base.Commands
             this.Actions = new List<ActionBase>(actions);
         }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
             if (arguments == null)
             {
