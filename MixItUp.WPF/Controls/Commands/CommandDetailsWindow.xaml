@@ -1,9 +1,11 @@
-﻿<Window x:Class="MixItUp.WPF.Controls.Commands.CommandDetailsWindow"
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Controls.Commands.CommandDetailsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Controls.Commands"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         mc:Ignorable="d"
         Title="Command Details" Height="500" Width="600">
     <Window.Resources>
@@ -19,118 +21,128 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
-    <Grid Margin="10">
+
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
 
-            <TextBlock Grid.Column="0">Name:</TextBlock>
-            <TextBox x:Name="NameTextBox" Grid.Column="2" />
+            </Grid.RowDefinitions>
 
-            <TextBlock Grid.Column="4">Type:</TextBlock>
-            <ComboBox x:Name="TypeComboBox" Grid.Column="6" SelectionChanged="TypeComboBox_SelectionChanged" />
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Name:</TextBlock>
+                <TextBox x:Name="NameTextBox" Grid.Column="2" />
+
+                <TextBlock Grid.Column="4">Type:</TextBlock>
+                <ComboBox x:Name="TypeComboBox" Grid.Column="6" SelectionChanged="TypeComboBox_SelectionChanged" />
+            </Grid>
+
+            <Grid x:Name="ChatCommandGrid" Grid.Row="2" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Command (Do not include the !):</TextBlock>
+                <TextBox x:Name="ChatCommandTextBox" Grid.Column="2" />
+
+                <TextBlock Grid.Column="4">Description:</TextBlock>
+                <TextBox x:Name="ChatDescriptionTextBox" Grid.Column="6" />
+            </Grid>
+
+            <Grid x:Name="InteractiveCommandGrid" Grid.Row="2" HorizontalAlignment="Center" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Command:</TextBlock>
+                <ComboBox x:Name="InteractiveCommandComboBox" Grid.Column="2" Width="200" DisplayMemberPath="controlID" />
+
+                <TextBlock Grid.Column="4">Event Type:</TextBlock>
+                <ComboBox x:Name="InteractiveCommandEventTypeComboBox" Grid.Column="6" Width="100" />
+            </Grid>
+
+            <Grid x:Name="EventCommandGrid" Grid.Row="2" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Event Type:</TextBlock>
+                <ComboBox x:Name="EventTypeComboBox" Grid.Column="2" />
+            </Grid>
+
+            <Grid x:Name="TimerCommandGrid" Grid.Row="2" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Time Interval (minutes):</TextBlock>
+                <TextBox x:Name="TimerIntervalTextBox" Grid.Column="2" />
+
+                <TextBlock Grid.Column="4">Minimum Chat Messages:</TextBlock>
+                <TextBox x:Name="TimerMinimumChatMessagesTextBox" Grid.Column="6" />
+            </Grid>
+
+            <ListView x:Name="ActionsListView" Grid.Row="4" Visibility="Collapsed" ItemContainerStyle="{StaticResource ListViewBorderedItem}" />
+
+            <Grid Grid.Row="6" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="AddActionButton" Click="AddActionButton_Click" Grid.Column="0" Width="80" IsEnabled="False">Add Action</Button>
+
+                <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="2" Width="60" IsEnabled="False">Save</Button>
+
+            </Grid>
         </Grid>
 
-        <Grid x:Name="ChatCommandGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Command (Do not include the !):</TextBlock>
-            <TextBox x:Name="ChatCommandTextBox" Grid.Column="2" />
-
-            <TextBlock Grid.Column="4">Description:</TextBlock>
-            <TextBox x:Name="ChatDescriptionTextBox" Grid.Column="6" />
-        </Grid>
-
-        <Grid x:Name="InteractiveCommandGrid" Grid.Row="2" HorizontalAlignment="Center" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Command:</TextBlock>
-            <ComboBox x:Name="InteractiveCommandComboBox" Grid.Column="2" Width="200" DisplayMemberPath="controlID" />
-
-            <TextBlock Grid.Column="4">Event Type:</TextBlock>
-            <ComboBox x:Name="InteractiveCommandEventTypeComboBox" Grid.Column="6" Width="100" />
-        </Grid>
-
-        <Grid x:Name="EventCommandGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Event Type:</TextBlock>
-            <ComboBox x:Name="EventTypeComboBox" Grid.Column="2" />
-        </Grid>
-
-        <Grid x:Name="TimerCommandGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Time Interval (minutes):</TextBlock>
-            <TextBox x:Name="TimerIntervalTextBox" Grid.Column="2" />
-
-            <TextBlock Grid.Column="4">Minimum Chat Messages:</TextBlock>
-            <TextBox x:Name="TimerMinimumChatMessagesTextBox" Grid.Column="6" />
-        </Grid>
-
-        <ListView x:Name="ActionsListView" Grid.Row="4" Visibility="Collapsed" ItemContainerStyle="{StaticResource ListViewBorderedItem}" />
-
-        <Grid Grid.Row="6" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Button x:Name="AddActionButton" Click="AddActionButton_Click" Grid.Column="0" Width="80" IsEnabled="False">Add Action</Button>
-
-            <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="2" Width="60" IsEnabled="False">Save</Button>
-
-        </Grid>
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
     </Grid>
-</Window>
+</Windows:LoadingWindowBase>

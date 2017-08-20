@@ -101,7 +101,7 @@ namespace MixItUp.WPF.Controls.Events
             {
                 MixerAPIHandler.ConstellationClient.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
 
-                foreach (SubscribedEventViewModel subscribedEvent in MixerAPIHandler.Settings.SubscribedEvents)
+                foreach (SubscribedEventViewModel subscribedEvent in ChannelSession.Settings.SubscribedEvents)
                 {
                     this.subscribedEvents.Add(new SubscribedEventItem(subscribedEvent));
                 }
@@ -156,11 +156,11 @@ namespace MixItUp.WPF.Controls.Events
             }
 
             this.subscribedEvents.Remove(subscribedEventItem);
-            MixerAPIHandler.Settings.SubscribedEvents.Remove(subscribedEventItem.EventType);
+            ChannelSession.Settings.SubscribedEvents.Remove(subscribedEventItem.EventType);
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await MixerAPIHandler.SaveSettings();
+                await ChannelSession.SaveSettings();
             });
         }
 
@@ -228,11 +228,11 @@ namespace MixItUp.WPF.Controls.Events
             }
 
             this.subscribedEvents.Add(new SubscribedEventItem(newEventType));
-            MixerAPIHandler.Settings.SubscribedEvents.Add(newEventType);
+            ChannelSession.Settings.SubscribedEvents.Add(newEventType);
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await MixerAPIHandler.SaveSettings();
+                await ChannelSession.SaveSettings();
             });
 
             this.EventTypeComboBox.SelectedIndex = -1;

@@ -5,6 +5,7 @@ using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,24 +16,24 @@ namespace MixItUp.WPF.Controls.Commands
     /// <summary>
     /// Interaction logic for CommandDetailsWindow.xaml
     /// </summary>
-    public partial class CommandDetailsWindow : Window
+    public partial class CommandDetailsWindow : LoadingWindowBase
     {
-        private InteractiveVersionModel selectedGameVersion;
         private List<InteractiveControlModel> interactiveControls;
 
         private CommandBase command;
 
         private ObservableCollection<ActionControl> actionControls;
 
-        public CommandDetailsWindow(InteractiveVersionModel selectedGameVersion) : this(selectedGameVersion, null) { }
+        public CommandDetailsWindow() : this(null) { }
 
-        public CommandDetailsWindow(InteractiveVersionModel selectedGameVersion, CommandBase command)
+        public CommandDetailsWindow(CommandBase command)
         {
             InitializeComponent();
 
+            this.Initialize(this.StatusBar);
+
             this.actionControls = new ObservableCollection<ActionControl>();
 
-            this.selectedGameVersion = selectedGameVersion;
             this.command = command;
 
             this.Loaded += CommandDetailsWindow_Loaded;
@@ -41,7 +42,7 @@ namespace MixItUp.WPF.Controls.Commands
         private void CommandDetailsWindow_Loaded(object sender, RoutedEventArgs e)
         {
             List<string> typeOptions = EnumHelper.GetEnumNames<CommandTypeEnum>().ToList();
-            if (this.selectedGameVersion == null)
+            if (ChannelSession.SelectedGameVersion == null)
             {
                 typeOptions.Remove(EnumHelper.GetEnumName(CommandTypeEnum.Interactive));
             }
@@ -49,9 +50,9 @@ namespace MixItUp.WPF.Controls.Commands
 
             this.ActionsListView.ItemsSource = this.actionControls;
 
-            if (this.selectedGameVersion != null)
+            if (ChannelSession.SelectedGameVersion != null)
             {
-                this.InteractiveCommandComboBox.ItemsSource = this.interactiveControls = this.selectedGameVersion.controls.scenes.SelectMany(s => s.allControls).OrderBy(c => c.controlID).ToList();
+                this.InteractiveCommandComboBox.ItemsSource = this.interactiveControls = ChannelSession.SelectedGameVersion.controls.scenes.SelectMany(s => s.allControls).OrderBy(c => c.controlID).ToList();
                 this.InteractiveCommandEventTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveCommandEventType>();
             }
 
@@ -218,16 +219,9 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 if (this.command != null)
                 {
-                    if (newCommand is ChatCommand) { MixerAPIHandler.Settings.ChatCommands.Remove((ChatCommand)this.command); }
-                    else if (newCommand is InteractiveCommand) { MixerAPIHandler.Settings.InteractiveCommands.Remove((InteractiveCommand)this.command); }
-                    else if (newCommand is EventCommand) { MixerAPIHandler.Settings.EventCommands.Remove((EventCommand)this.command); }
-                    else if (newCommand is TimerCommand) { MixerAPIHandler.Settings.TimerCommands.Remove((TimerCommand)this.command); }
+                    ChannelSession.Settings.RemoveCommand(this.command);
                 }
-
-                if (newCommand is ChatCommand) { MixerAPIHandler.Settings.ChatCommands.Add((ChatCommand)newCommand); }
-                else if (newCommand is InteractiveCommand) { MixerAPIHandler.Settings.InteractiveCommands.Add((InteractiveCommand)newCommand); }
-                else if (newCommand is EventCommand) { MixerAPIHandler.Settings.EventCommands.Add((EventCommand)newCommand); }
-                else if (newCommand is TimerCommand) { MixerAPIHandler.Settings.TimerCommands.Add((TimerCommand)newCommand); }
+                ChannelSession.Settings.AddCommand(newCommand);
             }
             else
             {

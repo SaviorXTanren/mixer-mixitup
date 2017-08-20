@@ -19,17 +19,11 @@ namespace MixItUp.Base
 
         public static OverlayWebServer OverlayServer { get; private set; }
 
-        public static SessionSettings Settings { get; private set; }
-
         public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<ClientScopeEnum> scopes)
         {
             MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(clientID, scopes);
             return (MixerAPIHandler.MixerConnection != null);
         }
-
-        public static async Task LoadSettings(ChannelModel channel) {  MixerAPIHandler.Settings = await SessionSettings.LoadSettings(channel); }
-
-        public static async Task SaveSettings() { await MixerAPIHandler.Settings.SaveSettings(); }
 
         public static async Task<bool> InitializeChatClient(ChannelModel channel)
         {
@@ -97,7 +91,7 @@ namespace MixItUp.Base
             return true;
         }
 
-        public static async Task Close()
+        public static void Close()
         {
             if (MixerAPIHandler.OverlayServer != null)
             {
@@ -124,8 +118,6 @@ namespace MixItUp.Base
                 MixerAPIHandler.ConstellationClient.Disconnect();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
-
-            await MixerAPIHandler.SaveSettings();
         }
 
         private static void CheckMixerConnection()

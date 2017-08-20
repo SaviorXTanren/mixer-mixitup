@@ -20,8 +20,9 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatControl : MainControlBase
     {
+        public bool EnableCommands { get; set; }
+
         public ObservableCollection<ChatUserControl> UserControls = new ObservableCollection<ChatUserControl>();
-        public Dictionary<uint, ChatUserViewModel> Users = new Dictionary<uint, ChatUserViewModel>();
 
         public ObservableCollection<ChatMessageControl> MessageControls = new ObservableCollection<ChatMessageControl>();
         public List<ChatMessageViewModel> Messages = new List<ChatMessageViewModel>();
@@ -37,14 +38,14 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.Window.Closing += Window_Closing;
 
-            if (await MixerAPIHandler.InitializeChatClient(this.Window.Channel))
+            if (await MixerAPIHandler.InitializeChatClient(ChannelSession.Channel))
             {
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
                 this.RefreshViewerCount();
 
-                foreach (ChatUserModel user in await MixerAPIHandler.MixerConnection.Chats.GetUsers(this.Window.Channel))
+                foreach (ChatUserModel user in await MixerAPIHandler.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
                 {
                     this.AddUser(new ChatUserViewModel(user));
                 }
@@ -68,7 +69,7 @@ namespace MixItUp.WPF.Controls.Chat
                     {
                         try
                         {
-                            await this.Window.RefreshChannel();
+                            await ChannelSession.RefreshChannel();
                             this.RefreshViewerCount();
 
                             this.channelRefreshCancellationTokenSource.Token.ThrowIfCancellationRequested();
@@ -87,10 +88,10 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void AddUser(ChatUserViewModel user)
         {
-            if (!this.Users.ContainsKey(user.ID))
+            if (!ChannelSession.ChatUsers.ContainsKey(user.ID))
             {
-                this.Users.Add(user.ID, user);
-                var orderedUsers = this.Users.Values.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
+                ChannelSession.ChatUsers.Add(user.ID, user);
+                var orderedUsers = ChannelSession.ChatUsers.Values.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
                 this.UserControls.Insert(orderedUsers.IndexOf(user), new ChatUserControl(user));
 
                 this.RefreshViewerCount();
@@ -103,7 +104,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (userControl != null)
             {
                 this.UserControls.Remove(userControl);
-                this.Users.Remove(userControl.User.ID);
+                ChannelSession.ChatUsers.Remove(userControl.User.ID);
 
                 this.RefreshViewerCount();
             }
@@ -114,10 +115,10 @@ namespace MixItUp.WPF.Controls.Chat
             this.Messages.Add(message);
             this.MessageControls.Add(new ChatMessageControl(message));
 
-            if (MixerAPIHandler.Settings != null && ChatMessageCommand.IsCommand(message))
+            if (this.EnableCommands && ChatMessageCommand.IsCommand(message))
             {
                 ChatMessageCommand messageCommand = new ChatMessageCommand(message);
-                ChatCommand command = MixerAPIHandler.Settings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
+                ChatCommand command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
                 if (command != null)
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -129,7 +130,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void RefreshViewerCount()
         {
-            this.ViewersCountTextBlock.Text = string.Format("Viewers: {0} (Users: {1})", this.Window.Channel.viewersCurrent, this.Users.Count);
+            this.ViewersCountTextBlock.Text = string.Format("Viewers: {0} (Users: {1})", ChannelSession.Channel.viewersCurrent, ChannelSession.ChatUsers.Count);
         }
 
         private async void ChatClearMessagesButton_Click(object sender, System.Windows.RoutedEventArgs e)

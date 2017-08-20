@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 namespace MixItUp.Base
 {
     [DataContract]
-    public class SessionSettings
+    public class ChannelSettings
     {
         private const string SettingsDirectoryName = "Settings";
 
-        public static async Task<SessionSettings> LoadSettings(ChannelModel channel)
+        public static async Task<ChannelSettings> LoadSettings(ChannelModel channel)
         {
-            string filePath = SessionSettings.GetSettingsFilePath(channel);
+            string filePath = ChannelSettings.GetSettingsFilePath(channel);
             if (File.Exists(filePath))
             {
-                SessionSettings settings = await SerializerHelper.DeserializeFromFile<SessionSettings>(filePath);
+                ChannelSettings settings = await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
 
                 settings.Channel = channel;
 
@@ -32,15 +32,15 @@ namespace MixItUp.Base
             }
             else
             {
-                return new SessionSettings(channel);
+                return new ChannelSettings(channel);
             }
         }
 
         private static string GetSettingsFilePath(ChannelModel channel) { return Path.Combine(SettingsDirectoryName, string.Format("{0}.xml", channel.id.ToString())); }
 
-        public SessionSettings(ChannelModel channel) : this() { this.Channel = channel; }
+        public ChannelSettings(ChannelModel channel) : this() { this.Channel = channel; }
 
-        public SessionSettings()
+        public ChannelSettings()
         {
             this.SubscribedEvents = new List<SubscribedEventViewModel>();
             this.UserData = new List<UserDataViewModel>();
@@ -80,8 +80,24 @@ namespace MixItUp.Base
             foreach (CommandBase command in this.EventCommands) { command.SerializeActions(); }
             foreach (CommandBase command in this.TimerCommands) { command.SerializeActions(); }
 
-            string filePath = SessionSettings.GetSettingsFilePath(this.Channel);
+            string filePath = ChannelSettings.GetSettingsFilePath(this.Channel);
             await SerializerHelper.SerializeToFile(filePath, this);
+        }
+
+        public void AddCommand(CommandBase command)
+        {
+            if (command is ChatCommand) { this.ChatCommands.Add((ChatCommand)command); }
+            if (command is InteractiveCommand) { this.InteractiveCommands.Add((InteractiveCommand)command); }
+            if (command is EventCommand) { this.EventCommands.Add((EventCommand)command); }
+            if (command is TimerCommand) { this.TimerCommands.Add((TimerCommand)command); }
+        }
+
+        public void RemoveCommand(CommandBase command)
+        {
+            if (command is ChatCommand) { this.ChatCommands.Remove((ChatCommand)command); }
+            if (command is InteractiveCommand) { this.InteractiveCommands.Remove((InteractiveCommand)command); }
+            if (command is EventCommand) { this.EventCommands.Remove((EventCommand)command); }
+            if (command is TimerCommand) { this.TimerCommands.Remove((TimerCommand)command); }
         }
     }
 }

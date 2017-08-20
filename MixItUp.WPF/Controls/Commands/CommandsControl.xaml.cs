@@ -17,14 +17,7 @@ namespace MixItUp.WPF.Controls.Commands
     /// </summary>
     public partial class CommandsControl : MainControlBase
     {
-        private ObservableCollection<CommandBase> commands = new ObservableCollection<CommandBase>();
-
         private ObservableCollection<InteractiveGameListingModel> interactiveGames = new ObservableCollection<InteractiveGameListingModel>();
-        private InteractiveGameListingModel selectedGame;
-        private InteractiveVersionModel selectedGameVersion;
-
-        private List<InteractiveCommand> selectedGameCommands = new List<InteractiveCommand>();
-        private Dictionary<string, InteractiveParticipantModel> participants = new Dictionary<string, InteractiveParticipantModel>();
 
         public CommandsControl()
         {
@@ -39,7 +32,7 @@ namespace MixItUp.WPF.Controls.Commands
 
             IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(this.Window.Channel);
+                return await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(ChannelSession.Channel);
             });
 
             this.interactiveGames.Clear();
@@ -51,39 +44,34 @@ namespace MixItUp.WPF.Controls.Commands
 
         private void RefreshList()
         {
-            if (MixerAPIHandler.Settings != null)
+            this.CommandsListView.ItemsSource = ChannelSession.ActiveCommands;
+            ChannelSession.ActiveCommands.Clear();
+
+            foreach (CommandBase command in ChannelSession.Settings.ChatCommands)
             {
-                this.CommandsListView.ItemsSource = this.commands;
-                this.commands.Clear();
+                ChannelSession.ActiveCommands.Add(command);
+            }
 
-                foreach (CommandBase command in MixerAPIHandler.Settings.ChatCommands)
-                {
-                    this.commands.Add(command);
-                }
+            foreach (CommandBase command in ChannelSession.Settings.EventCommands)
+            {
+                ChannelSession.ActiveCommands.Add(command);
+            }
 
-                foreach (CommandBase command in MixerAPIHandler.Settings.EventCommands)
-                {
-                    this.commands.Add(command);
-                }
+            foreach (CommandBase command in ChannelSession.Settings.TimerCommands)
+            {
+                ChannelSession.ActiveCommands.Add(command);
+            }
 
-                foreach (CommandBase command in MixerAPIHandler.Settings.TimerCommands)
+            if (ChannelSession.SelectedGameVersion != null)
+            {
+                foreach (InteractiveCommand command in ChannelSession.Settings.InteractiveCommands)
                 {
-                    this.commands.Add(command);
-                }
-
-                this.selectedGameCommands.Clear();
-                if (this.selectedGameVersion != null)
-                {
-                    foreach (InteractiveCommand command in MixerAPIHandler.Settings.InteractiveCommands)
+                    foreach (InteractiveSceneModel scene in ChannelSession.SelectedGameVersion.controls.scenes)
                     {
-                        foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
+                        InteractiveControlModel control = scene.allControls.FirstOrDefault(c => c.controlID.Equals(command.Command));
+                        if (control != null)
                         {
-                            InteractiveControlModel control = scene.allControls.FirstOrDefault(c => c.controlID.Equals(command.Command));
-                            if (control != null)
-                            {
-                                this.selectedGameCommands.Add(command);
-                                this.commands.Add(command);
-                            }
+                            ChannelSession.ActiveCommands.Add(command);
                         }
                     }
                 }
@@ -108,7 +96,7 @@ namespace MixItUp.WPF.Controls.Commands
             Button button = (Button)sender;
             CommandBase command = (CommandBase)button.DataContext;
 
-            CommandDetailsWindow window = new CommandDetailsWindow(this.selectedGameVersion, command);
+            CommandDetailsWindow window = new CommandDetailsWindow(command);
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -117,12 +105,9 @@ namespace MixItUp.WPF.Controls.Commands
         {
             Button button = (Button)sender;
             CommandBase command = (CommandBase)button.DataContext;
-            this.commands.Remove(command);
+            ChannelSession.ActiveCommands.Remove(command);
 
-            MixerAPIHandler.Settings.ChatCommands.Remove((ChatCommand)command);
-            MixerAPIHandler.Settings.InteractiveCommands.Remove((InteractiveCommand)command);
-            MixerAPIHandler.Settings.EventCommands.Remove((EventCommand)command);
-            MixerAPIHandler.Settings.TimerCommands.Remove((TimerCommand)command);
+            ChannelSession.Settings.RemoveCommand(command);
 
             this.CommandsListView.SelectedIndex = -1;
 
@@ -131,7 +116,7 @@ namespace MixItUp.WPF.Controls.Commands
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandDetailsWindow window = new CommandDetailsWindow(this.selectedGameVersion);
+            CommandDetailsWindow window = new CommandDetailsWindow();
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -142,12 +127,12 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 this.InteractiveGameConnectButton.IsEnabled = true;
 
-                this.selectedGame = (InteractiveGameListingModel)this.InteractiveGameComboBox.SelectedItem;
-                this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
+                ChannelSession.SelectedGame = (InteractiveGameListingModel)this.InteractiveGameComboBox.SelectedItem;
+                ChannelSession.SelectedGameVersion = await this.Window.RunAsyncOperation(async () =>
                 {
-                    this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
+                    ChannelSession.SelectedGame = this.interactiveGames.First(g => g.id.Equals(ChannelSession.SelectedGame.id));
 
-                    return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveGameVersion(this.selectedGame.versions.First());
+                    return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveGameVersion(ChannelSession.SelectedGame.versions.First());
                 });
 
                 this.RefreshList();
@@ -157,14 +142,14 @@ namespace MixItUp.WPF.Controls.Commands
         private async void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
-            await MixerAPIHandler.SaveSettings();
+            await ChannelSession.Settings.SaveSettings();
         }
 
         private async void InteractiveGameConnectButton_Click(object sender, RoutedEventArgs e)
         {
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.ConnectInteractiveClient(this.Window.Channel, this.selectedGame);
+                return await MixerAPIHandler.ConnectInteractiveClient(ChannelSession.Channel, ChannelSession.SelectedGame);
             });
 
             if (!result)
@@ -178,10 +163,10 @@ namespace MixItUp.WPF.Controls.Commands
                 return await MixerAPIHandler.InteractiveClient.GetAllParticipants();
             });
 
-            this.participants.Clear();
+            ChannelSession.InteractiveUsers.Clear();
             foreach (InteractiveParticipantModel participant in participants.participants)
             {
-                this.participants.Add(participant.sessionID, participant);
+                ChannelSession.InteractiveUsers.Add(participant.sessionID, participant);
             }
 
             MixerAPIHandler.InteractiveClient.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
@@ -221,7 +206,7 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    this.participants[participant.sessionID] = participant;
+                    ChannelSession.InteractiveUsers[participant.sessionID] = participant;
                 }
             }
         }
@@ -232,7 +217,7 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    this.participants[participant.sessionID] = participant;
+                    ChannelSession.InteractiveUsers[participant.sessionID] = participant;
                 }
             }
         }
@@ -243,7 +228,7 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    this.participants.Remove(participant.sessionID);
+                    ChannelSession.InteractiveUsers.Remove(participant.sessionID);
                 }
             }
         }
@@ -252,14 +237,14 @@ namespace MixItUp.WPF.Controls.Commands
         {
             if (sparkTransaction != null && sparkTransaction.input != null)
             {
-                foreach (InteractiveCommand command in this.selectedGameCommands)
+                foreach (InteractiveCommand command in ChannelSession.GetCommands<InteractiveCommand>())
                 {
                     if (command.Command.Equals(sparkTransaction.input.controlID) && command.EventTypeTransactionString.Equals(sparkTransaction.input.eventType))
                     {
                         UserViewModel user = new UserViewModel();
-                        if (this.participants.ContainsKey(sparkTransaction.participantID))
+                        if (ChannelSession.InteractiveUsers.ContainsKey(sparkTransaction.participantID))
                         {
-                            InteractiveParticipantModel participant = this.participants[sparkTransaction.participantID];
+                            InteractiveParticipantModel participant = ChannelSession.InteractiveUsers[sparkTransaction.participantID];
                             user = new UserViewModel(participant.userID, participant.username);
                         }
 

@@ -72,7 +72,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(this.Window.Channel);
+                return await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(ChannelSession.Channel);
             });
 
             this.interactiveGames.Clear();
@@ -187,7 +187,7 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 InteractiveGameListingModel gameListing = await this.Window.RunAsyncOperation(async () =>
                 {
-                     return await InteractiveGameHelper.CreateInteractive2Game(MixerAPIHandler.MixerConnection, this.Window.Channel, this.Window.User, this.GameNameTextBox.Text, null);
+                     return await InteractiveGameHelper.CreateInteractive2Game(MixerAPIHandler.MixerConnection, ChannelSession.Channel, ChannelSession.User, this.GameNameTextBox.Text, null);
                 });    
                 
                 if (gameListing == null)

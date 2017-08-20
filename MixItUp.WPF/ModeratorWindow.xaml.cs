@@ -1,6 +1,4 @@
-﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.User;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.WPF.Windows;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,24 +10,22 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class ModeratorWindow : LoadingWindowBase
     {
-        public ModeratorWindow(PrivatePopulatedUserModel user, ExpandedChannelModel channel)
+        public ModeratorWindow()
         {
             InitializeComponent();
-
-            this.Initialize(user, channel, this.StatusBar);
+            this.Initialize(this.StatusBar);
         }
 
         protected override async Task OnLoaded()
         {
-            await MixerAPIHandler.LoadSettings(this.Channel);
-
             await this.Chat.Initialize(this);
             await this.Events.Initialize(this);
         }
 
         protected override async Task OnClosing()
         {
-            await MixerAPIHandler.Close();
+            await ChannelSession.Settings.SaveSettings();
+            MixerAPIHandler.Close();
             Application.Current.Shutdown();
         }
     }

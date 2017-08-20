@@ -22,72 +22,45 @@ namespace MixItUp.WPF
         {
             InitializeComponent();
 
-            this.Initialize(null, null, this.StatusBar);
+            this.Initialize(this.StatusBar);
         }
 
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            bool result = await this.RunAsyncOperation(async () =>
+            bool result = await this.Login(new List<ClientScopeEnum>()
             {
-                return await this.Login(new List<ClientScopeEnum>()
-                {
-                    ClientScopeEnum.chat__bypass_links,
-                    ClientScopeEnum.chat__bypass_slowchat,
-                    ClientScopeEnum.chat__change_ban,
-                    ClientScopeEnum.chat__change_role,
-                    ClientScopeEnum.chat__chat,
-                    ClientScopeEnum.chat__connect,
-                    ClientScopeEnum.chat__clear_messages,
-                    ClientScopeEnum.chat__edit_options,
-                    ClientScopeEnum.chat__giveaway_start,
-                    ClientScopeEnum.chat__poll_start,
-                    ClientScopeEnum.chat__poll_vote,
-                    ClientScopeEnum.chat__purge,
-                    ClientScopeEnum.chat__remove_message,
-                    ClientScopeEnum.chat__timeout,
-                    ClientScopeEnum.chat__view_deleted,
-                    ClientScopeEnum.chat__whisper,
+                ClientScopeEnum.chat__bypass_links,
+                ClientScopeEnum.chat__bypass_slowchat,
+                ClientScopeEnum.chat__change_ban,
+                ClientScopeEnum.chat__change_role,
+                ClientScopeEnum.chat__chat,
+                ClientScopeEnum.chat__connect,
+                ClientScopeEnum.chat__clear_messages,
+                ClientScopeEnum.chat__edit_options,
+                ClientScopeEnum.chat__giveaway_start,
+                ClientScopeEnum.chat__poll_start,
+                ClientScopeEnum.chat__poll_vote,
+                ClientScopeEnum.chat__purge,
+                ClientScopeEnum.chat__remove_message,
+                ClientScopeEnum.chat__timeout,
+                ClientScopeEnum.chat__view_deleted,
+                ClientScopeEnum.chat__whisper,
 
-                    ClientScopeEnum.channel__details__self,
-                    ClientScopeEnum.channel__update__self,
+                ClientScopeEnum.channel__details__self,
+                ClientScopeEnum.channel__update__self,
 
-                    ClientScopeEnum.interactive__manage__self,
-                    ClientScopeEnum.interactive__robot__self,
+                ClientScopeEnum.interactive__manage__self,
+                ClientScopeEnum.interactive__robot__self,
 
-                    ClientScopeEnum.user__details__self,
-                });
-            });
+                ClientScopeEnum.user__details__self,
+            }, channelName: null);
 
             if (result)
             {
-                PrivatePopulatedUserModel user = await this.RunAsyncOperation(async () =>
-                {
-                    return await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
-                });
-
-                if (user != null)
-                {
-                    ExpandedChannelModel channel = await this.RunAsyncOperation(async () =>
-                    {
-                        return await MixerAPIHandler.MixerConnection.Channels.GetChannel(user.username);
-                    });
-
-                    if (channel != null)
-                    {
-                        StreamerWindow window = new StreamerWindow(user, channel);
-                        this.Hide();
-                        window.Show();
-                        this.Close();
-                    }
-                    else
-                    {
-                        MessageBoxHelper.ShowError("Unable to connect to channel.");
-                    }
-                }
-                else
-                {
-                    MessageBoxHelper.ShowError("Unable to get your user information.");
-                }
+                StreamerWindow window = new StreamerWindow();
+                this.Hide();
+                window.Show();
+                this.Close();
             }
             else
             {
@@ -111,61 +84,34 @@ namespace MixItUp.WPF
                 return;
             }
 
-            bool result = await this.RunAsyncOperation(async () =>
+            bool result = await this.Login(new List<ClientScopeEnum>()
             {
-                return await this.Login(new List<ClientScopeEnum>()
-                {
-                    ClientScopeEnum.chat__bypass_links,
-                    ClientScopeEnum.chat__bypass_slowchat,
-                    ClientScopeEnum.chat__change_ban,
-                    ClientScopeEnum.chat__change_role,
-                    ClientScopeEnum.chat__chat,
-                    ClientScopeEnum.chat__connect,
-                    ClientScopeEnum.chat__clear_messages,
-                    ClientScopeEnum.chat__edit_options,
-                    ClientScopeEnum.chat__giveaway_start,
-                    ClientScopeEnum.chat__poll_start,
-                    ClientScopeEnum.chat__poll_vote,
-                    ClientScopeEnum.chat__purge,
-                    ClientScopeEnum.chat__remove_message,
-                    ClientScopeEnum.chat__timeout,
-                    ClientScopeEnum.chat__view_deleted,
-                    ClientScopeEnum.chat__whisper,
+                ClientScopeEnum.chat__bypass_links,
+                ClientScopeEnum.chat__bypass_slowchat,
+                ClientScopeEnum.chat__change_ban,
+                ClientScopeEnum.chat__change_role,
+                ClientScopeEnum.chat__chat,
+                ClientScopeEnum.chat__connect,
+                ClientScopeEnum.chat__clear_messages,
+                ClientScopeEnum.chat__edit_options,
+                ClientScopeEnum.chat__giveaway_start,
+                ClientScopeEnum.chat__poll_start,
+                ClientScopeEnum.chat__poll_vote,
+                ClientScopeEnum.chat__purge,
+                ClientScopeEnum.chat__remove_message,
+                ClientScopeEnum.chat__timeout,
+                ClientScopeEnum.chat__view_deleted,
+                ClientScopeEnum.chat__whisper,
 
-                    ClientScopeEnum.user__details__self,
-                });
-            });
+                ClientScopeEnum.user__details__self,
+            }, this.ModeratorChannelTextBox.Text);
 
             if (result)
             {
-                PrivatePopulatedUserModel user = await this.RunAsyncOperation(async () =>
-                {
-                    return await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
-                });
-
-                if (user != null)
-                {
-                    ExpandedChannelModel channel = await this.RunAsyncOperation(async () =>
-                    {
-                        return await MixerAPIHandler.MixerConnection.Channels.GetChannel(this.ModeratorChannelTextBox.Text);
-                    });
-
-                    if (channel != null)
-                    {
-                        ModeratorWindow window = new ModeratorWindow(user, channel);
-                        this.Hide();
-                        window.Show();
-                        this.Close();
-                    }
-                    else
-                    {
-                        MessageBoxHelper.ShowError("Unable to connect to channel. Please ensure the channel you entered is valid.");
-                    }
-                }
-                else
-                {
-                    MessageBoxHelper.ShowError("Unable to get your user information.");
-                }
+                ModeratorWindow window = new ModeratorWindow();
+                this.Hide();
+                window.Show();
+                this.Close();
             }
             else
             {
@@ -173,7 +119,7 @@ namespace MixItUp.WPF
             }
         }
 
-        private async Task<bool> Login(IEnumerable<ClientScopeEnum> scopes)
+        private async Task<bool> Login(IEnumerable<ClientScopeEnum> scopes, string channelName)
         {
             string clientID = ConfigurationManager.AppSettings["ClientID"];
             if (string.IsNullOrEmpty(clientID))
@@ -181,7 +127,24 @@ namespace MixItUp.WPF
                 throw new ArgumentException("ClientID value isn't set in application configuration");
             }
 
-            return await MixerAPIHandler.InitializeMixerClient(clientID, scopes);
+            return await this.RunAsyncOperation(async () =>
+            {
+                if (await MixerAPIHandler.InitializeMixerClient(clientID, scopes))
+                {
+                    PrivatePopulatedUserModel user = await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
+                    if (user != null)
+                    {
+                        ExpandedChannelModel channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel((channelName == null) ? user.username : channelName);
+                        if (channel != null)
+                        {
+                            ChannelSession.Initialize(user, channel);
+                            await ChannelSession.LoadSettings();
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            });
         }
     }
 }
