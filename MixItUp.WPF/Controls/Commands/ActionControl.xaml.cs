@@ -44,6 +44,11 @@ namespace MixItUp.WPF.Controls.Commands
                         }
                         break;
                     case ActionTypeEnum.Cooldown:
+                        int cooldownAmount;
+                        if (this.CooldownTypeComboBox.SelectedIndex >= 0 && int.TryParse(this.CooldownAmountTextBox.Text, out cooldownAmount) && cooldownAmount > 0)
+                        {
+                            return new CooldownAction(EnumHelper.GetEnumValueFromString<CooldownActionTypeEnum>((string)this.CooldownTypeComboBox.SelectedItem), cooldownAmount);
+                        }
                         break;
                     case ActionTypeEnum.Currency:
                         int currencyAmount;
@@ -105,6 +110,8 @@ namespace MixItUp.WPF.Controls.Commands
         private void ActionControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>();
+            this.CooldownTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CooldownActionTypeEnum>();
+            this.InputButtonComboBox.ItemsSource = EnumHelper.GetEnumNames<InputTypeEnum>();
 
             if (this.Action != null)
             {
@@ -117,7 +124,8 @@ namespace MixItUp.WPF.Controls.Commands
                         break;
                     case ActionTypeEnum.Cooldown:
                         CooldownAction cooldownAction = (CooldownAction)this.Action;
-                        
+                        this.CooldownTypeComboBox.SelectedItem = EnumHelper.GetEnumName(cooldownAction.CooldownType);
+                        this.CooldownAmountTextBox.Text = cooldownAction.Amount.ToString();
                         break;
                     case ActionTypeEnum.Currency:
                         CurrencyAction currencyAction = (CurrencyAction)this.Action;

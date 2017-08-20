@@ -158,6 +158,13 @@ namespace MixItUp.WPF.Controls.Commands
                 return;
             }
 
+            InteractiveConnectedSceneGroupCollectionModel scenes = await this.Window.RunAsyncOperation(async () =>
+            {
+                return await MixerAPIHandler.InteractiveClient.GetScenes();
+            });
+            ChannelSession.SelectedScenes = scenes.scenes;
+            ChannelSession.SelectedScene = ChannelSession.SelectedScenes.First();
+
             InteractiveParticipantCollectionModel participants = await this.Window.RunAsyncOperation(async () =>
             {
                 return await MixerAPIHandler.InteractiveClient.GetAllParticipants();
@@ -192,6 +199,9 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 await MixerAPIHandler.DisconnectInteractiveClient();
             });
+
+            ChannelSession.SelectedScenes.Clear();
+            ChannelSession.SelectedScene = null;
 
             this.CommandsListView.IsEnabled = true;
             this.AddCommandButton.IsEnabled = true;
@@ -249,7 +259,7 @@ namespace MixItUp.WPF.Controls.Commands
                         }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        command.Perform(user);
+                        command.Perform(user, new List<string>() { command.Command });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         if (!string.IsNullOrEmpty(sparkTransaction.transactionID))

@@ -1,22 +1,55 @@
-﻿using Mixer.Base.ViewModel;
+﻿using Mixer.Base.Model.Interactive;
+using Mixer.Base.Util;
+using Mixer.Base.ViewModel;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
+    public enum CooldownActionTypeEnum
+    {
+        Global,
+        Individual
+    }
+
     public class CooldownAction : ActionBase
     {
-        public int CooldownAmount { get; set; }
+        public CooldownActionTypeEnum CooldownType { get; set; }
 
-        public CooldownAction(int cooldownAmount)
+        public int Amount { get; set; }
+
+        public CooldownAction(CooldownActionTypeEnum cooldownType, int amount)
             : base(ActionTypeEnum.Cooldown)
         {
-            this.CooldownAmount = cooldownAmount;
+            this.CooldownType = cooldownType;
+            this.Amount = amount;
         }
 
-        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            return Task.FromResult(0);
+            if (MixerAPIHandler.InteractiveClient != null && arguments.Count() == 1 && ChannelSession.SelectedScene != null)
+            {
+                List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
+                if (this.CooldownType == CooldownActionTypeEnum.Global)
+                {
+                    buttons.AddRange(ChannelSession.SelectedScene.buttons);
+                }
+                else if (this.CooldownType == CooldownActionTypeEnum.Individual)
+                {
+                    string controlID = arguments.ElementAt(0);
+                    buttons.Add(ChannelSession.SelectedScene.buttons.FirstOrDefault(b => b.controlID.Equals(controlID)));
+                }
+
+                long cooldownEnd = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.Amount));
+                foreach (InteractiveConnectedButtonControlModel button in buttons)
+                {
+                    button.cooldown = cooldownEnd;
+                }
+
+                await MixerAPIHandler.InteractiveClient.UpdateControls(ChannelSession.SelectedScene, buttons);
+            }
         }
 
         public override SerializableAction Serialize()
@@ -24,7 +57,7 @@ namespace MixItUp.Base.Actions
             return new SerializableAction()
             {
                 Type = this.Type,
-                Values = new List<string>() { this.CooldownAmount.ToString() }
+                Values = new List<string>() { EnumHelper.GetEnumName(this.CooldownType), this.Amount.ToString() }
             };
         }
     }

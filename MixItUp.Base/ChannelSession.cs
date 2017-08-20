@@ -24,6 +24,8 @@ namespace MixItUp.Base
 
         public static InteractiveGameListingModel SelectedGame { get; set; }
         public static InteractiveVersionModel SelectedGameVersion { get; set; }
+        public static List<InteractiveConnectedSceneGroupModel> SelectedScenes { get; set; }
+        public static InteractiveConnectedSceneGroupModel SelectedScene { get; set; }
 
         public static void Initialize(PrivatePopulatedUserModel user, ExpandedChannelModel channel)
         {
@@ -33,6 +35,7 @@ namespace MixItUp.Base
             ChannelSession.ChatUsers = new Dictionary<uint, ChatUserViewModel>();
             ChannelSession.InteractiveUsers = new Dictionary<string, InteractiveParticipantModel>();
             ChannelSession.ActiveCommands = new ObservableCollection<CommandBase>();
+            ChannelSession.SelectedScenes = new List<InteractiveConnectedSceneGroupModel>();
         }
 
         public static async Task LoadSettings() { ChannelSession.Settings = await ChannelSettings.LoadSettings(ChannelSession.Channel); }

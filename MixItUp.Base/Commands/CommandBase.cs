@@ -91,6 +91,7 @@ namespace MixItUp.Base.Commands
                         action = new ChatAction(serializedAction.Values[0], bool.Parse(serializedAction.Values[1]));
                         break;
                     case ActionTypeEnum.Cooldown:
+                        action = new CooldownAction(EnumHelper.GetEnumValueFromString<CooldownActionTypeEnum>(serializedAction.Values[0]), int.Parse(serializedAction.Values[1]));
                         break;
                     case ActionTypeEnum.Currency:
                         action = new CurrencyAction(int.Parse(serializedAction.Values[0]));
