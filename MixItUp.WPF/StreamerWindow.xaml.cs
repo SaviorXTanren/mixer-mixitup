@@ -21,9 +21,9 @@ namespace MixItUp.WPF
             this.Chat.EnableCommands = true;
 
             await this.Chat.Initialize(this);
+            await this.Commands.Initialize(this);
             await this.Interactive.Initialize(this);
             await this.Events.Initialize(this);
-            await this.Commands.Initialize(this);
         }
 
         protected override async Task OnClosing()

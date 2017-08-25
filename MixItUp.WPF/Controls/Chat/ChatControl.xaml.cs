@@ -4,6 +4,7 @@ using Mixer.Base.ViewModel.Chat;
 using MixItUp.Base;
 using MixItUp.Base.Chat;
 using MixItUp.Base.Commands;
+using MixItUp.WPF.Controls.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +12,8 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.Chat
@@ -86,6 +89,62 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
+        private async void ChatClearMessagesButton_Click(object sender, RoutedEventArgs e)
+        {
+            await MixerAPIHandler.ChatClient.ClearMessages();
+        }
+
+        private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.SendChatMessageButton_Click(this, new RoutedEventArgs());
+                this.ChatMessageTextBox.Focus();
+            }
+        }
+
+        private async void SendChatMessageButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
+            {
+                string message = this.ChatMessageTextBox.Text;
+                this.ChatMessageTextBox.Text = string.Empty;
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await MixerAPIHandler.ChatClient.SendMessage(message);
+                });
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.channelRefreshCancellationTokenSource.Cancel();
+        }
+
+        private void ChatCommandEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            ChatCommand command = (ChatCommand)button.DataContext;
+
+            CommandDetailsWindow commandWindow = new CommandDetailsWindow(command);
+            commandWindow.Show();
+        }
+
+        private void ChatCommandDeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            ChatCommand command = (ChatCommand)button.DataContext;
+            ChannelSession.Settings.ChatCommands.Remove(command);
+        }
+
+        private void AddChatCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandDetailsWindow commandWindow = new CommandDetailsWindow(CommandTypeEnum.Chat);
+            commandWindow.Show();
+        }
+
+        #region Chat Update Methods
+
         private void AddUser(ChatUserViewModel user)
         {
             if (!ChannelSession.ChatUsers.ContainsKey(user.ID))
@@ -110,6 +169,11 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
+        private void RefreshViewerCount()
+        {
+            this.ViewersCountTextBlock.Text = string.Format("Viewers: {0} (Users: {1})", ChannelSession.Channel.viewersCurrent, ChannelSession.ChatUsers.Count);
+        }
+
         private void AddMessage(ChatMessageViewModel message)
         {
             this.Messages.Add(message);
@@ -128,47 +192,7 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void RefreshViewerCount()
-        {
-            this.ViewersCountTextBlock.Text = string.Format("Viewers: {0} (Users: {1})", ChannelSession.Channel.viewersCurrent, ChannelSession.ChatUsers.Count);
-        }
-
-        private async void ChatClearMessagesButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            await MixerAPIHandler.ChatClient.ClearMessages();
-        }
-
-        private async Task SendChatMessage()
-        {
-            if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
-            {
-                string message = this.ChatMessageTextBox.Text;
-                this.ChatMessageTextBox.Text = string.Empty;
-                await this.Window.RunAsyncOperation(async () =>
-                {
-                    await MixerAPIHandler.ChatClient.SendMessage(message);
-                });
-            }
-        }
-
-        private async void ChatMessageTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                await this.SendChatMessage();
-                this.ChatMessageTextBox.Focus();
-            }
-        }
-
-        private async void SendChatMessageButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            await this.SendChatMessage();
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            this.channelRefreshCancellationTokenSource.Cancel();
-        }
+        #endregion Chat Update Methods
 
         #region Context Menu Events
 

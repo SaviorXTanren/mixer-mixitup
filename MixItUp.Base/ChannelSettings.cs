@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -22,11 +23,10 @@ namespace MixItUp.Base
                 ChannelSettings settings = await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
 
                 settings.Channel = channel;
-
-                foreach (CommandBase command in settings.ChatCommands) { command.DeserializeActions(); }
-                foreach (CommandBase command in settings.InteractiveCommands) { command.DeserializeActions(); }
-                foreach (CommandBase command in settings.EventCommands) { command.DeserializeActions(); }
-                foreach (CommandBase command in settings.TimerCommands) { command.DeserializeActions(); }
+                settings.ChatCommands = new LockedList<ChatCommand>(settings.chatCommandsInternal);
+                settings.SubscribedEvents = new LockedList<SubscribedEventViewModel>(settings.subscribedEventsInternal);
+                settings.InteractiveControls = new LockedList<InteractiveControlViewModel>(settings.interactiveControlsInternal);
+                settings.TimerCommands = new LockedList<TimerCommand>(settings.timerCommandsInternal);
 
                 return settings;
             }
@@ -38,66 +38,64 @@ namespace MixItUp.Base
 
         private static string GetSettingsFilePath(ChannelModel channel) { return Path.Combine(SettingsDirectoryName, string.Format("{0}.xml", channel.id.ToString())); }
 
+        [JsonProperty]
+        private List<ChatCommand> chatCommandsInternal { get; set; }
+
+        [JsonProperty]
+        private List<SubscribedEventViewModel> subscribedEventsInternal { get; set; }
+
+        [JsonProperty]
+        private List<InteractiveControlViewModel> interactiveControlsInternal { get; set; }
+
+        [JsonProperty]
+        private List<TimerCommand> timerCommandsInternal { get; set; }
+
+        [JsonProperty]
+        public ChannelModel Channel { get; set; }
+
+        [JsonProperty]
+        public List<UserDataViewModel> UserData { get; set; }
+
+        [JsonIgnore]
+        public LockedList<ChatCommand> ChatCommands { get; set; }
+
+        [JsonIgnore]
+        public LockedList<SubscribedEventViewModel> SubscribedEvents { get; set; }
+
+        [JsonIgnore]
+        public LockedList<InteractiveControlViewModel> InteractiveControls { get; set; }
+
+        [JsonIgnore]
+        public LockedList<TimerCommand> TimerCommands { get; set; }
+
         public ChannelSettings(ChannelModel channel) : this() { this.Channel = channel; }
 
         public ChannelSettings()
         {
-            this.SubscribedEvents = new List<SubscribedEventViewModel>();
+            this.chatCommandsInternal = new List<ChatCommand>();
+            this.subscribedEventsInternal = new List<SubscribedEventViewModel>();
+            this.interactiveControlsInternal = new List<InteractiveControlViewModel>();
+            this.timerCommandsInternal = new List<TimerCommand>();
+
             this.UserData = new List<UserDataViewModel>();
-            this.ChatCommands = new List<ChatCommand>();
-            this.InteractiveCommands = new List<InteractiveCommand>();
-            this.EventCommands = new List<EventCommand>();
-            this.TimerCommands = new List<TimerCommand>();
+
+            this.ChatCommands = new LockedList<ChatCommand>();
+            this.SubscribedEvents = new LockedList<SubscribedEventViewModel>();
+            this.InteractiveControls = new LockedList<InteractiveControlViewModel>();
+            this.TimerCommands = new LockedList<TimerCommand>();
         }
-
-        [DataMember]
-        public ChannelModel Channel { get; set; }
-
-        [DataMember]
-        public List<SubscribedEventViewModel> SubscribedEvents { get; set; }
-
-        [DataMember]
-        public List<UserDataViewModel> UserData { get; set; }
-
-        [DataMember]
-        public List<ChatCommand> ChatCommands { get; set; }
-
-        [DataMember]
-        public List<InteractiveCommand> InteractiveCommands { get; set; }
-
-        [DataMember]
-        public List<EventCommand> EventCommands { get; set; }
-
-        [DataMember]
-        public List<TimerCommand> TimerCommands { get; set; }
 
         public async Task SaveSettings()
         {
             Directory.CreateDirectory(SettingsDirectoryName);
-
-            foreach (CommandBase command in this.ChatCommands) { command.SerializeActions(); }
-            foreach (CommandBase command in this.InteractiveCommands) { command.SerializeActions(); }
-            foreach (CommandBase command in this.EventCommands) { command.SerializeActions(); }
-            foreach (CommandBase command in this.TimerCommands) { command.SerializeActions(); }
-
             string filePath = ChannelSettings.GetSettingsFilePath(this.Channel);
+
+            this.chatCommandsInternal = this.ChatCommands.ToList();
+            this.subscribedEventsInternal = this.SubscribedEvents.ToList();
+            this.interactiveControlsInternal = this.InteractiveControls.ToList();
+            this.timerCommandsInternal = this.TimerCommands.ToList();
+
             await SerializerHelper.SerializeToFile(filePath, this);
-        }
-
-        public void AddCommand(CommandBase command)
-        {
-            if (command is ChatCommand) { this.ChatCommands.Add((ChatCommand)command); }
-            if (command is InteractiveCommand) { this.InteractiveCommands.Add((InteractiveCommand)command); }
-            if (command is EventCommand) { this.EventCommands.Add((EventCommand)command); }
-            if (command is TimerCommand) { this.TimerCommands.Add((TimerCommand)command); }
-        }
-
-        public void RemoveCommand(CommandBase command)
-        {
-            if (command is ChatCommand) { this.ChatCommands.Remove((ChatCommand)command); }
-            if (command is InteractiveCommand) { this.InteractiveCommands.Remove((InteractiveCommand)command); }
-            if (command is EventCommand) { this.EventCommands.Remove((EventCommand)command); }
-            if (command is TimerCommand) { this.TimerCommands.Remove((TimerCommand)command); }
         }
     }
 }

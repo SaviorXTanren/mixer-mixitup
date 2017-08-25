@@ -1,17 +1,25 @@
 ﻿using Mixer.Base.ViewModel;
+using MixItUp.Base.Commands;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
+    [DataContract]
     public class ExternalProgramAction : ActionBase
     {
+        [DataMember]
         public string FilePath { get; set; }
 
+        [DataMember]
         public string Arguments { get; set; }
 
+        [DataMember]
         public bool ShowWindow { get; set; }
+
+        public ExternalProgramAction() { }
 
         public ExternalProgramAction(string filePath, string arguments, bool showWindow)
             : base(ActionTypeEnum.ExternalProgram)
@@ -33,15 +41,6 @@ namespace MixItUp.Base.Actions
             {
                 await this.Wait500();
             }
-        }
-
-        public override SerializableAction Serialize()
-        {
-            return new SerializableAction()
-            {
-                Type = this.Type,
-                Values = new List<string>() { this.FilePath, this.Arguments, this.ShowWindow.ToString() }
-            };
         }
     }
 }

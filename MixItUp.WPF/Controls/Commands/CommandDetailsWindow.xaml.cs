@@ -1,14 +1,14 @@
-﻿using Mixer.Base.Clients;
-using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel;
+using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
-using System.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Commands
@@ -18,112 +18,111 @@ namespace MixItUp.WPF.Controls.Commands
     /// </summary>
     public partial class CommandDetailsWindow : LoadingWindowBase
     {
-        private List<InteractiveControlModel> interactiveControls;
+        public CommandBase Command;
 
-        private CommandBase command;
+        private CommandTypeEnum type;
+
+        private InteractiveControlModel interactiveControl;
+        private SubscribedEventViewModel subscribedEvent;
 
         private ObservableCollection<ActionControl> actionControls;
 
-        public CommandDetailsWindow() : this(null) { }
+        public CommandDetailsWindow(CommandTypeEnum type) : this(type, null) { }
 
-        public CommandDetailsWindow(CommandBase command)
+        public CommandDetailsWindow(CommandBase command) : this(command.Type, command) { }
+
+        public CommandDetailsWindow(InteractiveControlModel interactiveControl, CommandBase command = null)
+            : this(CommandTypeEnum.Interactive, command)
+        {
+            this.interactiveControl = interactiveControl;
+        }
+
+        public CommandDetailsWindow(SubscribedEventViewModel subscribedEvent, CommandBase command = null)
+            : this(CommandTypeEnum.Event, command)
+        {
+            this.subscribedEvent = subscribedEvent;
+        }
+
+        private CommandDetailsWindow(CommandTypeEnum type, CommandBase command)
         {
             InitializeComponent();
 
             this.Initialize(this.StatusBar);
 
+            this.type = type;
+            this.Command = command;
             this.actionControls = new ObservableCollection<ActionControl>();
 
-            this.command = command;
+            if (this.type == CommandTypeEnum.Interactive && this.interactiveControl == null)
+            {
+                throw new InvalidOperationException("Interactive commands must have an interactive control set");
+            }
+            if (this.type == CommandTypeEnum.Event && this.subscribedEvent == null)
+            {
+                throw new InvalidOperationException("Event commands must have a subscribed event set");
+            }
 
             this.Loaded += CommandDetailsWindow_Loaded;
         }
 
         private void CommandDetailsWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            List<string> typeOptions = EnumHelper.GetEnumNames<CommandTypeEnum>().ToList();
-            if (ChannelSession.SelectedGameVersion == null)
-            {
-                typeOptions.Remove(EnumHelper.GetEnumName(CommandTypeEnum.Interactive));
-            }
-            this.TypeComboBox.ItemsSource = typeOptions;
-
             this.ActionsListView.ItemsSource = this.actionControls;
 
-            if (ChannelSession.SelectedGameVersion != null)
+            if (this.type == CommandTypeEnum.Interactive)
             {
-                this.InteractiveCommandComboBox.ItemsSource = this.interactiveControls = ChannelSession.SelectedGameVersion.controls.scenes.SelectMany(s => s.allControls).OrderBy(c => c.controlID).ToList();
                 this.InteractiveCommandEventTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveCommandEventType>();
             }
 
-            if (this.command != null)
+            switch (this.type)
             {
-                this.NameTextBox.Text = this.command.Name;
-                this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Type);
+                case CommandTypeEnum.Chat:
+                    this.ChatCommandGrid.Visibility = Visibility.Visible;
+                    break;
+                case CommandTypeEnum.Interactive:
+                    this.InteractiveCommandGrid.Visibility = Visibility.Visible;
+                    break;
+                case CommandTypeEnum.Event:
+                    this.EventCommandGrid.Visibility = Visibility.Visible;
+                    break;
+                case CommandTypeEnum.Timer:
+                    this.TimerCommandGrid.Visibility = Visibility.Visible;
+                    break;
+            }
+
+            this.ActionsListView.Visibility = Visibility.Visible;
+
+            this.AddActionButton.IsEnabled = true;
+            this.SaveButton.IsEnabled = true;
+
+            if (this.Command != null)
+            {
+                this.NameTextBox.Text = this.Command.Name;
                 
-                switch (this.command.Type)
+                switch (this.Command.Type)
                 {
                     case CommandTypeEnum.Chat:
-                        ChatCommand chatCommand = (ChatCommand)this.command;
+                        ChatCommand chatCommand = (ChatCommand)this.Command;
                         this.ChatCommandTextBox.Text = chatCommand.Command;
-                        this.ChatDescriptionTextBox.Text = chatCommand.Description;
                         break;
                     case CommandTypeEnum.Interactive:
-                        InteractiveCommand interactiveCommand = (InteractiveCommand)this.command;
-                        this.InteractiveCommandComboBox.SelectedItem = this.interactiveControls.FirstOrDefault(c => c.controlID.Equals(interactiveCommand.Command));
+                        InteractiveCommand interactiveCommand = (InteractiveCommand)this.Command;
                         this.InteractiveCommandEventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(interactiveCommand.EventType);
                         break;
                     case CommandTypeEnum.Event:
-                        EventCommand eventCommand = (EventCommand)this.command;
-                        this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(eventCommand.EventType);
+                        EventCommand eventCommand = (EventCommand)this.Command;
                         break;
                     case CommandTypeEnum.Timer:
-                        TimerCommand timerCommand = (TimerCommand)this.command;
+                        TimerCommand timerCommand = (TimerCommand)this.Command;
                         this.TimerIntervalTextBox.Text = timerCommand.Interval.ToString();
                         this.TimerMinimumChatMessagesTextBox.Text = timerCommand.MinimumMessages.ToString();
                         break;
                 }
 
-                foreach (ActionBase action in this.command.Actions)
+                foreach (ActionBase action in this.Command.Actions)
                 {
                     this.actionControls.Add(new ActionControl(action));
                 }
-            }
-        }
-
-        private void TypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            this.ChatCommandGrid.Visibility = Visibility.Collapsed;
-            this.InteractiveCommandGrid.Visibility = Visibility.Collapsed;
-            this.EventCommandGrid.Visibility = Visibility.Collapsed;
-            this.TimerCommandGrid.Visibility = Visibility.Collapsed;
-            this.ActionsListView.Visibility = Visibility.Collapsed;
-
-            if (this.TypeComboBox.SelectedIndex >= 0)
-            {
-                string typeName = (string)this.TypeComboBox.SelectedItem;
-                CommandTypeEnum type = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(typeName);
-
-                switch (type)
-                {
-                    case CommandTypeEnum.Chat:
-                        this.ChatCommandGrid.Visibility = Visibility.Visible;
-                        break;
-                    case CommandTypeEnum.Interactive:
-                        this.InteractiveCommandGrid.Visibility = Visibility.Visible;
-                        break;
-                    case CommandTypeEnum.Event:
-                        this.EventCommandGrid.Visibility = Visibility.Visible;
-                        break;
-                    case CommandTypeEnum.Timer:
-                        this.TimerCommandGrid.Visibility = Visibility.Visible;
-                        break;
-                }
-                
-                this.ActionsListView.Visibility = Visibility.Visible;
-
-                this.AddActionButton.IsEnabled = true;
-                this.SaveButton.IsEnabled = true;
             }
         }
 
@@ -134,102 +133,93 @@ namespace MixItUp.WPF.Controls.Commands
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(this.NameTextBox.Text) || this.TypeComboBox.SelectedIndex < 0)
-            {
-                MessageBoxHelper.ShowError("Required command information is missing");
-                return;
-            }
+            //if (string.IsNullOrEmpty(this.NameTextBox.Text))
+            //{
+            //    MessageBoxHelper.ShowError("Required command information is missing");
+            //    return;
+            //}
 
-            string typeName = (string)this.TypeComboBox.SelectedItem;
-            CommandTypeEnum type = EnumHelper.GetEnumValueFromString<CommandTypeEnum>(typeName);
+            //switch (this.type)
+            //{
+            //    case CommandTypeEnum.Chat:
+            //        if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
+            //        {
+            //            MessageBoxHelper.ShowError("Required chat command information is missing");
+            //            return;
+            //        }
 
-            if (this.actionControls.Count == 0)
-            {
-                MessageBoxHelper.ShowError("At least one action must be created");
-                return;
-            }
+            //        if (this.Command == null)
+            //        {
+            //            this.Command = new ChatCommand(this.NameTextBox.Text, this.ChatCommandTextBox.Text);
+            //        }
 
-            List<ActionBase> actions = new List<ActionBase>();
-            foreach (ActionControl control in this.actionControls)
-            {
-                ActionBase action = control.GetAction();
-                if (action == null)
-                {
-                    MessageBoxHelper.ShowError("Required action information is missing");
-                    return;
-                }
-                actions.Add(action);
-            }
+            //        this.Command.Name = this.NameTextBox.Text;
+            //        this.Command.Command = this.ChatCommandTextBox.Text;
 
-            CommandBase newCommand = null;
-            switch (type)
-            {
-                case CommandTypeEnum.Chat:
-                    if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text) || string.IsNullOrEmpty(this.ChatDescriptionTextBox.Text))
-                    {
-                        MessageBoxHelper.ShowError("Required chat command information is missing");
-                        return;
-                    }
+            //        break;
 
-                    newCommand = new ChatCommand(this.NameTextBox.Text, this.ChatCommandTextBox.Text, actions, this.ChatDescriptionTextBox.Text);
-                    break;
+            //    case CommandTypeEnum.Interactive:
+            //        if (this.InteractiveCommandEventTypeComboBox.SelectedIndex < 0)
+            //        {
+            //            MessageBoxHelper.ShowError("Required interactive command information is missing");
+            //            return;
+            //        }
 
-                case CommandTypeEnum.Interactive:
-                    if (this.InteractiveCommandComboBox.SelectedIndex < 0 || this.InteractiveCommandEventTypeComboBox.SelectedIndex < 0)
-                    {
-                        MessageBoxHelper.ShowError("Required interactive command information is missing");
-                        return;
-                    }
+            //        InteractiveCommandEventType interactiveEventType = EnumHelper.GetEnumValueFromString<InteractiveCommandEventType>((string)this.InteractiveCommandEventTypeComboBox.SelectedItem);
 
-                    InteractiveControlModel interactiveControl = (InteractiveControlModel)this.InteractiveCommandComboBox.SelectedItem;
-                    InteractiveCommandEventType interactiveEventType = EnumHelper.GetEnumValueFromString<InteractiveCommandEventType>((string)this.InteractiveCommandEventTypeComboBox.SelectedItem);
+            //        if (this.Command == null)
+            //        {
+            //            this.Command = new InteractiveCommand(this.NameTextBox.Text, this.interactiveControl.controlID, interactiveEventType);
+            //            ChannelSession.Settings.InteractiveControls.Add((ChatCommand)this.Command);
+            //        }
 
-                    newCommand = new InteractiveCommand(this.NameTextBox.Text, interactiveControl.controlID, interactiveEventType, actions);
-                    break;
+            //        this.Command.Name = this.NameTextBox.Text;
 
-                case CommandTypeEnum.Event:
-                    if (this.EventTypeComboBox.SelectedIndex < 0)
-                    {
-                        MessageBoxHelper.ShowError("Required event command information is missing");
-                        return;
-                    }
+            //        break;
 
-                    string eventTypeName = (string)this.EventTypeComboBox.SelectedItem;
-                    ConstellationEventTypeEnum constellationEventType = EnumHelper.GetEnumValueFromString<ConstellationEventTypeEnum>(eventTypeName);
+            //    case CommandTypeEnum.Event:
+            //        newCommand = new EventCommand(this.NameTextBox.Text, this.subscribedEvent);
+            //        break;
 
-                    newCommand = new EventCommand(this.NameTextBox.Text, this.ChatCommandTextBox.Text, actions, constellationEventType);
-                    break;
+            //    case CommandTypeEnum.Timer:
+            //        int timerInterval;
+            //        int timerMinimumChatMessage;
 
-                case CommandTypeEnum.Timer:
-                    int timerInterval;
-                    int timerMinimumChatMessage;
+            //        if (string.IsNullOrEmpty(this.TimerIntervalTextBox.Text) || !int.TryParse(this.TimerIntervalTextBox.Text, out timerInterval) || timerInterval <= 0 ||
+            //            string.IsNullOrEmpty(this.TimerMinimumChatMessagesTextBox.Text) || !int.TryParse(this.TimerMinimumChatMessagesTextBox.Text, out timerMinimumChatMessage) || timerMinimumChatMessage <= 0)
+            //        {
+            //            MessageBoxHelper.ShowError("Required timer command information is missing");
+            //            return;
+            //        }
 
-                    if (string.IsNullOrEmpty(this.TimerIntervalTextBox.Text) || !int.TryParse(this.TimerIntervalTextBox.Text, out timerInterval) || timerInterval <= 0 ||
-                        string.IsNullOrEmpty(this.TimerMinimumChatMessagesTextBox.Text) || !int.TryParse(this.TimerMinimumChatMessagesTextBox.Text, out timerMinimumChatMessage) || timerMinimumChatMessage <= 0)
-                    {
-                        MessageBoxHelper.ShowError("Required chat command information is missing");
-                        return;
-                    }
+            //        newCommand = new TimerCommand(this.NameTextBox.Text, timerInterval, timerMinimumChatMessage);
+            //        break;
+            //}
 
-                    newCommand = new TimerCommand(this.NameTextBox.Text, this.ChatCommandTextBox.Text, actions, timerInterval, timerMinimumChatMessage);
-                    break;
-            }
+            //if (this.actionControls.Count == 0)
+            //{
+            //    MessageBoxHelper.ShowError("At least one action must be created");
+            //    return;
+            //}
 
-            if (newCommand != null)
-            {
-                if (this.command != null)
-                {
-                    ChannelSession.Settings.RemoveCommand(this.command);
-                }
-                ChannelSession.Settings.AddCommand(newCommand);
-            }
-            else
-            {
-                MessageBoxHelper.ShowError("Unknown error occurred");
-                return;
-            }
+            //foreach (ActionControl control in this.actionControls)
+            //{
+            //    ActionBase action = control.GetAction(newCommand);
+            //    if (action == null)
+            //    {
+            //        MessageBoxHelper.ShowError("Required action information is missing");
+            //        return;
+            //    }
+            //    newCommand.AddAction(action);
+            //}
 
-            this.Close();
+            //if (this.Command != null)
+            //{
+            //    ChannelSession.Settings.RemoveCommand(this.Command);
+            //}
+            //ChannelSession.Settings.AddCommand(newCommand);
+
+            //this.Close();
         }
     }
 }

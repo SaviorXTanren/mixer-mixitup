@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Actions;
-using System.Collections.Generic;
+﻿using Mixer.Base.ViewModel.Chat;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Commands
@@ -8,14 +7,14 @@ namespace MixItUp.Base.Commands
     public class ChatCommand : CommandBase
     {
         [DataMember]
-        public string Description { get; set; }
+        public UserRole LowestAllowedRole { get; set; }
 
         public ChatCommand() { }
 
-        public ChatCommand(string name, string command, IEnumerable<ActionBase> actions, string description)
-            : base(name, CommandTypeEnum.Chat, command, actions)
+        public ChatCommand(string name, string command, UserRole lowestAllowedRole)
+            : base(name, CommandTypeEnum.Chat, command)
         {
-            this.Description = description;
+            this.LowestAllowedRole = lowestAllowedRole;
         }
     }
 }

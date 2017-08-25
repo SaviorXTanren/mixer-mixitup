@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Commands.ActionControl"
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Actions.ActionControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -47,7 +47,7 @@
 
                 <TextBlock Grid.Column="4">
                     <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat-Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
-                        Chat Special Identifiers Reference
+                        Chat Special Identifiers Reference (Only work for Chat Commands)
                     </Hyperlink>
                 </TextBlock>
             </Grid>
@@ -76,14 +76,50 @@
         </Grid>
 
         <Grid x:Name="CurrencyGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0">Amount (+ adds/- subtracts):</TextBlock>
-            <TextBox Grid.Column="2" x:Name="CurrencyAmountTextBox" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Amount (+ adds/- subtracts):</TextBlock>
+                <TextBox Grid.Column="2" x:Name="CurrencyAmountTextBox" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Whisper To User:</TextBlock>
+                <CheckBox Grid.Column="2" x:Name="CurrencyWhisperCheckBox" />
+
+                <TextBlock Grid.Column="4">
+                    <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat-Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
+                        Chat Special Identifiers Reference
+                    </Hyperlink>
+                </TextBlock>
+            </Grid>
+
+            <TextBlock Grid.Row="4">Message:</TextBlock>
+            <TextBox Grid.Row="6" x:Name="CurrencyMessageTextBox" />
+
         </Grid>
 
         <Grid x:Name="ExternalProgramGrid" Grid.Row="2" Visibility="Collapsed">
@@ -109,7 +145,14 @@
         </Grid>
 
         <Grid x:Name="GiveawayGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
+            <TextBlock Grid.Column="0">Giveaway Item:</TextBlock>
+            <TextBox Grid.Column="2" x:Name="GiveawayItemTextBox" />
         </Grid>
 
         <Grid x:Name="InputGrid" Grid.Row="2" Visibility="Collapsed">

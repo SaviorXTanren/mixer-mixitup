@@ -1,9 +1,11 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using Mixer.Base.ViewModel;
+using MixItUp.Base.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -14,11 +16,16 @@ namespace MixItUp.Base.Actions
         Individual
     }
 
+    [DataContract]
     public class CooldownAction : ActionBase
     {
+        [DataMember]
         public CooldownActionTypeEnum CooldownType { get; set; }
 
+        [DataMember]
         public int Amount { get; set; }
+
+        public CooldownAction() { }
 
         public CooldownAction(CooldownActionTypeEnum cooldownType, int amount)
             : base(ActionTypeEnum.Cooldown)
@@ -50,15 +57,6 @@ namespace MixItUp.Base.Actions
 
                 await MixerAPIHandler.InteractiveClient.UpdateControls(ChannelSession.SelectedScene, buttons);
             }
-        }
-
-        public override SerializableAction Serialize()
-        {
-            return new SerializableAction()
-            {
-                Type = this.Type,
-                Values = new List<string>() { EnumHelper.GetEnumName(this.CooldownType), this.Amount.ToString() }
-            };
         }
     }
 }

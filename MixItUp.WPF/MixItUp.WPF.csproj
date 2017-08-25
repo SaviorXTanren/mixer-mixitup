@@ -81,7 +81,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\MainControlBase.cs" />
-    <Compile Include="Controls\Commands\ActionControl.xaml.cs">
+    <Compile Include="Controls\Actions\ActionControl.xaml.cs">
       <DependentUpon>ActionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Commands\CommandDetailsWindow.xaml.cs">
@@ -108,6 +108,9 @@
     <Compile Include="Util\ColorHelper.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
     <Compile Include="Util\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Windows\Chat\ChatCommandWindow.xaml.cs">
+      <DependentUpon>ChatCommandWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\LoadingWindowBase.cs" />
     <Page Include="Controls\Chat\ChatControl.xaml">
       <SubType>Designer</SubType>
@@ -121,7 +124,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Commands\ActionControl.xaml">
+    <Page Include="Controls\Actions\ActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -171,6 +174,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ModeratorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Chat\ChatCommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

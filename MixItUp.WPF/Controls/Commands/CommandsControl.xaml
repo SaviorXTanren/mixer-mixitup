@@ -15,12 +15,11 @@
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="CommandsListView" Grid.Row="0" SelectionMode="Single" CanUserSortColumns="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False">
+        <DataGrid x:Name="CommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                 <DataGridTextColumn Header="Type" Binding="{Binding TypeName}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="Command" Binding="{Binding Command}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True" Width="2*" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -45,25 +44,6 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Width="100">Add Command</Button>
-
-            <TextBlock Grid.Column="2">Games:</TextBlock>
-            <ComboBox x:Name="InteractiveGameComboBox" Grid.Column="4" SelectionChanged="InteractiveGameComboBox_SelectionChanged" Width="250" DisplayMemberPath="name" />
-            
-            <Button x:Name="InteractiveGameConnectButton" Grid.Column="6" IsEnabled="False" Click="InteractiveGameConnectButton_Click" Width="70">Connect</Button>
-            <Button x:Name="InteractiveGameDisconnectButton" Grid.Column="6" Visibility="Collapsed" Click="InteractiveGameDisconnectButton_Click" Width="70">Disconnect</Button>
-            
-        </Grid>
+        <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="100">Add Command</Button>
     </Grid>
 </Controls:MainControlBase>

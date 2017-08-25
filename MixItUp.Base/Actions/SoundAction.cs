@@ -1,16 +1,21 @@
 ﻿using Mixer.Base.ViewModel;
+using MixItUp.Base.Commands;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace MixItUp.Base.Actions
 {
+    [DataContract]
     public class SoundAction : ActionBase
     {
+        [DataMember]
         public string FilePath { get; set; }
 
+        [DataMember]
         public int VolumeScale { get; set; }
 
         private MediaPlayer mediaPlayer;
@@ -35,15 +40,6 @@ namespace MixItUp.Base.Actions
                 this.mediaPlayer.Play();
             }
             return Task.FromResult(0);
-        }
-
-        public override SerializableAction Serialize()
-        {
-            return new SerializableAction()
-            {
-                Type = this.Type,
-                Values = new List<string>() { this.FilePath, this.VolumeScale.ToString() }
-            };
         }
     }
 }

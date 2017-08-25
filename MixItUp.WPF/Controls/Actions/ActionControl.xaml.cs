@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Navigation;
 using System.Diagnostics;
+using MixItUp.Base.Commands;
 
-namespace MixItUp.WPF.Controls.Commands
+namespace MixItUp.WPF.Controls.Actions
 {
     /// <summary>
     /// Interaction logic for ActionControl.xaml
@@ -52,9 +53,9 @@ namespace MixItUp.WPF.Controls.Commands
                         break;
                     case ActionTypeEnum.Currency:
                         int currencyAmount;
-                        if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount))
+                        if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) && !string.IsNullOrEmpty(this.CurrencyMessageTextBox.Text))
                         {
-                            return new CurrencyAction(currencyAmount);
+                            return new CurrencyAction(currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperCheckBox.IsChecked.GetValueOrDefault());
                         }
                         break;
                     case ActionTypeEnum.ExternalProgram:
@@ -64,6 +65,10 @@ namespace MixItUp.WPF.Controls.Commands
                         }
                         break;
                     case ActionTypeEnum.Giveaway:
+                        if (!string.IsNullOrEmpty(this.GiveawayItemTextBox.Text))
+                        {
+                            return new GiveawayAction(this.GiveawayItemTextBox.Text);
+                        }
                         break;
                     case ActionTypeEnum.Input:
                         if (this.InputButtonComboBox.SelectedIndex >= 0)
@@ -121,6 +126,7 @@ namespace MixItUp.WPF.Controls.Commands
                     case ActionTypeEnum.Chat:
                         ChatAction chatAction = (ChatAction)this.Action;
                         this.ChatMessageTextBox.Text = chatAction.ChatText;
+                        this.ChatWhisperCheckBox.IsChecked = chatAction.IsWhisper;
                         break;
                     case ActionTypeEnum.Cooldown:
                         CooldownAction cooldownAction = (CooldownAction)this.Action;
@@ -130,6 +136,8 @@ namespace MixItUp.WPF.Controls.Commands
                     case ActionTypeEnum.Currency:
                         CurrencyAction currencyAction = (CurrencyAction)this.Action;
                         this.CurrencyAmountTextBox.Text = currencyAction.Amount.ToString();
+                        this.CurrencyMessageTextBox.Text = currencyAction.ChatText;
+                        this.CurrencyWhisperCheckBox.IsChecked = currencyAction.IsWhisper;
                         break;
                     case ActionTypeEnum.ExternalProgram:
                         ExternalProgramAction externalAction = (ExternalProgramAction)this.Action;
@@ -138,6 +146,7 @@ namespace MixItUp.WPF.Controls.Commands
                         break;
                     case ActionTypeEnum.Giveaway:
                         GiveawayAction giveawayAction = (GiveawayAction)this.Action;
+                        this.GiveawayItemTextBox.Text = giveawayAction.GiveawayItem;
                         break;
                     case ActionTypeEnum.Input:
                         InputAction inputAction = (InputAction)this.Action;

@@ -1,6 +1,4 @@
 ﻿using Mixer.Base.Util;
-using MixItUp.Base.Actions;
-using System.Collections.Generic;
 
 namespace MixItUp.Base.Commands
 {
@@ -24,8 +22,8 @@ namespace MixItUp.Base.Commands
 
         public InteractiveCommand() { }
 
-        public InteractiveCommand(string name, string command, InteractiveCommandEventType eventType, IEnumerable<ActionBase> actions)
-            : base(name, CommandTypeEnum.Interactive, command, actions)
+        public InteractiveCommand(string name, string command, InteractiveCommandEventType eventType)
+            : base(name, CommandTypeEnum.Interactive, command)
         {
             this.EventType = eventType;
         }

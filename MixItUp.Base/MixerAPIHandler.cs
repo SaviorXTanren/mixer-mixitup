@@ -19,7 +19,7 @@ namespace MixItUp.Base
 
         public static OverlayWebServer OverlayServer { get; private set; }
 
-        public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<ClientScopeEnum> scopes)
+        public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<OAuthClientScopeEnum> scopes)
         {
             MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(clientID, scopes);
             return (MixerAPIHandler.MixerConnection != null);

@@ -1,15 +1,22 @@
 ﻿using Mixer.Base.ViewModel;
+using MixItUp.Base.Commands;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
+    [DataContract]
     public class ChatAction : ActionBase
     {
+        [DataMember]
         public string ChatText { get; set; }
 
+        [DataMember]
         public bool IsWhisper { get; set; }
+
+        public ChatAction() { }
 
         public ChatAction(string chatText, bool isWhisper)
             : base(ActionTypeEnum.Chat)
@@ -38,15 +45,6 @@ namespace MixItUp.Base.Actions
                     await MixerAPIHandler.ChatClient.SendMessage(message);
                 }
             }
-        }
-
-        public override SerializableAction Serialize()
-        {
-            return new SerializableAction()
-            {
-                Type = this.Type,
-                Values = new List<string>() { this.ChatText, this.IsWhisper.ToString() }
-            };
         }
     }
 }

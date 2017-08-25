@@ -45,17 +45,10 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0">Name:</TextBlock>
                 <TextBox x:Name="NameTextBox" Grid.Column="2" />
-
-                <TextBlock Grid.Column="4">Type:</TextBlock>
-                <ComboBox x:Name="TypeComboBox" Grid.Column="6" SelectionChanged="TypeComboBox_SelectionChanged" />
             </Grid>
 
             <Grid x:Name="ChatCommandGrid" Grid.Row="2" Visibility="Collapsed">
@@ -63,17 +56,10 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0">Command (Do not include the !):</TextBlock>
                 <TextBox x:Name="ChatCommandTextBox" Grid.Column="2" />
-
-                <TextBlock Grid.Column="4">Description:</TextBlock>
-                <TextBox x:Name="ChatDescriptionTextBox" Grid.Column="6" />
             </Grid>
 
             <Grid x:Name="InteractiveCommandGrid" Grid.Row="2" HorizontalAlignment="Center" Visibility="Collapsed">
@@ -81,32 +67,13 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0">Command:</TextBlock>
-                <ComboBox x:Name="InteractiveCommandComboBox" Grid.Column="2" Width="200" DisplayMemberPath="controlID" />
 
                 <TextBlock Grid.Column="4">Event Type:</TextBlock>
                 <ComboBox x:Name="InteractiveCommandEventTypeComboBox" Grid.Column="6" Width="100" />
             </Grid>
 
             <Grid x:Name="EventCommandGrid" Grid.Row="2" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0">Event Type:</TextBlock>
-                <ComboBox x:Name="EventTypeComboBox" Grid.Column="2" />
             </Grid>
 
             <Grid x:Name="TimerCommandGrid" Grid.Row="2" Visibility="Collapsed">

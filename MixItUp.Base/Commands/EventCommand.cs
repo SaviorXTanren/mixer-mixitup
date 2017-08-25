@@ -1,19 +1,20 @@
-﻿using Mixer.Base.Clients;
-using MixItUp.Base.Actions;
-using System.Collections.Generic;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.ViewModel;
 
 namespace MixItUp.Base.Commands
 {
     public class EventCommand : CommandBase
     {
-        public ConstellationEventTypeEnum EventType { get; set; }
+        private const string EventCommandStringFormat = "{0} - {1}";
+
+        public SubscribedEventViewModel SubscribedEvent { get; set; }
 
         public EventCommand() { }
 
-        public EventCommand(string name, string command, IEnumerable<ActionBase> actions, ConstellationEventTypeEnum eventType)
-            : base(name, CommandTypeEnum.Event, command, actions)
+        public EventCommand(string name, SubscribedEventViewModel subscribedEvent)
+            : base(name, CommandTypeEnum.Event, string.Format(EventCommandStringFormat, EnumHelper.GetEnumName(subscribedEvent.Type), subscribedEvent.Name))
         {
-            this.EventType = eventType;
+            this.SubscribedEvent = subscribedEvent;
         }
     }
 }

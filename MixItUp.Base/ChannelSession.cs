@@ -2,10 +2,8 @@
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
 using Mixer.Base.ViewModel.Chat;
-using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base
@@ -17,10 +15,8 @@ namespace MixItUp.Base
 
         public static ChannelSettings Settings { get; private set; }
 
-        public static Dictionary<uint, ChatUserViewModel> ChatUsers { get; private set; }
-        public static Dictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
-
-        public static ObservableCollection<CommandBase> ActiveCommands { get; private set; }
+        public static LockedDictionary<uint, ChatUserViewModel> ChatUsers { get; private set; }
+        public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
         public static InteractiveGameListingModel SelectedGame { get; set; }
         public static InteractiveVersionModel SelectedGameVersion { get; set; }
@@ -32,9 +28,8 @@ namespace MixItUp.Base
             ChannelSession.User = user;
             ChannelSession.Channel = channel;
 
-            ChannelSession.ChatUsers = new Dictionary<uint, ChatUserViewModel>();
-            ChannelSession.InteractiveUsers = new Dictionary<string, InteractiveParticipantModel>();
-            ChannelSession.ActiveCommands = new ObservableCollection<CommandBase>();
+            ChannelSession.ChatUsers = new LockedDictionary<uint, ChatUserViewModel>();
+            ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
             ChannelSession.SelectedScenes = new List<InteractiveConnectedSceneGroupModel>();
         }
 
@@ -56,11 +51,6 @@ namespace MixItUp.Base
             {
                 ChannelSession.Channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel(ChannelSession.Channel.user.username);
             }
-        }
-
-        public static IEnumerable<T> GetCommands<T>() where T : CommandBase
-        {
-            return ChannelSession.ActiveCommands.Where(c => c is T).Cast<T>();
         }
     }
 }

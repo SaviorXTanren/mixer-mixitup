@@ -22,14 +22,14 @@
             <TabItem Header="Chat">
                 <ChatControls:ChatControl x:Name="Chat" />
             </TabItem>
+            <TabItem Header="Commands">
+                <CommandsControls:CommandsControl x:Name="Commands" />
+            </TabItem>
             <TabItem Header="Interactive">
                 <InteractiveControls:InteractiveControl x:Name="Interactive" />
             </TabItem>
             <TabItem Header="Events">
                 <EventsControls:EventsControl x:Name="Events" />
-            </TabItem>
-            <TabItem Header="Commands">
-                <CommandsControls:CommandsControl x:Name="Commands" />
             </TabItem>
         </TabControl>
 

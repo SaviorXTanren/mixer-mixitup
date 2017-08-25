@@ -1,11 +1,15 @@
 ﻿using Mixer.Base.ViewModel;
+using MixItUp.Base.Commands;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
+    [DataContract]
     public class WaitAction : ActionBase
     {
+        [DataMember]
         public int WaitAmount { get; set; }
 
         public WaitAction(int waitAmount)
@@ -21,15 +25,6 @@ namespace MixItUp.Base.Actions
                 await this.Wait500();
                 await this.Wait500();
             }
-        }
-
-        public override SerializableAction Serialize()
-        {
-            return new SerializableAction()
-            {
-                Type = this.Type,
-                Values = new List<string>() { this.WaitAmount.ToString() }
-            };
         }
     }
 }

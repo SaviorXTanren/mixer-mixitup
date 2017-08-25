@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Commands;
 using System;
 using System.Runtime.Serialization;
 
@@ -18,6 +19,9 @@ namespace MixItUp.Base.ViewModel
 
         [DataMember]
         public string Name { get; set; }
+
+        [DataMember]
+        public EventCommand Command { get; set; }
 
         public SubscribedEventViewModel(ConstellationEventTypeEnum type, ChannelAdvancedModel channel) : this(type, channel.id, channel.user.username) { }
 

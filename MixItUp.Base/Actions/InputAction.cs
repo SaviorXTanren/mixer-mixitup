@@ -1,8 +1,11 @@
 ﻿using Mixer.Base.Util;
 using Mixer.Base.ViewModel;
+using MixItUp.Base.Commands;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using WindowsInput;
 using WindowsInput.Native;
@@ -413,11 +416,16 @@ namespace MixItUp.Base.Actions
         OEM_PERIOD = 190,
     }
 
+    [DataContract]
     public class InputAction : ActionBase
     {
+        [DataMember]
         public List<InputTypeEnum> Inputs { get; set; }
 
+        [JsonIgnore]
         private InputSimulator simulator = new InputSimulator();
+
+        public InputAction() { }
 
         public InputAction(IEnumerable<InputTypeEnum> inputs)
             : base(ActionTypeEnum.Input)
@@ -440,14 +448,6 @@ namespace MixItUp.Base.Actions
             simulator.Keyboard.KeyPress(keyCodes.ToArray());
 
             return Task.FromResult(0);
-        }
-        public override SerializableAction Serialize()
-        {
-            return new SerializableAction()
-            {
-                Type = this.Type,
-                Values = this.Inputs.Select(i => i.ToString()).ToList()
-            };
         }
     }
 }

@@ -4,6 +4,14 @@
              xmlns:local="clr-namespace:MixItUp.WPF"
              StartupUri="LoginWindow.xaml">
     <Application.Resources>
+
+        <Style x:Key="StandardDataGrid" TargetType="DataGrid">
+            <Setter Property="SelectionMode" Value="Single" />
+            <Setter Property="CanUserSortColumns" Value="True" />
+            <Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="CanUserDeleteRows" Value="False" />
+            <Setter Property="AutoGenerateColumns" Value="False" />
+        </Style>
         
         <Style x:Key="BorderedListViewItem" TargetType="ListViewItem">
             <Setter Property="Template">
