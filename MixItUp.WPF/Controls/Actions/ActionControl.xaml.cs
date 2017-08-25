@@ -1,13 +1,12 @@
-﻿using System.Windows.Controls;
-using System.Windows;
+﻿using Microsoft.Win32;
 using Mixer.Base.Util;
-using Microsoft.Win32;
 using MixItUp.Base.Actions;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Navigation;
 using System.Diagnostics;
-using MixItUp.Base.Commands;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -16,14 +15,18 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class ActionControl : UserControl
     {
+        private IEnumerable<ActionTypeEnum> allowedActions;
         private ActionBase Action;
 
         public ActionControl() : this(null) { }
 
-        public ActionControl(ActionBase action)
+        public ActionControl(IEnumerable<ActionTypeEnum> allowedActions) : this(allowedActions, null) { }
+
+        public ActionControl(IEnumerable<ActionTypeEnum> allowedActions, ActionBase action)
         {
             InitializeComponent();
 
+            this.allowedActions = allowedActions;
             this.Action = action;
 
             this.Loaded += ActionControl_Loaded;
@@ -114,7 +117,15 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ActionControl_Loaded(object sender, RoutedEventArgs e)
         {
-            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>();
+            if (this.allowedActions == null)
+            {
+                this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>();
+            }
+            else
+            {
+                this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>(this.allowedActions);
+            }
+
             this.CooldownTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CooldownActionTypeEnum>();
             this.InputButtonComboBox.ItemsSource = EnumHelper.GetEnumNames<InputTypeEnum>();
 

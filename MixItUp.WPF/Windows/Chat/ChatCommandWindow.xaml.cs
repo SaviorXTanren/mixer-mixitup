@@ -22,6 +22,12 @@ namespace MixItUp.WPF.Windows.Chat
 
         private ObservableCollection<ActionControl> actionControls;
 
+        private List<ActionTypeEnum> allowedActions = new List<ActionTypeEnum>()
+        {
+            ActionTypeEnum.Chat, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram, ActionTypeEnum.Giveaway,
+            ActionTypeEnum.Input, ActionTypeEnum.Overlay, ActionTypeEnum.Sound, ActionTypeEnum.Wait
+        };
+
         public ChatCommandWindow() : this(null) { }
 
         public ChatCommandWindow(ChatCommand command)
@@ -52,7 +58,7 @@ namespace MixItUp.WPF.Windows.Chat
 
                 foreach (ActionBase action in this.command.Actions)
                 {
-                    this.actionControls.Add(new ActionControl(action));
+                    this.actionControls.Add(new ActionControl(allowedActions, action));
                 }
             }
 
@@ -61,7 +67,7 @@ namespace MixItUp.WPF.Windows.Chat
 
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
         {
-            this.actionControls.Add(new ActionControl());
+            this.actionControls.Add(new ActionControl(allowedActions));
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)

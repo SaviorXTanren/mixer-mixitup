@@ -8,6 +8,7 @@ using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -26,6 +27,8 @@ namespace MixItUp.WPF.Controls.Commands
         private SubscribedEventViewModel subscribedEvent;
 
         private ObservableCollection<ActionControl> actionControls;
+
+
 
         public CommandDetailsWindow(CommandTypeEnum type) : this(type, null) { }
 
@@ -121,7 +124,7 @@ namespace MixItUp.WPF.Controls.Commands
 
                 foreach (ActionBase action in this.Command.Actions)
                 {
-                    this.actionControls.Add(new ActionControl(action));
+                    this.actionControls.Add(new ActionControl(null, action));
                 }
             }
         }
