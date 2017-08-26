@@ -25,16 +25,13 @@ namespace MixItUp.WPF.Controls.Commands
             InitializeComponent();
         }
 
-        protected override async Task InitializeInternal()
+        protected override Task InitializeInternal()
         {
             this.CommandsListView.ItemsSource = this.chatCommands;
 
             this.RefreshList();
 
-            IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
-            {
-                return await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(ChannelSession.Channel);
-            });
+            return base.InitializeInternal();
         }
 
         private void RefreshList()
@@ -49,7 +46,7 @@ namespace MixItUp.WPF.Controls.Commands
         private async void CommandTestButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            CommandBase command = (CommandBase)button.DataContext;
+            ChatCommand command = (ChatCommand)button.DataContext;
 
             await this.Window.RunAsyncOperation(async () =>
             {
@@ -60,9 +57,9 @@ namespace MixItUp.WPF.Controls.Commands
         private void CommandEditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            CommandBase command = (CommandBase)button.DataContext;
+            ChatCommand command = (ChatCommand)button.DataContext;
 
-            CommandDetailsWindow window = new CommandDetailsWindow(command);
+            ChatCommandWindow window = new ChatCommandWindow(command);
             window.Closed += Window_Closed;
             window.Show();
         }

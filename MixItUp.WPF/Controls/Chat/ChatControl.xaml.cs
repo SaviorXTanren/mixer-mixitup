@@ -179,15 +179,24 @@ namespace MixItUp.WPF.Controls.Chat
             this.Messages.Add(message);
             this.MessageControls.Add(new ChatMessageControl(message));
 
-            if (this.EnableCommands && ChatMessageCommand.IsCommand(message))
+            if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
             {
                 ChatMessageCommand messageCommand = new ChatMessageCommand(message);
                 ChatCommand command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
                 if (command != null)
                 {
+                    if (message.User.Roles.Any(r => r >= command.LowestAllowedRole))
+                    {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    command.Perform(message.User, messageCommand.CommandArguments);
+                        command.Perform(message.User, messageCommand.CommandArguments);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
+                    else
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        MixerAPIHandler.ChatClient.Whisper(message.User.UserName, "You do not permission to run this command");
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
                 }
             }
         }

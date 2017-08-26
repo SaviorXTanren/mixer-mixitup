@@ -8,19 +8,6 @@
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         mc:Ignorable="d"
         Title="Command Details" Height="500" Width="600">
-    <Window.Resources>
-        <Style x:Key="ListViewBorderedItem" TargetType="ListViewItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListViewItem">
-                        <Border Name="Border" BorderBrush="Black" BorderThickness="1">
-                            <ContentPresenter />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -94,7 +81,7 @@
                 <TextBox x:Name="TimerMinimumChatMessagesTextBox" Grid.Column="6" />
             </Grid>
 
-            <ListView x:Name="ActionsListView" Grid.Row="4" Visibility="Collapsed" ItemContainerStyle="{StaticResource ListViewBorderedItem}" />
+            <ListView x:Name="ActionsListView" Grid.Row="4" Visibility="Collapsed" ItemContainerStyle="{StaticResource BorderedListViewItem}" />
 
             <Grid Grid.Row="6" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>

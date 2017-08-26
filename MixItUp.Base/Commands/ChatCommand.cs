@@ -1,4 +1,6 @@
-﻿using Mixer.Base.ViewModel.Chat;
+﻿using Mixer.Base.Util;
+using Mixer.Base.ViewModel.Chat;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Commands
@@ -16,5 +18,8 @@ namespace MixItUp.Base.Commands
         {
             this.LowestAllowedRole = lowestAllowedRole;
         }
+
+        [JsonIgnore]
+        public string LowestAllowedRoleString { get { return EnumHelper.GetEnumName(this.LowestAllowedRole); } }
     }
 }

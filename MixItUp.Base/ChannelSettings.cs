@@ -56,6 +56,12 @@ namespace MixItUp.Base
         [JsonProperty]
         public List<UserDataViewModel> UserData { get; set; }
 
+        [JsonProperty]
+        public int TimerCommandsInterval { get; set; }
+
+        [JsonProperty]
+        public int TimerCommandsMinimumMessages { get; set; }
+
         [JsonIgnore]
         public LockedList<ChatCommand> ChatCommands { get; set; }
 
@@ -83,6 +89,9 @@ namespace MixItUp.Base
             this.SubscribedEvents = new LockedList<SubscribedEventViewModel>();
             this.InteractiveControls = new LockedList<InteractiveControlViewModel>();
             this.TimerCommands = new LockedList<TimerCommand>();
+
+            this.TimerCommandsInterval = 10;
+            this.TimerCommandsMinimumMessages = 10;
         }
 
         public async Task SaveSettings()
