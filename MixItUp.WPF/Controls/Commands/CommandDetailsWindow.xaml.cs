@@ -117,8 +117,6 @@ namespace MixItUp.WPF.Controls.Commands
                         break;
                     case CommandTypeEnum.Timer:
                         TimerCommand timerCommand = (TimerCommand)this.Command;
-                        this.TimerIntervalTextBox.Text = timerCommand.Interval.ToString();
-                        this.TimerMinimumChatMessagesTextBox.Text = timerCommand.MinimumMessages.ToString();
                         break;
                 }
 

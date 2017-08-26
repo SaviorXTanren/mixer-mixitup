@@ -1,5 +1,4 @@
-﻿using Mixer.Base.ViewModel;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Timers;
@@ -7,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.Timers
 {
@@ -26,6 +24,8 @@ namespace MixItUp.WPF.Controls.Timers
         protected override Task InitializeInternal()
         {
             this.TimerCommandsListView.ItemsSource = this.timerCommands;
+            this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
+            this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
 
             this.RefreshList();
 
@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.Timers
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await command.Perform(new UserViewModel(ChannelSession.User.id, ChannelSession.User.username));
+                await command.Perform();
             });
         }
 
@@ -89,13 +89,13 @@ namespace MixItUp.WPF.Controls.Timers
         private void TimerMinimumMessagesTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             int value;
-            if (int.TryParse(this.TimerMinimumMessagesTextBox.Text, out value))
+            if (int.TryParse(this.TimerMinimumMessagesTextBox.Text, out value) && value > 0)
             {
                 ChannelSession.Settings.TimerCommandsMinimumMessages = value;
             }
             else
             {
-                MessageBoxHelper.ShowError("Minimum Messages must be a valid, positive number");
+                MessageBoxHelper.ShowError("Minimum Messages must be greater than 0");
                 this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
             }
         }
@@ -103,13 +103,13 @@ namespace MixItUp.WPF.Controls.Timers
         private void TimerIntervalTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             int value;
-            if (int.TryParse(this.TimerIntervalTextBox.Text, out value))
+            if (int.TryParse(this.TimerIntervalTextBox.Text, out value) && value >= 0)
             {
                 ChannelSession.Settings.TimerCommandsInterval = value;
             }
             else
             {
-                MessageBoxHelper.ShowError("Interval must be a valid, positive number");
+                MessageBoxHelper.ShowError("Interval must be 0 or greater");
                 this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             }
         }

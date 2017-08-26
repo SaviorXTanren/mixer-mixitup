@@ -22,6 +22,7 @@ namespace MixItUp.WPF
 
             await this.Chat.Initialize(this);
             await this.Commands.Initialize(this);
+            await this.Timers.Initialize(this);
             await this.Interactive.Initialize(this);
             await this.Events.Initialize(this);
         }

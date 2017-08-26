@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Controls.Commands
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await command.Perform(new UserViewModel(ChannelSession.User.id, ChannelSession.User.username));
+                await command.Perform();
             });
         }
 

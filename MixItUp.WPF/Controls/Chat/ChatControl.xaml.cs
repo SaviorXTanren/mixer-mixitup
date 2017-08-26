@@ -30,7 +30,7 @@ namespace MixItUp.WPF.Controls.Chat
         public ObservableCollection<ChatMessageControl> MessageControls = new ObservableCollection<ChatMessageControl>();
         public List<ChatMessageViewModel> Messages = new List<ChatMessageViewModel>();
 
-        private CancellationTokenSource channelRefreshCancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         public ChatControl()
         {
@@ -66,27 +66,65 @@ namespace MixItUp.WPF.Controls.Chat
                 MixerAPIHandler.ChatClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(async () =>
-                {
-                    while (!this.channelRefreshCancellationTokenSource.Token.IsCancellationRequested)
-                    {
-                        try
-                        {
-                            await ChannelSession.RefreshChannel();
-                            this.RefreshViewerCount();
+                Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                            this.channelRefreshCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                            await Task.Delay(1000 * 30);
-                        }
-                        catch (Exception) { }
-                    }
-
-                    this.channelRefreshCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                }, this.channelRefreshCancellationTokenSource.Token);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
+        }
+
+        private async Task ChannelRefreshBackground()
+        {
+            while (!this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
+            {
+                try
+                {
+                    await ChannelSession.RefreshChannel();
+                    this.RefreshViewerCount();
+
+                    this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                    await Task.Delay(1000 * 30);
+                }
+                catch (Exception) { }
+            }
+
+            this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
+        }
+
+        private async Task TimerCommandsBackground()
+        {
+            int timerCommandIndex = 0;
+            while (!this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
+            {               
+                int startMessageCount = this.Messages.Count;
+                try
+                {
+                    DateTimeOffset startTime = DateTimeOffset.Now;
+
+                    Thread.Sleep(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval);
+                    if (ChannelSession.Settings.TimerCommands.Count > 0)
+                    {
+                        TimerCommand command = ChannelSession.Settings.TimerCommands[timerCommandIndex];
+
+                        while ((this.Messages.Count - startMessageCount) <= ChannelSession.Settings.TimerCommandsMinimumMessages)
+                        {
+                            Thread.Sleep(1000 * 10);
+                        }
+
+                        await command.Perform();
+
+                        timerCommandIndex++;
+                        timerCommandIndex = timerCommandIndex % ChannelSession.Settings.TimerCommands.Count;
+                    }
+                }
+                catch (ThreadAbortException) { return; }
+                catch (Exception) { }
+            }
+
+            this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
         }
 
         private async void ChatClearMessagesButton_Click(object sender, RoutedEventArgs e)
@@ -118,7 +156,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.channelRefreshCancellationTokenSource.Cancel();
+            this.backgroundThreadCancellationTokenSource.Cancel();
         }
 
         private void ChatCommandEditButton_Click(object sender, RoutedEventArgs e)

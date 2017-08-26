@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
+        xmlns:TimerControls="clr-namespace:MixItUp.WPF.Controls.Timers"
         xmlns:InteractiveControls="clr-namespace:MixItUp.WPF.Controls.Interactive"
         xmlns:EventsControls="clr-namespace:MixItUp.WPF.Controls.Events"
         xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
@@ -24,6 +25,9 @@
             </TabItem>
             <TabItem Header="Commands">
                 <CommandsControls:CommandsControl x:Name="Commands" />
+            </TabItem>
+            <TabItem Header="Timers">
+                <TimerControls:TimerControl x:Name="Timers" />
             </TabItem>
             <TabItem Header="Interactive">
                 <InteractiveControls:InteractiveControl x:Name="Interactive" />
