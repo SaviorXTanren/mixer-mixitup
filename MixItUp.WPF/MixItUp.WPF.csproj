@@ -114,6 +114,9 @@
     <Compile Include="Windows\Chat\ChatCommandWindow.xaml.cs">
       <DependentUpon>ChatCommandWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Events\EventCommandWindow.xaml.cs">
+      <DependentUpon>EventCommandWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\LoadingWindowBase.cs" />
     <Compile Include="Windows\Timers\TimerCommandWindow.xaml.cs">
       <DependentUpon>TimerCommandWindow.xaml</DependentUpon>
@@ -188,6 +191,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Chat\ChatCommandWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Events\EventCommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,12 +1,11 @@
 ﻿using Microsoft.Win32;
 using Mixer.Base.Clients;
-using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
-using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,20 +15,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.Events
 {
     public class SubscribedEventItem : NotifyPropertyChangedBase, IEquatable<SubscribedEventItem>
     {
-        public SubscribedEventItem(SubscribedEventViewModel eventType)
+        public SubscribedEventItem(EventCommand command)
         {
-            this.EventType = eventType;
+            this.Command = command;
             this.EventsFired = new ObservableCollection<SubscribedFiredEventItem>();
             this.DetailsVisibility = Visibility.Collapsed;
         }
 
-        public SubscribedEventViewModel EventType { get; set; }
+        public EventCommand Command { get; set; }
 
         public ObservableCollection<SubscribedFiredEventItem> EventsFired { get; set; }
 
@@ -44,7 +42,7 @@ namespace MixItUp.WPF.Controls.Events
         }
         private Visibility detailsVisibility;
 
-        public string EventName { get { return this.EventType.ToString(); } }
+        public string EventName { get { return this.Command.ToString(); } }
 
         public string EventsFiredCount { get { return this.EventsFired.Count.ToString(); } }
 
@@ -64,9 +62,9 @@ namespace MixItUp.WPF.Controls.Events
             return false;
         }
 
-        public bool Equals(SubscribedEventItem other) { return this.EventType.Equals(other.EventType); }
+        public bool Equals(SubscribedEventItem other) { return this.Command.Equals(other.Command); }
 
-        public override int GetHashCode() { return this.EventType.GetHashCode(); }
+        public override int GetHashCode() { return this.Command.GetHashCode(); }
     }
 
     public class SubscribedFiredEventItem : NotifyPropertyChangedBase
@@ -86,8 +84,6 @@ namespace MixItUp.WPF.Controls.Events
     /// </summary>
     public partial class EventsControl : MainControlBase
     {
-        private ObservableCollection<string> eventTypes = new ObservableCollection<string>();
-
         private ObservableCollection<SubscribedEventItem> subscribedEvents = new ObservableCollection<SubscribedEventItem>();
 
         public EventsControl()
@@ -97,146 +93,88 @@ namespace MixItUp.WPF.Controls.Events
 
         protected override async Task InitializeInternal()
         {
+            this.EventsCommandsListView.ItemsSource = this.subscribedEvents;
+
             if (await MixerAPIHandler.InitializeConstellationClient())
             {
                 MixerAPIHandler.ConstellationClient.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
+            }
 
-                foreach (SubscribedEventViewModel subscribedEvent in ChannelSession.Settings.SubscribedEvents)
+            await this.RefreshList();
+        }
+
+        private async Task RefreshList()
+        {
+            List<SubscribedEventItem> newEvents = new List<SubscribedEventItem>();
+            foreach (EventCommand eventCommand in ChannelSession.Settings.EventCommands)
+            {
+                if (!this.subscribedEvents.Any(se => se.Command.Equals(eventCommand)))
                 {
-                    this.subscribedEvents.Add(new SubscribedEventItem(subscribedEvent));
+                    newEvents.Add(new SubscribedEventItem(eventCommand));
                 }
+            }
 
-                if (this.subscribedEvents.Count > 0)
+            if (newEvents.Count > 0)
+            {
+                await MixerAPIHandler.ConstellationClient.LiveSubscribe(this.subscribedEvents.Select(se => se.Command.GetEventType()));
+                foreach (SubscribedEventItem newEvent in newEvents)
                 {
-                    await MixerAPIHandler.ConstellationClient.LiveSubscribe(this.subscribedEvents.Select(se => se.EventType.GetEventType()));
-                }
-
-                this.SubscribedEventsList.ItemsSource = this.subscribedEvents;
-
-                this.EventTypeComboBox.ItemsSource = this.eventTypes;
-                foreach (string name in EnumHelper.GetEnumNames<ConstellationEventTypeEnum>())
-                {
-                    if (name.ToString().Contains("Channel") || name.ToString().Contains("User"))
-                    {
-                        this.eventTypes.Add(name);
-                    }
+                    this.subscribedEvents.Add(newEvent);
                 }
             }
         }
 
-        private void SubscribedEventsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private async void CommandTestButton_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var item in e.AddedItems)
-            {
-                SubscribedEventItem eventItem = (SubscribedEventItem)item;
-                eventItem.DetailsVisibility = Visibility.Visible;
-            }
+            Button button = (Button)sender;
+            SubscribedEventItem item = (SubscribedEventItem)button.DataContext;
 
-            foreach (var item in e.RemovedItems)
+            await this.Window.RunAsyncOperation(async () =>
             {
-                SubscribedEventItem eventItem = (SubscribedEventItem)item;
-                eventItem.DetailsVisibility = Visibility.Collapsed;
-            }
+                await item.Command.Perform();
+            });
         }
 
-        private async void RemoveSubscribedEvent_Click(object sender, RoutedEventArgs e)
+        private void CommandEditButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)e.OriginalSource;
-            SubscribedEventItem subscribedEventItem = (SubscribedEventItem)button.DataContext;
+            Button button = (Button)sender;
+            SubscribedEventItem item = (SubscribedEventItem)button.DataContext;
+
+            EventCommandWindow window = new EventCommandWindow(item.Command);
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private async void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            SubscribedEventItem item = (SubscribedEventItem)button.DataContext;
+            ChannelSession.Settings.EventCommands.Remove(item.Command);
+            this.subscribedEvents.Remove(item);
 
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.ConstellationClient.LiveUnsubscribe(new List<ConstellationEventType>() { subscribedEventItem.EventType.GetEventType() });
+                return await MixerAPIHandler.ConstellationClient.LiveUnsubscribe(new List<ConstellationEventType>() { item.Command.GetEventType() });
             });
 
-            if (!result)
-            {
-                MessageBoxHelper.ShowError("Unable to unsubscribe from event, please try again");
-                return;
-            }
+            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
-            this.subscribedEvents.Remove(subscribedEventItem);
-            ChannelSession.Settings.SubscribedEvents.Remove(subscribedEventItem.EventType);
+            this.EventsCommandsListView.SelectedIndex = -1;
 
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                await ChannelSession.SaveSettings();
-            });
+            await this.RefreshList();
         }
 
-        private void EventIDFinderTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                this.AddEventButton_Click(this, new RoutedEventArgs());
-            }
+            EventCommandWindow window = new EventCommandWindow();
+            window.Closed += Window_Closed;
+            window.Show();
         }
 
-        private async void AddEventButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void Window_Closed(object sender, System.EventArgs e)
         {
-            if (this.EventIDFinderTextBox.Visibility == Visibility.Visible && string.IsNullOrEmpty(this.EventIDFinderTextBox.Text))
-            {
-                MessageBoxHelper.ShowError("A name must be specified for this event type");
-                return;
-            }
-
-            ConstellationEventTypeEnum eventType = EnumHelper.GetEnumValueFromString<ConstellationEventTypeEnum>((string)this.EventTypeComboBox.SelectedItem);
-            string eventIDName = this.EventIDFinderTextBox.Text;
-
-            SubscribedEventViewModel newEventType = null;
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                if (eventType.ToString().Contains("channel"))
-                {
-                    ChannelAdvancedModel channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel(eventIDName);
-                    if (channel != null)
-                    {
-                        newEventType = new SubscribedEventViewModel(eventType, channel);
-                    }
-                }
-                else if (eventType.ToString().Contains("user"))
-                {
-                    UserModel user = await MixerAPIHandler.MixerConnection.Users.GetUser(eventIDName);
-                    if (user != null)
-                    {
-                        newEventType = new SubscribedEventViewModel(eventType, user);
-                    }
-                }
-            });
-
-            if (newEventType == null)
-            {
-                MessageBoxHelper.ShowError("Unable to find the specified name, please ensure you typed it correctly");
-                return;
-            }
-
-            if (this.subscribedEvents.Select(se => se.EventType).Contains(newEventType))
-            {
-                MessageBoxHelper.ShowError("This event already exists");
-                return;
-            }
-
-            bool result = await this.Window.RunAsyncOperation(async () =>
-            {
-                return await MixerAPIHandler.ConstellationClient.LiveSubscribe(new List<ConstellationEventType>() { newEventType.GetEventType() });
-            });
-            
-            if (!result)
-            {
-                MessageBoxHelper.ShowError("Unable to subscribe to event, please try again");
-                return;
-            }
-
-            this.subscribedEvents.Add(new SubscribedEventItem(newEventType));
-            ChannelSession.Settings.SubscribedEvents.Add(newEventType);
-
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                await ChannelSession.SaveSettings();
-            });
-
-            this.EventTypeComboBox.SelectedIndex = -1;
-            this.EventIDFinderTextBox.Clear();
+            await this.RefreshList();
+            await ChannelSession.Settings.SaveSettings();
         }
 
         private async void ExportDataButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -256,7 +194,7 @@ namespace MixItUp.WPF.Controls.Events
                     {
                         foreach (SubscribedFiredEventItem firedEventItem in eventItem.EventsFired)
                         {
-                            fileData.AppendLine(string.Format("{0},{1},{2}", EnumHelper.GetEnumName(eventItem.EventType.Type), eventItem.EventType.Name, string.Empty));
+                            fileData.AppendLine(string.Format("{0},{1},{2}", EnumHelper.GetEnumName(eventItem.Command.EventType), eventItem.Command.Command, string.Empty));
                         }
                     }
 
@@ -272,9 +210,13 @@ namespace MixItUp.WPF.Controls.Events
         {
             foreach (SubscribedEventItem subscribedEvent in this.subscribedEvents)
             {
-                if (subscribedEvent.EventType.UniqueEventID.Equals(e.channel))
+                if (subscribedEvent.Command.UniqueEventID.Equals(e.channel))
                 {
                     subscribedEvent.AddFiredEvent(e);
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    subscribedEvent.Command.Perform();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
         }

@@ -64,11 +64,13 @@ namespace MixItUp.WPF.Controls.Commands
             window.Show();
         }
 
-        private void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             ChatCommand command = (ChatCommand)button.DataContext;
             ChannelSession.Settings.ChatCommands.Remove(command);
+
+            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
             this.CommandsListView.SelectedIndex = -1;
 

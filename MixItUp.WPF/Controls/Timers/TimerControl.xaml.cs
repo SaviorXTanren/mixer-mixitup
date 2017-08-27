@@ -62,11 +62,13 @@ namespace MixItUp.WPF.Controls.Timers
             window.Show();
         }
 
-        private void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             TimerCommand command = (TimerCommand)button.DataContext;
             ChannelSession.Settings.TimerCommands.Remove(command);
+
+            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
             this.TimerCommandsListView.SelectedIndex = -1;
 

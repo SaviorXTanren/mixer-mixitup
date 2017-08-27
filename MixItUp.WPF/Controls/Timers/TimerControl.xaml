@@ -58,7 +58,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Width="100">Add Command</Button>
+            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Width="80">Add Timer</Button>
 
             <TextBlock Grid.Column="2">Interval (Mins):</TextBlock>
             <TextBox Grid.Column="4" x:Name="TimerIntervalTextBox" LostFocus="TimerIntervalTextBox_LostFocus" Width="50" />

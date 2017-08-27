@@ -24,7 +24,7 @@ namespace MixItUp.WPF.Controls.Commands
         private CommandTypeEnum type;
 
         private InteractiveControlModel interactiveControl;
-        private SubscribedEventViewModel subscribedEvent;
+        //private SubscribedEventViewModel subscribedEvent;
 
         private ObservableCollection<ActionControl> actionControls;
 
@@ -40,11 +40,11 @@ namespace MixItUp.WPF.Controls.Commands
             this.interactiveControl = interactiveControl;
         }
 
-        public CommandDetailsWindow(SubscribedEventViewModel subscribedEvent, CommandBase command = null)
-            : this(CommandTypeEnum.Event, command)
-        {
-            this.subscribedEvent = subscribedEvent;
-        }
+        //public CommandDetailsWindow(SubscribedEventViewModel subscribedEvent, CommandBase command = null)
+        //    : this(CommandTypeEnum.Event, command)
+        //{
+        //    this.subscribedEvent = subscribedEvent;
+        //}
 
         private CommandDetailsWindow(CommandTypeEnum type, CommandBase command)
         {
@@ -60,10 +60,10 @@ namespace MixItUp.WPF.Controls.Commands
             {
                 throw new InvalidOperationException("Interactive commands must have an interactive control set");
             }
-            if (this.type == CommandTypeEnum.Event && this.subscribedEvent == null)
-            {
-                throw new InvalidOperationException("Event commands must have a subscribed event set");
-            }
+            //if (this.type == CommandTypeEnum.Event && this.subscribedEvent == null)
+            //{
+            //    throw new InvalidOperationException("Event commands must have a subscribed event set");
+            //}
 
             this.Loaded += CommandDetailsWindow_Loaded;
         }

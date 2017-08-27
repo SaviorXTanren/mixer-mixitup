@@ -24,7 +24,7 @@ namespace MixItUp.Base
 
                 settings.Channel = channel;
                 settings.ChatCommands = new LockedList<ChatCommand>(settings.chatCommandsInternal);
-                settings.SubscribedEvents = new LockedList<SubscribedEventViewModel>(settings.subscribedEventsInternal);
+                settings.EventCommands = new LockedList<EventCommand>(settings.eventCommandsInternal);
                 settings.InteractiveControls = new LockedList<InteractiveControlViewModel>(settings.interactiveControlsInternal);
                 settings.TimerCommands = new LockedList<TimerCommand>(settings.timerCommandsInternal);
 
@@ -42,7 +42,7 @@ namespace MixItUp.Base
         private List<ChatCommand> chatCommandsInternal { get; set; }
 
         [JsonProperty]
-        private List<SubscribedEventViewModel> subscribedEventsInternal { get; set; }
+        private List<EventCommand> eventCommandsInternal { get; set; }
 
         [JsonProperty]
         private List<InteractiveControlViewModel> interactiveControlsInternal { get; set; }
@@ -66,7 +66,7 @@ namespace MixItUp.Base
         public LockedList<ChatCommand> ChatCommands { get; set; }
 
         [JsonIgnore]
-        public LockedList<SubscribedEventViewModel> SubscribedEvents { get; set; }
+        public LockedList<EventCommand> EventCommands { get; set; }
 
         [JsonIgnore]
         public LockedList<InteractiveControlViewModel> InteractiveControls { get; set; }
@@ -79,14 +79,14 @@ namespace MixItUp.Base
         public ChannelSettings()
         {
             this.chatCommandsInternal = new List<ChatCommand>();
-            this.subscribedEventsInternal = new List<SubscribedEventViewModel>();
+            this.eventCommandsInternal = new List<EventCommand>();
             this.interactiveControlsInternal = new List<InteractiveControlViewModel>();
             this.timerCommandsInternal = new List<TimerCommand>();
 
             this.UserData = new List<UserDataViewModel>();
 
             this.ChatCommands = new LockedList<ChatCommand>();
-            this.SubscribedEvents = new LockedList<SubscribedEventViewModel>();
+            this.EventCommands = new LockedList<EventCommand>();
             this.InteractiveControls = new LockedList<InteractiveControlViewModel>();
             this.TimerCommands = new LockedList<TimerCommand>();
 
@@ -100,7 +100,7 @@ namespace MixItUp.Base
             string filePath = ChannelSettings.GetSettingsFilePath(this.Channel);
 
             this.chatCommandsInternal = this.ChatCommands.ToList();
-            this.subscribedEventsInternal = this.SubscribedEvents.ToList();
+            this.eventCommandsInternal = this.EventCommands.ToList();
             this.interactiveControlsInternal = this.InteractiveControls.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
 
