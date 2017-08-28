@@ -1,36 +1,33 @@
-﻿using Mixer.Base.Util;
-using Mixer.Base.ViewModel.Chat;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MixItUp.WPF.Windows.Chat
+namespace MixItUp.WPF.Windows.Interactive
 {
     /// <summary>
-    /// Interaction logic for ChatCommandWindow.xaml
+    /// Interaction logic for InteractiveCommandWindow.xaml
     /// </summary>
-    public partial class ChatCommandWindow : LoadingWindowBase
+    public partial class InteractiveCommandWindow : LoadingWindowBase
     {
-        private ChatCommand command;
+        private InteractiveCommand command;
 
         private ObservableCollection<ActionControl> actionControls;
 
         private List<ActionTypeEnum> allowedActions = new List<ActionTypeEnum>()
         {
-            ActionTypeEnum.Chat, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram, ActionTypeEnum.Giveaway,
+            ActionTypeEnum.Chat, ActionTypeEnum.Cooldown, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram,
             ActionTypeEnum.Input, ActionTypeEnum.Overlay, ActionTypeEnum.Sound, ActionTypeEnum.Wait
         };
 
-        public ChatCommandWindow() : this(null) { }
+        public InteractiveCommandWindow() : this(null) { }
 
-        public ChatCommandWindow(ChatCommand command)
+        public InteractiveCommandWindow(InteractiveCommand command)
         {
             this.command = command;
 
@@ -45,17 +42,8 @@ namespace MixItUp.WPF.Windows.Chat
         {
             this.ActionsListView.ItemsSource = this.actionControls;
 
-            List<string> roles = EnumHelper.GetEnumNames<UserRole>().ToList();
-            roles.Remove(EnumHelper.GetEnumName<UserRole>(UserRole.Banned));
-            this.LowestRoleAllowedComboBox.ItemsSource = roles;
-            this.LowestRoleAllowedComboBox.SelectedIndex = 0;
-
             if (this.command != null)
             {
-                this.NameTextBox.Text = this.command.Name;
-                this.ChatCommandTextBox.Text = this.command.Command;
-                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.LowestAllowedRole);
-
                 foreach (ActionBase action in this.command.Actions)
                 {
                     this.actionControls.Add(new ActionControl(allowedActions, action));
@@ -72,23 +60,17 @@ namespace MixItUp.WPF.Windows.Chat
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(this.NameTextBox.Text))
-            {
-                MessageBoxHelper.ShowError("Required command information is missing");
-                return;
-            }
+            //if (this.EventTypeComboBox.SelectedIndex < 0)
+            //{
+            //    MessageBoxHelper.ShowError("An event type must be selected");
+            //    return;
+            //}
 
-            if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
-            {
-                MessageBoxHelper.ShowError("Required chat command information is missing");
-                return;
-            }
-
-            if (this.actionControls.Count == 0)
-            {
-                MessageBoxHelper.ShowError("At least one action must be created");
-                return;
-            }
+            //if (this.EventIDTextBox.IsEnabled && string.IsNullOrEmpty(this.EventIDTextBox.Text))
+            //{
+            //    MessageBoxHelper.ShowError("A name must be specified for this event type");
+            //    return;
+            //}
 
             List<ActionBase> newActions = new List<ActionBase>();
             foreach (ActionControl control in this.actionControls)
@@ -102,17 +84,14 @@ namespace MixItUp.WPF.Windows.Chat
                 newActions.Add(action);
             }
 
-            UserRole lowestRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem);
             if (this.command == null)
             {
-                this.command = new ChatCommand(this.NameTextBox.Text, this.ChatCommandTextBox.Text, lowestRole);
-                ChannelSession.Settings.ChatCommands.Add(this.command);
+                this.command = new InteractiveCommand();
+                ChannelSession.Settings.InteractiveControls.Add(this.command);
             }
             else
             {
-                this.command.Name = this.NameTextBox.Text;
-                this.command.Command = this.ChatCommandTextBox.Text;
-                this.command.LowestAllowedRole = lowestRole;
+                this.command.Actions.Clear();
             }
 
             this.command.Actions.Clear();

@@ -1,8 +1,9 @@
-﻿using Mixer.Base.Util;
+﻿using Mixer.Base.Model.Interactive;
+using Mixer.Base.Util;
 
 namespace MixItUp.Base.Commands
 {
-    public enum InteractiveCommandEventType
+    public enum InteractiveButtonCommandEventType
     {
         [Name("Mouse Down")]
         MouseDown,
@@ -12,20 +13,34 @@ namespace MixItUp.Base.Commands
         KeyUp,
         [Name("Key Down")]
         KeyDown,
-        [Name("Move")]
-        Move,
     }
 
     public class InteractiveCommand : CommandBase
     {
-        public InteractiveCommandEventType EventType { get; set; }
+        public uint GameID { get; set; }
+
+        public string SceneID { get; set; }
+
+        public bool IsJoystick { get; set; }
+
+        public InteractiveButtonCommandEventType EventType { get; set; }
 
         public InteractiveCommand() { }
 
-        public InteractiveCommand(string name, string command, InteractiveCommandEventType eventType)
-            : base(name, CommandTypeEnum.Interactive, command)
+        public InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandEventType eventType)
+            : base(control.controlID, CommandTypeEnum.Interactive, EnumHelper.GetEnumName(eventType))
         {
+            this.GameID = game.id;
+            this.SceneID = scene.sceneID;
             this.EventType = eventType;
+        }
+
+        public InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control)
+            : base(control.controlID, CommandTypeEnum.Interactive, string.Empty)
+        {
+            this.GameID = game.id;
+            this.SceneID = scene.sceneID;
+            this.IsJoystick = true;
         }
 
         public string EventTypeTransactionString { get { return this.EventType.ToString().ToLower(); } }

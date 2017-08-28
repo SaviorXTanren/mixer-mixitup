@@ -117,6 +117,12 @@
     <Compile Include="Windows\Events\EventCommandWindow.xaml.cs">
       <DependentUpon>EventCommandWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml.cs">
+      <DependentUpon>InteractiveBoardDesignerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Interactive\InteractiveCommandWindow.xaml.cs">
+      <DependentUpon>InteractiveCommandWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\LoadingWindowBase.cs" />
     <Compile Include="Windows\Timers\TimerCommandWindow.xaml.cs">
       <DependentUpon>TimerCommandWindow.xaml</DependentUpon>
@@ -195,6 +201,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Events\EventCommandWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Interactive\InteractiveCommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

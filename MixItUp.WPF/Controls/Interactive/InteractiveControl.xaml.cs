@@ -1,24 +1,32 @@
 ﻿using Mixer.Base.Interactive;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.ViewModel;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
-using System;
+using MixItUp.WPF.Windows.Interactive;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace MixItUp.WPF.Controls.Interactive
 {
-    public class InteractiveBoardSize
+    public class InteractiveControlCommandItem
     {
-        public string Name { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public InteractiveControlModel Control { get; set; }
+        public InteractiveCommand Command { get; set; }
+
+        public InteractiveControlCommandItem(InteractiveControlModel control, InteractiveCommand command)
+        {
+            this.Control = control;
+            this.Command = command;
+        }
+
+        public string Name { get { return this.Control.controlID; } }
+        public string Type { get { return (this.Control is InteractiveButtonControlModel) ? "Button" : "Joystick"; } }
     }
 
     /// <summary>
@@ -26,44 +34,23 @@ namespace MixItUp.WPF.Controls.Interactive
     /// </summary>
     public partial class InteractiveControl : MainControlBase
     {
-        private const int LargeWidth = 80;
-        private const int LargeHeight = 22;
-
-        private const int MediumWidth = 40;
-        private const int MediumHeight = 25;
-
-        private const int SmallWidth = 30;
-        private const int SmallHeight = 40;
-
-        public ObservableCollection<InteractiveBoardSize> boardSizes = new ObservableCollection<InteractiveBoardSize>();
-
         private ObservableCollection<InteractiveGameListingModel> interactiveGames = new ObservableCollection<InteractiveGameListingModel>();
 
-        private InteractiveGameListingModel selectedGame;
-        private ObservableCollection<InteractiveSceneModel> gameScenes = new ObservableCollection<InteractiveSceneModel>();
-        private InteractiveSceneModel selectedScene;
-        private InteractiveBoardSize selectedBoardSize;
+        private ObservableCollection<InteractiveSceneModel> interactiveScenes = new ObservableCollection<InteractiveSceneModel>();
+        private InteractiveSceneModel selectedScene = null;
 
-        private bool[,] boardBlocks;
-        private int blockWidthHeight;
+        private ObservableCollection<InteractiveControlCommandItem> interactiveItems = new ObservableCollection<InteractiveControlCommandItem>();
 
         public InteractiveControl()
         {
             InitializeComponent();
-
-            this.boardSizes.Add(new InteractiveBoardSize() { Name = "Large", Width = LargeWidth, Height = LargeHeight });
-            this.boardSizes.Add(new InteractiveBoardSize() { Name = "Medium", Width = MediumWidth, Height = MediumHeight });
-            this.boardSizes.Add(new InteractiveBoardSize() { Name = "Small", Width = SmallWidth, Height = SmallHeight });
-            this.selectedBoardSize = this.boardSizes.First();
-
-            this.SizeChanged += InteractiveControl_SizeChanged;
         }
 
         protected override async Task InitializeInternal()
         {
             this.InteractiveGamesComboBox.ItemsSource = this.interactiveGames;
-            this.SceneComboBox.ItemsSource = this.gameScenes;
-            this.BoardSizeComboBox.ItemsSource = this.boardSizes;
+            this.InteractiveScenesComboBox.ItemsSource = this.interactiveScenes;
+            this.InteractiveControlsGridView.ItemsSource = this.interactiveItems;
 
             await this.RefreshInteractiveGames();
         }
@@ -84,97 +71,154 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private async Task RefreshSelectedInteractiveGame()
         {
-            this.gameScenes.Clear();
+            await this.RefreshInteractiveGames();
 
-            InteractiveVersionModel version = await this.Window.RunAsyncOperation(async () =>
+            this.interactiveScenes.Clear();
+
+            ChannelSession.SelectedGameVersion = await this.Window.RunAsyncOperation(async () =>
             {
-                await this.RefreshInteractiveGames();
-                this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
+                ChannelSession.SelectedGame = this.interactiveGames.First(g => g.id.Equals(ChannelSession.SelectedGame.id));
 
-                return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveGameVersion(this.selectedGame.versions.First());
+                return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveGameVersion(ChannelSession.SelectedGame.versions.First());
             });
 
-            this.GameNameTextBox.Text = this.selectedGame.name;
-            this.GameDescriptionTextBox.Text = this.selectedGame.description;
-
-            foreach (InteractiveSceneModel scene in version.controls.scenes)
+            if (ChannelSession.SelectedGame != null)
             {
-                this.gameScenes.Add(scene);
+                this.InteractiveGamesComboBox.SelectedItem = ChannelSession.SelectedGame;
             }
 
-            this.selectedScene = this.gameScenes.First();
-            this.SceneComboBox.SelectedIndex = 0;
-            this.BoardSizeComboBox.SelectedIndex = 0;
-
-            this.RefreshScene();
+            foreach (InteractiveSceneModel scene in ChannelSession.SelectedGameVersion.controls.scenes)
+            {
+                this.interactiveScenes.Add(scene);
+            }
+            
+            if (this.selectedScene != null)
+            {
+                this.InteractiveScenesComboBox.SelectedItem = this.interactiveScenes.FirstOrDefault(s => s.sceneID.Equals(this.selectedScene.sceneID));
+            }
+            else
+            {
+                this.InteractiveScenesComboBox.SelectedIndex = 0;
+            }
 
             this.SaveChangedButton.IsEnabled = true;
             this.GameDetailsGrid.IsEnabled = true;
+        }
+
+        private void RefreshSelectedScene()
+        {
+            this.interactiveItems.Clear();
+            if (this.selectedScene != null)
+            {
+                foreach (InteractiveButtonControlModel button in this.selectedScene.buttons)
+                {
+                    this.interactiveItems.Add(new InteractiveControlCommandItem(button, this.FindCommand(button)));
+                }
+
+                foreach (InteractiveJoystickControlModel joystick in this.selectedScene.joysticks)
+                {
+                    this.interactiveItems.Add(new InteractiveControlCommandItem(joystick, this.FindCommand(joystick)));
+                }
+            }
+        }
+
+        private InteractiveCommand FindCommand(InteractiveControlModel control)
+        {
+            return ChannelSession.Settings.InteractiveControls.FirstOrDefault(c => c.GameID.Equals(ChannelSession.SelectedGame.id) && c.SceneID.Equals(this.selectedScene.sceneID) && c.Name.Equals(control.controlID));
         }
 
         private async void InteractiveGamesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
-                this.selectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
-                await this.RefreshSelectedInteractiveGame();
+                InteractiveGameListingModel newSelectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
+                if (ChannelSession.SelectedGame != newSelectedGame)
+                {
+                    ChannelSession.SelectedGame = newSelectedGame;
+                    await this.RefreshSelectedInteractiveGame();
+                    this.ConnectButton.IsEnabled = true;
+                }
+            }
+        }
+
+        private void InteractiveScenesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.InteractiveScenesComboBox.SelectedIndex >= 0)
+            {
+                this.selectedScene = (InteractiveSceneModel)this.InteractiveScenesComboBox.SelectedItem;
+                this.RefreshSelectedScene();
             }
         }
 
         private void NewGameButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.selectedGame = null;
-            this.gameScenes.Clear();
+            //ChannelSession.SelectedGame = null;
+            //this.interactiveGameScenes.Clear();
 
-            this.GameNameTextBox.Clear();
-            this.GameDescriptionTextBox.Clear();
+            //this.GameNameTextBox.Clear();
 
-            this.selectedScene = InteractiveGameHelper.CreateDefaultScene();
-            this.gameScenes.Add(this.selectedScene);
-            this.SceneComboBox.SelectedIndex = 0;
-            this.BoardSizeComboBox.SelectedIndex = 0;
+            //this.selectedGameScene = InteractiveGameHelper.CreateDefaultScene();
+            //this.interactiveGameScenes.Add(this.selectedGameScene);
+            //this.SceneComboBox.SelectedIndex = 0;
+            //this.BoardSizeComboBox.SelectedIndex = 0;
 
-            this.RefreshScene();
+            //this.RefreshScene();
 
-            this.SaveChangedButton.IsEnabled = true;
-            this.GameDetailsGrid.IsEnabled = true;
+            //this.SaveChangedButton.IsEnabled = true;
+            //this.GameDetailsGrid.IsEnabled = true;
         }
 
-        private void SceneComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CommandTestButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.selectedScene != null && this.SceneComboBox.SelectedIndex >= 0)
+            Button button = (Button)sender;
+            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
+
+            if (command.Command != null)
             {
-                this.selectedScene = (InteractiveSceneModel)this.SceneComboBox.SelectedItem;
-                this.RefreshScene();
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await command.Command.Perform();
+                });
             }
         }
 
-        private void BoardSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CommandEditButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.selectedScene != null && this.BoardSizeComboBox.SelectedIndex >= 0)
+            Button button = (Button)sender;
+            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
+
+            InteractiveCommandWindow window = (command.Command == null) ? new InteractiveCommandWindow() : new InteractiveCommandWindow(command.Command);
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private async void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
+
+            if (command.Command != null)
             {
-                this.selectedBoardSize = (InteractiveBoardSize)this.BoardSizeComboBox.SelectedItem;
-                this.RefreshScene();
+                ChannelSession.Settings.InteractiveControls.Remove(command.Command);
+                command.Command = null;
+
+                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+
+                this.InteractiveControlsGridView.SelectedIndex = -1;
+
+                this.RefreshSelectedScene();
             }
         }
 
-        private void InteractiveControl_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
+        private async void Window_Closed(object sender, System.EventArgs e)
         {
-            if (this.selectedScene != null)
-            {
-                this.RefreshScene();
-            }
+            this.RefreshSelectedScene();
+            await ChannelSession.Settings.SaveSettings();
         }
 
         private async void SaveChangedButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(this.GameNameTextBox.Text))
-            {
-                MessageBoxHelper.ShowError("A name must be specified for the game");
-                return;
-            }
-
-            foreach (InteractiveSceneModel scene in this.gameScenes)
+            foreach (InteractiveSceneModel scene in this.interactiveScenes)
             {
                 if (scene.buttons.Count == 0 && scene.joysticks.Count == 0)
                 {
@@ -183,260 +227,151 @@ namespace MixItUp.WPF.Controls.Interactive
                 }
             }
 
-            if (this.selectedGame == null)
+            if (ChannelSession.SelectedGame == null)
             {
-                InteractiveGameListingModel gameListing = await this.Window.RunAsyncOperation(async () =>
+                await this.Window.RunAsyncOperation(async () =>
                 {
-                     return await InteractiveGameHelper.CreateInteractive2Game(MixerAPIHandler.MixerConnection, ChannelSession.Channel, ChannelSession.User, this.GameNameTextBox.Text, null);
-                });    
-                
-                if (gameListing == null)
-                {
-                    MessageBoxHelper.ShowError("Failed to create game, please try again");
-                    return;
-                }
-
-                this.selectedGame = gameListing;
-
-                await this.RefreshSelectedInteractiveGame();
+                    await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGame(ChannelSession.SelectedGame);
+                    await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGameVersion(ChannelSession.SelectedGameVersion);
+                });
             }
-            else
-            {
 
+            await this.RefreshSelectedInteractiveGame();
+        }
+
+        private async void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            bool result = await this.Window.RunAsyncOperation(async () =>
+            {
+                return await MixerAPIHandler.ConnectInteractiveClient(ChannelSession.Channel, ChannelSession.SelectedGame);
+            });
+
+            if (!result)
+            {
+                MessageBoxHelper.ShowError("Unable to connect to interactive with selected game. Please try again.");
+                return;
+            }
+
+            InteractiveConnectedSceneGroupCollectionModel scenes = await this.Window.RunAsyncOperation(async () =>
+            {
+                return await MixerAPIHandler.InteractiveClient.GetScenes();
+            });
+            ChannelSession.ConnectedGameScenes = scenes.scenes;
+            ChannelSession.ConnectedScene = ChannelSession.ConnectedGameScenes.First();
+
+            InteractiveParticipantCollectionModel participants = await this.Window.RunAsyncOperation(async () =>
+            {
+                return await MixerAPIHandler.InteractiveClient.GetAllParticipants();
+            });
+
+            ChannelSession.InteractiveUsers.Clear();
+            foreach (InteractiveParticipantModel participant in participants.participants)
+            {
+                ChannelSession.InteractiveUsers.Add(participant.sessionID, participant);
+            }
+
+            MixerAPIHandler.InteractiveClient.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
+            MixerAPIHandler.InteractiveClient.OnParticipantUpdate += InteractiveClient_OnParticipantUpdate;
+            MixerAPIHandler.InteractiveClient.OnParticipantLeave += InteractiveClient_OnParticipantLeave;
+            MixerAPIHandler.InteractiveClient.OnGiveInput += InteractiveClient_OnGiveInput;
+
+            this.GameSelectionGrid.IsEnabled = false;
+            this.GameDetailsGrid.IsEnabled = false;
+            this.ConnectButton.Visibility = Visibility.Collapsed;
+            this.DisconnectButton.Visibility = Visibility.Visible;
+        }
+
+        private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            MixerAPIHandler.InteractiveClient.OnParticipantJoin -= InteractiveClient_OnParticipantJoin;
+            MixerAPIHandler.InteractiveClient.OnParticipantUpdate -= InteractiveClient_OnParticipantUpdate;
+            MixerAPIHandler.InteractiveClient.OnParticipantLeave -= InteractiveClient_OnParticipantLeave;
+            MixerAPIHandler.InteractiveClient.OnGiveInput -= InteractiveClient_OnGiveInput;
+
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await MixerAPIHandler.DisconnectInteractiveClient();
+            });
+
+            ChannelSession.ConnectedGameScenes.Clear();
+            ChannelSession.ConnectedScene = null;
+
+            this.GameSelectionGrid.IsEnabled = true;
+            this.GameDetailsGrid.IsEnabled = true;
+            this.ConnectButton.Visibility = Visibility.Visible;
+            this.DisconnectButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void InteractiveClient_OnParticipantJoin(object sender, InteractiveParticipantCollectionModel participants)
+        {
+            if (participants != null)
+            {
+                foreach (InteractiveParticipantModel participant in participants.participants)
+                {
+                    ChannelSession.InteractiveUsers[participant.sessionID] = participant;
+                }
             }
         }
 
-        public void RefreshScene()
+        private void InteractiveClient_OnParticipantUpdate(object sender, InteractiveParticipantCollectionModel participants)
         {
-            this.InteractiveBoardGrid.IsEnabled = true;
-
-            this.InteractiveBoardCanvas.Children.Clear();
-            this.boardBlocks = new bool[this.selectedBoardSize.Width, this.selectedBoardSize.Height];
-
-            int perBlockWidth = (int)this.InteractiveBoardCanvas.ActualWidth / (this.selectedBoardSize.Width);
-            int perBlockHeight = (int)this.InteractiveBoardCanvas.ActualHeight / (this.selectedBoardSize.Height);
-            this.blockWidthHeight = Math.Min(perBlockWidth, perBlockHeight);
-
-            foreach (InteractiveControlModel control in this.selectedScene.allControls)
+            if (participants != null)
             {
-                this.BlockOutControlArea(control);
-            }
-
-            for (int w = 0; w < this.selectedBoardSize.Width; w++)
-            {
-                for (int h = 0; h < this.selectedBoardSize.Height; h++)
+                foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    if (!this.boardBlocks[w, h])
+                    ChannelSession.InteractiveUsers[participant.sessionID] = participant;
+                }
+            }
+        }
+
+        private void InteractiveClient_OnParticipantLeave(object sender, InteractiveParticipantCollectionModel participants)
+        {
+            if (participants != null)
+            {
+                foreach (InteractiveParticipantModel participant in participants.participants)
+                {
+                    ChannelSession.InteractiveUsers.Remove(participant.sessionID);
+                }
+            }
+        }
+
+        private async void InteractiveClient_OnGiveInput(object sender, InteractiveGiveInputModel sparkTransaction)
+        {
+            if (sparkTransaction != null && sparkTransaction.input != null)
+            {
+                foreach (InteractiveCommand command in ChannelSession.Settings.InteractiveControls)
+                {
+                    if (command.Name.Equals(sparkTransaction.input.controlID) && command.EventTypeTransactionString.Equals(sparkTransaction.input.eventType))
                     {
-                        this.RenderRectangle(w, h, 1, 1, Brushes.Blue);
+                        UserViewModel user = ChannelSession.GetCurrentUser();
+                        if (ChannelSession.InteractiveUsers.ContainsKey(sparkTransaction.participantID))
+                        {
+                            InteractiveParticipantModel participant = ChannelSession.InteractiveUsers[sparkTransaction.participantID];
+                            user = new UserViewModel(participant.userID, participant.username);
+                        }
+
+                        if (!string.IsNullOrEmpty(sparkTransaction.transactionID))
+                        {
+                            bool result = await this.Window.RunAsyncOperation(async () =>
+                            {
+                                return await MixerAPIHandler.InteractiveClient.CaptureSparkTransaction(sparkTransaction.transactionID);
+                            });
+
+                            if (!result)
+                            {
+                                MessageBoxHelper.ShowError("Failed to capture spark transaction for the following command: " + sparkTransaction.input.controlID);
+                                return;
+                            }
+                        }
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        command.Perform(user, new List<string>() { command.Command });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                        return;
                     }
                 }
             }
         }
-
-        private void BlockOutControlArea(InteractiveControlModel control)
-        {
-            InteractiveControlPositionModel position = control.position.FirstOrDefault(p => p.size.Equals(this.selectedBoardSize.Name.ToLower()));
-            for (int w = 0; w < position.width; w++)
-            {
-                for (int h = 0; h < position.height; h++)
-                {
-                    this.boardBlocks[position.x + w, position.y + h] = true;
-                }
-            }
-            this.RenderRectangle(position.x, position.y, position.width, position.height, Brushes.Black);
-
-            TextBlock textBlock = new TextBlock();
-            textBlock.Text = control.controlID;
-            textBlock.Foreground = Brushes.Black;
-            textBlock.TextWrapping = TextWrapping.Wrap;
-            textBlock.TextAlignment = TextAlignment.Center;
-            this.AddElementToCanvas(textBlock, position.x + 1, position.y + 1, position.width - 2, position.height - 2);
-        }
-
-        private void RenderRectangle(int x, int y, int width, int height, Brush color)
-        {
-            Rectangle rect = new Rectangle();
-            rect.Stroke = color;
-            rect.StrokeThickness = 1;
-            this.AddElementToCanvas(rect, x, y, width, height);
-        }
-
-        private void AddElementToCanvas(FrameworkElement element, int x, int y, int width, int height)
-        {
-            element.Width = width * this.blockWidthHeight;
-            element.Height = height * this.blockWidthHeight;
-            Canvas.SetLeft(element, x * this.blockWidthHeight);
-            Canvas.SetTop(element, y * this.blockWidthHeight);
-            this.InteractiveBoardCanvas.Children.Add(element);
-        }
-
-        private void CommandButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-
-
-
-
-
-
-
-
-//        private async void InteractiveGameComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-//        {
-//            if (this.InteractiveGameComboBox.SelectedIndex >= 0)
-//            {
-//                this.InteractiveGameConnectButton.IsEnabled = true;
-
-//                ChannelSession.SelectedGame = (InteractiveGameListingModel)this.InteractiveGameComboBox.SelectedItem;
-//                ChannelSession.SelectedGameVersion = await this.Window.RunAsyncOperation(async () =>
-//                {
-//                    ChannelSession.SelectedGame = this.interactiveGames.First(g => g.id.Equals(ChannelSession.SelectedGame.id));
-
-//                    return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveGameVersion(ChannelSession.SelectedGame.versions.First());
-//                });
-
-//                this.RefreshList();
-//            }
-//        }
-
-//        private async void InteractiveGameConnectButton_Click(object sender, RoutedEventArgs e)
-//        {
-//            bool result = await this.Window.RunAsyncOperation(async () =>
-//            {
-//                return await MixerAPIHandler.ConnectInteractiveClient(ChannelSession.Channel, ChannelSession.SelectedGame);
-//            });
-
-//            if (!result)
-//            {
-//                MessageBoxHelper.ShowError("Unable to connect to interactive with selected game. Please try again.");
-//                return;
-//            }
-
-//            InteractiveConnectedSceneGroupCollectionModel scenes = await this.Window.RunAsyncOperation(async () =>
-//            {
-//                return await MixerAPIHandler.InteractiveClient.GetScenes();
-//            });
-//            ChannelSession.SelectedScenes = scenes.scenes;
-//            ChannelSession.SelectedScene = ChannelSession.SelectedScenes.First();
-
-//            InteractiveParticipantCollectionModel participants = await this.Window.RunAsyncOperation(async () =>
-//            {
-//                return await MixerAPIHandler.InteractiveClient.GetAllParticipants();
-//            });
-
-//            ChannelSession.InteractiveUsers.Clear();
-//            foreach (InteractiveParticipantModel participant in participants.participants)
-//            {
-//                ChannelSession.InteractiveUsers.Add(participant.sessionID, participant);
-//            }
-
-//            MixerAPIHandler.InteractiveClient.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
-//            MixerAPIHandler.InteractiveClient.OnParticipantUpdate += InteractiveClient_OnParticipantUpdate;
-//            MixerAPIHandler.InteractiveClient.OnParticipantLeave += InteractiveClient_OnParticipantLeave;
-//            MixerAPIHandler.InteractiveClient.OnGiveInput += InteractiveClient_OnGiveInput;
-
-//            this.CommandsListView.IsEnabled = false;
-//            this.AddCommandButton.IsEnabled = false;
-//            this.InteractiveGameComboBox.IsEnabled = false;
-//            this.InteractiveGameConnectButton.Visibility = Visibility.Collapsed;
-//            this.InteractiveGameDisconnectButton.Visibility = Visibility.Visible;
-//        }
-
-//        private async void InteractiveGameDisconnectButton_Click(object sender, RoutedEventArgs e)
-//        {
-//            MixerAPIHandler.InteractiveClient.OnParticipantJoin -= InteractiveClient_OnParticipantJoin;
-//            MixerAPIHandler.InteractiveClient.OnParticipantUpdate -= InteractiveClient_OnParticipantUpdate;
-//            MixerAPIHandler.InteractiveClient.OnParticipantLeave -= InteractiveClient_OnParticipantLeave;
-//            MixerAPIHandler.InteractiveClient.OnGiveInput -= InteractiveClient_OnGiveInput;
-
-//            await this.Window.RunAsyncOperation(async () =>
-//            {
-//                await MixerAPIHandler.DisconnectInteractiveClient();
-//            });
-
-//            ChannelSession.SelectedScenes.Clear();
-//            ChannelSession.SelectedScene = null;
-
-//            this.CommandsListView.IsEnabled = true;
-//            this.AddCommandButton.IsEnabled = true;
-//            this.InteractiveGameComboBox.IsEnabled = true;
-//            this.InteractiveGameDisconnectButton.Visibility = Visibility.Collapsed;
-//            this.InteractiveGameConnectButton.Visibility = Visibility.Visible;
-//        }
-
-//        private void InteractiveClient_OnParticipantJoin(object sender, InteractiveParticipantCollectionModel participants)
-//        {
-//            if (participants != null)
-//            {
-//                foreach (InteractiveParticipantModel participant in participants.participants)
-//                {
-//                    ChannelSession.InteractiveUsers[participant.sessionID] = participant;
-//                }
-//            }
-//        }
-
-//        private void InteractiveClient_OnParticipantUpdate(object sender, InteractiveParticipantCollectionModel participants)
-//        {
-//            if (participants != null)
-//            {
-//                foreach (InteractiveParticipantModel participant in participants.participants)
-//                {
-//                    ChannelSession.InteractiveUsers[participant.sessionID] = participant;
-//                }
-//            }
-//        }
-
-//        private void InteractiveClient_OnParticipantLeave(object sender, InteractiveParticipantCollectionModel participants)
-//        {
-//            if (participants != null)
-//            {
-//                foreach (InteractiveParticipantModel participant in participants.participants)
-//                {
-//                    ChannelSession.InteractiveUsers.Remove(participant.sessionID);
-//                }
-//            }
-//        }
-
-//        private async void InteractiveClient_OnGiveInput(object sender, InteractiveGiveInputModel sparkTransaction)
-//        {
-//            if (sparkTransaction != null && sparkTransaction.input != null)
-//            {
-//                foreach (InteractiveCommand command in ChannelSession.GetCommands<InteractiveCommand>())
-//                {
-//                    if (command.Command.Equals(sparkTransaction.input.controlID) && command.EventTypeTransactionString.Equals(sparkTransaction.input.eventType))
-//                    {
-//                        UserViewModel user = new UserViewModel();
-//                        if (ChannelSession.InteractiveUsers.ContainsKey(sparkTransaction.participantID))
-//                        {
-//                            InteractiveParticipantModel participant = ChannelSession.InteractiveUsers[sparkTransaction.participantID];
-//                            user = new UserViewModel(participant.userID, participant.username);
-//                        }
-
-//#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-//                        command.Perform(user, new List<string>() { command.Command });
-//#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-//                        if (!string.IsNullOrEmpty(sparkTransaction.transactionID))
-//                        {
-//                            bool result = await this.Window.RunAsyncOperation(async () =>
-//                            {
-//                                return await MixerAPIHandler.InteractiveClient.CaptureSparkTransaction(sparkTransaction.transactionID);
-//                            });
-
-//                            if (!result)
-//                            {
-//                                MessageBoxHelper.ShowError("Failed to capture spark transaction for the following command: " + sparkTransaction.input.controlID);
-//                                return;
-//                            }
-//                        }
-
-//                        return;
-//                    }
-//                }
-//            }
-//        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
+using Mixer.Base.ViewModel;
 using Mixer.Base.ViewModel.Chat;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
@@ -20,8 +21,8 @@ namespace MixItUp.Base
 
         public static InteractiveGameListingModel SelectedGame { get; set; }
         public static InteractiveVersionModel SelectedGameVersion { get; set; }
-        public static List<InteractiveConnectedSceneGroupModel> SelectedScenes { get; set; }
-        public static InteractiveConnectedSceneGroupModel SelectedScene { get; set; }
+        public static List<InteractiveConnectedSceneGroupModel> ConnectedGameScenes { get; set; }
+        public static InteractiveConnectedSceneGroupModel ConnectedScene { get; set; }
 
         public static void Initialize(PrivatePopulatedUserModel user, ExpandedChannelModel channel)
         {
@@ -30,7 +31,7 @@ namespace MixItUp.Base
 
             ChannelSession.ChatUsers = new LockedDictionary<uint, ChatUserViewModel>();
             ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
-            ChannelSession.SelectedScenes = new List<InteractiveConnectedSceneGroupModel>();
+            ChannelSession.ConnectedGameScenes = new List<InteractiveConnectedSceneGroupModel>();
         }
 
         public static async Task LoadSettings() { ChannelSession.Settings = await ChannelSettings.LoadSettings(ChannelSession.Channel); }
@@ -52,5 +53,7 @@ namespace MixItUp.Base
                 ChannelSession.Channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel(ChannelSession.Channel.user.username);
             }
         }
+
+        public static UserViewModel GetCurrentUser() { return new UserViewModel(User.id, User.username); }
     }
 }

@@ -49,7 +49,7 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform() { await this.Perform(null); }
 
-        public async Task Perform(IEnumerable<string> arguments) { await this.Perform(new UserViewModel(ChannelSession.User.id, ChannelSession.User.username), arguments); }
+        public async Task Perform(IEnumerable<string> arguments) { await this.Perform(ChannelSession.GetCurrentUser(), arguments); }
 
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {

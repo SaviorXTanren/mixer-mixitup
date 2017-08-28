@@ -70,46 +70,9 @@
                 </Grid>
 
                 <Grid Grid.Column="1">
-                    <TabControl>
-                        <TabItem Header="Users">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <ListView x:Name="UserList" ContextMenu="{StaticResource UserListContextMenu}" />
-                            </ScrollViewer>
-                        </TabItem>
-                        <TabItem Header="Commands">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0">
-                                    <DataGrid x:Name="ChatCommandsDataGrid" Style="{StaticResource StandardDataGrid}">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                            <DataGridTemplateColumn>
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Button x:Name="ChatCommandEditButton" Click="ChatCommandEditButton_Click" DataContext="{Binding}">E</Button>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                            <DataGridTemplateColumn>
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Button x:Name="ChatCommandDeleteButton" Click="ChatCommandDeleteButton_Click" DataContext="{Binding}">D</Button>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </ScrollViewer>
-
-                                <Button Grid.Row="2" x:Name="AddChatCommandButton" Click="AddChatCommandButton_Click" Width="40">Add</Button>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ListView x:Name="UserList" ContextMenu="{StaticResource UserListContextMenu}" />
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </Grid>

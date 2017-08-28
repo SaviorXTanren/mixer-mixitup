@@ -36,17 +36,17 @@ namespace MixItUp.Base.Actions
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (MixerAPIHandler.InteractiveClient != null && arguments.Count() == 1 && ChannelSession.SelectedScene != null)
+            if (MixerAPIHandler.InteractiveClient != null && arguments.Count() == 1 && ChannelSession.ConnectedScene != null)
             {
                 List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
                 if (this.CooldownType == CooldownActionTypeEnum.Global)
                 {
-                    buttons.AddRange(ChannelSession.SelectedScene.buttons);
+                    buttons.AddRange(ChannelSession.ConnectedScene.buttons);
                 }
                 else if (this.CooldownType == CooldownActionTypeEnum.Individual)
                 {
                     string controlID = arguments.ElementAt(0);
-                    buttons.Add(ChannelSession.SelectedScene.buttons.FirstOrDefault(b => b.controlID.Equals(controlID)));
+                    buttons.Add(ChannelSession.ConnectedScene.buttons.FirstOrDefault(b => b.controlID.Equals(controlID)));
                 }
 
                 long cooldownEnd = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.Amount));
@@ -55,7 +55,7 @@ namespace MixItUp.Base.Actions
                     button.cooldown = cooldownEnd;
                 }
 
-                await MixerAPIHandler.InteractiveClient.UpdateControls(ChannelSession.SelectedScene, buttons);
+                await MixerAPIHandler.InteractiveClient.UpdateControls(ChannelSession.ConnectedScene, buttons);
             }
         }
     }

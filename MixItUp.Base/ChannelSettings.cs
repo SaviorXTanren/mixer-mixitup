@@ -25,7 +25,7 @@ namespace MixItUp.Base
                 settings.Channel = channel;
                 settings.ChatCommands = new LockedList<ChatCommand>(settings.chatCommandsInternal);
                 settings.EventCommands = new LockedList<EventCommand>(settings.eventCommandsInternal);
-                settings.InteractiveControls = new LockedList<InteractiveControlViewModel>(settings.interactiveControlsInternal);
+                settings.InteractiveControls = new LockedList<InteractiveCommand>(settings.interactiveControlsInternal);
                 settings.TimerCommands = new LockedList<TimerCommand>(settings.timerCommandsInternal);
 
                 return settings;
@@ -45,7 +45,7 @@ namespace MixItUp.Base
         private List<EventCommand> eventCommandsInternal { get; set; }
 
         [JsonProperty]
-        private List<InteractiveControlViewModel> interactiveControlsInternal { get; set; }
+        private List<InteractiveCommand> interactiveControlsInternal { get; set; }
 
         [JsonProperty]
         private List<TimerCommand> timerCommandsInternal { get; set; }
@@ -69,7 +69,7 @@ namespace MixItUp.Base
         public LockedList<EventCommand> EventCommands { get; set; }
 
         [JsonIgnore]
-        public LockedList<InteractiveControlViewModel> InteractiveControls { get; set; }
+        public LockedList<InteractiveCommand> InteractiveControls { get; set; }
 
         [JsonIgnore]
         public LockedList<TimerCommand> TimerCommands { get; set; }
@@ -80,14 +80,14 @@ namespace MixItUp.Base
         {
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
-            this.interactiveControlsInternal = new List<InteractiveControlViewModel>();
+            this.interactiveControlsInternal = new List<InteractiveCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
 
             this.UserData = new List<UserDataViewModel>();
 
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
-            this.InteractiveControls = new LockedList<InteractiveControlViewModel>();
+            this.InteractiveControls = new LockedList<InteractiveCommand>();
             this.TimerCommands = new LockedList<TimerCommand>();
 
             this.TimerCommandsInterval = 10;

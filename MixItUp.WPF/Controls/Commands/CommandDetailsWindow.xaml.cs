@@ -74,7 +74,7 @@ namespace MixItUp.WPF.Controls.Commands
 
             if (this.type == CommandTypeEnum.Interactive)
             {
-                this.InteractiveCommandEventTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveCommandEventType>();
+                this.InteractiveCommandEventTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandEventType>();
             }
 
             switch (this.type)
