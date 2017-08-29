@@ -84,9 +84,6 @@
     <Compile Include="Controls\Actions\ActionControl.xaml.cs">
       <DependentUpon>ActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Commands\CommandDetailsWindow.xaml.cs">
-      <DependentUpon>CommandDetailsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Commands\CommandsControl.xaml.cs">
       <DependentUpon>CommandsControl.xaml</DependentUpon>
     </Compile>
@@ -140,10 +137,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\ActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Commands\CommandDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

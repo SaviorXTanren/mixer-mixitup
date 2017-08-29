@@ -47,13 +47,6 @@ namespace MixItUp.WPF.Controls.Actions
                             return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperCheckBox.IsChecked.GetValueOrDefault());
                         }
                         break;
-                    case ActionTypeEnum.Cooldown:
-                        int cooldownAmount;
-                        if (this.CooldownTypeComboBox.SelectedIndex >= 0 && int.TryParse(this.CooldownAmountTextBox.Text, out cooldownAmount) && cooldownAmount > 0)
-                        {
-                            return new CooldownAction(EnumHelper.GetEnumValueFromString<CooldownActionTypeEnum>((string)this.CooldownTypeComboBox.SelectedItem), cooldownAmount);
-                        }
-                        break;
                     case ActionTypeEnum.Currency:
                         int currencyAmount;
                         if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) && !string.IsNullOrEmpty(this.CurrencyMessageTextBox.Text))
@@ -126,7 +119,6 @@ namespace MixItUp.WPF.Controls.Actions
                 this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>(this.allowedActions);
             }
 
-            this.CooldownTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CooldownActionTypeEnum>();
             this.InputButtonComboBox.ItemsSource = EnumHelper.GetEnumNames<InputTypeEnum>();
 
             if (this.Action != null)
@@ -138,11 +130,6 @@ namespace MixItUp.WPF.Controls.Actions
                         ChatAction chatAction = (ChatAction)this.Action;
                         this.ChatMessageTextBox.Text = chatAction.ChatText;
                         this.ChatWhisperCheckBox.IsChecked = chatAction.IsWhisper;
-                        break;
-                    case ActionTypeEnum.Cooldown:
-                        CooldownAction cooldownAction = (CooldownAction)this.Action;
-                        this.CooldownTypeComboBox.SelectedItem = EnumHelper.GetEnumName(cooldownAction.CooldownType);
-                        this.CooldownAmountTextBox.Text = cooldownAction.Amount.ToString();
                         break;
                     case ActionTypeEnum.Currency:
                         CurrencyAction currencyAction = (CurrencyAction)this.Action;
@@ -188,7 +175,6 @@ namespace MixItUp.WPF.Controls.Actions
         private void TypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.ChatGrid.Visibility = Visibility.Collapsed;
-            this.CooldownGrid.Visibility = Visibility.Collapsed;
             this.CurrencyGrid.Visibility = Visibility.Collapsed;
             this.ExternalProgramGrid.Visibility = Visibility.Collapsed;
             this.GiveawayGrid.Visibility = Visibility.Collapsed;
@@ -206,9 +192,6 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     case ActionTypeEnum.Chat:
                         this.ChatGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.Cooldown:
-                        this.CooldownGrid.Visibility = Visibility.Visible;
                         break;
                     case ActionTypeEnum.Currency:
                         this.CurrencyGrid.Visibility = Visibility.Visible;

@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Interactive;
-using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.ViewModel;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
@@ -16,17 +15,39 @@ namespace MixItUp.WPF.Controls.Interactive
 {
     public class InteractiveControlCommandItem
     {
-        public InteractiveControlModel Control { get; set; }
+        public InteractiveSceneModel Scene { get; set; }
+
+        public InteractiveButtonControlModel Button { get; set; }
+        public InteractiveJoystickControlModel Joystick { get; set; }
+
+        public InteractiveConnectedButtonControlModel ConnectedButton { get; set; }
+        public InteractiveConnectedJoystickControlModel ConnectedJoystick { get; set; }
+
         public InteractiveCommand Command { get; set; }
 
-        public InteractiveControlCommandItem(InteractiveControlModel control, InteractiveCommand command)
+        public InteractiveControlCommandItem(InteractiveButtonControlModel button) { this.Button = button; }
+        public InteractiveControlCommandItem(InteractiveJoystickControlModel joystick) { this.Joystick = joystick; }
+
+        public InteractiveControlCommandItem(InteractiveCommand command)
         {
-            this.Control = control;
             this.Command = command;
+            if (command.Control is InteractiveButtonControlModel)
+            {
+                this.Button = (InteractiveButtonControlModel)command.Control;
+            }
+            else
+            {
+                this.Joystick = (InteractiveJoystickControlModel)command.Control;
+            }
         }
+
+        public InteractiveControlModel Control { get { return (this.Button != null) ? (InteractiveControlModel)this.Button : (InteractiveControlModel)this.Joystick; } }
 
         public string Name { get { return this.Control.controlID; } }
         public string Type { get { return (this.Control is InteractiveButtonControlModel) ? "Button" : "Joystick"; } }
+        public string SparkCost { get { return (this.Button != null) ? this.Button.cost.ToString() : string.Empty; } }
+        public string Cooldown { get { return (this.Command != null) ? this.Command.Cooldown.ToString() : string.Empty; } }
+        public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
     }
 
     /// <summary>
@@ -35,11 +56,16 @@ namespace MixItUp.WPF.Controls.Interactive
     public partial class InteractiveControl : MainControlBase
     {
         private ObservableCollection<InteractiveGameListingModel> interactiveGames = new ObservableCollection<InteractiveGameListingModel>();
+        private InteractiveGameListingModel selectedGame = null;
+        public InteractiveGameVersionModel selectedGameVersion = null;
 
         private ObservableCollection<InteractiveSceneModel> interactiveScenes = new ObservableCollection<InteractiveSceneModel>();
         private InteractiveSceneModel selectedScene = null;
 
         private ObservableCollection<InteractiveControlCommandItem> interactiveItems = new ObservableCollection<InteractiveControlCommandItem>();
+
+        private List<InteractiveConnectedSceneGroupModel> connectedGameScenes = new List<InteractiveConnectedSceneGroupModel>();
+        private InteractiveConnectedSceneGroupModel connectedScene = null;
 
         public InteractiveControl()
         {
@@ -75,19 +101,19 @@ namespace MixItUp.WPF.Controls.Interactive
 
             this.interactiveScenes.Clear();
 
-            ChannelSession.SelectedGameVersion = await this.Window.RunAsyncOperation(async () =>
+            this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
             {
-                ChannelSession.SelectedGame = this.interactiveGames.First(g => g.id.Equals(ChannelSession.SelectedGame.id));
+                this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
 
-                return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveGameVersion(ChannelSession.SelectedGame.versions.First());
+                return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveGameVersion(this.selectedGame.versions.First());
             });
 
-            if (ChannelSession.SelectedGame != null)
+            if (this.selectedGame != null)
             {
-                this.InteractiveGamesComboBox.SelectedItem = ChannelSession.SelectedGame;
+                this.InteractiveGamesComboBox.SelectedItem = this.selectedGame;
             }
 
-            foreach (InteractiveSceneModel scene in ChannelSession.SelectedGameVersion.controls.scenes)
+            foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
             {
                 this.interactiveScenes.Add(scene);
             }
@@ -101,7 +127,6 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.InteractiveScenesComboBox.SelectedIndex = 0;
             }
 
-            this.SaveChangedButton.IsEnabled = true;
             this.GameDetailsGrid.IsEnabled = true;
         }
 
@@ -112,19 +137,26 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 foreach (InteractiveButtonControlModel button in this.selectedScene.buttons)
                 {
-                    this.interactiveItems.Add(new InteractiveControlCommandItem(button, this.FindCommand(button)));
+                    this.interactiveItems.Add(this.CreateItem(button));
                 }
 
                 foreach (InteractiveJoystickControlModel joystick in this.selectedScene.joysticks)
                 {
-                    this.interactiveItems.Add(new InteractiveControlCommandItem(joystick, this.FindCommand(joystick)));
+                    this.interactiveItems.Add(this.CreateItem(joystick));
                 }
             }
         }
 
-        private InteractiveCommand FindCommand(InteractiveControlModel control)
+        private InteractiveControlCommandItem CreateItem(InteractiveControlModel control)
         {
-            return ChannelSession.Settings.InteractiveControls.FirstOrDefault(c => c.GameID.Equals(ChannelSession.SelectedGame.id) && c.SceneID.Equals(this.selectedScene.sceneID) && c.Name.Equals(control.controlID));
+            InteractiveCommand command = this.FindCommandFromSettings(this.selectedScene, control);
+            if (command != null)
+            {
+                command.UpdateWithLatestControl(control);
+                return new InteractiveControlCommandItem(command);
+            }
+            else if (control is InteractiveButtonControlModel) { return new InteractiveControlCommandItem((InteractiveButtonControlModel)control); }
+            else { return new InteractiveControlCommandItem((InteractiveJoystickControlModel)control); }
         }
 
         private async void InteractiveGamesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -132,9 +164,9 @@ namespace MixItUp.WPF.Controls.Interactive
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
                 InteractiveGameListingModel newSelectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
-                if (ChannelSession.SelectedGame != newSelectedGame)
+                if (this.selectedGame != newSelectedGame)
                 {
-                    ChannelSession.SelectedGame = newSelectedGame;
+                    this.selectedGame = newSelectedGame;
                     await this.RefreshSelectedInteractiveGame();
                     this.ConnectButton.IsEnabled = true;
                 }
@@ -187,7 +219,9 @@ namespace MixItUp.WPF.Controls.Interactive
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
 
-            InteractiveCommandWindow window = (command.Command == null) ? new InteractiveCommandWindow() : new InteractiveCommandWindow(command.Command);
+            InteractiveCommandWindow window = (command.Command == null) ?
+                new InteractiveCommandWindow(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control) :
+                new InteractiveCommandWindow(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Command);
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -216,34 +250,11 @@ namespace MixItUp.WPF.Controls.Interactive
             await ChannelSession.Settings.SaveSettings();
         }
 
-        private async void SaveChangedButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            foreach (InteractiveSceneModel scene in this.interactiveScenes)
-            {
-                if (scene.buttons.Count == 0 && scene.joysticks.Count == 0)
-                {
-                    MessageBoxHelper.ShowError("The following scene does not contain any controls: " + scene.sceneID);
-                    return;
-                }
-            }
-
-            if (ChannelSession.SelectedGame == null)
-            {
-                await this.Window.RunAsyncOperation(async () =>
-                {
-                    await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGame(ChannelSession.SelectedGame);
-                    await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGameVersion(ChannelSession.SelectedGameVersion);
-                });
-            }
-
-            await this.RefreshSelectedInteractiveGame();
-        }
-
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.ConnectInteractiveClient(ChannelSession.Channel, ChannelSession.SelectedGame);
+                return await MixerAPIHandler.ConnectInteractiveClient(ChannelSession.Channel, this.selectedGame);
             });
 
             if (!result)
@@ -256,8 +267,26 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 return await MixerAPIHandler.InteractiveClient.GetScenes();
             });
-            ChannelSession.ConnectedGameScenes = scenes.scenes;
-            ChannelSession.ConnectedScene = ChannelSession.ConnectedGameScenes.First();
+            this.connectedGameScenes = scenes.scenes;
+            this.connectedScene = this.connectedGameScenes.First();
+
+            foreach (InteractiveConnectedButtonControlModel button in this.connectedScene.buttons)
+            {
+                InteractiveControlCommandItem item = this.FindCommandFromItems(button);
+                if (item != null)
+                {
+                    item.ConnectedButton = button;
+                }
+            }
+
+            foreach (InteractiveConnectedJoystickControlModel joystick in this.connectedScene.joysticks)
+            {
+                InteractiveControlCommandItem item = this.FindCommandFromItems(joystick);
+                if (item != null)
+                {
+                    item.ConnectedJoystick = joystick;
+                }
+            }
 
             InteractiveParticipantCollectionModel participants = await this.Window.RunAsyncOperation(async () =>
             {
@@ -293,8 +322,14 @@ namespace MixItUp.WPF.Controls.Interactive
                 await MixerAPIHandler.DisconnectInteractiveClient();
             });
 
-            ChannelSession.ConnectedGameScenes.Clear();
-            ChannelSession.ConnectedScene = null;
+            foreach (InteractiveControlCommandItem item in this.interactiveItems)
+            {
+                item.ConnectedButton = null;
+                item.ConnectedJoystick = null;
+            }
+
+            this.connectedGameScenes.Clear();
+            this.connectedScene = null;
 
             this.GameSelectionGrid.IsEnabled = true;
             this.GameDetailsGrid.IsEnabled = true;
@@ -335,43 +370,67 @@ namespace MixItUp.WPF.Controls.Interactive
             }
         }
 
-        private async void InteractiveClient_OnGiveInput(object sender, InteractiveGiveInputModel sparkTransaction)
+        private async void InteractiveClient_OnGiveInput(object sender, InteractiveGiveInputModel interactiveInput)
         {
-            if (sparkTransaction != null && sparkTransaction.input != null)
+            if (interactiveInput != null && interactiveInput.input != null)
             {
-                foreach (InteractiveCommand command in ChannelSession.Settings.InteractiveControls)
+                foreach (InteractiveControlCommandItem item in this.interactiveItems)
                 {
-                    if (command.Name.Equals(sparkTransaction.input.controlID) && command.EventTypeTransactionString.Equals(sparkTransaction.input.eventType))
+                    if (item.Name.Equals(interactiveInput.input.controlID) && item.Command != null)
                     {
-                        UserViewModel user = ChannelSession.GetCurrentUser();
-                        if (ChannelSession.InteractiveUsers.ContainsKey(sparkTransaction.participantID))
+                        if (item.ConnectedButton != null && !item.TriggerTransactionString.Equals(interactiveInput.input.eventType))
                         {
-                            InteractiveParticipantModel participant = ChannelSession.InteractiveUsers[sparkTransaction.participantID];
+                            return;
+                        }
+
+                        UserViewModel user = ChannelSession.GetCurrentUser();
+                        if (ChannelSession.InteractiveUsers.ContainsKey(interactiveInput.participantID))
+                        {
+                            InteractiveParticipantModel participant = ChannelSession.InteractiveUsers[interactiveInput.participantID];
                             user = new UserViewModel(participant.userID, participant.username);
                         }
 
-                        if (!string.IsNullOrEmpty(sparkTransaction.transactionID))
+                        if (!string.IsNullOrEmpty(interactiveInput.transactionID))
                         {
                             bool result = await this.Window.RunAsyncOperation(async () =>
                             {
-                                return await MixerAPIHandler.InteractiveClient.CaptureSparkTransaction(sparkTransaction.transactionID);
+                                return await MixerAPIHandler.InteractiveClient.CaptureSparkTransaction(interactiveInput.transactionID);
                             });
 
                             if (!result)
                             {
-                                MessageBoxHelper.ShowError("Failed to capture spark transaction for the following command: " + sparkTransaction.input.controlID);
+                                MessageBoxHelper.ShowError("Failed to capture spark transaction for the following command: " + interactiveInput.input.controlID);
                                 return;
                             }
                         }
 
+                        if (item.ConnectedButton != null)
+                        {
+                            await this.Window.RunAsyncOperation(async () =>
+                            {
+                                item.ConnectedButton.cooldown = item.Command.GetCooldownTimestamp();
+                                await MixerAPIHandler.InteractiveClient.UpdateControls(this.connectedScene, new List<InteractiveConnectedButtonControlModel>() { item.ConnectedButton });
+                            });
+                        }
+
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        command.Perform(user, new List<string>() { command.Command });
+                        item.Command.Perform(user);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         return;
                     }
                 }
             }
+        }
+
+        public InteractiveCommand FindCommandFromSettings(InteractiveSceneModel scene, InteractiveControlModel control)
+        {
+            return ChannelSession.Settings.InteractiveControls.FirstOrDefault(c => c.GameID.Equals(this.selectedGame.id) && c.SceneID.Equals(scene.sceneID) && c.Name.Equals(control.controlID));
+        }
+
+        public InteractiveControlCommandItem FindCommandFromItems(InteractiveControlModel control)
+        {
+            return this.interactiveItems.FirstOrDefault(i => i.Control.controlID.Equals(control.controlID));
         }
     }
 }

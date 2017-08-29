@@ -28,11 +28,21 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0">Trigger:</TextBlock>
             <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="2" IsEnabled="False" />
-            
+
+            <TextBlock Grid.Column="4">Cost:</TextBlock>
+            <TextBox x:Name="SparkCostTextBox" Grid.Column="6" IsEnabled="False" />
+
+            <TextBlock Grid.Column="8">Cooldown:</TextBlock>
+            <TextBox x:Name="CooldownTextBox" Grid.Column="10" IsEnabled="False" />
+
         </Grid>
 
         <ListView x:Name="ActionsListView" Grid.Row="2" Margin="10,0,10,0" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" />

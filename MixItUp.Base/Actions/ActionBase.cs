@@ -10,7 +10,6 @@ namespace MixItUp.Base.Actions
     public enum ActionTypeEnum
     {
         Chat,
-        Cooldown,
         Currency,
         [Name("External Program")]
         ExternalProgram,

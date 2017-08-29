@@ -74,6 +74,29 @@ namespace MixItUp.WPF.Windows.Interactive
             return base.OnLoaded();
         }
 
+        private void SaveChangesButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            //foreach (InteractiveSceneModel scene in this.interactiveScenes)
+            //{
+            //    if (scene.buttons.Count == 0 && scene.joysticks.Count == 0)
+            //    {
+            //        MessageBoxHelper.ShowError("The following scene does not contain any controls: " + scene.sceneID);
+            //        return;
+            //    }
+            //}
+
+            //if (this.selectedGame == null)
+            //{
+            //    await this.Window.RunAsyncOperation(async () =>
+            //    {
+            //        await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGame(this.selectedGame);
+            //        await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.selectedGameVersion);
+            //    });
+            //}
+
+            //await this.RefreshSelectedInteractiveGame();
+        }
+
         public async Task Save()
         {
             if (string.IsNullOrEmpty(this.GameNameTextBox.Text))
@@ -82,12 +105,12 @@ namespace MixItUp.WPF.Windows.Interactive
                 return;
             }
 
-            ChannelSession.SelectedGame = await this.RunAsyncOperation(async () =>
+            InteractiveGameListingModel game = await this.RunAsyncOperation(async () =>
             {
                 return await InteractiveGameHelper.CreateInteractive2Game(MixerAPIHandler.MixerConnection, ChannelSession.Channel, ChannelSession.User, this.GameNameTextBox.Text, null);
             });
 
-            if (ChannelSession.SelectedGame == null)
+            if (game == null)
             {
                 MessageBoxHelper.ShowError("Failed to create game");
                 return;

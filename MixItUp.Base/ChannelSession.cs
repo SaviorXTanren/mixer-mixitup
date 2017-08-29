@@ -19,11 +19,6 @@ namespace MixItUp.Base
         public static LockedDictionary<uint, ChatUserViewModel> ChatUsers { get; private set; }
         public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
-        public static InteractiveGameListingModel SelectedGame { get; set; }
-        public static InteractiveGameVersionModel SelectedGameVersion { get; set; }
-        public static List<InteractiveConnectedSceneGroupModel> ConnectedGameScenes { get; set; }
-        public static InteractiveConnectedSceneGroupModel ConnectedScene { get; set; }
-
         public static void Initialize(PrivatePopulatedUserModel user, ExpandedChannelModel channel)
         {
             ChannelSession.User = user;
@@ -31,7 +26,6 @@ namespace MixItUp.Base
 
             ChannelSession.ChatUsers = new LockedDictionary<uint, ChatUserViewModel>();
             ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
-            ChannelSession.ConnectedGameScenes = new List<InteractiveConnectedSceneGroupModel>();
         }
 
         public static async Task LoadSettings() { ChannelSession.Settings = await ChannelSettings.LoadSettings(ChannelSession.Channel); }

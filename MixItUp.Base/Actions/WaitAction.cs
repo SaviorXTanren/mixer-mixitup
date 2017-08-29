@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.ViewModel;
-using MixItUp.Base.Commands;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -13,7 +12,7 @@ namespace MixItUp.Base.Actions
         public int WaitAmount { get; set; }
 
         public WaitAction(int waitAmount)
-            : base(ActionTypeEnum.Cooldown)
+            : base(ActionTypeEnum.Wait)
         {
             this.WaitAmount = waitAmount;
         }

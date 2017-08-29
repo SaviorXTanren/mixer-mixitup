@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="Actions\ActionBase.cs" />
     <Compile Include="Actions\ChatAction.cs" />
-    <Compile Include="Actions\CooldownAction.cs" />
     <Compile Include="Actions\CurrencyAction.cs" />
     <Compile Include="Actions\ExternalProgramAction.cs" />
     <Compile Include="Actions\GiveawayAction.cs" />

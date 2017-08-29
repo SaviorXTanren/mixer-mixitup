@@ -159,28 +159,6 @@ namespace MixItUp.WPF.Controls.Chat
             this.backgroundThreadCancellationTokenSource.Cancel();
         }
 
-        private void ChatCommandEditButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            ChatCommand command = (ChatCommand)button.DataContext;
-
-            CommandDetailsWindow commandWindow = new CommandDetailsWindow(command);
-            commandWindow.Show();
-        }
-
-        private void ChatCommandDeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            ChatCommand command = (ChatCommand)button.DataContext;
-            ChannelSession.Settings.ChatCommands.Remove(command);
-        }
-
-        private void AddChatCommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandDetailsWindow commandWindow = new CommandDetailsWindow(CommandTypeEnum.Chat);
-            commandWindow.Show();
-        }
-
         #region Chat Update Methods
 
         private void AddUser(ChatUserViewModel user)

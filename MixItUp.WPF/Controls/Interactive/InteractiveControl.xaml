@@ -55,7 +55,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                         <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" Width="80" />
-                        <DataGridTextColumn Header="S" Binding="{Binding Cost}" IsReadOnly="True" Width="40" />
+                        <DataGridTextColumn Header="S" Binding="{Binding SparkCost}" IsReadOnly="True" Width="40" />
                         <DataGridTextColumn Header="C" Binding="{Binding Cooldown}" IsReadOnly="True" Width="40" />
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
@@ -85,14 +85,10 @@
             <Grid Grid.Row="5" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" x:Name="SaveChangedButton" Click="SaveChangedButton_Click" Width="80" IsEnabled="False">Save Changes</Button>
-
-                <Button Grid.Column="2" x:Name="ConnectButton" Click="ConnectButton_Click" Width="80" IsEnabled="False">Connect</Button>
-                <Button Grid.Column="2" x:Name="DisconnectButton" Click="DisconnectButton_Click" Width="80" Visibility="Collapsed">Disconnect</Button>
+                <Button Grid.Column="0" x:Name="ConnectButton" Click="ConnectButton_Click" Width="80" IsEnabled="False">Connect</Button>
+                <Button Grid.Column="0" x:Name="DisconnectButton" Click="DisconnectButton_Click" Width="80" Visibility="Collapsed">Disconnect</Button>
             </Grid>
 
         </Grid>
