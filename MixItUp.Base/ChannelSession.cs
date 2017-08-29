@@ -20,7 +20,7 @@ namespace MixItUp.Base
         public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
         public static InteractiveGameListingModel SelectedGame { get; set; }
-        public static InteractiveVersionModel SelectedGameVersion { get; set; }
+        public static InteractiveGameVersionModel SelectedGameVersion { get; set; }
         public static List<InteractiveConnectedSceneGroupModel> ConnectedGameScenes { get; set; }
         public static InteractiveConnectedSceneGroupModel ConnectedScene { get; set; }
 
