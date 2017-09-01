@@ -1,15 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.WPF.Windows.Chat;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Threading.Tasks;
-using Mixer.Base.Model.Interactive;
-using MixItUp.WPF.Util;
-using System.Collections.Generic;
-using System.Linq;
-using Mixer.Base.ViewModel;
-using MixItUp.WPF.Windows.Chat;
 
 namespace MixItUp.WPF.Controls.Commands
 {
@@ -75,6 +70,13 @@ namespace MixItUp.WPF.Controls.Commands
             this.CommandsListView.SelectedIndex = -1;
 
             this.RefreshList();
+        }
+
+        private void CommandEnableDisableButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            ChatCommand command = (ChatCommand)button.DataContext;
+            command.IsEnabled = !command.IsEnabled;
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)

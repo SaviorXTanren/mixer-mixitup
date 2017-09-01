@@ -75,6 +75,13 @@ namespace MixItUp.WPF.Controls.Timers
             this.RefreshList();
         }
 
+        private void CommandEnableDisableButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            TimerCommand command = (TimerCommand)button.DataContext;
+            command.IsEnabled = !command.IsEnabled;
+        }
+
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             TimerCommandWindow window = new TimerCommandWindow();

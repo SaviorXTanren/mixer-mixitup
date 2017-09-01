@@ -244,6 +244,13 @@ namespace MixItUp.WPF.Controls.Interactive
             }
         }
 
+        private void CommandEnableDisableButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
+            command.Command.IsEnabled = !command.Command.IsEnabled;
+        }
+
         private async void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshSelectedScene();

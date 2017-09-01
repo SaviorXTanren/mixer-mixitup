@@ -164,6 +164,13 @@ namespace MixItUp.WPF.Controls.Events
             await this.RefreshList();
         }
 
+        private void CommandEnableDisableButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            SubscribedEventItem item = (SubscribedEventItem)button.DataContext;
+            item.Command.IsEnabled = !item.Command.IsEnabled;
+        }
+
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             EventCommandWindow window = new EventCommandWindow();
