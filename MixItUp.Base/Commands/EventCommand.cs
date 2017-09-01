@@ -34,7 +34,7 @@ namespace MixItUp.Base.Commands
 
         public ConstellationEventType GetEventType() { return new ConstellationEventType(this.EventType, this.EventID); }
 
-        public override string ToString() { return this.Command; }
+        public override string ToString() { return this.CommandsString; }
 
         public override bool Equals(object obj)
         {

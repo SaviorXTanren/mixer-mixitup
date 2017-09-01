@@ -5,6 +5,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace MixItUp.WPF.Windows.Chat
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
-                this.ChatCommandTextBox.Text = this.command.Command;
+                this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.LowestAllowedRole);
 
                 foreach (ActionBase action in this.command.Actions)
@@ -102,16 +103,18 @@ namespace MixItUp.WPF.Windows.Chat
                 newActions.Add(action);
             }
 
+            List<string> commands = new List<string>(this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
             UserRole lowestRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem);
             if (this.command == null)
             {
-                this.command = new ChatCommand(this.NameTextBox.Text, this.ChatCommandTextBox.Text, lowestRole);
+                
+                this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole);
                 ChannelSession.Settings.ChatCommands.Add(this.command);
             }
             else
             {
                 this.command.Name = this.NameTextBox.Text;
-                this.command.Command = this.ChatCommandTextBox.Text;
+                this.command.Commands = commands;
                 this.command.LowestAllowedRole = lowestRole;
             }
 

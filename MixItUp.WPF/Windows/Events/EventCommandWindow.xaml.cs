@@ -57,7 +57,7 @@ namespace MixItUp.WPF.Windows.Events
             if (this.command != null)
             {
                 this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.EventType);
-                this.EventIDTextBox.Text = this.command.Command;
+                this.EventIDTextBox.Text = this.command.CommandsString;
 
                 foreach (ActionBase action in this.command.Actions)
                 {
@@ -157,7 +157,7 @@ namespace MixItUp.WPF.Windows.Events
                         this.command = new EventCommand(eventType);
                     }
 
-                    if (ChannelSession.Settings.EventCommands.Any(se => se.Command.Equals(this.command)))
+                    if (ChannelSession.Settings.EventCommands.Any(se => se.ContainsCommand(this.command.CommandsString)))
                     {
                         MessageBoxHelper.ShowError("This event already exists");
                         return;

@@ -198,7 +198,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
             {
                 ChatMessageCommand messageCommand = new ChatMessageCommand(message);
-                ChatCommand command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.Command.Equals(messageCommand.CommandName));
+                ChatCommand command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
                 if (command != null)
                 {
                     if (message.User.Roles.Any(r => r >= command.LowestAllowedRole))

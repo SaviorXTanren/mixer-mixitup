@@ -18,7 +18,7 @@
         <DataGrid x:Name="TimerCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
-                <DataGridTextColumn Header="Command" Binding="{Binding Command}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Command" Binding="{Binding CommandsString}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="Interval" Binding="{Binding Interval}" IsReadOnly="True" Width="50" />
                 <DataGridTextColumn Header="Messages" Binding="{Binding MinimumMessages}" IsReadOnly="True" Width="65" />
                 <DataGridTemplateColumn>

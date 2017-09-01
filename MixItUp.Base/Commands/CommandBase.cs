@@ -26,7 +26,7 @@ namespace MixItUp.Base.Commands
         public CommandTypeEnum Type { get; set; }
 
         [DataMember]
-        public string Command { get; set; }
+        public List<string> Commands { get; set; }
 
         [DataMember]
         public List<ActionBase> Actions { get; set; }
@@ -36,16 +36,23 @@ namespace MixItUp.Base.Commands
 
         public CommandBase()
         {
+            this.Commands = new List<string>();
             this.Actions = new List<ActionBase>();
         }
 
-        public CommandBase(string name, CommandTypeEnum type, string command)
+        public CommandBase(string name, CommandTypeEnum type, string command) : this(name, type, new List<string>() { command }) { }
+
+        public CommandBase(string name, CommandTypeEnum type, List<string> commands)
             : this()
         {
             this.Name = name;
             this.Type = type;
-            this.Command = command;
+            this.Commands.AddRange(commands);
         }
+
+        public string CommandsString { get { return string.Join(" ", this.Commands); } }
+
+        public bool ContainsCommand(string command) { return this.Commands.Contains(command); }
 
         public async Task Perform() { await this.Perform(null); }
 

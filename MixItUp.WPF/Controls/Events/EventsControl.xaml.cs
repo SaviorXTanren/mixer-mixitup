@@ -116,7 +116,7 @@ namespace MixItUp.WPF.Controls.Events
 
             if (newEvents.Count > 0)
             {
-                await MixerAPIHandler.ConstellationClient.LiveSubscribe(this.subscribedEvents.Select(se => se.Command.GetEventType()));
+                await MixerAPIHandler.ConstellationClient.SubscribeToEvents(this.subscribedEvents.Select(se => se.Command.GetEventType()));
                 foreach (SubscribedEventItem newEvent in newEvents)
                 {
                     this.subscribedEvents.Add(newEvent);
@@ -154,7 +154,7 @@ namespace MixItUp.WPF.Controls.Events
 
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.ConstellationClient.LiveUnsubscribe(new List<ConstellationEventType>() { item.Command.GetEventType() });
+                return await MixerAPIHandler.ConstellationClient.UnsubscribeToEvents(new List<ConstellationEventType>() { item.Command.GetEventType() });
             });
 
             await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
@@ -194,7 +194,7 @@ namespace MixItUp.WPF.Controls.Events
                     {
                         foreach (SubscribedFiredEventItem firedEventItem in eventItem.EventsFired)
                         {
-                            fileData.AppendLine(string.Format("{0},{1},{2}", EnumHelper.GetEnumName(eventItem.Command.EventType), eventItem.Command.Command, string.Empty));
+                            fileData.AppendLine(string.Format("{0},{1},{2}", EnumHelper.GetEnumName(eventItem.Command.EventType), eventItem.Command.CommandsString, string.Empty));
                         }
                     }
 

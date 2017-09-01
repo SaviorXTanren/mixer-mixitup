@@ -36,7 +36,7 @@
             <TextBlock Grid.Column="0" Grid.Row="0">Name:</TextBlock>
             <TextBox x:Name="NameTextBox" Grid.Column="2" Grid.Row="0" />
 
-            <TextBlock Grid.Column="0" Grid.Row="2">Command (No "!"):</TextBlock>
+            <TextBlock Grid.Column="0" Grid.Row="2">Commands (No "!", space seperated):</TextBlock>
             <TextBox x:Name="ChatCommandTextBox" Grid.Column="2" Grid.Row="2" />
 
             <TextBlock Grid.Column="0" Grid.Row="4">Lowest Role Allowed:</TextBlock>
