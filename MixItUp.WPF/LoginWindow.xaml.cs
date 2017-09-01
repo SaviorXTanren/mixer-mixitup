@@ -48,6 +48,7 @@ namespace MixItUp.WPF
 
                 OAuthClientScopeEnum.channel__details__self,
                 OAuthClientScopeEnum.channel__update__self,
+                OAuthClientScopeEnum.channel__analytics__self,
 
                 OAuthClientScopeEnum.interactive__manage__self,
                 OAuthClientScopeEnum.interactive__robot__self,

@@ -62,7 +62,7 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(IEnumerable<string> arguments) { await this.Perform(ChannelSession.GetCurrentUser(), arguments); }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        public virtual async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
             if (!this.IsEnabled)
             {

@@ -1,10 +1,12 @@
 ﻿using Mixer.Base.Model.Channel;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -17,23 +19,32 @@ namespace MixItUp.Base
 
         public static async Task<ChannelSettings> LoadSettings(ChannelModel channel)
         {
+            ChannelSettings settings = null;
             string filePath = ChannelSettings.GetSettingsFilePath(channel);
             if (File.Exists(filePath))
             {
-                ChannelSettings settings = await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
+                settings = await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
 
                 settings.Channel = channel;
                 settings.ChatCommands = new LockedList<ChatCommand>(settings.chatCommandsInternal);
                 settings.EventCommands = new LockedList<EventCommand>(settings.eventCommandsInternal);
                 settings.InteractiveControls = new LockedList<InteractiveCommand>(settings.interactiveControlsInternal);
                 settings.TimerCommands = new LockedList<TimerCommand>(settings.timerCommandsInternal);
-
-                return settings;
             }
             else
             {
-                return new ChannelSettings(channel);
+                settings = new ChannelSettings(channel);
             }
+
+            settings.ChatCommands.Add(new UptimeChatCommand());
+            settings.ChatCommands.Add(new GameChatCommand());
+            settings.ChatCommands.Add(new TitleChatCommand());
+            settings.ChatCommands.Add(new TimeoutChatCommand());
+            settings.ChatCommands.Add(new PurgeChatCommand());
+            settings.ChatCommands.Add(new MixerAgeChatCommand());
+            settings.ChatCommands.Add(new FollowAgeChatCommand());
+
+            return settings;
         }
 
         private static string GetSettingsFilePath(ChannelModel channel) { return Path.Combine(SettingsDirectoryName, string.Format("{0}.xml", channel.id.ToString())); }
@@ -74,7 +85,11 @@ namespace MixItUp.Base
         [JsonIgnore]
         public LockedList<TimerCommand> TimerCommands { get; set; }
 
-        public ChannelSettings(ChannelModel channel) : this() { this.Channel = channel; }
+        public ChannelSettings(ChannelModel channel)
+            : this()
+        {
+            this.Channel = channel;
+        }
 
         public ChannelSettings()
         {
@@ -103,6 +118,8 @@ namespace MixItUp.Base
             this.eventCommandsInternal = this.EventCommands.ToList();
             this.interactiveControlsInternal = this.InteractiveControls.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
+
+            this.chatCommandsInternal.RemoveAll(c => c.Actions.Any(a => a.Type == ActionTypeEnum.Custom));
 
             await SerializerHelper.SerializeToFile(filePath, this);
         }

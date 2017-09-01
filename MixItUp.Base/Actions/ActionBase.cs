@@ -18,6 +18,8 @@ namespace MixItUp.Base.Actions
         Overlay,
         Sound,
         Wait,
+
+        Custom,
     }
 
     [DataContract]

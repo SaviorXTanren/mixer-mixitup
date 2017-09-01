@@ -4,7 +4,6 @@ using Mixer.Base.Model.User;
 using Mixer.Base.ViewModel;
 using Mixer.Base.ViewModel.Chat;
 using MixItUp.Base.Util;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base
