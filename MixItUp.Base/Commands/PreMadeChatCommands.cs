@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Mixer.Base.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
+using Mixer.Base.Model.Channel;
 
 namespace MixItUp.Base.Commands
 {
@@ -26,6 +27,20 @@ namespace MixItUp.Base.Commands
             {
                 if (MixerAPIHandler.ChatClient != null)
                 {
+                    IEnumerable<StreamSessionsAnalyticModel> sessions = await MixerAPIHandler.MixerConnection.Channels.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now);
+                    if (sessions.Count() > 0)
+                    {
+                        StreamSessionsAnalyticModel session = sessions.ElementAt(0);
+
+                        TimeSpan duration = TimeSpan.FromSeconds(session.duration.GetValueOrDefault());
+                        DateTimeOffset startTime = DateTimeOffset.Now.Subtract(duration);
+
+                        await MixerAPIHandler.ChatClient.SendMessage("Start Time: " + startTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                    }
+                    else
+                    {
+                        await MixerAPIHandler.ChatClient.SendMessage("Stream is currently offline");
+                    }
                 }
             }));
         }
