@@ -27,15 +27,14 @@ namespace MixItUp.Base.Commands
             {
                 if (MixerAPIHandler.ChatClient != null)
                 {
-                    IEnumerable<StreamSessionsAnalyticModel> sessions = await MixerAPIHandler.MixerConnection.Channels.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now);
+                    IEnumerable<StreamSessionsAnalyticModel> sessions = await MixerAPIHandler.MixerConnection.Channels.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromHours(1)));
                     if (sessions.Count() > 0)
                     {
-                        StreamSessionsAnalyticModel session = sessions.ElementAt(0);
+                        StreamSessionsAnalyticModel session = sessions.OrderBy(s => s.dateTime).Last();
 
-                        TimeSpan duration = TimeSpan.FromSeconds(session.duration.GetValueOrDefault());
-                        DateTimeOffset startTime = DateTimeOffset.Now.Subtract(duration);
+                        TimeSpan duration = DateTimeOffset.Now.Subtract(session.dateTime);
 
-                        await MixerAPIHandler.ChatClient.SendMessage("Start Time: " + startTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                        await MixerAPIHandler.ChatClient.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
                     }
                     else
                     {
