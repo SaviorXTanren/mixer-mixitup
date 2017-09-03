@@ -37,11 +37,11 @@ namespace MixItUp.Base.Commands
 
                         TimeSpan duration = DateTimeOffset.Now.Subtract(session.dateTime);
 
-                        await MixerAPIHandler.ChatClient.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                        await MixerAPIHandler.BotChatClient.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
                     }
                     else
                     {
-                        await MixerAPIHandler.ChatClient.SendMessage("Stream is currently offline");
+                        await MixerAPIHandler.BotChatClient.SendMessage("Stream is currently offline");
                     }
                 }
             }));
@@ -59,7 +59,7 @@ namespace MixItUp.Base.Commands
                 {
                     await ChannelSession.RefreshChannel();
 
-                    await MixerAPIHandler.ChatClient.SendMessage("Game: " + ChannelSession.Channel.type.name);
+                    await MixerAPIHandler.BotChatClient.SendMessage("Game: " + ChannelSession.Channel.type.name);
                 }
             }));
         }
@@ -76,7 +76,7 @@ namespace MixItUp.Base.Commands
                 {
                     await ChannelSession.RefreshChannel();
 
-                    await MixerAPIHandler.ChatClient.SendMessage("Stream Title: " + ChannelSession.Channel.name);
+                    await MixerAPIHandler.BotChatClient.SendMessage("Stream Title: " + ChannelSession.Channel.name);
                 }
             }));
         }
@@ -99,12 +99,12 @@ namespace MixItUp.Base.Commands
                             username = username.Substring(1);
                         }
 
-                        await MixerAPIHandler.ChatClient.Whisper(username, "You have been timed out for 1 minute");
+                        await MixerAPIHandler.BotChatClient.Whisper(username, "You have been timed out for 1 minute");
                         await MixerAPIHandler.ChatClient.TimeoutUser(username, 60);
                     }
                     else
                     {
-                        await MixerAPIHandler.ChatClient.Whisper(user.UserName, "Usage: !timeout @USERNAME");
+                        await MixerAPIHandler.BotChatClient.Whisper(user.UserName, "Usage: !timeout @USERNAME");
                     }
                 }
             }));
@@ -132,7 +132,7 @@ namespace MixItUp.Base.Commands
                     }
                     else
                     {
-                        await MixerAPIHandler.ChatClient.Whisper(user.UserName, "Usage: !purge @USERNAME");
+                        await MixerAPIHandler.BotChatClient.Whisper(user.UserName, "Usage: !purge @USERNAME");
                     }
                 }
             }));
@@ -148,7 +148,7 @@ namespace MixItUp.Base.Commands
             {
                 if (MixerAPIHandler.ChatClient != null)
                 {
-                    await MixerAPIHandler.ChatClient.SendMessage(ChannelSession.Channel.user.GetMixerAge());
+                    await MixerAPIHandler.BotChatClient.SendMessage(ChannelSession.Channel.user.GetMixerAge());
                 }
             }));
         }
@@ -164,7 +164,7 @@ namespace MixItUp.Base.Commands
                 if (MixerAPIHandler.ChatClient != null)
                 {
                     UserModel userModel = await MixerAPIHandler.MixerConnection.Users.GetUser(user.ID);
-                    await MixerAPIHandler.ChatClient.Whisper(userModel.username, userModel.GetMixerAge());
+                    await MixerAPIHandler.BotChatClient.Whisper(userModel.username, userModel.GetMixerAge());
                 }
             }));
         }

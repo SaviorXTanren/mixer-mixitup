@@ -1,5 +1,6 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.WPF.Util;
@@ -7,6 +8,7 @@ using MixItUp.WPF.Windows;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -58,6 +60,43 @@ namespace MixItUp.WPF
 
             if (result)
             {
+                if (this.BotLoginCheckBox.IsChecked.GetValueOrDefault())
+                {
+                    string clientID = ConfigurationManager.AppSettings["ClientID"];
+                    if (string.IsNullOrEmpty(clientID))
+                    {
+                        throw new ArgumentException("ClientID value isn't set in application configuration");
+                    }
+
+                    result = await this.RunAsyncOperation(async () =>
+                    {
+                        if (await MixerAPIHandler.InitializeBotConnection(clientID, (OAuthShortCodeModel shortCode) =>
+                        {
+                            this.BotShortCodeGrid.Visibility = Visibility.Visible;
+                            this.BotShortCodeTextBox.Text = shortCode.code;
+
+                            Process.Start("https://mixer.com/oauth/shortcode?code=" + shortCode.code);
+                        }))
+                        {
+                            PrivatePopulatedUserModel user = await MixerAPIHandler.BotConnection.Users.GetCurrentUser();
+                            if (user != null)
+                            {
+                                ChannelSession.InitializeBot(user);
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+
+                    if (!result)
+                    {
+                        MessageBoxHelper.ShowError("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
+                        return;
+                    }
+                }
+
+                await ChannelSession.LoadSettings();
+
                 StreamerWindow window = new StreamerWindow();
                 this.Hide();
                 window.Show();

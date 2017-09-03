@@ -11,6 +11,7 @@ namespace MixItUp.Base
     public static class ChannelSession
     {
         public static PrivatePopulatedUserModel User { get; private set; }
+        public static PrivatePopulatedUserModel BotUser { get; private set; }
         public static ExpandedChannelModel Channel { get; private set; }
 
         public static ChannelSettings Settings { get; private set; }
@@ -26,6 +27,8 @@ namespace MixItUp.Base
             ChannelSession.ChatUsers = new LockedDictionary<uint, ChatUserViewModel>();
             ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
         }
+
+        public static void InitializeBot(PrivatePopulatedUserModel botUser) { ChannelSession.BotUser = botUser; }
 
         public static async Task LoadSettings() { ChannelSession.Settings = await ChannelSettings.LoadSettings(ChannelSession.Channel); }
 

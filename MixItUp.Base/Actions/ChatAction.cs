@@ -38,11 +38,11 @@ namespace MixItUp.Base.Actions
 
                 if (this.IsWhisper)
                 {
-                    await MixerAPIHandler.ChatClient.Whisper(user.UserName, this.ChatText);
+                    await MixerAPIHandler.BotChatClient.Whisper(user.UserName, this.ChatText);
                 }
                 else
                 {
-                    await MixerAPIHandler.ChatClient.SendMessage(message);
+                    await MixerAPIHandler.BotChatClient.SendMessage(message);
                 }
             }
         }

@@ -26,12 +26,39 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="160" TextAlignment="Center">
-                If you are running a streamer, click the Streamer button
+                If you are running a stream, click the Streamer button
             </TextBlock>
-            <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Streamer</Button>
+
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Log in with Bot:</TextBlock>
+                <CheckBox Grid.Column="2" x:Name="BotLoginCheckBox" />
+            </Grid>
+
+            <Grid x:Name="BotShortCodeGrid" Grid.Row="4" HorizontalAlignment="Center" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Short Code:</TextBlock>
+                <TextBox Grid.Column="2" x:Name="BotShortCodeTextBox" IsEnabled="False" />
+            </Grid>
+
+            <Button Grid.Row="6" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Streamer</Button>
         </Grid>
 
         <Grid Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">

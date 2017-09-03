@@ -149,7 +149,7 @@ namespace MixItUp.WPF.Controls.Chat
                 this.ChatMessageTextBox.Text = string.Empty;
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    await MixerAPIHandler.ChatClient.SendMessage(message);
+                    await MixerAPIHandler.BotChatClient.SendMessage(message);
                 });
             }
         }
@@ -210,7 +210,7 @@ namespace MixItUp.WPF.Controls.Chat
                     else
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        MixerAPIHandler.ChatClient.Whisper(message.User.UserName, "You do not permission to run this command");
+                        MixerAPIHandler.BotChatClient.Whisper(message.User.UserName, "You do not permission to run this command");
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }

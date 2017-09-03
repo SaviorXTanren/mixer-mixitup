@@ -2,6 +2,7 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Overlay;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,10 @@ namespace MixItUp.Base
     public static class MixerAPIHandler
     {
         public static MixerConnection MixerConnection { get; private set; }
+        public static MixerConnection BotConnection { get; private set; }
 
         public static ChatClient ChatClient { get; private set; }
+        public static ChatClient BotChatClient { get; private set; }
         public static InteractiveClient InteractiveClient { get; private set; }
         public static ConstellationClient ConstellationClient { get; private set; }
 
@@ -25,18 +28,47 @@ namespace MixItUp.Base
             return (MixerAPIHandler.MixerConnection != null);
         }
 
+        public static async Task<bool> InitializeBotConnection(string clientID, Action<OAuthShortCodeModel> callback)
+        {
+            MixerAPIHandler.BotConnection = await MixerConnection.ConnectViaShortCode(clientID, new List<OAuthClientScopeEnum>()
+            {
+                OAuthClientScopeEnum.chat__bypass_links,
+                OAuthClientScopeEnum.chat__bypass_slowchat,
+                OAuthClientScopeEnum.chat__chat,
+                OAuthClientScopeEnum.chat__connect,
+                OAuthClientScopeEnum.chat__edit_options,
+                OAuthClientScopeEnum.chat__giveaway_start,
+                OAuthClientScopeEnum.chat__poll_start,
+                OAuthClientScopeEnum.chat__poll_vote,
+                OAuthClientScopeEnum.chat__whisper,
+
+                OAuthClientScopeEnum.user__details__self,
+            }, callback);
+            return (MixerAPIHandler.BotConnection != null);
+        }
+
         public static async Task<bool> InitializeChatClient(ChannelModel channel)
         {
             MixerAPIHandler.CheckMixerConnection();
 
-            MixerAPIHandler.ChatClient = await ChatClient.CreateFromChannel(MixerAPIHandler.MixerConnection, channel);
-            if (await MixerAPIHandler.ChatClient.Connect() && await MixerAPIHandler.ChatClient.Authenticate())
+            MixerAPIHandler.ChatClient = MixerAPIHandler.BotChatClient = await ChatClient.CreateFromChannel(MixerAPIHandler.MixerConnection, channel);
+            if (!(await MixerAPIHandler.ChatClient.Connect() && await MixerAPIHandler.ChatClient.Authenticate()))
             {
-                return true;
+                MixerAPIHandler.ChatClient = MixerAPIHandler.BotChatClient = null;
+                return false;
             }
 
-            MixerAPIHandler.ChatClient = null;
-            return false;
+            if (MixerAPIHandler.BotConnection != null)
+            {
+                MixerAPIHandler.BotChatClient = await ChatClient.CreateFromChannel(MixerAPIHandler.BotConnection, channel);
+                if (!(await MixerAPIHandler.BotChatClient.Connect() && await MixerAPIHandler.BotChatClient.Authenticate()))
+                {
+                    MixerAPIHandler.BotChatClient = null;
+                    return false;
+                }            
+            }
+
+            return true;
         }
 
         public static async Task<bool> InitializeConstellationClient()
