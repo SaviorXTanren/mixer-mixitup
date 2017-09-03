@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Windows.Chat;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -45,7 +46,7 @@ namespace MixItUp.WPF.Controls.Commands
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await command.Perform();
+                await command.Perform(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
             });
         }
 
