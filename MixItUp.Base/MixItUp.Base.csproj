@@ -80,6 +80,7 @@
     <Compile Include="Util\LockedDictionary.cs" />
     <Compile Include="Util\LockedList.cs" />
     <Compile Include="Util\SerializerHelper.cs" />
+    <Compile Include="Util\UserModelExtensions.cs" />
     <Compile Include="ViewModel\InteractiveControlViewModel.cs" />
     <Compile Include="ViewModel\UserDataViewModel.cs" />
     <Compile Include="Web\OverlayWebServer.cs" />

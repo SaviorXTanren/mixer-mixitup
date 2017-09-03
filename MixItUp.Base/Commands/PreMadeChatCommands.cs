@@ -6,6 +6,9 @@ using Mixer.Base.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
 using Mixer.Base.Model.Channel;
+using System.Text;
+using MixItUp.Base.Util;
+using Mixer.Base.Model.User;
 
 namespace MixItUp.Base.Commands
 {
@@ -136,6 +139,21 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    public class StreamerAgeChatCommand : ChatCommand
+    {
+        public StreamerAgeChatCommand()
+            : base("Streamer Age", "streamerage", UserRole.Mod)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (MixerAPIHandler.ChatClient != null)
+                {
+                    await MixerAPIHandler.ChatClient.SendMessage(ChannelSession.Channel.user.GetMixerAge());
+                }
+            }));
+        }
+    }
+
     public class MixerAgeChatCommand : ChatCommand
     {
         public MixerAgeChatCommand()
@@ -145,7 +163,8 @@ namespace MixItUp.Base.Commands
             {
                 if (MixerAPIHandler.ChatClient != null)
                 {
-
+                    UserModel userModel = await MixerAPIHandler.MixerConnection.Users.GetUser(user.ID);
+                    await MixerAPIHandler.ChatClient.Whisper(userModel.username, userModel.GetMixerAge());
                 }
             }));
         }
@@ -160,7 +179,6 @@ namespace MixItUp.Base.Commands
             {
                 if (MixerAPIHandler.ChatClient != null)
                 {
-
                 }
             }));
         }

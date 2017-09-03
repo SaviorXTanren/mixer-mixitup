@@ -41,6 +41,7 @@ namespace MixItUp.Base
             settings.ChatCommands.Add(new TitleChatCommand());
             settings.ChatCommands.Add(new TimeoutChatCommand());
             settings.ChatCommands.Add(new PurgeChatCommand());
+            settings.ChatCommands.Add(new StreamerAgeChatCommand());
             settings.ChatCommands.Add(new MixerAgeChatCommand());
             settings.ChatCommands.Add(new FollowAgeChatCommand());
 
