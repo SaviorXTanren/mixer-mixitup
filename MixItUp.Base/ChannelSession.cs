@@ -1,9 +1,9 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
-using Mixer.Base.ViewModel;
-using Mixer.Base.ViewModel.Chat;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.Chat;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base

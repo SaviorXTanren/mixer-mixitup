@@ -1,10 +1,8 @@
 ﻿using Mixer.Base.Util;
-using Mixer.Base.ViewModel;
-using Mixer.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Chat;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {

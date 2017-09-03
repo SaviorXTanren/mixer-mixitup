@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel
+namespace MixItUp.Base.ViewModel.Interactive
 {
     [DataContract]
     public class InteractiveControlViewModel : IEquatable<InteractiveControlViewModel>

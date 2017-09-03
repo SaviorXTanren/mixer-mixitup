@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Model.Interactive;
-using Mixer.Base.ViewModel;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Interactive;
 using System.Collections.Generic;

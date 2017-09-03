@@ -1,4 +1,4 @@
-﻿using Mixer.Base.ViewModel;
+﻿using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;

@@ -1,5 +1,4 @@
-﻿using Mixer.Base.ViewModel;
-using System;
+﻿using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel

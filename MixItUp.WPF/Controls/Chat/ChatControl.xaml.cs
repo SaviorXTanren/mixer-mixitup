@@ -1,10 +1,9 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
-using Mixer.Base.ViewModel.Chat;
 using MixItUp.Base;
 using MixItUp.Base.Chat;
 using MixItUp.Base.Commands;
-using MixItUp.WPF.Controls.Commands;
+using MixItUp.Base.ViewModel.Chat;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,7 +12,6 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.Chat

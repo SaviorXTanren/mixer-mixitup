@@ -8,7 +8,12 @@ namespace MixItUp.Base.Util
     {
         public static string GetMixerAge(this UserModel user)
         {
-            TimeSpan upTime = DateTimeOffset.Now - user.createdAt.GetValueOrDefault().ToOffset(DateTimeOffset.Now.Offset);
+            return user.GetFollowAge(user.createdAt.GetValueOrDefault());
+        }
+
+        public static string GetFollowAge(this UserModel user, DateTimeOffset followDate)
+        {
+            TimeSpan upTime = DateTimeOffset.Now - followDate.ToOffset(DateTimeOffset.Now.Offset);
             int days = (int)upTime.TotalDays;
             int years = days / 365;
             days = days - (years * 365);

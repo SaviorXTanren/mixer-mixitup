@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mixer.Base, Version=0.2.6453.41514, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.2.3-beta\lib\net46\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.2.6455.25986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.2.4-beta\lib\net46\Mixer.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -81,8 +81,11 @@
     <Compile Include="Util\LockedList.cs" />
     <Compile Include="Util\SerializerHelper.cs" />
     <Compile Include="Util\UserModelExtensions.cs" />
-    <Compile Include="ViewModel\InteractiveControlViewModel.cs" />
+    <Compile Include="ViewModel\Chat\ChatMessageViewModel.cs" />
+    <Compile Include="ViewModel\Chat\ChatUserViewModel.cs" />
+    <Compile Include="ViewModel\Interactive\InteractiveControlViewModel.cs" />
     <Compile Include="ViewModel\UserDataViewModel.cs" />
+    <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="Web\OverlayWebServer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,8 @@
 ﻿using Mixer.Base.Util;
-using Mixer.Base.ViewModel;
-using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using WindowsInput;

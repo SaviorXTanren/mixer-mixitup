@@ -1,5 +1,4 @@
-﻿using Mixer.Base.ViewModel;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;

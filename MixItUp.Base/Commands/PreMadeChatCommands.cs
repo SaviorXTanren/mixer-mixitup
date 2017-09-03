@@ -1,14 +1,13 @@
-﻿using Mixer.Base.ViewModel.Chat;
+﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.Chat;
 using System;
-using System.Threading.Tasks;
-using Mixer.Base.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
-using Mixer.Base.Model.Channel;
-using System.Text;
-using MixItUp.Base.Util;
-using Mixer.Base.Model.User;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
@@ -179,6 +178,15 @@ namespace MixItUp.Base.Commands
             {
                 if (MixerAPIHandler.ChatClient != null)
                 {
+                    DateTimeOffset? followDate = await MixerAPIHandler.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, user.GetModel());
+                    if (followDate != null)
+                    {
+                        await MixerAPIHandler.BotChatClient.Whisper(user.UserName, user.GetModel().GetFollowAge(followDate.GetValueOrDefault()));
+                    }
+                    else
+                    {
+                        await MixerAPIHandler.BotChatClient.Whisper(user.UserName, "You must follow the channel to use this");
+                    }
                 }
             }));
         }

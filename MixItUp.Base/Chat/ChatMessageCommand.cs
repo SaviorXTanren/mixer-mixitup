@@ -1,4 +1,4 @@
-﻿using Mixer.Base.ViewModel.Chat;
+﻿using MixItUp.Base.ViewModel.Chat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
