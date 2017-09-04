@@ -191,4 +191,20 @@ namespace MixItUp.Base.Commands
             }));
         }
     }
+
+    public class SparksChatCommand : ChatCommand
+    {
+        public SparksChatCommand()
+            : base("Sparks", "sparks", UserRole.User)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (MixerAPIHandler.ChatClient != null)
+                {
+                    UserWithChannelModel userModel = await MixerAPIHandler.MixerConnection.Users.GetUser(user.ID);
+                    await MixerAPIHandler.BotChatClient.Whisper(userModel.username, "Sparks: " + userModel.sparks);
+                }
+            }));
+        }
+    }
 }
