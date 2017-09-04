@@ -30,6 +30,7 @@ namespace MixItUp.Base
                 settings.EventCommands = new LockedList<EventCommand>(settings.eventCommandsInternal);
                 settings.InteractiveControls = new LockedList<InteractiveCommand>(settings.interactiveControlsInternal);
                 settings.TimerCommands = new LockedList<TimerCommand>(settings.timerCommandsInternal);
+                settings.Quotes = new LockedList<string>(settings.quotesInternal);
             }
             else
             {
@@ -44,6 +45,10 @@ namespace MixItUp.Base
             settings.ChatCommands.Add(new StreamerAgeChatCommand());
             settings.ChatCommands.Add(new MixerAgeChatCommand());
             settings.ChatCommands.Add(new FollowAgeChatCommand());
+            settings.ChatCommands.Add(new SparksChatCommand());
+            settings.ChatCommands.Add(new QuoteChatCommand());
+
+            settings.ChatCommands.First(c => c is QuoteChatCommand).IsEnabled = settings.QuotesEnabled;
 
             return settings;
         }
@@ -63,10 +68,16 @@ namespace MixItUp.Base
         private List<TimerCommand> timerCommandsInternal { get; set; }
 
         [JsonProperty]
+        private List<string> quotesInternal { get; set; }
+
+        [JsonProperty]
         public ChannelModel Channel { get; set; }
 
         [JsonProperty]
         public List<UserDataViewModel> UserData { get; set; }
+
+        [JsonProperty]
+        public bool QuotesEnabled { get; set; }
 
         [JsonProperty]
         public int TimerCommandsInterval { get; set; }
@@ -86,6 +97,9 @@ namespace MixItUp.Base
         [JsonIgnore]
         public LockedList<TimerCommand> TimerCommands { get; set; }
 
+        [JsonIgnore]
+        public LockedList<string> Quotes { get; set; }
+
         public ChannelSettings(ChannelModel channel)
             : this()
         {
@@ -98,6 +112,7 @@ namespace MixItUp.Base
             this.eventCommandsInternal = new List<EventCommand>();
             this.interactiveControlsInternal = new List<InteractiveCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
+            this.quotesInternal = new List<string>();
 
             this.UserData = new List<UserDataViewModel>();
 
@@ -105,6 +120,7 @@ namespace MixItUp.Base
             this.EventCommands = new LockedList<EventCommand>();
             this.InteractiveControls = new LockedList<InteractiveCommand>();
             this.TimerCommands = new LockedList<TimerCommand>();
+            this.Quotes = new LockedList<string>();
 
             this.TimerCommandsInterval = 10;
             this.TimerCommandsMinimumMessages = 10;
@@ -119,6 +135,7 @@ namespace MixItUp.Base
             this.eventCommandsInternal = this.EventCommands.ToList();
             this.interactiveControlsInternal = this.InteractiveControls.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
+            this.quotesInternal = this.Quotes.ToList();
 
             this.chatCommandsInternal.RemoveAll(c => c.Actions.Any(a => a.Type == ActionTypeEnum.Custom));
 

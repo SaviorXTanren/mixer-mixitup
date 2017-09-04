@@ -55,7 +55,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0">Short Code:</TextBlock>
-                <TextBox Grid.Column="2" x:Name="BotShortCodeTextBox" IsEnabled="False" />
+                <TextBox Grid.Column="2" x:Name="BotShortCodeTextBox" IsReadOnly="True" />
             </Grid>
 
             <Button Grid.Row="6" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Streamer</Button>

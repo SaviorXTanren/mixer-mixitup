@@ -10,6 +10,7 @@
         xmlns:InteractiveControls="clr-namespace:MixItUp.WPF.Controls.Interactive"
         xmlns:EventsControls="clr-namespace:MixItUp.WPF.Controls.Events"
         xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
+        xmlns:QuotesControls="clr-namespace:MixItUp.WPF.Controls.Quotes"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         mc:Ignorable="d"
         Title="Mix It Up - Streamer" Height="600" Width="800">
@@ -25,6 +26,9 @@
             </TabItem>
             <TabItem Header="Commands">
                 <CommandsControls:CommandsControl x:Name="Commands" />
+            </TabItem>
+            <TabItem Header="Quotes">
+                <QuotesControls:QuoteControl x:Name="Quotes" />
             </TabItem>
             <TabItem Header="Timers">
                 <TimerControls:TimerControl x:Name="Timers" />

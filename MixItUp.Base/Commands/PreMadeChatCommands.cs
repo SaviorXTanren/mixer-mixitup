@@ -207,4 +207,23 @@ namespace MixItUp.Base.Commands
             }));
         }
     }
+
+    public class QuoteChatCommand : ChatCommand
+    {
+        public QuoteChatCommand()
+            : base("Quotes", "quote", UserRole.User)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (MixerAPIHandler.ChatClient != null && ChannelSession.Settings.Quotes.Count > 0)
+                {
+                    Random random = new Random();
+                    int index = random.Next(ChannelSession.Settings.Quotes.Count);
+                    string quote = ChannelSession.Settings.Quotes[index];
+
+                    await MixerAPIHandler.BotChatClient.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
+                }
+            }));
+        }
+    }
 }

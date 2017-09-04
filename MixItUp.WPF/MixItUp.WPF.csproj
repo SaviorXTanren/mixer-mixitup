@@ -100,6 +100,9 @@
     <Compile Include="Controls\LoadingStatusBar.xaml.cs">
       <DependentUpon>LoadingStatusBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Quotes\QuoteControl.xaml.cs">
+      <DependentUpon>QuoteControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Timers\TimerControl.xaml.cs">
       <DependentUpon>TimerControl.xaml</DependentUpon>
     </Compile>
@@ -157,6 +160,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\LoadingStatusBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Quotes\QuoteControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
