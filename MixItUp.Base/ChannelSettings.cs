@@ -1,4 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.OAuth;
+using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
@@ -17,7 +19,21 @@ namespace MixItUp.Base
     {
         private const string SettingsDirectoryName = "Settings";
 
-        public static async Task<ChannelSettings> LoadSettings(ChannelModel channel)
+        public static async Task<IEnumerable<ChannelSettings>> GetAllAvailableSettings()
+        {
+            List<ChannelSettings> settings = new List<ChannelSettings>();
+            foreach (string filePath in Directory.GetFiles(SettingsDirectoryName))
+            {
+                ChannelSettings setting = await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
+                if (setting != null)
+                {
+                    settings.Add(setting);
+                }
+            }
+            return settings;
+        }
+
+        public static async Task<ChannelSettings> LoadSettings(ExpandedChannelModel channel)
         {
             ChannelSettings settings = null;
             string filePath = ChannelSettings.GetSettingsFilePath(channel);
@@ -71,7 +87,13 @@ namespace MixItUp.Base
         private List<string> quotesInternal { get; set; }
 
         [JsonProperty]
-        public ChannelModel Channel { get; set; }
+        public OAuthTokenModel OAuthToken { get; set; }
+
+        [JsonProperty]
+        public OAuthTokenModel BotOAuthToken { get; set; }
+
+        [JsonProperty]
+        public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]
         public List<UserDataViewModel> UserData { get; set; }
@@ -100,7 +122,7 @@ namespace MixItUp.Base
         [JsonIgnore]
         public LockedList<string> Quotes { get; set; }
 
-        public ChannelSettings(ChannelModel channel)
+        public ChannelSettings(ExpandedChannelModel channel)
             : this()
         {
             this.Channel = channel;
@@ -130,6 +152,9 @@ namespace MixItUp.Base
         {
             Directory.CreateDirectory(SettingsDirectoryName);
             string filePath = ChannelSettings.GetSettingsFilePath(this.Channel);
+
+            this.OAuthToken = MixerAPIHandler.MixerConnection.GetOAuthTokenCopy();
+            this.BotOAuthToken = MixerAPIHandler.BotConnection.GetOAuthTokenCopy();
 
             this.chatCommandsInternal = this.ChatCommands.ToList();
             this.eventCommandsInternal = this.EventCommands.ToList();

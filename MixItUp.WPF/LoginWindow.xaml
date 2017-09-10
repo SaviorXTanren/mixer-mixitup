@@ -26,39 +26,25 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
+
             <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="160" TextAlignment="Center">
                 If you are running a stream, click the Streamer button
             </TextBlock>
 
-            <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Row="2" x:Name="ExistingStreamerLoginGrid" HorizontalAlignment="Center" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0">Log in with Bot:</TextBlock>
-                <CheckBox Grid.Column="2" x:Name="BotLoginCheckBox" />
+                <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="160" DisplayMemberPath="Name" />
             </Grid>
 
-            <Grid x:Name="BotShortCodeGrid" Grid.Row="4" HorizontalAlignment="Center" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0">Short Code:</TextBlock>
-                <TextBox Grid.Column="2" x:Name="BotShortCodeTextBox" IsReadOnly="True" />
-            </Grid>
-
-            <Button Grid.Row="6" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Streamer</Button>
+            <Button Grid.Row="4" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Streamer</Button>
         </Grid>
 
         <Grid Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">

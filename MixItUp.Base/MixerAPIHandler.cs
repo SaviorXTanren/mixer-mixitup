@@ -22,30 +22,33 @@ namespace MixItUp.Base
 
         public static OverlayWebServer OverlayServer { get; private set; }
 
-        public static async Task<bool> InitializeMixerClient(string clientID, IEnumerable<OAuthClientScopeEnum> scopes)
+        public static async Task<bool> InitializeMixerConnection(string clientID, IEnumerable<OAuthClientScopeEnum> scopes)
         {
             MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(clientID, scopes);
             return (MixerAPIHandler.MixerConnection != null);
         }
 
-        public static async Task<bool> InitializeBotConnection(string clientID, Action<OAuthShortCodeModel> callback)
+        public static async Task<bool> InitializeMixerConnection(OAuthTokenModel token)
         {
-            MixerAPIHandler.BotConnection = await MixerConnection.ConnectViaShortCode(clientID, new List<OAuthClientScopeEnum>()
-            {
-                OAuthClientScopeEnum.chat__bypass_links,
-                OAuthClientScopeEnum.chat__bypass_slowchat,
-                OAuthClientScopeEnum.chat__chat,
-                OAuthClientScopeEnum.chat__connect,
-                OAuthClientScopeEnum.chat__edit_options,
-                OAuthClientScopeEnum.chat__giveaway_start,
-                OAuthClientScopeEnum.chat__poll_start,
-                OAuthClientScopeEnum.chat__poll_vote,
-                OAuthClientScopeEnum.chat__whisper,
+            MixerAPIHandler.MixerConnection = await MixerConnection.ConnectViaOAuthToken(token);
+            return (MixerAPIHandler.MixerConnection != null);
+        }
 
-                OAuthClientScopeEnum.user__details__self,
-            }, callback);
+        public static void CloseMixerConnection() { MixerAPIHandler.MixerConnection = null; }
+
+        public static async Task<bool> InitializeBotConnection(string clientID, IEnumerable<OAuthClientScopeEnum> scopes, Action<OAuthShortCodeModel> callback)
+        {
+            MixerAPIHandler.BotConnection = await MixerConnection.ConnectViaShortCode(clientID, scopes, callback);
             return (MixerAPIHandler.BotConnection != null);
         }
+
+        public static async Task<bool> InitializeBotConnection(OAuthTokenModel token)
+        {
+            MixerAPIHandler.BotConnection = await MixerConnection.ConnectViaOAuthToken(token);
+            return (MixerAPIHandler.BotConnection != null);
+        }
+
+        public static void CloseBotConnection() { MixerAPIHandler.BotConnection = null; }
 
         public static async Task<bool> InitializeChatClient(ChannelModel channel)
         {

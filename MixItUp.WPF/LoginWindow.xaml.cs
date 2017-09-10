@@ -1,6 +1,5 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.WPF.Util;
@@ -8,18 +7,81 @@ using MixItUp.WPF.Windows;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace MixItUp.WPF
 {
+    public class StreamerLoginItem
+    {
+        public ChannelSettings Setting;
+
+        public StreamerLoginItem(ChannelSettings setting)
+        {
+            this.Setting = setting;
+        }
+
+        public string Name { get { return this.Setting.Channel.user.username; } }
+    }
+
     /// <summary>
     /// Interaction logic for LoginWindow.xaml
     /// </summary>
     public partial class LoginWindow : LoadingWindowBase
     {
+        private List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
+        {
+            OAuthClientScopeEnum.chat__bypass_links,
+            OAuthClientScopeEnum.chat__bypass_slowchat,
+            OAuthClientScopeEnum.chat__change_ban,
+            OAuthClientScopeEnum.chat__change_role,
+            OAuthClientScopeEnum.chat__chat,
+            OAuthClientScopeEnum.chat__connect,
+            OAuthClientScopeEnum.chat__clear_messages,
+            OAuthClientScopeEnum.chat__edit_options,
+            OAuthClientScopeEnum.chat__giveaway_start,
+            OAuthClientScopeEnum.chat__poll_start,
+            OAuthClientScopeEnum.chat__poll_vote,
+            OAuthClientScopeEnum.chat__purge,
+            OAuthClientScopeEnum.chat__remove_message,
+            OAuthClientScopeEnum.chat__timeout,
+            OAuthClientScopeEnum.chat__view_deleted,
+            OAuthClientScopeEnum.chat__whisper,
+
+            OAuthClientScopeEnum.channel__details__self,
+            OAuthClientScopeEnum.channel__update__self,
+            OAuthClientScopeEnum.channel__analytics__self,
+
+            OAuthClientScopeEnum.interactive__manage__self,
+            OAuthClientScopeEnum.interactive__robot__self,
+
+            OAuthClientScopeEnum.user__details__self,
+        };
+
+        private List<OAuthClientScopeEnum> ModeratorScopes = new List<OAuthClientScopeEnum>()
+        {
+            OAuthClientScopeEnum.chat__bypass_links,
+            OAuthClientScopeEnum.chat__bypass_slowchat,
+            OAuthClientScopeEnum.chat__change_ban,
+            OAuthClientScopeEnum.chat__change_role,
+            OAuthClientScopeEnum.chat__chat,
+            OAuthClientScopeEnum.chat__connect,
+            OAuthClientScopeEnum.chat__clear_messages,
+            OAuthClientScopeEnum.chat__edit_options,
+            OAuthClientScopeEnum.chat__giveaway_start,
+            OAuthClientScopeEnum.chat__poll_start,
+            OAuthClientScopeEnum.chat__poll_vote,
+            OAuthClientScopeEnum.chat__purge,
+            OAuthClientScopeEnum.chat__remove_message,
+            OAuthClientScopeEnum.chat__timeout,
+            OAuthClientScopeEnum.chat__view_deleted,
+            OAuthClientScopeEnum.chat__whisper,
+
+            OAuthClientScopeEnum.user__details__self,
+        };
+
         public LoginWindow()
         {
             InitializeComponent();
@@ -27,74 +89,54 @@ namespace MixItUp.WPF
             this.Initialize(this.StatusBar);
         }
 
+        protected override async Task OnLoaded()
+        {
+            List<ChannelSettings> settings = new List<ChannelSettings>(await ChannelSettings.GetAllAvailableSettings());
+            if (settings.Count() > 0)
+            {
+                this.ExistingStreamerLoginGrid.Visibility = Visibility.Visible;
+                settings.Add(new ChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserModel() { username = "NEW STREAMER" } } });
+                this.ExistingStreamerComboBox.ItemsSource = settings.Select(cs => new StreamerLoginItem(cs));
+            }
+
+            await base.OnLoaded();
+        }
+
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            bool result = await this.Login(new List<OAuthClientScopeEnum>()
+            bool result = false;
+
+            if (this.ExistingStreamerLoginGrid.Visibility == Visibility.Visible)
             {
-                OAuthClientScopeEnum.chat__bypass_links,
-                OAuthClientScopeEnum.chat__bypass_slowchat,
-                OAuthClientScopeEnum.chat__change_ban,
-                OAuthClientScopeEnum.chat__change_role,
-                OAuthClientScopeEnum.chat__chat,
-                OAuthClientScopeEnum.chat__connect,
-                OAuthClientScopeEnum.chat__clear_messages,
-                OAuthClientScopeEnum.chat__edit_options,
-                OAuthClientScopeEnum.chat__giveaway_start,
-                OAuthClientScopeEnum.chat__poll_start,
-                OAuthClientScopeEnum.chat__poll_vote,
-                OAuthClientScopeEnum.chat__purge,
-                OAuthClientScopeEnum.chat__remove_message,
-                OAuthClientScopeEnum.chat__timeout,
-                OAuthClientScopeEnum.chat__view_deleted,
-                OAuthClientScopeEnum.chat__whisper,
-
-                OAuthClientScopeEnum.channel__details__self,
-                OAuthClientScopeEnum.channel__update__self,
-                OAuthClientScopeEnum.channel__analytics__self,
-
-                OAuthClientScopeEnum.interactive__manage__self,
-                OAuthClientScopeEnum.interactive__robot__self,
-
-                OAuthClientScopeEnum.user__details__self,
-            }, channelName: null);
+                if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
+                {
+                    StreamerLoginItem loginItem = (StreamerLoginItem)this.ExistingStreamerComboBox.SelectedItem;
+                    ChannelSettings setting = loginItem.Setting;
+                    if (setting.Channel.id == 0)
+                    {
+                        result = await this.NewStreamerLogin();
+                    }
+                    else
+                    {
+                        result = await MixerAPIHandler.InitializeMixerConnection(setting.OAuthToken);
+                        if (result)
+                        {
+                            result = await this.InitializeSession(setting.Channel.user.username);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBoxHelper.ShowError("You must select a Streamer account to log in to");
+                }
+            }
+            else
+            {
+                result = await this.NewStreamerLogin();
+            }
 
             if (result)
             {
-                if (this.BotLoginCheckBox.IsChecked.GetValueOrDefault())
-                {
-                    string clientID = ConfigurationManager.AppSettings["ClientID"];
-                    if (string.IsNullOrEmpty(clientID))
-                    {
-                        throw new ArgumentException("ClientID value isn't set in application configuration");
-                    }
-
-                    result = await this.RunAsyncOperation(async () =>
-                    {
-                        if (await MixerAPIHandler.InitializeBotConnection(clientID, (OAuthShortCodeModel shortCode) =>
-                        {
-                            this.BotShortCodeGrid.Visibility = Visibility.Visible;
-                            this.BotShortCodeTextBox.Text = shortCode.code;
-
-                            Process.Start("https://mixer.com/oauth/shortcode?code=" + shortCode.code);
-                        }))
-                        {
-                            PrivatePopulatedUserModel user = await MixerAPIHandler.BotConnection.Users.GetCurrentUser();
-                            if (user != null)
-                            {
-                                ChannelSession.InitializeBot(user);
-                                return true;
-                            }
-                        }
-                        return false;
-                    });
-
-                    if (!result)
-                    {
-                        MessageBoxHelper.ShowError("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
-                        return;
-                    }
-                }
-
                 await ChannelSession.LoadSettings();
 
                 StreamerWindow window = new StreamerWindow();
@@ -104,7 +146,7 @@ namespace MixItUp.WPF
             }
             else
             {
-                MessageBoxHelper.ShowError("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
+                MessageBoxHelper.ShowError("Unable to initialize session, please try again");
             }
         }
 
@@ -124,27 +166,7 @@ namespace MixItUp.WPF
                 return;
             }
 
-            bool result = await this.Login(new List<OAuthClientScopeEnum>()
-            {
-                OAuthClientScopeEnum.chat__bypass_links,
-                OAuthClientScopeEnum.chat__bypass_slowchat,
-                OAuthClientScopeEnum.chat__change_ban,
-                OAuthClientScopeEnum.chat__change_role,
-                OAuthClientScopeEnum.chat__chat,
-                OAuthClientScopeEnum.chat__connect,
-                OAuthClientScopeEnum.chat__clear_messages,
-                OAuthClientScopeEnum.chat__edit_options,
-                OAuthClientScopeEnum.chat__giveaway_start,
-                OAuthClientScopeEnum.chat__poll_start,
-                OAuthClientScopeEnum.chat__poll_vote,
-                OAuthClientScopeEnum.chat__purge,
-                OAuthClientScopeEnum.chat__remove_message,
-                OAuthClientScopeEnum.chat__timeout,
-                OAuthClientScopeEnum.chat__view_deleted,
-                OAuthClientScopeEnum.chat__whisper,
-
-                OAuthClientScopeEnum.user__details__self,
-            }, this.ModeratorChannelTextBox.Text);
+            bool result = await this.EstablishConnection(this.ModeratorScopes, this.ModeratorChannelTextBox.Text);
 
             if (result)
             {
@@ -155,11 +177,16 @@ namespace MixItUp.WPF
             }
             else
             {
-                MessageBoxHelper.ShowError("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
+                MessageBoxHelper.ShowError("Unable to initialize session, please try again");
             }
         }
 
-        private async Task<bool> Login(IEnumerable<OAuthClientScopeEnum> scopes, string channelName)
+        private async Task<bool> NewStreamerLogin()
+        {
+            return await this.EstablishConnection(this.StreamerScopes, channelName: null);
+        }
+
+        private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
             string clientID = ConfigurationManager.AppSettings["ClientID"];
             if (string.IsNullOrEmpty(clientID))
@@ -167,20 +194,33 @@ namespace MixItUp.WPF
                 throw new ArgumentException("ClientID value isn't set in application configuration");
             }
 
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await MixerAPIHandler.InitializeMixerConnection(clientID, scopes);
+            });
+
+            if (!result)
+            {
+                MessageBoxHelper.ShowError("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
+                return false;
+            }
+
+            return await this.InitializeSession(channelName);
+        }
+
+        private async Task<bool> InitializeSession(string channelName)
+        {
             return await this.RunAsyncOperation(async () =>
             {
-                if (await MixerAPIHandler.InitializeMixerClient(clientID, scopes))
+                PrivatePopulatedUserModel user = await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
+                if (user != null)
                 {
-                    PrivatePopulatedUserModel user = await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
-                    if (user != null)
+                    ExpandedChannelModel channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel((channelName == null) ? user.username : channelName);
+                    if (channel != null)
                     {
-                        ExpandedChannelModel channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel((channelName == null) ? user.username : channelName);
-                        if (channel != null)
-                        {
-                            ChannelSession.Initialize(user, channel);
-                            await ChannelSession.LoadSettings();
-                            return true;
-                        }
+                        ChannelSession.Initialize(user, channel);
+                        await ChannelSession.LoadSettings();
+                        return true;
                     }
                 }
                 return false;
