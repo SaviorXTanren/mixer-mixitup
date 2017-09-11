@@ -39,7 +39,7 @@ namespace MixItUp.Base.Actions
 
         public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (MixerAPIHandler.OverlayServer != null)
+            if (ChannelSession.OverlayServer != null)
             {
                 if (this.FileData == null)
                 {
@@ -47,7 +47,7 @@ namespace MixItUp.Base.Actions
                     this.FileData = Convert.ToBase64String(byteData);
                 }
 
-                MixerAPIHandler.OverlayServer.SetOverlayImage(new OverlayImage()
+                ChannelSession.OverlayServer.SetOverlayImage(new OverlayImage()
                 {
                     filePath = this.FilePath,
                     fileData = this.FileData,

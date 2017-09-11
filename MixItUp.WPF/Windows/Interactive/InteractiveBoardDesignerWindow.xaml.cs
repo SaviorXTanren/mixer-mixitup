@@ -89,8 +89,8 @@ namespace MixItUp.WPF.Windows.Interactive
             //{
             //    await this.Window.RunAsyncOperation(async () =>
             //    {
-            //        await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGame(this.selectedGame);
-            //        await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.selectedGameVersion);
+            //        await ChannelSession.MixerConnection.Interactive.UpdateInteractiveGame(this.selectedGame);
+            //        await ChannelSession.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.selectedGameVersion);
             //    });
             //}
 
@@ -107,7 +107,7 @@ namespace MixItUp.WPF.Windows.Interactive
 
             InteractiveGameListingModel game = await this.RunAsyncOperation(async () =>
             {
-                return await InteractiveGameHelper.CreateInteractive2Game(MixerAPIHandler.MixerConnection, ChannelSession.Channel, ChannelSession.User, this.GameNameTextBox.Text, null);
+                return await InteractiveGameHelper.CreateInteractive2Game(ChannelSession.MixerConnection, ChannelSession.Channel, ChannelSession.User, this.GameNameTextBox.Text, null);
             });
 
             if (game == null)

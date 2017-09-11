@@ -26,7 +26,7 @@ namespace MixItUp.Base.Actions
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (MixerAPIHandler.ChatClient != null)
+            if (ChannelSession.ChatClient != null)
             {
                 string message = this.ChatText;
                 message = message.Replace("$user", "@" + user.UserName);
@@ -37,11 +37,11 @@ namespace MixItUp.Base.Actions
 
                 if (this.IsWhisper)
                 {
-                    await MixerAPIHandler.BotChatClient.Whisper(user.UserName, this.ChatText);
+                    await ChannelSession.BotChatClient.Whisper(user.UserName, this.ChatText);
                 }
                 else
                 {
-                    await MixerAPIHandler.BotChatClient.SendMessage(message);
+                    await ChannelSession.BotChatClient.SendMessage(message);
                 }
             }
         }

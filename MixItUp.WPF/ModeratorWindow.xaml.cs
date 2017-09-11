@@ -25,7 +25,7 @@ namespace MixItUp.WPF
         protected override async Task OnClosing()
         {
             await ChannelSession.Settings.SaveSettings();
-            MixerAPIHandler.Close();
+            ChannelSession.Close();
             Application.Current.Shutdown();
         }
     }

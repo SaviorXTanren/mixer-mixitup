@@ -125,17 +125,6 @@
             <TextBox Grid.Column="2"  Grid.Row="2" x:Name="ProgramArgumentsTextBox" />
         </Grid>
 
-        <Grid x:Name="GiveawayGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Giveaway Item:</TextBlock>
-            <TextBox Grid.Column="2" x:Name="GiveawayItemTextBox" />
-        </Grid>
-
         <Grid x:Name="InputGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

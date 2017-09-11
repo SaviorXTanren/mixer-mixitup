@@ -60,12 +60,6 @@ namespace MixItUp.WPF.Controls.Actions
                             return new ExternalProgramAction(this.ProgramFilePathTextBox.Text, this.ProgramArgumentsTextBox.Text, showWindow: true);
                         }
                         break;
-                    case ActionTypeEnum.Giveaway:
-                        if (!string.IsNullOrEmpty(this.GiveawayItemTextBox.Text))
-                        {
-                            return new GiveawayAction(this.GiveawayItemTextBox.Text);
-                        }
-                        break;
                     case ActionTypeEnum.Input:
                         if (this.InputButtonComboBox.SelectedIndex >= 0)
                         {
@@ -142,10 +136,6 @@ namespace MixItUp.WPF.Controls.Actions
                         this.ProgramFilePathTextBox.Text = externalAction.FilePath;
                         this.ProgramArgumentsTextBox.Text = externalAction.Arguments;
                         break;
-                    case ActionTypeEnum.Giveaway:
-                        GiveawayAction giveawayAction = (GiveawayAction)this.Action;
-                        this.GiveawayItemTextBox.Text = giveawayAction.GiveawayItem;
-                        break;
                     case ActionTypeEnum.Input:
                         InputAction inputAction = (InputAction)this.Action;
                         this.InputButtonComboBox.SelectedItem = EnumHelper.GetEnumName(inputAction.Inputs.First());
@@ -177,7 +167,6 @@ namespace MixItUp.WPF.Controls.Actions
             this.ChatGrid.Visibility = Visibility.Collapsed;
             this.CurrencyGrid.Visibility = Visibility.Collapsed;
             this.ExternalProgramGrid.Visibility = Visibility.Collapsed;
-            this.GiveawayGrid.Visibility = Visibility.Collapsed;
             this.InputGrid.Visibility = Visibility.Collapsed;
             this.OverlayGrid.Visibility = Visibility.Collapsed;
             this.SoundGrid.Visibility = Visibility.Collapsed;
@@ -198,9 +187,6 @@ namespace MixItUp.WPF.Controls.Actions
                         break;
                     case ActionTypeEnum.ExternalProgram:
                         this.ExternalProgramGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.Giveaway:
-                        this.GiveawayGrid.Visibility = Visibility.Visible;
                         break;
                     case ActionTypeEnum.Input:
                         this.InputGrid.Visibility = Visibility.Visible;

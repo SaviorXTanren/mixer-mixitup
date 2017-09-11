@@ -63,6 +63,7 @@ namespace MixItUp.Base
             settings.ChatCommands.Add(new FollowAgeChatCommand());
             settings.ChatCommands.Add(new SparksChatCommand());
             settings.ChatCommands.Add(new QuoteChatCommand());
+            settings.ChatCommands.Add(new GiveawayChatCommand());
 
             settings.ChatCommands.First(c => c is QuoteChatCommand).IsEnabled = settings.QuotesEnabled;
 
@@ -153,8 +154,8 @@ namespace MixItUp.Base
             Directory.CreateDirectory(SettingsDirectoryName);
             string filePath = ChannelSettings.GetSettingsFilePath(this.Channel);
 
-            this.OAuthToken = MixerAPIHandler.MixerConnection.GetOAuthTokenCopy();
-            this.BotOAuthToken = MixerAPIHandler.BotConnection.GetOAuthTokenCopy();
+            this.OAuthToken = ChannelSession.MixerConnection.GetOAuthTokenCopy();
+            this.BotOAuthToken = (ChannelSession.BotConnection != null) ? ChannelSession.BotConnection.GetOAuthTokenCopy() : null;
 
             this.chatCommandsInternal = this.ChatCommands.ToList();
             this.eventCommandsInternal = this.EventCommands.ToList();

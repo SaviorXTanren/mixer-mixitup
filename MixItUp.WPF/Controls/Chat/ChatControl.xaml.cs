@@ -39,29 +39,29 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.Window.Closing += Window_Closing;
 
-            if (await MixerAPIHandler.InitializeChatClient(ChannelSession.Channel))
+            if (await ChannelSession.InitializeChatClient(ChannelSession.Channel))
             {
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
                 this.RefreshViewerCount();
 
-                foreach (ChatUserModel user in await MixerAPIHandler.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
+                foreach (ChatUserModel user in await ChannelSession.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
                 {
                     this.AddUser(new ChatUserViewModel(user));
                 }
 
-                MixerAPIHandler.ChatClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-                MixerAPIHandler.ChatClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-                MixerAPIHandler.ChatClient.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
-                MixerAPIHandler.ChatClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                MixerAPIHandler.ChatClient.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                MixerAPIHandler.ChatClient.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-                MixerAPIHandler.ChatClient.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-                MixerAPIHandler.ChatClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-                MixerAPIHandler.ChatClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                MixerAPIHandler.ChatClient.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
-                MixerAPIHandler.ChatClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                ChannelSession.ChatClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                ChannelSession.ChatClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                ChannelSession.ChatClient.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
+                ChannelSession.ChatClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                ChannelSession.ChatClient.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                ChannelSession.ChatClient.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                ChannelSession.ChatClient.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                ChannelSession.ChatClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                ChannelSession.ChatClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                ChannelSession.ChatClient.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
+                ChannelSession.ChatClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
@@ -127,7 +127,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async void ChatClearMessagesButton_Click(object sender, RoutedEventArgs e)
         {
-            await MixerAPIHandler.ChatClient.ClearMessages();
+            await ChannelSession.ChatClient.ClearMessages();
         }
 
         private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -147,7 +147,7 @@ namespace MixItUp.WPF.Controls.Chat
                 this.ChatMessageTextBox.Text = string.Empty;
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    await MixerAPIHandler.BotChatClient.SendMessage(message);
+                    await ChannelSession.BotChatClient.SendMessage(message);
                 });
             }
         }
@@ -208,7 +208,7 @@ namespace MixItUp.WPF.Controls.Chat
                     else
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        MixerAPIHandler.BotChatClient.Whisper(message.User.UserName, "You do not permission to run this command");
+                        ChannelSession.BotChatClient.Whisper(message.User.UserName, "You do not permission to run this command");
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                 }
@@ -224,7 +224,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.ChatList.SelectedItem != null)
             {
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
-                await MixerAPIHandler.ChatClient.DeleteMessage(control.Message.ID);
+                await ChannelSession.ChatClient.DeleteMessage(control.Message.ID);
             }
         }
 
@@ -235,7 +235,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
                 if (control.Message.User != null)
                 {
-                    await MixerAPIHandler.ChatClient.PurgeUser(control.Message.User.UserName);
+                    await ChannelSession.ChatClient.PurgeUser(control.Message.User.UserName);
                 }
             }
         }
@@ -247,7 +247,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
                 if (control.Message.User != null)
                 {
-                    await MixerAPIHandler.ChatClient.TimeoutUser(control.Message.User.UserName, 60);
+                    await ChannelSession.ChatClient.TimeoutUser(control.Message.User.UserName, 60);
                 }
             }
         }
@@ -259,7 +259,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
                 if (control.Message.User != null)
                 {
-                    await MixerAPIHandler.ChatClient.TimeoutUser(control.Message.User.UserName, 300);
+                    await ChannelSession.ChatClient.TimeoutUser(control.Message.User.UserName, 300);
                 }
             }
         }
@@ -269,7 +269,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.UserList.SelectedItem != null)
             {
                 ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
-                await MixerAPIHandler.ChatClient.PurgeUser(control.User.UserName);
+                await ChannelSession.ChatClient.PurgeUser(control.User.UserName);
             }
         }
 
@@ -278,7 +278,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.UserList.SelectedItem != null)
             {
                 ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
-                await MixerAPIHandler.ChatClient.TimeoutUser(control.User.UserName, 60);
+                await ChannelSession.ChatClient.TimeoutUser(control.User.UserName, 60);
             }
         }
 
@@ -287,7 +287,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.UserList.SelectedItem != null)
             {
                 ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
-                await MixerAPIHandler.ChatClient.TimeoutUser(control.User.UserName, 300);
+                await ChannelSession.ChatClient.TimeoutUser(control.User.UserName, 300);
             }
         }
 

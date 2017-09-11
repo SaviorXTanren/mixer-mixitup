@@ -25,8 +25,7 @@ namespace MixItUp.WPF.Windows.Chat
 
         private List<ActionTypeEnum> allowedActions = new List<ActionTypeEnum>()
         {
-            ActionTypeEnum.Chat, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram, ActionTypeEnum.Giveaway,
-            ActionTypeEnum.Input, ActionTypeEnum.Overlay, ActionTypeEnum.Sound, ActionTypeEnum.Wait
+            ActionTypeEnum.Chat, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram, ActionTypeEnum.Input, ActionTypeEnum.Overlay, ActionTypeEnum.Sound, ActionTypeEnum.Wait
         };
 
         public ChatCommandWindow() : this(null) { }

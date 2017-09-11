@@ -125,7 +125,7 @@ namespace MixItUp.WPF.Windows.Events
 
                 if (eventType.ToString().Contains("channel"))
                 {
-                    channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel(this.EventIDTextBox.Text);
+                    channel = await ChannelSession.MixerConnection.Channels.GetChannel(this.EventIDTextBox.Text);
                     if (channel == null)
                     {
                         MessageBoxHelper.ShowError("Unable to find the channel for the specified username");
@@ -134,7 +134,7 @@ namespace MixItUp.WPF.Windows.Events
                 }
                 else if (eventType.ToString().Contains("user"))
                 {
-                    user = await MixerAPIHandler.MixerConnection.Users.GetUser(this.EventIDTextBox.Text);
+                    user = await ChannelSession.MixerConnection.Users.GetUser(this.EventIDTextBox.Text);
                     if (user == null)
                     {
                         MessageBoxHelper.ShowError("Unable to find a user for the specified username");

@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mixer.Base, Version=0.2.6461.24578, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.2.5-beta\lib\net46\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.2.6462.34693, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.2.8-beta\lib\net46\Mixer.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -61,7 +61,6 @@
     <Compile Include="Actions\ChatAction.cs" />
     <Compile Include="Actions\CurrencyAction.cs" />
     <Compile Include="Actions\ExternalProgramAction.cs" />
-    <Compile Include="Actions\GiveawayAction.cs" />
     <Compile Include="Actions\InputAction.cs" />
     <Compile Include="Actions\OverlayAction.cs" />
     <Compile Include="Actions\SoundAction.cs" />
@@ -75,7 +74,7 @@
     <Compile Include="Commands\InteractiveCommand.cs" />
     <Compile Include="Commands\PreMadeChatCommands.cs" />
     <Compile Include="Commands\TimerCommand.cs" />
-    <Compile Include="MixerAPIHandler.cs" />
+    <Compile Include="Models\GiveawayItemModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\LockedDictionary.cs" />
     <Compile Include="Util\LockedList.cs" />

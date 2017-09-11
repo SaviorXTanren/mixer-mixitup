@@ -97,6 +97,10 @@ namespace MixItUp.WPF
                 this.ExistingStreamerLoginGrid.Visibility = Visibility.Visible;
                 settings.Add(new ChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserModel() { username = "NEW STREAMER" } } });
                 this.ExistingStreamerComboBox.ItemsSource = settings.Select(cs => new StreamerLoginItem(cs));
+                if (settings.Count() == 2)
+                {
+                    this.ExistingStreamerComboBox.SelectedIndex = 0;
+                }
             }
 
             await base.OnLoaded();
@@ -106,39 +110,40 @@ namespace MixItUp.WPF
         {
             bool result = false;
 
-            if (this.ExistingStreamerLoginGrid.Visibility == Visibility.Visible)
+            await this.RunAsyncOperation(async () =>
             {
-                if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
+                if (this.ExistingStreamerLoginGrid.Visibility == Visibility.Visible)
                 {
-                    StreamerLoginItem loginItem = (StreamerLoginItem)this.ExistingStreamerComboBox.SelectedItem;
-                    ChannelSettings setting = loginItem.Setting;
-                    if (setting.Channel.id == 0)
+                    if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {
-                        result = await this.NewStreamerLogin();
+                        StreamerLoginItem loginItem = (StreamerLoginItem)this.ExistingStreamerComboBox.SelectedItem;
+                        ChannelSettings setting = loginItem.Setting;
+                        if (setting.Channel.id == 0)
+                        {
+                            result = await this.NewStreamerLogin();
+                        }
+                        else
+                        {
+                            result = await ChannelSession.Initialize(setting.OAuthToken);
+                            if (result && setting.BotOAuthToken != null)
+                            {
+                                result = await ChannelSession.InitializeBot(setting.BotOAuthToken);
+                            }
+                        }
                     }
                     else
                     {
-                        result = await MixerAPIHandler.InitializeMixerConnection(setting.OAuthToken);
-                        if (result)
-                        {
-                            result = await this.InitializeSession(setting.Channel.user.username);
-                        }
+                        MessageBoxHelper.ShowError("You must select a Streamer account to log in to");
                     }
                 }
                 else
                 {
-                    MessageBoxHelper.ShowError("You must select a Streamer account to log in to");
+                    result = await this.NewStreamerLogin();
                 }
-            }
-            else
-            {
-                result = await this.NewStreamerLogin();
-            }
+            });
 
             if (result)
             {
-                await ChannelSession.LoadSettings();
-
                 StreamerWindow window = new StreamerWindow();
                 this.Hide();
                 window.Show();
@@ -166,7 +171,10 @@ namespace MixItUp.WPF
                 return;
             }
 
-            bool result = await this.EstablishConnection(this.ModeratorScopes, this.ModeratorChannelTextBox.Text);
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await this.EstablishConnection(this.ModeratorScopes, this.ModeratorChannelTextBox.Text);
+            });
 
             if (result)
             {
@@ -196,35 +204,14 @@ namespace MixItUp.WPF
 
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.InitializeMixerConnection(clientID, scopes);
+                return await ChannelSession.Initialize(clientID, scopes);
             });
 
             if (!result)
             {
                 MessageBoxHelper.ShowError("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
-                return false;
             }
-
-            return await this.InitializeSession(channelName);
-        }
-
-        private async Task<bool> InitializeSession(string channelName)
-        {
-            return await this.RunAsyncOperation(async () =>
-            {
-                PrivatePopulatedUserModel user = await MixerAPIHandler.MixerConnection.Users.GetCurrentUser();
-                if (user != null)
-                {
-                    ExpandedChannelModel channel = await MixerAPIHandler.MixerConnection.Channels.GetChannel((channelName == null) ? user.username : channelName);
-                    if (channel != null)
-                    {
-                        ChannelSession.Initialize(user, channel);
-                        await ChannelSession.LoadSettings();
-                        return true;
-                    }
-                }
-                return false;
-            });
+            return result;
         }
     }
 }

@@ -1,0 +1,56 @@
+﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.Giveaway.GiveawayControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Giveaway"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0">Item:</TextBlock>
+            <TextBox Grid.Column="2" x:Name="GiveawayItemTextBox" Width="150" />
+
+            <TextBlock Grid.Column="4">Allowed Winners:</TextBlock>
+            <ComboBox Grid.Column="6" x:Name="GiveawayTypeComboBox" Width="100" />
+        </Grid>
+
+        <Button Grid.Row="2" x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" Width="120">Enable Giveaway</Button>
+        <Button Grid.Row="2" x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" Width="120" Visibility="Collapsed">Disable Giveaway</Button>
+
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" x:Name="PerformGiveawayButton" Click="PerformGiveawayButton_Click" Width="120" IsEnabled="False">Perform Giveaway</Button>
+
+            <TextBlock Grid.Column="2">Giveaway Winner:</TextBlock>
+            <TextBlock Grid.Column="4" x:Name="GiveawayWinnerTextBlock" />
+        </Grid>
+
+    </Grid>
+</Controls:MainControlBase>

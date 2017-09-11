@@ -13,7 +13,6 @@ namespace MixItUp.Base.Actions
         Currency,
         [Name("External Program")]
         ExternalProgram,
-        Giveaway,
         Input,
         Overlay,
         Sound,

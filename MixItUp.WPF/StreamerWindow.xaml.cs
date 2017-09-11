@@ -26,13 +26,14 @@ namespace MixItUp.WPF
             await this.Timers.Initialize(this);
             await this.Interactive.Initialize(this);
             await this.Events.Initialize(this);
+            await this.Giveaway.Initialize(this);
             await this.Bot.Initialize(this);
         }
 
         protected override async Task OnClosing()
         {
             await ChannelSession.Settings.SaveSettings();
-            MixerAPIHandler.Close();
+            ChannelSession.Close();
             Application.Current.Shutdown();
         }
     }

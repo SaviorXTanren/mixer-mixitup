@@ -95,9 +95,9 @@ namespace MixItUp.WPF.Controls.Events
         {
             this.EventsCommandsListView.ItemsSource = this.subscribedEvents;
 
-            if (await MixerAPIHandler.InitializeConstellationClient())
+            if (await ChannelSession.InitializeConstellationClient())
             {
-                MixerAPIHandler.ConstellationClient.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
+                ChannelSession.ConstellationClient.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
             }
 
             await this.RefreshList();
@@ -116,7 +116,7 @@ namespace MixItUp.WPF.Controls.Events
 
             if (newEvents.Count > 0)
             {
-                await MixerAPIHandler.ConstellationClient.SubscribeToEvents(this.subscribedEvents.Select(se => se.Command.GetEventType()));
+                await ChannelSession.ConstellationClient.SubscribeToEvents(this.subscribedEvents.Select(se => se.Command.GetEventType()));
                 foreach (SubscribedEventItem newEvent in newEvents)
                 {
                     this.subscribedEvents.Add(newEvent);
@@ -154,7 +154,7 @@ namespace MixItUp.WPF.Controls.Events
 
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.ConstellationClient.UnsubscribeToEvents(new List<ConstellationEventType>() { item.Command.GetEventType() });
+                return await ChannelSession.ConstellationClient.UnsubscribeToEvents(new List<ConstellationEventType>() { item.Command.GetEventType() });
             });
 
             await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });

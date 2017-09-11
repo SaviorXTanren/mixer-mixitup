@@ -8,12 +8,17 @@ namespace MixItUp.Base.Util
     {
         public static string GetMixerAge(this UserModel user)
         {
-            return user.GetFollowAge(user.createdAt.GetValueOrDefault());
+            return user.username + "'s Mixer Age: " + user.GetAge(user.createdAt.GetValueOrDefault());
         }
 
         public static string GetFollowAge(this UserModel user, DateTimeOffset followDate)
         {
-            TimeSpan upTime = DateTimeOffset.Now - followDate.ToOffset(DateTimeOffset.Now.Offset);
+            return user.username + "'s Follow Age: " + user.GetAge(user.createdAt.GetValueOrDefault());
+        }
+
+        public static string GetAge(this UserModel user, DateTimeOffset startDate)
+        {
+            TimeSpan upTime = DateTimeOffset.Now - startDate.ToOffset(DateTimeOffset.Now.Offset);
             int days = (int)upTime.TotalDays;
             int years = days / 365;
             days = days - (years * 365);
@@ -21,7 +26,6 @@ namespace MixItUp.Base.Util
             days = days - (months * 30);
 
             StringBuilder mixerAgeString = new StringBuilder();
-            mixerAgeString.Append(user.username + "'s Mixer Age: ");
             if (years > 0)
             {
                 mixerAgeString.Append(years + " Year");

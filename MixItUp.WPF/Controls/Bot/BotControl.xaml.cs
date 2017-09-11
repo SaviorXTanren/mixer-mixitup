@@ -1,6 +1,5 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.WPF.Util;
 using System;
@@ -41,12 +40,8 @@ namespace MixItUp.WPF.Controls.Bot
         {            
             if (ChannelSession.Settings.BotOAuthToken != null)
             {
-                bool result = await MixerAPIHandler.InitializeBotConnection(ChannelSession.Settings.BotOAuthToken);
-                if (result)
-                {
-                    await this.InitializeBotSession();
-                    this.ExistingBotGrid.Visibility = Visibility.Visible;
-                }
+                this.ExistingBotGrid.Visibility = Visibility.Visible;
+                this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
             }
             else
             {
@@ -66,7 +61,7 @@ namespace MixItUp.WPF.Controls.Bot
 
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.InitializeBotConnection(clientID, this.BotScopes, (OAuthShortCodeModel shortCode) =>
+                return await ChannelSession.InitializeBot(clientID, this.BotScopes, (OAuthShortCodeModel shortCode) =>
                 {
                     this.BotShortCodeTextBox.IsEnabled = true;
                     this.BotShortCodeTextBox.Text = shortCode.code;
@@ -81,33 +76,19 @@ namespace MixItUp.WPF.Controls.Bot
             }
             else
             {
-                await this.InitializeBotSession();
                 this.NewBotLoginGrid.Visibility = Visibility.Collapsed;
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
+                this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
             }
         }
 
         private void LogOutBotButton_Click(object sender, RoutedEventArgs e)
         {
-            MixerAPIHandler.CloseBotConnection();
+            ChannelSession.DisconnectBot();
             ChannelSession.Settings.BotOAuthToken = null;
 
             this.ExistingBotGrid.Visibility = Visibility.Collapsed;
             this.NewBotLoginGrid.Visibility = Visibility.Visible;
-        }
-
-        private async Task<bool> InitializeBotSession()
-        {
-            return await this.Window.RunAsyncOperation(async () =>
-            {
-                PrivatePopulatedUserModel user = await MixerAPIHandler.BotConnection.Users.GetCurrentUser();
-                if (user != null)
-                {
-                    ChannelSession.InitializeBot(user);
-                    return true;
-                }
-                return false;
-            });
         }
     }
 }

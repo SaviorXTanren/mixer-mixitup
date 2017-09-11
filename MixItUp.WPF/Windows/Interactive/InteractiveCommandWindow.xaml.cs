@@ -149,7 +149,7 @@ namespace MixItUp.WPF.Windows.Interactive
             this.command.Actions.Clear();
             this.command.Actions = newActions;
 
-            await this.RunAsyncOperation(async () => { await MixerAPIHandler.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.version); });
+            await this.RunAsyncOperation(async () => { await ChannelSession.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.version); });
 
             this.Close();
         }

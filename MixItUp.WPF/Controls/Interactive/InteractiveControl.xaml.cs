@@ -85,7 +85,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.MixerConnection.Interactive.GetOwnedInteractiveGames(ChannelSession.Channel);
+                return await ChannelSession.MixerConnection.Interactive.GetOwnedInteractiveGames(ChannelSession.Channel);
             });
 
             this.interactiveGames.Clear();
@@ -105,7 +105,7 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
 
-                return await MixerAPIHandler.MixerConnection.Interactive.GetInteractiveGameVersion(this.selectedGame.versions.First());
+                return await ChannelSession.MixerConnection.Interactive.GetInteractiveGameVersion(this.selectedGame.versions.First());
             });
 
             if (this.selectedGame != null)
@@ -261,7 +261,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.ConnectInteractiveClient(ChannelSession.Channel, this.selectedGame);
+                return await ChannelSession.ConnectInteractiveClient(ChannelSession.Channel, this.selectedGame);
             });
 
             if (!result)
@@ -272,7 +272,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             InteractiveConnectedSceneGroupCollectionModel scenes = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.InteractiveClient.GetScenes();
+                return await ChannelSession.InteractiveClient.GetScenes();
             });
             this.connectedGameScenes = scenes.scenes;
             this.connectedScene = this.connectedGameScenes.First();
@@ -297,7 +297,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             InteractiveParticipantCollectionModel participants = await this.Window.RunAsyncOperation(async () =>
             {
-                return await MixerAPIHandler.InteractiveClient.GetAllParticipants();
+                return await ChannelSession.InteractiveClient.GetAllParticipants();
             });
 
             ChannelSession.InteractiveUsers.Clear();
@@ -306,10 +306,10 @@ namespace MixItUp.WPF.Controls.Interactive
                 ChannelSession.InteractiveUsers.Add(participant.sessionID, participant);
             }
 
-            MixerAPIHandler.InteractiveClient.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
-            MixerAPIHandler.InteractiveClient.OnParticipantUpdate += InteractiveClient_OnParticipantUpdate;
-            MixerAPIHandler.InteractiveClient.OnParticipantLeave += InteractiveClient_OnParticipantLeave;
-            MixerAPIHandler.InteractiveClient.OnGiveInput += InteractiveClient_OnGiveInput;
+            ChannelSession.InteractiveClient.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
+            ChannelSession.InteractiveClient.OnParticipantUpdate += InteractiveClient_OnParticipantUpdate;
+            ChannelSession.InteractiveClient.OnParticipantLeave += InteractiveClient_OnParticipantLeave;
+            ChannelSession.InteractiveClient.OnGiveInput += InteractiveClient_OnGiveInput;
 
             this.GameSelectionGrid.IsEnabled = false;
             this.GameDetailsGrid.IsEnabled = false;
@@ -319,14 +319,14 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            MixerAPIHandler.InteractiveClient.OnParticipantJoin -= InteractiveClient_OnParticipantJoin;
-            MixerAPIHandler.InteractiveClient.OnParticipantUpdate -= InteractiveClient_OnParticipantUpdate;
-            MixerAPIHandler.InteractiveClient.OnParticipantLeave -= InteractiveClient_OnParticipantLeave;
-            MixerAPIHandler.InteractiveClient.OnGiveInput -= InteractiveClient_OnGiveInput;
+            ChannelSession.InteractiveClient.OnParticipantJoin -= InteractiveClient_OnParticipantJoin;
+            ChannelSession.InteractiveClient.OnParticipantUpdate -= InteractiveClient_OnParticipantUpdate;
+            ChannelSession.InteractiveClient.OnParticipantLeave -= InteractiveClient_OnParticipantLeave;
+            ChannelSession.InteractiveClient.OnGiveInput -= InteractiveClient_OnGiveInput;
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await MixerAPIHandler.DisconnectInteractiveClient();
+                await ChannelSession.DisconnectInteractiveClient();
             });
 
             foreach (InteractiveControlCommandItem item in this.interactiveItems)
@@ -401,7 +401,7 @@ namespace MixItUp.WPF.Controls.Interactive
                         {
                             bool result = await this.Window.RunAsyncOperation(async () =>
                             {
-                                return await MixerAPIHandler.InteractiveClient.CaptureSparkTransaction(interactiveInput.transactionID);
+                                return await ChannelSession.InteractiveClient.CaptureSparkTransaction(interactiveInput.transactionID);
                             });
 
                             if (!result)
@@ -416,7 +416,7 @@ namespace MixItUp.WPF.Controls.Interactive
                             await this.Window.RunAsyncOperation(async () =>
                             {
                                 item.ConnectedButton.cooldown = item.Command.GetCooldownTimestamp();
-                                await MixerAPIHandler.InteractiveClient.UpdateControls(this.connectedScene, new List<InteractiveConnectedButtonControlModel>() { item.ConnectedButton });
+                                await ChannelSession.InteractiveClient.UpdateControls(this.connectedScene, new List<InteractiveConnectedButtonControlModel>() { item.ConnectedButton });
                             });
                         }
 
