@@ -32,7 +32,7 @@ namespace MixItUp.WPF
 
         protected override async Task OnClosing()
         {
-            await ChannelSession.Settings.SaveSettings();
+            await ChannelSession.Settings.Save();
             ChannelSession.Close();
             Application.Current.Shutdown();
         }

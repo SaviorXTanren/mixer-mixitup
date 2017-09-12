@@ -90,7 +90,7 @@ namespace MixItUp.WPF.Controls.Commands
         private async void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
-            await ChannelSession.Settings.SaveSettings();
+            await ChannelSession.Settings.Save();
         }
     }
 }

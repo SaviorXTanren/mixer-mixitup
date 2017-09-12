@@ -28,7 +28,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.MixerConnection.Channels.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromHours(1)));
                     if (sessions.Count() > 0)
@@ -55,7 +55,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     await ChannelSession.RefreshChannel();
 
@@ -72,7 +72,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     await ChannelSession.RefreshChannel();
 
@@ -89,7 +89,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     if (arguments.Count() == 1)
                     {
@@ -118,7 +118,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     if (arguments.Count() == 1)
                     {
@@ -146,7 +146,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     await ChannelSession.BotChatClient.SendMessage(ChannelSession.Channel.user.GetMixerAge());
                 }
@@ -161,7 +161,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     UserModel userModel = await ChannelSession.MixerConnection.Users.GetUser(user.ID);
                     await ChannelSession.BotChatClient.Whisper(userModel.username, userModel.GetMixerAge());
@@ -177,7 +177,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     DateTimeOffset? followDate = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, user.GetModel());
                     if (followDate != null)
@@ -200,7 +200,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     UserWithChannelModel userModel = await ChannelSession.MixerConnection.Users.GetUser(user.ID);
                     await ChannelSession.BotChatClient.SendMessage("Sparks: " + userModel.sparks);
@@ -216,7 +216,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null && ChannelSession.Settings.Quotes.Count > 0)
+                if (ChannelSession.BotChatClient != null && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
                 {
                     Random random = new Random();
                     int index = random.Next(ChannelSession.Settings.Quotes.Count);
@@ -235,15 +235,15 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.ChatClient != null)
+                if (ChannelSession.BotChatClient != null)
                 {
                     if (ChannelSession.Giveaway.IsEnabled)
                     {
-                        await ChannelSession.ChatClient.SendMessage(string.Format("There is a giveaway running for {0} for {1}! You must be present in chat to win to receive this giveaway.", ChannelSession.Giveaway.Item, ChannelSession.Giveaway.Type));
+                        await ChannelSession.BotChatClient.SendMessage(string.Format("There is a giveaway running for {0} for {1}! You must be present in chat to win to receive this giveaway.", ChannelSession.Giveaway.Item, ChannelSession.Giveaway.Type));
                     }
                     else
                     {
-                        await ChannelSession.ChatClient.SendMessage("A giveaway is not currently running at this time");
+                        await ChannelSession.BotChatClient.SendMessage("A giveaway is not currently running at this time");
                     }
                 }
             }));

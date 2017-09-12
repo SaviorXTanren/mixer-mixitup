@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
@@ -30,43 +29,6 @@ namespace MixItUp.Base
                     settings.Add(setting);
                 }
             }
-            return settings;
-        }
-
-        public static async Task<ChannelSettings> LoadSettings(ExpandedChannelModel channel)
-        {
-            ChannelSettings settings = null;
-            string filePath = ChannelSettings.GetSettingsFilePath(channel);
-            if (File.Exists(filePath))
-            {
-                settings = await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
-
-                settings.Channel = channel;
-                settings.ChatCommands = new LockedList<ChatCommand>(settings.chatCommandsInternal);
-                settings.EventCommands = new LockedList<EventCommand>(settings.eventCommandsInternal);
-                settings.InteractiveControls = new LockedList<InteractiveCommand>(settings.interactiveControlsInternal);
-                settings.TimerCommands = new LockedList<TimerCommand>(settings.timerCommandsInternal);
-                settings.Quotes = new LockedList<string>(settings.quotesInternal);
-            }
-            else
-            {
-                settings = new ChannelSettings(channel);
-            }
-
-            settings.ChatCommands.Add(new UptimeChatCommand());
-            settings.ChatCommands.Add(new GameChatCommand());
-            settings.ChatCommands.Add(new TitleChatCommand());
-            settings.ChatCommands.Add(new TimeoutChatCommand());
-            settings.ChatCommands.Add(new PurgeChatCommand());
-            settings.ChatCommands.Add(new StreamerAgeChatCommand());
-            settings.ChatCommands.Add(new MixerAgeChatCommand());
-            settings.ChatCommands.Add(new FollowAgeChatCommand());
-            settings.ChatCommands.Add(new SparksChatCommand());
-            settings.ChatCommands.Add(new QuoteChatCommand());
-            settings.ChatCommands.Add(new GiveawayChatCommand());
-
-            settings.ChatCommands.First(c => c is QuoteChatCommand).IsEnabled = settings.QuotesEnabled;
-
             return settings;
         }
 
@@ -149,7 +111,28 @@ namespace MixItUp.Base
             this.TimerCommandsMinimumMessages = 10;
         }
 
-        public async Task SaveSettings()
+        public void Initialize()
+        {
+            this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
+            this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
+            this.InteractiveControls = new LockedList<InteractiveCommand>(this.interactiveControlsInternal);
+            this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
+            this.Quotes = new LockedList<string>(this.quotesInternal);
+
+            this.ChatCommands.Add(new UptimeChatCommand());
+            this.ChatCommands.Add(new GameChatCommand());
+            this.ChatCommands.Add(new TitleChatCommand());
+            this.ChatCommands.Add(new TimeoutChatCommand());
+            this.ChatCommands.Add(new PurgeChatCommand());
+            this.ChatCommands.Add(new StreamerAgeChatCommand());
+            this.ChatCommands.Add(new MixerAgeChatCommand());
+            this.ChatCommands.Add(new FollowAgeChatCommand());
+            this.ChatCommands.Add(new SparksChatCommand());
+            this.ChatCommands.Add(new QuoteChatCommand());
+            this.ChatCommands.Add(new GiveawayChatCommand());
+        }
+
+        public async Task Save()
         {
             Directory.CreateDirectory(SettingsDirectoryName);
             string filePath = ChannelSettings.GetSettingsFilePath(this.Channel);

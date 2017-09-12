@@ -181,7 +181,7 @@ namespace MixItUp.WPF.Controls.Events
         private async void Window_Closed(object sender, System.EventArgs e)
         {
             await this.RefreshList();
-            await ChannelSession.Settings.SaveSettings();
+            await ChannelSession.Settings.Save();
         }
 
         private async void ExportDataButton_Click(object sender, System.Windows.RoutedEventArgs e)

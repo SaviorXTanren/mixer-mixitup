@@ -28,7 +28,6 @@ namespace MixItUp.WPF.Controls.Quotes
         private void EnableQuotesCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.QuotesEnabled = this.EnableQuotesCheckBox.IsChecked.GetValueOrDefault();
-            ChannelSession.Settings.ChatCommands.First(c => c is QuoteChatCommand).IsEnabled = ChannelSession.Settings.QuotesEnabled;
         }
 
         private void QuotesTextBox_LostFocus(object sender, RoutedEventArgs e)

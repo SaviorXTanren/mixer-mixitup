@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.Window.Closing += Window_Closing;
 
-            if (await ChannelSession.InitializeChatClient(ChannelSession.Channel))
+            if (await ChannelSession.InitializeChatClient())
             {
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
@@ -147,7 +147,7 @@ namespace MixItUp.WPF.Controls.Chat
                 this.ChatMessageTextBox.Text = string.Empty;
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    await ChannelSession.BotChatClient.SendMessage(message);
+                    await ChannelSession.ChatClient.SendMessage(message);
                 });
             }
         }

@@ -124,11 +124,7 @@ namespace MixItUp.WPF
                         }
                         else
                         {
-                            result = await ChannelSession.Initialize(setting.OAuthToken);
-                            if (result && setting.BotOAuthToken != null)
-                            {
-                                result = await ChannelSession.InitializeBot(setting.BotOAuthToken);
-                            }
+                            result = await ChannelSession.Initialize(setting);
                         }
                     }
                     else

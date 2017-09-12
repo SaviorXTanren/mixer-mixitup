@@ -47,14 +47,30 @@ namespace MixItUp.Base
             return false;
         }
 
-        public static async Task<bool> Initialize(OAuthTokenModel token)
+        public static async Task<bool> Initialize(ChannelSettings settings)
         {
-            ChannelSession.MixerConnection = MixerConnection.ConnectViaOAuthToken(token);
+            bool result = false;
+
+            ChannelSession.Settings = settings;
+            ChannelSession.Settings.Initialize();
+
+            ChannelSession.MixerConnection = MixerConnection.ConnectViaOAuthToken(settings.OAuthToken);
+            if (settings.BotOAuthToken != null)
+            {
+                ChannelSession.BotConnection = MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
+            }
+
             if (ChannelSession.MixerConnection != null)
             {
-                return await ChannelSession.InitializeInternal();
+                await ChannelSession.MixerConnection.RefreshOAuthToken();
+                result = await ChannelSession.InitializeInternal();
+                if (result && ChannelSession.BotConnection != null)
+                {
+                    await ChannelSession.BotConnection.RefreshOAuthToken();
+                    result = await ChannelSession.InitializeBotInternal();
+                }
             }
-            return false;
+            return result;
         }
 
         public static async Task<bool> InitializeBot(string clientID, IEnumerable<OAuthClientScopeEnum> scopes, Action<OAuthShortCodeModel> callback)
@@ -62,33 +78,47 @@ namespace MixItUp.Base
             ChannelSession.BotConnection = await MixerConnection.ConnectViaShortCode(clientID, scopes, callback);
             if (ChannelSession.BotConnection != null)
             {
-                return await ChannelSession.InitializeBotInternal();
+                return (await ChannelSession.InitializeBotInternal() && await ChannelSession.InitializeBotChatClient());
             }
             return false;
         }
 
-        public static async Task<bool> InitializeBot(OAuthTokenModel token)
-        {
-            ChannelSession.BotConnection = MixerConnection.ConnectViaOAuthToken(token);
-            if (ChannelSession.BotConnection != null)
-            {
-                await ChannelSession.InitializeBotInternal();
-            }
-            return false;
-        }
-
-        public static async Task<bool> InitializeChatClient(ChannelModel channel)
+        public static async Task<bool> InitializeChatClient()
         {
             ChannelSession.CheckMixerConnection();
 
-            ChannelSession.ChatClient = ChannelSession.BotChatClient = await ChatClient.CreateFromChannel(ChannelSession.MixerConnection, channel);
-            if (!(await ChannelSession.ChatClient.Connect() && await ChannelSession.ChatClient.Authenticate()))
+            if (ChannelSession.ChatClient != null)
             {
-                ChannelSession.ChatClient = ChannelSession.BotChatClient = null;
-                return false;
+                await ChannelSession.ChatClient.Disconnect();
             }
 
-            return true;
+            ChannelSession.ChatClient = ChannelSession.BotChatClient = await ChatClient.CreateFromChannel(ChannelSession.MixerConnection, ChannelSession.Channel);
+            if (await ChannelSession.ChatClient.Connect() && await ChannelSession.ChatClient.Authenticate())
+            {
+                if (ChannelSession.BotConnection != null)
+                {
+                    return await ChannelSession.InitializeBotChatClient();
+                }
+                return true;
+            }
+            ChannelSession.ChatClient = ChannelSession.BotChatClient = null;
+            return false;
+        }
+
+        public static async Task<bool> InitializeBotChatClient()
+        {
+            if (ChannelSession.BotChatClient != null && ChannelSession.BotChatClient != ChannelSession.ChatClient)
+            {
+                await ChannelSession.BotChatClient.Disconnect();
+            }
+
+            ChannelSession.BotChatClient = await ChatClient.CreateFromChannel(ChannelSession.BotConnection, ChannelSession.Channel);
+            if (await ChannelSession.BotChatClient.Connect() && await ChannelSession.BotChatClient.Authenticate())
+            {
+                return true;
+            }
+            ChannelSession.BotChatClient = ChannelSession.ChatClient;
+            return false;
         }
 
         public static async Task<bool> InitializeConstellationClient()
@@ -189,9 +219,11 @@ namespace MixItUp.Base
                     ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
 
                     ChannelSession.Giveaway = new GiveawayItemModel();
-
-                    await ChannelSession.LoadSettings();
-                    await ChannelSession.MixerConnection.RefreshOAuthToken();
+                    
+                    if (ChannelSession.Settings == null)
+                    {
+                        ChannelSession.Settings = new ChannelSettings(channel);
+                    }
                     await ChannelSession.SaveSettings();
 
                     return true;
@@ -207,15 +239,9 @@ namespace MixItUp.Base
             {
                 ChannelSession.BotUser = user;
 
-                await ChannelSession.BotConnection.RefreshOAuthToken();
                 await ChannelSession.SaveSettings();
 
-                ChannelSession.BotChatClient = await ChatClient.CreateFromChannel(ChannelSession.BotConnection, ChannelSession.Channel);
-                if (await ChannelSession.BotChatClient.Connect() && await ChannelSession.BotChatClient.Authenticate())
-                {                   
-                    return true;
-                }
-                ChannelSession.BotChatClient = ChannelSession.ChatClient;
+                return true;
             }
             return false;
         }
@@ -228,9 +254,7 @@ namespace MixItUp.Base
             }
         }
 
-        public static async Task LoadSettings() { ChannelSession.Settings = await ChannelSettings.LoadSettings(ChannelSession.Channel); }
-
-        public static async Task SaveSettings() { await ChannelSession.Settings.SaveSettings(); }
+        public static async Task SaveSettings() { await ChannelSession.Settings.Save(); }
 
         public static async Task RefreshUser()
         {
