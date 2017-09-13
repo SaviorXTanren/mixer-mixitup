@@ -54,19 +54,17 @@ namespace MixItUp.Base
             ChannelSession.Settings = settings;
             ChannelSession.Settings.Initialize();
 
-            ChannelSession.MixerConnection = MixerConnection.ConnectViaOAuthToken(settings.OAuthToken);
+            ChannelSession.MixerConnection = await MixerConnection.ConnectViaOAuthToken(settings.OAuthToken);
             if (settings.BotOAuthToken != null)
             {
-                ChannelSession.BotConnection = MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
+                ChannelSession.BotConnection = await MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
             }
 
             if (ChannelSession.MixerConnection != null)
             {
-                await ChannelSession.MixerConnection.RefreshOAuthToken();
                 result = await ChannelSession.InitializeInternal();
                 if (result && ChannelSession.BotConnection != null)
                 {
-                    await ChannelSession.BotConnection.RefreshOAuthToken();
                     result = await ChannelSession.InitializeBotInternal();
                 }
             }
