@@ -1,7 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Timers;
+using MixItUp.WPF.Windows.Command;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -57,7 +58,7 @@ namespace MixItUp.WPF.Controls.Timers
             Button button = (Button)sender;
             TimerCommand command = (TimerCommand)button.DataContext;
 
-            TimerCommandWindow window = new TimerCommandWindow(command);
+            CommandWindow window = new CommandWindow(new TimerCommandDetailsControl(command));
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -84,7 +85,7 @@ namespace MixItUp.WPF.Controls.Timers
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            TimerCommandWindow window = new TimerCommandWindow();
+            CommandWindow window = new CommandWindow(new TimerCommandDetailsControl());
             window.Closed += Window_Closed;
             window.Show();
         }

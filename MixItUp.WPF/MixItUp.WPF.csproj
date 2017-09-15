@@ -87,6 +87,19 @@
     <Compile Include="Controls\Bot\BotControl.xaml.cs">
       <DependentUpon>BotControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\ChatCommandDetailsControl.xaml.cs">
+      <DependentUpon>ChatCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Command\CommandDetailsControlBase.cs" />
+    <Compile Include="Controls\Command\EventCommandDetailsControl.xaml.cs">
+      <DependentUpon>EventCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Command\InteractiveCommandDetailsControl.xaml.cs">
+      <DependentUpon>InteractiveCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Command\TimerCommandDetailsControl.xaml.cs">
+      <DependentUpon>TimerCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Giveaway\GiveawayControl.xaml.cs">
       <DependentUpon>GiveawayControl.xaml</DependentUpon>
     </Compile>
@@ -121,22 +134,13 @@
     <Compile Include="Util\ColorHelper.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
     <Compile Include="Util\NotifyPropertyChangedBase.cs" />
-    <Compile Include="Windows\Chat\ChatCommandWindow.xaml.cs">
-      <DependentUpon>ChatCommandWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Windows\Events\EventCommandWindow.xaml.cs">
-      <DependentUpon>EventCommandWindow.xaml</DependentUpon>
+    <Compile Include="Windows\Command\CommandWindow.xaml.cs">
+      <DependentUpon>CommandWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml.cs">
       <DependentUpon>InteractiveBoardDesignerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Interactive\InteractiveCommandWindow.xaml.cs">
-      <DependentUpon>InteractiveCommandWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\LoadingWindowBase.cs" />
-    <Compile Include="Windows\Timers\TimerCommandWindow.xaml.cs">
-      <DependentUpon>TimerCommandWindow.xaml</DependentUpon>
-    </Compile>
     <Page Include="Controls\Bot\BotControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,6 +162,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat\ChatCommandsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\ChatCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\EventCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\InteractiveCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\TimerCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -214,23 +234,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Chat\ChatCommandWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Events\EventCommandWindow.xaml">
+    <Page Include="Windows\Command\CommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Interactive\InteractiveCommandWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\Timers\TimerCommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

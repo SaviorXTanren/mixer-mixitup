@@ -4,8 +4,9 @@ using Mixer.Base.Model.Constellation;
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Events;
+using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -140,7 +141,7 @@ namespace MixItUp.WPF.Controls.Events
             Button button = (Button)sender;
             SubscribedEventItem item = (SubscribedEventItem)button.DataContext;
 
-            EventCommandWindow window = new EventCommandWindow(item.Command);
+            CommandWindow window = new CommandWindow(new EventCommandDetailsControl(item.Command));
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -173,7 +174,7 @@ namespace MixItUp.WPF.Controls.Events
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            EventCommandWindow window = new EventCommandWindow();
+            CommandWindow window = new CommandWindow(new EventCommandDetailsControl());
             window.Closed += Window_Closed;
             window.Show();
         }

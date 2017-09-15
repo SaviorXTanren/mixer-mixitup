@@ -2,13 +2,26 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Actions;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Commands
 {
     public class EventCommand : CommandBase, IEquatable<EventCommand>
     {
+        public static IEnumerable<ActionTypeEnum> AllowedActions
+        {
+            get
+            {
+                return new List<ActionTypeEnum>()
+                {
+                    ActionTypeEnum.Chat, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram, ActionTypeEnum.Input, ActionTypeEnum.Overlay, ActionTypeEnum.Sound, ActionTypeEnum.Wait
+                };
+            }
+        }
+
         [DataMember]
         public ConstellationEventTypeEnum EventType { get; set; }
 

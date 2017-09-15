@@ -15,192 +15,154 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class ActionControl : UserControl
     {
-        private IEnumerable<ActionTypeEnum> allowedActions;
-        private ActionBase Action;
+        private ActionTypeEnum type;
+        private ActionBase action;
 
-        public ActionControl() : this(null) { }
-
-        public ActionControl(IEnumerable<ActionTypeEnum> allowedActions) : this(allowedActions, null) { }
-
-        public ActionControl(IEnumerable<ActionTypeEnum> allowedActions, ActionBase action)
+        public ActionControl(ActionTypeEnum type)
         {
-            InitializeComponent();
+            this.type = type;
 
-            this.allowedActions = allowedActions;
-            this.Action = action;
+            InitializeComponent();
 
             this.Loaded += ActionControl_Loaded;
         }
 
+        public ActionControl(ActionBase action) : this(action.Type) { this.action = action; }
+
         public ActionBase GetAction()
         {
-            if (this.TypeComboBox.SelectedIndex >= 0)
+            switch (this.type)
             {
-                string typeName = (string)this.TypeComboBox.SelectedItem;
-                ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>(typeName);
-
-                switch (type)
-                {
-                    case ActionTypeEnum.Chat:
-                        if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
+                case ActionTypeEnum.Chat:
+                    if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
+                    {
+                        return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperCheckBox.IsChecked.GetValueOrDefault());
+                    }
+                    break;
+                case ActionTypeEnum.Currency:
+                    int currencyAmount;
+                    if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) && !string.IsNullOrEmpty(this.CurrencyMessageTextBox.Text))
+                    {
+                        return new CurrencyAction(currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperCheckBox.IsChecked.GetValueOrDefault());
+                    }
+                    break;
+                case ActionTypeEnum.ExternalProgram:
+                    if (!string.IsNullOrEmpty(this.ProgramFilePathTextBox.Text))
+                    {
+                        return new ExternalProgramAction(this.ProgramFilePathTextBox.Text, this.ProgramArgumentsTextBox.Text, showWindow: true);
+                    }
+                    break;
+                case ActionTypeEnum.Input:
+                    if (this.InputButtonComboBox.SelectedIndex >= 0)
+                    {
+                        return new InputAction(new List<InputTypeEnum>() { EnumHelper.GetEnumValueFromString<InputTypeEnum>((string)this.InputButtonComboBox.SelectedItem) });
+                    }
+                    break;
+                case ActionTypeEnum.Overlay:
+                    if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
+                    {
+                        int duration;
+                        int horizontal;
+                        int vertical;
+                        if (int.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0 &&
+                            int.TryParse(this.OverlayHorizontalTextBox.Text, out horizontal) && horizontal >= 0 && horizontal <= 100 &&
+                            int.TryParse(this.OverlayVerticalTextBox.Text, out vertical) && vertical >= 0 && vertical <= 100)
                         {
-                            return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperCheckBox.IsChecked.GetValueOrDefault());
+                            return new OverlayAction(this.OverlayImageFilePathTextBox.Text, duration, horizontal, vertical);
                         }
-                        break;
-                    case ActionTypeEnum.Currency:
-                        int currencyAmount;
-                        if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) && !string.IsNullOrEmpty(this.CurrencyMessageTextBox.Text))
+                    }
+                    break;
+                case ActionTypeEnum.Sound:
+                    if (!string.IsNullOrEmpty(this.SoundFilePathTextBox.Text) && !string.IsNullOrEmpty(this.SoundVolumeTextBox.Text))
+                    {
+                        int volumeLevel;
+                        if (int.TryParse(this.SoundVolumeTextBox.Text, out volumeLevel) && volumeLevel >= 0 && volumeLevel <= 100)
                         {
-                            return new CurrencyAction(currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperCheckBox.IsChecked.GetValueOrDefault());
+                            return new SoundAction(this.SoundFilePathTextBox.Text, volumeLevel);
                         }
-                        break;
-                    case ActionTypeEnum.ExternalProgram:
-                        if (!string.IsNullOrEmpty(this.ProgramFilePathTextBox.Text))
-                        {
-                            return new ExternalProgramAction(this.ProgramFilePathTextBox.Text, this.ProgramArgumentsTextBox.Text, showWindow: true);
-                        }
-                        break;
-                    case ActionTypeEnum.Input:
-                        if (this.InputButtonComboBox.SelectedIndex >= 0)
-                        {
-                            return new InputAction(new List<InputTypeEnum>() { EnumHelper.GetEnumValueFromString<InputTypeEnum>((string)this.InputButtonComboBox.SelectedItem) });
-                        }
-                        break;
-                    case ActionTypeEnum.Overlay:
-                        if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
-                        {
-                            int duration;
-                            int horizontal;
-                            int vertical;
-                            if (int.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0 &&
-                                int.TryParse(this.OverlayHorizontalTextBox.Text, out horizontal) && horizontal >= 0 && horizontal <= 100 &&
-                                int.TryParse(this.OverlayVerticalTextBox.Text, out vertical) && vertical >= 0 && vertical <= 100)
-                            {
-                                return new OverlayAction(this.OverlayImageFilePathTextBox.Text, duration, horizontal, vertical);
-                            }
-                        }
-                        break;
-                    case ActionTypeEnum.Sound:
-                        if (!string.IsNullOrEmpty(this.SoundFilePathTextBox.Text) && !string.IsNullOrEmpty(this.SoundVolumeTextBox.Text))
-                        {
-                            int volumeLevel;
-                            if (int.TryParse(this.SoundVolumeTextBox.Text, out volumeLevel) && volumeLevel >= 0 && volumeLevel <= 100)
-                            {
-                                return new SoundAction(this.SoundFilePathTextBox.Text, volumeLevel);
-                            }
-                        }
-                        break;
-                    case ActionTypeEnum.Wait:
-                        int waitAmount;
-                        if (!string.IsNullOrEmpty(this.WaitAmountTextBox.Text) && int.TryParse(this.WaitAmountTextBox.Text, out waitAmount) && waitAmount > 0)
-                        {
-                            return new WaitAction(waitAmount);
-                        }
-                        break;
-                }
+                    }
+                    break;
+                case ActionTypeEnum.Wait:
+                    int waitAmount;
+                    if (!string.IsNullOrEmpty(this.WaitAmountTextBox.Text) && int.TryParse(this.WaitAmountTextBox.Text, out waitAmount) && waitAmount > 0)
+                    {
+                        return new WaitAction(waitAmount);
+                    }
+                    break;
             }
             return null;
         }
 
         private void ActionControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (this.allowedActions == null)
+            switch (type)
             {
-                this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>();
-            }
-            else
-            {
-                this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>(this.allowedActions);
+                case ActionTypeEnum.Chat:
+                    this.ChatGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.Currency:
+                    this.CurrencyGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.ExternalProgram:
+                    this.ExternalProgramGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.Input:
+                    this.InputGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.Overlay:
+                    this.OverlayGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.Sound:
+                    this.SoundGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.Wait:
+                    this.WaitGrid.Visibility = Visibility.Visible;
+                    break;
             }
 
-            this.InputButtonComboBox.ItemsSource = EnumHelper.GetEnumNames<InputTypeEnum>();
-
-            if (this.Action != null)
+            if (this.action != null)
             {
-                this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.Action.Type);
-                switch (this.Action.Type)
+                switch (this.type)
                 {
                     case ActionTypeEnum.Chat:
-                        ChatAction chatAction = (ChatAction)this.Action;
+                        ChatAction chatAction = (ChatAction)this.action;
                         this.ChatMessageTextBox.Text = chatAction.ChatText;
                         this.ChatWhisperCheckBox.IsChecked = chatAction.IsWhisper;
                         break;
                     case ActionTypeEnum.Currency:
-                        CurrencyAction currencyAction = (CurrencyAction)this.Action;
+                        CurrencyAction currencyAction = (CurrencyAction)this.action;
                         this.CurrencyAmountTextBox.Text = currencyAction.Amount.ToString();
                         this.CurrencyMessageTextBox.Text = currencyAction.ChatText;
                         this.CurrencyWhisperCheckBox.IsChecked = currencyAction.IsWhisper;
                         break;
                     case ActionTypeEnum.ExternalProgram:
-                        ExternalProgramAction externalAction = (ExternalProgramAction)this.Action;
+                        ExternalProgramAction externalAction = (ExternalProgramAction)this.action;
                         this.ProgramFilePathTextBox.Text = externalAction.FilePath;
                         this.ProgramArgumentsTextBox.Text = externalAction.Arguments;
                         break;
                     case ActionTypeEnum.Input:
-                        InputAction inputAction = (InputAction)this.Action;
+                        InputAction inputAction = (InputAction)this.action;
                         this.InputButtonComboBox.SelectedItem = EnumHelper.GetEnumName(inputAction.Inputs.First());
                         break;
                     case ActionTypeEnum.Overlay:
-                        OverlayAction overlayAction = (OverlayAction)this.Action;
+                        OverlayAction overlayAction = (OverlayAction)this.action;
                         this.OverlayImageFilePathTextBox.Text = overlayAction.FilePath;
                         this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
                         this.OverlayHorizontalTextBox.Text = overlayAction.Horizontal.ToString();
                         this.OverlayVerticalTextBox.Text = overlayAction.Vertical.ToString();
                         break;
                     case ActionTypeEnum.Sound:
-                        SoundAction soundAction = (SoundAction)this.Action;
+                        SoundAction soundAction = (SoundAction)this.action;
                         this.SoundFilePathTextBox.Text = soundAction.FilePath;
                         this.SoundVolumeTextBox.Text = soundAction.VolumeScale.ToString();
                         break;
                     case ActionTypeEnum.Wait:
-                        WaitAction waitAction = (WaitAction)this.Action;
+                        WaitAction waitAction = (WaitAction)this.action;
                         this.WaitAmountTextBox.Text = waitAction.WaitAmount.ToString();
                         break;
                 }
 
-                this.Action = null;
-            }
-        }
-
-        private void TypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            this.ChatGrid.Visibility = Visibility.Collapsed;
-            this.CurrencyGrid.Visibility = Visibility.Collapsed;
-            this.ExternalProgramGrid.Visibility = Visibility.Collapsed;
-            this.InputGrid.Visibility = Visibility.Collapsed;
-            this.OverlayGrid.Visibility = Visibility.Collapsed;
-            this.SoundGrid.Visibility = Visibility.Collapsed;
-            this.WaitGrid.Visibility = Visibility.Collapsed;
-
-            if (this.TypeComboBox.SelectedIndex >= 0)
-            {
-                string typeName = (string)this.TypeComboBox.SelectedItem;
-                ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>(typeName);
-
-                switch (type)
-                {
-                    case ActionTypeEnum.Chat:
-                        this.ChatGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.Currency:
-                        this.CurrencyGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.ExternalProgram:
-                        this.ExternalProgramGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.Input:
-                        this.InputGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.Overlay:
-                        this.OverlayGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.Sound:
-                        this.SoundGrid.Visibility = Visibility.Visible;
-                        break;
-                    case ActionTypeEnum.Wait:
-                        this.WaitGrid.Visibility = Visibility.Visible;
-                        break;
-                }
+                this.action = null;
             }
         }
 

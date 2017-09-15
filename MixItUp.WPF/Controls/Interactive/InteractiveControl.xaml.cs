@@ -2,8 +2,9 @@
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Interactive;
+using MixItUp.WPF.Windows.Command;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -219,9 +220,9 @@ namespace MixItUp.WPF.Controls.Interactive
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
 
-            InteractiveCommandWindow window = (command.Command == null) ?
-                new InteractiveCommandWindow(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control) :
-                new InteractiveCommandWindow(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Command);
+            CommandWindow window = (command.Command == null) ?
+                new CommandWindow(new InteractiveCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control)) :
+                new CommandWindow(new InteractiveCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Command));
             window.Closed += Window_Closed;
             window.Show();
         }

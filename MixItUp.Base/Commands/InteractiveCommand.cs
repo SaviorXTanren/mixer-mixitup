@@ -1,7 +1,9 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
+using MixItUp.Base.Actions;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.Commands
 {
@@ -19,6 +21,17 @@ namespace MixItUp.Base.Commands
 
     public class InteractiveCommand : CommandBase
     {
+        public static IEnumerable<ActionTypeEnum> AllowedActions
+        {
+            get
+            {
+                return new List<ActionTypeEnum>()
+                {
+                    ActionTypeEnum.Chat, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram, ActionTypeEnum.Input, ActionTypeEnum.Overlay, ActionTypeEnum.Sound, ActionTypeEnum.Wait
+                };
+            }
+        }
+
         [JsonProperty]
         public uint GameID { get; set; }
 

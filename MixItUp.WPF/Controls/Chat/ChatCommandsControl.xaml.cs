@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.WPF.Windows.Chat;
+using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Windows.Command;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace MixItUp.WPF.Controls.Chat
             Button button = (Button)sender;
             ChatCommand command = (ChatCommand)button.DataContext;
 
-            ChatCommandWindow window = new ChatCommandWindow(command);
+            CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command));
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -82,7 +83,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            ChatCommandWindow window = new ChatCommandWindow();
+            CommandWindow window = new CommandWindow(new ChatCommandDetailsControl());
             window.Closed += Window_Closed;
             window.Show();
         }

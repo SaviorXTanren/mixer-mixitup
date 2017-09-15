@@ -13,9 +13,21 @@
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="EventsCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}">
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                
+            </Grid.RowDefinitions>
+        </Grid>
+
+        <TextBlock Grid.Row="2" HorizontalAlignment="Center">Custom Events:</TextBlock>
+
+        <DataGrid x:Name="EventsCommandsListView" Grid.Row="4" Style="{StaticResource StandardDataGrid}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Event" Binding="{Binding EventName}" IsReadOnly="True" Width="2*" />
                 <DataGridTextColumn Header="Fired" Binding="{Binding EventsFiredCount}" IsReadOnly="True" Width="50" />
@@ -50,7 +62,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />

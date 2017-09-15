@@ -13,17 +13,6 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Type:</TextBlock>
-            <ComboBox Grid.Column="2" x:Name="TypeComboBox" SelectionChanged="TypeComboBox_SelectionChanged" />
-        </Grid>
-
         <Grid x:Name="ChatGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

@@ -73,6 +73,7 @@
     <Compile Include="Commands\EventCommand.cs" />
     <Compile Include="Commands\InteractiveCommand.cs" />
     <Compile Include="Commands\PreMadeChatCommands.cs" />
+    <Compile Include="Commands\TestCommand.cs" />
     <Compile Include="Commands\TimerCommand.cs" />
     <Compile Include="Models\GiveawayItemModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
