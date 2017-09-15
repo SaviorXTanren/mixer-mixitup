@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MixItUp.WPF.Controls.Commands
+namespace MixItUp.WPF.Controls.Chat
 {
     /// <summary>
-    /// Interaction logic for CommandsControl.xaml
+    /// Interaction logic for ChatCommandsControl.xaml
     /// </summary>
-    public partial class CommandsControl : MainControlBase
+    public partial class ChatCommandsControl : MainControlBase
     {
         private ObservableCollection<ChatCommand> chatCommands = new ObservableCollection<ChatCommand>();
 
-        public CommandsControl()
+        public ChatCommandsControl()
         {
             InitializeComponent();
         }

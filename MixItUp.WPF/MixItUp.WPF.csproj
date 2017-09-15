@@ -94,8 +94,8 @@
     <Compile Include="Controls\Actions\ActionControl.xaml.cs">
       <DependentUpon>ActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Commands\CommandsControl.xaml.cs">
-      <DependentUpon>CommandsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Chat\ChatCommandsControl.xaml.cs">
+      <DependentUpon>ChatCommandsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Events\EventsControl.xaml.cs">
       <DependentUpon>EventsControl.xaml</DependentUpon>
@@ -157,7 +157,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Commands\CommandsControl.xaml">
+    <Page Include="Controls\Chat\ChatCommandsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

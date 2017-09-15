@@ -11,7 +11,6 @@
         xmlns:TimerControls="clr-namespace:MixItUp.WPF.Controls.Timers"
         xmlns:InteractiveControls="clr-namespace:MixItUp.WPF.Controls.Interactive"
         xmlns:EventsControls="clr-namespace:MixItUp.WPF.Controls.Events"
-        xmlns:CommandsControls="clr-namespace:MixItUp.WPF.Controls.Commands"
         xmlns:QuotesControls="clr-namespace:MixItUp.WPF.Controls.Quotes"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         mc:Ignorable="d"
@@ -27,7 +26,7 @@
                 <ChatControls:ChatControl x:Name="Chat" />
             </TabItem>
             <TabItem Header="Commands">
-                <CommandsControls:CommandsControl x:Name="Commands" />
+                <ChatControls:ChatCommandsControl x:Name="Commands" />
             </TabItem>
             <TabItem Header="Quotes">
                 <QuotesControls:QuoteControl x:Name="Quotes" />
