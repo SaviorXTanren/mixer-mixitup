@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         public void MessageDeleted()
         {
-            //this.MessageTextBlock.TextDecorations = TextDecorations.Strikethrough;
+            this.MessageTextBlock.TextDecorations = TextDecorations.Strikethrough;
         }
     }
 }

@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using System;
@@ -174,10 +175,18 @@ namespace MixItUp.WPF
 
             if (result)
             {
-                ModeratorWindow window = new ModeratorWindow();
-                this.Hide();
-                window.Show();
-                this.Close();
+                IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerConnection.Channels.GetUsersWithRoles(ChannelSession.Channel, UserRole.Mod.ToString().ToLower());
+                if (users.Any(uwg => uwg.id.Equals(ChannelSession.User.id)))
+                {
+                    ModeratorWindow window = new ModeratorWindow();
+                    this.Hide();
+                    window.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBoxHelper.ShowError("You are not a moderator for this channel.");
+                }
             }
             else
             {
