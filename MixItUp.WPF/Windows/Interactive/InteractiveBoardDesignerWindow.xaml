@@ -11,8 +11,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="10">
@@ -56,6 +55,6 @@
             </Grid>
         </Grid>
 
-        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>
 </Windows:LoadingWindowBase>

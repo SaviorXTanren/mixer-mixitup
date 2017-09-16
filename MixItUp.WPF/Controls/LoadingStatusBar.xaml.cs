@@ -13,10 +13,8 @@ namespace MixItUp.WPF.Controls
             InitializeComponent();
         }
 
-        public void SetStatusText(string text) { this.StatusTextBlock.Text = text; }
+        public void ShowProgressBar() { this.StatusBar.Visibility = Visibility.Visible; }
 
-        public void ShowProgressBar() { this.StatusProgressBar.Visibility = Visibility.Visible; }
-
-        public void HideProgressBar() { this.StatusProgressBar.Visibility = Visibility.Collapsed; }
+        public void HideProgressBar() { this.StatusBar.Visibility = Visibility.Hidden; }
     }
 }

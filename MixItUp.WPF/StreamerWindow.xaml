@@ -48,6 +48,6 @@
             </TabItem>
         </TabControl>
 
-        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>
 </Windows:LoadingWindowBase>

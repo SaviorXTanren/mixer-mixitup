@@ -4,26 +4,35 @@
              xmlns:local="clr-namespace:MixItUp.WPF"
              StartupUri="LoginWindow.xaml">
     <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
 
-        <Style x:Key="StandardDataGrid" TargetType="DataGrid">
-            <Setter Property="SelectionMode" Value="Single" />
-            <Setter Property="CanUserSortColumns" Value="True" />
-            <Setter Property="CanUserAddRows" Value="False" />
-            <Setter Property="CanUserDeleteRows" Value="False" />
-            <Setter Property="AutoGenerateColumns" Value="False" />
-        </Style>
-        
-        <Style x:Key="BorderedListViewItem" TargetType="ListViewItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListViewItem">
-                        <Border BorderBrush="Black" BorderThickness="1">
-                            <ContentPresenter />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Indigo.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="StandardDataGrid" TargetType="DataGrid">
+                <Setter Property="SelectionMode" Value="Single" />
+                <Setter Property="CanUserSortColumns" Value="True" />
+                <Setter Property="CanUserAddRows" Value="False" />
+                <Setter Property="CanUserDeleteRows" Value="False" />
+                <Setter Property="AutoGenerateColumns" Value="False" />
+            </Style>
+
+            <Style x:Key="BorderedListViewItem" TargetType="ListViewItem">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListViewItem">
+                            <Border BorderBrush="Black" BorderThickness="1">
+                                <ContentPresenter />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

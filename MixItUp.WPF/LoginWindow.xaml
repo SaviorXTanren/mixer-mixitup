@@ -6,63 +6,78 @@
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"      
         Title="Mix It Up - Login" Height="250" Width="420">
+    <Windows:LoadingWindowBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Windows:LoadingWindowBase.Resources>
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="40" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="160" TextAlignment="Center">
-                If you are running a stream, click the Streamer button
-            </TextBlock>
+            <GroupBox Grid.Column="1" Header="Streamer" Margin="0,8,0,8">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-            <Grid Grid.Row="2" x:Name="ExistingStreamerLoginGrid" HorizontalAlignment="Center" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" x:Name="ExistingStreamerLoginGrid" HorizontalAlignment="Center" Visibility="Hidden">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="160" DisplayMemberPath="Name" />
-            </Grid>
+                        <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="160" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Streamer Account" />
+                    </Grid>
 
-            <Button Grid.Row="4" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Streamer</Button>
+                    <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Login</Button>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="3" Header="Moderator" Margin="0,8,0,8">
+                <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox Grid.Row="0" x:Name="ModeratorChannelTextBox" KeyDown="ModeratorChannelTextBox_KeyDown" Width="150" MaterialDesign:HintAssist.Hint="Channel Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <Button Grid.Row="2" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" Width="80" Height="30">Login</Button>
+
+                </Grid>
+            </GroupBox>
+
         </Grid>
 
-        <Grid Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="160" TextAlignment="Center">
-                If you are moderating a stream, type the channel and click the Moderator button
-            </TextBlock>
-            <TextBox Grid.Row="2" x:Name="ModeratorChannelTextBox" KeyDown="ModeratorChannelTextBox_KeyDown" />
-            <Button Grid.Row="4" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" Width="80" Height="30">Moderator</Button>
-        </Grid>
-
-        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="2" />
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>
 </Windows:LoadingWindowBase>
