@@ -3,6 +3,7 @@ using Mixer.Base.Model.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 
 namespace MixItUp.Base.ViewModel.Chat
 {
@@ -42,6 +43,28 @@ namespace MixItUp.Base.ViewModel.Chat
             else if (userRoles.Any(r => r.Equals("Subscriber"))) { this.Roles.Add(UserRole.Subscriber); }
             else if (userRoles.Any(r => r.Equals("Pro"))) { this.Roles.Add(UserRole.Pro); }
             else if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
+        }
+
+        public SolidColorBrush PrimaryRoleColor
+        {
+            get
+            {
+                switch (this.PrimaryRole)
+                {
+                    case UserRole.Streamer:
+                    case UserRole.Mod:
+                        return Brushes.Green;
+                    case UserRole.Staff:
+                        return Brushes.Gold;
+                    case UserRole.Subscriber:
+                    case UserRole.Pro:
+                        return Brushes.Purple;
+                    case UserRole.Banned:
+                        return Brushes.Red;
+                    default:
+                        return Brushes.Blue;
+                }
+            }
         }
 
         public new ChatUserModel GetModel()

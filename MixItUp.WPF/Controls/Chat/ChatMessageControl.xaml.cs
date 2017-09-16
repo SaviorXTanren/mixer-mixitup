@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.Chat;
-using MixItUp.WPF.Util;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Chat
@@ -16,16 +16,11 @@ namespace MixItUp.WPF.Controls.Chat
             InitializeComponent();
 
             this.DataContext = this.Message = message;
-
-            this.Loaded += ChatMessageControl_Loaded;
         }
 
-        private void ChatMessageControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        public void MessageDeleted()
         {
-            if (this.Message.User != null)
-            {
-                this.UserTextBlock.Foreground = ColorHelper.GetColorForUser(this.Message.User);
-            }
+            //this.MessageTextBlock.TextDecorations = TextDecorations.Strikethrough;
         }
     }
 }

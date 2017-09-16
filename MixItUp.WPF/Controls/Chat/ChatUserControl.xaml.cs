@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.ViewModel.Chat;
-using MixItUp.WPF.Util;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Chat
@@ -16,13 +15,6 @@ namespace MixItUp.WPF.Controls.Chat
             InitializeComponent();
 
             this.DataContext = this.User = user;
-
-            this.Loaded += ChatUserControl_Loaded;
-        }
-
-        private void ChatUserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            this.UserNameTextBlock.Foreground = ColorHelper.GetColorForUser(this.User);
         }
     }
 }

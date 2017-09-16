@@ -15,7 +15,7 @@
 
         <Image x:Name="UserPictureImage" Grid.Column="0" />
 
-        <TextBlock x:Name="UserNameTextBlock" Grid.Column="2" Text="{Binding UserName}" FontWeight="Bold" />
+        <TextBlock x:Name="UserNameTextBlock" Grid.Column="2" Text="{Binding UserName}" Foreground="{Binding PrimaryRoleColor}" FontWeight="Bold" />
 
     </Grid>
 </UserControl>

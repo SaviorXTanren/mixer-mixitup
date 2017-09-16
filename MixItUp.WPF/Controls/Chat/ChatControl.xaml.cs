@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Controls.Chat
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
-                this.RefreshViewerCount();
+                this.RefreshViewerAndChatCount();
 
                 foreach (ChatUserModel user in await ChannelSession.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
                 {
@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Controls.Chat
                 try
                 {
                     await ChannelSession.RefreshChannel();
-                    this.RefreshViewerCount();
+                    this.RefreshViewerAndChatCount();
 
                     this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
@@ -167,7 +167,7 @@ namespace MixItUp.WPF.Controls.Chat
                 var orderedUsers = ChannelSession.ChatUsers.Values.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
                 this.UserControls.Insert(orderedUsers.IndexOf(user), new ChatUserControl(user));
 
-                this.RefreshViewerCount();
+                this.RefreshViewerAndChatCount();
             }
         }
 
@@ -179,13 +179,14 @@ namespace MixItUp.WPF.Controls.Chat
                 this.UserControls.Remove(userControl);
                 ChannelSession.ChatUsers.Remove(userControl.User.ID);
 
-                this.RefreshViewerCount();
+                this.RefreshViewerAndChatCount();
             }
         }
 
-        private void RefreshViewerCount()
+        private void RefreshViewerAndChatCount()
         {
-            this.ViewersCountTextBlock.Text = string.Format("Viewers: {0} (Users: {1})", ChannelSession.Channel.viewersCurrent, ChannelSession.ChatUsers.Count);
+            this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
+            this.ChatCountTextBlock.Text = ChannelSession.ChatUsers.Count.ToString();
         }
 
         private void AddMessage(ChatMessageViewModel message)
@@ -215,6 +216,18 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
+        private async Task PurgeUser(ChatUserViewModel user)
+        {
+            await ChannelSession.ChatClient.PurgeUser(user.UserName);
+            foreach (ChatMessageControl messageControl in this.MessageControls)
+            {
+                if (messageControl.Message.User.Equals(user) && !messageControl.Message.IsWhisper)
+                {
+                    messageControl.MessageDeleted();
+                }
+            }
+        }
+
         #endregion Chat Update Methods
 
         #region Context Menu Events
@@ -224,7 +237,11 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.ChatList.SelectedItem != null)
             {
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
-                await ChannelSession.ChatClient.DeleteMessage(control.Message.ID);
+                if (!control.Message.IsWhisper)
+                {
+                    await ChannelSession.ChatClient.DeleteMessage(control.Message.ID);
+                    control.MessageDeleted();
+                }
             }
         }
 
@@ -235,7 +252,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
                 if (control.Message.User != null)
                 {
-                    await ChannelSession.ChatClient.PurgeUser(control.Message.User.UserName);
+                    await this.PurgeUser(control.Message.User);
                 }
             }
         }
@@ -269,7 +286,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.UserList.SelectedItem != null)
             {
                 ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
-                await ChannelSession.ChatClient.PurgeUser(control.User.UserName);
+                await this.PurgeUser(control.User);
             }
         }
 
