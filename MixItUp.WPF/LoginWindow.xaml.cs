@@ -200,7 +200,7 @@ namespace MixItUp.WPF
 
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Initialize(clientID, scopes);
+                return await ChannelSession.Initialize(clientID, scopes, channelName);
             });
 
             if (!result)
