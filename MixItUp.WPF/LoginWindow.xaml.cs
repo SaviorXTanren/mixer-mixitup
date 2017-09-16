@@ -94,7 +94,7 @@ namespace MixItUp.WPF
             List<ChannelSettings> settings = new List<ChannelSettings>(await ChannelSettings.GetAllAvailableSettings());
             if (settings.Count() > 0)
             {
-                this.ExistingStreamerLoginGrid.Visibility = Visibility.Visible;
+                this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
                 settings.Add(new ChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserModel() { username = "NEW STREAMER" } } });
                 this.ExistingStreamerComboBox.ItemsSource = settings.Select(cs => new StreamerLoginItem(cs));
                 if (settings.Count() == 2)
@@ -112,7 +112,7 @@ namespace MixItUp.WPF
 
             await this.RunAsyncOperation(async () =>
             {
-                if (this.ExistingStreamerLoginGrid.Visibility == Visibility.Visible)
+                if (this.ExistingStreamerComboBox.Visibility == Visibility.Visible)
                 {
                     if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {

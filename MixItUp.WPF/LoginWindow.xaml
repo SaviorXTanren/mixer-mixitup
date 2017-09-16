@@ -47,15 +47,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0" x:Name="ExistingStreamerLoginGrid" HorizontalAlignment="Center" Visibility="Hidden">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="10" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="160" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Streamer Account" />
-                    </Grid>
+                    <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Streamer Account" />
 
                     <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Login</Button>
                 </Grid>
@@ -69,7 +61,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0" x:Name="ModeratorChannelTextBox" KeyDown="ModeratorChannelTextBox_KeyDown" Width="150" MaterialDesign:HintAssist.Hint="Channel Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Row="0" x:Name="ModeratorChannelTextBox" KeyDown="ModeratorChannelTextBox_KeyDown" Width="140" MaterialDesign:HintAssist.Hint="Channel Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <Button Grid.Row="2" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" Width="80" Height="30">Login</Button>
 
