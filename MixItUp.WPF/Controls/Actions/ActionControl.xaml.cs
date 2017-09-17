@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class ActionControl : UserControl
     {
+        public EventHandler<ActionBase> OnActionDelete;
+
         private ActionTypeEnum type;
         private ActionBase action;
 
@@ -108,6 +111,8 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ActionControl_Loaded(object sender, RoutedEventArgs e)
         {
+            this.GroupBoxHeaderTextBox.Text = EnumHelper.GetEnumName(this.type);
+
             this.OBSStudioTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
 
             switch (type)
@@ -196,6 +201,14 @@ namespace MixItUp.WPF.Controls.Actions
                 }
 
                 this.action = null;
+            }
+        }
+
+        private void DeleteActionButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.OnActionDelete != null)
+            {
+                this.OnActionDelete(this, this.action);
             }
         }
 

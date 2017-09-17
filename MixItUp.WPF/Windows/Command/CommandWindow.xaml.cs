@@ -51,7 +51,9 @@ namespace MixItUp.WPF.Windows.Command
             {
                 foreach (ActionBase action in command.Actions)
                 {
-                    this.actionControls.Add(new ActionControl(action));
+                    ActionControl actionControl = new ActionControl(action);
+                    actionControl.OnActionDelete += this.OnActionDeleted;
+                    this.actionControls.Add(actionControl);
                 }
             }
 
@@ -63,7 +65,9 @@ namespace MixItUp.WPF.Windows.Command
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                this.actionControls.Add(new ActionControl(type));
+                ActionControl actionControl = new ActionControl(type);
+                actionControl.OnActionDelete += this.OnActionDeleted;
+                this.actionControls.Add(actionControl);
             }
         }
 
@@ -106,6 +110,12 @@ namespace MixItUp.WPF.Windows.Command
                 command.Actions = this.GetActions();
                 await command.Perform();
             });
+        }
+
+        private void OnActionDeleted(object sender, ActionBase e)
+        {
+            ActionControl control = (ActionControl)sender;
+            this.actionControls.Remove(control);
         }
 
         private List<ActionBase> GetActions()

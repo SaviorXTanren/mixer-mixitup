@@ -24,136 +24,94 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <GroupBox>
+        <GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-        <Grid x:Name="ChatGrid" Grid.Row="2" Visibility="Collapsed">
+                <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" />
+
+                <Button Grid.Column="2" x:Name="DeleteActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" />
+            </Grid>
+        </GroupBox.Header>
+        
+        <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <Grid x:Name="ChatGrid" Grid.Row="2" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0">Whisper To User:</TextBlock>
-                <CheckBox Grid.Column="2" x:Name="ChatWhisperCheckBox" />
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="4">
+                    <TextBlock Grid.Column="0">Whisper:</TextBlock>
+                    <CheckBox Grid.Column="2" x:Name="ChatWhisperCheckBox" />
+
+                    <TextBlock Grid.Column="4">
                     <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat-Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
                         Chat Special Identifiers Reference
                     </Hyperlink>
-                </TextBlock>
+                    </TextBlock>
+                </Grid>
+
+                <TextBox Grid.Row="2" x:Name="ChatMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" />
             </Grid>
 
-            <TextBlock Grid.Row="2">Message:</TextBlock>
-            <TextBox Grid.Row="4" x:Name="ChatMessageTextBox" />
-        </Grid>
+            <Grid x:Name="CurrencyGrid" Grid.Row="2" Visibility="Collapsed">
 
-        <Grid x:Name="CurrencyGrid" Grid.Row="2" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+                <TextBox Grid.Row="0" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+ adds/- subtracts)" />
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0">Amount (+ adds/- subtracts):</TextBlock>
-                <TextBox Grid.Column="2" x:Name="CurrencyAmountTextBox" />
-            </Grid>
+                    <TextBlock Grid.Column="0">Whisper:</TextBlock>
+                    <CheckBox Grid.Column="2" x:Name="CurrencyWhisperCheckBox" />
 
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0">Whisper To User:</TextBlock>
-                <CheckBox Grid.Column="2" x:Name="CurrencyWhisperCheckBox" />
-
-                <TextBlock Grid.Column="4">
+                    <TextBlock Grid.Column="4">
                     <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat-Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
                         Chat Special Identifiers Reference
                     </Hyperlink>
-                </TextBlock>
+                    </TextBlock>
+                </Grid>
+
+                <TextBox Grid.Row="4" x:Name="CurrencyMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" />
+
             </Grid>
 
-            <TextBlock Grid.Row="4">Message:</TextBlock>
-            <TextBox Grid.Row="6" x:Name="CurrencyMessageTextBox" />
-
-        </Grid>
-
-        <Grid x:Name="ExternalProgramGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Grid.Column="0" Grid.Row="0">Program:</TextBlock>
-            <TextBox Grid.Column="2" Grid.Row="0" x:Name="ProgramFilePathTextBox" />
-            <Button Grid.Column="4" Grid.Row="0" x:Name="ProgramFileBrowseButton" Click="ProgramFileBrowseButton_Click">Browse</Button>
-
-            <TextBlock Grid.Column="0" Grid.Row="2">Arguments:</TextBlock>
-            <TextBox Grid.Column="2"  Grid.Row="2" x:Name="ProgramArgumentsTextBox" />
-        </Grid>
-
-        <Grid x:Name="InputGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Button:</TextBlock>
-            <ComboBox Grid.Column="2" x:Name="InputButtonComboBox" />
-        </Grid>
-
-        <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0">
+            <Grid x:Name="ExternalProgramGrid" Grid.Row="2" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
@@ -164,19 +122,47 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0">Image:</TextBlock>
-                <TextBox Grid.Column="2" Grid.Row="0" x:Name="OverlayImageFilePathTextBox" />
-                <Button Grid.Column="4" Grid.Row="0" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
+                <TextBox Grid.Column="0" Grid.Row="0" x:Name="ProgramFilePathTextBox" MaterialDesign:HintAssist.Hint="Program File Path" />
+                <Button Grid.Column="2" Grid.Row="0" x:Name="ProgramFileBrowseButton" Click="ProgramFileBrowseButton_Click">Browse</Button>
 
-                <TextBlock Grid.Column="0" Grid.Row="2">Duration (Sec):</TextBlock>
-                <TextBox Grid.Column="2" Grid.Row="2" x:Name="OverlayDurationTextBox" />
+                <TextBox Grid.Column="0" Grid.Row="2" x:Name="ProgramArgumentsTextBox" MaterialDesign:HintAssist.Hint="Program Arguments" />
             </Grid>
 
-            <Grid Grid.Row="2">
+            <Grid x:Name="InputGrid" Grid.Row="2" Visibility="Collapsed">
+                <ComboBox x:Name="InputButtonComboBox" MaterialDesign:HintAssist.Hint="Input Button" />
+            </Grid>
+
+            <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBox Grid.Column="0" Grid.Row="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path" />
+                <Button Grid.Column="2" Grid.Row="0" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
+
+                <TextBox Grid.Column="0" Grid.Row="2" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Seconds)" />
+
+                <TextBox Grid.Column="0" Grid.Row="4" x:Name="OverlayHorizontalTextBox" MaterialDesign:HintAssist.Hint="Horizontal Position Percentage" />
+
+                <TextBox Grid.Column="0" Grid.Row="6" x:Name="OverlayVerticalTextBox" MaterialDesign:HintAssist.Hint="Vertical Position Percentage" />
+            </Grid>
+
+            <Grid x:Name="SoundGrid" Grid.Row="2" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -184,100 +170,61 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0">Horizontal Position Percentage:</TextBlock>
-                <TextBox Grid.Column="2" Grid.Row="0" x:Name="OverlayHorizontalTextBox" />
+                <TextBox Grid.Column="0" Grid.Row="0" x:Name="SoundFilePathTextBox" MaterialDesign:HintAssist.Hint="Sound File Path" />
+                <Button Grid.Column="2" Grid.Row="0" x:Name="SoundFileBrowseButton" Click="SoundFileBrowseButton_Click">Browse</Button>
 
-                <TextBlock Grid.Column="0" Grid.Row="2">Vertical Position Percentage:</TextBlock>
-                <TextBox Grid.Column="2" Grid.Row="2" x:Name="OverlayVerticalTextBox" />
+                <TextBox Grid.Column="0"  Grid.Row="2" x:Name="SoundVolumeTextBox" MaterialDesign:HintAssist.Hint="Volume (1-100)" />
             </Grid>
 
-        </Grid>
-
-        <Grid x:Name="SoundGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <TextBlock Grid.Column="0" Grid.Row="0">File:</TextBlock>
-            <TextBox Grid.Column="2" Grid.Row="0" x:Name="SoundFilePathTextBox" />
-            <Button Grid.Column="4" Grid.Row="0" x:Name="SoundFileBrowseButton" Click="SoundFileBrowseButton_Click">Browse</Button>
-
-            <TextBlock Grid.Column="0" Grid.Row="2">Volume (0-100):</TextBlock>
-            <TextBox Grid.Column="2"  Grid.Row="2" x:Name="SoundVolumeTextBox" />
-        </Grid>
-
-        <Grid x:Name="WaitGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="0">Duration (Sec):</TextBlock>
-            <TextBox Grid.Column="2" x:Name="WaitAmountTextBox" />
-        </Grid>
-
-        <Grid x:Name="OBSStudioGrid" Grid.Row="2" Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0">Type:</TextBlock>
-
-                <ComboBox x:Name="OBSStudioTypeComboBox" Grid.Column="2" SelectionChanged="OBSStudioTypeComboBox_SelectionChanged" />
+            <Grid x:Name="WaitGrid" Grid.Row="2" Visibility="Collapsed">
+                <TextBox x:Name="WaitAmountTextBox" MaterialDesign:HintAssist.Hint="Duration (Seconds)" />
             </Grid>
 
-            <Grid x:Name="OBSStudioSceneGrid" Grid.Row="2" Visibility="Hidden">
+            <Grid x:Name="OBSStudioGrid" Grid.Row="2" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" x:Name="OBSStudioSceneCollectionNameTextBox" MaterialDesign:HintAssist.Hint="Collection Name (Optional)" />
+                <ComboBox x:Name="OBSStudioTypeComboBox" Grid.Row="0" SelectionChanged="OBSStudioTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
 
-                <TextBox Grid.Row="2" x:Name="OBSStudioSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" />
+                <Grid x:Name="OBSStudioSceneGrid" Grid.Row="2" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox Grid.Row="0" x:Name="OBSStudioSceneCollectionNameTextBox" MaterialDesign:HintAssist.Hint="Collection Name (Optional)" />
+
+                    <TextBox Grid.Row="2" x:Name="OBSStudioSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" />
+
+                </Grid>
+
+                <Grid x:Name="OBSStudioSourceGrid" Grid.Row="2" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="OBSStudioSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" />
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0">Visible:</TextBlock>
+                        <CheckBox Grid.Column="2" x:Name="OBSStudioSourceVisibleCheckBox" />
+                    </Grid>
+
+                </Grid>
 
             </Grid>
-
-            <Grid x:Name="OBSStudioSourceGrid" Grid.Row="2" Visibility="Hidden">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" x:Name="OBSStudioSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" />
-
-                <TextBlock Grid.Column="0" Grid.Row="2">Visible:</TextBlock>
-                <CheckBox Grid.Column="2" Grid.Row="2" x:Name="OBSStudioSourceVisibleCheckBox" />
-
-            </Grid>
-
         </Grid>
-
-    </Grid>
+    </GroupBox>
 </UserControl>
