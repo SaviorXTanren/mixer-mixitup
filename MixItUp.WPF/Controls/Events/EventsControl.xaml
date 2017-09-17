@@ -7,19 +7,26 @@
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <local:EventCommandControl x:Name="OnFollowCommandControl" Grid.Column="0" />
+        <local:EventCommandControl x:Name="OnFollowCommandControl" Grid.Column="1" Grid.Row="1" />
 
-        <local:EventCommandControl x:Name="OnHostCommandControl" Grid.Column="2" />
+        <local:EventCommandControl x:Name="OnHostCommandControl" Grid.Column="3" Grid.Row="1" />
 
-        <local:EventCommandControl x:Name="OnSubscribeCommandControl" Grid.Column="4" />
+        <local:EventCommandControl x:Name="OnSubscribeCommandControl" Grid.Column="5" Grid.Row="1" />
     </Grid>
 </Controls:MainControlBase>
