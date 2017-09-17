@@ -12,7 +12,9 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -225,6 +227,8 @@ namespace MixItUp.WPF.Controls.Chat
 
             this.Messages.Add(message);
             this.MessageControls.Add(messageControl);
+
+            this.ChatList.ScrollIntoView(messageControl);
 
             if (this.blockChat && !message.ID.Equals(Guid.Empty))
             {

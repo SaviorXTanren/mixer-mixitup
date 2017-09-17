@@ -37,7 +37,7 @@
 
         <TextBlock Grid.Column="2">:</TextBlock>
 
-        <TextBlock x:Name="MessageTextBlock" Grid.Column="4" Text="{Binding Message}" />
+        <TextBlock x:Name="MessageTextBlock" Grid.Column="4" Text="{Binding Message}" TextWrapping="Wrap" />
 
     </Grid>
 </UserControl>
