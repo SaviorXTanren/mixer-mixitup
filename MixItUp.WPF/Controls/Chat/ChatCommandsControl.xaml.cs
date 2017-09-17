@@ -40,7 +40,7 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private async void CommandTestButton_Click(object sender, RoutedEventArgs e)
+        private async void TestButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             ChatCommand command = (ChatCommand)button.DataContext;
@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.Chat
             });
         }
 
-        private void CommandEditButton_Click(object sender, RoutedEventArgs e)
+        private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             ChatCommand command = (ChatCommand)button.DataContext;
@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Controls.Chat
             window.Show();
         }
 
-        private async void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             ChatCommand command = (ChatCommand)button.DataContext;
@@ -72,13 +72,6 @@ namespace MixItUp.WPF.Controls.Chat
             this.CommandsListView.SelectedIndex = -1;
 
             this.RefreshList();
-        }
-
-        private void CommandEnableDisableButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            ChatCommand command = (ChatCommand)button.DataContext;
-            command.IsEnabled = !command.IsEnabled;
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)

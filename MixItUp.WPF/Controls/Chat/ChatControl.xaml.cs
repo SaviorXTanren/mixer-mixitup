@@ -30,9 +30,25 @@ namespace MixItUp.WPF.Controls.Chat
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
+        private List<ChatCommand> PreMadeChatCommands = new List<ChatCommand>();
+
+        private bool blockChat = false;
+
         public ChatControl()
         {
             InitializeComponent();
+
+            this.PreMadeChatCommands.Add(new UptimeChatCommand());
+            this.PreMadeChatCommands.Add(new GameChatCommand());
+            this.PreMadeChatCommands.Add(new TitleChatCommand());
+            this.PreMadeChatCommands.Add(new TimeoutChatCommand());
+            this.PreMadeChatCommands.Add(new PurgeChatCommand());
+            this.PreMadeChatCommands.Add(new StreamerAgeChatCommand());
+            this.PreMadeChatCommands.Add(new MixerAgeChatCommand());
+            this.PreMadeChatCommands.Add(new FollowAgeChatCommand());
+            this.PreMadeChatCommands.Add(new SparksChatCommand());
+            this.PreMadeChatCommands.Add(new QuoteChatCommand());
+            this.PreMadeChatCommands.Add(new GiveawayChatCommand());
         }
 
         protected override async Task InitializeInternal()
@@ -130,6 +146,20 @@ namespace MixItUp.WPF.Controls.Chat
             await ChannelSession.ChatClient.ClearMessages();
         }
 
+        private void BlockChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.blockChat = true;
+            this.BlockChatButton.Visibility = Visibility.Collapsed;
+            this.EnableChatButton.Visibility = Visibility.Visible;
+        }
+
+        private void EnableChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.blockChat = false;
+            this.BlockChatButton.Visibility = Visibility.Visible;
+            this.EnableChatButton.Visibility = Visibility.Collapsed;
+        }
+
         private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -189,15 +219,28 @@ namespace MixItUp.WPF.Controls.Chat
             this.ChatCountTextBlock.Text = ChannelSession.ChatUsers.Count.ToString();
         }
 
-        private void AddMessage(ChatMessageViewModel message)
+        private async void AddMessage(ChatMessageViewModel message)
         {
-            this.Messages.Add(message);
-            this.MessageControls.Add(new ChatMessageControl(message));
+            ChatMessageControl messageControl = new ChatMessageControl(message);
 
-            if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
+            this.Messages.Add(message);
+            this.MessageControls.Add(messageControl);
+
+            if (this.blockChat && !message.ID.Equals(Guid.Empty))
+            {
+                messageControl.DeleteMessage();
+                await ChannelSession.ChatClient.DeleteMessage(message.ID);
+            }
+            else if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
             {
                 ChatMessageCommand messageCommand = new ChatMessageCommand(message);
-                ChatCommand command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
+
+                ChatCommand command = this.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
+                if (command != null)
+                {
+                    command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
+                }
+
                 if (command != null)
                 {
                     if (message.User.Roles.Any(r => r >= command.LowestAllowedRole))
@@ -223,7 +266,7 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 if (messageControl.Message.User.Equals(user) && !messageControl.Message.IsWhisper)
                 {
-                    messageControl.MessageDeleted();
+                    messageControl.DeleteMessage();
                 }
             }
         }
@@ -240,7 +283,7 @@ namespace MixItUp.WPF.Controls.Chat
                 if (!control.Message.IsWhisper)
                 {
                     await ChannelSession.ChatClient.DeleteMessage(control.Message.ID);
-                    control.MessageDeleted();
+                    control.DeleteMessage();
                 }
             }
         }
@@ -319,7 +362,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatClient_OnClearMessagesOccurred(object sender, ChatClearMessagesEventModel e)
         {
-            this.AddMessage(new ChatMessageViewModel("--- MESSAGES CLEARED ---"));
         }
 
         private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
@@ -327,7 +369,7 @@ namespace MixItUp.WPF.Controls.Chat
             ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(e.id));
             if (message != null)
             {
-                message.Message.IsDeleted = true;
+                message.DeleteMessage();
             }
         }
 
@@ -353,7 +395,7 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 foreach (ChatMessageControl message in userMessages)
                 {
-                    message.Message.IsDeleted = true;
+                    message.DeleteMessage();
                 }
             }
         }

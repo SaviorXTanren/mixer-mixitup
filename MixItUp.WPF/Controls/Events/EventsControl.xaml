@@ -21,7 +21,7 @@
 
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
-                
+
             </Grid.RowDefinitions>
         </Grid>
 
@@ -49,13 +49,6 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button x:Name="CommandDeleteButton" Click="CommandDeleteButton_Click" DataContext="{Binding}">D</Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button x:Name="CommandEnableDisableButton" Click="CommandEnableDisableButton_Click" DataContext="{Binding}">A</Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

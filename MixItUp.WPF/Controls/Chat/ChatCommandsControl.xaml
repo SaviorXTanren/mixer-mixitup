@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -19,38 +20,37 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                 <DataGridTextColumn Header="Command" Binding="{Binding CommandsString}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Lowest Allowed" Binding="{Binding LowestAllowedRoleString}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Permission" Binding="{Binding LowestAllowedRoleString}" IsReadOnly="True" Width="*" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="CommandTestButton" Click="CommandTestButton_Click" DataContext="{Binding}">T</Button>
+                            <Button x:Name="TestButton" Grid.Column="4" Click="TestButton_Click">
+                                <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-10" />
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="CommandEditButton" Click="CommandEditButton_Click" DataContext="{Binding}">E</Button>
+                            <Button x:Name="EditButton" Grid.Column="2" Click="EditButton_Click" Width="40">
+                                <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-10" />
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="CommandDeleteButton" Click="CommandDeleteButton_Click" DataContext="{Binding}">D</Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button x:Name="CommandEnableDisableButton" Click="CommandEnableDisableButton_Click" DataContext="{Binding}">A</Button>
+                            <Button x:Name="DeleteButton" Grid.Column="6" Click="DeleteButton_Click">
+                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-10" />
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="100">Add Command</Button>
+        <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="130">New Command</Button>
     </Grid>
 </Controls:MainControlBase>

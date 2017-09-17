@@ -118,18 +118,6 @@ namespace MixItUp.Base
             this.InteractiveControls = new LockedList<InteractiveCommand>(this.interactiveControlsInternal);
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.Quotes = new LockedList<string>(this.quotesInternal);
-
-            this.ChatCommands.Add(new UptimeChatCommand());
-            this.ChatCommands.Add(new GameChatCommand());
-            this.ChatCommands.Add(new TitleChatCommand());
-            this.ChatCommands.Add(new TimeoutChatCommand());
-            this.ChatCommands.Add(new PurgeChatCommand());
-            this.ChatCommands.Add(new StreamerAgeChatCommand());
-            this.ChatCommands.Add(new MixerAgeChatCommand());
-            this.ChatCommands.Add(new FollowAgeChatCommand());
-            this.ChatCommands.Add(new SparksChatCommand());
-            this.ChatCommands.Add(new QuoteChatCommand());
-            this.ChatCommands.Add(new GiveawayChatCommand());
         }
 
         public async Task Save()
@@ -145,8 +133,6 @@ namespace MixItUp.Base
             this.interactiveControlsInternal = this.InteractiveControls.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.quotesInternal = this.Quotes.ToList();
-
-            this.chatCommandsInternal.RemoveAll(c => c.Actions.Any(a => a.Type == ActionTypeEnum.Custom));
 
             await SerializerHelper.SerializeToFile(filePath, this);
         }

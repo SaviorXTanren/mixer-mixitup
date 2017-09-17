@@ -14,7 +14,7 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                           
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="500" d:DesignWidth="600">
     <Controls:MainControlBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -37,25 +37,54 @@
             </ContextMenu>
         </ResourceDictionary>
     </Controls:MainControlBase.Resources>
-    
+
     <Grid>
-        <Grid Grid.Column="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="0,10,0,10">
+            <GroupBox Grid.Row="0">
+                <GroupBox.Header>
+                    <Grid Height="20" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <Button x:Name="ChatClearMessagesButton" Grid.Column="0" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="ChatClearMessagesButton_Click">Clear Chat</Button>
+
+                        <Button x:Name="BlockChatButton" Grid.Column="2" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="BlockChatButton_Click">Block Chat</Button>
+                        <Button x:Name="EnableChatButton" Grid.Column="2" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="EnableChatButton_Click" Visibility="Collapsed">Enable Chat</Button>
+                        
+                    </Grid>
+                </GroupBox.Header>
+
+                <ListView x:Name="ChatList" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" />
+            </GroupBox>
+
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0">
-                    <Button x:Name="ChatClearMessagesButton" Grid.Column="0" Width="100" Click="ChatClearMessagesButton_Click">Clear Chat</Button>
-                </Grid>
+                <TextBox x:Name="ChatMessageTextBox" Grid.Column="0" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <Grid Grid.Column="1" HorizontalAlignment="Center">
+                <Button x:Name="SendChatMessageButton" Grid.Column="1" Width="70" Click="SendChatMessageButton_Click">Send</Button>
+            </Grid>
+        </Grid>
+
+        <GroupBox Grid.Column="1">
+            <GroupBox.Header>
+                <Grid Grid.Column="1" HorizontalAlignment="Center" Height="20">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="5" />
@@ -66,44 +95,17 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <MaterialDesign:PackIcon Kind="Eye" Grid.Column="0" Foreground="#3F51B5" />
-                    <TextBlock Grid.Column="2" x:Name="ViewersCountTextBlock">0</TextBlock>
+                    <MaterialDesign:PackIcon Kind="Eye" Grid.Column="0" Foreground="White" />
+                    <TextBlock Grid.Column="2" x:Name="ViewersCountTextBlock" Foreground="White">0</TextBlock>
 
-                    <MaterialDesign:PackIcon Kind="Message" Grid.Column="4" Foreground="#3F51B5" />
-                    <TextBlock Grid.Column="6" x:Name="ChatCountTextBlock">0</TextBlock>
+                    <MaterialDesign:PackIcon Kind="Message" Grid.Column="4" Foreground="White" />
+                    <TextBlock Grid.Column="6" x:Name="ChatCountTextBlock" Foreground="White">0</TextBlock>
 
                 </Grid>
-            </Grid>
+            </GroupBox.Header>
 
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <ListView x:Name="UserList" Grid.Column="1" ContextMenu="{StaticResource UserListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" />
+        </GroupBox>
 
-                <Grid Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <ListView x:Name="ChatList" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" />
-
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox x:Name="ChatMessageTextBox" Grid.Column="0" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                        
-                        <Button x:Name="SendChatMessageButton" Grid.Column="1" Width="70" Click="SendChatMessageButton_Click">Send</Button>
-                    </Grid>
-                </Grid>
-
-                <ListView x:Name="UserList" Grid.Column="1" ContextMenu="{StaticResource UserListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" />
-
-            </Grid>
-        </Grid>
     </Grid>
 </Controls:MainControlBase>

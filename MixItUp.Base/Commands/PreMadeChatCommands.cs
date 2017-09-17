@@ -142,7 +142,7 @@ namespace MixItUp.Base.Commands
     public class StreamerAgeChatCommand : ChatCommand
     {
         public StreamerAgeChatCommand()
-            : base("Streamer Age", "streamerage", UserRole.Mod)
+            : base("Streamer Age", "streamerage age", UserRole.Mod)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {

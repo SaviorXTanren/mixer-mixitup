@@ -18,8 +18,9 @@ namespace MixItUp.WPF.Controls.Chat
             this.DataContext = this.Message = message;
         }
 
-        public void MessageDeleted()
+        public void DeleteMessage()
         {
+            this.Message.IsDeleted = true;
             this.MessageTextBlock.TextDecorations = TextDecorations.Strikethrough;
         }
     }
