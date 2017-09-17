@@ -97,7 +97,7 @@ namespace MixItUp.WPF.Controls.Services
             this.NewBotLoginGrid.Visibility = Visibility.Visible;
         }
 
-        private void OBSStudioTestConnectionButton_Click(object sender, RoutedEventArgs e)
+        private async void OBSStudioTestConnectionButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.OBSStudioIPAddressTextBox.Text))
             {
@@ -106,14 +106,17 @@ namespace MixItUp.WPF.Controls.Services
                 ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
                 ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;
 
-                if (ChannelSession.InitializeOBSWebsocket())
+                await this.Window.RunAsyncOperation(async () =>
                 {
-                    MessageBoxHelper.ShowInformation("Connection successful!");
-                }
-                else
-                {
-                    MessageBoxHelper.ShowError("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
-                }
+                    if (await ChannelSession.InitializeOBSWebsocket())
+                    {
+                        MessageBoxHelper.ShowInformation("Connection successful!");
+                    }
+                    else
+                    {
+                        MessageBoxHelper.ShowError("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
+                    }
+                });
             }
         }
     }

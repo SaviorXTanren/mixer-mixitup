@@ -34,11 +34,11 @@ namespace MixItUp.Base.Actions
             this.SourceVisible = sourceVisible;
         }
 
-        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.OBSWebsocket == null)
             {
-                ChannelSession.InitializeOBSWebsocket();
+                await ChannelSession.InitializeOBSWebsocket();
             }
 
             if (ChannelSession.OBSWebsocket != null)
@@ -58,7 +58,6 @@ namespace MixItUp.Base.Actions
                     ChannelSession.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
                 }
             }
-            return Task.FromResult(0);
         }
     }
 }

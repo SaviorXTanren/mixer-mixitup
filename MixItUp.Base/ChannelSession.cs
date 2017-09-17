@@ -12,6 +12,7 @@ using MixItUp.Base.ViewModel.Chat;
 using OBSWebsocketDotNet;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base
@@ -147,21 +148,33 @@ namespace MixItUp.Base
             return true;
         }
 
-        public static bool InitializeOBSWebsocket()
+        public static async Task<bool> InitializeOBSWebsocket()
         {
             if (ChannelSession.OBSWebsocket == null)
             {
                 ChannelSession.OBSWebsocket = new OBSWebsocket();
-                try
+
+                CancellationTokenSource tokenSource = new CancellationTokenSource();
+                bool connected = false;
+
+                Task t = Task.Factory.StartNew(() =>
                 {
-                    ChannelSession.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
-                }
-                catch (Exception)
+                    try
+                    {
+                        ChannelSession.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
+                        connected = true;
+                    }
+                    catch (Exception) { }
+                }, tokenSource.Token);
+
+                await Task.Delay(2000);
+                tokenSource.Cancel();
+
+                if (!connected)
                 {
                     ChannelSession.OBSWebsocket = null;
-                    return false;
                 }
-                return true;
+                return connected;
             }
             return false;
         }
