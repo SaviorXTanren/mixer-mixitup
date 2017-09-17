@@ -95,7 +95,7 @@ namespace MixItUp.WPF.Windows.Command
             }
         }
 
-        private async void TestCommandButton_Click(object sender, RoutedEventArgs e)
+        private async void TestButton_Click(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {

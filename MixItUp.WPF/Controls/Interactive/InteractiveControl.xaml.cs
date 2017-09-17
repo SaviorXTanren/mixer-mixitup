@@ -245,7 +245,7 @@ namespace MixItUp.WPF.Controls.Interactive
             }
         }
 
-        private async void Window_Closed(object sender, System.EventArgs e)
+        private void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshSelectedScene();
         }

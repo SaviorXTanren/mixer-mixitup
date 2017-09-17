@@ -93,6 +93,7 @@ namespace MixItUp.WPF
         protected override async Task OnLoaded()
         {
             List<ChannelSettings> settings = new List<ChannelSettings>(await ChannelSettings.GetAllAvailableSettings());
+            settings = settings.Where(s => s.IsStreamer).ToList();
             if (settings.Count() > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;

@@ -19,7 +19,6 @@ namespace MixItUp.WPF
         protected override async Task OnLoaded()
         {
             await this.Chat.Initialize(this);
-            await this.Events.Initialize(this);
         }
 
         protected override async Task OnClosing()

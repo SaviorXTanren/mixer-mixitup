@@ -6,8 +6,26 @@
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Command"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
+                                        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+                          
         Title="Customize Command" Height="500" Width="600">
+    <Windows:LoadingWindowBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Windows:LoadingWindowBase.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -33,20 +51,20 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0">Action:</TextBlock>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Action:</TextBlock>
                 <ComboBox Grid.Column="2" x:Name="TypeComboBox" Width="180" />
 
-                <Button x:Name="AddActionButton" Click="AddActionButton_Click" Grid.Column="4" Width="40">Add</Button>
+                <Button x:Name="AddActionButton" Content="{MaterialDesign:PackIcon Plus}" Click="AddActionButton_Click" Grid.Column="4" ToolTip="Add Action" />
 
-                <Button x:Name="TestCommandButton" Click="TestCommandButton_Click" Grid.Column="6" Width="100">Test Command</Button>
-                
-                <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="8" Width="60">Save</Button>
+                <Button x:Name="TestButton" Content="{MaterialDesign:PackIcon Play}" Grid.Column="6" ToolTip="Test" Click="TestButton_Click" />
+
+                <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="8" ToolTip="Save">Save</Button>
 
             </Grid>
         </Grid>

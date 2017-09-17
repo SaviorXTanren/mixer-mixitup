@@ -220,7 +220,7 @@ namespace MixItUp.Base
                     
                     if (ChannelSession.Settings == null)
                     {
-                        ChannelSession.Settings = new ChannelSettings(channel);
+                        ChannelSession.Settings = new ChannelSettings(channel, (channelName == null));
                     }
                     await ChannelSession.SaveSettings();
 

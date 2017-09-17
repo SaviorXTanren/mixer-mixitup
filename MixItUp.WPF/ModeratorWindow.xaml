@@ -16,14 +16,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TabControl Grid.Row="0">
-            <TabItem Header="Chat">
-                <ChatControls:ChatControl x:Name="Chat" />
-            </TabItem>
-            <TabItem Header="Events">
-                <EventsControls:EventsControl x:Name="Events" />
-            </TabItem>
-        </TabControl>
+        <ChatControls:ChatControl x:Name="Chat" Grid.Row="0" />
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>

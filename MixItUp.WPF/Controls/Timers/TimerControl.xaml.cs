@@ -83,7 +83,7 @@ namespace MixItUp.WPF.Controls.Timers
             window.Show();
         }
 
-        private async void Window_Closed(object sender, System.EventArgs e)
+        private void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
         }

@@ -1,13 +1,11 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.OAuth;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -32,7 +30,8 @@ namespace MixItUp.Base
             return settings;
         }
 
-        private static string GetSettingsFilePath(ChannelModel channel) { return Path.Combine(SettingsDirectoryName, string.Format("{0}.xml", channel.id.ToString())); }
+        [JsonProperty]
+        public bool IsStreamer { get; set; }
 
         [JsonProperty]
         private List<ChatCommand> chatCommandsInternal { get; set; }
@@ -85,10 +84,11 @@ namespace MixItUp.Base
         [JsonIgnore]
         public LockedList<string> Quotes { get; set; }
 
-        public ChannelSettings(ExpandedChannelModel channel)
+        public ChannelSettings(ExpandedChannelModel channel, bool isStreamer = true)
             : this()
         {
             this.Channel = channel;
+            this.IsStreamer = isStreamer;
         }
 
         public ChannelSettings()
@@ -123,7 +123,7 @@ namespace MixItUp.Base
         public async Task Save()
         {
             Directory.CreateDirectory(SettingsDirectoryName);
-            string filePath = ChannelSettings.GetSettingsFilePath(this.Channel);
+            string filePath = Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", this.Channel.id.ToString(), (this.IsStreamer) ? "Streamer" : "Moderator"));
 
             this.OAuthToken = ChannelSession.MixerConnection.GetOAuthTokenCopy();
             this.BotOAuthToken = (ChannelSession.BotConnection != null) ? ChannelSession.BotConnection.GetOAuthTokenCopy() : null;

@@ -81,7 +81,7 @@ namespace MixItUp.WPF.Controls.Chat
             window.Show();
         }
 
-        private async void Window_Closed(object sender, System.EventArgs e)
+        private void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
         }
