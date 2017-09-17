@@ -196,6 +196,15 @@ namespace MixItUp.Base
             return true;
         }
 
+        public static void DisconnectOBSStudio()
+        {
+            if (ChannelSession.OBSWebsocket != null)
+            {
+                ChannelSession.OBSWebsocket.Disconnect();
+                ChannelSession.OBSWebsocket = null;
+            }
+        }
+
         public static void Close()
         {
             if (ChannelSession.OverlayServer != null)
@@ -203,10 +212,7 @@ namespace MixItUp.Base
                 ChannelSession.OverlayServer.End();
             }
 
-            if (ChannelSession.OBSWebsocket != null)
-            {
-                ChannelSession.OBSWebsocket.Disconnect();
-            }
+            ChannelSession.DisconnectOBSStudio();
 
             if (ChannelSession.ChatClient != null)
             {

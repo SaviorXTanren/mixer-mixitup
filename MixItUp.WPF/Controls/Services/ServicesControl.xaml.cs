@@ -101,10 +101,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             if (!string.IsNullOrEmpty(this.OBSStudioIPAddressTextBox.Text))
             {
-                if (ChannelSession.OBSWebsocket != null)
-                {
-                    ChannelSession.OBSWebsocket.Disconnect();
-                }
+                ChannelSession.DisconnectOBSStudio();
 
                 ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
                 ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;

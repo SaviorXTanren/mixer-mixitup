@@ -65,18 +65,19 @@ namespace MixItUp.Base.Commands
                 arguments = new List<string>();
             }
 
-            List<Task> taskActionsToPerform = new List<Task>();
             foreach (ActionBase action in this.Actions)
             {
-                taskActionsToPerform.Add(action.Perform(user, arguments));
-
                 if (action.Type == ActionTypeEnum.Wait)
                 {
-                    await Task.WhenAll(taskActionsToPerform);
-                    taskActionsToPerform.Clear();
+                    await action.Perform(user, arguments);
+                }
+                else
+                {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    action.Perform(user, arguments);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
-            await Task.WhenAll(taskActionsToPerform);
         }
     }
 }
