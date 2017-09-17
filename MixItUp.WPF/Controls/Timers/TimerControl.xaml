@@ -5,7 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Timers"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             mc:Ignorable="d" 
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+                          
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
@@ -18,27 +26,30 @@
         <DataGrid x:Name="TimerCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
-                <DataGridTextColumn Header="Command" Binding="{Binding CommandsString}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Interval" Binding="{Binding Interval}" IsReadOnly="True" Width="50" />
-                <DataGridTextColumn Header="Messages" Binding="{Binding MinimumMessages}" IsReadOnly="True" Width="65" />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="CommandTestButton" Click="CommandTestButton_Click" DataContext="{Binding}">T</Button>
+                            <Button x:Name="TestButton" Grid.Column="4" Click="CommandTestButton_Click">
+                                <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="CommandEditButton" Click="CommandEditButton_Click" DataContext="{Binding}">E</Button>
+                            <Button x:Name="EditButton" Grid.Column="2" Click="CommandEditButton_Click" Width="40">
+                                <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="CommandDeleteButton" Click="CommandDeleteButton_Click" DataContext="{Binding}">D</Button>
+                            <Button x:Name="DeleteButton" Grid.Column="6" Click="CommandDeleteButton_Click">
+                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -48,23 +59,17 @@
         <Grid Grid.Row="2" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click" Width="80">Add Timer</Button>
+            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Command</Button>
 
-            <TextBlock Grid.Column="2">Interval (Mins):</TextBlock>
-            <TextBox Grid.Column="4" x:Name="TimerIntervalTextBox" LostFocus="TimerIntervalTextBox_LostFocus" Width="50" />
+            <TextBox Grid.Column="2" x:Name="TimerIntervalTextBox" LostFocus="TimerIntervalTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Interval (Mins)" />
 
-            <TextBlock Grid.Column="6">Min Messages:</TextBlock>
-            <TextBox Grid.Column="8" x:Name="TimerMinimumMessagesTextBox" LostFocus="TimerMinimumMessagesTextBox_LostFocus" Width="50" />
+            <TextBox Grid.Column="4" x:Name="TimerMinimumMessagesTextBox" LostFocus="TimerMinimumMessagesTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Min Messages" />
 
         </Grid>
 
