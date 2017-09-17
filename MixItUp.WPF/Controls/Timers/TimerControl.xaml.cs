@@ -86,7 +86,6 @@ namespace MixItUp.WPF.Controls.Timers
         private async void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
-            await ChannelSession.Settings.Save();
         }
 
         private void TimerMinimumMessagesTextBox_LostFocus(object sender, RoutedEventArgs e)

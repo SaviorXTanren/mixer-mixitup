@@ -248,7 +248,6 @@ namespace MixItUp.WPF.Controls.Interactive
         private async void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshSelectedScene();
-            await ChannelSession.Settings.Save();
         }
 
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)

@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.Bot
             InitializeComponent();
         }
 
-        protected override async Task InitializeInternal()
+        protected override Task InitializeInternal()
         {            
             if (ChannelSession.Settings.BotOAuthToken != null)
             {
@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.Bot
                 this.NewBotLoginGrid.Visibility = Visibility.Visible;
             }
 
-            await base.InitializeInternal();
+            return base.InitializeInternal();
         }
 
         private async void LogInBotButton_Click(object sender, RoutedEventArgs e)

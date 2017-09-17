@@ -84,7 +84,6 @@ namespace MixItUp.WPF.Controls.Chat
         private async void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
-            await ChannelSession.Settings.Save();
         }
     }
 }

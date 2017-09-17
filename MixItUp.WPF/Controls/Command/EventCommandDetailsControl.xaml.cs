@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Controls.Command
             if (this.command != null)
             {
                 this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.EventType);
-                this.EventIDTextBox.Text = this.command.CommandsString;
+                this.EventIDTextBox.Text = this.command.UniqueEventID;
 
                 this.EventTypeComboBox.IsEnabled = false;
                 this.EventIDTextBox.IsEnabled = false;
@@ -69,32 +69,32 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.Validate())
             {
-                ConstellationEventTypeEnum eventType = EnumHelper.GetEnumValueFromString<ConstellationEventTypeEnum>((string)this.EventTypeComboBox.SelectedItem);
-
-                ChannelAdvancedModel channel = null;
-                UserModel user = null;
-
-                if (eventType.ToString().Contains("channel"))
-                {
-                    channel = await ChannelSession.MixerConnection.Channels.GetChannel(this.EventIDTextBox.Text);
-                    if (channel == null)
-                    {
-                        MessageBoxHelper.ShowError("Unable to find the channel for the specified username");
-                        return null;
-                    }
-                }
-                else if (eventType.ToString().Contains("user"))
-                {
-                    user = await ChannelSession.MixerConnection.Users.GetUser(this.EventIDTextBox.Text);
-                    if (user == null)
-                    {
-                        MessageBoxHelper.ShowError("Unable to find a user for the specified username");
-                        return null;
-                    }
-                }
-
                 if (this.command == null)
                 {
+                    ConstellationEventTypeEnum eventType = EnumHelper.GetEnumValueFromString<ConstellationEventTypeEnum>((string)this.EventTypeComboBox.SelectedItem);
+
+                    ChannelAdvancedModel channel = null;
+                    UserModel user = null;
+
+                    if (eventType.ToString().Contains("channel"))
+                    {
+                        channel = await ChannelSession.MixerConnection.Channels.GetChannel(this.EventIDTextBox.Text);
+                        if (channel == null)
+                        {
+                            MessageBoxHelper.ShowError("Unable to find the channel for the specified username");
+                            return null;
+                        }
+                    }
+                    else if (eventType.ToString().Contains("user"))
+                    {
+                        user = await ChannelSession.MixerConnection.Users.GetUser(this.EventIDTextBox.Text);
+                        if (user == null)
+                        {
+                            MessageBoxHelper.ShowError("Unable to find a user for the specified username");
+                            return null;
+                        }
+                    }
+
                     if (channel != null)
                     {
                         this.command = new EventCommand(eventType, channel);

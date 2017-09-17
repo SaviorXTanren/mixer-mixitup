@@ -108,6 +108,9 @@
     <Compile Include="Controls\Command\TimerCommandDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Events\EventCommandControl.xaml.cs">
+      <DependentUpon>EventCommandControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Giveaway\GiveawayControl.xaml.cs">
       <DependentUpon>GiveawayControl.xaml</DependentUpon>
     </Compile>
@@ -185,6 +188,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\TimerCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Events\EventCommandControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

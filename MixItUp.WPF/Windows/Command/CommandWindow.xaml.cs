@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Actions;
@@ -87,6 +88,8 @@ namespace MixItUp.WPF.Windows.Command
             {
                 command.Actions.Clear();
                 command.Actions = actions;
+
+                await this.RunAsyncOperation(async () => { await ChannelSession.Settings.Save(); });
 
                 this.Close();
             }
