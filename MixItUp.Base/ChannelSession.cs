@@ -270,6 +270,6 @@ namespace MixItUp.Base
             }
         }
 
-        public static UserViewModel GetCurrentUser() { return new UserViewModel(User.id, User.username); }
+        public static UserViewModel GetCurrentUser() { return new UserViewModel(User); }
     }
 }

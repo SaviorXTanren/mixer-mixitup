@@ -17,6 +17,8 @@ namespace MixItUp.Base.ViewModel
             this.UserName = username;
         }
 
+        public UserViewModel(UserModel user) : this(user.id, user.username) { }
+
         public UserModel GetModel()
         {
             return new UserModel()

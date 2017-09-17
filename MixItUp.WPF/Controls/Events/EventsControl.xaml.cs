@@ -1,7 +1,11 @@
 ﻿using Mixer.Base.Clients;
+using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
+using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel;
+using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,9 +61,28 @@ namespace MixItUp.WPF.Controls.Events
         {
             foreach (EventCommand command in ChannelSession.Settings.EventCommands)
             {
-                if (command.UniqueEventID.Equals(e.channel))
+                if (command.MatchesEvent(e))
                 {
-                    await command.Perform();
+                    JToken userToken;
+                    UserViewModel user = null;
+                    if (e.payload.TryGetValue("user", out userToken))
+                    {
+                        user = new UserViewModel(userToken.ToObject<UserModel>());
+                    }
+                    else if (e.payload.TryGetValue("hoster", out userToken))
+                    {
+                        ChannelModel channel = userToken.ToObject<ChannelModel>();
+                        user = new UserViewModel(channel.id, channel.token);
+                    }
+
+                    if (user != null)
+                    {
+                        await command.Perform(user);
+                    }
+                    else
+                    {
+                        await command.Perform();
+                    }
                 }
             }
         }

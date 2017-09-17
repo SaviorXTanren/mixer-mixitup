@@ -1,8 +1,10 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -46,6 +48,23 @@ namespace MixItUp.Base.Commands
         public string UniqueEventID { get { return this.GetEventType().ToString(); } }
 
         public ConstellationEventType GetEventType() { return new ConstellationEventType(this.EventType, this.EventID); }
+
+        public bool MatchesEvent(ConstellationLiveEventModel liveEvent)
+        {
+            if (this.UniqueEventID.Equals(liveEvent.channel))
+            {
+                if (this.EventType == ConstellationEventTypeEnum.channel__id__followed)
+                {
+                    JToken following;
+                    if (!liveEvent.payload.TryGetValue("following", out following) || !(bool)following)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
 
         public override string ToString() { return this.CommandsString; }
 
