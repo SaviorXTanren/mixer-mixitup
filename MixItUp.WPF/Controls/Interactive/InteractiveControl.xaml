@@ -5,9 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Interactive"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             mc:Ignorable="d" 
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
              d:DesignHeight="300" d:DesignWidth="600">
-    <Grid>
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
@@ -19,21 +27,15 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" x:Name="NewGameButton" Click="NewGameButton_Click" Width="80" IsEnabled="False">New Game</Button>
+            <Button Grid.Column="0" x:Name="NewGameButton" Click="NewGameButton_Click" IsEnabled="False">New Game</Button>
                 
-            <TextBlock Grid.Column="2">Games:</TextBlock>
-            <ComboBox Grid.Column="4" x:Name="InteractiveGamesComboBox" Width="250" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" />
+            <ComboBox Grid.Column="2" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="Game" />
 
-            <TextBlock Grid.Column="6">Scenes:</TextBlock>
-            <ComboBox Grid.Column="8" x:Name="InteractiveScenesComboBox" Width="150" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" />
+            <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
 
         </Grid>
 
@@ -55,26 +57,44 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                         <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" Width="80" />
-                        <DataGridTextColumn Header="S" Binding="{Binding SparkCost}" IsReadOnly="True" Width="40" />
-                        <DataGridTextColumn Header="C" Binding="{Binding Cooldown}" IsReadOnly="True" Width="40" />
-                        <DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding SparkCost}" IsReadOnly="True" Width="50">
+                            <DataGridTextColumn.Header>
+                                <Grid HorizontalAlignment="Center">
+                                    <MaterialDesign:PackIcon Kind="WeatherLightning" Height="24" Width="24" />
+                                </Grid>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Cooldown}" IsReadOnly="True" Width="50">
+                            <DataGridTextColumn.Header>
+                                <Grid HorizontalAlignment="Center">
+                                    <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
+                                </Grid>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Width="65">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="CommandTestButton" Click="CommandTestButton_Click" DataContext="{Binding}">T</Button>
+                                    <Button x:Name="TestButton" Grid.Column="4" Click="CommandTestButton_Click" Width="40">
+                                        <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="65">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="CommandEditButton" Click="CommandEditButton_Click" DataContext="{Binding}">E</Button>
+                                    <Button x:Name="EditButton" Grid.Column="2" Click="CommandEditButton_Click" Width="40">
+                                        <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="65">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="CommandDeleteButton" Click="CommandDeleteButton_Click" DataContext="{Binding}">D</Button>
+                                    <Button x:Name="DeleteButton" Grid.Column="6" Click="CommandDeleteButton_Click" Width="40">
+                                        <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -87,8 +107,8 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" x:Name="ConnectButton" Click="ConnectButton_Click" Width="80" IsEnabled="False">Connect</Button>
-                <Button Grid.Column="0" x:Name="DisconnectButton" Click="DisconnectButton_Click" Width="80" Visibility="Collapsed">Disconnect</Button>
+                <Button Grid.Column="0" x:Name="ConnectButton" Click="ConnectButton_Click" Width="110" IsEnabled="False">Connect</Button>
+                <Button Grid.Column="0" x:Name="DisconnectButton" Click="DisconnectButton_Click" Width="110" Visibility="Collapsed">Disconnect</Button>
             </Grid>
 
         </Grid>
