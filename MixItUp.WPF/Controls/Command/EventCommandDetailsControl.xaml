@@ -4,23 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
-             mc:Ignorable="d" 
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+                                 
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0">Event:</TextBlock>
-        <ComboBox x:Name="EventTypeComboBox" Grid.Column="2" SelectionChanged="EventTypeComboBox_SelectionChanged" />
+        <ComboBox x:Name="EventTypeComboBox" Grid.Column="0" SelectionChanged="EventTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Event Type" />
 
-        <TextBlock Grid.Column="4">Username:</TextBlock>
-        <TextBox x:Name="EventIDTextBox" Grid.Column="6" />
+        <TextBox x:Name="EventIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Username" />
     </Grid>
 </local:CommandDetailsControlBase>
