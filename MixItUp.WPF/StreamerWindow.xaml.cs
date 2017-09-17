@@ -27,7 +27,7 @@ namespace MixItUp.WPF
             await this.Interactive.Initialize(this);
             await this.Events.Initialize(this);
             await this.Giveaway.Initialize(this);
-            await this.Bot.Initialize(this);
+            await this.Services.Initialize(this);
         }
 
         protected override async Task OnClosing()

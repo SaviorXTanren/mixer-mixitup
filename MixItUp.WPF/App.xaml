@@ -13,6 +13,9 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Indigo.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <SolidColorBrush x:Key="PrimaryColor">#3F51B5</SolidColorBrush>
+            <SolidColorBrush x:Key="WhiteColor">White</SolidColorBrush>
+            
             <Style x:Key="StandardDataGrid" TargetType="DataGrid">
                 <Setter Property="SelectionMode" Value="Single" />
                 <Setter Property="CanUserSortColumns" Value="True" />

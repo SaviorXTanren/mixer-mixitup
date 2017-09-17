@@ -9,12 +9,12 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MixItUp.WPF.Controls.Bot
+namespace MixItUp.WPF.Controls.Services
 {
     /// <summary>
-    /// Interaction logic for BotControl.xaml
+    /// Interaction logic for ServicesControl.xaml
     /// </summary>
-    public partial class BotControl : MainControlBase
+    public partial class ServicesControl : MainControlBase
     {
         private List<OAuthClientScopeEnum> BotScopes = new List<OAuthClientScopeEnum>()
         {
@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Bot
             OAuthClientScopeEnum.user__details__self,
         };
 
-        public BotControl()
+        public ServicesControl()
         {
             InitializeComponent();
         }
@@ -47,6 +47,12 @@ namespace MixItUp.WPF.Controls.Bot
             {
                 this.NewBotLoginGrid.Visibility = Visibility.Visible;
             }
+
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
+            {
+                this.OBSStudioIPAddressTextBox.Text = ChannelSession.Settings.OBSStudioServerIP;
+            }
+            this.OBSStudioPasswordTextBox.Password = ChannelSession.Settings.OBSStudioServerPassword;
 
             return base.InitializeInternal();
         }
@@ -89,6 +95,29 @@ namespace MixItUp.WPF.Controls.Bot
 
             this.ExistingBotGrid.Visibility = Visibility.Collapsed;
             this.NewBotLoginGrid.Visibility = Visibility.Visible;
+        }
+
+        private void OBSStudioTestConnectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.OBSStudioIPAddressTextBox.Text))
+            {
+                if (ChannelSession.OBSWebsocket != null)
+                {
+                    ChannelSession.OBSWebsocket.Disconnect();
+                }
+
+                ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
+                ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;
+
+                if (ChannelSession.InitializeOBSWebsocket())
+                {
+                    MessageBoxHelper.ShowInformation("Connection successful!");
+                }
+                else
+                {
+                    MessageBoxHelper.ShowError("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
+                }
+            }
         }
     }
 }

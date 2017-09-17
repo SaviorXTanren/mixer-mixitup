@@ -7,6 +7,7 @@ using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -17,6 +18,8 @@ namespace MixItUp.WPF.Windows.Command
     /// </summary>
     public partial class CommandWindow : LoadingWindowBase
     {
+        private class TestCommand : CommandBase { }
+
         private CommandDetailsControlBase commandDetailsControl;
 
         private ObservableCollection<ActionControl> actionControls;
@@ -34,7 +37,7 @@ namespace MixItUp.WPF.Windows.Command
 
         protected override async Task OnLoaded()
         {
-            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames(this.commandDetailsControl.GetAllowedActions());
+            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames(this.commandDetailsControl.GetAllowedActions()).OrderBy(s => s);
 
             this.ActionsListView.ItemsSource = this.actionControls;
 

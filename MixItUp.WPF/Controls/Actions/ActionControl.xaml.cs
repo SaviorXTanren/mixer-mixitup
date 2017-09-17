@@ -89,12 +89,27 @@ namespace MixItUp.WPF.Controls.Actions
                         return new WaitAction(waitAmount);
                     }
                     break;
+                case ActionTypeEnum.OBSStudio:
+                    if (this.OBSStudioTypeComboBox.SelectedIndex >= 0)
+                    {
+                        if (this.OBSStudioSceneGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.OBSStudioSceneNameTextBox.Text))
+                        {
+                            return new OBSStudioAction(this.OBSStudioSceneCollectionNameTextBox.Text, this.OBSStudioSceneNameTextBox.Text);
+                        }
+                        else if (this.OBSStudioSourceGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.OBSStudioSourceNameTextBox.Text))
+                        {
+                            return new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault());
+                        }
+                    }
+                    break;
             }
             return null;
         }
 
         private void ActionControl_Loaded(object sender, RoutedEventArgs e)
         {
+            this.OBSStudioTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
+
             switch (type)
             {
                 case ActionTypeEnum.Chat:
@@ -117,6 +132,9 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.Wait:
                     this.WaitGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.OBSStudio:
+                    this.OBSStudioGrid.Visibility = Visibility.Visible;
                     break;
             }
 
@@ -159,6 +177,21 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Wait:
                         WaitAction waitAction = (WaitAction)this.action;
                         this.WaitAmountTextBox.Text = waitAction.WaitAmount.ToString();
+                        break;
+                    case ActionTypeEnum.OBSStudio:
+                        OBSStudioAction obsStudioAction = (OBSStudioAction)this.action;
+                        if (!string.IsNullOrEmpty(obsStudioAction.SceneName))
+                        {
+                            this.OBSStudioTypeComboBox.SelectedItem = "Scene";
+                            this.OBSStudioSceneCollectionNameTextBox.Text = obsStudioAction.SceneCollection;
+                            this.OBSStudioSceneNameTextBox.Text = obsStudioAction.SceneName;
+                        }
+                        else
+                        {
+                            this.OBSStudioTypeComboBox.SelectedItem = "Source";
+                            this.OBSStudioSourceNameTextBox.Text = obsStudioAction.SourceName;
+                            this.OBSStudioSourceVisibleCheckBox.IsChecked = obsStudioAction.SourceVisible;
+                        }
                         break;
                 }
 
@@ -206,6 +239,23 @@ namespace MixItUp.WPF.Controls.Actions
         {
             Process.Start(e.Uri.AbsoluteUri);
             e.Handled = true;
+        }
+
+        private void OBSStudioTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.OBSStudioSceneGrid.Visibility = Visibility.Hidden;
+            this.OBSStudioSourceGrid.Visibility = Visibility.Hidden;
+            if (this.OBSStudioTypeComboBox.SelectedIndex >= 0)
+            {
+                if (this.OBSStudioTypeComboBox.SelectedItem.ToString().Equals("Scene"))
+                {
+                    this.OBSStudioSceneGrid.Visibility = Visibility.Visible;
+                }
+                else if (this.OBSStudioTypeComboBox.SelectedItem.ToString().Equals("Source"))
+                {
+                    this.OBSStudioSourceGrid.Visibility = Visibility.Visible;
+                }
+            }
         }
     }
 }

@@ -69,6 +69,13 @@ namespace MixItUp.Base
         [JsonProperty]
         public int TimerCommandsMinimumMessages { get; set; }
 
+        [JsonProperty]
+        public string OBSStudioServerIP { get; set; }
+        
+        [JsonProperty]
+        public string OBSStudioServerPassword { get; set; }
+
+
         [JsonIgnore]
         public LockedList<ChatCommand> ChatCommands { get; set; }
 

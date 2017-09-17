@@ -17,6 +17,8 @@ namespace MixItUp.Base.Actions
         Overlay,
         Sound,
         Wait,
+        [Name("OBS Studio")]
+        OBSStudio,
 
         Custom,
     }

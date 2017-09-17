@@ -225,5 +225,59 @@
             <TextBlock Grid.Column="0">Duration (Sec):</TextBlock>
             <TextBox Grid.Column="2" x:Name="WaitAmountTextBox" />
         </Grid>
+
+        <Grid x:Name="OBSStudioGrid" Grid.Row="2" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0">Type:</TextBlock>
+
+                <ComboBox x:Name="OBSStudioTypeComboBox" Grid.Column="2" SelectionChanged="OBSStudioTypeComboBox_SelectionChanged" />
+            </Grid>
+
+            <Grid x:Name="OBSStudioSceneGrid" Grid.Row="2" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBox Grid.Row="0" x:Name="OBSStudioSceneCollectionNameTextBox" MaterialDesign:HintAssist.Hint="Collection Name (Optional)" />
+
+                <TextBox Grid.Row="2" x:Name="OBSStudioSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name (Optional)" />
+
+            </Grid>
+
+            <Grid x:Name="OBSStudioSourceGrid" Grid.Row="2" Visibility="Hidden">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" x:Name="OBSStudioSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name (Optional)" />
+
+                <TextBlock Grid.Column="0" Grid.Row="2">Visible:</TextBlock>
+                <CheckBox Grid.Column="2" Grid.Row="2" x:Name="OBSStudioSourceVisibleCheckBox" />
+
+            </Grid>
+
+        </Grid>
+
     </Grid>
 </UserControl>

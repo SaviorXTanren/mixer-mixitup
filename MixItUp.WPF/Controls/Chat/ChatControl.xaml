@@ -95,11 +95,11 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <MaterialDesign:PackIcon Kind="Eye" Grid.Column="0" Foreground="White" />
-                    <TextBlock Grid.Column="2" x:Name="ViewersCountTextBlock" Foreground="White">0</TextBlock>
+                    <MaterialDesign:PackIcon Kind="Eye" Grid.Column="0" Foreground="{StaticResource WhiteColor}" />
+                    <TextBlock Grid.Column="2" x:Name="ViewersCountTextBlock" Foreground="{StaticResource WhiteColor}">0</TextBlock>
 
-                    <MaterialDesign:PackIcon Kind="Message" Grid.Column="4" Foreground="White" />
-                    <TextBlock Grid.Column="6" x:Name="ChatCountTextBlock" Foreground="White">0</TextBlock>
+                    <MaterialDesign:PackIcon Kind="Message" Grid.Column="4" Foreground="{StaticResource WhiteColor}" />
+                    <TextBlock Grid.Column="6" x:Name="ChatCountTextBlock" Foreground="{StaticResource WhiteColor}">0</TextBlock>
 
                 </Grid>
             </GroupBox.Header>

@@ -25,7 +25,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button x:Name="TestButton" Grid.Column="4" Click="TestButton_Click">
-                                <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-10" />
+                                <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -34,7 +34,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button x:Name="EditButton" Grid.Column="2" Click="EditButton_Click" Width="40">
-                                <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-10" />
+                                <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -43,7 +43,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button x:Name="DeleteButton" Grid.Column="6" Click="DeleteButton_Click">
-                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-10" />
+                                <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

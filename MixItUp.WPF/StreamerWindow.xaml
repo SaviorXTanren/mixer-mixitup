@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:BotControls="clr-namespace:MixItUp.WPF.Controls.Bot"
+        xmlns:ServicesControls="clr-namespace:MixItUp.WPF.Controls.Services"
         xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
         xmlns:GiveawayControls="clr-namespace:MixItUp.WPF.Controls.Giveaway"
         xmlns:TimerControls="clr-namespace:MixItUp.WPF.Controls.Timers"
@@ -43,8 +43,8 @@
             <TabItem Header="Giveaway">
                 <GiveawayControls:GiveawayControl x:Name="Giveaway" />
             </TabItem>
-            <TabItem Header="Bot">
-                <BotControls:BotControl x:Name="Bot" />
+            <TabItem Header="Services">
+                <ServicesControls:ServicesControl x:Name="Services" />
             </TabItem>
         </TabControl>
 

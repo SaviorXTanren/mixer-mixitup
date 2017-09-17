@@ -236,7 +236,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageCommand messageCommand = new ChatMessageCommand(message);
 
                 ChatCommand command = this.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
-                if (command != null)
+                if (command == null)
                 {
                     command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
                 }

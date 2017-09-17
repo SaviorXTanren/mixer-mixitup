@@ -9,6 +9,7 @@ using MixItUp.Base.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
+using OBSWebsocketDotNet;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,7 +31,10 @@ namespace MixItUp.Base
         public static ChatClient BotChatClient { get; private set; }
         public static InteractiveClient InteractiveClient { get; private set; }
         public static ConstellationClient ConstellationClient { get; private set; }
+
         public static OverlayWebServer OverlayServer { get; private set; }
+
+        public static OBSWebsocket OBSWebsocket { get; private set; }
 
         public static LockedDictionary<uint, ChatUserViewModel> ChatUsers { get; private set; }
         public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
@@ -143,6 +147,25 @@ namespace MixItUp.Base
             return true;
         }
 
+        public static bool InitializeOBSWebsocket()
+        {
+            if (ChannelSession.OBSWebsocket == null)
+            {
+                ChannelSession.OBSWebsocket = new OBSWebsocket();
+                try
+                {
+                    ChannelSession.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
+                }
+                catch (Exception)
+                {
+                    ChannelSession.OBSWebsocket = null;
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
         public static async Task<bool> ConnectInteractiveClient(ChannelModel channel, InteractiveGameListingModel game)
         {
             ChannelSession.CheckMixerConnection();
@@ -178,6 +201,11 @@ namespace MixItUp.Base
             if (ChannelSession.OverlayServer != null)
             {
                 ChannelSession.OverlayServer.End();
+            }
+
+            if (ChannelSession.OBSWebsocket != null)
+            {
+                ChannelSession.OBSWebsocket.Disconnect();
             }
 
             if (ChannelSession.ChatClient != null)
