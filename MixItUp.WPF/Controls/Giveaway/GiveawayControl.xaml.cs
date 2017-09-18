@@ -3,6 +3,7 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,7 +15,14 @@ namespace MixItUp.WPF.Controls.Giveaway
     /// </summary>
     public partial class GiveawayControl : MainControlBase
     {
-        public List<ChatUserViewModel> previousWinners = new List<ChatUserViewModel>();
+        private class PreviousWinnerModel
+        {
+            public uint ID { get; set; }
+            public string Username { get; set; }
+            public string Prize { get; set; }
+        }
+
+        private ObservableCollection<PreviousWinnerModel> previousWinners = new ObservableCollection<PreviousWinnerModel>();
 
         public GiveawayControl()
         {
@@ -24,6 +32,7 @@ namespace MixItUp.WPF.Controls.Giveaway
         protected override Task InitializeInternal()
         {
             this.GiveawayTypeComboBox.ItemsSource = new List<string>() { "Users", "Followers", "Subscribers" };
+            this.PreviousWinnersListView.ItemsSource = this.previousWinners;
 
             return base.InitializeInternal();
         }
@@ -85,14 +94,14 @@ namespace MixItUp.WPF.Controls.Giveaway
                     break;
             }
 
-            usersToSelectFrom = usersToSelectFrom.Where(u => !this.previousWinners.Contains(u));
+            usersToSelectFrom = usersToSelectFrom.Where(u => !this.previousWinners.Select(w => w.ID).Contains(u.ID));
 
             if (usersToSelectFrom.Count() > 0)
             {
                 Random random = new Random();
                 int index = random.Next(usersToSelectFrom.Count());
                 ChatUserViewModel winner = usersToSelectFrom.ElementAt(index);
-                this.previousWinners.Add(winner);
+                this.previousWinners.Add(new PreviousWinnerModel() { ID = winner.ID, Username = winner.UserName, Prize = ChannelSession.Giveaway.Item });
 
                 this.GiveawayWinnerTextBlock.Text = winner.UserName;
 

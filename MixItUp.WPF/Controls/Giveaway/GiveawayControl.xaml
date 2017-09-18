@@ -5,37 +5,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Giveaway"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+             d:DesignHeight="500" d:DesignWidth="600">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0">Item:</TextBlock>
-            <TextBox Grid.Column="2" x:Name="GiveawayItemTextBox" Width="150" />
+            <TextBox Grid.Column="0" x:Name="GiveawayItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" />
 
-            <TextBlock Grid.Column="4">Allowed Winners:</TextBlock>
-            <ComboBox Grid.Column="6" x:Name="GiveawayTypeComboBox" Width="100" />
+            <ComboBox Grid.Column="2" x:Name="GiveawayTypeComboBox" MaterialDesign:HintAssist.Hint="Allowed Winners" />
         </Grid>
 
-        <Button Grid.Row="2" x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" Width="120">Enable Giveaway</Button>
-        <Button Grid.Row="2" x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" Width="120" Visibility="Collapsed">Disable Giveaway</Button>
+        <Button Grid.Row="2" x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Enable Giveaway</Button>
+        <Button Grid.Row="2" x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Disable Giveaway</Button>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
@@ -46,11 +52,20 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" x:Name="PerformGiveawayButton" Click="PerformGiveawayButton_Click" Width="120" IsEnabled="False">Perform Giveaway</Button>
+            <Button Grid.Column="0" x:Name="PerformGiveawayButton" Click="PerformGiveawayButton_Click" IsEnabled="False">Perform Giveaway</Button>
 
-            <TextBlock Grid.Column="2">Giveaway Winner:</TextBlock>
-            <TextBlock Grid.Column="4" x:Name="GiveawayWinnerTextBlock" />
+            <TextBlock Grid.Column="2" VerticalAlignment="Center">Winner:</TextBlock>
+            <TextBlock Grid.Column="4" VerticalAlignment="Center" x:Name="GiveawayWinnerTextBlock" Width="150" />
         </Grid>
+
+        <TextBlock Grid.Row="6" HorizontalAlignment="Center">Previous Winners:</TextBlock>
+
+        <DataGrid x:Name="PreviousWinnersListView" Grid.Row="8" Style="{StaticResource StandardDataGrid}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Prize" Binding="{Binding Prize}" IsReadOnly="True" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </Controls:MainControlBase>
