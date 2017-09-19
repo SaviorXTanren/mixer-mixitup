@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Overlay;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,7 +63,7 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     break;
                 case ActionTypeEnum.Overlay:
-                    if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
+                    if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text) || !(string.IsNullOrEmpty(this.OverlayTextTextBox.Text)))
                     {
                         int duration;
                         int horizontal;
@@ -71,7 +72,14 @@ namespace MixItUp.WPF.Controls.Actions
                             int.TryParse(this.OverlayHorizontalTextBox.Text, out horizontal) && horizontal >= 0 && horizontal <= 100 &&
                             int.TryParse(this.OverlayVerticalTextBox.Text, out vertical) && vertical >= 0 && vertical <= 100)
                         {
-                            return new OverlayAction(this.OverlayImageFilePathTextBox.Text, duration, horizontal, vertical);
+                            if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
+                            {
+                                return new OverlayAction(new OverlayImage() { imagePath = this.OverlayImageFilePathTextBox.Text, duration = duration, horizontal = horizontal, vertical = vertical });
+                            }
+                            else if (!string.IsNullOrEmpty(this.OverlayTextTextBox.Text))
+                            {
+                                return new OverlayAction(new OverlayText() { text = this.OverlayTextTextBox.Text, duration = duration, horizontal = horizontal, vertical = vertical });
+                            }
                         }
                     }
                     break;
@@ -126,6 +134,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.GroupBoxHeaderTextBox.Text = EnumHelper.GetEnumName(this.type);
 
+            this.OverlayTypeComboBox.ItemsSource = new List<string>() { "Image", "Text" };
             this.OBSStudioTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
             this.XSplitTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
 
@@ -186,10 +195,22 @@ namespace MixItUp.WPF.Controls.Actions
                         break;
                     case ActionTypeEnum.Overlay:
                         OverlayAction overlayAction = (OverlayAction)this.action;
-                        this.OverlayImageFilePathTextBox.Text = overlayAction.FilePath;
-                        this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
-                        this.OverlayHorizontalTextBox.Text = overlayAction.Horizontal.ToString();
-                        this.OverlayVerticalTextBox.Text = overlayAction.Vertical.ToString();
+                        if (overlayAction.Image != null)
+                        {
+                            this.OverlayTypeComboBox.SelectedItem = "Image";
+                            this.OverlayImageFilePathTextBox.Text = overlayAction.Image.imagePath;
+                            this.OverlayDurationTextBox.Text = overlayAction.Image.duration.ToString();
+                            this.OverlayHorizontalTextBox.Text = overlayAction.Image.horizontal.ToString();
+                            this.OverlayVerticalTextBox.Text = overlayAction.Image.vertical.ToString();
+                        }
+                        else if (overlayAction.Text != null)
+                        {
+                            this.OverlayTypeComboBox.SelectedItem = "Text";
+                            this.OverlayTextTextBox.Text = overlayAction.Text.text;
+                            this.OverlayDurationTextBox.Text = overlayAction.Text.duration.ToString();
+                            this.OverlayHorizontalTextBox.Text = overlayAction.Text.horizontal.ToString();
+                            this.OverlayVerticalTextBox.Text = overlayAction.Text.vertical.ToString();
+                        }
                         break;
                     case ActionTypeEnum.Sound:
                         SoundAction soundAction = (SoundAction)this.action;
@@ -283,6 +304,24 @@ namespace MixItUp.WPF.Controls.Actions
         {
             Process.Start(e.Uri.AbsoluteUri);
             e.Handled = true;
+        }
+
+        private void OverlayTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.OverlayImageGrid.Visibility = Visibility.Hidden;
+            this.OverlayTextGrid.Visibility = Visibility.Hidden;
+            if (this.OverlayTypeComboBox.SelectedIndex >= 0)
+            {
+                if (this.OverlayTypeComboBox.SelectedItem.ToString().Equals("Image"))
+                {
+                    this.OverlayImageGrid.Visibility = Visibility.Visible;
+                }
+                else if (this.OverlayTypeComboBox.SelectedItem.ToString().Equals("Text"))
+                {
+                    this.OverlayTextGrid.Visibility = Visibility.Visible;
+                }
+                this.OverlayPositionGrid.Visibility = Visibility.Visible;
+            }
         }
 
         private void OBSStudioTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

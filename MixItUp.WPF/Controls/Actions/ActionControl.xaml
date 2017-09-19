@@ -132,15 +132,8 @@
                 <ComboBox x:Name="InputButtonComboBox" MaterialDesign:HintAssist.Hint="Input Button" />
             </Grid>
 
-            <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Visible">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
@@ -148,14 +141,52 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path" />
-                <Button Grid.Column="2" Grid.Row="0" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
+                <ComboBox x:Name="OverlayTypeComboBox" Grid.Row="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
 
-                <TextBox Grid.Column="0" Grid.Row="2" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Seconds)" />
+                <Grid Grid.Row="2" x:Name="OverlayImageGrid" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="4" x:Name="OverlayHorizontalTextBox" MaterialDesign:HintAssist.Hint="Horizontal Position Percentage" />
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="6" x:Name="OverlayVerticalTextBox" MaterialDesign:HintAssist.Hint="Vertical Position Percentage" />
+                        <TextBox Grid.Column="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path" />
+                        <Button Grid.Column="2" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Row="2" x:Name="OverlayTextGrid" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox Grid.Row="0" x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" />
+                </Grid>
+
+                <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Hidden">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" />
+
+                    <TextBox Grid.Column="2" x:Name="OverlayHorizontalTextBox" MaterialDesign:HintAssist.Hint="Horizontal %" />
+
+                    <TextBox Grid.Column="4" x:Name="OverlayVerticalTextBox" MaterialDesign:HintAssist.Hint="Vertical %" />
+                </Grid>
             </Grid>
 
             <Grid x:Name="SoundGrid" Grid.Row="2" Visibility="Collapsed">

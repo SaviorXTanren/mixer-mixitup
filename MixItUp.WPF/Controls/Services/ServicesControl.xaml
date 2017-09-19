@@ -78,6 +78,25 @@
             </Grid>
         </GroupBox>
 
+        <GroupBox Header="Overlay" Grid.Column="3" Grid.Row="1">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" TextAlignment="Center">Add "OverlayPage.html" in the Overlay folder as a browser source</TextBlock>
+
+                <Button x:Name="EnableOverlayButton" Grid.Row="2" Click="EnableOverlayButton_Click" Width="140">Enable Overlay</Button>
+                <Button x:Name="DisableOverlayButton" Grid.Row="2" Click="DisableOverlayButton_Click" Width="140" Visibility="Collapsed">Disable Overlay</Button>
+
+                <Button x:Name="TestOverlayButton" Grid.Row="4" Click="TestOverlayButton_Click" Width="140" IsEnabled="False">Test Connection</Button>
+            </Grid>
+        </GroupBox>
+
         <GroupBox Header="OBS Studio" Grid.Column="1" Grid.Row="3">
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.RowDefinitions>

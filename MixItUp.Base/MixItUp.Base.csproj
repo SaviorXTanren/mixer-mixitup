@@ -95,7 +95,7 @@
     <Compile Include="ViewModel\Interactive\InteractiveControlViewModel.cs" />
     <Compile Include="ViewModel\UserDataViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
-    <Compile Include="Web\OverlayWebServer.cs" />
+    <Compile Include="Overlay\OverlayWebServer.cs" />
     <Compile Include="XSplit\XSplitWebServer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +106,9 @@
     <Content Include="OBS\obs-websocket-4.2.0-Windows-Installer.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Overlay\js\main.js" />
+    <Content Include="Overlay\js\main.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Overlay\OverlayPage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

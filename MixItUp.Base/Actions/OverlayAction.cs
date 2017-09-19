@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Overlay;
 using MixItUp.Base.ViewModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,50 +12,44 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class OverlayAction : ActionBase
     {
-        [DataMember]
-        public string FilePath { get; set; }
+        [JsonProperty]
+        public OverlayImage Image { get; set; }
 
-        [DataMember]
-        public int Duration { get; set; }
-
-        [DataMember]
-        public int Horizontal { get; set; }
-
-        [DataMember]
-        public int Vertical { get; set; }
-
-        [DataMember]
-        public string FileData { get; set; }
+        [JsonProperty]
+        public OverlayText Text { get; set; }
 
         public OverlayAction() { }
 
-        public OverlayAction(string filePath, int duration, int horizontal, int vertical)
+        public OverlayAction(OverlayImage image)
             : base(ActionTypeEnum.Overlay)
         {
-            this.FilePath = filePath;
-            this.Duration = duration;
-            this.Horizontal = horizontal;
-            this.Vertical = vertical;
+            this.Image = image;
+        }
+
+        public OverlayAction(OverlayText text)
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.Text = text;
         }
 
         public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.OverlayServer != null)
             {
-                if (this.FileData == null)
+                if (this.Image != null)
                 {
-                    byte[] byteData = File.ReadAllBytes(this.FilePath);
-                    this.FileData = Convert.ToBase64String(byteData);
-                }
+                    if (this.Image.imageData == null)
+                    {
+                        byte[] byteData = File.ReadAllBytes(this.Image.imagePath);
+                        this.Image.imageData = Convert.ToBase64String(byteData);
+                    }
 
-                ChannelSession.OverlayServer.SetOverlayImage(new OverlayImage()
+                    ChannelSession.OverlayServer.SetImage(this.Image);
+                }
+                else if (this.Text != null)
                 {
-                    filePath = this.FilePath,
-                    fileData = this.FileData,
-                    duration = this.Duration,
-                    horizontal = this.Horizontal,
-                    vertical = this.Vertical
-                });
+                    ChannelSession.OverlayServer.SetText(this.Text);
+                }
             }
             return Task.FromResult(0);
         }

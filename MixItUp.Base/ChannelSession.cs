@@ -221,6 +221,14 @@ namespace MixItUp.Base
             return true;
         }
 
+        public static void DisconnectOverlayServer()
+        {
+            if (ChannelSession.OverlayServer != null)
+            {
+                ChannelSession.OverlayServer.End();
+            }
+        }
+
         public static void DisconnectOBSStudio()
         {
             if (ChannelSession.OBSWebsocket != null)
@@ -240,10 +248,7 @@ namespace MixItUp.Base
 
         public static void Close()
         {
-            if (ChannelSession.OverlayServer != null)
-            {
-                ChannelSession.OverlayServer.End();
-            }
+            ChannelSession.DisconnectOverlayServer();
 
             ChannelSession.DisconnectOBSStudio();
 

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
+using MixItUp.Base.Overlay;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,15 @@ namespace MixItUp.WPF.Controls.Services
             else
             {
                 this.NewBotLoginGrid.Visibility = Visibility.Visible;
+            }
+
+            if (ChannelSession.Settings.EnableOverlay)
+            {
+                ChannelSession.InitializeOverlayServer();
+
+                this.EnableOverlayButton.Visibility = Visibility.Collapsed;
+                this.DisableOverlayButton.Visibility = Visibility.Visible;
+                this.TestOverlayButton.IsEnabled = true;
             }
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
@@ -105,6 +115,41 @@ namespace MixItUp.WPF.Controls.Services
 
             this.ExistingBotGrid.Visibility = Visibility.Collapsed;
             this.NewBotLoginGrid.Visibility = Visibility.Visible;
+        }
+
+        private async void EnableOverlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                ChannelSession.InitializeOverlayServer();
+
+                ChannelSession.Settings.EnableOverlay = true;
+                await ChannelSession.Settings.Save();
+
+                this.EnableOverlayButton.Visibility = Visibility.Collapsed;
+                this.DisableOverlayButton.Visibility = Visibility.Visible;
+                this.TestOverlayButton.IsEnabled = true;
+            });
+        }
+
+        private async void DisableOverlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                ChannelSession.DisconnectOverlayServer();
+
+                ChannelSession.Settings.EnableOverlay = false;
+                await ChannelSession.Settings.Save();
+
+                this.EnableOverlayButton.Visibility = Visibility.Visible;
+                this.DisableOverlayButton.Visibility = Visibility.Collapsed;
+                this.TestOverlayButton.IsEnabled = false;
+            });
+        }
+
+        private void TestOverlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.OverlayServer.SetText(new OverlayText() { text = "Connection Test", duration = 5, horizontal = 50, vertical = 50 });
         }
 
         private void OBSStudioIPAddressTextBox_LostFocus(object sender, RoutedEventArgs e)

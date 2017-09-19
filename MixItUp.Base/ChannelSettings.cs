@@ -70,6 +70,9 @@ namespace MixItUp.Base
         public int TimerCommandsMinimumMessages { get; set; }
 
         [JsonProperty]
+        public bool EnableOverlay { get; set; }
+
+        [JsonProperty]
         public string OBSStudioServerIP { get; set; }
         
         [JsonProperty]

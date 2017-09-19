@@ -1,4 +1,6 @@
-﻿function processResultAndRepeat(status, result)
+﻿var mainOverlayDiv = document.getElementById('mainOverlay');
+
+function processResultAndRepeat(status, result)
 {
     if (status == 200)
     {
@@ -6,28 +8,41 @@
         {
             data = JSON.parse(result);
 
-            var imageElement = document.createElement('img');
-            imageElement.id = 'imageOverlay';
+            var addedElement = null;
 
-            var imageType = "data:image/png";
-            if (data.filePath.endsWith("gif")) {
-                imageType = "data:image/gif";
+            if (data.imagePath != null)
+            {
+                addedElement = document.createElement('img');
+                addedElement.id = 'imageOverlay';
+
+                var imageType = "data:image/png";
+                if (data.imagePath.endsWith("gif")) {
+                    imageType = "data:image/gif";
+                }
+
+                addedElement.src = imageType + ";base64," + data.imageData;
+            }
+            else if (data.text != null)
+            {
+                addedElement = document.createElement('p');
+                addedElement.id = 'textOverlay';
+                addedElement.innerHTML = data.text;
             }
 
-            imageElement.src = imageType + ";base64," + data.fileData;
-            imageElement.style.cssText = 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
-                data.vertical.toString() + '%; transform: translate(-50%, -50%);'
-
-            var mainOverlayDiv = document.getElementById('mainOverlay');
-            mainOverlayDiv.appendChild(imageElement);
-
-            setTimeout(function ()
+            if (addedElement != null)
             {
-                mainOverlayDiv.removeChild(imageElement);
-                sendGETRequest();
-            }, data.duration * 1000);
+                addedElement.style.cssText = 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
+                    data.vertical.toString() + '%; transform: translate(-50%, -50%);'
 
-            return;
+                mainOverlayDiv.appendChild(addedElement);
+
+                setTimeout(function () {
+                    mainOverlayDiv.removeChild(addedElement);
+                    sendGETRequest();
+                }, data.duration * 1000);
+
+                return;
+            }        
         }
         catch (err) { }
     }
@@ -36,7 +51,7 @@
 
 function sendGETRequest() {
     $.ajax({
-        url: 'http://localhost:8201/',
+        url: 'http://localhost:8001/',
         type: 'GET',
         timeout: 2000,
     })
