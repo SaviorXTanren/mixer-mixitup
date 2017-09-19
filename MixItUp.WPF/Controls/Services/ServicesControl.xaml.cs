@@ -107,7 +107,7 @@ namespace MixItUp.WPF.Controls.Services
             this.NewBotLoginGrid.Visibility = Visibility.Visible;
         }
 
-        private async void OBSStudioIPAddressTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private void OBSStudioIPAddressTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
             ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;

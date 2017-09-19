@@ -21,12 +21,18 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <local:EventCommandControl x:Name="OnFollowCommandControl" Grid.Column="1" Grid.Row="1" />
 
         <local:EventCommandControl x:Name="OnHostCommandControl" Grid.Column="3" Grid.Row="1" />
 
-        <local:EventCommandControl x:Name="OnSubscribeCommandControl" Grid.Column="5" Grid.Row="1" />
+        <local:EventCommandControl x:Name="OnSubscribeCommandControl" Grid.Column="1" Grid.Row="3" />
+
+        <local:EventCommandControl x:Name="OnResubscribeCommandControl" Grid.Column="3" Grid.Row="3" />
+
+        <local:EventCommandControl x:Name="OnResubscribeSharedCommandControl" Grid.Column="3" Grid.Row="3" />
     </Grid>
 </Controls:MainControlBase>
