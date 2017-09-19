@@ -29,6 +29,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" x:Name="NewGameButton" Click="NewGameButton_Click" IsEnabled="False">New Game</Button>

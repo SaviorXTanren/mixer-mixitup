@@ -19,6 +19,7 @@ namespace MixItUp.Base.Actions
         Wait,
         [Name("OBS Studio")]
         OBSStudio,
+        XSplit,
 
         Custom,
     }

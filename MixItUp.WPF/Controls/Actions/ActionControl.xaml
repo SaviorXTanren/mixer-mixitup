@@ -225,6 +225,44 @@
                 </Grid>
 
             </Grid>
+
+            <Grid x:Name="XSplitGrid" Grid.Row="2" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ComboBox x:Name="XSplitTypeComboBox" Grid.Row="0" SelectionChanged="XSplitTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+
+                <Grid x:Name="XSplitSceneGrid" Grid.Row="2" Visibility="Hidden">
+                    <TextBox x:Name="XSplitSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" />
+                </Grid>
+
+                <Grid x:Name="XSplitSourceGrid" Grid.Row="2" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="XSplitSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" />
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0">Visible:</TextBlock>
+                        <CheckBox Grid.Column="2" x:Name="XSplitSourceVisibleCheckBox" />
+                    </Grid>
+
+                </Grid>
+
+            </Grid>
+            
         </Grid>
     </GroupBox>
 </UserControl>

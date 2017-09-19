@@ -74,6 +74,7 @@
     <Compile Include="Actions\OverlayAction.cs" />
     <Compile Include="Actions\SoundAction.cs" />
     <Compile Include="Actions\WaitAction.cs" />
+    <Compile Include="Actions\XSplitAction.cs" />
     <Compile Include="ChannelSession.cs" />
     <Compile Include="ChannelSettings.cs" />
     <Compile Include="Chat\ChatMessageCommand.cs" />
@@ -95,10 +96,25 @@
     <Compile Include="ViewModel\UserDataViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="Web\OverlayWebServer.cs" />
+    <Compile Include="XSplit\XSplitWebServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="OBS\obs-websocket-4.2.0-Windows-Installer.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XSplit\js\main.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XSplit\js\xjs.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="XSplit\Mix It Up.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.Services
             InitializeComponent();
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {            
             if (ChannelSession.Settings.BotOAuthToken != null)
             {
@@ -51,10 +51,20 @@ namespace MixItUp.WPF.Controls.Services
             if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
             {
                 this.OBSStudioIPAddressTextBox.Text = ChannelSession.Settings.OBSStudioServerIP;
+
+                await ChannelSession.InitializeOBSWebsocket();
             }
             this.OBSStudioPasswordTextBox.Password = ChannelSession.Settings.OBSStudioServerPassword;
 
-            return base.InitializeInternal();
+            if (ChannelSession.Settings.EnableXSplitConnection)
+            {
+                this.EnableXSplitConnectionButton.Visibility = Visibility.Collapsed;
+                this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
+
+                ChannelSession.InitializeXSplitServer();
+            }
+
+            await base.InitializeInternal();
         }
 
         private async void LogInBotButton_Click(object sender, RoutedEventArgs e)
@@ -97,14 +107,17 @@ namespace MixItUp.WPF.Controls.Services
             this.NewBotLoginGrid.Visibility = Visibility.Visible;
         }
 
+        private async void OBSStudioIPAddressTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
+            ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;
+        }
+
         private async void OBSStudioTestConnectionButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.OBSStudioIPAddressTextBox.Text))
             {
                 ChannelSession.DisconnectOBSStudio();
-
-                ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
-                ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;
 
                 await this.Window.RunAsyncOperation(async () =>
                 {
@@ -115,6 +128,54 @@ namespace MixItUp.WPF.Controls.Services
                     else
                     {
                         MessageBoxHelper.ShowError("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
+                    }
+                });
+            }
+        }
+
+        private async void EnableXSplitConnectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                ChannelSession.Settings.EnableXSplitConnection = true;
+                this.EnableXSplitConnectionButton.Visibility = Visibility.Collapsed;
+                this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
+                this.TestXSplitConnectionButton.IsEnabled = true;
+
+                ChannelSession.InitializeXSplitServer();
+
+                await ChannelSession.Settings.Save();
+            });
+        }
+
+        private async void DisableXSplitConnectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                ChannelSession.Settings.EnableXSplitConnection = false;
+                this.EnableXSplitConnectionButton.Visibility = Visibility.Visible;
+                this.DisableXSplitConnectionButton.Visibility = Visibility.Collapsed;
+                this.TestXSplitConnectionButton.IsEnabled = false;
+
+                ChannelSession.DisconnectXSplitServer();
+
+                await ChannelSession.Settings.Save();
+            });
+        }
+
+        private async void TestXSplitConnectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ChannelSession.XSplitServer != null)
+            {
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    if (await ChannelSession.XSplitServer.TestConnection())
+                    {
+                        MessageBoxHelper.ShowInformation("Connection successful!");
+                    }
+                    else
+                    {
+                        MessageBoxHelper.ShowError("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
                     }
                 });
             }

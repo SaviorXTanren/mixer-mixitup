@@ -105,6 +105,19 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                     }
                     break;
+                case ActionTypeEnum.XSplit:
+                    if (this.XSplitTypeComboBox.SelectedIndex >= 0)
+                    {
+                        if (this.XSplitSceneGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.XSplitSceneNameTextBox.Text))
+                        {
+                            return new XSplitAction(this.XSplitSceneNameTextBox.Text);
+                        }
+                        else if (this.XSplitSourceGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
+                        {
+                            return new XSplitAction(this.XSplitSourceNameTextBox.Text, this.XSplitSourceVisibleCheckBox.IsChecked.GetValueOrDefault());
+                        }
+                    }
+                    break;
             }
             return null;
         }
@@ -114,6 +127,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.GroupBoxHeaderTextBox.Text = EnumHelper.GetEnumName(this.type);
 
             this.OBSStudioTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
+            this.XSplitTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
 
             switch (type)
             {
@@ -140,6 +154,9 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.OBSStudio:
                     this.OBSStudioGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.XSplit:
+                    this.XSplitGrid.Visibility = Visibility.Visible;
                     break;
             }
 
@@ -196,6 +213,20 @@ namespace MixItUp.WPF.Controls.Actions
                             this.OBSStudioTypeComboBox.SelectedItem = "Source";
                             this.OBSStudioSourceNameTextBox.Text = obsStudioAction.SourceName;
                             this.OBSStudioSourceVisibleCheckBox.IsChecked = obsStudioAction.SourceVisible;
+                        }
+                        break;
+                    case ActionTypeEnum.XSplit:
+                        XSplitAction xsplitAction = (XSplitAction)this.action;
+                        if (!string.IsNullOrEmpty(xsplitAction.SceneName))
+                        {
+                            this.XSplitTypeComboBox.SelectedItem = "Scene";
+                            this.XSplitSceneNameTextBox.Text = xsplitAction.SceneName;
+                        }
+                        else
+                        {
+                            this.XSplitTypeComboBox.SelectedItem = "Source";
+                            this.XSplitSourceNameTextBox.Text = xsplitAction.SourceName;
+                            this.XSplitSourceVisibleCheckBox.IsChecked = xsplitAction.SourceVisible;
                         }
                         break;
                 }
@@ -267,6 +298,23 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (this.OBSStudioTypeComboBox.SelectedItem.ToString().Equals("Source"))
                 {
                     this.OBSStudioSourceGrid.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private void XSplitTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.XSplitSceneGrid.Visibility = Visibility.Hidden;
+            this.XSplitSourceGrid.Visibility = Visibility.Hidden;
+            if (this.XSplitTypeComboBox.SelectedIndex >= 0)
+            {
+                if (this.XSplitTypeComboBox.SelectedItem.ToString().Equals("Scene"))
+                {
+                    this.XSplitSceneGrid.Visibility = Visibility.Visible;
+                }
+                else if (this.XSplitTypeComboBox.SelectedItem.ToString().Equals("Source"))
+                {
+                    this.XSplitSourceGrid.Visibility = Visibility.Visible;
                 }
             }
         }

@@ -9,6 +9,7 @@ using MixItUp.Base.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.XSplit;
 using OBSWebsocketDotNet;
 using System;
 using System.Collections.Generic;
@@ -34,8 +35,8 @@ namespace MixItUp.Base
         public static ConstellationClient ConstellationClient { get; private set; }
 
         public static OverlayWebServer OverlayServer { get; private set; }
-
         public static OBSWebsocket OBSWebsocket { get; private set; }
+        public static XSplitWebServer XSplitServer { get; private set; }
 
         public static LockedDictionary<uint, ChatUserViewModel> ChatUsers { get; private set; }
         public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
@@ -73,6 +74,7 @@ namespace MixItUp.Base
                     result = await ChannelSession.InitializeBotInternal();
                 }
             }
+
             return result;
         }
 
@@ -179,6 +181,16 @@ namespace MixItUp.Base
             return false;
         }
 
+        public static bool InitializeXSplitServer()
+        {
+            if (ChannelSession.XSplitServer == null)
+            {
+                ChannelSession.XSplitServer = new XSplitWebServer("http://localhost:8201/");
+                ChannelSession.XSplitServer.Start();
+            }
+            return true;
+        }
+
         public static async Task<bool> ConnectInteractiveClient(ChannelModel channel, InteractiveGameListingModel game)
         {
             ChannelSession.CheckMixerConnection();
@@ -218,6 +230,14 @@ namespace MixItUp.Base
             }
         }
 
+        public static void DisconnectXSplitServer()
+        {
+            if (ChannelSession.XSplitServer != null)
+            {
+                ChannelSession.XSplitServer.End();
+            }
+        }
+
         public static void Close()
         {
             if (ChannelSession.OverlayServer != null)
@@ -226,6 +246,8 @@ namespace MixItUp.Base
             }
 
             ChannelSession.DisconnectOBSStudio();
+
+            ChannelSession.DisconnectXSplitServer();
 
             if (ChannelSession.ChatClient != null)
             {

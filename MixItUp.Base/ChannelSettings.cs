@@ -75,6 +75,9 @@ namespace MixItUp.Base
         [JsonProperty]
         public string OBSStudioServerPassword { get; set; }
 
+        [JsonProperty]
+        public bool EnableXSplitConnection { get; set; }
+
 
         [JsonIgnore]
         public LockedList<ChatCommand> ChatCommands { get; set; }
