@@ -106,6 +106,10 @@
     <Content Include="OBS\obs-websocket-4.2.0-Windows-Installer.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Overlay\js\main.js" />
+    <Content Include="Overlay\OverlayPage.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="XSplit\js\main.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
