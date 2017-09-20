@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -92,6 +93,8 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
+            this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
+
             List<ChannelSettings> settings = new List<ChannelSettings>(await ChannelSettings.GetAllAvailableSettings());
             settings = settings.Where(s => s.IsStreamer).ToList();
             if (settings.Count() > 0)

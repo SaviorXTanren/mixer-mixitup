@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.WPF.Windows;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -18,7 +19,10 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
+            this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
+
             await this.Chat.Initialize(this);
+            await this.About.Initialize(this);
         }
 
         protected override async Task OnClosing()

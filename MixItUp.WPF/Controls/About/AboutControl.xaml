@@ -1,0 +1,159 @@
+﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.About.AboutControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.About"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+                          
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                          
+             d:DesignHeight="700" d:DesignWidth="600">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <GroupBox Grid.Row="0" Header="Application Info">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0">Version:</TextBlock>
+                        <TextBlock Grid.Column="2" x:Name="VersionTextBlock" />
+                    </Grid>
+
+                    <TextBlock Grid.Row="2" HorizontalAlignment="Center">
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/releases" RequestNavigate="Hyperlink_RequestNavigate">Latest Release</Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="4" HorizontalAlignment="Center">
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues/new" RequestNavigate="Hyperlink_RequestNavigate">Submit a Bug</Hyperlink>
+                    </TextBlock>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="2" Header="Contact">
+                <Grid HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="MixerButton" Height="50" Click="MixerButton_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/Mixer.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+
+                    <Button Grid.Column="2" x:Name="TwitterButton" Height="50" Click="TwitterButton_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/Twitter.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+
+                    <Button Grid.Column="4" x:Name="GithubButton" Height="50" Click="GithubButton_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/Github.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="4" Header="Helpful Links">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0">
+                        • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki" RequestNavigate="Hyperlink_RequestNavigate">Wiki</Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="2">
+                        • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues" RequestNavigate="Hyperlink_RequestNavigate">Known Issues</Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="4">
+                        • <Hyperlink NavigateUri="https://forums.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Forums</Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="6">
+                        • <Hyperlink NavigateUri="https://obsproject.com/" RequestNavigate="Hyperlink_RequestNavigate">OBS Studio</Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="8">
+                        • <Hyperlink NavigateUri="https://www.xsplit.com/" RequestNavigate="Hyperlink_RequestNavigate">XSplit</Hyperlink>
+                    </TextBlock>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <GroupBox Header="License">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" TextWrapping="Wrap">Copyright (c) 2017 Matthew Olivo. All rights reserved.</TextBlock>
+
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap">MIT License</TextBlock>
+
+                    <TextBlock Grid.Row="4" TextWrapping="Wrap">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</TextBlock>
+
+                    <TextBlock Grid.Row="6" TextWrapping="Wrap">The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</TextBlock>
+
+                    <TextBlock Grid.Row="8" TextWrapping="Wrap">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</TextBlock>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+    </Grid>
+</Controls:MainControlBase>

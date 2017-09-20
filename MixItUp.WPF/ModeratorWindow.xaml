@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
-        xmlns:EventsControls="clr-namespace:MixItUp.WPF.Controls.Events"
+        xmlns:AboutControls="clr-namespace:MixItUp.WPF.Controls.About"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         mc:Ignorable="d"
         Title="Mix It Up - Moderator" Height="600" Width="800">
@@ -16,7 +16,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ChatControls:ChatControl x:Name="Chat" Grid.Row="0" />
+        <TabControl Grid.Row="0">
+            <TabItem Header="Chat">
+                <ChatControls:ChatControl x:Name="Chat" />
+            </TabItem>
+            <TabItem Header="About">
+                <AboutControls:AboutControl x:Name="About" />
+            </TabItem>
+        </TabControl>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>

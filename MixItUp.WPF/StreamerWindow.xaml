@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:ServicesControls="clr-namespace:MixItUp.WPF.Controls.Services"
         xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
         xmlns:GiveawayControls="clr-namespace:MixItUp.WPF.Controls.Giveaway"
         xmlns:TimerControls="clr-namespace:MixItUp.WPF.Controls.Timers"
         xmlns:InteractiveControls="clr-namespace:MixItUp.WPF.Controls.Interactive"
         xmlns:EventsControls="clr-namespace:MixItUp.WPF.Controls.Events"
         xmlns:QuotesControls="clr-namespace:MixItUp.WPF.Controls.Quotes"
+        xmlns:ServicesControls="clr-namespace:MixItUp.WPF.Controls.Services"
+        xmlns:AboutControls="clr-namespace:MixItUp.WPF.Controls.About"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         mc:Ignorable="d"
         Title="Mix It Up - Streamer" Height="600" Width="800">
@@ -45,6 +46,9 @@
             </TabItem>
             <TabItem Header="Services">
                 <ServicesControls:ServicesControl x:Name="Services" />
+            </TabItem>
+            <TabItem Header="About">
+                <AboutControls:AboutControl x:Name="About" />
             </TabItem>
         </TabControl>
 
