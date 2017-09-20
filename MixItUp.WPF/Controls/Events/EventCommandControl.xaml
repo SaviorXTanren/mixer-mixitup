@@ -25,7 +25,7 @@
     </UserControl.Resources>
 
     <GroupBox Header="{Binding Name}">
-        <Grid Margin="10,0,10,0">
+        <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />

@@ -68,6 +68,8 @@ namespace MixItUp.WPF.Windows.Command
                 ActionControl actionControl = new ActionControl(type);
                 actionControl.OnActionDelete += this.OnActionDeleted;
                 this.actionControls.Add(actionControl);
+
+                this.TypeComboBox.SelectedIndex = -1;
             }
         }
 

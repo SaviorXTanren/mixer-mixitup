@@ -33,6 +33,6 @@
 
         <local:EventCommandControl x:Name="OnResubscribeCommandControl" Grid.Column="3" Grid.Row="3" />
 
-        <local:EventCommandControl x:Name="OnResubscribeSharedCommandControl" Grid.Column="3" Grid.Row="3" />
+        <local:EventCommandControl x:Name="OnResubscribeSharedCommandControl" Grid.Column="5" Grid.Row="3" />
     </Grid>
 </Controls:MainControlBase>
