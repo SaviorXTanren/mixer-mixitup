@@ -14,7 +14,7 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="500" d:DesignWidth="600">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -39,6 +39,7 @@
 
             <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
 
+            <Button Grid.Column="6" x:Name="RefreshSelectedGameButton" Click="RefreshSelectedGameButton_Click" Content="{MaterialDesign:PackIcon Refresh}" IsEnabled="False" />
         </Grid>
 
         <Grid Grid.Row="2">

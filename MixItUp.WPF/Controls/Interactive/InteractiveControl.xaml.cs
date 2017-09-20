@@ -160,29 +160,6 @@ namespace MixItUp.WPF.Controls.Interactive
             else { return new InteractiveControlCommandItem((InteractiveJoystickControlModel)control); }
         }
 
-        private async void InteractiveGamesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
-            {
-                InteractiveGameListingModel newSelectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
-                if (this.selectedGame != newSelectedGame)
-                {
-                    this.selectedGame = newSelectedGame;
-                    await this.RefreshSelectedInteractiveGame();
-                    this.ConnectButton.IsEnabled = true;
-                }
-            }
-        }
-
-        private void InteractiveScenesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.InteractiveScenesComboBox.SelectedIndex >= 0)
-            {
-                this.selectedScene = (InteractiveSceneModel)this.InteractiveScenesComboBox.SelectedItem;
-                this.RefreshSelectedScene();
-            }
-        }
-
         private void NewGameButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             //ChannelSession.SelectedGame = null;
@@ -199,6 +176,39 @@ namespace MixItUp.WPF.Controls.Interactive
 
             //this.SaveChangedButton.IsEnabled = true;
             //this.GameDetailsGrid.IsEnabled = true;
+        }
+
+        private async void InteractiveGamesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            this.RefreshSelectedGameButton.IsEnabled = false;
+            if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
+            {
+                InteractiveGameListingModel newSelectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
+                if (this.selectedGame != newSelectedGame)
+                {
+                    this.selectedGame = newSelectedGame;
+                    await this.RefreshSelectedInteractiveGame();
+                    this.ConnectButton.IsEnabled = true;
+                }
+                this.RefreshSelectedGameButton.IsEnabled = true;
+            }
+        }
+
+        private void InteractiveScenesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.InteractiveScenesComboBox.SelectedIndex >= 0)
+            {
+                this.selectedScene = (InteractiveSceneModel)this.InteractiveScenesComboBox.SelectedItem;
+                this.RefreshSelectedScene();
+            }
+        }
+
+        private async void RefreshSelectedGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.selectedGame != null)
+            {
+                await this.RefreshSelectedInteractiveGame();
+            }
         }
 
         private async void CommandTestButton_Click(object sender, RoutedEventArgs e)
