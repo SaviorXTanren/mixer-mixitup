@@ -38,10 +38,7 @@ function processResultAndRepeat(status, result)
 
                 setTimeout(function () {
                     mainOverlayDiv.removeChild(addedElement);
-                    sendGETRequest();
                 }, data.duration * 1000);
-
-                return;
             }        
         }
         catch (err) { }
@@ -49,7 +46,8 @@ function processResultAndRepeat(status, result)
     sendGETRequest();
 }
 
-function sendGETRequest() {
+function sendGETRequest()
+{
     $.ajax({
         url: 'http://localhost:8001/',
         type: 'GET',
@@ -61,10 +59,6 @@ function sendGETRequest() {
 	.error(function (jqXHR, textStatus) {
 	    processResultAndRepeat(-1, '');
 	});
-}
-
-function sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 sendGETRequest();

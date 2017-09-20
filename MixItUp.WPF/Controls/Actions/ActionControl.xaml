@@ -66,9 +66,7 @@
                     <CheckBox Grid.Column="2" x:Name="ChatWhisperCheckBox" />
 
                     <TextBlock Grid.Column="4">
-                    <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat-Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
-                        Chat Special Identifiers Reference
-                    </Hyperlink>
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
                     </TextBlock>
                 </Grid>
 
@@ -100,9 +98,7 @@
                     <CheckBox Grid.Column="2" x:Name="CurrencyWhisperCheckBox" />
 
                     <TextBlock Grid.Column="4">
-                    <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat-Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">
-                        Chat Special Identifiers Reference
-                    </Hyperlink>
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Chat Special Identifiers Reference</Hyperlink>
                     </TextBlock>
                 </Grid>
 
@@ -132,7 +128,7 @@
                 <ComboBox x:Name="InputButtonComboBox" MaterialDesign:HintAssist.Hint="Input Button" />
             </Grid>
 
-            <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Visible">
+            <Grid x:Name="OverlayGrid" Grid.Row="2" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
@@ -169,7 +165,11 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0" x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" />
+                    <TextBlock Grid.Column="0">
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+                    </TextBlock>
+
+                    <TextBox Grid.Row="2" x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" />
                 </Grid>
 
                 <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Hidden">

@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Web;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 
@@ -16,7 +17,7 @@ namespace MixItUp.Base.Overlay
         public int horizontal;
         [DataMember]
         public int vertical;
-        [JsonIgnore]
+        [DataMember]
         public string imageData;
     }
 
@@ -37,24 +38,41 @@ namespace MixItUp.Base.Overlay
 
     public class OverlayWebServer : HttpListenerServerBase
     {
+        private static object lockObj = new object();
+
         public OverlayWebServer(string address) : base(address) { }
 
-        private string currentData = null;
+        private List<string> currentData = new List<string>();
 
-        public void SetImage(OverlayImage image) { this.currentData = JsonConvert.SerializeObject(image); }
+        public void SetImage(OverlayImage image)
+        {
+            lock (lockObj)
+            {
+                this.currentData.Add(JsonConvert.SerializeObject(image));
+            }
+        }
 
-        public void SetText(OverlayText text) { this.currentData = JsonConvert.SerializeObject(text); }
+        public void SetText(OverlayText text)
+        {
+            lock (lockObj)
+            {
+                this.currentData.Add(JsonConvert.SerializeObject(text));
+            }
+        }
 
         protected override HttpStatusCode RequestReceived(HttpListenerRequest request, string data, out string result)
         {
-            result = string.Empty;
-            if (this.currentData != null)
+            lock (lockObj)
             {
-                result = this.currentData;
-                this.currentData = null;
-                return HttpStatusCode.OK;
+                result = string.Empty;
+                if (this.currentData.Count > 0)
+                {
+                    result = this.currentData[0];
+                    this.currentData.RemoveAt(0);
+                    return HttpStatusCode.OK;
+                }
+                return HttpStatusCode.NoContent;
             }
-            return HttpStatusCode.NoContent;
         }
     }
 }

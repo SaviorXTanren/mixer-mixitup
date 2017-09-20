@@ -47,6 +47,12 @@ namespace MixItUp.Base.Actions
         protected string ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
         {
             str = str.Replace("$user", "@" + user.UserName);
+
+            if (ChannelSession.ChatUsers.ContainsKey(user.ID))
+            {
+                str = str.Replace("$currency", ChannelSession.Settings.UserData[user.ID].CurrencyAmount.ToString());
+            }
+
             for (int i = 0; i < arguments.Count(); i++)
             {
                 str = str.Replace("$arg" + (i + 1), arguments.ElementAt(i));

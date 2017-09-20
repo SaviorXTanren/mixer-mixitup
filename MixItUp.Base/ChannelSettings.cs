@@ -58,7 +58,7 @@ namespace MixItUp.Base
         public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]
-        public List<UserDataViewModel> UserData { get; set; }
+        public Dictionary<uint, UserDataViewModel> UserData { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
@@ -112,7 +112,7 @@ namespace MixItUp.Base
             this.timerCommandsInternal = new List<TimerCommand>();
             this.quotesInternal = new List<string>();
 
-            this.UserData = new List<UserDataViewModel>();
+            this.UserData = new Dictionary<uint, UserDataViewModel>();
 
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();

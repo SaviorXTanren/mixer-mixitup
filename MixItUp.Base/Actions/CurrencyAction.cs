@@ -28,9 +28,26 @@ namespace MixItUp.Base.Actions
             this.IsWhisper = isWhisper;
         }
 
-        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            throw new NotImplementedException();
+            if (ChannelSession.BotChatClient != null)
+            {
+                if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
+                {
+                    ChannelSession.Settings.UserData.Add(user.ID, new UserDataViewModel(user.ID, user.UserName));
+                }
+                ChannelSession.Settings.UserData[user.ID].CurrencyAmount += this.Amount;
+
+                string message = this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
+                if (this.IsWhisper)
+                {
+                    await ChannelSession.BotChatClient.Whisper(user.UserName, message);
+                }
+                else
+                {
+                    await ChannelSession.BotChatClient.SendMessage(message);
+                }
+            }
         }
     }
 }

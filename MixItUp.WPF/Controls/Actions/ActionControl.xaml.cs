@@ -74,11 +74,11 @@ namespace MixItUp.WPF.Controls.Actions
                         {
                             if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
                             {
-                                return new OverlayAction(new OverlayImage() { imagePath = this.OverlayImageFilePathTextBox.Text, duration = duration, horizontal = horizontal, vertical = vertical });
+                                return new OverlayAction(this.OverlayImageFilePathTextBox.Text, duration,  horizontal, vertical);
                             }
                             else if (!string.IsNullOrEmpty(this.OverlayTextTextBox.Text))
                             {
-                                return new OverlayAction(new OverlayText() { text = this.OverlayTextTextBox.Text, duration = duration, horizontal = horizontal, vertical = vertical });
+                                return new OverlayAction(this.OverlayTextTextBox.Text, "black", duration, horizontal, vertical);
                             }
                         }
                     }
@@ -195,22 +195,19 @@ namespace MixItUp.WPF.Controls.Actions
                         break;
                     case ActionTypeEnum.Overlay:
                         OverlayAction overlayAction = (OverlayAction)this.action;
-                        if (overlayAction.Image != null)
+                        if (!string.IsNullOrEmpty(overlayAction.ImagePath))
                         {
                             this.OverlayTypeComboBox.SelectedItem = "Image";
-                            this.OverlayImageFilePathTextBox.Text = overlayAction.Image.imagePath;
-                            this.OverlayDurationTextBox.Text = overlayAction.Image.duration.ToString();
-                            this.OverlayHorizontalTextBox.Text = overlayAction.Image.horizontal.ToString();
-                            this.OverlayVerticalTextBox.Text = overlayAction.Image.vertical.ToString();
+                            this.OverlayImageFilePathTextBox.Text = overlayAction.ImagePath;
                         }
-                        else if (overlayAction.Text != null)
+                        else if (!string.IsNullOrEmpty(overlayAction.Text))
                         {
                             this.OverlayTypeComboBox.SelectedItem = "Text";
-                            this.OverlayTextTextBox.Text = overlayAction.Text.text;
-                            this.OverlayDurationTextBox.Text = overlayAction.Text.duration.ToString();
-                            this.OverlayHorizontalTextBox.Text = overlayAction.Text.horizontal.ToString();
-                            this.OverlayVerticalTextBox.Text = overlayAction.Text.vertical.ToString();
+                            this.OverlayTextTextBox.Text = overlayAction.Text;
                         }
+                        this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
+                        this.OverlayHorizontalTextBox.Text = overlayAction.Horizontal.ToString();
+                        this.OverlayVerticalTextBox.Text = overlayAction.Vertical.ToString();
                         break;
                     case ActionTypeEnum.Sound:
                         SoundAction soundAction = (SoundAction)this.action;
