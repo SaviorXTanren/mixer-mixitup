@@ -1,9 +1,9 @@
 var xjs = require('xjs');
 
+var dataDiv = document.getElementById('data');
+
 function processResultAndRepeat(status, result)
 {
-	var dataDiv = document.getElementById('data');
-	
 	if (status == 200)
 	{
 		try
@@ -27,7 +27,7 @@ function processResultAndRepeat(status, result)
 			}
 			else if (data.sourceName != null)
 			{
-				dataDiv.innerHTML += 'Scene Visibility Changed: ' + data.sourceName + '<BR>';
+				dataDiv.innerHTML += 'Source Visibility Changed: ' + data.sourceName + ' - ' + data.sourceVisible + '<BR>';
 				
 				xjs.ready().then(function()
 				{
@@ -85,11 +85,6 @@ function sendGETRequest()
 	.error(function (jqXHR, textStatus) {
 		processResultAndRepeat(-1, '');
 	});
-}
-
-function sleep(milliseconds)
-{
-	return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 sendGETRequest();

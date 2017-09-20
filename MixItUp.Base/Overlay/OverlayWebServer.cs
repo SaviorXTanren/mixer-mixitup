@@ -1,7 +1,5 @@
-﻿using Mixer.Base.Web;
+﻿using MixItUp.Base.Util;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Overlay
@@ -36,43 +34,12 @@ namespace MixItUp.Base.Overlay
         public int vertical;
     }
 
-    public class OverlayWebServer : HttpListenerServerBase
+    public class OverlayWebServer : RequestListenerWebServerBase
     {
-        private static object lockObj = new object();
-
         public OverlayWebServer(string address) : base(address) { }
 
-        private List<string> currentData = new List<string>();
+        public void SetImage(OverlayImage image) { this.AddToData(JsonConvert.SerializeObject(image)); }
 
-        public void SetImage(OverlayImage image)
-        {
-            lock (lockObj)
-            {
-                this.currentData.Add(JsonConvert.SerializeObject(image));
-            }
-        }
-
-        public void SetText(OverlayText text)
-        {
-            lock (lockObj)
-            {
-                this.currentData.Add(JsonConvert.SerializeObject(text));
-            }
-        }
-
-        protected override HttpStatusCode RequestReceived(HttpListenerRequest request, string data, out string result)
-        {
-            lock (lockObj)
-            {
-                result = string.Empty;
-                if (this.currentData.Count > 0)
-                {
-                    result = this.currentData[0];
-                    this.currentData.RemoveAt(0);
-                    return HttpStatusCode.OK;
-                }
-                return HttpStatusCode.NoContent;
-            }
-        }
+        public void SetText(OverlayText text) { this.AddToData(JsonConvert.SerializeObject(text)); }
     }
 }
