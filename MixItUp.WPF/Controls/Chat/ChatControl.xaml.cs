@@ -53,10 +53,13 @@ namespace MixItUp.WPF.Controls.Chat
                     await this.AddUser(new ChatUserViewModel(user), checkIfFollows: false);
                 }
 
-                Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, ChannelSession.ChatUsers.Values.Select(u => u.GetModel()));
-                foreach (var kvp in chatFollowers)
+                if (ChannelSession.ChatUsers.Count > 0)
                 {
-                    ChannelSession.ChatUsers[kvp.Key.id].Roles.Add(UserRole.Follower);
+                    Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, ChannelSession.ChatUsers.Values.Select(u => u.GetModel()));
+                    foreach (var kvp in chatFollowers)
+                    {
+                        ChannelSession.ChatUsers[kvp.Key.id].Roles.Add(UserRole.Follower);
+                    }
                 }
 
                 ChannelSession.ChatClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
