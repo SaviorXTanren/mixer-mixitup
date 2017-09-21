@@ -67,7 +67,7 @@ namespace MixItUp.Base.ViewModel.Chat
             }
         }
 
-        public new ChatUserModel GetModel()
+        public ChatUserModel GetChatModel()
         {
             return new ChatUserModel()
             {

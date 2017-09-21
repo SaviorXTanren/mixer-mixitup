@@ -13,7 +13,7 @@ namespace MixItUp.Base.Util
 
         public static string GetFollowAge(this UserModel user, DateTimeOffset followDate)
         {
-            return user.username + "'s Follow Age: " + user.GetAge(user.createdAt.GetValueOrDefault());
+            return user.username + "'s Follow Age: " + user.GetAge(followDate);
         }
 
         public static string GetAge(this UserModel user, DateTimeOffset startDate)

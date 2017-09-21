@@ -50,7 +50,13 @@ namespace MixItUp.WPF.Controls.Chat
 
                 foreach (ChatUserModel user in await ChannelSession.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
                 {
-                    this.AddUser(new ChatUserViewModel(user));
+                    await this.AddUser(new ChatUserViewModel(user), checkIfFollows: false);
+                }
+
+                Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, ChannelSession.ChatUsers.Values.Select(u => u.GetModel()));
+                foreach (var kvp in chatFollowers)
+                {
+                    ChannelSession.ChatUsers[kvp.Key.id].Roles.Add(UserRole.Follower);
                 }
 
                 ChannelSession.ChatClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
@@ -199,11 +205,21 @@ namespace MixItUp.WPF.Controls.Chat
 
         #region Chat Update Methods
 
-        private void AddUser(ChatUserViewModel user)
+        private async Task AddUser(ChatUserViewModel user, bool checkIfFollows = true)
         {
             if (!ChannelSession.ChatUsers.ContainsKey(user.ID))
             {
                 ChannelSession.ChatUsers.Add(user.ID, user);
+
+                if (checkIfFollows)
+                {
+                    DateTimeOffset? followDate = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, user.GetModel());
+                    if (followDate != null)
+                    {
+                        user.Roles.Add(UserRole.Follower);
+                    }
+                }
+
                 var orderedUsers = ChannelSession.ChatUsers.Values.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
                 this.UserControls.Insert(orderedUsers.IndexOf(user), new ChatUserControl(user));
 
@@ -237,6 +253,8 @@ namespace MixItUp.WPF.Controls.Chat
             this.MessageControls.Add(messageControl);
 
             this.ChatList.ScrollIntoView(messageControl);
+
+            await this.AddUser(message.User);
 
             if (this.blockChat && !message.ID.Equals(Guid.Empty))
             {
@@ -412,10 +430,10 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel e)
         {
             ChatUserViewModel user = new ChatUserViewModel(e);
-            this.AddUser(user);
+            await this.AddUser(user);
         }
 
         private void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
@@ -429,11 +447,11 @@ namespace MixItUp.WPF.Controls.Chat
             
         }
 
-        private void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
         {
             ChatUserViewModel user = new ChatUserViewModel(e);
             this.RemoveUser(user);
-            this.AddUser(user);
+            await this.AddUser(user);
         }
 
         #endregion Chat Event Handlers
