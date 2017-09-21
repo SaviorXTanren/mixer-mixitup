@@ -48,7 +48,7 @@ namespace MixItUp.Base.Actions
         {
             str = str.Replace("$user", "@" + user.UserName);
 
-            if (ChannelSession.ChatUsers.ContainsKey(user.ID))
+            if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
             {
                 str = str.Replace("$currency", ChannelSession.Settings.UserData[user.ID].CurrencyAmount.ToString());
             }

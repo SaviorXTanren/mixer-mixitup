@@ -4,6 +4,9 @@ using MixItUp.Base.ViewModel.Chat;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using MixItUp.Base.ViewModel;
+using System.Threading.Tasks;
+using System;
 
 namespace MixItUp.Base.Commands
 {
@@ -25,17 +28,33 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public UserRole LowestAllowedRole { get; set; }
 
+        [DataMember]
+        public int Cooldown { get; set; }
+
+        [JsonIgnore]
+        private DateTimeOffset lastRun = DateTimeOffset.MinValue;
+
         public ChatCommand() { }
 
-        public ChatCommand(string name, string command, UserRole lowestAllowedRole) : this(name, new List<string>() { command }, lowestAllowedRole) { }
+        public ChatCommand(string name, string command, UserRole lowestAllowedRole, int cooldown) : this(name, new List<string>() { command }, lowestAllowedRole, cooldown) { }
 
-        public ChatCommand(string name, List<string> commands, UserRole lowestAllowedRole)
+        public ChatCommand(string name, List<string> commands, UserRole lowestAllowedRole, int cooldown)
             : base(name, CommandTypeEnum.Chat, commands)
         {
             this.LowestAllowedRole = lowestAllowedRole;
+            this.Cooldown = cooldown;
         }
 
         [JsonIgnore]
         public string LowestAllowedRoleString { get { return EnumHelper.GetEnumName(this.LowestAllowedRole); } }
+
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            if (this.lastRun.AddSeconds(this.Cooldown) < DateTimeOffset.Now)
+            {
+                this.lastRun = DateTimeOffset.Now;
+                await base.Perform(user, arguments);
+            }
+        }
     }
 }

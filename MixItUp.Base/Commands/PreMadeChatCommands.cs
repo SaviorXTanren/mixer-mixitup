@@ -24,7 +24,7 @@ namespace MixItUp.Base.Commands
     public class UptimeChatCommand : ChatCommand
     {
         public UptimeChatCommand()
-            : base("Uptime", "uptime", UserRole.Mod)
+            : base("Uptime", "uptime", UserRole.Mod, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -51,7 +51,7 @@ namespace MixItUp.Base.Commands
     public class GameChatCommand : ChatCommand
     {
         public GameChatCommand()
-            : base("Game", new List<string>() { "game", "status" }, UserRole.Mod)
+            : base("Game", new List<string>() { "game", "status" }, UserRole.Mod, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -68,7 +68,7 @@ namespace MixItUp.Base.Commands
     public class TitleChatCommand : ChatCommand
     {
         public TitleChatCommand()
-            : base("Title", new List<string>() { "title", "stream" }, UserRole.Mod)
+            : base("Title", new List<string>() { "title", "stream" }, UserRole.Mod, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -85,7 +85,7 @@ namespace MixItUp.Base.Commands
     public class TimeoutChatCommand : ChatCommand
     {
         public TimeoutChatCommand()
-            : base("Timeout", "timeout", UserRole.Mod)
+            : base("Timeout", "timeout", UserRole.Mod, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -114,7 +114,7 @@ namespace MixItUp.Base.Commands
     public class PurgeChatCommand : ChatCommand
     {
         public PurgeChatCommand()
-            : base("Purge", "purge", UserRole.Mod)
+            : base("Purge", "purge", UserRole.Mod, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -142,7 +142,7 @@ namespace MixItUp.Base.Commands
     public class StreamerAgeChatCommand : ChatCommand
     {
         public StreamerAgeChatCommand()
-            : base("Streamer Age", "streamerage age", UserRole.Mod)
+            : base("Streamer Age", "streamerage age", UserRole.Mod, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -157,7 +157,7 @@ namespace MixItUp.Base.Commands
     public class MixerAgeChatCommand : ChatCommand
     {
         public MixerAgeChatCommand()
-            : base("Mixer Age", "mixerage", UserRole.User)
+            : base("Mixer Age", "mixerage", UserRole.User, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -173,7 +173,7 @@ namespace MixItUp.Base.Commands
     public class FollowAgeChatCommand : ChatCommand
     {
         public FollowAgeChatCommand()
-            : base("Follow Age", "followage", UserRole.User)
+            : base("Follow Age", "followage", UserRole.User, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -196,7 +196,7 @@ namespace MixItUp.Base.Commands
     public class SparksChatCommand : ChatCommand
     {
         public SparksChatCommand()
-            : base("Sparks", "sparks", UserRole.User)
+            : base("Sparks", "sparks", UserRole.User, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -212,7 +212,7 @@ namespace MixItUp.Base.Commands
     public class QuoteChatCommand : ChatCommand
     {
         public QuoteChatCommand()
-            : base("Quotes", "quote", UserRole.User)
+            : base("Quotes", "quote", UserRole.User, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -231,7 +231,7 @@ namespace MixItUp.Base.Commands
     public class GiveawayChatCommand : ChatCommand
     {
         public GiveawayChatCommand()
-            : base("Giveaway", "giveaway", UserRole.Mod)
+            : base("Giveaway", "giveaway", UserRole.Mod, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {

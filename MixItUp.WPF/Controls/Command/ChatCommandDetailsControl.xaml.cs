@@ -36,8 +36,9 @@ namespace MixItUp.WPF.Controls.Command
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
-                this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.LowestAllowedRole);
+                this.ChatCommandTextBox.Text = this.command.CommandsString;
+                this.CooldownTextBox.Text = this.command.Cooldown.ToString();
             }
 
             return Task.FromResult(0);
@@ -53,9 +54,22 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
+            if (this.LowestRoleAllowedComboBox.SelectedIndex < 0)
+            {
+                MessageBoxHelper.ShowError("A permission level must be selected");
+                return false;
+            }
+
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
             {
                 MessageBoxHelper.ShowError("Required chat command information is missing");
+                return false;
+            }
+
+            int cooldown = 0;
+            if (string.IsNullOrEmpty(this.CooldownTextBox.Text) || !int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
+            {
+                MessageBoxHelper.ShowError("Required command information is missing");
                 return false;
             }
 
@@ -70,9 +84,10 @@ namespace MixItUp.WPF.Controls.Command
             {
                 List<string> commands = new List<string>(this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                 UserRole lowestRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem);
+                int cooldown = int.Parse(this.CooldownTextBox.Text);
                 if (this.command == null)
                 {
-                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole);
+                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown);
                     ChannelSession.Settings.ChatCommands.Add(this.command);
                 }
                 else
@@ -80,6 +95,7 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.Name = this.NameTextBox.Text;
                     this.command.Commands = commands;
                     this.command.LowestAllowedRole = lowestRole;
+                    this.command.Cooldown = cooldown;
                 }
                 return Task.FromResult<CommandBase>(this.command);
             }

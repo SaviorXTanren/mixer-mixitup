@@ -21,7 +21,17 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBox x:Name="NameTextBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Command Name" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" />
+
+            <ComboBox x:Name="LowestRoleAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" />
+        </Grid>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -32,7 +42,7 @@
 
             <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Commands (No &quot;!&quot;, space seperated)" />
 
-            <ComboBox x:Name="LowestRoleAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" />
+            <TextBox x:Name="CooldownTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Sec)" />
         </Grid>
         
     </Grid>
