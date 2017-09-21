@@ -31,6 +31,9 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public List<ActionBase> Actions { get; set; }
 
+        [DataMember]
+        public bool IsEnabled { get; set; }
+
         [XmlIgnore]
         public string TypeName { get { return EnumHelper.GetEnumName(this.Type); } }
 
@@ -38,6 +41,7 @@ namespace MixItUp.Base.Commands
         {
             this.Commands = new List<string>();
             this.Actions = new List<ActionBase>();
+            this.IsEnabled = true;
         }
 
         public CommandBase(string name, CommandTypeEnum type, string command) : this(name, type, new List<string>() { command }) { }
@@ -60,6 +64,11 @@ namespace MixItUp.Base.Commands
 
         public virtual async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
+            if (!this.IsEnabled)
+            {
+                return;
+            }
+
             if (arguments == null)
             {
                 arguments = new List<string>();
@@ -67,16 +76,7 @@ namespace MixItUp.Base.Commands
 
             foreach (ActionBase action in this.Actions)
             {
-                if (action.Type == ActionTypeEnum.Wait)
-                {
-                    await action.Perform(user, arguments);
-                }
-                else
-                {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    action.Perform(user, arguments);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                }
+                await action.Perform(user, arguments);
             }
         }
     }

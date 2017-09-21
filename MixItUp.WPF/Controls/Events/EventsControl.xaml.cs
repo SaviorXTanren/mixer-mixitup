@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Controls.Events
                 followCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel);
                 ChannelSession.Settings.EventCommands.Add(followCommand);
             }
-            this.OnFollowCommandControl.Initialize(followCommand);
+            this.OnFollowCommandControl.Initialize(this.Window, followCommand);
 
             EventCommand hostCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__hosted));
             if (hostCommand == null)
@@ -37,7 +37,7 @@ namespace MixItUp.WPF.Controls.Events
                 hostCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__hosted, ChannelSession.Channel);
                 ChannelSession.Settings.EventCommands.Add(hostCommand);
             }
-            this.OnHostCommandControl.Initialize(hostCommand);
+            this.OnHostCommandControl.Initialize(this.Window, hostCommand);
 
             EventCommand subscribeCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__subscribed));
             if (subscribeCommand == null)
@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls.Events
                 subscribeCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel);
                 ChannelSession.Settings.EventCommands.Add(subscribeCommand);
             }
-            this.OnSubscribeCommandControl.Initialize(subscribeCommand);
+            this.OnSubscribeCommandControl.Initialize(this.Window, subscribeCommand);
 
             EventCommand resubscribeCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__resubscribed));
             if (resubscribeCommand == null)
@@ -53,7 +53,7 @@ namespace MixItUp.WPF.Controls.Events
                 resubscribeCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.Channel);
                 ChannelSession.Settings.EventCommands.Add(resubscribeCommand);
             }
-            this.OnResubscribeCommandControl.Initialize(resubscribeCommand);
+            this.OnResubscribeCommandControl.Initialize(this.Window, resubscribeCommand);
 
             EventCommand resubscribeSharedCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__resubShared));
             if (resubscribeSharedCommand == null)
@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Controls.Events
                 resubscribeSharedCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel);
                 ChannelSession.Settings.EventCommands.Add(resubscribeSharedCommand);
             }
-            this.OnResubscribeSharedCommandControl.Initialize(resubscribeSharedCommand);
+            this.OnResubscribeSharedCommandControl.Initialize(this.Window, resubscribeSharedCommand);
 
             await ChannelSession.Settings.Save();
 

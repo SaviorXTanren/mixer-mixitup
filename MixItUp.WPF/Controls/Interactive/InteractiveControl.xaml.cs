@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.Interactive
 {
@@ -211,7 +212,7 @@ namespace MixItUp.WPF.Controls.Interactive
             }
         }
 
-        private async void CommandTestButton_Click(object sender, RoutedEventArgs e)
+        private async void TestButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
@@ -225,7 +226,7 @@ namespace MixItUp.WPF.Controls.Interactive
             }
         }
 
-        private void CommandEditButton_Click(object sender, RoutedEventArgs e)
+        private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
@@ -237,7 +238,7 @@ namespace MixItUp.WPF.Controls.Interactive
             window.Show();
         }
 
-        private async void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
@@ -252,6 +253,36 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.InteractiveControlsGridView.SelectedIndex = -1;
 
                 this.RefreshSelectedScene();
+            }
+        }
+
+        private async void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
+        {
+            ToggleButton button = (ToggleButton)sender;
+            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
+            if (command.Command != null)
+            {
+                command.Command.IsEnabled = true;
+                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+            }
+            else
+            {
+                button.IsChecked = false;
+            }
+        }
+
+        private async void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ToggleButton button = (ToggleButton)sender;
+            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
+            if (command.Command != null)
+            {
+                command.Command.IsEnabled = false;
+                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+            }
+            else
+            {
+                button.IsChecked = false;
             }
         }
 

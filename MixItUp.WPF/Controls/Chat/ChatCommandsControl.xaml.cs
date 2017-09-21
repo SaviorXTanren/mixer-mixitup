@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -72,6 +73,20 @@ namespace MixItUp.WPF.Controls.Chat
             this.CommandsListView.SelectedIndex = -1;
 
             this.RefreshList();
+        }
+
+        private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
+        {
+            ToggleButton button = (ToggleButton)sender;
+            CommandBase command = (CommandBase)button.DataContext;
+            command.IsEnabled = true;
+        }
+
+        private void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ToggleButton button = (ToggleButton)sender;
+            CommandBase command = (CommandBase)button.DataContext;
+            command.IsEnabled = false;
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)

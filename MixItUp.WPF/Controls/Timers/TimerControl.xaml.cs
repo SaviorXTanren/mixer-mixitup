@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.Timers
 {
@@ -42,7 +43,7 @@ namespace MixItUp.WPF.Controls.Timers
             }
         }
 
-        private async void CommandTestButton_Click(object sender, RoutedEventArgs e)
+        private async void TestButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             TimerCommand command = (TimerCommand)button.DataContext;
@@ -53,7 +54,7 @@ namespace MixItUp.WPF.Controls.Timers
             });
         }
 
-        private void CommandEditButton_Click(object sender, RoutedEventArgs e)
+        private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             TimerCommand command = (TimerCommand)button.DataContext;
@@ -63,7 +64,7 @@ namespace MixItUp.WPF.Controls.Timers
             window.Show();
         }
 
-        private async void CommandDeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             TimerCommand command = (TimerCommand)button.DataContext;
@@ -74,6 +75,20 @@ namespace MixItUp.WPF.Controls.Timers
             this.TimerCommandsListView.SelectedIndex = -1;
 
             this.RefreshList();
+        }
+
+        private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
+        {
+            ToggleButton button = (ToggleButton)sender;
+            CommandBase command = (CommandBase)button.DataContext;
+            command.IsEnabled = true;
+        }
+
+        private void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
+        {
+            ToggleButton button = (ToggleButton)sender;
+            CommandBase command = (CommandBase)button.DataContext;
+            command.IsEnabled = false;
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)

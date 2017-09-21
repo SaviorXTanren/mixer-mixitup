@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base
@@ -14,6 +15,8 @@ namespace MixItUp.Base
     [DataContract]
     public class ChannelSettings
     {
+        private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
+
         private const string SettingsDirectoryName = "Settings";
 
         public static async Task<IEnumerable<ChannelSettings>> GetAllAvailableSettings()
@@ -135,6 +138,8 @@ namespace MixItUp.Base
 
         public async Task Save()
         {
+            await semaphore.WaitAsync();
+
             Directory.CreateDirectory(SettingsDirectoryName);
             string filePath = Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", this.Channel.id.ToString(), (this.IsStreamer) ? "Streamer" : "Moderator"));
 
@@ -148,6 +153,8 @@ namespace MixItUp.Base
             this.quotesInternal = this.Quotes.ToList();
 
             await SerializerHelper.SerializeToFile(filePath, this);
+
+            semaphore.Release();
         }
     }
 }
