@@ -21,6 +21,11 @@ namespace MixItUp.Base
 
         public static async Task<IEnumerable<ChannelSettings>> GetAllAvailableSettings()
         {
+            if (!Directory.Exists(SettingsDirectoryName))
+            {
+                Directory.CreateDirectory(SettingsDirectoryName);
+            }
+
             List<ChannelSettings> settings = new List<ChannelSettings>();
             foreach (string filePath in Directory.GetFiles(SettingsDirectoryName))
             {
