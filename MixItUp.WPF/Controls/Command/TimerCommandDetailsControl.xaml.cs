@@ -38,7 +38,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                MessageBoxHelper.ShowError("Required command information is missing");
+                MessageBoxHelper.ShowDialog("Name is missing");
                 return false;
             }
 

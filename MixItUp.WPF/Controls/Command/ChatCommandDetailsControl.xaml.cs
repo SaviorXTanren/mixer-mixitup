@@ -50,26 +50,26 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                MessageBoxHelper.ShowError("Required command information is missing");
+                MessageBoxHelper.ShowDialog("Name is missing");
                 return false;
             }
 
             if (this.LowestRoleAllowedComboBox.SelectedIndex < 0)
             {
-                MessageBoxHelper.ShowError("A permission level must be selected");
+                MessageBoxHelper.ShowDialog("A permission level must be selected");
                 return false;
             }
 
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
             {
-                MessageBoxHelper.ShowError("Required chat command information is missing");
+                MessageBoxHelper.ShowDialog("Commands is missing");
                 return false;
             }
 
             int cooldown = 0;
             if (string.IsNullOrEmpty(this.CooldownTextBox.Text) || !int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
             {
-                MessageBoxHelper.ShowError("Required command information is missing");
+                MessageBoxHelper.ShowDialog("Cooldown is missing");
                 return false;
             }
 

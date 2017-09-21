@@ -32,6 +32,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <MaterialDesign:DialogHost Identifier="RootDialog" />
+
         <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

@@ -73,19 +73,19 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (this.ButtonTriggerComboBox.SelectedIndex < 0)
                 {
-                    MessageBoxHelper.ShowError("An trigger type must be selected");
+                    MessageBoxHelper.ShowDialog("An trigger type must be selected");
                     return false;
                 }
 
                 if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost <= 0)
                 {
-                    MessageBoxHelper.ShowError("A valid spark cost must be entered");
+                    MessageBoxHelper.ShowDialog("A valid spark cost must be entered");
                     return false;
                 }
 
                 if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown <= 0)
                 {
-                    MessageBoxHelper.ShowError("A valid cooldown must be entered");
+                    MessageBoxHelper.ShowDialog("A valid cooldown must be entered");
                     return false;
                 }
             }

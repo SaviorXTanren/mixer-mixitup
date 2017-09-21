@@ -50,13 +50,13 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.EventTypeComboBox.SelectedIndex < 0)
             {
-                MessageBoxHelper.ShowError("An event type must be selected");
+                MessageBoxHelper.ShowDialog("An event type must be selected");
                 return false;
             }
 
             if (this.EventIDTextBox.IsEnabled && string.IsNullOrEmpty(this.EventIDTextBox.Text))
             {
-                MessageBoxHelper.ShowError("A name must be specified for this event type");
+                MessageBoxHelper.ShowDialog("A name must be specified for this event type");
                 return false;
             }
 
@@ -81,7 +81,7 @@ namespace MixItUp.WPF.Controls.Command
                         channel = await ChannelSession.MixerConnection.Channels.GetChannel(this.EventIDTextBox.Text);
                         if (channel == null)
                         {
-                            MessageBoxHelper.ShowError("Unable to find the channel for the specified username");
+                            MessageBoxHelper.ShowDialog("Unable to find the channel for the specified username");
                             return null;
                         }
                     }
@@ -90,7 +90,7 @@ namespace MixItUp.WPF.Controls.Command
                         user = await ChannelSession.MixerConnection.Users.GetUser(this.EventIDTextBox.Text);
                         if (user == null)
                         {
-                            MessageBoxHelper.ShowError("Unable to find a user for the specified username");
+                            MessageBoxHelper.ShowDialog("Unable to find a user for the specified username");
                             return null;
                         }
                     }
@@ -110,7 +110,7 @@ namespace MixItUp.WPF.Controls.Command
 
                     if (ChannelSession.Settings.EventCommands.Any(se => se.ContainsCommand(this.command.CommandsString)))
                     {
-                        MessageBoxHelper.ShowError("This event already exists");
+                        MessageBoxHelper.ShowDialog("This event already exists");
                         return null;
                     }
 

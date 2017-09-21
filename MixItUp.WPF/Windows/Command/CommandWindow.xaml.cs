@@ -82,7 +82,7 @@ namespace MixItUp.WPF.Windows.Command
 
             if (this.actionControls.Count == 0)
             {
-                MessageBoxHelper.ShowError("At least one action must be created");
+                MessageBoxHelper.ShowDialog("At least one action must be created");
                 return;
             }
 
@@ -128,7 +128,7 @@ namespace MixItUp.WPF.Windows.Command
                 ActionBase action = control.GetAction();
                 if (action == null)
                 {
-                    MessageBoxHelper.ShowError("Required action information is missing");
+                    MessageBoxHelper.ShowDialog("Required action information is missing");
                     return new List<ActionBase>();
                 }
                 actions.Add(action);

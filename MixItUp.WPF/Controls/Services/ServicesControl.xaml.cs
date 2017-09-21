@@ -98,7 +98,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (!result)
             {
-                MessageBoxHelper.ShowError("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
+                MessageBoxHelper.ShowDialog("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
             }
             else
             {
@@ -164,15 +164,18 @@ namespace MixItUp.WPF.Controls.Services
             {
                 ChannelSession.DisconnectOBSStudio();
 
+                ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
+                ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;
+
                 await this.Window.RunAsyncOperation(async () =>
                 {
                     if (await ChannelSession.InitializeOBSWebsocket())
                     {
-                        MessageBoxHelper.ShowInformation("Connection successful!");
+                        MessageBoxHelper.ShowDialog("Connection successful!");
                     }
                     else
                     {
-                        MessageBoxHelper.ShowError("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
+                        MessageBoxHelper.ShowDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
                     }
                 });
             }
@@ -216,11 +219,11 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     if (await ChannelSession.XSplitServer.TestConnection())
                     {
-                        MessageBoxHelper.ShowInformation("Connection successful!");
+                        MessageBoxHelper.ShowDialog("Connection successful!");
                     }
                     else
                     {
-                        MessageBoxHelper.ShowError("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
+                        MessageBoxHelper.ShowDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
                     }
                 });
             }

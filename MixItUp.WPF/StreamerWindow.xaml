@@ -14,14 +14,24 @@
         xmlns:ServicesControls="clr-namespace:MixItUp.WPF.Controls.Services"
         xmlns:AboutControls="clr-namespace:MixItUp.WPF.Controls.About"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
+                           
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
         Title="Mix It Up - Streamer" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
+        <MaterialDesign:DialogHost Identifier="RootDialog" />
+
         <TabControl Grid.Row="0">
             <TabItem Header="Chat">
                 <ChatControls:ChatControl x:Name="Chat" />

@@ -300,7 +300,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             if (!result)
             {
-                MessageBoxHelper.ShowError("Unable to connect to interactive with selected game. Please try again.");
+                MessageBoxHelper.ShowDialog("Unable to connect to interactive with selected game. Please try again.");
                 return;
             }
 
@@ -440,7 +440,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
                             if (!result)
                             {
-                                MessageBoxHelper.ShowError("Failed to capture spark transaction for the following command: " + interactiveInput.input.controlID);
+                                MessageBoxHelper.ShowDialog("Failed to capture spark transaction for the following command: " + interactiveInput.input.controlID);
                                 return;
                             }
                         }

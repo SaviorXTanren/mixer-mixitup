@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Windows.Interactive
             //{
             //    if (scene.buttons.Count == 0 && scene.joysticks.Count == 0)
             //    {
-            //        MessageBoxHelper.ShowError("The following scene does not contain any controls: " + scene.sceneID);
+            //        MessageBoxHelper.ShowDialog("The following scene does not contain any controls: " + scene.sceneID);
             //        return;
             //    }
             //}
@@ -101,7 +101,7 @@ namespace MixItUp.WPF.Windows.Interactive
         {
             if (string.IsNullOrEmpty(this.GameNameTextBox.Text))
             {
-                MessageBoxHelper.ShowError("A name must be specified for the game");
+                MessageBoxHelper.ShowDialog("A name must be specified for the game");
                 return;
             }
 
@@ -112,7 +112,7 @@ namespace MixItUp.WPF.Windows.Interactive
 
             if (game == null)
             {
-                MessageBoxHelper.ShowError("Failed to create game");
+                MessageBoxHelper.ShowDialog("Failed to create game");
                 return;
             }
         }

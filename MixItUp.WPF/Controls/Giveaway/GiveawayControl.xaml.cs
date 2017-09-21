@@ -41,13 +41,13 @@ namespace MixItUp.WPF.Controls.Giveaway
         {
             if (string.IsNullOrEmpty(this.GiveawayItemTextBox.Text))
             {
-                MessageBoxHelper.ShowError("An item to give away must be specified");
+                MessageBoxHelper.ShowDialog("An item to give away must be specified");
                 return;
             }
 
             if (this.GiveawayTypeComboBox.SelectedIndex < 0)
             {
-                MessageBoxHelper.ShowError("The allowed winners must be specified");
+                MessageBoxHelper.ShowDialog("The allowed winners must be specified");
                 return;
             }
 
@@ -109,7 +109,7 @@ namespace MixItUp.WPF.Controls.Giveaway
             }
             else
             {
-                MessageBoxHelper.ShowError("There are no users currently in chat that are either applicable to win or have not won already");
+                MessageBoxHelper.ShowDialog("There are no users currently in chat that are either applicable to win or have not won already");
             }
         }
     }

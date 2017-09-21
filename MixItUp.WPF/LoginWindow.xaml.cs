@@ -141,7 +141,7 @@ namespace MixItUp.WPF
                     }
                     else
                     {
-                        MessageBoxHelper.ShowError("You must select a Streamer account to log in to");
+                        MessageBoxHelper.ShowDialog("You must select a Streamer account to log in to");
                     }
                 }
                 else
@@ -159,7 +159,7 @@ namespace MixItUp.WPF
             }
             else
             {
-                MessageBoxHelper.ShowError("Unable to initialize session, please try again");
+                MessageBoxHelper.ShowDialog("Unable to initialize session, please try again");
             }
         }
 
@@ -175,7 +175,7 @@ namespace MixItUp.WPF
         {
             if (string.IsNullOrEmpty(this.ModeratorChannelTextBox.Text))
             {
-                MessageBoxHelper.ShowError("A channel name must be entered");
+                MessageBoxHelper.ShowDialog("A channel name must be entered");
                 return;
             }
 
@@ -196,12 +196,12 @@ namespace MixItUp.WPF
                 }
                 else
                 {
-                    MessageBoxHelper.ShowError("You are not a moderator for this channel.");
+                    MessageBoxHelper.ShowDialog("You are not a moderator for this channel.");
                 }
             }
             else
             {
-                MessageBoxHelper.ShowError("Unable to initialize session, please try again");
+                MessageBoxHelper.ShowDialog("Unable to initialize session, please try again");
             }
         }
 
@@ -225,7 +225,7 @@ namespace MixItUp.WPF
 
             if (!result)
             {
-                MessageBoxHelper.ShowError("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
+                MessageBoxHelper.ShowDialog("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
             }
             return result;
         }
