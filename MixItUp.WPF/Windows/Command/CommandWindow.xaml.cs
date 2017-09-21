@@ -24,9 +24,12 @@ namespace MixItUp.WPF.Windows.Command
 
         private ObservableCollection<ActionControl> actionControls;
 
-        public CommandWindow(CommandDetailsControlBase commandDetailsControl)
+        private bool allowActionChanges;
+
+        public CommandWindow(CommandDetailsControlBase commandDetailsControl, bool allowActionChanges = true)
         {
             this.commandDetailsControl = commandDetailsControl;
+            this.allowActionChanges = allowActionChanges;
 
             InitializeComponent();
 
@@ -56,6 +59,8 @@ namespace MixItUp.WPF.Windows.Command
                     this.actionControls.Add(actionControl);
                 }
             }
+
+            this.ActionsListView.IsEnabled = this.allowActionChanges;
 
             await base.OnLoaded();
         }

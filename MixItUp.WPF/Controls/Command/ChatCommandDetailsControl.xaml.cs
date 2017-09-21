@@ -6,7 +6,6 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Command
@@ -28,15 +27,13 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
-            List<string> roles = EnumHelper.GetEnumNames<UserRole>().ToList();
-            roles.Remove(EnumHelper.GetEnumName<UserRole>(UserRole.Banned));
-            this.LowestRoleAllowedComboBox.ItemsSource = roles;
+            this.LowestRoleAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
             this.LowestRoleAllowedComboBox.SelectedIndex = 0;
 
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
-                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.LowestAllowedRole);
+                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Permissions);
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.CooldownTextBox.Text = this.command.Cooldown.ToString();
             }
@@ -94,7 +91,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     this.command.Name = this.NameTextBox.Text;
                     this.command.Commands = commands;
-                    this.command.LowestAllowedRole = lowestRole;
+                    this.command.Permissions = lowestRole;
                     this.command.Cooldown = cooldown;
                 }
                 return Task.FromResult<CommandBase>(this.command);

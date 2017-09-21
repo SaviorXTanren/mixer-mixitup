@@ -12,9 +12,7 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -32,25 +30,11 @@ namespace MixItUp.WPF.Controls.Chat
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
-        private List<ChatCommand> PreMadeChatCommands = new List<ChatCommand>();
-
         private bool blockChat = false;
 
         public ChatControl()
         {
             InitializeComponent();
-
-            this.PreMadeChatCommands.Add(new UptimeChatCommand());
-            this.PreMadeChatCommands.Add(new GameChatCommand());
-            this.PreMadeChatCommands.Add(new TitleChatCommand());
-            this.PreMadeChatCommands.Add(new TimeoutChatCommand());
-            this.PreMadeChatCommands.Add(new PurgeChatCommand());
-            this.PreMadeChatCommands.Add(new StreamerAgeChatCommand());
-            this.PreMadeChatCommands.Add(new MixerAgeChatCommand());
-            this.PreMadeChatCommands.Add(new FollowAgeChatCommand());
-            this.PreMadeChatCommands.Add(new SparksChatCommand());
-            this.PreMadeChatCommands.Add(new QuoteChatCommand());
-            this.PreMadeChatCommands.Add(new GiveawayChatCommand());
         }
 
         protected override async Task InitializeInternal()
@@ -88,6 +72,30 @@ namespace MixItUp.WPF.Controls.Chat
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                if (this.EnableCommands)
+                {
+                    ChannelSession.PreMadeChatCommands.Add(new UptimeChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new GameChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new TitleChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new TimeoutChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new PurgeChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new StreamerAgeChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new MixerAgeChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new FollowAgeChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new SparksChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new QuoteChatCommand());
+                    ChannelSession.PreMadeChatCommands.Add(new GiveawayChatCommand());
+
+                    foreach (PreMadeChatCommandSettings setting in ChannelSession.Settings.PreMadeChatCommandSettings)
+                    {
+                        PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(setting.Name));
+                        if (command != null)
+                        {
+                            command.UpdateFromSettings(setting);
+                        }
+                    }
+                }
             }
         }
 
@@ -239,7 +247,7 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 ChatMessageCommand messageCommand = new ChatMessageCommand(message);
 
-                ChatCommand command = this.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
+                ChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
                 if (command == null)
                 {
                     command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
@@ -247,7 +255,7 @@ namespace MixItUp.WPF.Controls.Chat
 
                 if (command != null)
                 {
-                    if (message.User.Roles.Any(r => r >= command.LowestAllowedRole))
+                    if (message.User.Roles.Any(r => r >= command.Permissions))
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         command.Perform(message.User, messageCommand.CommandArguments);

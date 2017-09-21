@@ -37,6 +37,9 @@ namespace MixItUp.Base
         public bool IsStreamer { get; set; }
 
         [JsonProperty]
+        private List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; }
+
+        [JsonProperty]
         private List<ChatCommand> chatCommandsInternal { get; set; }
 
         [JsonProperty]
@@ -85,6 +88,10 @@ namespace MixItUp.Base
         public bool EnableXSplitConnection { get; set; }
 
 
+        
+        [JsonIgnore]
+        public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
+
         [JsonIgnore]
         public LockedList<ChatCommand> ChatCommands { get; set; }
 
@@ -109,6 +116,7 @@ namespace MixItUp.Base
 
         public ChannelSettings()
         {
+            this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
             this.interactiveControlsInternal = new List<InteractiveCommand>();
@@ -117,6 +125,7 @@ namespace MixItUp.Base
 
             this.UserData = new Dictionary<uint, UserDataViewModel>();
 
+            this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
             this.InteractiveControls = new LockedList<InteractiveCommand>();
@@ -129,6 +138,7 @@ namespace MixItUp.Base
 
         public void Initialize()
         {
+            this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
             this.InteractiveControls = new LockedList<InteractiveCommand>(this.interactiveControlsInternal);
@@ -146,6 +156,7 @@ namespace MixItUp.Base
             this.OAuthToken = ChannelSession.MixerConnection.GetOAuthTokenCopy();
             this.BotOAuthToken = (ChannelSession.BotConnection != null) ? ChannelSession.BotConnection.GetOAuthTokenCopy() : null;
 
+            this.preMadeChatCommandSettingsInternal = this.PreMadeChatCommandSettings.ToList();
             this.chatCommandsInternal = this.ChatCommands.ToList();
             this.eventCommandsInternal = this.EventCommands.ToList();
             this.interactiveControlsInternal = this.InteractiveControls.ToList();

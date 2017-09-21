@@ -7,12 +7,23 @@ using System.Runtime.Serialization;
 using MixItUp.Base.ViewModel;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 
 namespace MixItUp.Base.Commands
 {
     [DataContract]
     public class ChatCommand : CommandBase
     {
+        public static IEnumerable<string> PermissionsAllowedValues
+        {
+            get
+            {
+                List<string> roles = EnumHelper.GetEnumNames<UserRole>().ToList();
+                roles.Remove(EnumHelper.GetEnumName<UserRole>(UserRole.Banned));
+                return roles;
+            }
+        }
+
         public static IEnumerable<ActionTypeEnum> AllowedActions
         {
             get
@@ -26,7 +37,7 @@ namespace MixItUp.Base.Commands
         }
 
         [DataMember]
-        public UserRole LowestAllowedRole { get; set; }
+        public UserRole Permissions { get; set; }
 
         [DataMember]
         public int Cooldown { get; set; }
@@ -41,12 +52,12 @@ namespace MixItUp.Base.Commands
         public ChatCommand(string name, List<string> commands, UserRole lowestAllowedRole, int cooldown)
             : base(name, CommandTypeEnum.Chat, commands)
         {
-            this.LowestAllowedRole = lowestAllowedRole;
+            this.Permissions = lowestAllowedRole;
             this.Cooldown = cooldown;
         }
 
         [JsonIgnore]
-        public string LowestAllowedRoleString { get { return EnumHelper.GetEnumName(this.LowestAllowedRole); } }
+        public string PermissionsString { get { return EnumHelper.GetEnumName(this.Permissions); } }
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {

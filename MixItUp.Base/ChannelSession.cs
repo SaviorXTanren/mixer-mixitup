@@ -4,6 +4,7 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Models;
 using MixItUp.Base.Overlay;
 using MixItUp.Base.Util;
@@ -38,6 +39,7 @@ namespace MixItUp.Base
         public static OBSWebsocket OBSWebsocket { get; private set; }
         public static XSplitWebServer XSplitServer { get; private set; }
 
+        public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
         public static LockedDictionary<uint, ChatUserViewModel> ChatUsers { get; private set; }
         public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
@@ -287,6 +289,7 @@ namespace MixItUp.Base
                     ChannelSession.User = user;
                     ChannelSession.Channel = channel;
 
+                    ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
                     ChannelSession.ChatUsers = new LockedDictionary<uint, ChatUserViewModel>();
                     ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
 

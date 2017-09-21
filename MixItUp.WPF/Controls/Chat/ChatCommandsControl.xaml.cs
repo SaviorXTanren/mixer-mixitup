@@ -2,8 +2,10 @@
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,7 +18,7 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatCommandsControl : MainControlBase
     {
-        private ObservableCollection<ChatCommand> chatCommands = new ObservableCollection<ChatCommand>();
+        private ObservableCollection<ChatCommand> customChatCommands = new ObservableCollection<ChatCommand>();
 
         public ChatCommandsControl()
         {
@@ -25,20 +27,59 @@ namespace MixItUp.WPF.Controls.Chat
 
         protected override Task InitializeInternal()
         {
-            this.CommandsListView.ItemsSource = this.chatCommands;
+            this.CustomCommandsListView.ItemsSource = this.customChatCommands;
+
+            this.FollowAgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Follow Age")));
+            this.GameChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Game")));
+            this.GiveawayChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Giveaway")));
+            this.MixerAgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Mixer Age")));
+            this.PurgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Purge")));
+            this.QuoteChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Quote")));
+            this.SparksChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Sparks")));
+            this.StreamerAgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Streamer Age")));
+            this.TimeoutChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Timeout")));
+            this.TitleChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Title")));
+            this.UptimeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Uptime")));
 
             this.RefreshList();
+
+            if (this.customChatCommands.Count > 0)
+            {
+                this.PreMadeCommandsButton.IsEnabled = true;
+                this.CustomCommandsGrid.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.CustomCommandsButton.IsEnabled = true;
+                this.PreMadeCommandsGrid.Visibility = Visibility.Visible;
+            }
 
             return base.InitializeInternal();
         }
 
         private void RefreshList()
         {
-            this.chatCommands.Clear();
+            this.customChatCommands.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
             {
-                this.chatCommands.Add(command);
+                this.customChatCommands.Add(command);
             }
+        }
+
+        private void PreMadeCommandsButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.PreMadeCommandsButton.IsEnabled = false;
+            this.CustomCommandsButton.IsEnabled = true;
+            this.PreMadeCommandsGrid.Visibility = Visibility.Visible;
+            this.CustomCommandsGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void CustomCommandsButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.PreMadeCommandsButton.IsEnabled = true;
+            this.CustomCommandsButton.IsEnabled = false;
+            this.PreMadeCommandsGrid.Visibility = Visibility.Collapsed;
+            this.CustomCommandsGrid.Visibility = Visibility.Visible;
         }
 
         private async void TestButton_Click(object sender, RoutedEventArgs e)
@@ -70,7 +111,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
-            this.CommandsListView.SelectedIndex = -1;
+            this.CustomCommandsListView.SelectedIndex = -1;
 
             this.RefreshList();
         }
@@ -96,7 +137,7 @@ namespace MixItUp.WPF.Controls.Chat
             window.Show();
         }
 
-        private void Window_Closed(object sender, System.EventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
         {
             this.RefreshList();
         }
