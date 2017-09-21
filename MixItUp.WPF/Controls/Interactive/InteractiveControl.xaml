@@ -39,7 +39,7 @@
 
             <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
 
-            <Button Grid.Column="6" x:Name="RefreshSelectedGameButton" Click="RefreshSelectedGameButton_Click" Content="{MaterialDesign:PackIcon Refresh}" IsEnabled="False" />
+            <Button Grid.Column="6" x:Name="RefreshSelectedGameButton" Click="RefreshSelectedGameButton_Click" Content="{MaterialDesign:PackIcon Refresh}" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -60,16 +60,16 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                         <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" Width="80" />
-                        <DataGridTextColumn Binding="{Binding SparkCost}" IsReadOnly="True" Width="50">
+                        <DataGridTextColumn Binding="{Binding SparkCost}" IsReadOnly="True" Width="70">
                             <DataGridTextColumn.Header>
-                                <Grid HorizontalAlignment="Center">
+                                <Grid HorizontalAlignment="Center" Margin="6,0,0,0">
                                     <MaterialDesign:PackIcon Kind="WeatherLightning" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Cooldown}" IsReadOnly="True" Width="50">
+                        <DataGridTextColumn Binding="{Binding Cooldown}" IsReadOnly="True" Width="70">
                             <DataGridTextColumn.Header>
-                                <Grid HorizontalAlignment="Center">
+                                <Grid HorizontalAlignment="Center" Margin="6,0,0,0">
                                     <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>

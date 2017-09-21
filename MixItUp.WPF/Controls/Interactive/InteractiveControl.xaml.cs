@@ -101,35 +101,38 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             await this.RefreshInteractiveGames();
 
-            this.interactiveScenes.Clear();
-
-            this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
-            {
-                this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
-
-                return await ChannelSession.MixerConnection.Interactive.GetInteractiveGameVersion(this.selectedGame.versions.First());
-            });
-
             if (this.selectedGame != null)
             {
-                this.InteractiveGamesComboBox.SelectedItem = this.selectedGame;
-            }
+                this.interactiveScenes.Clear();
 
-            foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
-            {
-                this.interactiveScenes.Add(scene);
-            }
-            
-            if (this.selectedScene != null)
-            {
-                this.InteractiveScenesComboBox.SelectedItem = this.interactiveScenes.FirstOrDefault(s => s.sceneID.Equals(this.selectedScene.sceneID));
-            }
-            else
-            {
-                this.InteractiveScenesComboBox.SelectedIndex = 0;
-            }
+                this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
+                {
+                    this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
 
-            this.GameDetailsGrid.IsEnabled = true;
+                    return await ChannelSession.MixerConnection.Interactive.GetInteractiveGameVersion(this.selectedGame.versions.First());
+                });
+
+                if (this.selectedGame != null)
+                {
+                    this.InteractiveGamesComboBox.SelectedItem = this.selectedGame;
+                }
+
+                foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
+                {
+                    this.interactiveScenes.Add(scene);
+                }
+
+                if (this.selectedScene != null)
+                {
+                    this.InteractiveScenesComboBox.SelectedItem = this.interactiveScenes.FirstOrDefault(s => s.sceneID.Equals(this.selectedScene.sceneID));
+                }
+                else
+                {
+                    this.InteractiveScenesComboBox.SelectedIndex = 0;
+                }
+
+                this.GameDetailsGrid.IsEnabled = true;
+            }
         }
 
         private void RefreshSelectedScene()
@@ -206,10 +209,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private async void RefreshSelectedGameButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.selectedGame != null)
-            {
-                await this.RefreshSelectedInteractiveGame();
-            }
+            await this.RefreshSelectedInteractiveGame();
         }
 
         private async void TestButton_Click(object sender, RoutedEventArgs e)
