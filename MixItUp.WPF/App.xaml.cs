@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace MixItUp.WPF
 {
@@ -13,5 +11,31 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class App : Application
     {
+        private bool crashObtained = false;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            base.OnStartup(e);
+        }
+
+        private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) { this.HandleCrash(e.Exception); }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e) { this.HandleCrash((Exception)e.ExceptionObject); }
+
+        private void HandleCrash(Exception ex)
+        {
+            if (!this.crashObtained)
+            {
+                this.crashObtained = true;
+                File.WriteAllText("CrashData.txt", ex.ToString());
+                if (MessageBox.Show("Whoops! Looks like we ran into an issue and we'll have to close the program. Would you like to submit a bug to help us improve Mix It Up?", "Mix It Up - Crash", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/issues");
+                }
+            }
+        }
     }
 }
