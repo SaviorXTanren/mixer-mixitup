@@ -55,8 +55,6 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="80" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" VerticalAlignment="Center">Action:</TextBlock>
@@ -64,9 +62,7 @@
 
                 <Button x:Name="AddActionButton" Content="{MaterialDesign:PackIcon Plus}" Click="AddActionButton_Click" Grid.Column="4" ToolTip="Add Action" />
 
-                <Button x:Name="TestButton" Content="{MaterialDesign:PackIcon Play}" Grid.Column="6" ToolTip="Test" Click="TestButton_Click" />
-
-                <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="8" ToolTip="Save">Save</Button>
+                <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="6" ToolTip="Save">Save</Button>
 
             </Grid>
         </Grid>

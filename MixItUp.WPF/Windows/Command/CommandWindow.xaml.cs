@@ -109,16 +109,6 @@ namespace MixItUp.WPF.Windows.Command
             }
         }
 
-        private async void TestButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.RunAsyncOperation(async () =>
-            {
-                TestCommand command = new TestCommand();
-                command.Actions = this.GetActions();
-                await command.Perform();
-            });
-        }
-
         private void OnActionDeleted(object sender, ActionBase e)
         {
             ActionControl control = (ActionControl)sender;
