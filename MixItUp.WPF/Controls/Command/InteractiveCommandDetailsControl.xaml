@@ -15,18 +15,39 @@
 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Trigger" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <TextBox x:Name="SparkCostTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" />
+            <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Trigger" />
 
-        <TextBox x:Name="CooldownTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown" />
+            <TextBox x:Name="SparkCostTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Type" SelectionChanged="CooldownTypeComboBox_SelectionChanged" />
+
+            <ComboBox x:Name="CooldownGroupsComboBox" Grid.Column="2" IsEditable="True" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Groups" SelectionChanged="CooldownGroupsComboBox_SelectionChanged" Visibility="Collapsed" />
+
+            <TextBox x:Name="CooldownTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown (Sec)" />
+        </Grid>
+        
     </Grid>
 </local:CommandDetailsControlBase>

@@ -43,7 +43,10 @@ namespace MixItUp.Base.Commands
         public InteractiveControlModel Control { get; set; }
 
         [JsonProperty]
-        public int Cooldown { get; set; }
+        public int IndividualCooldown { get; set; }
+
+        [JsonProperty]
+        public string CooldownGroup { get; set; }
 
         [JsonProperty]
         public InteractiveButtonCommandTriggerType Trigger { get; set; }
@@ -68,6 +71,19 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
+        public int CooldownAmount
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.CooldownGroup) && ChannelSession.Settings.InteractiveCooldownGroups.ContainsKey(this.CooldownGroup))
+                {
+                    return ChannelSession.Settings.InteractiveCooldownGroups[this.CooldownGroup];
+                }
+                return this.IndividualCooldown;
+            }
+        }
+
+        [JsonIgnore]
         public InteractiveButtonControlModel Button { get { return (this.Control is InteractiveButtonControlModel) ? (InteractiveButtonControlModel)this.Control : null; } }
 
         [JsonIgnore]
@@ -78,6 +94,6 @@ namespace MixItUp.Base.Commands
 
         public void UpdateWithLatestControl(InteractiveControlModel control) { this.Control = control; }
 
-        public long GetCooldownTimestamp() { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.Cooldown)); }
+        public long GetCooldownTimestamp() { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount)); }
     }
 }

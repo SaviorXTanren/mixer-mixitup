@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.Interactive
         public string Name { get { return this.Control.controlID; } }
         public string Type { get { return (this.Control is InteractiveButtonControlModel) ? "Button" : "Joystick"; } }
         public string SparkCost { get { return (this.Button != null) ? this.Button.cost.ToString() : string.Empty; } }
-        public string Cooldown { get { return (this.Command != null) ? this.Command.Cooldown.ToString() : string.Empty; } }
+        public string Cooldown { get { return (this.Command != null) ? this.Command.CooldownAmount.ToString() : string.Empty; } }
         public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
     }
 
@@ -450,7 +450,24 @@ namespace MixItUp.WPF.Controls.Interactive
                             await this.Window.RunAsyncOperation(async () =>
                             {
                                 item.ConnectedButton.cooldown = item.Command.GetCooldownTimestamp();
-                                await ChannelSession.InteractiveClient.UpdateControls(this.connectedScene, new List<InteractiveConnectedButtonControlModel>() { item.ConnectedButton });
+
+                                List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();                             
+                                if (!string.IsNullOrEmpty(item.Command.CooldownGroup))
+                                {
+                                    var otherItems = this.interactiveItems.Where(i => i.Command != null && i.ConnectedButton != null);
+                                    otherItems = otherItems.Where(i => item.Command.CooldownGroup.Equals(i.Command.CooldownGroup));
+                                    foreach (var otherItem in otherItems)
+                                    {
+                                        otherItem.ConnectedButton.cooldown = item.ConnectedButton.cooldown;
+                                    }
+                                    buttons.AddRange(otherItems.Select(i => i.ConnectedButton));
+                                }
+                                else
+                                {
+                                    buttons.Add(item.ConnectedButton);
+                                }
+
+                                await ChannelSession.InteractiveClient.UpdateControls(this.connectedScene, buttons);
                             });
                         }
 

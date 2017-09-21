@@ -81,6 +81,9 @@ namespace MixItUp.Base
         public int TimerCommandsMinimumMessages { get; set; }
 
         [JsonProperty]
+        public Dictionary<string, int> InteractiveCooldownGroups { get; set; }
+
+        [JsonProperty]
         public bool EnableOverlay { get; set; }
 
         [JsonProperty]
@@ -127,6 +130,7 @@ namespace MixItUp.Base
             this.interactiveControlsInternal = new List<InteractiveCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
             this.quotesInternal = new List<string>();
+            this.InteractiveCooldownGroups = new Dictionary<string, int>();
 
             this.UserData = new Dictionary<uint, UserDataViewModel>();
 

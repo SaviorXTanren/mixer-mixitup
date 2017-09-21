@@ -6,6 +6,7 @@ using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
 {
@@ -40,6 +41,8 @@ namespace MixItUp.WPF.Controls.Command
         public override Task Initialize()
         {
             this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandTriggerType>();
+            this.CooldownTypeComboBox.ItemsSource = new List<string>() { "Individual", "Group" };
+            this.CooldownGroupsComboBox.ItemsSource = ChannelSession.Settings.InteractiveCooldownGroups.Keys;
 
             if (this.control != null && this.control is InteractiveButtonControlModel)
             {
@@ -47,6 +50,8 @@ namespace MixItUp.WPF.Controls.Command
                 this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveButtonCommandTriggerType.MouseDown);
                 this.SparkCostTextBox.IsEnabled = true;
                 this.SparkCostTextBox.Text = ((InteractiveButtonControlModel)this.control).cost.ToString();
+                this.CooldownGroupsComboBox.IsEnabled = true;
+                this.CooldownTypeComboBox.IsEnabled = true;
                 this.CooldownTextBox.IsEnabled = true;
             }
 
@@ -55,7 +60,17 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.command.Button != null)
                 {
                     this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Trigger);
-                    this.CooldownTextBox.Text = this.command.Cooldown.ToString();
+                    if (!string.IsNullOrEmpty(this.command.CooldownGroup))
+                    {
+                        this.CooldownTypeComboBox.SelectedItem = "Group";
+                        this.CooldownGroupsComboBox.SelectedItem = this.command.CooldownGroup;
+                        this.CooldownTextBox.Text = ChannelSession.Settings.InteractiveCooldownGroups[this.command.CooldownGroup].ToString();
+                    }
+                    else
+                    {
+                        this.CooldownTypeComboBox.SelectedItem = "Individual";
+                        this.CooldownTextBox.Text = this.command.IndividualCooldown.ToString();
+                    }
                 }
             }
 
@@ -77,15 +92,27 @@ namespace MixItUp.WPF.Controls.Command
                     return false;
                 }
 
-                if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost <= 0)
+                if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost < 0)
                 {
                     MessageBoxHelper.ShowDialog("A valid spark cost must be entered");
                     return false;
                 }
 
-                if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown <= 0)
+                if (this.CooldownTypeComboBox.SelectedIndex < 0)
                 {
-                    MessageBoxHelper.ShowDialog("A valid cooldown must be entered");
+                    MessageBoxHelper.ShowDialog("A cooldown type must be selected");
+                    return false;
+                }
+
+                if (this.CooldownTypeComboBox.SelectedItem.Equals("Group") && this.CooldownGroupsComboBox.SelectedIndex < 0 && string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
+                {
+                    MessageBoxHelper.ShowDialog("A cooldown group must be selected or entered");
+                    return false;
+                }
+
+                if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
+                {
+                    MessageBoxHelper.ShowDialog("A valid cooldown amount must be entered");
                     return false;
                 }
             }
@@ -117,13 +144,56 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     this.command.Trigger = trigger;
                     this.command.Button.cost = int.Parse(this.SparkCostTextBox.Text);
-                    this.command.Cooldown = int.Parse(this.CooldownTextBox.Text);
+                    if (this.CooldownTypeComboBox.SelectedItem.Equals("Group"))
+                    {
+                        string cooldownGroup = this.CooldownGroupsComboBox.Text;
+                        this.command.CooldownGroup = cooldownGroup;
+                        ChannelSession.Settings.InteractiveCooldownGroups[cooldownGroup] = int.Parse(this.CooldownTextBox.Text);
+                    }
+                    else
+                    {
+                        this.command.IndividualCooldown = int.Parse(this.CooldownTextBox.Text);
+                    }
 
                     await ChannelSession.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.version);
                 }
                 return this.command;
             }
             return null;
+        }
+
+        private void CooldownTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.CooldownTypeComboBox.SelectedIndex >= 0)
+            {
+                string selection = (string)this.CooldownTypeComboBox.SelectedItem;
+                if (selection.Equals("Group"))
+                {
+                    this.CooldownGroupsComboBox.Visibility = Visibility.Visible;
+                }
+                else if (selection.Equals("Individual"))
+                {
+                    this.CooldownGroupsComboBox.Visibility = Visibility.Collapsed;
+                }
+                this.CooldownGroupsComboBox.SelectedIndex = -1;
+                this.CooldownTextBox.Clear();
+            }
+        }
+
+        private void CooldownGroupsComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                string selection = (string)e.AddedItems[0];
+                if (ChannelSession.Settings.InteractiveCooldownGroups.ContainsKey(selection))
+                {
+                    this.CooldownTextBox.Text = ChannelSession.Settings.InteractiveCooldownGroups[selection].ToString();
+                }
+                else
+                {
+                    this.CooldownTextBox.Text = string.Empty;
+                }
+            }
         }
     }
 }
