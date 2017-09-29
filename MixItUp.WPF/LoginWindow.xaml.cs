@@ -38,57 +38,6 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class LoginWindow : LoadingWindowBase
     {
-        private List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
-        {
-            OAuthClientScopeEnum.chat__bypass_links,
-            OAuthClientScopeEnum.chat__bypass_slowchat,
-            OAuthClientScopeEnum.chat__change_ban,
-            OAuthClientScopeEnum.chat__change_role,
-            OAuthClientScopeEnum.chat__chat,
-            OAuthClientScopeEnum.chat__connect,
-            OAuthClientScopeEnum.chat__clear_messages,
-            OAuthClientScopeEnum.chat__edit_options,
-            OAuthClientScopeEnum.chat__giveaway_start,
-            OAuthClientScopeEnum.chat__poll_start,
-            OAuthClientScopeEnum.chat__poll_vote,
-            OAuthClientScopeEnum.chat__purge,
-            OAuthClientScopeEnum.chat__remove_message,
-            OAuthClientScopeEnum.chat__timeout,
-            OAuthClientScopeEnum.chat__view_deleted,
-            OAuthClientScopeEnum.chat__whisper,
-
-            OAuthClientScopeEnum.channel__details__self,
-            OAuthClientScopeEnum.channel__update__self,
-            OAuthClientScopeEnum.channel__analytics__self,
-
-            OAuthClientScopeEnum.interactive__manage__self,
-            OAuthClientScopeEnum.interactive__robot__self,
-
-            OAuthClientScopeEnum.user__details__self,
-        };
-
-        private List<OAuthClientScopeEnum> ModeratorScopes = new List<OAuthClientScopeEnum>()
-        {
-            OAuthClientScopeEnum.chat__bypass_links,
-            OAuthClientScopeEnum.chat__bypass_slowchat,
-            OAuthClientScopeEnum.chat__change_ban,
-            OAuthClientScopeEnum.chat__change_role,
-            OAuthClientScopeEnum.chat__chat,
-            OAuthClientScopeEnum.chat__connect,
-            OAuthClientScopeEnum.chat__clear_messages,
-            OAuthClientScopeEnum.chat__edit_options,
-            OAuthClientScopeEnum.chat__giveaway_start,
-            OAuthClientScopeEnum.chat__poll_start,
-            OAuthClientScopeEnum.chat__poll_vote,
-            OAuthClientScopeEnum.chat__purge,
-            OAuthClientScopeEnum.chat__remove_message,
-            OAuthClientScopeEnum.chat__timeout,
-            OAuthClientScopeEnum.chat__view_deleted,
-            OAuthClientScopeEnum.chat__whisper,
-
-            OAuthClientScopeEnum.user__details__self,
-        };
-
         public LoginWindow()
         {
             InitializeComponent();
@@ -181,7 +130,7 @@ namespace MixItUp.WPF
 
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await this.EstablishConnection(this.ModeratorScopes, this.ModeratorChannelTextBox.Text);
+                return await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelTextBox.Text);
             });
 
             if (result)
@@ -207,20 +156,14 @@ namespace MixItUp.WPF
 
         private async Task<bool> NewStreamerLogin()
         {
-            return await this.EstablishConnection(this.StreamerScopes, channelName: null);
+            return await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null);
         }
 
         private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
-            string clientID = ConfigurationManager.AppSettings["ClientID"];
-            if (string.IsNullOrEmpty(clientID))
-            {
-                throw new ArgumentException("ClientID value isn't set in application configuration");
-            }
-
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Initialize(clientID, scopes, channelName);
+                return await ChannelSession.Initialize(scopes, channelName);
             });
 
             if (!result)

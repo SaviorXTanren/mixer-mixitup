@@ -1,11 +1,7 @@
-﻿using Mixer.Base;
-using Mixer.Base.Model.OAuth;
+﻿using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
 using MixItUp.Base.Overlay;
 using MixItUp.WPF.Util;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,21 +13,6 @@ namespace MixItUp.WPF.Controls.Services
     /// </summary>
     public partial class ServicesControl : MainControlBase
     {
-        private List<OAuthClientScopeEnum> BotScopes = new List<OAuthClientScopeEnum>()
-        {
-            OAuthClientScopeEnum.chat__bypass_links,
-            OAuthClientScopeEnum.chat__bypass_slowchat,
-            OAuthClientScopeEnum.chat__chat,
-            OAuthClientScopeEnum.chat__connect,
-            OAuthClientScopeEnum.chat__edit_options,
-            OAuthClientScopeEnum.chat__giveaway_start,
-            OAuthClientScopeEnum.chat__poll_start,
-            OAuthClientScopeEnum.chat__poll_vote,
-            OAuthClientScopeEnum.chat__whisper,
-
-            OAuthClientScopeEnum.user__details__self,
-        };
-
         public ServicesControl()
         {
             InitializeComponent();
@@ -79,15 +60,9 @@ namespace MixItUp.WPF.Controls.Services
 
         private async void LogInBotButton_Click(object sender, RoutedEventArgs e)
         {
-            string clientID = ConfigurationManager.AppSettings["ClientID"];
-            if (string.IsNullOrEmpty(clientID))
-            {
-                throw new ArgumentException("ClientID value isn't set in application configuration");
-            }
-
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.InitializeBot(clientID, this.BotScopes, (OAuthShortCodeModel shortCode) =>
+                return await ChannelSession.InitializeBot((OAuthShortCodeModel shortCode) =>
                 {
                     this.BotShortCodeTextBox.IsEnabled = true;
                     this.BotShortCodeTextBox.Text = shortCode.code;

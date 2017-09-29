@@ -4,6 +4,7 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Models;
 using MixItUp.Base.Overlay;
@@ -14,6 +15,7 @@ using MixItUp.Base.XSplit;
 using OBSWebsocketDotNet;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +23,72 @@ namespace MixItUp.Base
 {
     public static class ChannelSession
     {
+        public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
+        {
+            OAuthClientScopeEnum.chat__bypass_links,
+            OAuthClientScopeEnum.chat__bypass_slowchat,
+            OAuthClientScopeEnum.chat__change_ban,
+            OAuthClientScopeEnum.chat__change_role,
+            OAuthClientScopeEnum.chat__chat,
+            OAuthClientScopeEnum.chat__connect,
+            OAuthClientScopeEnum.chat__clear_messages,
+            OAuthClientScopeEnum.chat__edit_options,
+            OAuthClientScopeEnum.chat__giveaway_start,
+            OAuthClientScopeEnum.chat__poll_start,
+            OAuthClientScopeEnum.chat__poll_vote,
+            OAuthClientScopeEnum.chat__purge,
+            OAuthClientScopeEnum.chat__remove_message,
+            OAuthClientScopeEnum.chat__timeout,
+            OAuthClientScopeEnum.chat__view_deleted,
+            OAuthClientScopeEnum.chat__whisper,
+
+            OAuthClientScopeEnum.channel__details__self,
+            OAuthClientScopeEnum.channel__update__self,
+            OAuthClientScopeEnum.channel__analytics__self,
+
+            OAuthClientScopeEnum.interactive__manage__self,
+            OAuthClientScopeEnum.interactive__robot__self,
+
+            OAuthClientScopeEnum.user__details__self,
+        };
+
+        public static readonly List<OAuthClientScopeEnum> ModeratorScopes = new List<OAuthClientScopeEnum>()
+        {
+            OAuthClientScopeEnum.chat__bypass_links,
+            OAuthClientScopeEnum.chat__bypass_slowchat,
+            OAuthClientScopeEnum.chat__change_ban,
+            OAuthClientScopeEnum.chat__change_role,
+            OAuthClientScopeEnum.chat__chat,
+            OAuthClientScopeEnum.chat__connect,
+            OAuthClientScopeEnum.chat__clear_messages,
+            OAuthClientScopeEnum.chat__edit_options,
+            OAuthClientScopeEnum.chat__giveaway_start,
+            OAuthClientScopeEnum.chat__poll_start,
+            OAuthClientScopeEnum.chat__poll_vote,
+            OAuthClientScopeEnum.chat__purge,
+            OAuthClientScopeEnum.chat__remove_message,
+            OAuthClientScopeEnum.chat__timeout,
+            OAuthClientScopeEnum.chat__view_deleted,
+            OAuthClientScopeEnum.chat__whisper,
+
+            OAuthClientScopeEnum.user__details__self,
+        };
+
+        public static readonly List<OAuthClientScopeEnum> BotScopes = new List<OAuthClientScopeEnum>()
+        {
+            OAuthClientScopeEnum.chat__bypass_links,
+            OAuthClientScopeEnum.chat__bypass_slowchat,
+            OAuthClientScopeEnum.chat__chat,
+            OAuthClientScopeEnum.chat__connect,
+            OAuthClientScopeEnum.chat__edit_options,
+            OAuthClientScopeEnum.chat__giveaway_start,
+            OAuthClientScopeEnum.chat__poll_start,
+            OAuthClientScopeEnum.chat__poll_vote,
+            OAuthClientScopeEnum.chat__whisper,
+
+            OAuthClientScopeEnum.user__details__self,
+        };
+
         public static MixerConnection MixerConnection { get; private set; }
         public static MixerConnection BotConnection { get; private set; }
 
@@ -45,9 +113,9 @@ namespace MixItUp.Base
 
         public static GiveawayItemModel Giveaway { get; set; }
 
-        public static async Task<bool> Initialize(string clientID, IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
+        public static async Task<bool> Initialize(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
-            ChannelSession.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(clientID, scopes);
+            ChannelSession.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.GetClientID(), scopes);
             if (ChannelSession.MixerConnection != null)
             {
                 return await ChannelSession.InitializeInternal(channelName);
@@ -62,10 +130,25 @@ namespace MixItUp.Base
             ChannelSession.Settings = settings;
             ChannelSession.Settings.Initialize();
 
-            ChannelSession.MixerConnection = await MixerConnection.ConnectViaOAuthToken(settings.OAuthToken);
+            try
+            {
+                ChannelSession.MixerConnection = await MixerConnection.ConnectViaOAuthToken(settings.OAuthToken);
+            }
+            catch (RestServiceRequestException)
+            {
+                result = await ChannelSession.Initialize(ChannelSession.StreamerScopes, null);
+            }
+            
             if (settings.BotOAuthToken != null)
             {
-                ChannelSession.BotConnection = await MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
+                try
+                {
+                    ChannelSession.BotConnection = await MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
+                }
+                catch (RestServiceRequestException)
+                {
+                    settings.BotOAuthToken = null;
+                }
             }
 
             if (ChannelSession.MixerConnection != null)
@@ -80,9 +163,9 @@ namespace MixItUp.Base
             return result;
         }
 
-        public static async Task<bool> InitializeBot(string clientID, IEnumerable<OAuthClientScopeEnum> scopes, Action<OAuthShortCodeModel> callback)
+        public static async Task<bool> InitializeBot(Action<OAuthShortCodeModel> callback)
         {
-            ChannelSession.BotConnection = await MixerConnection.ConnectViaShortCode(clientID, scopes, callback);
+            ChannelSession.BotConnection = await MixerConnection.ConnectViaShortCode(ChannelSession.GetClientID(), ChannelSession.BotScopes, callback);
             if (ChannelSession.BotConnection != null)
             {
                 return (await ChannelSession.InitializeBotInternal() && await ChannelSession.InitializeBotChatClient());
@@ -278,6 +361,26 @@ namespace MixItUp.Base
             }
         }
 
+        public static async Task SaveSettings() { await ChannelSession.Settings.Save(); }
+
+        public static async Task RefreshUser()
+        {
+            if (ChannelSession.User != null)
+            {
+                ChannelSession.User = await ChannelSession.MixerConnection.Users.GetCurrentUser();
+            }
+        }
+
+        public static async Task RefreshChannel()
+        {
+            if (ChannelSession.Channel != null)
+            {
+                ChannelSession.Channel = await ChannelSession.MixerConnection.Channels.GetChannel(ChannelSession.Channel.user.username);
+            }
+        }
+
+        public static UserViewModel GetCurrentUser() { return new UserViewModel(User); }
+
         private static async Task<bool> InitializeInternal(string channelName = null)
         {
             PrivatePopulatedUserModel user = await ChannelSession.MixerConnection.Users.GetCurrentUser();
@@ -329,24 +432,14 @@ namespace MixItUp.Base
             }
         }
 
-        public static async Task SaveSettings() { await ChannelSession.Settings.Save(); }
-
-        public static async Task RefreshUser()
+        private static string GetClientID()
         {
-            if (ChannelSession.User != null)
+            string clientID = ConfigurationManager.AppSettings["ClientID"];
+            if (string.IsNullOrEmpty(clientID))
             {
-                ChannelSession.User = await ChannelSession.MixerConnection.Users.GetCurrentUser();
+                throw new ArgumentException("ClientID value isn't set in application configuration");
             }
+            return clientID;
         }
-
-        public static async Task RefreshChannel()
-        {
-            if (ChannelSession.Channel != null)
-            {
-                ChannelSession.Channel = await ChannelSession.MixerConnection.Channels.GetChannel(ChannelSession.Channel.user.username);
-            }
-        }
-
-        public static UserViewModel GetCurrentUser() { return new UserViewModel(User); }
     }
 }
