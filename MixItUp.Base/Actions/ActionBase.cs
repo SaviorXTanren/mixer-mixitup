@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -55,6 +56,8 @@ namespace MixItUp.Base.Actions
                     str = str.Replace("$currency", ChannelSession.Settings.UserData[user.ID].CurrencyAmount.ToString());
                 }
             }
+
+            str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
 
             if (arguments != null)
             {
