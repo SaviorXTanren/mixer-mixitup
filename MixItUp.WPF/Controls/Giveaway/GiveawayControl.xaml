@@ -60,7 +60,7 @@
 
         <TextBlock Grid.Row="6" HorizontalAlignment="Center">Previous Winners:</TextBlock>
 
-        <DataGrid x:Name="PreviousWinnersListView" Grid.Row="8" Style="{StaticResource StandardDataGrid}">
+        <DataGrid x:Name="PreviousWinnersListView" Grid.Row="8" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="Prize" Binding="{Binding Prize}" IsReadOnly="True" Width="*" />

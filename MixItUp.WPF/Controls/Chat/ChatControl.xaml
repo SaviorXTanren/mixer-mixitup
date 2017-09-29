@@ -67,7 +67,7 @@
                     </Grid>
                 </GroupBox.Header>
 
-                <ListView x:Name="ChatList" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView x:Name="ChatList" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
                     <ListView.Resources>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}, Path=ActualWidth}" />
@@ -110,7 +110,7 @@
                 </Grid>
             </GroupBox.Header>
 
-            <ListView x:Name="UserList" Grid.Column="1" ContextMenu="{StaticResource UserListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" />
+            <ListView x:Name="UserList" Grid.Column="1" ContextMenu="{StaticResource UserListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" />
         </GroupBox>
 
     </Grid>

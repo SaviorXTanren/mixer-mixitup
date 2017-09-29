@@ -82,7 +82,7 @@
                 <RowDefinition Height="10" />
             </Grid.RowDefinitions>
 
-            <DataGrid x:Name="CustomCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}">
+            <DataGrid x:Name="CustomCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                     <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="*" />

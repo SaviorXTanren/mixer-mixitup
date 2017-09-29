@@ -15,7 +15,7 @@
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                           
-        Title="Customize Command" Height="500" Width="600">
+        Title="Customize Command" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -44,7 +44,7 @@
 
             <Grid Grid.Row="0" x:Name="CommandDetailsGrid" Margin="0,0,0,10" />
 
-            <ListView x:Name="ActionsListView" Grid.Row="1" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" />
+            <ListView x:Name="ActionsListView" Grid.Row="1" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" HorizontalContentAlignment="Stretch" />
 
             <Grid Grid.Row="4" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>

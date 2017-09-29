@@ -110,10 +110,13 @@ namespace MixItUp.WPF.Controls.Command
                     return false;
                 }
 
-                if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
+                if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
                 {
-                    MessageBoxHelper.ShowDialog("A valid cooldown amount must be entered");
-                    return false;
+                    if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
+                    {
+                        MessageBoxHelper.ShowDialog("Cooldown must be 0 or greater");
+                        return false;
+                    }
                 }
             }
 
@@ -152,7 +155,12 @@ namespace MixItUp.WPF.Controls.Command
                     }
                     else
                     {
-                        this.command.IndividualCooldown = int.Parse(this.CooldownTextBox.Text);
+                        int cooldown = 0;
+                        if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
+                        {
+                            cooldown = int.Parse(this.CooldownTextBox.Text);
+                        }
+                        this.command.IndividualCooldown = cooldown;
                     }
 
                     await ChannelSession.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.version);

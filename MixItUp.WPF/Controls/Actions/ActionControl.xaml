@@ -266,7 +266,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0">Load Text From:</TextBlock>
+                        <TextBlock Grid.Column="0">File:</TextBlock>
 
                         <TextBox Grid.Column="2" x:Name="OBSStudioSourceLoadTextFromTextBox" IsReadOnly="True" />
                     </Grid>
@@ -321,7 +321,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0">Load Text From:</TextBlock>
+                        <TextBlock Grid.Column="0">File:</TextBlock>
 
                         <TextBox Grid.Column="2" x:Name="XSplitSourceLoadTextFromTextBox" IsReadOnly="True" />
                     </Grid>

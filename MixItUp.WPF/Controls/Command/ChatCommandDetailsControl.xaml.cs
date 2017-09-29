@@ -63,11 +63,14 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            int cooldown = 0;
-            if (string.IsNullOrEmpty(this.CooldownTextBox.Text) || !int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
+            if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
             {
-                MessageBoxHelper.ShowDialog("Cooldown is missing");
-                return false;
+                int cooldown = 0;
+                if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
+                {
+                    MessageBoxHelper.ShowDialog("Cooldown must be 0 or greater");
+                    return false;
+                }
             }
 
             return true;
@@ -81,7 +84,13 @@ namespace MixItUp.WPF.Controls.Command
             {
                 List<string> commands = new List<string>(this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                 UserRole lowestRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem);
-                int cooldown = int.Parse(this.CooldownTextBox.Text);
+
+                int cooldown = 0;
+                if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
+                {
+                    cooldown = int.Parse(this.CooldownTextBox.Text);
+                }
+
                 if (this.command == null)
                 {
                     this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown);
