@@ -115,7 +115,7 @@
                     </Grid.ColumnDefinitions>
 
                     <MaterialDesign:PackIcon Kind="AccessPoint" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
-                    <TextBox x:Name="OBSStudioIPAddressTextBox" Grid.Column="2" Width="130" LostFocus="OBSStudioIPAddressTextBox_LostFocus">ws://127.0.0.1:4444</TextBox>
+                    <TextBox x:Name="OBSStudioIPAddressTextBox" Grid.Column="2" Width="130">ws://127.0.0.1:4444</TextBox>
                 </Grid>
 
                 <Grid Grid.Row="2">
@@ -126,10 +126,12 @@
                     </Grid.ColumnDefinitions>
 
                     <MaterialDesign:PackIcon Kind="KeyVariant" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
-                    <PasswordBox x:Name="OBSStudioPasswordTextBox" Grid.Column="2" Width="130" LostFocus="OBSStudioIPAddressTextBox_LostFocus" />
+                    <PasswordBox x:Name="OBSStudioPasswordTextBox" Grid.Column="2" Width="130" />
                 </Grid>
 
-                <Button x:Name="OBSStudioTestConnectionButton" Grid.Row="4" Click="OBSStudioTestConnectionButton_Click" Width="140">Test Connection</Button>
+                <Button x:Name="OBSStudioEnableConnectionButton" Grid.Row="4" Click="OBSStudioEnableConnectionButton_Click" Width="140">Enable OBS</Button>
+                <Button x:Name="OBSStudioDisableConnectionButton" Grid.Row="4" Click="OBSStudioDisableConnectionButton_Click" Width="140" Visibility="Collapsed">Disable OBS</Button>
+
             </Grid>
         </GroupBox>
 

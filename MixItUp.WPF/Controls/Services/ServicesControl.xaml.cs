@@ -42,10 +42,13 @@ namespace MixItUp.WPF.Controls.Services
             if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
             {
                 this.OBSStudioIPAddressTextBox.Text = ChannelSession.Settings.OBSStudioServerIP;
+                this.OBSStudioPasswordTextBox.Password = ChannelSession.Settings.OBSStudioServerPassword;
+
+                this.OBSStudioEnableConnectionButton.Visibility = Visibility.Collapsed;
+                this.OBSStudioDisableConnectionButton.Visibility = Visibility.Visible;
 
                 await ChannelSession.InitializeOBSWebsocket();
             }
-            this.OBSStudioPasswordTextBox.Password = ChannelSession.Settings.OBSStudioServerPassword;
 
             if (ChannelSession.Settings.EnableXSplitConnection)
             {
@@ -127,33 +130,37 @@ namespace MixItUp.WPF.Controls.Services
             ChannelSession.OverlayServer.SetText(new OverlayText() { text = "Connection Test", duration = 5, horizontal = 50, vertical = 50 });
         }
 
-        private void OBSStudioIPAddressTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private async void OBSStudioEnableConnectionButton_Click(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
             ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;
+
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (await ChannelSession.InitializeOBSWebsocket())
+                {
+                    this.OBSStudioEnableConnectionButton.Visibility = Visibility.Collapsed;
+                    this.OBSStudioDisableConnectionButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    ChannelSession.Settings.OBSStudioServerIP = null;
+                    ChannelSession.Settings.OBSStudioServerPassword = null;
+
+                    MessageBoxHelper.ShowDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
+                }
+            });
         }
 
-        private async void OBSStudioTestConnectionButton_Click(object sender, RoutedEventArgs e)
+        private void OBSStudioDisableConnectionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.OBSStudioIPAddressTextBox.Text))
-            {
-                ChannelSession.DisconnectOBSStudio();
+            ChannelSession.DisconnectOBSStudio();
 
-                ChannelSession.Settings.OBSStudioServerIP = this.OBSStudioIPAddressTextBox.Text;
-                ChannelSession.Settings.OBSStudioServerPassword = this.OBSStudioPasswordTextBox.Password;
+            ChannelSession.Settings.OBSStudioServerIP = null;
+            ChannelSession.Settings.OBSStudioServerPassword = null;
 
-                await this.Window.RunAsyncOperation(async () =>
-                {
-                    if (await ChannelSession.InitializeOBSWebsocket())
-                    {
-                        MessageBoxHelper.ShowDialog("Connection successful!");
-                    }
-                    else
-                    {
-                        MessageBoxHelper.ShowDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
-                    }
-                });
-            }
+            this.OBSStudioEnableConnectionButton.Visibility = Visibility.Visible;
+            this.OBSStudioDisableConnectionButton.Visibility = Visibility.Collapsed;
         }
 
         private async void EnableXSplitConnectionButton_Click(object sender, RoutedEventArgs e)
