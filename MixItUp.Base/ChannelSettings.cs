@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,25 +44,21 @@ namespace MixItUp.Base
 
         [JsonProperty]
         private List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; }
-
         [JsonProperty]
         private List<ChatCommand> chatCommandsInternal { get; set; }
-
         [JsonProperty]
         private List<EventCommand> eventCommandsInternal { get; set; }
-
         [JsonProperty]
         private List<InteractiveCommand> interactiveControlsInternal { get; set; }
-
         [JsonProperty]
         private List<TimerCommand> timerCommandsInternal { get; set; }
-
         [JsonProperty]
         private List<string> quotesInternal { get; set; }
+        [JsonProperty]
+        private List<UserDataViewModel> userDataInternal { get; set; }
 
         [JsonProperty]
         public OAuthTokenModel OAuthToken { get; set; }
-
         [JsonProperty]
         public OAuthTokenModel BotOAuthToken { get; set; }
 
@@ -69,14 +66,19 @@ namespace MixItUp.Base
         public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]
-        public Dictionary<uint, UserDataViewModel> UserData { get; set; }
+        public bool CurrencyEnabled { get; set; }
+        [JsonProperty]
+        public string CurrencyName { get; set; }
+        [JsonProperty]
+        public int CurrencyAcquireAmount { get; set; }
+        [JsonProperty]
+        public int CurrencyAcquireInterval { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
 
         [JsonProperty]
         public int TimerCommandsInterval { get; set; }
-
         [JsonProperty]
         public int TimerCommandsMinimumMessages { get; set; }
 
@@ -85,13 +87,10 @@ namespace MixItUp.Base
 
         [JsonProperty]
         public bool EnableOverlay { get; set; }
-
         [JsonProperty]
         public string OBSStudioServerIP { get; set; }
-        
         [JsonProperty]
         public string OBSStudioServerPassword { get; set; }
-
         [JsonProperty]
         public bool EnableXSplitConnection { get; set; }
 
@@ -99,21 +98,18 @@ namespace MixItUp.Base
         
         [JsonIgnore]
         public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
-
         [JsonIgnore]
         public LockedList<ChatCommand> ChatCommands { get; set; }
-
         [JsonIgnore]
         public LockedList<EventCommand> EventCommands { get; set; }
-
         [JsonIgnore]
         public LockedList<InteractiveCommand> InteractiveControls { get; set; }
-
         [JsonIgnore]
         public LockedList<TimerCommand> TimerCommands { get; set; }
-
         [JsonIgnore]
         public LockedList<string> Quotes { get; set; }
+        [JsonIgnore]
+        public LockedDictionary<uint, UserDataViewModel> UserData { get; set; }
 
         public ChannelSettings(ExpandedChannelModel channel, bool isStreamer = true)
             : this()
@@ -130,9 +126,8 @@ namespace MixItUp.Base
             this.interactiveControlsInternal = new List<InteractiveCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
             this.quotesInternal = new List<string>();
+            this.userDataInternal = new List<UserDataViewModel>();
             this.InteractiveCooldownGroups = new Dictionary<string, int>();
-
-            this.UserData = new Dictionary<uint, UserDataViewModel>();
 
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
@@ -140,6 +135,7 @@ namespace MixItUp.Base
             this.InteractiveControls = new LockedList<InteractiveCommand>();
             this.TimerCommands = new LockedList<TimerCommand>();
             this.Quotes = new LockedList<string>();
+            this.UserData = new LockedDictionary<uint, UserDataViewModel>();
 
             this.TimerCommandsInterval = 10;
             this.TimerCommandsMinimumMessages = 10;
@@ -153,6 +149,7 @@ namespace MixItUp.Base
             this.InteractiveControls = new LockedList<InteractiveCommand>(this.interactiveControlsInternal);
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.Quotes = new LockedList<string>(this.quotesInternal);
+            this.UserData = new LockedDictionary<uint, UserDataViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
         }
 
         public async Task Save()
@@ -171,6 +168,7 @@ namespace MixItUp.Base
             this.interactiveControlsInternal = this.InteractiveControls.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.quotesInternal = this.Quotes.ToList();
+            this.userDataInternal = this.UserData.Values.ToList();
 
             await SerializerHelper.SerializeToFile(filePath, this);
 

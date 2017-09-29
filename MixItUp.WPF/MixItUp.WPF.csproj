@@ -106,6 +106,9 @@
     <Compile Include="Controls\Chat\PreMadeChatCommandControl.xaml.cs">
       <DependentUpon>PreMadeChatCommandControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Currency\CurrencyControl.xaml.cs">
+      <DependentUpon>CurrencyControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\ServicesControl.xaml.cs">
       <DependentUpon>ServicesControl.xaml</DependentUpon>
     </Compile>
@@ -173,6 +176,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat\PreMadeChatCommandControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Currency\CurrencyControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

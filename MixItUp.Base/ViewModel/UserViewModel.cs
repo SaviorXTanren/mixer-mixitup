@@ -1,12 +1,16 @@
 ﻿using Mixer.Base.Model.User;
 using System;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel
 {
+    [DataContract]
     public class UserViewModel : IEquatable<UserViewModel>
     {
+        [DataMember]
         public uint ID { get; set; }
 
+        [DataMember]
         public string UserName { get; set; }
 
         public UserViewModel() { }

@@ -137,7 +137,7 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     DateTimeOffset startTime = DateTimeOffset.Now;
 
-                    Thread.Sleep(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval);
+                    await Task.Delay(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval);
                     if (ChannelSession.Settings.TimerCommands.Count > 0)
                     {
                         TimerCommand command = ChannelSession.Settings.TimerCommands[timerCommandIndex];

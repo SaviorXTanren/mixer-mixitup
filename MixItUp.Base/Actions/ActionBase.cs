@@ -57,6 +57,11 @@ namespace MixItUp.Base.Actions
                 }
             }
 
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.CurrencyName))
+            {
+                str = str.Replace("$currencyName", ChannelSession.Settings.CurrencyName);
+            }
+
             str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
 
             if (arguments != null)

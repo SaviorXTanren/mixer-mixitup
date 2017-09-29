@@ -29,6 +29,10 @@ namespace MixItUp.WPF
         {
             if (!this.crashObtained)
             {
+                #if DEBUG
+                    Debugger.Break();
+                #endif
+
                 this.crashObtained = true;
                 File.WriteAllText("CrashData.txt", ex.ToString());
                 if (MessageBox.Show("Whoops! Looks like we ran into an issue and we'll have to close the program. Would you like to submit a bug to help us improve Mix It Up?", "Mix It Up - Crash", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
