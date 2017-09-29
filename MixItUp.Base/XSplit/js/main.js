@@ -27,7 +27,7 @@ function processResultAndRepeat(status, result)
 			}
 			else if (data.sourceName != null)
 			{
-				dataDiv.innerHTML += 'Source Visibility Changed: ' + data.sourceName + ' - ' + data.sourceVisible + '<BR>';
+				dataDiv.innerHTML += 'Source Update: ' + data.sourceName + ' - ' + data.sourceVisible + ' - ' + data.sourceText + '<BR>';
 				
 				xjs.ready().then(function()
 				{
@@ -51,7 +51,7 @@ function processResultAndRepeat(status, result)
 										{
 											try
 											{
-												items[j].setVisible(data.sourceVisible);
+											    items[j].setVisible(data.sourceVisible);
 											}
 											catch (err) {}
 										}

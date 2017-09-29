@@ -1,10 +1,10 @@
 ﻿using Microsoft.Win32;
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Overlay;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -122,7 +122,9 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                         else if (this.XSplitSourceGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
                         {
-                            return new XSplitAction(this.XSplitSourceNameTextBox.Text, this.XSplitSourceVisibleCheckBox.IsChecked.GetValueOrDefault());
+                            XSplitAction action = new XSplitAction(this.XSplitSourceNameTextBox.Text, this.XSplitSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.XSplitSourceTextTextBox.Text);
+                            action.UpdateReferenceTextFile();
+                            return action;
                         }
                     }
                     break;
@@ -245,6 +247,8 @@ namespace MixItUp.WPF.Controls.Actions
                             this.XSplitTypeComboBox.SelectedItem = "Source";
                             this.XSplitSourceNameTextBox.Text = xsplitAction.SourceName;
                             this.XSplitSourceVisibleCheckBox.IsChecked = xsplitAction.SourceVisible;
+                            this.XSplitSourceTextTextBox.Text = xsplitAction.SourceText;
+                            this.XSplitSourceLoadTextFromTextBox.Text = xsplitAction.LoadTextFromFilePath;
                         }
                         break;
                 }
@@ -352,6 +356,14 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.XSplitSourceGrid.Visibility = Visibility.Visible;
                 }
+            }
+        }
+
+        private void XSplitSourceNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
+            {
+                this.XSplitSourceLoadTextFromTextBox.Text = Path.Combine(XSplitAction.XSplitReferenceTextFilesDirectory, this.XSplitSourceNameTextBox.Text + ".txt");
             }
         }
     }

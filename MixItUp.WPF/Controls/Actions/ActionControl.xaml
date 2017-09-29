@@ -275,12 +275,16 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="XSplitSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" />
+                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="XSplitSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" TextChanged="XSplitSourceNameTextBox_TextChanged" />
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
@@ -288,6 +292,20 @@
 
                         <TextBlock Grid.Column="0">Visible:</TextBlock>
                         <CheckBox Grid.Column="2" x:Name="XSplitSourceVisibleCheckBox" />
+
+                        <TextBox Grid.Column="4" x:Name="XSplitSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" />
+                    </Grid>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0">Load Text From:</TextBlock>
+
+                        <TextBox Grid.Column="2" x:Name="XSplitSourceLoadTextFromTextBox" IsReadOnly="True" />
                     </Grid>
 
                 </Grid>
