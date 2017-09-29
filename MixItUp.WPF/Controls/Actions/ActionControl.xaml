@@ -238,6 +238,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBox Grid.Column="0" Grid.Row="0" x:Name="OBSStudioSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" />
@@ -246,11 +248,27 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0">Visible:</TextBlock>
                         <CheckBox Grid.Column="2" x:Name="OBSStudioSourceVisibleCheckBox" />
+
+                        <TextBox Grid.Column="4" x:Name="OBSStudioSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" TextChanged="OBSStudioSourceTextTextBox_TextChanged" />
+                    </Grid>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0">Load Text From:</TextBlock>
+
+                        <TextBox Grid.Column="2" x:Name="OBSStudioSourceLoadTextFromTextBox" IsReadOnly="True" />
                     </Grid>
 
                 </Grid>

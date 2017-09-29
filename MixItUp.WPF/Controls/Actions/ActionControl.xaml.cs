@@ -109,7 +109,9 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                         else if (this.OBSStudioSourceGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.OBSStudioSourceNameTextBox.Text))
                         {
-                            return new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault());
+                            OBSStudioAction action = new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.OBSStudioSourceTextTextBox.Text);
+                            action.UpdateReferenceTextFile();
+                            return action;
                         }
                     }
                     break;
@@ -233,6 +235,8 @@ namespace MixItUp.WPF.Controls.Actions
                             this.OBSStudioTypeComboBox.SelectedItem = "Source";
                             this.OBSStudioSourceNameTextBox.Text = obsStudioAction.SourceName;
                             this.OBSStudioSourceVisibleCheckBox.IsChecked = obsStudioAction.SourceVisible;
+                            this.OBSStudioSourceTextTextBox.Text = obsStudioAction.SourceText;
+                            this.OBSStudioSourceLoadTextFromTextBox.Text = obsStudioAction.LoadTextFromFilePath;
                         }
                         break;
                     case ActionTypeEnum.XSplit:
@@ -356,6 +360,14 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.XSplitSourceGrid.Visibility = Visibility.Visible;
                 }
+            }
+        }
+
+        private void OBSStudioSourceTextTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.OBSStudioSourceNameTextBox.Text))
+            {
+                this.OBSStudioSourceLoadTextFromTextBox.Text = Path.Combine(OBSStudioAction.OBSStudioReferenceTextFilesDirectory, this.OBSStudioSourceNameTextBox.Text + ".txt");
             }
         }
 
