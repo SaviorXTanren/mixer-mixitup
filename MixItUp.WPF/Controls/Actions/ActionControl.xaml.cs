@@ -94,8 +94,8 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     break;
                 case ActionTypeEnum.Wait:
-                    int waitAmount;
-                    if (!string.IsNullOrEmpty(this.WaitAmountTextBox.Text) && int.TryParse(this.WaitAmountTextBox.Text, out waitAmount) && waitAmount > 0)
+                    double waitAmount;
+                    if (!string.IsNullOrEmpty(this.WaitAmountTextBox.Text) && double.TryParse(this.WaitAmountTextBox.Text, out waitAmount) && waitAmount > 0.0)
                     {
                         return new WaitAction(waitAmount);
                     }

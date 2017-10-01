@@ -9,9 +9,9 @@ namespace MixItUp.Base.Actions
     public class WaitAction : ActionBase
     {
         [DataMember]
-        public int WaitAmount { get; set; }
+        public double WaitAmount { get; set; }
 
-        public WaitAction(int waitAmount)
+        public WaitAction(double waitAmount)
             : base(ActionTypeEnum.Wait)
         {
             this.WaitAmount = waitAmount;
@@ -19,11 +19,7 @@ namespace MixItUp.Base.Actions
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            for (int i = 0; i < this.WaitAmount; i++)
-            {
-                await this.Wait500();
-                await this.Wait500();
-            }
+            await Task.Delay((int)(1000 * this.WaitAmount));
         }
     }
 }
