@@ -137,7 +137,17 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ComboBox x:Name="OverlayTypeComboBox" Grid.Row="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="OverlayTypeComboBox" Grid.Column="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+
+                    <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
+                </Grid>
 
                 <Grid Grid.Row="2" x:Name="OverlayImageGrid" Visibility="Hidden">
                     <Grid.RowDefinitions>
@@ -218,7 +228,17 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ComboBox x:Name="OBSStudioTypeComboBox" Grid.Row="0" SelectionChanged="OBSStudioTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="OBSStudioTypeComboBox" Grid.Column="0" SelectionChanged="OBSStudioTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+
+                    <TextBlock x:Name="OBSStudioNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable OBS Studio connection in the Services Section!</TextBlock>
+                </Grid>
 
                 <Grid x:Name="OBSStudioSceneGrid" Grid.Row="2" Visibility="Hidden">
                     <Grid.RowDefinitions>
@@ -282,7 +302,17 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ComboBox x:Name="XSplitTypeComboBox" Grid.Row="0" SelectionChanged="XSplitTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="XSplitTypeComboBox" Grid.Column="0" SelectionChanged="XSplitTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+
+                    <TextBlock x:Name="XSplitNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable XSplit connection in the Services Section!</TextBlock>
+                </Grid>
 
                 <Grid x:Name="XSplitSceneGrid" Grid.Row="2" Visibility="Hidden">
                     <TextBox x:Name="XSplitSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" />

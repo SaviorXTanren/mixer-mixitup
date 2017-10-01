@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using System;
 using System.Collections.Generic;
@@ -166,6 +167,10 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.Overlay:
                     this.OverlayGrid.Visibility = Visibility.Visible;
+                    if (!ChannelSession.Settings.EnableOverlay)
+                    {
+                        this.OverlayNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
+                    }
                     break;
                 case ActionTypeEnum.Sound:
                     this.SoundGrid.Visibility = Visibility.Visible;
@@ -175,9 +180,17 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.OBSStudio:
                     this.OBSStudioGrid.Visibility = Visibility.Visible;
+                    if (string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
+                    {
+                        this.OBSStudioNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
+                    }
                     break;
                 case ActionTypeEnum.XSplit:
                     this.XSplitGrid.Visibility = Visibility.Visible;
+                    if (!ChannelSession.Settings.EnableXSplitConnection)
+                    {
+                        this.XSplitNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
+                    }
                     break;
                 case ActionTypeEnum.Counter:
                     this.CounterGrid.Visibility = Visibility.Visible;
