@@ -124,7 +124,7 @@ namespace MixItUp.Base
         public LockedList<string> Quotes { get; set; }
         [JsonIgnore]
         public LockedDictionary<uint, UserDataViewModel> UserData { get; set; }
-        [JsonProperty]
+        [JsonIgnore]
         public LockedList<string> BannedWords { get; set; }
 
         public ChannelSettings(ExpandedChannelModel channel, bool isStreamer = true)
@@ -191,6 +191,7 @@ namespace MixItUp.Base
             this.bannedWordsInternal = this.BannedWords.ToList();
 
             await SerializerHelper.SerializeToFile(filePath, this);
+            await SerializerHelper.SerializeToFile(filePath + ".backup", this);
 
             semaphore.Release();
         }

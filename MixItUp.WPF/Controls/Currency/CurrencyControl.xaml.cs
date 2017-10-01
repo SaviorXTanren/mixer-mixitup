@@ -70,7 +70,7 @@ namespace MixItUp.WPF.Controls.Currency
                     });
                 }
                 catch (ThreadAbortException) { return; }
-                catch (Exception ex) { }
+                catch (Exception) { }
             }
 
             this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();

@@ -54,6 +54,7 @@ namespace MixItUp.WPF.Controls.Services
             {
                 this.EnableXSplitConnectionButton.Visibility = Visibility.Collapsed;
                 this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
+                this.TestXSplitConnectionButton.IsEnabled = true;
 
                 ChannelSession.InitializeXSplitServer();
             }
