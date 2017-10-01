@@ -176,7 +176,7 @@ namespace MixItUp.Base
             await semaphore.WaitAsync();
 
             Directory.CreateDirectory(SettingsDirectoryName);
-            string filePath = Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", this.Channel.id.ToString(), (this.IsStreamer) ? "Streamer" : "Moderator"));
+            string filePath = this.GetSettingsFileName();
 
             this.OAuthToken = ChannelSession.MixerConnection.GetOAuthTokenCopy();
             this.BotOAuthToken = (ChannelSession.BotConnection != null) ? ChannelSession.BotConnection.GetOAuthTokenCopy() : null;
@@ -191,9 +191,19 @@ namespace MixItUp.Base
             this.bannedWordsInternal = this.BannedWords.ToList();
 
             await SerializerHelper.SerializeToFile(filePath, this);
-            await SerializerHelper.SerializeToFile(filePath + ".backup", this);
 
             semaphore.Release();
+        }
+
+        public async Task SaveBackup()
+        {
+            string filePath = this.GetSettingsFileName();
+            await SerializerHelper.SerializeToFile(filePath + ".backup", this);
+        }
+
+        private string GetSettingsFileName()
+        {
+            return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", this.Channel.id.ToString(), (this.IsStreamer) ? "Streamer" : "Moderator"));
         }
     }
 }

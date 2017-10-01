@@ -404,6 +404,8 @@ namespace MixItUp.Base
                     }
                     await ChannelSession.SaveSettings();
 
+                    await ChannelSession.Settings.SaveBackup();
+
                     return true;
                 }
             }
