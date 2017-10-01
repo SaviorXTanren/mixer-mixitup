@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
@@ -76,8 +75,6 @@ namespace MixItUp.WPF.Controls.Command
 
             return Task.FromResult(0);
         }
-
-        public override IEnumerable<ActionTypeEnum> GetAllowedActions() { return InteractiveCommand.AllowedActions; }
 
         public override bool Validate()
         {

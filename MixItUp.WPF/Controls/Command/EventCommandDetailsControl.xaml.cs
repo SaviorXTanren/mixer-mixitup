@@ -3,10 +3,8 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -43,8 +41,6 @@ namespace MixItUp.WPF.Controls.Command
 
             return Task.FromResult(0);
         }
-
-        public override IEnumerable<ActionTypeEnum> GetAllowedActions() { return EventCommand.AllowedActions; }
 
         public override bool Validate()
         {

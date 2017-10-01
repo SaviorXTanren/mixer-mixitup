@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Actions\ActionBase.cs" />
     <Compile Include="Actions\ChatAction.cs" />
+    <Compile Include="Actions\CounterAction.cs" />
     <Compile Include="Actions\CurrencyAction.cs" />
     <Compile Include="Actions\ExternalProgramAction.cs" />
     <Compile Include="Actions\InputAction.cs" />

@@ -83,7 +83,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+ adds/- subtracts)" />
+                <TextBox Grid.Row="0" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" />
 
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -329,7 +329,31 @@
                 </Grid>
 
             </Grid>
-            
+
+            <Grid x:Name="CounterGrid" Grid.Row="2" Visibility="Collapsed">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0">Special Identifier Name (Only Letters &amp; Numbers Allowed):</TextBlock>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name" />
+
+                    <TextBox Grid.Column="2" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" />
+                </Grid>
+
+            </Grid>
+
         </Grid>
     </GroupBox>
 </UserControl>

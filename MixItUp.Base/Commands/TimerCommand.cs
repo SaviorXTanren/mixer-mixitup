@@ -1,22 +1,7 @@
-﻿using MixItUp.Base.Actions;
-using System.Collections.Generic;
-
-namespace MixItUp.Base.Commands
+﻿namespace MixItUp.Base.Commands
 {
     public class TimerCommand : CommandBase
     {
-        public static IEnumerable<ActionTypeEnum> AllowedActions
-        {
-            get
-            {
-                return new List<ActionTypeEnum>()
-                {
-                    ActionTypeEnum.Chat, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram, ActionTypeEnum.Input, ActionTypeEnum.Overlay,
-                    ActionTypeEnum.Sound, ActionTypeEnum.Wait, ActionTypeEnum.OBSStudio, ActionTypeEnum.XSplit
-                };
-            }
-        }
-
         public TimerCommand() { }
 
         public TimerCommand(string name)

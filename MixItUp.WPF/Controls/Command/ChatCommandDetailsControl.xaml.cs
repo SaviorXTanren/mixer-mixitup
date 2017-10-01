@@ -41,8 +41,6 @@ namespace MixItUp.WPF.Controls.Command
             return Task.FromResult(0);
         }
 
-        public override IEnumerable<ActionTypeEnum> GetAllowedActions() { return ChatCommand.AllowedActions; }
-
         public override bool Validate()
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))

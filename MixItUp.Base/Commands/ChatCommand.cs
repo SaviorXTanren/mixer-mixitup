@@ -1,13 +1,12 @@
 ﻿using Mixer.Base.Util;
-using MixItUp.Base.Actions;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using MixItUp.Base.ViewModel;
-using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
@@ -21,18 +20,6 @@ namespace MixItUp.Base.Commands
                 List<string> roles = EnumHelper.GetEnumNames<UserRole>().ToList();
                 roles.Remove(EnumHelper.GetEnumName<UserRole>(UserRole.Banned));
                 return roles;
-            }
-        }
-
-        public static IEnumerable<ActionTypeEnum> AllowedActions
-        {
-            get
-            {
-                return new List<ActionTypeEnum>()
-                {
-                    ActionTypeEnum.Chat, ActionTypeEnum.Currency, ActionTypeEnum.ExternalProgram, ActionTypeEnum.Input, ActionTypeEnum.Overlay,
-                    ActionTypeEnum.Sound, ActionTypeEnum.Wait, ActionTypeEnum.OBSStudio, ActionTypeEnum.XSplit
-                };
             }
         }
 

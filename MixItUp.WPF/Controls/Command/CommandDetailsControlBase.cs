@@ -10,8 +10,6 @@ namespace MixItUp.WPF.Controls.Command
     {
         public virtual Task Initialize() { return Task.FromResult(0); }
 
-        public virtual IEnumerable<ActionTypeEnum> GetAllowedActions() { return new List<ActionTypeEnum>(); }
-
         public virtual bool Validate() { return false; }
 
         public virtual CommandBase GetExistingCommand() { return null; }

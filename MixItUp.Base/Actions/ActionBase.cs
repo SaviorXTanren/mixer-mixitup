@@ -21,8 +21,9 @@ namespace MixItUp.Base.Actions
         [Name("OBS Studio")]
         OBSStudio,
         XSplit,
+        Counter,
 
-        Custom,
+        Custom = 99,
     }
 
     [DataContract]
@@ -70,6 +71,11 @@ namespace MixItUp.Base.Actions
                 {
                     str = str.Replace("$arg" + (i + 1), arguments.ElementAt(i));
                 }
+            }
+
+            foreach (string counter in ChannelSession.Counters.Keys)
+            {
+                str = str.Replace("$" + counter, ChannelSession.Counters[counter].ToString());
             }
 
             return str;

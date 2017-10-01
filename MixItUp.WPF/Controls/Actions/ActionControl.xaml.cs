@@ -130,6 +130,14 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                     }
                     break;
+                case ActionTypeEnum.Counter:
+                    int counterAmount;
+                    if (!string.IsNullOrEmpty(this.CounterNameTextBox.Text) && this.CounterNameTextBox.Text.All(c => char.IsLetterOrDigit(c)) &&
+                        !string.IsNullOrEmpty(this.CounterAmountTextBox.Text) && int.TryParse(this.CounterAmountTextBox.Text, out counterAmount))
+                    {
+                        return new CounterAction(this.CounterNameTextBox.Text, counterAmount);
+                    }
+                    break;
             }
             return null;
         }
@@ -170,6 +178,9 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.XSplit:
                     this.XSplitGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.Counter:
+                    this.CounterGrid.Visibility = Visibility.Visible;
                     break;
             }
 
@@ -254,6 +265,11 @@ namespace MixItUp.WPF.Controls.Actions
                             this.XSplitSourceTextTextBox.Text = xsplitAction.SourceText;
                             this.XSplitSourceLoadTextFromTextBox.Text = xsplitAction.LoadTextFromFilePath;
                         }
+                        break;
+                    case ActionTypeEnum.Counter:
+                        CounterAction counterAction = (CounterAction)this.action;
+                        this.CounterNameTextBox.Text = counterAction.CounterName;
+                        this.CounterAmountTextBox.Text = counterAction.CounterAmount.ToString();
                         break;
                 }
 

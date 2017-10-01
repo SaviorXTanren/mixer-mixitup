@@ -113,6 +113,8 @@ namespace MixItUp.Base
 
         public static GiveawayItemModel Giveaway { get; set; }
 
+        public static LockedDictionary<string, int> Counters { get; private set; }
+
         public static async Task<bool> Initialize(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
             ChannelSession.MixerConnection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.GetClientID(), scopes);
@@ -397,6 +399,8 @@ namespace MixItUp.Base
                     ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
 
                     ChannelSession.Giveaway = new GiveawayItemModel();
+
+                    ChannelSession.Counters = new LockedDictionary<string, int>();
                     
                     if (ChannelSession.Settings == null)
                     {
