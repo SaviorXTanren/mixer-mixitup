@@ -15,6 +15,7 @@ namespace MixItUp.WPF.Windows
         {
             this.Loaded += LoadingWindowBase_Loaded;
             this.Closing += LoadingWindowBase_Closing;
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         public void Initialize(LoadingStatusBar statusBar)
