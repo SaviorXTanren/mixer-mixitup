@@ -4,6 +4,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -86,6 +87,19 @@ namespace MixItUp.Base
         public Dictionary<string, int> InteractiveCooldownGroups { get; set; }
 
         [JsonProperty]
+        public List<string> bannedWordsInternal { get; set; }
+        [JsonProperty]
+        public int CapsBlockCount { get; set; }
+        [JsonProperty]
+        public int SymbolEmoteBlockCount { get; set; }
+        [JsonProperty]
+        public bool BlockLinks { get; set; }
+        [JsonProperty]
+        public int Timeout1MinuteOffenseCount { get; set; }
+        [JsonProperty]
+        public int Timeout5MinuteOffenseCount { get; set; }
+
+        [JsonProperty]
         public bool EnableOverlay { get; set; }
         [JsonProperty]
         public string OBSStudioServerIP { get; set; }
@@ -110,6 +124,8 @@ namespace MixItUp.Base
         public LockedList<string> Quotes { get; set; }
         [JsonIgnore]
         public LockedDictionary<uint, UserDataViewModel> UserData { get; set; }
+        [JsonProperty]
+        public LockedList<string> BannedWords { get; set; }
 
         public ChannelSettings(ExpandedChannelModel channel, bool isStreamer = true)
             : this()
@@ -127,7 +143,8 @@ namespace MixItUp.Base
             this.timerCommandsInternal = new List<TimerCommand>();
             this.quotesInternal = new List<string>();
             this.userDataInternal = new List<UserDataViewModel>();
-            this.InteractiveCooldownGroups = new Dictionary<string, int>();
+            this.bannedWordsInternal = new List<string>();
+            this.InteractiveCooldownGroups = new Dictionary<string, int>();        
 
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
@@ -136,6 +153,7 @@ namespace MixItUp.Base
             this.TimerCommands = new LockedList<TimerCommand>();
             this.Quotes = new LockedList<string>();
             this.UserData = new LockedDictionary<uint, UserDataViewModel>();
+            this.BannedWords = new LockedList<string>();
 
             this.TimerCommandsInterval = 10;
             this.TimerCommandsMinimumMessages = 10;
@@ -150,6 +168,7 @@ namespace MixItUp.Base
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.Quotes = new LockedList<string>(this.quotesInternal);
             this.UserData = new LockedDictionary<uint, UserDataViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
+            this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
         }
 
         public async Task Save()
@@ -169,6 +188,7 @@ namespace MixItUp.Base
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.quotesInternal = this.Quotes.ToList();
             this.userDataInternal = this.UserData.Values.ToList();
+            this.bannedWordsInternal = this.BannedWords.ToList();
 
             await SerializerHelper.SerializeToFile(filePath, this);
 

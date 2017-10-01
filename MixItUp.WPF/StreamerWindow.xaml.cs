@@ -33,6 +33,7 @@ namespace MixItUp.WPF
             await this.Services.Initialize(this);
             await this.About.Initialize(this);
             await this.Currency.Initialize(this);
+            await this.Moderation.Initialize(this);
         }
 
         protected override async Task OnClosing()

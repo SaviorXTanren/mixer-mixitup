@@ -58,6 +58,9 @@
             <TabItem Header="Giveaway">
                 <GiveawayControls:GiveawayControl x:Name="Giveaway" />
             </TabItem>
+            <TabItem Header="Moderation">
+                <ChatControls:ChatModerationControl x:Name="Moderation" />
+            </TabItem>
             <TabItem Header="Services">
                 <ServicesControls:ServicesControl x:Name="Services" />
             </TabItem>

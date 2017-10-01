@@ -25,6 +25,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public UserRole PrimaryRole { get { return this.Roles.Max(); } }
 
+        public int ChatOffenses { get; set; }
+
         public ChatUserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { }
 
         public ChatUserViewModel(ChatUserEventModel userEvent) : this(userEvent.id, userEvent.username, userEvent.roles) { }

@@ -264,29 +264,49 @@ namespace MixItUp.WPF.Controls.Chat
                 messageControl.DeleteMessage();
                 await ChannelSession.ChatClient.DeleteMessage(message.ID);
             }
-            else if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
+            else
             {
-                ChatMessageCommand messageCommand = new ChatMessageCommand(message);
-
-                ChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
-                if (command == null)
+                if (!messageControl.Message.IsWhisper && messageControl.Message.User.PrimaryRole < UserRole.Mod && messageControl.Message.ShouldBeModerated())
                 {
-                    command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
-                }
+                    await ChannelSession.ChatClient.DeleteMessage(messageControl.Message.ID);
+                    messageControl.DeleteMessage();
 
-                if (command != null)
-                {
-                    if (message.User.Roles.Any(r => r >= command.Permissions))
+                    messageControl.Message.User.ChatOffenses++;
+                    if (ChannelSession.Settings.Timeout5MinuteOffenseCount > 0 && messageControl.Message.User.ChatOffenses >= ChannelSession.Settings.Timeout5MinuteOffenseCount)
                     {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        command.Perform(message.User, messageCommand.CommandArguments);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        await ChannelSession.ChatClient.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 5 minutes due to chat moderation. Please watch what you type in chat or further actions will be taken.");
+                        await ChannelSession.ChatClient.TimeoutUser(messageControl.Message.User.UserName, 300);
                     }
-                    else
+                    else if (ChannelSession.Settings.Timeout1MinuteOffenseCount > 0 && messageControl.Message.User.ChatOffenses >= ChannelSession.Settings.Timeout1MinuteOffenseCount)
                     {
+                        await ChannelSession.ChatClient.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 1 minute due to chat moderation. Please watch what you type in chat or further actions will be taken.");
+                        await ChannelSession.ChatClient.TimeoutUser(messageControl.Message.User.UserName, 60);
+                    }
+                }
+                else if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
+                {
+                    ChatMessageCommand messageCommand = new ChatMessageCommand(message);
+
+                    ChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
+                    if (command == null)
+                    {
+                        command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
+                    }
+
+                    if (command != null)
+                    {
+                        if (message.User.Roles.Any(r => r >= command.Permissions))
+                        {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        ChannelSession.BotChatClient.Whisper(message.User.UserName, "You do not permission to run this command");
+                            command.Perform(message.User, messageCommand.CommandArguments);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        }
+                        else
+                        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            ChannelSession.BotChatClient.Whisper(message.User.UserName, "You do not permission to run this command");
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        }
                     }
                 }
             }

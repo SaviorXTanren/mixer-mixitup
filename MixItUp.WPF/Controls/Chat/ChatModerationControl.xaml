@@ -1,0 +1,93 @@
+﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.Chat.ChatModerationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+                          
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                          
+             d:DesignHeight="700" d:DesignWidth="600">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0">Banned Words (One Per Line):</TextBlock>
+
+            <TextBox x:Name="BannedWordsTextBox" Grid.Row="2" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" LostFocus="BannedWordsTextBox_LostFocus" />
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0">Max Caps Allowed:</TextBlock>
+                <Slider x:Name="MaxCapsAllowedSlider" Grid.Row="1" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Max Caps Allowed (0 = Disabled)" Width="200" ValueChanged="MaxCapsAllowedSlider_ValueChanged" />
+
+                <TextBlock Grid.Row="3">Max Emote/Symbol Allowed:</TextBlock>
+                <Slider x:Name="MaxEmoteSymbolAllowedSlider" Grid.Row="4" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Max Emote/Symbol Allowed (0 = Disabled)" Width="200" ValueChanged="MaxEmoteSymbolAllowedSlider_ValueChanged" />
+
+                <Grid Grid.Row="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0">Block Links:</TextBlock>
+                    <CheckBox x:Name="BlockLinksCheckBox" Grid.Column="2" Checked="BlockLinksCheckBox_Checked" Unchecked="BlockLinksCheckBox_Unchecked" />
+                </Grid>
+
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0">Minimum Offenses for 1 Min Timeout:</TextBlock>
+                <Slider x:Name="Timeout1MinAfterSlider" Grid.Row="1" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="1 Min timeout after (0 = Disabled)" Width="200" ValueChanged="Timeout1MinAfterSlider_ValueChanged" />
+
+                <TextBlock Grid.Row="3">Minimum Offenses for 5 Min Timeout:</TextBlock>
+                <Slider x:Name="Timeout5MinAfterSlider" Grid.Row="4" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="5 Min timeout after (0 = Disabled)" Width="200" ValueChanged="Timeout5MinAfterSlider_ValueChanged" />
+
+            </Grid>
+
+        </Grid>
+    </Grid>
+</Controls:MainControlBase>
