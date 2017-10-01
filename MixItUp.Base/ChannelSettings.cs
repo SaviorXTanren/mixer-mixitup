@@ -31,10 +31,13 @@ namespace MixItUp.Base
             List<ChannelSettings> settings = new List<ChannelSettings>();
             foreach (string filePath in Directory.GetFiles(SettingsDirectoryName))
             {
-                ChannelSettings setting = await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
-                if (setting != null)
+                if (filePath.EndsWith("xml"))
                 {
-                    settings.Add(setting);
+                    ChannelSettings setting = await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
+                    if (setting != null)
+                    {
+                        settings.Add(setting);
+                    }
                 }
             }
             return settings;
