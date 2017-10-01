@@ -282,6 +282,10 @@ namespace MixItUp.WPF.Controls.Chat
                         await ChannelSession.ChatClient.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 1 minute due to chat moderation. Please watch what you type in chat or further actions will be taken.");
                         await ChannelSession.ChatClient.TimeoutUser(messageControl.Message.User.UserName, 60);
                     }
+                    else
+                    {
+                        await ChannelSession.ChatClient.Whisper(messageControl.Message.User.UserName, "Your message has been deleted due to chat moderation. Please watch what you type in chat or further actions will be taken.");
+                    }
                 }
                 else if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
                 {
