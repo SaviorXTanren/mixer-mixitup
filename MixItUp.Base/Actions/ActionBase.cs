@@ -57,6 +57,8 @@ namespace MixItUp.Base.Actions
 
                 str = str.Replace("$user", "@" + user.UserName);
 
+                str = str.Replace("$userUrl", "https://www.mixer.com/" + user.UserName);
+
                 if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
                 {
                     str = str.Replace("$currency", ChannelSession.Settings.UserData[user.ID].CurrencyAmount.ToString());
