@@ -108,7 +108,7 @@ namespace MixItUp.Base
         public static XSplitWebServer XSplitServer { get; private set; }
 
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
-        public static LockedDictionary<uint, ChatUserViewModel> ChatUsers { get; private set; }
+        public static LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
         public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
         public static GiveawayItemModel Giveaway { get; set; }
@@ -395,7 +395,7 @@ namespace MixItUp.Base
                     ChannelSession.Channel = channel;
 
                     ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
-                    ChannelSession.ChatUsers = new LockedDictionary<uint, ChatUserViewModel>();
+                    ChannelSession.ChatUsers = new LockedDictionary<uint, UserViewModel>();
                     ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
 
                     ChannelSession.Giveaway = new GiveawayItemModel();

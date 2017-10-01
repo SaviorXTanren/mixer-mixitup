@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public Guid ID { get; private set; }
 
-        public ChatUserViewModel User { get; private set; }
+        public UserViewModel User { get; private set; }
 
         public string Message { get; private set; }
 
@@ -34,7 +34,7 @@ namespace MixItUp.Base.ViewModel.Chat
             }
             else
             {
-                this.User = new ChatUserViewModel(this.ChatMessageEvent);
+                this.User = new UserViewModel(this.ChatMessageEvent);
             }
             
             this.TargetUsername = this.ChatMessageEvent.target;

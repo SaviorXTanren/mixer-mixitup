@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.Chat;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Chat
@@ -8,9 +9,9 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatUserControl : UserControl
     {
-        public ChatUserViewModel User { get; private set; }
+        public UserViewModel User { get; private set; }
 
-        public ChatUserControl(ChatUserViewModel user)
+        public ChatUserControl(UserViewModel user)
         {
             InitializeComponent();
 

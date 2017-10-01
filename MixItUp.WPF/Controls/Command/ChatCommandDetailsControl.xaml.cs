@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using System;

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Windows;
 using System;

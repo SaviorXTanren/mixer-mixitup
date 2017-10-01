@@ -428,7 +428,14 @@ namespace MixItUp.WPF.Controls.Interactive
                         if (ChannelSession.InteractiveUsers.ContainsKey(interactiveInput.participantID))
                         {
                             InteractiveParticipantModel participant = ChannelSession.InteractiveUsers[interactiveInput.participantID];
-                            user = new UserViewModel(participant.userID, participant.username);
+                            if (ChannelSession.ChatUsers.ContainsKey(participant.userID))
+                            {
+                                user = ChannelSession.ChatUsers[participant.userID];
+                            }
+                            else
+                            {
+                                user = new UserViewModel(participant.userID, participant.username);
+                            }
                         }
 
                         if (!string.IsNullOrEmpty(interactiveInput.transactionID))

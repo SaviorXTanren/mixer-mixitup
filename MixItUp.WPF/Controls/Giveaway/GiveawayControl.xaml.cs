@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using System;
@@ -80,7 +81,7 @@ namespace MixItUp.WPF.Controls.Giveaway
             this.EnableGiveawayButton.Visibility = Visibility.Visible;
             this.PerformGiveawayButton.IsEnabled = false;
 
-            IEnumerable<ChatUserViewModel> usersToSelectFrom = null;
+            IEnumerable<UserViewModel> usersToSelectFrom = null;
             switch (ChannelSession.Giveaway.Type)
             {
                 case "Users":
@@ -100,7 +101,7 @@ namespace MixItUp.WPF.Controls.Giveaway
             {
                 Random random = new Random();
                 int index = random.Next(usersToSelectFrom.Count());
-                ChatUserViewModel winner = usersToSelectFrom.ElementAt(index);
+                UserViewModel winner = usersToSelectFrom.ElementAt(index);
                 this.previousWinners.Add(new PreviousWinnerModel() { ID = winner.ID, Username = winner.UserName, Prize = ChannelSession.Giveaway.Item });
 
                 this.GiveawayWinnerTextBlock.Text = winner.UserName;

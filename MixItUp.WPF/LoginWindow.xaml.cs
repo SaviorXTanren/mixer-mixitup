@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;

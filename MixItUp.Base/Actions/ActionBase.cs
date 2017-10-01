@@ -50,6 +50,11 @@ namespace MixItUp.Base.Actions
         {
             if (user != null)
             {
+                if (ChannelSession.ChatUsers.ContainsKey(user.ID))
+                {
+                    str = str.Replace("$userAvatar", ChannelSession.ChatUsers[user.ID].AvatarLink);
+                }
+
                 str = str.Replace("$user", "@" + user.UserName);
 
                 if (ChannelSession.Settings.UserData.ContainsKey(user.ID))

@@ -3,6 +3,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Chat;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace MixItUp.WPF.Controls.Chat
 
                 foreach (ChatUserModel user in await ChannelSession.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
                 {
-                    await this.AddUser(new ChatUserViewModel(user), checkIfFollows: false);
+                    await this.AddUser(new UserViewModel(user), checkIfFollows: false);
                 }
 
                 if (ChannelSession.ChatUsers.Count > 0)
@@ -208,7 +209,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         #region Chat Update Methods
 
-        private async Task AddUser(ChatUserViewModel user, bool checkIfFollows = true)
+        private async Task AddUser(UserViewModel user, bool checkIfFollows = true)
         {
             if (!ChannelSession.ChatUsers.ContainsKey(user.ID))
             {
@@ -223,6 +224,12 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                 }
 
+                if (user.ID > 0)
+                {
+                    UserWithChannelModel userWithChannel = await ChannelSession.MixerConnection.Users.GetUser(user.GetModel());
+                    user.AvatarLink = userWithChannel.avatarUrl;
+                }
+
                 var orderedUsers = ChannelSession.ChatUsers.Values.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
                 this.UserControls.Insert(orderedUsers.IndexOf(user), new ChatUserControl(user));
 
@@ -230,7 +237,7 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void RemoveUser(ChatUserViewModel user)
+        private void RemoveUser(UserViewModel user)
         {
             ChatUserControl userControl = this.UserControls.FirstOrDefault(u => u.User.Equals(user));
             if (userControl != null)
@@ -316,7 +323,7 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private async Task PurgeUser(ChatUserViewModel user)
+        private async Task PurgeUser(UserViewModel user)
         {
             await ChannelSession.ChatClient.PurgeUser(user.UserName);
             foreach (ChatMessageControl messageControl in this.MessageControls)
@@ -459,13 +466,13 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel e)
         {
-            ChatUserViewModel user = new ChatUserViewModel(e);
+            UserViewModel user = new UserViewModel(e);
             await this.AddUser(user);
         }
 
         private void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
         {
-            ChatUserViewModel user = new ChatUserViewModel(e);
+            UserViewModel user = new UserViewModel(e);
             this.RemoveUser(user);
         }
 
@@ -476,7 +483,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
         {
-            ChatUserViewModel user = new ChatUserViewModel(e);
+            UserViewModel user = new UserViewModel(e);
             this.RemoveUser(user);
             await this.AddUser(user);
         }

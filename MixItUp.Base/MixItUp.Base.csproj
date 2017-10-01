@@ -94,7 +94,6 @@
     <Compile Include="Util\SerializerHelper.cs" />
     <Compile Include="Util\UserModelExtensions.cs" />
     <Compile Include="ViewModel\Chat\ChatMessageViewModel.cs" />
-    <Compile Include="ViewModel\Chat\ChatUserViewModel.cs" />
     <Compile Include="ViewModel\Interactive\InteractiveControlViewModel.cs" />
     <Compile Include="ViewModel\UserDataViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
