@@ -3,6 +3,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -19,6 +20,8 @@ namespace MixItUp.Base.Commands
     [DataContract]
     public class CommandBase
     {
+        private static SemaphoreSlim commandPerformSemaphore = new SemaphoreSlim(1);
+
         [DataMember]
         public string Name { get; set; }
 
@@ -74,10 +77,14 @@ namespace MixItUp.Base.Commands
                 arguments = new List<string>();
             }
 
+            await commandPerformSemaphore.WaitAsync();
+
             foreach (ActionBase action in this.Actions)
             {
                 await action.Perform(user, arguments);
             }
+
+            commandPerformSemaphore.Release();
         }
     }
 }
