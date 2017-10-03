@@ -63,9 +63,10 @@
 
 					if (data.text != null)
 					{
-						addedElement = document.createElement('p');
+						addedElement = document.createElement('h1');
 						addedElement.innerHTML = data.text;
-						addedElement.style.cssText += 'font-size: ' + data.fontSize + 'px; color: ' + data.color + '; ';
+						addedElement.style.cssText += 'font-size: ' + data.fontSize + 'px; color: ' + data.color + '; ' +
+						    'text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;';
 					}
 					
 					addWaitRemoveElement(data, addedElement);
