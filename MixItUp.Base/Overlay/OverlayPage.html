@@ -18,7 +18,7 @@
 			    var addedElement = document.createElement('p');
 			    addedElement.innerHTML = 'Connection Test!';
 
-			    var data = { horizontal: 50, vertical: 50, duration: 3 };
+			    var data = { horizontal: 50, vertical: 50, fontSize: 200, duration: 3 };
 
 			    addWaitRemoveElement(data, addedElement);
 			});
@@ -53,6 +53,8 @@
 
 							addedElement.src = imageType + ";base64," + data.imageData;
 						}
+
+						addedElement.style.cssText += 'width: ' + data.width + 'px; height: ' + data.height + 'px; ';
 						
 						addWaitRemoveElement(data, addedElement);
 					}
@@ -70,6 +72,7 @@
 					{
 						addedElement = document.createElement('p');
 						addedElement.innerHTML = data.text;
+						addedElement.style.cssText += 'font-size: ' + data.fontSize + 'px; color: ' + data.color + '; ';
 					}
 					
 					addWaitRemoveElement(data, addedElement);
@@ -93,7 +96,7 @@
 			{
 				if (addedElement != null)
 				{
-					addedElement.style.cssText = 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
+					addedElement.style.cssText += 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
 						data.vertical.toString() + '%; transform: translate(-50%, -50%);'
 
 					mainOverlayDiv.appendChild(addedElement);

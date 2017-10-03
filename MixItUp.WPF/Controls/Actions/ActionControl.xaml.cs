@@ -75,11 +75,21 @@ namespace MixItUp.WPF.Controls.Actions
                         {
                             if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
                             {
-                                return new OverlayAction(this.OverlayImageFilePathTextBox.Text, duration,  horizontal, vertical);
+                                int width;
+                                int height;
+                                if (int.TryParse(this.OverlayImageWidthTextBox.Text, out width) && width > 0 &&
+                                    int.TryParse(this.OverlayImageHeightTextBox.Text, out height) && height > 0)
+                                {
+                                    return new OverlayAction(this.OverlayImageFilePathTextBox.Text, width, height, duration, horizontal, vertical);
+                                }
                             }
-                            else if (!string.IsNullOrEmpty(this.OverlayTextTextBox.Text))
+                            else if (!string.IsNullOrEmpty(this.OverlayTextTextBox.Text) && !string.IsNullOrEmpty(this.OverlayFontColorTextBox.Text))
                             {
-                                return new OverlayAction(this.OverlayTextTextBox.Text, "black", duration, horizontal, vertical);
+                                int fontSize;
+                                if (int.TryParse(this.OverlayFontSizeTextBox.Text, out fontSize) && fontSize > 0)
+                                {
+                                    return new OverlayAction(this.OverlayTextTextBox.Text, this.OverlayFontColorTextBox.Text, fontSize, duration, horizontal, vertical);
+                                }
                             }
                         }
                     }
@@ -227,11 +237,14 @@ namespace MixItUp.WPF.Controls.Actions
                         {
                             this.OverlayTypeComboBox.SelectedItem = "Image";
                             this.OverlayImageFilePathTextBox.Text = overlayAction.ImagePath;
+                            this.OverlayImageWidthTextBox.Text = overlayAction.ImageWidth.ToString();
+                            this.OverlayImageHeightTextBox.Text = overlayAction.ImageHeight.ToString();
                         }
                         else if (!string.IsNullOrEmpty(overlayAction.Text))
                         {
                             this.OverlayTypeComboBox.SelectedItem = "Text";
                             this.OverlayTextTextBox.Text = overlayAction.Text;
+                            this.OverlayFontSizeTextBox.Text = overlayAction.FontSize.ToString();
                         }
                         this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
                         this.OverlayHorizontalTextBox.Text = overlayAction.Horizontal.ToString();

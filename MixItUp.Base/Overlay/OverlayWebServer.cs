@@ -17,6 +17,10 @@ namespace MixItUp.Base.Overlay
         [DataMember]
         public int vertical;
         [DataMember]
+        public int width;
+        [DataMember]
+        public int height;
+        [DataMember]
         public string imageData;
     }
 
@@ -33,6 +37,8 @@ namespace MixItUp.Base.Overlay
         public int horizontal;
         [DataMember]
         public int vertical;
+        [DataMember]
+        public int fontSize;
     }
 
     public class OverlayWebServer : RequestSenderWebServerBase

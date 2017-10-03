@@ -14,11 +14,17 @@ namespace MixItUp.Base.Actions
     {
         [DataMember]
         public string ImagePath;
+        [DataMember]
+        public int ImageWidth;
+        [DataMember]
+        public int ImageHeight;
 
         [DataMember]
         public string Text;
         [DataMember]
         public string Color;
+        [DataMember]
+        public int FontSize;
 
         [DataMember]
         public int Duration;
@@ -31,17 +37,20 @@ namespace MixItUp.Base.Actions
 
         public OverlayAction() { }
 
-        public OverlayAction(string imagePath, int duration, int horizontal, int vertical)
+        public OverlayAction(string imagePath, int width, int height, int duration, int horizontal, int vertical)
             : this(duration, horizontal, vertical)
         {
             this.ImagePath = imagePath;
+            this.ImageWidth = width;
+            this.ImageHeight = height;
         }
 
-        public OverlayAction(string text, string color, int duration, int horizontal, int vertical)
+        public OverlayAction(string text, string color, int fontSize, int duration, int horizontal, int vertical)
             : this(duration, horizontal, vertical)
         {
             this.Text = text;
             this.Color = color;
+            this.FontSize = fontSize;
         }
 
         public OverlayAction(int duration, int horizontal, int vertical)
@@ -74,8 +83,7 @@ namespace MixItUp.Base.Actions
                                     }
                                     imageFilePath = tempFilePath;
                                 }
-
-                                if (File.Exists(imageFilePath))
+                                else if (File.Exists(imageFilePath))
                                 {
                                     byte[] byteData = File.ReadAllBytes(imageFilePath);
                                     this.imageData = Convert.ToBase64String(byteData);
@@ -88,11 +96,8 @@ namespace MixItUp.Base.Actions
                         {
                             ChannelSession.OverlayServer.SetImage(new OverlayImage()
                             {
-                                imagePath = imageFilePath,
-                                duration = this.Duration,
-                                horizontal = this.Horizontal,
-                                vertical = this.Vertical,
-                                imageData = this.imageData
+                                imagePath = imageFilePath, width = this.ImageWidth, height = this.ImageHeight, duration = this.Duration, horizontal = this.Horizontal,
+                                vertical = this.Vertical, imageData = this.imageData
                             });
                         }
                     }
@@ -103,7 +108,7 @@ namespace MixItUp.Base.Actions
                     string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
                     ChannelSession.OverlayServer.SetText(new OverlayText()
                     {
-                        text = text, color = this.Color, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical
+                        text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical
                     });
                 }
             }
