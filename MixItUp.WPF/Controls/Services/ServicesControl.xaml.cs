@@ -27,7 +27,6 @@ namespace MixItUp.WPF.Controls.Services
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
 
                 this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
-
                 if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
                 {
                     this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
@@ -91,7 +90,12 @@ namespace MixItUp.WPF.Controls.Services
             {
                 this.NewBotLoginGrid.Visibility = Visibility.Collapsed;
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
+
                 this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
+                if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
+                {
+                    this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+                }
             }
         }
 

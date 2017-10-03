@@ -54,12 +54,12 @@
                     <Grid Grid.Row="0" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <UsersControls:UserProfileAvatarControl Grid.Column="0" x:Name="BotProfileAvatar" />
-                        <TextBlock Grid.Column="2" x:Name="BotLoggedInNameTextBlock" />
+                        <TextBlock Grid.Column="2" x:Name="BotLoggedInNameTextBlock" VerticalAlignment="Center" />
                     </Grid>
 
                     <Button x:Name="LogOutBotButton" Grid.Row="2" Click="LogOutBotButton_Click" Width="90">Log Out</Button>
