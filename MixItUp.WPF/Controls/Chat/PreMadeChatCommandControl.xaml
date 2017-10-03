@@ -24,11 +24,11 @@
             <ColumnDefinition Width="60" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" Text="{Binding Name}" />
-        
-        <TextBlock Grid.Column="1" Text="{Binding CommandsString}" />
-        
-        <ComboBox Grid.Column="2" x:Name="PermissionsComboBox" SelectionChanged="PermissionsComboBox_SelectionChanged" />
+        <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" />
+
+        <TextBlock Grid.Column="1" Text="{Binding CommandsString}" VerticalAlignment="Center" />
+
+        <ComboBox Grid.Column="2" x:Name="PermissionsComboBox" SelectionChanged="PermissionsComboBox_SelectionChanged" VerticalAlignment="Center" />
         
         <TextBox Grid.Column="3" x:Name="CooldownTextBox" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Text="{Binding Cooldown}" LostFocus="CooldownTextBox_LostFocus" />
         
