@@ -89,7 +89,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (!string.IsNullOrEmpty(this.SourceText))
                     {
-                        this.currentTextToWrite = this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
+                        this.currentTextToWrite = await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
                         this.UpdateReferenceTextFile();
                     }
                     ChannelSession.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);

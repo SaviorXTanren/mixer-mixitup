@@ -63,7 +63,7 @@ namespace MixItUp.Base.Actions
             }
         }
 
-        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.XSplitServer == null)
             {
@@ -81,13 +81,12 @@ namespace MixItUp.Base.Actions
                 {
                     if (!string.IsNullOrEmpty(this.SourceText))
                     {
-                        this.currentTextToWrite = this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
+                        this.currentTextToWrite = await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
                         this.UpdateReferenceTextFile();
                     }
                     ChannelSession.XSplitServer.UpdateSource(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
                 }
             }
-            return Task.FromResult(0);
         }
     }
 }

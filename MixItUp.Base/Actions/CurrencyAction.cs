@@ -38,7 +38,7 @@ namespace MixItUp.Base.Actions
                 }
                 ChannelSession.Settings.UserData[user.ID].CurrencyAmount += this.Amount;
 
-                string message = this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
+                string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)
                 {
                     await ChannelSession.BotChatClient.Whisper(user.UserName, message);

@@ -28,7 +28,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.BotChatClient != null)
             {
-                string message = this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
+                string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)
                 {
                     await ChannelSession.BotChatClient.Whisper(user.UserName, message);

@@ -51,7 +51,7 @@ namespace MixItUp.Base.Actions
             this.Vertical = vertical;
         }
 
-        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.OverlayServer != null)
             {
@@ -69,14 +69,13 @@ namespace MixItUp.Base.Actions
                 }
                 else if (this.Text != null)
                 {
-                    string text = this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
+                    string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
                     ChannelSession.OverlayServer.SetText(new OverlayText()
                     {
                         text = text, color = this.Color, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical
                     });
                 }
             }
-            return Task.FromResult(0);
         }
     }
 }

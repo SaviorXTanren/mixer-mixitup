@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Util;
+﻿using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace MixItUp.Base.Actions
             await Task.Delay(500);
         }
 
-        protected string ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
         {
             if (user != null)
             {
@@ -55,9 +56,9 @@ namespace MixItUp.Base.Actions
                     str = str.Replace("$userAvatar", ChannelSession.ChatUsers[user.ID].AvatarLink);
                 }
 
-                str = str.Replace("$user", "@" + user.UserName);
-
                 str = str.Replace("$userUrl", "https://www.mixer.com/" + user.UserName);
+
+                str = str.Replace("$user", "@" + user.UserName);
 
                 if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
                 {
@@ -76,6 +77,23 @@ namespace MixItUp.Base.Actions
             {
                 for (int i = 0; i < arguments.Count(); i++)
                 {
+                    string username = arguments.ElementAt(i);
+                    username = username.Replace("@", "");
+
+                    UserModel argUser = await ChannelSession.MixerConnection.Users.GetUser(username);
+                    if (argUser != null)
+                    {
+                        str = str.Replace("$arg" + (i + 1) + "UserAvatar", argUser.avatarUrl);
+                        str = str.Replace("$arg" + (i + 1) + "UserUrl", "https://www.mixer.com/" + argUser.username);
+                        str = str.Replace("$arg" + (i + 1) + "User", "@" + argUser.username);
+                    }
+                    else
+                    {
+                        str = str.Replace("$arg" + (i + 1) + "UserAvatar", "");
+                        str = str.Replace("$arg" + (i + 1) + "UserUrl", "");
+                        str = str.Replace("$arg" + (i + 1) + "User", "");
+                    }
+
                     str = str.Replace("$arg" + (i + 1), arguments.ElementAt(i));
                 }
             }
