@@ -245,6 +245,7 @@ namespace MixItUp.WPF.Controls.Actions
                             this.OverlayTypeComboBox.SelectedItem = "Text";
                             this.OverlayTextTextBox.Text = overlayAction.Text;
                             this.OverlayFontSizeTextBox.Text = overlayAction.FontSize.ToString();
+                            this.OverlayFontColorTextBox.Text = overlayAction.Color;
                         }
                         this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
                         this.OverlayHorizontalTextBox.Text = overlayAction.Horizontal.ToString();

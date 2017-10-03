@@ -71,7 +71,7 @@ namespace MixItUp.Base.Actions
                     try
                     {
                         if (this.imageData == null)
-                        { 
+                        {
                             try
                             {
                                 if (Uri.IsWellFormedUriString(imageFilePath, UriKind.RelativeOrAbsolute))
@@ -83,7 +83,8 @@ namespace MixItUp.Base.Actions
                                     }
                                     imageFilePath = tempFilePath;
                                 }
-                                else if (File.Exists(imageFilePath))
+
+                                if (File.Exists(imageFilePath))
                                 {
                                     byte[] byteData = File.ReadAllBytes(imageFilePath);
                                     this.imageData = Convert.ToBase64String(byteData);

@@ -34,25 +34,18 @@
 					{
 						addedElement = document.createElement('img');
 
-						if (data.imagePath.startsWith("http"))
-						{
-							addedElement.src = data.imagePath;
+						var imageType = "data:image/png";
+						if (data.imagePath.endsWith("gif")) {
+						    imageType = "data:image/gif";
 						}
-						else
-						{
-							var imageType = "data:image/png";
-							if (data.imagePath.endsWith("gif")) {
-								imageType = "data:image/gif";
-							}
-							else if (data.imagePath.endsWith("jpg")) {
-								imageType = "data:image/jpg";
-							}
-							else if (data.imagePath.endsWith("jpeg")) {
-								imageType = "data:image/jpeg";
-							}
+						else if (data.imagePath.endsWith("jpg")) {
+						    imageType = "data:image/jpg";
+						}
+						else if (data.imagePath.endsWith("jpeg")) {
+						    imageType = "data:image/jpeg";
+						}
 
-							addedElement.src = imageType + ";base64," + data.imageData;
-						}
+						addedElement.src = imageType + ";base64," + data.imageData;
 
 						addedElement.style.cssText += 'width: ' + data.width + 'px; height: ' + data.height + 'px; ';
 						
