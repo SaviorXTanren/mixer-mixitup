@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
+             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -13,31 +14,42 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock x:Name="UserTextBlock" Grid.Column="0" Text="{Binding User.UserName}" Foreground="{Binding User.PrimaryRoleColor}" />
-
-        <Grid x:Name="WhisperTargetGrid" Grid.Column="1" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
+        <Grid Grid.Column="0" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" Text="&#x2794;" />
+            <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" />
 
-            <TextBlock Grid.Column="3" x:Name="TargetUserTextBlock" Text="{Binding TargetUsername}" />
+            <TextBlock x:Name="UserTextBlock" Grid.Column="2" Text="{Binding User.UserName}" Foreground="{Binding User.PrimaryRoleColor}" VerticalAlignment="Center" />
 
+            <Grid x:Name="WhisperTargetGrid" Grid.Column="3" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="1" Text="&#x2794;" VerticalAlignment="Center" />
+
+                <TextBlock Grid.Column="3" x:Name="TargetUserTextBlock" Text="{Binding TargetUsername}" VerticalAlignment="Center" />
+
+            </Grid>
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center">:</TextBlock>
+            
         </Grid>
 
-        <TextBlock Grid.Column="2">:</TextBlock>
-
-        <TextBlock x:Name="MessageTextBlock" Grid.Column="4" Text="{Binding Message}" TextWrapping="Wrap" />
+        <TextBlock x:Name="MessageTextBlock" Grid.Column="2" Text="{Binding Message}" TextWrapping="Wrap" Margin="0,2,0,0" />
 
     </Grid>
 </UserControl>

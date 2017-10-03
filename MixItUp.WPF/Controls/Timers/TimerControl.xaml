@@ -25,7 +25,7 @@
 
         <DataGrid x:Name="TimerCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                 <DataGridTemplateColumn Width="65">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -74,7 +74,7 @@
 
             <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Command</Button>
 
-            <TextBox Grid.Column="2" x:Name="TimerIntervalTextBox" LostFocus="TimerIntervalTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Interval (Mins)" />
+            <TextBox Grid.Column="2" x:Name="TimerIntervalTextBox" LostFocus="TimerIntervalTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Interval (Minutes)" />
 
             <TextBox Grid.Column="4" x:Name="TimerMinimumMessagesTextBox" LostFocus="TimerMinimumMessagesTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Min Messages" />
 

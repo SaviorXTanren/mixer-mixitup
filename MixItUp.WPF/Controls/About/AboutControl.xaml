@@ -101,7 +101,7 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0">
-                        • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki" RequestNavigate="Hyperlink_RequestNavigate">Wiki</Hyperlink>
+                        • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki" RequestNavigate="Hyperlink_RequestNavigate">Wiki &amp; Tutorials</Hyperlink>
                     </TextBlock>
 
                     <TextBlock Grid.Row="2">

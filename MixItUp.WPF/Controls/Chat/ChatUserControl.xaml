@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
+             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -13,9 +14,9 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Image x:Name="UserPictureImage" Grid.Column="0" />
+        <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" />
 
-        <TextBlock x:Name="UserNameTextBlock" Grid.Column="2" Text="{Binding UserName}" Foreground="{Binding PrimaryRoleColor}" FontWeight="Bold" />
+        <TextBlock x:Name="UserNameTextBlock" Grid.Column="2" Text="{Binding UserName}" Foreground="{Binding PrimaryRoleColor}" FontWeight="Bold" VerticalAlignment="Center" />
 
     </Grid>
 </UserControl>

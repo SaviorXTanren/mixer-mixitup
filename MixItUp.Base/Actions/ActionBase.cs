@@ -42,11 +42,6 @@ namespace MixItUp.Base.Actions
 
         public abstract Task Perform(UserViewModel user, IEnumerable<string> arguments);
 
-        protected async Task Wait500()
-        {
-            await Task.Delay(500);
-        }
-
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
         {
             if (user != null)
@@ -55,9 +50,7 @@ namespace MixItUp.Base.Actions
                 {
                     str = str.Replace("$useravatar", ChannelSession.ChatUsers[user.ID].AvatarLink);
                 }
-
                 str = str.Replace("$userurl", "https://www.mixer.com/" + user.UserName);
-
                 str = str.Replace("$user", "@" + user.UserName);
 
                 if (ChannelSession.Settings.UserData.ContainsKey(user.ID))

@@ -19,15 +19,15 @@ namespace MixItUp.WPF.Controls.Quotes
 
         protected override Task InitializeInternal()
         {
-            this.EnableQuotesCheckBox.IsChecked = ChannelSession.Settings.QuotesEnabled;
+            this.EnableQuotesToggleButton.IsChecked = ChannelSession.Settings.QuotesEnabled;
             this.QuotesTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.Quotes);
 
             return base.InitializeInternal();
         }
 
-        private void EnableQuotesCheckBox_Checked(object sender, RoutedEventArgs e)
+        private void EnableQuotesToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Settings.QuotesEnabled = this.EnableQuotesCheckBox.IsChecked.GetValueOrDefault();
+            ChannelSession.Settings.QuotesEnabled = this.EnableQuotesToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void QuotesTextBox_LostFocus(object sender, RoutedEventArgs e)

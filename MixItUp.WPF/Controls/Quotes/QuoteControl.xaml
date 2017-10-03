@@ -25,7 +25,7 @@
 
             <TextBlock Grid.Column="0">Enable quotes (!quote):</TextBlock>
 
-            <CheckBox Grid.Column="2" x:Name="EnableQuotesCheckBox" Checked="EnableQuotesCheckBox_Checked" Unchecked="EnableQuotesCheckBox_Checked" />
+            <ToggleButton Grid.Column="2" x:Name="EnableQuotesToggleButton" Checked="EnableQuotesToggleButton_Checked" Unchecked="EnableQuotesToggleButton_Checked" />
 
             <TextBlock Grid.Column="4">Enter quotes one per line:</TextBlock>
         </Grid>

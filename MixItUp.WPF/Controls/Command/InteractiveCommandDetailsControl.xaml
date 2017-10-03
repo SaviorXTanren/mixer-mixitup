@@ -44,9 +44,9 @@
 
             <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Type" SelectionChanged="CooldownTypeComboBox_SelectionChanged" />
 
-            <ComboBox x:Name="CooldownGroupsComboBox" Grid.Column="2" IsEditable="True" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Groups" SelectionChanged="CooldownGroupsComboBox_SelectionChanged" Visibility="Collapsed" />
+            <ComboBox x:Name="CooldownGroupsComboBox" Grid.Column="2" IsEditable="True" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Group" SelectionChanged="CooldownGroupsComboBox_SelectionChanged" Visibility="Collapsed" />
 
-            <TextBox x:Name="CooldownTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown (Sec)" />
+            <TextBox x:Name="CooldownTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" />
         </Grid>
         
     </Grid>

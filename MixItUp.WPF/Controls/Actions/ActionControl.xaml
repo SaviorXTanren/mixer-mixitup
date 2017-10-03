@@ -63,7 +63,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0">Whisper:</TextBlock>
-                    <CheckBox Grid.Column="2" x:Name="ChatWhisperCheckBox" />
+                    <ToggleButton Grid.Column="2" x:Name="ChatWhisperToggleButton" />
 
                     <TextBlock Grid.Column="4">
                         <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
@@ -95,7 +95,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0">Whisper:</TextBlock>
-                    <CheckBox Grid.Column="2" x:Name="CurrencyWhisperCheckBox" />
+                    <ToggleButton Grid.Column="2" x:Name="CurrencyWhisperToggleButton" />
 
                     <TextBlock Grid.Column="4">
                         <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Chat Special Identifiers Reference</Hyperlink>
@@ -368,7 +368,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0">Special Identifier Name (Only Letters &amp; Numbers Allowed):</TextBlock>
+                <TextBlock Grid.Row="0">Special Identifier Name (Only Letters &amp; Numbers Allowed, no $):</TextBlock>
 
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>

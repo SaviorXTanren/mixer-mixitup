@@ -2,9 +2,11 @@
 using MixItUp.Base;
 using MixItUp.Base.Overlay;
 using MixItUp.WPF.Util;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Services
 {
@@ -23,7 +25,13 @@ namespace MixItUp.WPF.Controls.Services
             if (ChannelSession.Settings.BotOAuthToken != null)
             {
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
+
                 this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
+
+                if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
+                {
+                    this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+                }
             }
             else
             {

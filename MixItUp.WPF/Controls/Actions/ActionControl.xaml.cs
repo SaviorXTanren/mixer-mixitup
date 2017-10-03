@@ -41,14 +41,14 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.Chat:
                     if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
                     {
-                        return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperCheckBox.IsChecked.GetValueOrDefault());
+                        return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperToggleButton.IsChecked.GetValueOrDefault());
                     }
                     break;
                 case ActionTypeEnum.Currency:
                     int currencyAmount;
                     if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) && !string.IsNullOrEmpty(this.CurrencyMessageTextBox.Text))
                     {
-                        return new CurrencyAction(currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperCheckBox.IsChecked.GetValueOrDefault());
+                        return new CurrencyAction(currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
                     }
                     break;
                 case ActionTypeEnum.ExternalProgram:
@@ -204,13 +204,13 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Chat:
                         ChatAction chatAction = (ChatAction)this.action;
                         this.ChatMessageTextBox.Text = chatAction.ChatText;
-                        this.ChatWhisperCheckBox.IsChecked = chatAction.IsWhisper;
+                        this.ChatWhisperToggleButton.IsChecked = chatAction.IsWhisper;
                         break;
                     case ActionTypeEnum.Currency:
                         CurrencyAction currencyAction = (CurrencyAction)this.action;
                         this.CurrencyAmountTextBox.Text = currencyAction.Amount.ToString();
                         this.CurrencyMessageTextBox.Text = currencyAction.ChatText;
-                        this.CurrencyWhisperCheckBox.IsChecked = currencyAction.IsWhisper;
+                        this.CurrencyWhisperToggleButton.IsChecked = currencyAction.IsWhisper;
                         break;
                     case ActionTypeEnum.ExternalProgram:
                         ExternalProgramAction externalAction = (ExternalProgramAction)this.action;

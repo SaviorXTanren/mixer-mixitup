@@ -160,6 +160,9 @@
     <Compile Include="Controls\Timers\TimerControl.xaml.cs">
       <DependentUpon>TimerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Users\UserProfileAvatarControl.xaml.cs">
+      <DependentUpon>UserProfileAvatarControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -259,6 +262,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Timers\TimerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Users\UserProfileAvatarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

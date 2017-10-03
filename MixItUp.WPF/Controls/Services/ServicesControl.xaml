@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
              mc:Ignorable="d"
                           
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -50,7 +51,16 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" x:Name="BotLoggedInNameTextBlock" HorizontalAlignment="Center" />
+                    <Grid Grid.Row="0" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <UsersControls:UserProfileAvatarControl Grid.Column="0" x:Name="BotProfileAvatar" />
+                        <TextBlock Grid.Column="2" x:Name="BotLoggedInNameTextBlock" />
+                    </Grid>
 
                     <Button x:Name="LogOutBotButton" Grid.Row="2" Click="LogOutBotButton_Click" Width="90">Log Out</Button>
                 </Grid>
@@ -145,10 +155,10 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" TextWrapping="Wrap" TextAlignment="Center">The Mix It Up extension must be installed and running</TextBlock>
-                
-                <Button x:Name="EnableXSplitConnectionButton" Grid.Row="2" Click="EnableXSplitConnectionButton_Click" Width="120">Enable XSplit</Button>
-                <Button x:Name="DisableXSplitConnectionButton" Grid.Row="2" Click="DisableXSplitConnectionButton_Click" Width="120" Visibility="Collapsed">Disable XSplit</Button>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" TextAlignment="Center">The Mix It Up extension must be installed and running in XSplit</TextBlock>
+
+                <Button x:Name="EnableXSplitConnectionButton" Grid.Row="2" Click="EnableXSplitConnectionButton_Click" Width="140">Enable XSplit</Button>
+                <Button x:Name="DisableXSplitConnectionButton" Grid.Row="2" Click="DisableXSplitConnectionButton_Click" Width="140" Visibility="Collapsed">Disable XSplit</Button>
 
                 <Button x:Name="TestXSplitConnectionButton" Grid.Row="4" Click="TestXSplitConnectionButton_Click" Width="140" IsEnabled="False">Test Connection</Button>
             </Grid>

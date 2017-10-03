@@ -13,9 +13,19 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatMessageControl(ChatMessageViewModel message)
         {
+            this.Loaded += ChatMessageControl_Loaded;
+
             InitializeComponent();
 
             this.DataContext = this.Message = message;
+        }
+
+        private void ChatMessageControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.Message.User.AvatarLink))
+            {
+                this.UserAvatar.SetImageUrl(this.Message.User.AvatarLink);
+            }
         }
 
         public void DeleteMessage()

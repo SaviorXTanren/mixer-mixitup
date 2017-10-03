@@ -38,7 +38,7 @@ namespace MixItUp.Base.Actions
             process.Start();
             while (!process.HasExited)
             {
-                await this.Wait500();
+                await Task.Delay(500);
             }
         }
     }

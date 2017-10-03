@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             this.MaxCapsAllowedSlider.Value = ChannelSession.Settings.CapsBlockCount;
             this.MaxEmoteSymbolAllowedSlider.Value = ChannelSession.Settings.SymbolEmoteBlockCount;
-            this.BlockLinksCheckBox.IsChecked = ChannelSession.Settings.BlockLinks;
+            this.BlockLinksToggleButton.IsChecked = ChannelSession.Settings.BlockLinks;
 
             this.Timeout1MinAfterSlider.Value = ChannelSession.Settings.Timeout1MinuteOffenseCount;
             this.Timeout5MinAfterSlider.Value = ChannelSession.Settings.Timeout5MinuteOffenseCount;
@@ -53,9 +53,9 @@ namespace MixItUp.WPF.Controls.Chat
             ChannelSession.Settings.SymbolEmoteBlockCount = (int)this.MaxEmoteSymbolAllowedSlider.Value;
         }
 
-        private void BlockLinksCheckBox_Checked(object sender, System.Windows.RoutedEventArgs e) { ChannelSession.Settings.BlockLinks = true; }
+        private void BlockLinksToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e) { ChannelSession.Settings.BlockLinks = true; }
 
-        private void BlockLinksCheckBox_Unchecked(object sender, System.Windows.RoutedEventArgs e) { ChannelSession.Settings.BlockLinks = false; }
+        private void BlockLinksToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e) { ChannelSession.Settings.BlockLinks = false; }
 
         private void Timeout1MinAfterSlider_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
         {
