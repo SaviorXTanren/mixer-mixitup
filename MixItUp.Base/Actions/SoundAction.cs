@@ -17,8 +17,6 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public int VolumeScale { get; set; }
 
-        private MediaPlayer mediaPlayer;
-
         public SoundAction(string filePath, int volumeScale)
             : base(ActionTypeEnum.Sound)
         {
@@ -30,13 +28,26 @@ namespace MixItUp.Base.Actions
         {
             if (File.Exists(this.FilePath))
             {
-                if (this.mediaPlayer == null)
+                Task.Run(async () =>
                 {
-                    this.mediaPlayer = new MediaPlayer();
-                    this.mediaPlayer.Open(new Uri(this.FilePath));
-                }
-                this.mediaPlayer.Volume = ((double)this.VolumeScale / 100.0);
-                this.mediaPlayer.Play();
+                    bool mediaEnded = false;
+
+                    MediaPlayer mediaPlayer = new MediaPlayer();
+                    mediaPlayer.MediaEnded += (object sender, EventArgs e) =>
+                    {
+                        mediaEnded = true;
+                    };
+                    mediaPlayer.Open(new Uri(this.FilePath));
+                    mediaPlayer.Volume = ((double)this.VolumeScale / 100.0);
+                    mediaPlayer.Play();
+
+                    while (!mediaEnded)
+                    {
+                        await Task.Delay(500);
+                    }
+
+                    mediaPlayer.Close();
+               });
             }
             return Task.FromResult(0);
         }
