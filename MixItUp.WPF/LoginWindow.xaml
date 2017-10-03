@@ -14,7 +14,8 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"      
-                           
+
+        Icon="./Logo.ico"
         Title="Mix It Up - Login" Height="250" Width="420">
     <Windows:LoadingWindowBase.Resources>
         <ResourceDictionary>

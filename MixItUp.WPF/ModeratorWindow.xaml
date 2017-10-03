@@ -16,7 +16,8 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
-
+                           
+        Icon="./Logo.ico"
         Title="Mix It Up - Moderator" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
