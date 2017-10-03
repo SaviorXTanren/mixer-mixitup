@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Web;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;

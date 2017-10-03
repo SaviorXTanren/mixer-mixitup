@@ -50,8 +50,13 @@ namespace MixItUp.Base.Actions
                 {
                     str = str.Replace("$useravatar", ChannelSession.ChatUsers[user.ID].AvatarLink);
                 }
+                else
+                {
+                    UserModel argUser = await ChannelSession.MixerConnection.Users.GetUser(user.UserName);
+                    str = str.Replace("$useravatar", argUser.avatarUrl);
+                }
                 str = str.Replace("$userurl", "https://www.mixer.com/" + user.UserName);
-                str = str.Replace("$user", "@" + user.UserName);
+                str = str.Replace("$user", user.UserName);
 
                 if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
                 {
@@ -78,7 +83,7 @@ namespace MixItUp.Base.Actions
                     {
                         str = str.Replace("$arg" + (i + 1) + "useravatar", argUser.avatarUrl);
                         str = str.Replace("$arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.username);
-                        str = str.Replace("$arg" + (i + 1) + "user", "@" + argUser.username);
+                        str = str.Replace("$arg" + (i + 1) + "user", argUser.username);
                     }
                     else
                     {

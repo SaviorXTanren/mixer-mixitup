@@ -140,7 +140,7 @@ namespace MixItUp.WPF.Controls.Services
 
         private void TestOverlayButton_Click(object sender, RoutedEventArgs e)
         {
-            ChannelSession.OverlayServer.SetText(new OverlayText() { text = "Connection Test", duration = 5, horizontal = 50, vertical = 50 });
+            ChannelSession.OverlayServer.TestConnection();
         }
 
         private async void OBSStudioEnableConnectionButton_Click(object sender, RoutedEventArgs e)

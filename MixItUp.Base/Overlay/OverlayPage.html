@@ -6,7 +6,104 @@
     <body style="background-color:transparent">
         <div id="mainOverlay" />
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-        <script src="js/main.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+		<script>
+			var mainOverlayDiv = document.getElementById('mainOverlay');
+			
+			var socket = io();
+			
+			socket.on('test', function(packet)
+			{
+			    var addedElement = document.createElement('p');
+			    addedElement.innerHTML = 'Connection Test!';
+
+			    var data = { horizontal: 50, vertical: 50, duration: 3 };
+
+			    addWaitRemoveElement(data, addedElement);
+			});
+			
+			socket.on('image', function(packet)
+			{
+				data = getDataFromJSON(packet);
+				if (data != null)
+				{
+					var addedElement = null;
+
+					if (data.imagePath != null)
+					{
+						addedElement = document.createElement('img');
+
+						if (data.imagePath.startsWith("http"))
+						{
+							addedElement.src = data.imagePath;
+						}
+						else
+						{
+							var imageType = "data:image/png";
+							if (data.imagePath.endsWith("gif")) {
+								imageType = "data:image/gif";
+							}
+							else if (data.imagePath.endsWith("jpg")) {
+								imageType = "data:image/jpg";
+							}
+							else if (data.imagePath.endsWith("jpeg")) {
+								imageType = "data:image/jpeg";
+							}
+
+							addedElement.src = imageType + ";base64," + data.imageData;
+						}
+						
+						addWaitRemoveElement(data, addedElement);
+					}
+				}
+			});
+			
+			socket.on('text', function(packet)
+			{
+				data = getDataFromJSON(packet);
+				if (data != null)
+				{
+					var addedElement = null;
+
+					if (data.text != null)
+					{
+						addedElement = document.createElement('p');
+						addedElement.innerHTML = data.text;
+					}
+					
+					addWaitRemoveElement(data, addedElement);
+				}
+			});
+			
+			function getDataFromJSON(packet)
+			{
+				try
+				{
+					if (packet != null)
+					{
+						return JSON.parse(packet);
+					}
+				}
+				catch (err) { console.log(err); }
+				return null;
+			}
+
+			function addWaitRemoveElement(data, addedElement)
+			{
+				if (addedElement != null)
+				{
+					addedElement.style.cssText = 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
+						data.vertical.toString() + '%; transform: translate(-50%, -50%);'
+
+					mainOverlayDiv.appendChild(addedElement);
+
+					setTimeout(function ()
+					{
+						mainOverlayDiv.removeChild(addedElement);
+					}, data.duration * 1000);
+				}
+			}
+		</script>
     </body>
 </html>

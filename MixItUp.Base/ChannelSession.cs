@@ -231,8 +231,7 @@ namespace MixItUp.Base
         {
             if (ChannelSession.OverlayServer == null)
             {
-                ChannelSession.OverlayServer = new OverlayWebServer("http://localhost:8001/");
-                ChannelSession.OverlayServer.Start();
+                ChannelSession.OverlayServer = new OverlayWebServer("http://localhost:8111/");
             }
             return true;
         }
@@ -312,7 +311,8 @@ namespace MixItUp.Base
         {
             if (ChannelSession.OverlayServer != null)
             {
-                ChannelSession.OverlayServer.End();
+                ChannelSession.OverlayServer.Close();
+                ChannelSession.OverlayServer = null;
             }
         }
 
