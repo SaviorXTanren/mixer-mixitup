@@ -53,10 +53,10 @@ namespace MixItUp.Base.Actions
             {
                 if (ChannelSession.ChatUsers.ContainsKey(user.ID))
                 {
-                    str = str.Replace("$userAvatar", ChannelSession.ChatUsers[user.ID].AvatarLink);
+                    str = str.Replace("$useravatar", ChannelSession.ChatUsers[user.ID].AvatarLink);
                 }
 
-                str = str.Replace("$userUrl", "https://www.mixer.com/" + user.UserName);
+                str = str.Replace("$userurl", "https://www.mixer.com/" + user.UserName);
 
                 str = str.Replace("$user", "@" + user.UserName);
 
@@ -68,7 +68,7 @@ namespace MixItUp.Base.Actions
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.CurrencyName))
             {
-                str = str.Replace("$currencyName", ChannelSession.Settings.CurrencyName);
+                str = str.Replace("$currencyname", ChannelSession.Settings.CurrencyName);
             }
 
             str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
@@ -83,15 +83,15 @@ namespace MixItUp.Base.Actions
                     UserModel argUser = await ChannelSession.MixerConnection.Users.GetUser(username);
                     if (argUser != null)
                     {
-                        str = str.Replace("$arg" + (i + 1) + "UserAvatar", argUser.avatarUrl);
-                        str = str.Replace("$arg" + (i + 1) + "UserUrl", "https://www.mixer.com/" + argUser.username);
-                        str = str.Replace("$arg" + (i + 1) + "User", "@" + argUser.username);
+                        str = str.Replace("$arg" + (i + 1) + "useravatar", argUser.avatarUrl);
+                        str = str.Replace("$arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.username);
+                        str = str.Replace("$arg" + (i + 1) + "user", "@" + argUser.username);
                     }
                     else
                     {
-                        str = str.Replace("$arg" + (i + 1) + "UserAvatar", "");
-                        str = str.Replace("$arg" + (i + 1) + "UserUrl", "");
-                        str = str.Replace("$arg" + (i + 1) + "User", "");
+                        str = str.Replace("$arg" + (i + 1) + "useravatar", "");
+                        str = str.Replace("$arg" + (i + 1) + "userurl", "");
+                        str = str.Replace("$arg" + (i + 1) + "user", "");
                     }
 
                     str = str.Replace("$arg" + (i + 1), arguments.ElementAt(i));
