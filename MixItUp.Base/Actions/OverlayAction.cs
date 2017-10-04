@@ -70,39 +70,37 @@ namespace MixItUp.Base.Actions
                     string imageFilePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, arguments);
                     try
                     {
-                        if (this.imageData == null)
+                        if (Uri.IsWellFormedUriString(imageFilePath, UriKind.RelativeOrAbsolute))
                         {
-                            try
+                            string tempFilePath = Path.GetTempFileName();
+                            using (WebClient client = new WebClient())
                             {
-                                if (Uri.IsWellFormedUriString(imageFilePath, UriKind.RelativeOrAbsolute))
-                                {
-                                    string tempFilePath = Path.GetTempFileName();
-                                    using (WebClient client = new WebClient())
-                                    {
-                                        client.DownloadFile(new Uri(imageFilePath), tempFilePath);
-                                    }
-                                    imageFilePath = tempFilePath;
-                                }
-
-                                if (File.Exists(imageFilePath))
-                                {
-                                    byte[] byteData = File.ReadAllBytes(imageFilePath);
-                                    this.imageData = Convert.ToBase64String(byteData);
-                                }
+                                client.DownloadFile(new Uri(imageFilePath), tempFilePath);
                             }
-                            catch (Exception) { }
+                            imageFilePath = tempFilePath;
                         }
 
-                        if (this.imageData != null)
+                        if (File.Exists(imageFilePath))
                         {
-                            ChannelSession.OverlayServer.SetImage(new OverlayImage()
-                            {
-                                imagePath = imageFilePath, width = this.ImageWidth, height = this.ImageHeight, duration = this.Duration, horizontal = this.Horizontal,
-                                vertical = this.Vertical, imageData = this.imageData
-                            });
+                            byte[] byteData = File.ReadAllBytes(imageFilePath);
+                            this.imageData = Convert.ToBase64String(byteData);
                         }
                     }
                     catch (Exception) { }
+
+                    if (this.imageData != null)
+                    {
+                        ChannelSession.OverlayServer.SetImage(new OverlayImage()
+                        {
+                            imagePath = imageFilePath,
+                            width = this.ImageWidth,
+                            height = this.ImageHeight,
+                            duration = this.Duration,
+                            horizontal = this.Horizontal,
+                            vertical = this.Vertical,
+                            imageData = this.imageData
+                        });
+                    }
                 }
                 else if (!string.IsNullOrEmpty(this.Text))
                 {
