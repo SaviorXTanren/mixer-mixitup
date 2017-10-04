@@ -1,7 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -30,7 +28,7 @@ namespace MixItUp.WPF.Controls.Quotes
             ChannelSession.Settings.QuotesEnabled = this.EnableQuotesToggleButton.IsChecked.GetValueOrDefault();
         }
 
-        private void QuotesTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private async void QuotesTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             string quotes = this.QuotesTextBox.Text;
             if (string.IsNullOrEmpty(this.QuotesTextBox.Text))
@@ -43,6 +41,11 @@ namespace MixItUp.WPF.Controls.Quotes
             {
                 ChannelSession.Settings.Quotes.Add(split);
             }
+
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.Settings.Save();
+            });
         }
     }
 }
