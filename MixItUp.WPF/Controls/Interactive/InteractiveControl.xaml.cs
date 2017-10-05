@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -440,16 +441,14 @@ namespace MixItUp.WPF.Controls.Interactive
 
                         if (!string.IsNullOrEmpty(interactiveInput.transactionID))
                         {
-                            bool result = await this.Window.RunAsyncOperation(async () =>
+                            await this.Window.RunAsyncOperation(async () =>
                             {
-                                return await ChannelSession.InteractiveClient.CaptureSparkTransaction(interactiveInput.transactionID);
+                                try
+                                {
+                                    await ChannelSession.InteractiveClient.CaptureSparkTransaction(interactiveInput.transactionID);
+                                }
+                                catch (Exception) { }
                             });
-
-                            if (!result)
-                            {
-                                MessageBoxHelper.ShowDialog("Failed to capture spark transaction for the following command: " + interactiveInput.input.controlID);
-                                return;
-                            }
                         }
 
                         if (item.ConnectedButton != null)
