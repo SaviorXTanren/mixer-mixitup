@@ -73,6 +73,21 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    public class CommandsChatCommand : PreMadeChatCommand
+    {
+        public CommandsChatCommand()
+            : base("Commands", "commands", UserRole.User, 60)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChatClient != null)
+                {
+                    await ChannelSession.BotChatClient.SendMessage("All common chat commands can be found here: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Pre-Made-Chat-Commands. For commands specific to this stream, ask your streamer/moderator.");
+                }
+            }));
+        }
+    }
+
     public class FollowAgeChatCommand : PreMadeChatCommand
     {
         public FollowAgeChatCommand()
