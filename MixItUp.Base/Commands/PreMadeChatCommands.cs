@@ -3,7 +3,6 @@ using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
-using MixItUp.Base.ViewModel.Chat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +55,21 @@ namespace MixItUp.Base.Commands
             this.IsEnabled = settings.IsEnabled;
             this.Permissions = settings.Permissions;
             this.Cooldown = settings.Cooldown;
+        }
+    }
+
+    public class MixItUpChatCommand : PreMadeChatCommand
+    {
+        public MixItUpChatCommand()
+            : base("Mix It Up", "mixitup", UserRole.User, 60)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChatClient != null)
+                {
+                    await ChannelSession.BotChatClient.SendMessage("This channel uses the Mix It Up app to improve their stream. Check out https://github.com/SaviorXTanren/mixer-mixitup for more information!");
+                }
+            }));
         }
     }
 
