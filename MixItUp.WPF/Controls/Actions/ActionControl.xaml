@@ -31,11 +31,18 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" />
-                
-                <Button Grid.Column="2" x:Name="DeleteActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" />
+
+                <Button Grid.Column="2" x:Name="MoveUpActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowUpBold}" Click="MoveUpActionButton_Click" />
+                <Button Grid.Column="4" x:Name="MoveDownActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowDownBold}" Click="MoveDownActionButton_Click" />
+
+                <Button Grid.Column="6" x:Name="DeleteActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" />
             </Grid>
         </GroupBox.Header>
 

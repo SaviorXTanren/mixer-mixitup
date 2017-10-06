@@ -2,6 +2,7 @@
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,13 +21,14 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private const int MinimzedGroupBoxHeight = 35;
 
-        public EventHandler<ActionBase> OnActionDelete;
+        private CommandWindow window;
 
         private ActionTypeEnum type;
         private ActionBase action;
 
-        public ActionControl(ActionTypeEnum type)
+        public ActionControl(CommandWindow window, ActionTypeEnum type)
         {
+            this.window = window;
             this.type = type;
 
             InitializeComponent();
@@ -34,7 +36,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.Loaded += ActionControl_Loaded;
         }
 
-        public ActionControl(ActionBase action) : this(action.Type) { this.action = action; }
+        public ActionControl(CommandWindow window, ActionBase action) : this(window, action.Type) { this.action = action; }
 
         public ActionBase GetAction()
         {
@@ -310,12 +312,19 @@ namespace MixItUp.WPF.Controls.Actions
             }
         }
 
+        private void MoveUpActionButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.window.MoveActionUp(this);
+        }
+
+        private void MoveDownActionButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.window.MoveActionDown(this);
+        }
+
         private void DeleteActionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.OnActionDelete != null)
-            {
-                this.OnActionDelete(this, this.action);
-            }
+            this.window.DeleteAction(this);
         }
 
         private void SoundFileBrowseButton_Click(object sender, RoutedEventArgs e)

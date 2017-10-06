@@ -143,6 +143,7 @@
     <Compile Include="Util\GlobalEvents.cs" />
     <Compile Include="Util\LockedDictionary.cs" />
     <Compile Include="Util\LockedList.cs" />
+    <Compile Include="Util\MathHelper.cs" />
     <Compile Include="Util\ReflectionHelper.cs" />
     <Compile Include="Util\RequestListenerWebServerBase.cs" />
     <Compile Include="Util\RequestSenderWebServerBase.cs" />

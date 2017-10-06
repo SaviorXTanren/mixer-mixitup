@@ -2,9 +2,11 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -38,6 +40,29 @@ namespace MixItUp.WPF.Windows.Command
             this.Initialize(this.StatusBar);
         }
 
+        public void MoveActionUp(ActionControl control)
+        {
+            int index = this.actionControls.IndexOf(control);
+            index = MathHelper.Clamp((index - 1), 0, this.actionControls.Count() - 1);
+
+            this.actionControls.Remove(control);
+            this.actionControls.Insert(index, control);
+        }
+
+        public void MoveActionDown(ActionControl control)
+        {
+            int index = this.actionControls.IndexOf(control);
+            index = MathHelper.Clamp((index + 1), 0, this.actionControls.Count() - 1);
+
+            this.actionControls.Remove(control);
+            this.actionControls.Insert(index, control);
+        }
+
+        public void DeleteAction(ActionControl control)
+        {
+            this.actionControls.Remove(control);
+        }
+
         protected override async Task OnLoaded()
         {
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>().OrderBy(s => s);
@@ -54,9 +79,8 @@ namespace MixItUp.WPF.Windows.Command
             {
                 foreach (ActionBase action in command.Actions)
                 {
-                    ActionControl actionControl = new ActionControl(action);
+                    ActionControl actionControl = new ActionControl(this, action);
                     actionControl.Minimize();
-                    actionControl.OnActionDelete += this.OnActionDeleted;
                     this.actionControls.Add(actionControl);
                 }
             }
@@ -76,8 +100,7 @@ namespace MixItUp.WPF.Windows.Command
                 }
 
                 ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                ActionControl actionControl = new ActionControl(type);
-                actionControl.OnActionDelete += this.OnActionDeleted;
+                ActionControl actionControl = new ActionControl(this, type);
                 this.actionControls.Add(actionControl);
 
                 this.TypeComboBox.SelectedIndex = -1;
@@ -113,12 +136,6 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.Close();
             }
-        }
-
-        private void OnActionDeleted(object sender, ActionBase e)
-        {
-            ActionControl control = (ActionControl)sender;
-            this.actionControls.Remove(control);
         }
 
         private List<ActionBase> GetActions()
