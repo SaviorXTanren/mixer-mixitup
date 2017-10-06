@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base.Commands;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Collections.Generic;
-using MixItUp.Base.Actions;
 
 namespace MixItUp.WPF.Controls.Command
 {
@@ -10,7 +8,7 @@ namespace MixItUp.WPF.Controls.Command
     {
         public virtual Task Initialize() { return Task.FromResult(0); }
 
-        public virtual bool Validate() { return false; }
+        public virtual Task<bool> Validate() { return Task.FromResult(false); }
 
         public virtual CommandBase GetExistingCommand() { return null; }
 

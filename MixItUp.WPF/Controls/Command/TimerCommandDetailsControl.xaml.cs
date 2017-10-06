@@ -30,11 +30,11 @@ namespace MixItUp.WPF.Controls.Command
             return Task.FromResult(0);
         }
 
-        public override bool Validate()
+        public override async Task<bool> Validate()
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                MessageBoxHelper.ShowDialog("Name is missing");
+                await MessageBoxHelper.ShowDialog("Name is missing");
                 return false;
             }
 
@@ -43,9 +43,9 @@ namespace MixItUp.WPF.Controls.Command
 
         public override CommandBase GetExistingCommand() { return this.command; }
 
-        public override Task<CommandBase> GetNewCommand()
+        public override async Task<CommandBase> GetNewCommand()
         {
-            if (this.Validate())
+            if (await this.Validate())
             {
                 if (this.command == null)
                 {
@@ -56,9 +56,9 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     this.command.Name = this.NameTextBox.Text;
                 }
-                return Task.FromResult<CommandBase>(this.command);
+                return this.command;
             }
-            return Task.FromResult<CommandBase>(null);
+            return null;
         }
     }
 }

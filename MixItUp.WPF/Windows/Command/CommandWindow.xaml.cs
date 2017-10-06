@@ -109,18 +109,18 @@ namespace MixItUp.WPF.Windows.Command
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!this.commandDetailsControl.Validate())
+            if (!await this.commandDetailsControl.Validate())
             {
                 return;
             }
 
             if (this.actionControls.Count == 0)
             {
-                MessageBoxHelper.ShowDialog("At least one action must be created");
+                await MessageBoxHelper.ShowDialog("At least one action must be created");
                 return;
             }
 
-            List<ActionBase> actions = this.GetActions();
+            List<ActionBase> actions = await this.GetActions();
             if (actions.Count == 0)
             {
                 return;
@@ -138,7 +138,7 @@ namespace MixItUp.WPF.Windows.Command
             }
         }
 
-        private List<ActionBase> GetActions()
+        private async Task<List<ActionBase>> GetActions()
         {
             List<ActionBase> actions = new List<ActionBase>();
             foreach (ActionControl control in this.actionControls)
@@ -146,7 +146,7 @@ namespace MixItUp.WPF.Windows.Command
                 ActionBase action = control.GetAction();
                 if (action == null)
                 {
-                    MessageBoxHelper.ShowDialog("Required action information is missing");
+                    await MessageBoxHelper.ShowDialog("Required action information is missing");
                     return new List<ActionBase>();
                 }
                 actions.Add(action);

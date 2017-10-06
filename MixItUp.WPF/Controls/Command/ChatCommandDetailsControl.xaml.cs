@@ -1,9 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
@@ -42,23 +40,23 @@ namespace MixItUp.WPF.Controls.Command
             return Task.FromResult(0);
         }
 
-        public override bool Validate()
+        public override async Task<bool> Validate()
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                MessageBoxHelper.ShowDialog("Name is missing");
+                await MessageBoxHelper.ShowDialog("Name is missing");
                 return false;
             }
 
             if (this.LowestRoleAllowedComboBox.SelectedIndex < 0)
             {
-                MessageBoxHelper.ShowDialog("A permission level must be selected");
+                await MessageBoxHelper.ShowDialog("A permission level must be selected");
                 return false;
             }
 
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
             {
-                MessageBoxHelper.ShowDialog("Commands is missing");
+                await MessageBoxHelper.ShowDialog("Commands is missing");
                 return false;
             }
 
@@ -67,7 +65,7 @@ namespace MixItUp.WPF.Controls.Command
                 int cooldown = 0;
                 if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
                 {
-                    MessageBoxHelper.ShowDialog("Cooldown must be 0 or greater");
+                    await MessageBoxHelper.ShowDialog("Cooldown must be 0 or greater");
                     return false;
                 }
             }
@@ -77,9 +75,9 @@ namespace MixItUp.WPF.Controls.Command
 
         public override CommandBase GetExistingCommand() { return this.command; }
 
-        public override Task<CommandBase> GetNewCommand()
+        public override async Task<CommandBase> GetNewCommand()
         {
-            if (this.Validate())
+            if (await this.Validate())
             {
                 List<string> commands = new List<string>(this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                 UserRole lowestRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem);
@@ -102,9 +100,9 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.Permissions = lowestRole;
                     this.command.Cooldown = cooldown;
                 }
-                return Task.FromResult<CommandBase>(this.command);
+                return this.command;
             }
-            return Task.FromResult<CommandBase>(null);
+            return null;
         }
     }
 }

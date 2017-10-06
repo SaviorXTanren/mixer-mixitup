@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Controls.Currency
         {
             if (string.IsNullOrEmpty(this.CurrencyNameTextBox.Text))
             {
-                MessageBoxHelper.ShowDialog("A currency name must be specified");
+                await MessageBoxHelper.ShowDialog("A currency name must be specified");
                 this.CurrencyToggleSwitch.IsChecked = false;
                 return;
             }
@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Controls.Currency
             int currencyAmount = 0;
             if (string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) || !int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) || currencyAmount < 1)
             {
-                MessageBoxHelper.ShowDialog("A valid currency amount must be specified");
+                await MessageBoxHelper.ShowDialog("A valid currency amount must be specified");
                 this.CurrencyToggleSwitch.IsChecked = false;
                 return;
             }
@@ -96,7 +96,7 @@ namespace MixItUp.WPF.Controls.Currency
             int currencyTime = 0;
             if (string.IsNullOrEmpty(this.CurrencyTimeTextBox.Text) || !int.TryParse(this.CurrencyTimeTextBox.Text, out currencyTime) || currencyTime < 1)
             {
-                MessageBoxHelper.ShowDialog("A valid currency interval must be specified");
+                await MessageBoxHelper.ShowDialog("A valid currency interval must be specified");
                 this.CurrencyToggleSwitch.IsChecked = false;
                 return;
             }

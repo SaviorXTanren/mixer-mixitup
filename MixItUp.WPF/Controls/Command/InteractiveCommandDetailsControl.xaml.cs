@@ -76,7 +76,7 @@ namespace MixItUp.WPF.Controls.Command
             return Task.FromResult(0);
         }
 
-        public override bool Validate()
+        public override async Task<bool> Validate()
         {
             int sparkCost = 0;
             int cooldown = 0;
@@ -85,25 +85,25 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (this.ButtonTriggerComboBox.SelectedIndex < 0)
                 {
-                    MessageBoxHelper.ShowDialog("An trigger type must be selected");
+                    await MessageBoxHelper.ShowDialog("An trigger type must be selected");
                     return false;
                 }
 
                 if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost < 0)
                 {
-                    MessageBoxHelper.ShowDialog("A valid spark cost must be entered");
+                    await MessageBoxHelper.ShowDialog("A valid spark cost must be entered");
                     return false;
                 }
 
                 if (this.CooldownTypeComboBox.SelectedIndex < 0)
                 {
-                    MessageBoxHelper.ShowDialog("A cooldown type must be selected");
+                    await MessageBoxHelper.ShowDialog("A cooldown type must be selected");
                     return false;
                 }
 
                 if (this.CooldownTypeComboBox.SelectedItem.Equals("Group") && this.CooldownGroupsComboBox.SelectedIndex < 0 && string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
                 {
-                    MessageBoxHelper.ShowDialog("A cooldown group must be selected or entered");
+                    await MessageBoxHelper.ShowDialog("A cooldown group must be selected or entered");
                     return false;
                 }
 
@@ -111,7 +111,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
                     {
-                        MessageBoxHelper.ShowDialog("Cooldown must be 0 or greater");
+                        await MessageBoxHelper.ShowDialog("Cooldown must be 0 or greater");
                         return false;
                     }
                 }
@@ -124,7 +124,7 @@ namespace MixItUp.WPF.Controls.Command
 
         public override async Task<CommandBase> GetNewCommand()
         {
-            if (this.Validate())
+            if (await this.Validate())
             {
                 InteractiveButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
                 if (this.command == null)

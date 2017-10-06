@@ -302,7 +302,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             if (!result)
             {
-                MessageBoxHelper.ShowDialog("Unable to connect to interactive with selected game. Please try again.");
+                await MessageBoxHelper.ShowDialog("Unable to connect to interactive with selected game. Please try again.");
                 return;
             }
 

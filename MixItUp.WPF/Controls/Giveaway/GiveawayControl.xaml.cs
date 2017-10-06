@@ -38,17 +38,17 @@ namespace MixItUp.WPF.Controls.Giveaway
             return base.InitializeInternal();
         }
 
-        private void EnableGiveawayButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void EnableGiveawayButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(this.GiveawayItemTextBox.Text))
             {
-                MessageBoxHelper.ShowDialog("An item to give away must be specified");
+                await MessageBoxHelper.ShowDialog("An item to give away must be specified");
                 return;
             }
 
             if (this.GiveawayTypeComboBox.SelectedIndex < 0)
             {
-                MessageBoxHelper.ShowDialog("The allowed winners must be specified");
+                await MessageBoxHelper.ShowDialog("The allowed winners must be specified");
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace MixItUp.WPF.Controls.Giveaway
             this.PerformGiveawayButton.IsEnabled = false;
         }
 
-        private void PerformGiveawayButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void PerformGiveawayButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.Giveaway.IsEnabled = false;
 
@@ -106,11 +106,11 @@ namespace MixItUp.WPF.Controls.Giveaway
 
                 this.GiveawayWinnerTextBlock.Text = winner.UserName;
 
-                ChannelSession.BotChatClient.SendMessage(string.Format("Congratulations {0}, you won {1}! You'll find out how to get your prize momentarily!", winner.UserName, ChannelSession.Giveaway.Item));
+                await ChannelSession.BotChatClient.SendMessage(string.Format("Congratulations {0}, you won {1}! You'll find out how to get your prize momentarily!", winner.UserName, ChannelSession.Giveaway.Item));
             }
             else
             {
-                MessageBoxHelper.ShowDialog("There are no users currently in chat that are either applicable to win or have not won already");
+                await MessageBoxHelper.ShowDialog("There are no users currently in chat that are either applicable to win or have not won already");
             }
         }
     }

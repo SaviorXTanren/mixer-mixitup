@@ -103,7 +103,7 @@ namespace MixItUp.WPF.Controls.Timers
             this.RefreshList();
         }
 
-        private void TimerMinimumMessagesTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private async void TimerMinimumMessagesTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             int value;
             if (int.TryParse(this.TimerMinimumMessagesTextBox.Text, out value) && value > 0)
@@ -112,12 +112,12 @@ namespace MixItUp.WPF.Controls.Timers
             }
             else
             {
-                MessageBoxHelper.ShowDialog("Minimum Messages must be greater than 0");
+                await MessageBoxHelper.ShowDialog("Minimum Messages must be greater than 0");
                 this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
             }
         }
 
-        private void TimerIntervalTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private async void TimerIntervalTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             int value;
             if (int.TryParse(this.TimerIntervalTextBox.Text, out value) && value >= 0)
@@ -126,7 +126,7 @@ namespace MixItUp.WPF.Controls.Timers
             }
             else
             {
-                MessageBoxHelper.ShowDialog("Interval must be 0 or greater");
+                await MessageBoxHelper.ShowDialog("Interval must be 0 or greater");
                 this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             }
         }
