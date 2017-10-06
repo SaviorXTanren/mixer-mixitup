@@ -12,7 +12,7 @@ namespace MixItUp.Base.Chat
             return chatMessage.Message.StartsWith("!");
         }
 
-        public string CommandName { get { return this.CommandPieces.First().Replace("!", ""); } }
+        public string CommandName { get { return this.CommandPieces.First().Replace("!", "").ToLower(); } }
 
         public IEnumerable<string> CommandArguments { get { return this.CommandPieces.Skip(1); } }
 
