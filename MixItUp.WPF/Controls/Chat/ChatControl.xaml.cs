@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +24,11 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatControl : MainControlBase
     {
+        private const string UserNameTagRegexPattern = " @\\w+ ";
+
+        private static readonly Regex UserNameTagRegex = new Regex(UserNameTagRegexPattern);
+        private static readonly Regex WhisperRegex = new Regex("/w" + UserNameTagRegexPattern);
+
         public bool EnableCommands { get; set; }
 
         public ObservableCollection<ChatUserControl> UserControls = new ObservableCollection<ChatUserControl>();
@@ -189,10 +195,29 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 string message = this.ChatMessageTextBox.Text;
                 this.ChatMessageTextBox.Text = string.Empty;
-                await this.Window.RunAsyncOperation(async () =>
+
+                Match whisperRegexMatch = WhisperRegex.Match(message);
+                if (whisperRegexMatch != null && whisperRegexMatch.Success)
                 {
-                    await ChannelSession.ChatClient.SendMessage(message);
-                });
+                    message = message.Substring(whisperRegexMatch.Value.Length);
+
+                    Match usernNameMatch = UserNameTagRegex.Match(whisperRegexMatch.Value);
+                    string username = usernNameMatch.Value;
+                    username = username.Trim();
+                    username = username.Replace("@", "");
+
+                    await this.Window.RunAsyncOperation(async () =>
+                    {
+                        await ChannelSession.ChatClient.Whisper(username, message);
+                    });
+                }
+                else
+                {
+                    await this.Window.RunAsyncOperation(async () =>
+                    {
+                        await ChannelSession.ChatClient.SendMessage(message);
+                    });
+                }
             }
         }
 
