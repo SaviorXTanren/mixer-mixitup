@@ -18,6 +18,8 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class ActionControl : UserControl
     {
+        private const int MinimzedGroupBoxHeight = 35;
+
         public EventHandler<ActionBase> OnActionDelete;
 
         private ActionTypeEnum type;
@@ -152,6 +154,10 @@ namespace MixItUp.WPF.Controls.Actions
             }
             return null;
         }
+
+        public void Expand() { this.GroupBox.Height = Double.NaN; }
+
+        public void Minimize() { this.GroupBox.Height = MinimzedGroupBoxHeight; }
 
         private void ActionControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -419,6 +425,18 @@ namespace MixItUp.WPF.Controls.Actions
             if (!string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
             {
                 this.XSplitSourceLoadTextFromTextBox.Text = Path.Combine(XSplitAction.XSplitReferenceTextFilesDirectory, this.XSplitSourceNameTextBox.Text + ".txt");
+            }
+        }
+
+        private void Grid_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (this.GroupBox.Height == MinimzedGroupBoxHeight)
+            {
+                this.Expand();
+            }
+            else
+            {
+                this.Minimize();
             }
         }
     }

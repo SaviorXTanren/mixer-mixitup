@@ -24,9 +24,9 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <GroupBox>
+    <GroupBox x:Name="GroupBox">
         <GroupBox.Header>
-            <Grid>
+            <Grid MouseLeftButtonUp="Grid_MouseLeftButtonUp">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -34,11 +34,11 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" />
-
+                
                 <Button Grid.Column="2" x:Name="DeleteActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" />
             </Grid>
         </GroupBox.Header>
-        
+
         <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -420,4 +420,5 @@
 
         </Grid>
     </GroupBox>
+
 </UserControl>
