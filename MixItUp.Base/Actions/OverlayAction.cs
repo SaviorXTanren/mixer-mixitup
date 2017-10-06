@@ -27,7 +27,7 @@ namespace MixItUp.Base.Actions
         public int FontSize;
 
         [DataMember]
-        public int Duration;
+        public double Duration;
         [DataMember]
         public int Horizontal;
         [DataMember]
@@ -37,7 +37,7 @@ namespace MixItUp.Base.Actions
 
         public OverlayAction() { }
 
-        public OverlayAction(string imagePath, int width, int height, int duration, int horizontal, int vertical)
+        public OverlayAction(string imagePath, int width, int height, double duration, int horizontal, int vertical)
             : this(duration, horizontal, vertical)
         {
             this.ImagePath = imagePath;
@@ -45,7 +45,7 @@ namespace MixItUp.Base.Actions
             this.ImageHeight = height;
         }
 
-        public OverlayAction(string text, string color, int fontSize, int duration, int horizontal, int vertical)
+        public OverlayAction(string text, string color, int fontSize, double duration, int horizontal, int vertical)
             : this(duration, horizontal, vertical)
         {
             this.Text = text;
@@ -53,7 +53,7 @@ namespace MixItUp.Base.Actions
             this.FontSize = fontSize;
         }
 
-        public OverlayAction(int duration, int horizontal, int vertical)
+        public OverlayAction(double duration, int horizontal, int vertical)
             : base(ActionTypeEnum.Overlay)
         {
             this.Duration = duration;

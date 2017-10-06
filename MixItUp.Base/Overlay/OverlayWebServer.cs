@@ -6,16 +6,10 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Overlay
 {
     [DataContract]
-    public class OverlayImage
+    public class OverlayImage : OverlayBase
     {
         [DataMember]
         public string imagePath;
-        [DataMember]
-        public int duration;
-        [DataMember]
-        public int horizontal;
-        [DataMember]
-        public int vertical;
         [DataMember]
         public int width;
         [DataMember]
@@ -25,20 +19,25 @@ namespace MixItUp.Base.Overlay
     }
 
     [DataContract]
-    public class OverlayText
+    public class OverlayText : OverlayBase
     {
         [DataMember]
         public string text;
         [DataMember]
         public string color;
         [DataMember]
-        public int duration;
+        public int fontSize;
+    }
+
+    [DataContract]
+    public abstract class OverlayBase
+    {
+        [DataMember]
+        public double duration;
         [DataMember]
         public int horizontal;
         [DataMember]
         public int vertical;
-        [DataMember]
-        public int fontSize;
     }
 
     public class OverlayWebServer : RequestSenderWebServerBase

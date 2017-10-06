@@ -66,10 +66,10 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.Overlay:
                     if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text) || !(string.IsNullOrEmpty(this.OverlayTextTextBox.Text)))
                     {
-                        int duration;
+                        double duration;
                         int horizontal;
                         int vertical;
-                        if (int.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0 &&
+                        if (double.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0 &&
                             int.TryParse(this.OverlayHorizontalTextBox.Text, out horizontal) && horizontal >= 0 && horizontal <= 100 &&
                             int.TryParse(this.OverlayVerticalTextBox.Text, out vertical) && vertical >= 0 && vertical <= 100)
                         {
