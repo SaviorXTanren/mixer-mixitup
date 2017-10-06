@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.Util;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -15,6 +16,8 @@ namespace MixItUp.WPF
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            Logger.Initialize();
+
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
@@ -34,7 +37,10 @@ namespace MixItUp.WPF
                 #endif
 
                 this.crashObtained = true;
+
+                Logger.Log(ex);
                 File.WriteAllText("CrashData.txt", ex.ToString());
+
                 if (MessageBox.Show("Whoops! Looks like we ran into an issue and we'll have to close the program. Would you like to submit a bug to help us improve Mix It Up?", "Mix It Up - Crash", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/issues");
