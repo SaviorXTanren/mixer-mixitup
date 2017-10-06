@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -76,6 +77,8 @@ namespace MixItUp.Base.Commands
             {
                 arguments = new List<string>();
             }
+
+            GlobalEvents.CommandExecuted(this);
 
             await commandPerformSemaphore.WaitAsync();
 

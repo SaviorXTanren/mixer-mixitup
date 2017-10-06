@@ -34,6 +34,7 @@ namespace MixItUp.WPF.Controls.Chat
             this.GiveawayChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Giveaway")));
             this.MixerAgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Mixer Age")));
             this.PurgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Purge")));
+            this.AddQuoteChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Add Quote")));
             this.QuoteChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Quote")));
             this.SparksChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Sparks")));
             this.StreamerAgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Streamer Age")));

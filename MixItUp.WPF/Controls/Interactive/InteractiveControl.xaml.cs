@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
@@ -424,6 +425,8 @@ namespace MixItUp.WPF.Controls.Interactive
                         {
                             return;
                         }
+
+                        GlobalEvents.InteractiveControlUsed(item.Control);
 
                         UserViewModel user = ChannelSession.GetCurrentUser();
                         if (ChannelSession.InteractiveUsers.ContainsKey(interactiveInput.participantID))

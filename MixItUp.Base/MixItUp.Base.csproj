@@ -140,8 +140,10 @@
     <Compile Include="Commands\TimerCommand.cs" />
     <Compile Include="Models\GiveawayItemModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\GlobalEvents.cs" />
     <Compile Include="Util\LockedDictionary.cs" />
     <Compile Include="Util\LockedList.cs" />
+    <Compile Include="Util\ReflectionHelper.cs" />
     <Compile Include="Util\RequestListenerWebServerBase.cs" />
     <Compile Include="Util\RequestSenderWebServerBase.cs" />
     <Compile Include="Util\SerializerHelper.cs" />

@@ -3,6 +3,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Chat;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
 using System;
@@ -85,24 +86,17 @@ namespace MixItUp.WPF.Controls.Chat
 
                 if (this.EnableCommands)
                 {
-                    ChannelSession.PreMadeChatCommands.Add(new UptimeChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new GameChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new TitleChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new TimeoutChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new PurgeChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new StreamerAgeChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new MixerAgeChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new FollowAgeChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new SparksChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new QuoteChatCommand());
-                    ChannelSession.PreMadeChatCommands.Add(new GiveawayChatCommand());
-
-                    foreach (PreMadeChatCommandSettings setting in ChannelSession.Settings.PreMadeChatCommandSettings)
+                    foreach (PreMadeChatCommand command in ReflectionHelper.GetInstancesImplementingType<PreMadeChatCommand>())
                     {
-                        PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(setting.Name));
+                        ChannelSession.PreMadeChatCommands.Add(command);
+                    }
+
+                    foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
+                    {
+                        PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
                         if (command != null)
                         {
-                            command.UpdateFromSettings(setting);
+                            command.UpdateFromSettings(commandSetting);
                         }
                     }
                 }
@@ -258,6 +252,8 @@ namespace MixItUp.WPF.Controls.Chat
         private async void AddMessage(ChatMessageViewModel message)
         {
             ChatMessageControl messageControl = new ChatMessageControl(message);
+
+            GlobalEvents.MessageReceived(message);
 
             this.Messages.Add(message);
             this.MessageControls.Add(messageControl);

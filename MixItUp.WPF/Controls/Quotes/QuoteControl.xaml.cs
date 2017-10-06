@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +20,8 @@ namespace MixItUp.WPF.Controls.Quotes
         {
             this.EnableQuotesToggleButton.IsChecked = ChannelSession.Settings.QuotesEnabled;
             this.QuotesTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.Quotes);
+
+            GlobalEvents.OnQuoteAdded += GlobalEvent_OnQuoteAdded;
 
             return base.InitializeInternal();
         }
@@ -46,6 +49,11 @@ namespace MixItUp.WPF.Controls.Quotes
             {
                 await ChannelSession.Settings.Save();
             });
+        }
+
+        private void GlobalEvent_OnQuoteAdded(object sender, string e)
+        {
+            this.QuotesTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.Quotes);
         }
     }
 }

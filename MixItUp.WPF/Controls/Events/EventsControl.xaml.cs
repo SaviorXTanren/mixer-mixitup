@@ -4,6 +4,7 @@ using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using Newtonsoft.Json.Linq;
 using System.Linq;
@@ -79,6 +80,8 @@ namespace MixItUp.WPF.Controls.Events
             {
                 if (command.MatchesEvent(e))
                 {
+                    GlobalEvents.EventOccurred(command.GetEventType());
+
                     JToken userToken;
                     UserViewModel user = null;
                     if (e.payload.TryGetValue("user", out userToken))

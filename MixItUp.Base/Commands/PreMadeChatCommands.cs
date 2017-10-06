@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
@@ -174,6 +175,36 @@ namespace MixItUp.Base.Commands
                     string quote = ChannelSession.Settings.Quotes[index];
 
                     await ChannelSession.BotChatClient.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
+                }
+            }));
+        }
+    }
+
+    public class AddQuoteChatCommand : PreMadeChatCommand
+    {
+        public AddQuoteChatCommand()
+            : base("Add Quote", "addquote", UserRole.Mod, 5)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Settings.QuotesEnabled)
+                {
+                    StringBuilder quoteBuilder = new StringBuilder();
+                    foreach (string arg in arguments)
+                    {
+                        quoteBuilder.Append(arg + " ");
+                    }
+
+                    string quote = quoteBuilder.ToString();
+                    quote = quote.Trim(new char[] { ' ', '\'', '\"' });
+
+                    ChannelSession.Settings.Quotes.Add(quote);
+                    GlobalEvents.QuoteAdded(quote);
+
+                    if (ChannelSession.BotChatClient != null)
+                    {
+                        await ChannelSession.BotChatClient.SendMessage("Added Quote #" + (ChannelSession.Settings.Quotes.Count - 1) + ": \"" + quote + "\"");
+                    }
                 }
             }));
         }
