@@ -1,12 +1,23 @@
 ﻿using Mixer.Base.Model.Chat;
 using System;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace MixItUp.Base.ViewModel.Chat
 {
+    public class EmoticonImage
+    {
+        public string Name { get; set; }
+        public string FilePath { get; set; }
+        public CoordinatesModel Coordinates { get; set; }
+    }
+
     public class ChatMessageViewModel : IEquatable<ChatMessageViewModel>
     {
+        private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
+
         public static readonly Regex EmoteRegex = new Regex(":\\w+");
 
         public Guid ID { get; private set; }
@@ -42,7 +53,36 @@ namespace MixItUp.Base.ViewModel.Chat
             this.Message = string.Empty;
             foreach (ChatMessageDataModel message in this.ChatMessageEvent.message.message)
             {
-                this.Message += message.text;
+                if (message.type.Equals("text"))
+                {
+                    this.Message += message.text;
+                }
+                else if (message.type.Equals("emoticon"))
+                {
+                    // Special code here to process emoticons
+                    //string imageLink = null;
+                    //if (message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
+                    //{
+                    //    imageLink = message.pack;
+                    //}
+                    //else if (message.source.Equals("builtin"))
+                    //{
+                    //    imageLink = string.Format(ChatMessageViewModel.DefaultEmoticonsLinkFormat, message.pack);
+                    //}
+
+                    //if (!string.IsNullOrEmpty(imageLink))
+                    //{
+                    //    string imageFilePath = Path.GetTempFileName();
+                    //    using (WebClient client = new WebClient())
+                    //    {
+                    //        client.DownloadFile(new Uri(imageLink), imageFilePath);
+                    //    }
+
+                    //    EmoticonImage emoticonImage = new EmoticonImage() { Name = message.text, FilePath = imageFilePath, Coordinates = message.coords };
+                    //}
+
+                    this.Message += message.text;
+                }
             }
         }
 
