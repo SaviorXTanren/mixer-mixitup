@@ -212,7 +212,7 @@ namespace MixItUp.Base.Commands
     public class AddQuoteChatCommand : PreMadeChatCommand
     {
         public AddQuoteChatCommand()
-            : base("Add Quote", "addquote", UserRole.Mod, 5)
+            : base("Add Quote", "addquote quoteadd", UserRole.Mod, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {

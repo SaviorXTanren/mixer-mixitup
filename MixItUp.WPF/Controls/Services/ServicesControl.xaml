@@ -82,7 +82,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0">Short Code:</TextBlock>
-                        <TextBox Grid.Column="2" x:Name="BotShortCodeTextBox" IsReadOnly="True" Width="60" />
+                        <TextBox Grid.Column="2" x:Name="BotShortCodeTextBox" IsReadOnly="True" Width="60" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
                 </Grid>
             </Grid>
@@ -125,7 +125,7 @@
                     </Grid.ColumnDefinitions>
 
                     <MaterialDesign:PackIcon Kind="AccessPoint" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
-                    <TextBox x:Name="OBSStudioIPAddressTextBox" Grid.Column="2" Width="130">ws://127.0.0.1:4444</TextBox>
+                    <TextBox x:Name="OBSStudioIPAddressTextBox" Grid.Column="2" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}">ws://127.0.0.1:4444</TextBox>
                 </Grid>
 
                 <Grid Grid.Row="2">

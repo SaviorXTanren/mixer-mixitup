@@ -15,6 +15,6 @@
                                  
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBox x:Name="NameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Name" />
+        <TextBox x:Name="NameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
     </Grid>
 </local:CommandDetailsControlBase>

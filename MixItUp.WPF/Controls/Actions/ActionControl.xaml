@@ -77,7 +77,7 @@
                     </TextBlock>
                 </Grid>
 
-                <TextBox Grid.Row="2" x:Name="ChatMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" />
+                <TextBox Grid.Row="2" x:Name="ChatMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
             <Grid x:Name="CurrencyGrid" Grid.Row="2" Visibility="Collapsed">
@@ -90,7 +90,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" />
+                <TextBox Grid.Row="0" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -109,7 +109,7 @@
                     </TextBlock>
                 </Grid>
 
-                <TextBox Grid.Row="4" x:Name="CurrencyMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" />
+                <TextBox Grid.Row="4" x:Name="CurrencyMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             </Grid>
 
@@ -125,10 +125,10 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="0" x:Name="ProgramFilePathTextBox" MaterialDesign:HintAssist.Hint="Program File Path" />
+                <TextBox Grid.Column="0" Grid.Row="0" x:Name="ProgramFilePathTextBox" MaterialDesign:HintAssist.Hint="Program File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 <Button Grid.Column="2" Grid.Row="0" x:Name="ProgramFileBrowseButton" Click="ProgramFileBrowseButton_Click">Browse</Button>
 
-                <TextBox Grid.Column="0" Grid.Row="2" x:Name="ProgramArgumentsTextBox" MaterialDesign:HintAssist.Hint="Program Arguments" />
+                <TextBox Grid.Column="0" Grid.Row="2" x:Name="ProgramArgumentsTextBox" MaterialDesign:HintAssist.Hint="Program Arguments" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
             <Grid x:Name="InputGrid" Grid.Row="2" Visibility="Collapsed">
@@ -177,7 +177,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path" />
+                            <TextBox Grid.Column="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                             <Button Grid.Column="2" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
                         </Grid>
 
@@ -188,9 +188,9 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox Grid.Column="0" x:Name="OverlayImageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" />
+                            <TextBox Grid.Column="0" x:Name="OverlayImageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <TextBox Grid.Column="2" x:Name="OverlayImageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" />
+                            <TextBox Grid.Column="2" x:Name="OverlayImageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -211,16 +211,16 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Column="0" x:Name="OverlayFontSizeTextBox" MaterialDesign:HintAssist.Hint="Font Size (Pixels)" />
+                        <TextBox Grid.Column="0" x:Name="OverlayFontSizeTextBox" MaterialDesign:HintAssist.Hint="Font Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="2" x:Name="OverlayFontColorTextBox" MaterialDesign:HintAssist.Hint="Color Name" />
+                        <TextBox Grid.Column="2" x:Name="OverlayFontColorTextBox" MaterialDesign:HintAssist.Hint="Color Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <TextBlock Grid.Column="4">
                             <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
                         </TextBlock>
                     </Grid>
 
-                    <TextBox Grid.Row="2" x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" />
+                    <TextBox Grid.Row="2" x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
                 <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Hidden">
@@ -232,11 +232,11 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" />
+                    <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="2" x:Name="OverlayHorizontalTextBox" MaterialDesign:HintAssist.Hint="Horizontal %" />
+                    <TextBox Grid.Column="2" x:Name="OverlayHorizontalTextBox" MaterialDesign:HintAssist.Hint="Horizontal %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="4" x:Name="OverlayVerticalTextBox" MaterialDesign:HintAssist.Hint="Vertical %" />
+                    <TextBox Grid.Column="4" x:Name="OverlayVerticalTextBox" MaterialDesign:HintAssist.Hint="Vertical %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
             </Grid>
 
@@ -252,14 +252,14 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Column="0" Grid.Row="0" x:Name="SoundFilePathTextBox" MaterialDesign:HintAssist.Hint="Sound File Path" />
+                <TextBox Grid.Column="0" Grid.Row="0" x:Name="SoundFilePathTextBox" MaterialDesign:HintAssist.Hint="Sound File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 <Button Grid.Column="2" Grid.Row="0" x:Name="SoundFileBrowseButton" Click="SoundFileBrowseButton_Click">Browse</Button>
 
-                <TextBox Grid.Column="0"  Grid.Row="2" x:Name="SoundVolumeTextBox" MaterialDesign:HintAssist.Hint="Volume (1-100)" />
+                <TextBox Grid.Column="0"  Grid.Row="2" x:Name="SoundVolumeTextBox" MaterialDesign:HintAssist.Hint="Volume (1-100)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
             <Grid x:Name="WaitGrid" Grid.Row="2" Visibility="Collapsed">
-                <TextBox x:Name="WaitAmountTextBox" MaterialDesign:HintAssist.Hint="Duration (Seconds)" />
+                <TextBox x:Name="WaitAmountTextBox" MaterialDesign:HintAssist.Hint="Duration (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
             <Grid x:Name="OBSStudioGrid" Grid.Row="2" Visibility="Collapsed">
@@ -288,9 +288,9 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0" x:Name="OBSStudioSceneCollectionNameTextBox" MaterialDesign:HintAssist.Hint="Collection Name (Optional)" />
+                    <TextBox Grid.Row="0" x:Name="OBSStudioSceneCollectionNameTextBox" MaterialDesign:HintAssist.Hint="Collection Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Row="2" x:Name="OBSStudioSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" />
+                    <TextBox Grid.Row="2" x:Name="OBSStudioSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 </Grid>
 
@@ -303,7 +303,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="OBSStudioSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" />
+                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="OBSStudioSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -317,7 +317,7 @@
                         <TextBlock Grid.Column="0">Visible:</TextBlock>
                         <CheckBox Grid.Column="2" x:Name="OBSStudioSourceVisibleCheckBox" />
 
-                        <TextBox Grid.Column="4" x:Name="OBSStudioSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" TextChanged="OBSStudioSourceTextTextBox_TextChanged" />
+                        <TextBox Grid.Column="4" x:Name="OBSStudioSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" TextChanged="OBSStudioSourceTextTextBox_TextChanged" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
                     <Grid Grid.Row="4">
@@ -329,7 +329,7 @@
 
                         <TextBlock Grid.Column="0">File:</TextBlock>
 
-                        <TextBox Grid.Column="2" x:Name="OBSStudioSourceLoadTextFromTextBox" IsReadOnly="True" />
+                        <TextBox Grid.Column="2" x:Name="OBSStudioSourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
                 </Grid>
@@ -356,7 +356,7 @@
                 </Grid>
 
                 <Grid x:Name="XSplitSceneGrid" Grid.Row="2" Visibility="Hidden">
-                    <TextBox x:Name="XSplitSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" />
+                    <TextBox x:Name="XSplitSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
                 <Grid x:Name="XSplitSourceGrid" Grid.Row="2" Visibility="Hidden">
@@ -368,7 +368,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="XSplitSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" TextChanged="XSplitSourceNameTextBox_TextChanged" />
+                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="XSplitSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" TextChanged="XSplitSourceNameTextBox_TextChanged" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -382,7 +382,7 @@
                         <TextBlock Grid.Column="0">Visible:</TextBlock>
                         <CheckBox Grid.Column="2" x:Name="XSplitSourceVisibleCheckBox" />
 
-                        <TextBox Grid.Column="4" x:Name="XSplitSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" />
+                        <TextBox Grid.Column="4" x:Name="XSplitSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text"  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
                     <Grid Grid.Row="4">
@@ -394,7 +394,7 @@
 
                         <TextBlock Grid.Column="0">File:</TextBlock>
 
-                        <TextBox Grid.Column="2" x:Name="XSplitSourceLoadTextFromTextBox" IsReadOnly="True" />
+                        <TextBox Grid.Column="2" x:Name="XSplitSourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     </Grid>
 
                 </Grid>
@@ -418,9 +418,9 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name" />
+                    <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="2" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" />
+                    <TextBox Grid.Column="2" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
             </Grid>

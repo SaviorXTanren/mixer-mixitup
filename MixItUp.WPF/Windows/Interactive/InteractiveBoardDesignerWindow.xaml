@@ -40,7 +40,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0">Name:</TextBlock>
-                <TextBox Grid.Column="2" x:Name="GameNameTextBox" />
+                <TextBox Grid.Column="2" x:Name="GameNameTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
             <Grid Grid.Row="2">

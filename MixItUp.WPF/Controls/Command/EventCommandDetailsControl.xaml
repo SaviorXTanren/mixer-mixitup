@@ -23,6 +23,6 @@
 
         <ComboBox x:Name="EventTypeComboBox" Grid.Column="0" SelectionChanged="EventTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Event Type" />
 
-        <TextBox x:Name="EventIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Username" />
+        <TextBox x:Name="EventIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Username" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
     </Grid>
 </local:CommandDetailsControlBase>

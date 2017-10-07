@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" />
+            <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <ComboBox x:Name="LowestRoleAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" />
         </Grid>
@@ -40,9 +40,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Commands (No !, space seperated)" />
+            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Commands (No !, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="CooldownTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" />
+            <TextBox x:Name="CooldownTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
         
     </Grid>

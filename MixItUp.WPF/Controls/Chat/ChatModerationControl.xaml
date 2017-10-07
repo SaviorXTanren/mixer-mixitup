@@ -31,7 +31,7 @@
 
             <TextBlock Grid.Row="0">Banned Words (One Per Line):</TextBlock>
 
-            <TextBox x:Name="BannedWordsTextBox" Grid.Row="2" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" LostFocus="BannedWordsTextBox_LostFocus" />
+            <TextBox x:Name="BannedWordsTextBox" Grid.Row="2" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" LostFocus="BannedWordsTextBox_LostFocus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Column="2">

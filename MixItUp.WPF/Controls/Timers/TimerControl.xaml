@@ -74,9 +74,9 @@
 
             <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Command</Button>
 
-            <TextBox Grid.Column="2" x:Name="TimerIntervalTextBox" LostFocus="TimerIntervalTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Interval (Minutes)" />
+            <TextBox Grid.Column="2" x:Name="TimerIntervalTextBox" LostFocus="TimerIntervalTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Interval (Minutes)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="4" x:Name="TimerMinimumMessagesTextBox" LostFocus="TimerMinimumMessagesTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Min Messages" />
+            <TextBox Grid.Column="4" x:Name="TimerMinimumMessagesTextBox" LostFocus="TimerMinimumMessagesTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Min Messages" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         </Grid>
 

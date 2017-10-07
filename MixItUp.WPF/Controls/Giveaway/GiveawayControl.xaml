@@ -35,7 +35,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="GiveawayItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" />
+            <TextBox Grid.Column="0" x:Name="GiveawayItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <ComboBox Grid.Column="2" x:Name="GiveawayTypeComboBox" MaterialDesign:HintAssist.Hint="Allowed Winners" />
         </Grid>
