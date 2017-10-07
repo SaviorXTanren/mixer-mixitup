@@ -24,6 +24,8 @@ namespace MixItUp.Base.ViewModel
     [DataContract]
     public class UserViewModel : IEquatable<UserViewModel>
     {
+        private const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.jpg";
+
         [DataMember]
         public uint ID { get; set; }
 
@@ -42,7 +44,10 @@ namespace MixItUp.Base.ViewModel
         [JsonIgnore]
         public int ChatOffenses { get; set; }
 
-        public UserViewModel() { }
+        public UserViewModel()
+        {
+            this.AvatarLink = DefaultAvatarLink;
+        }
 
         public UserViewModel(UserModel user) : this(user.id, user.username) { }
 
@@ -55,6 +60,7 @@ namespace MixItUp.Base.ViewModel
         public UserViewModel(uint id, string username) : this(id, username, new string[] { }) { }
 
         public UserViewModel(uint id, string username, string[] userRoles)
+            : this()
         {
             this.ID = id;
             this.UserName = username;
