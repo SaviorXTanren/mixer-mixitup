@@ -181,18 +181,22 @@ namespace MixItUp.Base
 
             if (ChannelSession.ChatClient != null)
             {
+                ChannelSession.ChatClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
                 await ChannelSession.ChatClient.Disconnect();
             }
 
             ChannelSession.ChatClient = ChannelSession.BotChatClient = await ChatClient.CreateFromChannel(ChannelSession.MixerConnection, ChannelSession.Channel);
             if (await ChannelSession.ChatClient.Connect() && await ChannelSession.ChatClient.Authenticate())
             {
+                ChannelSession.ChatClient.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
+
                 if (ChannelSession.BotConnection != null)
                 {
                     return await ChannelSession.InitializeBotChatClient();
                 }
                 return true;
             }
+
             ChannelSession.ChatClient = ChannelSession.BotChatClient = null;
             return false;
         }
@@ -201,14 +205,17 @@ namespace MixItUp.Base
         {
             if (ChannelSession.BotChatClient != null && ChannelSession.BotChatClient != ChannelSession.ChatClient)
             {
+                ChannelSession.BotChatClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
                 await ChannelSession.BotChatClient.Disconnect();
             }
 
             ChannelSession.BotChatClient = await ChatClient.CreateFromChannel(ChannelSession.BotConnection, ChannelSession.Channel);
             if (await ChannelSession.BotChatClient.Connect() && await ChannelSession.BotChatClient.Authenticate())
             {
+                ChannelSession.BotChatClient.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
                 return true;
             }
+
             ChannelSession.BotChatClient = ChannelSession.ChatClient;
             return false;
         }
@@ -220,6 +227,7 @@ namespace MixItUp.Base
             ChannelSession.ConstellationClient = await ConstellationClient.Create(ChannelSession.MixerConnection);
             if (await ChannelSession.ConstellationClient.Connect())
             {
+                ChannelSession.ConstellationClient.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
                 return true;
             }
 
@@ -284,6 +292,7 @@ namespace MixItUp.Base
             ChannelSession.InteractiveClient = await InteractiveClient.CreateFromChannel(ChannelSession.MixerConnection, channel, game);
             if (await ChannelSession.InteractiveClient.Connect() && await ChannelSession.InteractiveClient.Ready())
             {
+                ChannelSession.InteractiveClient.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
                 return true;
             }
 
@@ -301,6 +310,8 @@ namespace MixItUp.Base
             {
                 throw new InvalidOperationException("Interactive client is not connected");
             }
+
+            ChannelSession.InteractiveClient.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
             await ChannelSession.InteractiveClient.Disconnect();
 
             ChannelSession.InteractiveClient = null;
@@ -333,7 +344,7 @@ namespace MixItUp.Base
             }
         }
 
-        public static void Close()
+        public static async Task Close()
         {
             ChannelSession.DisconnectOverlayServer();
 
@@ -343,23 +354,28 @@ namespace MixItUp.Base
 
             if (ChannelSession.ChatClient != null)
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                ChannelSession.ChatClient.Disconnect();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                ChannelSession.ChatClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
+                await ChannelSession.ChatClient.Disconnect();
+                ChannelSession.ChatClient = null;
+            }
+
+            if (ChannelSession.BotChatClient != null)
+            {
+                ChannelSession.BotChatClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
+                await ChannelSession.BotChatClient.Disconnect();
+                ChannelSession.BotChatClient = null;
             }
 
             if (ChannelSession.InteractiveClient != null)
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                ChannelSession.InteractiveClient.Disconnect();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                await ChannelSession.DisconnectInteractiveClient();
             }
 
             if (ChannelSession.ConstellationClient != null)
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                ChannelSession.ConstellationClient.Disconnect();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                ChannelSession.ConstellationClient.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
+                await ChannelSession.ConstellationClient.Disconnect();
+                ChannelSession.ConstellationClient = null;
             }
         }
 
@@ -446,6 +462,38 @@ namespace MixItUp.Base
                 throw new ArgumentException("ClientID value isn't set in application configuration");
             }
             return clientID;
+        }
+
+        private static async void ChatClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        {
+            while (!await ChannelSession.ChatClient.Connect() || !await ChannelSession.ChatClient.Authenticate())
+            {
+                await Task.Delay(3000);
+            }
+        }
+
+        private static async void BotChatClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        {
+            while (!await ChannelSession.BotChatClient.Connect() && !await ChannelSession.BotChatClient.Authenticate())
+            {
+                await Task.Delay(3000);
+            }
+        }
+
+        private static async void ConstellationClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        {
+            while (!await ChannelSession.ConstellationClient.Connect())
+            {
+                await Task.Delay(3000);
+            }
+        }
+
+        private static async void InteractiveClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        {
+            while (!await ChannelSession.InteractiveClient.Connect() && !await ChannelSession.InteractiveClient.Ready())
+            {
+                await Task.Delay(3000);
+            }
         }
     }
 }

@@ -35,8 +35,8 @@
       <HintPath>..\packages\EngineIoClientDotNet.1.0.3\lib\net45\EngineIoClientDotNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.2.6467.159, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.3.0-beta\lib\net46\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.2.6489.4001, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.3.2-beta\lib\net46\Mixer.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
