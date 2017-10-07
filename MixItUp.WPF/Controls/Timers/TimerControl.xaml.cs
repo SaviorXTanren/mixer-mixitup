@@ -112,7 +112,7 @@ namespace MixItUp.WPF.Controls.Timers
             }
             else
             {
-                await MessageBoxHelper.ShowDialog("Minimum Messages must be greater than 0");
+                await MessageBoxHelper.ShowMessageDialog("Minimum Messages must be greater than 0");
                 this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
             }
         }
@@ -126,7 +126,7 @@ namespace MixItUp.WPF.Controls.Timers
             }
             else
             {
-                await MessageBoxHelper.ShowDialog("Interval must be 0 or greater");
+                await MessageBoxHelper.ShowMessageDialog("Interval must be 0 or greater");
                 this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             }
         }

@@ -224,6 +224,9 @@
     <Compile Include="Util\BasicDialogControl.xaml.cs">
       <DependentUpon>BasicDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Util\ConfirmationDialogControl.xaml.cs">
+      <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Util\MessageBoxHelper.cs" />
     <Compile Include="Util\NotifyPropertyChangedBase.cs" />
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
@@ -351,6 +354,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Util\BasicDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Util\ConfirmationDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

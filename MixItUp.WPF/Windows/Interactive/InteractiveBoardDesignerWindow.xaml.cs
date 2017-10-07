@@ -101,7 +101,7 @@ namespace MixItUp.WPF.Windows.Interactive
         {
             if (string.IsNullOrEmpty(this.GameNameTextBox.Text))
             {
-                await MessageBoxHelper.ShowDialog("A name must be specified for the game");
+                await MessageBoxHelper.ShowMessageDialog("A name must be specified for the game");
                 return;
             }
 
@@ -112,7 +112,7 @@ namespace MixItUp.WPF.Windows.Interactive
 
             if (game == null)
             {
-                await MessageBoxHelper.ShowDialog("Failed to create game");
+                await MessageBoxHelper.ShowMessageDialog("Failed to create game");
                 return;
             }
         }

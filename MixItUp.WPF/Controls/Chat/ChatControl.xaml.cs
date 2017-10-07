@@ -6,6 +6,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,7 +39,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
-        private bool blockChat = false;
+        private bool disableChat = false;
 
         public ChatControl()
         {
@@ -163,20 +164,26 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async void ChatClearMessagesButton_Click(object sender, RoutedEventArgs e)
         {
-            await ChannelSession.ChatClient.ClearMessages();
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will clear all Chat for the stream. Are you sure?"))
+            {
+                await ChannelSession.ChatClient.ClearMessages();
+            }
         }
 
-        private void BlockChatButton_Click(object sender, RoutedEventArgs e)
+        private async void DisableChatButton_Click(object sender, RoutedEventArgs e)
         {
-            this.blockChat = true;
-            this.BlockChatButton.Visibility = Visibility.Collapsed;
-            this.EnableChatButton.Visibility = Visibility.Visible;
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will disable chat for all users. Are you sure?"))
+            {
+                this.disableChat = true;
+                this.DisableChatButton.Visibility = Visibility.Collapsed;
+                this.EnableChatButton.Visibility = Visibility.Visible;
+            }
         }
 
         private void EnableChatButton_Click(object sender, RoutedEventArgs e)
         {
-            this.blockChat = false;
-            this.BlockChatButton.Visibility = Visibility.Visible;
+            this.disableChat = false;
+            this.DisableChatButton.Visibility = Visibility.Visible;
             this.EnableChatButton.Visibility = Visibility.Collapsed;
         }
 
@@ -287,7 +294,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             await this.AddUser(message.User);
 
-            if (this.blockChat && !message.ID.Equals(Guid.Empty))
+            if (this.disableChat && !message.ID.Equals(Guid.Empty))
             {
                 messageControl.DeleteMessage();
                 await ChannelSession.ChatClient.DeleteMessage(message.ID);

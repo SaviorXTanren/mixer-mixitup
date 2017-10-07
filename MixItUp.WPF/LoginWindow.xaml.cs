@@ -91,7 +91,7 @@ namespace MixItUp.WPF
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowDialog("You must select a Streamer account to log in to");
+                        await MessageBoxHelper.ShowMessageDialog("You must select a Streamer account to log in to");
                     }
                 }
                 else
@@ -109,7 +109,7 @@ namespace MixItUp.WPF
             }
             else
             {
-                await MessageBoxHelper.ShowDialog("Unable to initialize session, please try again");
+                await MessageBoxHelper.ShowMessageDialog("Unable to initialize session, please try again");
             }
         }
 
@@ -125,7 +125,7 @@ namespace MixItUp.WPF
         {
             if (string.IsNullOrEmpty(this.ModeratorChannelTextBox.Text))
             {
-                await MessageBoxHelper.ShowDialog("A channel name must be entered");
+                await MessageBoxHelper.ShowMessageDialog("A channel name must be entered");
                 return;
             }
 
@@ -146,12 +146,12 @@ namespace MixItUp.WPF
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowDialog("You are not a moderator for this channel.");
+                    await MessageBoxHelper.ShowMessageDialog("You are not a moderator for this channel.");
                 }
             }
             else
             {
-                await MessageBoxHelper.ShowDialog("Unable to initialize session, please try again");
+                await MessageBoxHelper.ShowMessageDialog("Unable to initialize session, please try again");
             }
         }
 
@@ -169,7 +169,7 @@ namespace MixItUp.WPF
 
             if (!result)
             {
-                await MessageBoxHelper.ShowDialog("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
+                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
             }
             return result;
         }

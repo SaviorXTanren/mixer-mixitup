@@ -34,7 +34,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                await MessageBoxHelper.ShowDialog("Name is missing");
+                await MessageBoxHelper.ShowMessageDialog("Name is missing");
                 return false;
             }
 

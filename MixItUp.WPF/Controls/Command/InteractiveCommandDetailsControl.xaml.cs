@@ -85,25 +85,25 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (this.ButtonTriggerComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowDialog("An trigger type must be selected");
+                    await MessageBoxHelper.ShowMessageDialog("An trigger type must be selected");
                     return false;
                 }
 
                 if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost < 0)
                 {
-                    await MessageBoxHelper.ShowDialog("A valid spark cost must be entered");
+                    await MessageBoxHelper.ShowMessageDialog("A valid spark cost must be entered");
                     return false;
                 }
 
                 if (this.CooldownTypeComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowDialog("A cooldown type must be selected");
+                    await MessageBoxHelper.ShowMessageDialog("A cooldown type must be selected");
                     return false;
                 }
 
                 if (this.CooldownTypeComboBox.SelectedItem.Equals("Group") && this.CooldownGroupsComboBox.SelectedIndex < 0 && string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
                 {
-                    await MessageBoxHelper.ShowDialog("A cooldown group must be selected or entered");
+                    await MessageBoxHelper.ShowMessageDialog("A cooldown group must be selected or entered");
                     return false;
                 }
 
@@ -111,7 +111,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
                     {
-                        await MessageBoxHelper.ShowDialog("Cooldown must be 0 or greater");
+                        await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
                         return false;
                     }
                 }

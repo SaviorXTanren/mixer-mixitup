@@ -84,7 +84,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (!result)
             {
-                await MessageBoxHelper.ShowDialog("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
+                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate Bot with Mixer. Please ensure you approved access for the application in a timely manner.");
             }
             else
             {
@@ -160,7 +160,7 @@ namespace MixItUp.WPF.Controls.Services
                     ChannelSession.Settings.OBSStudioServerIP = null;
                     ChannelSession.Settings.OBSStudioServerPassword = null;
 
-                    await MessageBoxHelper.ShowDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
+                    await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password match your settings in OBS Studio");
                 }
             });
         }
@@ -214,11 +214,11 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     if (await ChannelSession.XSplitServer.TestConnection())
                     {
-                        await MessageBoxHelper.ShowDialog("Connection successful!");
+                        await MessageBoxHelper.ShowMessageDialog("Connection successful!");
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
+                        await MessageBoxHelper.ShowMessageDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
                     }
                 });
             }

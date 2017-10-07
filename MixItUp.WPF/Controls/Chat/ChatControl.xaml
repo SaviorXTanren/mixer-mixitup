@@ -61,7 +61,7 @@
                         
                         <Button x:Name="ChatClearMessagesButton" Grid.Column="0" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="ChatClearMessagesButton_Click">Clear Chat</Button>
 
-                        <Button x:Name="BlockChatButton" Grid.Column="2" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="BlockChatButton_Click">Block Chat</Button>
+                        <Button x:Name="DisableChatButton" Grid.Column="2" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DisableChatButton_Click">Disable Chat</Button>
                         <Button x:Name="EnableChatButton" Grid.Column="2" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="EnableChatButton_Click" Visibility="Collapsed">Enable Chat</Button>
                         
                     </Grid>

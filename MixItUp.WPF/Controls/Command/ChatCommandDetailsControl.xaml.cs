@@ -44,19 +44,19 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (string.IsNullOrEmpty(this.NameTextBox.Text))
             {
-                await MessageBoxHelper.ShowDialog("Name is missing");
+                await MessageBoxHelper.ShowMessageDialog("Name is missing");
                 return false;
             }
 
             if (this.LowestRoleAllowedComboBox.SelectedIndex < 0)
             {
-                await MessageBoxHelper.ShowDialog("A permission level must be selected");
+                await MessageBoxHelper.ShowMessageDialog("A permission level must be selected");
                 return false;
             }
 
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
             {
-                await MessageBoxHelper.ShowDialog("Commands is missing");
+                await MessageBoxHelper.ShowMessageDialog("Commands is missing");
                 return false;
             }
 
@@ -65,7 +65,7 @@ namespace MixItUp.WPF.Controls.Command
                 int cooldown = 0;
                 if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
                 {
-                    await MessageBoxHelper.ShowDialog("Cooldown must be 0 or greater");
+                    await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
                     return false;
                 }
             }
