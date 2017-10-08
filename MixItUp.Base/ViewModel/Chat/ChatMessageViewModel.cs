@@ -53,35 +53,40 @@ namespace MixItUp.Base.ViewModel.Chat
             this.Message = string.Empty;
             foreach (ChatMessageDataModel message in this.ChatMessageEvent.message.message)
             {
-                if (message.type.Equals("text"))
+                switch (message.type)
                 {
-                    this.Message += message.text;
-                }
-                else if (message.type.Equals("emoticon"))
-                {
-                    // Special code here to process emoticons
-                    //string imageLink = null;
-                    //if (message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
-                    //{
-                    //    imageLink = message.pack;
-                    //}
-                    //else if (message.source.Equals("builtin"))
-                    //{
-                    //    imageLink = string.Format(ChatMessageViewModel.DefaultEmoticonsLinkFormat, message.pack);
-                    //}
+                    case "emoticon":
+                        // Special code here to process emoticons
+                        //string imageLink = null;
+                        //if (message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
+                        //{
+                        //    imageLink = message.pack;
+                        //}
+                        //else if (message.source.Equals("builtin"))
+                        //{
+                        //    imageLink = string.Format(ChatMessageViewModel.DefaultEmoticonsLinkFormat, message.pack);
+                        //}
 
-                    //if (!string.IsNullOrEmpty(imageLink))
-                    //{
-                    //    string imageFilePath = Path.GetTempFileName();
-                    //    using (WebClient client = new WebClient())
-                    //    {
-                    //        client.DownloadFile(new Uri(imageLink), imageFilePath);
-                    //    }
+                        //if (!string.IsNullOrEmpty(imageLink))
+                        //{
+                        //    string imageFilePath = Path.GetTempFileName();
+                        //    using (WebClient client = new WebClient())
+                        //    {
+                        //        client.DownloadFile(new Uri(imageLink), imageFilePath);
+                        //    }
 
-                    //    EmoticonImage emoticonImage = new EmoticonImage() { Name = message.text, FilePath = imageFilePath, Coordinates = message.coords };
-                    //}
+                        //    EmoticonImage emoticonImage = new EmoticonImage() { Name = message.text, FilePath = imageFilePath, Coordinates = message.coords };
+                        //}
 
-                    this.Message += message.text;
+                        this.Message += message.text;
+
+                        break;
+                    case "text":
+                    case "tag":
+                    default:
+                        this.Message += message.text;
+
+                        break;
                 }
             }
         }
