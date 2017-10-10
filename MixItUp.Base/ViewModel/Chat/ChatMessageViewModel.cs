@@ -1,8 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using System;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 
 namespace MixItUp.Base.ViewModel.Chat
@@ -18,7 +16,8 @@ namespace MixItUp.Base.ViewModel.Chat
     {
         private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
 
-        public static readonly Regex EmoteRegex = new Regex(":\\w+");
+        private static readonly Regex EmoteRegex = new Regex(":\\w+");
+        private static readonly string BannedWordRegexFormat = "(^|\\s){0}(\\s|$)";
 
         public Guid ID { get; private set; }
 
@@ -29,6 +28,8 @@ namespace MixItUp.Base.ViewModel.Chat
         public string TargetUsername { get; private set; }
 
         public DateTimeOffset Timestamp { get; private set; }
+
+        public bool ContainsLink { get; private set; }
 
         public bool IsDeleted { get; set; }
 
@@ -81,11 +82,14 @@ namespace MixItUp.Base.ViewModel.Chat
                         this.Message += message.text;
 
                         break;
+                    case "link":
+                        this.ContainsLink = true;
+                        this.Message += message.text;
+                        break;
                     case "text":
                     case "tag":
                     default:
                         this.Message += message.text;
-
                         break;
                 }
             }
@@ -115,7 +119,7 @@ namespace MixItUp.Base.ViewModel.Chat
             string lower = this.Message.ToLower();
             foreach (string word in ChannelSession.Settings.BannedWords)
             {
-                if (lower.Contains(word))
+                if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
                 {
                     return true;
                 }
@@ -140,7 +144,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 }
             }
 
-            if (ChannelSession.Settings.BlockLinks && lower.Contains(".com"))
+            if (ChannelSession.Settings.BlockLinks && this.ContainsLink)
             {
                 return true;
             }
