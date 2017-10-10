@@ -426,6 +426,18 @@ namespace MixItUp.WPF.Controls.Interactive
                             return;
                         }
 
+                        if (!string.IsNullOrEmpty(interactiveInput.transactionID))
+                        {
+                            await this.Window.RunAsyncOperation(async () =>
+                            {
+                                try
+                                {
+                                    await ChannelSession.InteractiveClient.CaptureSparkTransaction(interactiveInput.transactionID);
+                                }
+                                catch (Exception) { }
+                            });
+                        }
+
                         GlobalEvents.InteractiveControlUsed(item.Control);
 
                         UserViewModel user = ChannelSession.GetCurrentUser();
@@ -440,18 +452,6 @@ namespace MixItUp.WPF.Controls.Interactive
                             {
                                 user = new UserViewModel(participant.userID, participant.username);
                             }
-                        }
-
-                        if (!string.IsNullOrEmpty(interactiveInput.transactionID))
-                        {
-                            await this.Window.RunAsyncOperation(async () =>
-                            {
-                                try
-                                {
-                                    await ChannelSession.InteractiveClient.CaptureSparkTransaction(interactiveInput.transactionID);
-                                }
-                                catch (Exception) { }
-                            });
                         }
 
                         if (item.ConnectedButton != null)
