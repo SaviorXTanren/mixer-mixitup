@@ -39,9 +39,6 @@ namespace MixItUp.Base.ViewModel
         public List<UserRole> Roles { get; set; }
 
         [JsonIgnore]
-        public UserRole PrimaryRole { get { return this.Roles.Max(); } }
-
-        [JsonIgnore]
         public int ChatOffenses { get; set; }
 
         public UserViewModel()
@@ -75,11 +72,19 @@ namespace MixItUp.Base.ViewModel
             else if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
         }
 
+        [JsonIgnore]
+        public UserRole PrimaryRole { get { return this.Roles.Max(); } }
+
+        [JsonIgnore]
+        public bool IsFollower { get { return this.Roles.Contains(UserRole.Follower); } }
+
         public SolidColorBrush PrimaryRoleColor
         {
             get
             {
-                switch (this.PrimaryRole)
+                IEnumerable<UserRole> roles = this.Roles.Where(r => r != UserRole.Follower);
+                UserRole primaryRole = roles.Max();
+                switch (primaryRole)
                 {
                     case UserRole.Streamer:
                     case UserRole.Mod:
