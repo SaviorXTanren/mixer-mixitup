@@ -374,14 +374,34 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private async Task PurgeUser(UserViewModel user)
+        private async Task ShowUserDialog(UserViewModel user)
         {
-            await ChannelSession.ChatClient.PurgeUser(user.UserName);
-            foreach (ChatMessageControl messageControl in this.MessageControls)
+            UserDialogResult result = await MessageBoxHelper.ShowUserDialog(user);
+
+            if (result == UserDialogResult.Purge)
             {
-                if (messageControl.Message.User.Equals(user) && !messageControl.Message.IsWhisper)
+                await ChannelSession.ChatClient.PurgeUser(user.UserName);
+                foreach (ChatMessageControl messageControl in this.MessageControls)
                 {
-                    messageControl.DeleteMessage();
+                    if (messageControl.Message.User.Equals(user) && !messageControl.Message.IsWhisper)
+                    {
+                        messageControl.DeleteMessage();
+                    }
+                }
+            }
+            else if (result == UserDialogResult.Timeout1)
+            {
+                await ChannelSession.ChatClient.TimeoutUser(user.UserName, 60);
+            }
+            else if (result == UserDialogResult.Timeout5)
+            {
+                await ChannelSession.ChatClient.TimeoutUser(user.UserName, 300);
+            }
+            else if (result == UserDialogResult.Ban)
+            {
+                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
+                {
+                    await ChannelSession.MixerConnection.Channels.UpdateUserRoles(ChannelSession.Channel, user.GetModel(), new List<string>() { UserRole.Banned.ToString() });
                 }
             }
         }
@@ -389,6 +409,16 @@ namespace MixItUp.WPF.Controls.Chat
         #endregion Chat Update Methods
 
         #region Context Menu Events
+
+        private async void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.UserList.SelectedIndex >= 0)
+            {
+                ChatUserControl userControl = (ChatUserControl)this.UserList.SelectedItem;
+                this.UserList.SelectedIndex = -1;
+                await this.ShowUserDialog(userControl.User);
+            }
+        }
 
         private async void MessageDeleteMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
@@ -403,66 +433,12 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private async void MessageUserPurgeMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void MessageUserInformationMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.ChatList.SelectedItem != null)
             {
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
-                if (control.Message.User != null)
-                {
-                    await this.PurgeUser(control.Message.User);
-                }
-            }
-        }
-
-        private async void MessageUserTimeout1MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (this.ChatList.SelectedItem != null)
-            {
-                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
-                if (control.Message.User != null)
-                {
-                    await ChannelSession.ChatClient.TimeoutUser(control.Message.User.UserName, 60);
-                }
-            }
-        }
-
-        private async void MessageUserTimeout5MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (this.ChatList.SelectedItem != null)
-            {
-                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
-                if (control.Message.User != null)
-                {
-                    await ChannelSession.ChatClient.TimeoutUser(control.Message.User.UserName, 300);
-                }
-            }
-        }
-
-        private async void UserPurgeMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (this.UserList.SelectedItem != null)
-            {
-                ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
-                await this.PurgeUser(control.User);
-            }
-        }
-
-        private async void UserTimeout1MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (this.UserList.SelectedItem != null)
-            {
-                ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
-                await ChannelSession.ChatClient.TimeoutUser(control.User.UserName, 60);
-            }
-        }
-
-        private async void UserTimeout5MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (this.UserList.SelectedItem != null)
-            {
-                ChatUserControl control = (ChatUserControl)this.UserList.SelectedItem;
-                await ChannelSession.ChatClient.TimeoutUser(control.User.UserName, 300);
+                await this.ShowUserDialog(control.Message.User);
             }
         }
 

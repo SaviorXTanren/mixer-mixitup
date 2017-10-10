@@ -67,8 +67,8 @@
       <HintPath>..\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.2.6489.4001, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.3.2-beta\lib\net46\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.2.6491.41270, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.3.3.1-beta\lib\net46\Mixer.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -168,6 +168,9 @@
     <Compile Include="Controls\Currency\CurrencyControl.xaml.cs">
       <DependentUpon>CurrencyControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\UserDialogControl.xaml.cs">
+      <DependentUpon>UserDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\ServicesControl.xaml.cs">
       <DependentUpon>ServicesControl.xaml</DependentUpon>
     </Compile>
@@ -221,10 +224,10 @@
     <Compile Include="ModeratorWindow.xaml.cs">
       <DependentUpon>ModeratorWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Util\BasicDialogControl.xaml.cs">
+    <Compile Include="Controls\Dialogs\BasicDialogControl.xaml.cs">
       <DependentUpon>BasicDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Util\ConfirmationDialogControl.xaml.cs">
+    <Compile Include="Controls\Dialogs\ConfirmationDialogControl.xaml.cs">
       <DependentUpon>ConfirmationDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Util\MessageBoxHelper.cs" />
@@ -249,6 +252,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Currency\CurrencyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\UserDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -353,11 +360,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Util\BasicDialogControl.xaml">
+    <Page Include="Controls\Dialogs\BasicDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Util\ConfirmationDialogControl.xaml">
+    <Page Include="Controls\Dialogs\ConfirmationDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

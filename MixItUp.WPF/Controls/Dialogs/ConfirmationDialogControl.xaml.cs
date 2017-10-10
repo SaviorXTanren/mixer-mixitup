@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace MixItUp.WPF.Util
+namespace MixItUp.WPF.Controls.Dialogs
 {
     /// <summary>
     /// Interaction logic for ConfirmationDialogControl.xaml

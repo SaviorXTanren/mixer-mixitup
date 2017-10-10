@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,9 @@ namespace MixItUp.Base.ViewModel
             else if (userRoles.Any(r => r.Equals("Pro"))) { this.Roles.Add(UserRole.Pro); }
             else if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
         }
+
+        [JsonIgnore]
+        public string RolesString { get { return string.Join(", ", this.Roles.OrderByDescending(r => r).Select(r => EnumHelper.GetEnumName(r))); } }
 
         [JsonIgnore]
         public UserRole PrimaryRole { get { return this.Roles.Max(); } }

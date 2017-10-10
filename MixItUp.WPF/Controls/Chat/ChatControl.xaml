@@ -25,16 +25,9 @@
 
             <ContextMenu x:Key="ChatListContextMenu">
                 <MenuItem x:Name="MessageDeleteMenuItem" Header="Delete Message" Click="MessageDeleteMenuItem_Click" />
-                <MenuItem x:Name="MessageUserPurgeMenuItem" Header="Purge User" Click="MessageUserPurgeMenuItem_Click" />
-                <MenuItem x:Name="MessageUserTimeout1MenuItem" Header="Timeout User (1 Min)" Click="MessageUserTimeout1MenuItem_Click" />
-                <MenuItem x:Name="MessageUserTimeout5MenuItem" Header="Timeout User (5 Mins)" Click="MessageUserTimeout5MenuItem_Click" />
+                <MenuItem x:Name="MessageUserInformationMenuItem" Header="User Info" Click="MessageUserInformationMenuItem_Click" />
             </ContextMenu>
 
-            <ContextMenu x:Key="UserListContextMenu">
-                <MenuItem x:Name="UserPurgeMenuItem" Header="Purge User" Click="UserPurgeMenuItem_Click" />
-                <MenuItem x:Name="UserTimeout1MenuItem" Header="Timeout User (1 Min)" Click="UserTimeout1MenuItem_Click" />
-                <MenuItem x:Name="UserTimeout5MenuItem" Header="Timeout User (5 Mins)" Click="UserTimeout5MenuItem_Click" />
-            </ContextMenu>
         </ResourceDictionary>
     </Controls:MainControlBase.Resources>
 
@@ -110,7 +103,7 @@
                 </Grid>
             </GroupBox.Header>
 
-            <ListView x:Name="UserList" Grid.Column="1" ContextMenu="{StaticResource UserListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" />
+            <ListView x:Name="UserList" Grid.Column="1" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" />
         </GroupBox>
 
     </Grid>

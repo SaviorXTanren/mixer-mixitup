@@ -1,0 +1,114 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.UserDialogControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Dialogs"
+             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             xmlns:MaterialDesignWPF="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+             
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="400">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="16" MaxWidth="325">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" />
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock x:Name="UserNameTextBlock" Grid.Row="0" Text="{Binding UserName}" />
+
+                <TextBlock x:Name="RolesTextBlock" Grid.Row="2" Text="{Binding RolesString}" TextWrapping="Wrap" />
+
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" IsDefault="True" ToolTip="Purge" Content="{MaterialDesign:PackIcon Broom}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:String>Purge</system:String>
+                </Button.CommandParameter>
+            </Button>
+
+            <Button Grid.Column="2" IsDefault="True" ToolTip="Timeout 1 Min" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:String>Timeout1</system:String>
+                </Button.CommandParameter>
+                <StackPanel Orientation="Horizontal">
+                    <MaterialDesign:PackIcon Kind="Timer" Foreground="{StaticResource PrimaryColor}" />
+                    <TextBlock Foreground="{StaticResource PrimaryColor}">1</TextBlock>
+                </StackPanel>
+            </Button>
+
+            <Button Grid.Column="4" IsDefault="True" ToolTip="Timeout 5 Min" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:String>Timeout5</system:String>
+                </Button.CommandParameter>
+                <StackPanel Orientation="Horizontal">
+                    <MaterialDesign:PackIcon Kind="Timer" Foreground="{StaticResource PrimaryColor}" />
+                    <TextBlock Foreground="{StaticResource PrimaryColor}">5</TextBlock>
+                </StackPanel>
+            </Button>
+
+            <Button Grid.Column="6" IsDefault="True" ToolTip="Ban" Content="{MaterialDesign:PackIcon BlockHelper}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:String>Ban</system:String>
+                </Button.CommandParameter>
+            </Button>
+
+            <Button Grid.Column="8" IsDefault="True" ToolTip="Close" Content="{MaterialDesign:PackIcon Close}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:String>Close</system:String>
+                </Button.CommandParameter>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

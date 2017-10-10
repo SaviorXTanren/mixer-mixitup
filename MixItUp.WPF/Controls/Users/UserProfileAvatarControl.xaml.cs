@@ -26,5 +26,11 @@ namespace MixItUp.WPF.Controls.Users
                 this.ProfileAvatarImage.Source = bitmap;
             }
         }
+
+        public void SetSize(int size)
+        {
+            this.ProfileAvatarImage.Width = size;
+            this.ProfileAvatarImage.Height = size;
+        }
     }
 }
