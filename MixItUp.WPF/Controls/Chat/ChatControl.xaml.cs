@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -25,6 +26,8 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatControl : MainControlBase
     {
+        public static BitmapImage SubscriberBadgeBitmap { get; private set; }
+
         private const string UserNameTagRegexPattern = " @\\w+ ";
 
         private static readonly Regex UserNameTagRegex = new Regex(UserNameTagRegexPattern);
@@ -69,6 +72,16 @@ namespace MixItUp.WPF.Controls.Chat
                 ChannelSession.ChatClient.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
                 ChannelSession.ChatClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
 
+                if (ChannelSession.Channel.badge != null && !string.IsNullOrEmpty(ChannelSession.Channel.badge.url))
+                {
+                    ChatControl.SubscriberBadgeBitmap = new BitmapImage();
+                    ChatControl.SubscriberBadgeBitmap.BeginInit();
+                    ChatControl.SubscriberBadgeBitmap.UriSource = new Uri(ChannelSession.Channel.badge.url, UriKind.Absolute);
+                    ChatControl.SubscriberBadgeBitmap.EndInit();
+                }
+
+                await this.RefreshAllChat();
+
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -104,39 +117,11 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-                    await ChannelSession.RefreshChannel();
-
-                    ChannelSession.ChatUsers.Clear();
-
-                    foreach (ChatUserModel user in await ChannelSession.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
-                    {
-                        await this.AddUser(new UserViewModel(user), notMassUpdate: false);
-                    }
-
-                    if (ChannelSession.ChatUsers.Count > 0)
-                    {
-                        Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, ChannelSession.ChatUsers.Values.Select(u => u.GetModel()));
-                        foreach (var kvp in chatFollowers)
-                        {
-                            ChannelSession.ChatUsers[kvp.Key.id].Roles.Add(UserRole.Follower);
-                        }
-                    }
-
-                    await this.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        lock (userUpdateLock)
-                        {
-                            this.UserControls.Clear();
-                            var orderedUsers = ChannelSession.ChatUsers.Values.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
-                            foreach (UserViewModel user in orderedUsers)
-                            {
-                                this.UserControls.Add(new ChatUserControl(user));
-                            }
-                            this.UpdateUserViewCount();
-                        }
-                    }));
-
                     await Task.Delay(1000 * 30);
+
+                    this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                    await this.RefreshAllChat();
                 }
                 catch (Exception ex) { string str = ex.ToString(); }
             }
@@ -250,12 +235,45 @@ namespace MixItUp.WPF.Controls.Chat
 
         #region Chat Update Methods
 
+        private async Task RefreshAllChat()
+        {
+            await ChannelSession.RefreshChannel();
+
+            ChannelSession.ChatUsers.Clear();
+
+            foreach (ChatUserModel user in await ChannelSession.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
+            {
+                await this.AddUser(new UserViewModel(user), notMassUpdate: false);
+            }
+
+            if (ChannelSession.ChatUsers.Count > 0)
+            {
+                Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, ChannelSession.ChatUsers.Values.Select(u => u.GetModel()));
+                foreach (var kvp in chatFollowers)
+                {
+                    ChannelSession.ChatUsers[kvp.Key.id].IsFollower = true;
+                }
+            }
+
+            await this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                lock (userUpdateLock)
+                {
+                    this.RefreshUserList();
+                    this.UpdateUserViewCount();
+                }
+            }));
+        }
+
         private async Task AddUser(UserViewModel user, bool notMassUpdate = true)
         {
             if (user.ID > 0)
             {
                 UserWithChannelModel userWithChannel = await ChannelSession.MixerConnection.Users.GetUser(user.GetModel());
-                user.AvatarLink = userWithChannel.avatarUrl;
+                if (!string.IsNullOrEmpty(userWithChannel.avatarUrl))
+                {
+                    user.AvatarLink = userWithChannel.avatarUrl;
+                }
             }
 
             if (notMassUpdate)
@@ -263,7 +281,7 @@ namespace MixItUp.WPF.Controls.Chat
                 DateTimeOffset? followDate = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, user.GetModel());
                 if (followDate != null)
                 {
-                    user.Roles.Add(UserRole.Follower);
+                    user.IsFollower = true;
                 }
 
                 this.UpdateUserViewCount();
@@ -277,8 +295,7 @@ namespace MixItUp.WPF.Controls.Chat
 
                     if (notMassUpdate)
                     {
-                        var orderedUsers = ChannelSession.ChatUsers.Values.OrderByDescending(u => u.PrimaryRole).ThenBy(u => u.UserName).ToList();
-                        this.UserControls.Insert(orderedUsers.IndexOf(user), new ChatUserControl(user));
+                        this.RefreshUserList();
                     }
                 }
             }
@@ -295,6 +312,16 @@ namespace MixItUp.WPF.Controls.Chat
                     this.UserControls.Remove(userControl);
                 }
                 this.UpdateUserViewCount();
+            }
+        }
+
+        private void RefreshUserList()
+        {
+            this.UserControls.Clear();
+            var orderedUsers = ChannelSession.ChatUsers.Values.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
+            foreach (UserViewModel user in orderedUsers)
+            {
+                this.UserControls.Add(new ChatUserControl(user));
             }
         }
 

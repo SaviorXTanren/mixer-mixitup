@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.ViewModel;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -24,6 +25,12 @@ namespace MixItUp.WPF.Controls.Chat
             if (!string.IsNullOrEmpty(this.User.AvatarLink))
             {
                 this.UserAvatar.SetImageUrl(this.User.AvatarLink);
+            }
+
+            if (ChatControl.SubscriberBadgeBitmap != null && this.User.IsSubscriber)
+            {
+                this.SubscriberImage.Visibility = Visibility.Visible;
+                this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;
             }
         }
     }

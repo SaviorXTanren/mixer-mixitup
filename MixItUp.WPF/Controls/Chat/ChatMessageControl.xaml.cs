@@ -26,6 +26,12 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 this.UserAvatar.SetImageUrl(this.Message.User.AvatarLink);
             }
+
+            if (ChatControl.SubscriberBadgeBitmap != null && this.Message.User.IsSubscriber)
+            {
+                this.SubscriberImage.Visibility = Visibility.Visible;
+                this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;
+            }
         }
 
         public void DeleteMessage()

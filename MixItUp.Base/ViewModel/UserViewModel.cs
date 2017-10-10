@@ -23,7 +23,7 @@ namespace MixItUp.Base.ViewModel
     }
 
     [DataContract]
-    public class UserViewModel : IEquatable<UserViewModel>
+    public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
         private const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.jpg";
 
@@ -37,7 +37,7 @@ namespace MixItUp.Base.ViewModel
         public string AvatarLink { get; set; }
 
         [JsonIgnore]
-        public List<UserRole> Roles { get; set; }
+        public HashSet<UserRole> Roles { get; set; }
 
         [JsonIgnore]
         public int ChatOffenses { get; set; }
@@ -62,15 +62,15 @@ namespace MixItUp.Base.ViewModel
         {
             this.ID = id;
             this.UserName = username;
-            this.Roles = new List<UserRole>();
+            this.Roles = new HashSet<UserRole>();
 
             this.Roles.Add(UserRole.User);
             if (userRoles.Any(r => r.Equals("Owner"))) { this.Roles.Add(UserRole.Streamer); }
-            else if (userRoles.Any(r => r.Equals("Staff"))) { this.Roles.Add(UserRole.Staff); }
-            else if (userRoles.Any(r => r.Equals("Mod"))) { this.Roles.Add(UserRole.Mod); }
-            else if (userRoles.Any(r => r.Equals("Subscriber"))) { this.Roles.Add(UserRole.Subscriber); }
-            else if (userRoles.Any(r => r.Equals("Pro"))) { this.Roles.Add(UserRole.Pro); }
-            else if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
+            if (userRoles.Any(r => r.Equals("Staff"))) { this.Roles.Add(UserRole.Staff); }
+            if (userRoles.Any(r => r.Equals("Mod"))) { this.Roles.Add(UserRole.Mod); }
+            if (userRoles.Any(r => r.Equals("Subscriber"))) { this.Roles.Add(UserRole.Subscriber); }
+            if (userRoles.Any(r => r.Equals("Pro"))) { this.Roles.Add(UserRole.Pro); }
+            if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
         }
 
         [JsonIgnore]
@@ -80,28 +80,41 @@ namespace MixItUp.Base.ViewModel
         public UserRole PrimaryRole { get { return this.Roles.Max(); } }
 
         [JsonIgnore]
-        public bool IsFollower { get { return this.Roles.Contains(UserRole.Follower); } }
+        public UserRole PrimarySortableRole { get { return this.Roles.Where(r => r != UserRole.Follower).Max(); } }
+
+        [JsonIgnore]
+        public bool IsFollower
+        {
+            get { return this.Roles.Contains(UserRole.Follower); }
+            set { this.Roles.Add(UserRole.Follower); }
+        }
+
+        [JsonIgnore]
+        public bool IsSubscriber { get { return this.Roles.Contains(UserRole.Subscriber); } }
 
         public SolidColorBrush PrimaryRoleColor
         {
             get
             {
-                IEnumerable<UserRole> roles = this.Roles.Where(r => r != UserRole.Follower);
-                UserRole primaryRole = roles.Max();
-                switch (primaryRole)
+                if (this.Roles.Contains(UserRole.Streamer))
                 {
-                    case UserRole.Streamer:
-                    case UserRole.Mod:
-                        return Brushes.Green;
-                    case UserRole.Staff:
-                        return Brushes.Gold;
-                    case UserRole.Subscriber:
-                    case UserRole.Pro:
-                        return Brushes.Purple;
-                    case UserRole.Banned:
-                        return Brushes.Red;
-                    default:
-                        return Brushes.Blue;
+                    return Brushes.Black;
+                }
+                else if (this.Roles.Contains(UserRole.Staff))
+                {
+                    return Brushes.Gold;
+                }
+                else if (this.Roles.Contains(UserRole.Mod))
+                {
+                    return Brushes.Green;
+                }
+                else if (this.Roles.Contains(UserRole.Pro))
+                {
+                    return Brushes.Purple;
+                }
+                else
+                {
+                    return Brushes.Blue;
                 }
             }
         }
@@ -135,6 +148,16 @@ namespace MixItUp.Base.ViewModel
         }
 
         public bool Equals(UserViewModel other) { return this.ID.Equals(other.ID); }
+
+        public int CompareTo(UserViewModel other)
+        {
+            int order = this.PrimaryRole.CompareTo(other.PrimaryRole);
+            if (order == 0)
+            {
+                return this.UserName.CompareTo(other.UserName);
+            }
+            return order;
+        }
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 

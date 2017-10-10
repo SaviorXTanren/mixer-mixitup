@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Controls.Giveaway
                     usersToSelectFrom = ChannelSession.ChatUsers.Values;
                     break;
                 case "Followers":
-                    usersToSelectFrom = ChannelSession.ChatUsers.Values.Where(u => u.Roles.Contains(UserRole.Follower));
+                    usersToSelectFrom = ChannelSession.ChatUsers.Values.Where(u => u.IsFollower);
                     break;
                 case "Subscribers":
                     usersToSelectFrom = ChannelSession.ChatUsers.Values.Where(u => u.Roles.Contains(UserRole.Subscriber));

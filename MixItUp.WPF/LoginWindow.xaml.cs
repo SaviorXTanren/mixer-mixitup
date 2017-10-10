@@ -136,18 +136,22 @@ namespace MixItUp.WPF
 
             if (result)
             {
+
+
                 IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerConnection.Channels.GetUsersWithRoles(ChannelSession.Channel, UserRole.Mod.ToString().ToLower());
                 if (users.Any(uwg => uwg.id.Equals(ChannelSession.User.id)))
                 {
-                    ModeratorWindow window = new ModeratorWindow();
-                    this.Hide();
-                    window.Show();
-                    this.Close();
+
                 }
                 else
                 {
-                    await MessageBoxHelper.ShowMessageDialog("You are not a moderator for this channel.");
+                    //await MessageBoxHelper.ShowMessageDialog("You are not a moderator for this channel.");
                 }
+
+                ModeratorWindow window = new ModeratorWindow();
+                this.Hide();
+                window.Show();
+                this.Close();
             }
             else
             {

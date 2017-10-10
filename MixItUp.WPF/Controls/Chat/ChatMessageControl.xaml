@@ -21,6 +21,7 @@
         <Grid Grid.Column="0" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -29,9 +30,11 @@
 
             <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" />
 
-            <TextBlock x:Name="UserTextBlock" Grid.Column="2" Text="{Binding User.UserName}" Foreground="{Binding User.PrimaryRoleColor}" VerticalAlignment="Center" />
+            <Image x:Name="SubscriberImage" Grid.Column="1" Margin="5,0,0,0" Width="15" Height="15" VerticalAlignment="Center" Visibility="Collapsed" />
+            
+            <TextBlock x:Name="UserTextBlock" Grid.Column="3" Text="{Binding User.UserName}" Foreground="{Binding User.PrimaryRoleColor}" VerticalAlignment="Center" />
 
-            <Grid x:Name="WhisperTargetGrid" Grid.Column="3" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
+            <Grid x:Name="WhisperTargetGrid" Grid.Column="4" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
@@ -45,7 +48,7 @@
 
             </Grid>
 
-            <TextBlock Grid.Column="4" VerticalAlignment="Center">:</TextBlock>
+            <TextBlock Grid.Column="5" VerticalAlignment="Center">:</TextBlock>
             
         </Grid>
 
