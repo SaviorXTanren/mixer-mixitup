@@ -1,0 +1,58 @@
+﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.Menu.MainMenuControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Menu"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Controls:MainControlBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Controls:MainControlBase.Resources>
+
+    <MaterialDesign:DialogHost x:Name="FlyoutMenuDialog" Identifier="FlyoutMenuDialog" SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}" Grid.Row="0">
+        <MaterialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+            <MaterialDesign:DrawerHost.LeftDrawerContent>
+                <DockPanel MinWidth="212">
+                    <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="16" IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+
+                    <ListBox x:Name="MenuItemsListBox" Margin="0 16 0 16" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp" SelectionChanged="MenuItemsListBox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" Margin="32 0 32 0" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </MaterialDesign:DrawerHost.LeftDrawerContent>
+
+            <DockPanel>
+                <MaterialDesign:ColorZone Padding="16,8,16,8" MaterialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                            Mode="PrimaryMid" DockPanel.Dock="Top">
+                    <DockPanel>
+                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" />
+
+                        <MaterialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                            <StackPanel>
+                                <Button x:Name="DocumentationButton" Content="Documentation" Click="DocumentationButton_Click" />
+                                <Button x:Name="SubmitABugButton" Content="Submit a Bug" Click="SubmitABugButton_Click" />
+                            </StackPanel>
+                        </MaterialDesign:PopupBox>
+
+                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
+                    </DockPanel>
+                </MaterialDesign:ColorZone>
+
+                <ContentControl x:Name="ActiveControlContentControl" />
+            </DockPanel>
+        </MaterialDesign:DrawerHost>
+    </MaterialDesign:DialogHost>
+</Controls:MainControlBase>

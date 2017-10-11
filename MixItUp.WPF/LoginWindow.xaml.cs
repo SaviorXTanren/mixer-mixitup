@@ -3,13 +3,11 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.ViewModel;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -102,7 +100,7 @@ namespace MixItUp.WPF
 
             if (result)
             {
-                StreamerWindow window = new StreamerWindow();
+                MainWindow window = new MainWindow();
                 this.Hide();
                 window.Show();
                 this.Close();
@@ -136,22 +134,18 @@ namespace MixItUp.WPF
 
             if (result)
             {
-
-
                 IEnumerable<UserWithGroupsModel> users = await ChannelSession.MixerConnection.Channels.GetUsersWithRoles(ChannelSession.Channel, UserRole.Mod.ToString().ToLower());
                 if (users.Any(uwg => uwg.id.Equals(ChannelSession.User.id)))
                 {
-
+                    MainWindow window = new MainWindow();
+                    this.Hide();
+                    window.Show();
+                    this.Close();
                 }
                 else
                 {
-                    //await MessageBoxHelper.ShowMessageDialog("You are not a moderator for this channel.");
+                    await MessageBoxHelper.ShowMessageDialog("You are not a moderator for this channel.");
                 }
-
-                ModeratorWindow window = new ModeratorWindow();
-                this.Hide();
-                window.Show();
-                this.Close();
             }
             else
             {

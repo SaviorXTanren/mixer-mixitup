@@ -171,6 +171,9 @@
     <Compile Include="Controls\Dialogs\UserDialogControl.xaml.cs">
       <DependentUpon>UserDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Menu\MainMenuControl.xaml.cs">
+      <DependentUpon>MainMenuControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\ServicesControl.xaml.cs">
       <DependentUpon>ServicesControl.xaml</DependentUpon>
     </Compile>
@@ -221,9 +224,6 @@
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ModeratorWindow.xaml.cs">
-      <DependentUpon>ModeratorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Dialogs\BasicDialogControl.xaml.cs">
       <DependentUpon>BasicDialogControl.xaml</DependentUpon>
     </Compile>
@@ -256,6 +256,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\UserDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Menu\MainMenuControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -335,7 +339,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="StreamerWindow.xaml">
+    <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -352,14 +356,10 @@
     <Compile Include="Controls\Chat\ChatUserControl.xaml.cs">
       <DependentUpon>ChatUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StreamerWindow.xaml.cs">
-      <DependentUpon>StreamerWindow.xaml</DependentUpon>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ModeratorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Dialogs\BasicDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

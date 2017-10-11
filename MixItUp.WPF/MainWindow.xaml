@@ -1,12 +1,11 @@
-﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.ModeratorWindow"
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
-        xmlns:AboutControls="clr-namespace:MixItUp.WPF.Controls.About"
+        xmlns:MenuControls="clr-namespace:MixItUp.WPF.Controls.Menu"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -16,9 +15,19 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
-                           
+
         Icon="./Logo.ico"
-        Title="Mix It Up - Moderator" Height="600" Width="800">
+        Title="Mix It Up - Streamer" Height="600" Width="800">
+    <Windows:LoadingWindowBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Windows:LoadingWindowBase.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -27,14 +36,7 @@
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
-        <TabControl Grid.Row="0">
-            <TabItem Header="Chat">
-                <ChatControls:ChatControl x:Name="Chat" />
-            </TabItem>
-            <TabItem Header="About">
-                <AboutControls:AboutControl x:Name="About" />
-            </TabItem>
-        </TabControl>
+        <MenuControls:MainMenuControl x:Name="MainMenu" Grid.Row="0" />
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>
