@@ -3,14 +3,20 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.ViewModel;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
     public class EventCommand : CommandBase, IEquatable<EventCommand>
     {
+        private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
+
         [DataMember]
         public ConstellationEventTypeEnum EventType { get; set; }
 
@@ -67,5 +73,14 @@ namespace MixItUp.Base.Commands
         public bool Equals(EventCommand other) { return this.Type.Equals(other.Type) && this.EventID.Equals(other.EventID); }
 
         public override int GetHashCode() { return this.GetEventType().GetHashCode(); }
+
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            await eventCommandPerformSemaphore.WaitAsync();
+
+            await base.Perform(user, arguments);
+
+            eventCommandPerformSemaphore.Release();
+        }
     }
 }

@@ -2,6 +2,10 @@
 using Mixer.Base.Util;
 using Newtonsoft.Json;
 using System;
+using System.Threading;
+using MixItUp.Base.ViewModel;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
@@ -19,6 +23,8 @@ namespace MixItUp.Base.Commands
 
     public class InteractiveCommand : CommandBase
     {
+        private static SemaphoreSlim interactiveCommandPerformSemaphore = new SemaphoreSlim(1);
+
         [JsonProperty]
         public uint GameID { get; set; }
 
@@ -81,5 +87,14 @@ namespace MixItUp.Base.Commands
         public void UpdateWithLatestControl(InteractiveControlModel control) { this.Control = control; }
 
         public long GetCooldownTimestamp() { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount)); }
+
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            await interactiveCommandPerformSemaphore.WaitAsync();
+
+            await base.Perform(user, arguments);
+
+            interactiveCommandPerformSemaphore.Release();
+        }
     }
 }
