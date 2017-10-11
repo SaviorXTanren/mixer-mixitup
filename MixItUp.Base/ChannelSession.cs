@@ -89,6 +89,8 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.user__details__self,
         };
 
+        public static event EventHandler OnDisconectionOccurred;
+
         public static MixerConnection MixerConnection { get; private set; }
         public static MixerConnection BotConnection { get; private set; }
 
@@ -466,33 +468,45 @@ namespace MixItUp.Base
 
         private static async void ChatClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
+            ChannelSession.DisconnectionOccurred();
             while (!await ChannelSession.ChatClient.Connect() || !await ChannelSession.ChatClient.Authenticate())
             {
-                await Task.Delay(3000);
+                await Task.Delay(2000);
             }
         }
 
         private static async void BotChatClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
+            ChannelSession.DisconnectionOccurred();
             while (!await ChannelSession.BotChatClient.Connect() && !await ChannelSession.BotChatClient.Authenticate())
             {
-                await Task.Delay(3000);
+                await Task.Delay(2000);
             }
         }
 
         private static async void ConstellationClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
+            ChannelSession.DisconnectionOccurred();
             while (!await ChannelSession.ConstellationClient.Connect())
             {
-                await Task.Delay(3000);
+                await Task.Delay(2000);
             }
         }
 
         private static async void InteractiveClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
+            ChannelSession.DisconnectionOccurred();
             while (!await ChannelSession.InteractiveClient.Connect() && !await ChannelSession.InteractiveClient.Ready())
             {
-                await Task.Delay(3000);
+                await Task.Delay(2000);
+            }
+        }
+
+        private static void DisconnectionOccurred()
+        {
+            if (ChannelSession.OnDisconectionOccurred != null)
+            {
+                ChannelSession.OnDisconectionOccurred(null, new EventArgs());
             }
         }
     }

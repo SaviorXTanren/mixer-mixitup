@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace MixItUp.WPF
         {
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
+            ChannelSession.OnDisconectionOccurred += ChannelSession_OnDisconectionOccurred;
+
             await this.Chat.Initialize(this);
             await this.About.Initialize(this);
         }
@@ -30,6 +33,11 @@ namespace MixItUp.WPF
             await ChannelSession.Settings.Save();
             await ChannelSession.Close();
             Application.Current.Shutdown();
+        }
+
+        private async void ChannelSession_OnDisconectionOccurred(object sender, System.EventArgs e)
+        {
+            await MessageBoxHelper.ShowMessageDialog("Disconnection occurred, attempting to reconnect...");
         }
     }
 }
