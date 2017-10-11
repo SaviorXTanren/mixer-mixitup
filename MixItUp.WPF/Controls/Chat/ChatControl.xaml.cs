@@ -40,11 +40,11 @@ namespace MixItUp.WPF.Controls.Chat
         public ObservableCollection<ChatUserControl> UserControls = new ObservableCollection<ChatUserControl>();
 
         public ObservableCollection<ChatMessageControl> MessageControls = new ObservableCollection<ChatMessageControl>();
-        public List<ChatMessageViewModel> Messages = new List<ChatMessageViewModel>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         private bool disableChat = false;
+        private int totalMessages = 0;
 
         public ChatControl()
         {
@@ -133,20 +133,20 @@ namespace MixItUp.WPF.Controls.Chat
         {
             int timerCommandIndex = 0;
             while (!this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
-            {               
-                int startMessageCount = this.Messages.Count;
+            {
                 try
                 {
                     DateTimeOffset startTime = DateTimeOffset.Now;
+                    int startMessageCount = this.totalMessages;
 
                     await Task.Delay(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval);
                     if (ChannelSession.Settings.TimerCommands.Count > 0)
                     {
                         TimerCommand command = ChannelSession.Settings.TimerCommands[timerCommandIndex];
 
-                        while ((this.Messages.Count - startMessageCount) <= ChannelSession.Settings.TimerCommandsMinimumMessages)
+                        while ((this.totalMessages - startMessageCount) < ChannelSession.Settings.TimerCommandsMinimumMessages)
                         {
-                            Thread.Sleep(1000 * 10);
+                            await Task.Delay(1000 * 10);
                         }
 
                         await command.Perform();
@@ -339,8 +339,12 @@ namespace MixItUp.WPF.Controls.Chat
 
             await this.AddUser(message.User);
 
-            this.Messages.Add(message);
+            this.totalMessages++;
             this.MessageControls.Add(messageControl);
+            while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
+            {
+                this.MessageControls.RemoveAt(0);
+            }
 
             this.ChatList.ScrollIntoView(messageControl);
 

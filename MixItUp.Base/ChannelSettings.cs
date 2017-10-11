@@ -111,6 +111,8 @@ namespace MixItUp.Base
         [JsonProperty]
         public bool EnableXSplitConnection { get; set; }
 
+        [JsonProperty]
+        public int MaxMessagesInChat { get; set; }
 
         
         [JsonIgnore]
@@ -160,6 +162,8 @@ namespace MixItUp.Base
 
             this.TimerCommandsInterval = 10;
             this.TimerCommandsMinimumMessages = 10;
+
+            this.MaxMessagesInChat = 100;
         }
 
         public void Initialize()
