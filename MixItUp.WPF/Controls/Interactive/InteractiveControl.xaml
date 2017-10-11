@@ -58,7 +58,7 @@
 
                 <DataGrid x:Name="InteractiveControlsGridView" Grid.Row="2" Style="{StaticResource StandardDataGrid}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                         <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" Width="80" />
                         <DataGridTextColumn Binding="{Binding SparkCost}" IsReadOnly="True" Width="70">
                             <DataGridTextColumn.Header>
@@ -67,9 +67,9 @@
                                 </Grid>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Cooldown}" IsReadOnly="True" Width="70">
+                        <DataGridTextColumn Binding="{Binding Cooldown}" IsReadOnly="True" Width="125">
                             <DataGridTextColumn.Header>
-                                <Grid HorizontalAlignment="Center" Margin="6,0,0,0">
+                                <Grid HorizontalAlignment="Center" Margin="35,0,0,0">
                                     <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>

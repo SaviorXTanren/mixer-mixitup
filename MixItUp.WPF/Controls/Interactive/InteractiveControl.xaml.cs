@@ -50,7 +50,17 @@ namespace MixItUp.WPF.Controls.Interactive
         public string Name { get { return this.Control.controlID; } }
         public string Type { get { return (this.Control is InteractiveButtonControlModel) ? "Button" : "Joystick"; } }
         public string SparkCost { get { return (this.Button != null) ? this.Button.cost.ToString() : string.Empty; } }
-        public string Cooldown { get { return (this.Command != null) ? this.Command.CooldownAmount.ToString() : string.Empty; } }
+        public string Cooldown
+        {
+            get
+            {
+                if (this.Command != null)
+                {
+                    return (!string.IsNullOrEmpty(this.Command.CooldownGroup)) ? this.Command.CooldownGroup : this.Command.CooldownAmount.ToString();
+                }
+                return string.Empty;
+            }
+        }
         public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
     }
 
