@@ -10,7 +10,6 @@ using MixItUp.Base.Models;
 using MixItUp.Base.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.XSplit;
 using OBSWebsocketDotNet;
 using System;
@@ -112,6 +111,7 @@ namespace MixItUp.Base
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
         public static LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
         public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
+        public static LockedList<UserViewModel> JoinGameQueue { get; private set; }
 
         public static GiveawayItemModel Giveaway { get; set; }
 
@@ -415,6 +415,7 @@ namespace MixItUp.Base
                     ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
                     ChannelSession.ChatUsers = new LockedDictionary<uint, UserViewModel>();
                     ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
+                    ChannelSession.JoinGameQueue = new LockedList<UserViewModel>();
 
                     ChannelSession.Giveaway = new GiveawayItemModel();
 

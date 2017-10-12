@@ -342,4 +342,75 @@ namespace MixItUp.Base.Commands
             }));
         }
     }
+
+    public class JoinGameChatCommand : PreMadeChatCommand
+    {
+        public JoinGameChatCommand()
+            : base("Join Game", new List<string>() { "joingame", "joinqueue", "join" }, UserRole.User, 0)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChatClient != null)
+                {
+                    int position = ChannelSession.JoinGameQueue.IndexOf(user);
+                    if (position == -1)
+                    {
+                        ChannelSession.JoinGameQueue.Add(user);
+                        position = ChannelSession.JoinGameQueue.Count;
+                    }
+                    await ChannelSession.BotChatClient.Whisper(user.UserName, "You are #" + position + " in the queue to play with " + ChannelSession.Channel.user.username + ".");
+                }
+            }));
+        }
+    }
+
+    public class GameQueueChatCommand : PreMadeChatCommand
+    {
+        public GameQueueChatCommand()
+            : base("Game Queue", new List<string>() { "queue", "gamequeue" }, UserRole.Mod, 5)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChatClient != null)
+                {
+                    int total = ChannelSession.JoinGameQueue.Count();
+
+                    StringBuilder message = new StringBuilder();
+                    message.Append("There are currently " + total + " waiting to play with " + ChannelSession.Channel.user.username + ".");
+
+                    if (total > 0)
+                    {
+                        message.Append(" The following users are next up to play: ");
+
+                        List<string> users = new List<string>();
+                        for (int i = 0; i < total && i < 5; i++)
+                        {
+                            users.Add(ChannelSession.JoinGameQueue[i].UserName);
+                        }
+
+                        message.Append(string.Join(", ", users));
+                        message.Append(".");
+                    }
+
+                    await ChannelSession.BotChatClient.SendMessage(message.ToString());
+                }
+            }));
+        }
+    }
+
+    public class RemoveQueueChatCommand : PreMadeChatCommand
+    {
+        public RemoveQueueChatCommand()
+            : base("Leave Game", new List<string>() { "leavegame", "leavequeue" }, UserRole.Mod, 0)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChatClient != null)
+                {
+                    ChannelSession.JoinGameQueue.Remove(user);
+                    await ChannelSession.BotChatClient.Whisper(user.UserName, "You have been remoevd from the queue to play with " + ChannelSession.Channel.user.username + ".");
+                }
+            }));
+        }
+    }
 }
