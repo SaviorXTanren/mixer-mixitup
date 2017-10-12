@@ -346,11 +346,11 @@ namespace MixItUp.Base.Commands
     public class JoinGameChatCommand : PreMadeChatCommand
     {
         public JoinGameChatCommand()
-            : base("Join Game", new List<string>() { "joingame", "joinqueue", "join" }, UserRole.User, 0)
+            : base("Join Game", new List<string>() { "joingame", "join" }, UserRole.User, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChatClient != null)
                 {
                     int position = ChannelSession.JoinGameQueue.IndexOf(user);
                     if (position == -1)
@@ -371,7 +371,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChatClient != null)
                 {
                     int total = ChannelSession.JoinGameQueue.Count();
 
@@ -405,10 +405,10 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChatClient != null)
                 {
                     ChannelSession.JoinGameQueue.Remove(user);
-                    await ChannelSession.BotChatClient.Whisper(user.UserName, "You have been remoevd from the queue to play with " + ChannelSession.Channel.user.username + ".");
+                    await ChannelSession.BotChatClient.Whisper(user.UserName, "You have been removed from the queue to play with " + ChannelSession.Channel.user.username + ".");
                 }
             }));
         }
