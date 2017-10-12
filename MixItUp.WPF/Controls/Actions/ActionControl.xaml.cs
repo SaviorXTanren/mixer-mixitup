@@ -2,6 +2,7 @@
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
@@ -329,37 +330,28 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void SoundFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "MP3 Files (*.mp3)|*.mp3|All files (*.*)|*.*";
-            fileDialog.CheckFileExists = true;
-            fileDialog.CheckPathExists = true;
-            if (fileDialog.ShowDialog() == true)
+            string filePath = FileSystemHelper.ShowOpenFileDialog("MP3 Files (*.mp3)|*.mp3|All files (*.*)|*.*");
+            if (!string.IsNullOrEmpty(filePath))
             {
-                this.SoundFilePathTextBox.Text = fileDialog.FileName;
+                this.SoundFilePathTextBox.Text = filePath;
             }
         }
 
         private void ProgramFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "All files (*.*)|*.*";
-            fileDialog.CheckFileExists = true;
-            fileDialog.CheckPathExists = true;
-            if (fileDialog.ShowDialog() == true)
+            string filePath = FileSystemHelper.ShowOpenFileDialog();
+            if (!string.IsNullOrEmpty(filePath))
             {
-                this.ProgramFilePathTextBox.Text = fileDialog.FileName;
+                this.ProgramFilePathTextBox.Text = filePath;
             }
         }
 
         private void OverlayImageFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "All files (*.*)|*.*";
-            fileDialog.CheckFileExists = true;
-            fileDialog.CheckPathExists = true;
-            if (fileDialog.ShowDialog() == true)
+            string filePath = FileSystemHelper.ShowOpenFileDialog();
+            if (!string.IsNullOrEmpty(filePath))
             {
-                this.OverlayImageFilePathTextBox.Text = fileDialog.FileName;
+                this.OverlayImageFilePathTextBox.Text = filePath;
             }
         }
 

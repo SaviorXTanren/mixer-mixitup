@@ -180,10 +180,14 @@ namespace MixItUp.Base
 
         public async Task Save()
         {
-            await semaphore.WaitAsync();
-
             Directory.CreateDirectory(SettingsDirectoryName);
             string filePath = this.GetSettingsFileName();
+            await this.Save(filePath);
+        }
+
+        public async Task Save(string filePath)
+        {
+            await semaphore.WaitAsync();
 
             this.OAuthToken = ChannelSession.MixerConnection.GetOAuthTokenCopy();
             this.BotOAuthToken = (ChannelSession.BotConnection != null) ? ChannelSession.BotConnection.GetOAuthTokenCopy() : null;
@@ -205,10 +209,10 @@ namespace MixItUp.Base
         public async Task SaveBackup()
         {
             string filePath = this.GetSettingsFileName();
-            await SerializerHelper.SerializeToFile(filePath + ".backup", this);
+            await this.Save(filePath + ".backup");
         }
 
-        private string GetSettingsFileName()
+        public string GetSettingsFileName()
         {
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", this.Channel.id.ToString(), (this.IsStreamer) ? "Streamer" : "Moderator"));
         }

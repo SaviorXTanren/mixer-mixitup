@@ -10,6 +10,7 @@ using MixItUp.WPF.Controls.Services;
 using MixItUp.WPF.Controls.Timers;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,8 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class MainWindow : LoadingWindowBase
     {
+        public string restoredSettingsFilePath = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -53,8 +56,14 @@ namespace MixItUp.WPF
 
         protected override async Task OnClosing()
         {
-            await ChannelSession.Settings.Save();
-            await ChannelSession.Close();
+            if (!string.IsNullOrEmpty(this.restoredSettingsFilePath))
+            {
+                File.Copy(this.restoredSettingsFilePath, ChannelSession.Settings.GetSettingsFileName(), overwrite: true);
+            }
+            else
+            {
+                await ChannelSession.Settings.Save();
+            }
             Application.Current.Shutdown();
         }
 

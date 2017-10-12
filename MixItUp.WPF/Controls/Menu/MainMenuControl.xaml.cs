@@ -1,4 +1,6 @@
-﻿using MixItUp.WPF.Util;
+﻿using MixItUp.Base;
+using MixItUp.Base.Util;
+using MixItUp.WPF.Util;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -80,6 +82,31 @@ namespace MixItUp.WPF.Controls.Menu
             this.DataContext = item;
             this.ActiveControlContentControl.Content = item.Control;
             this.MenuToggleButton.IsChecked = false;
+        }
+
+        private async void BackupSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                string filePath = FileSystemHelper.ShowSaveFileDialog(ChannelSession.Settings.Channel.user.username + ".mixitup");
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    await ChannelSession.Settings.Save(filePath);
+                }
+            });
+        }
+
+        private async void RestoreSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will overwrite your current settings and close Mix It Up. Are you sure you wish to do this?"))
+            {
+                string filePath = FileSystemHelper.ShowOpenFileDialog("Mix It Up Settings (*.mixitup)|*.mixitup|All files (*.*)|*.*");
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    ((MainWindow)this.Window).restoredSettingsFilePath = filePath;
+                    this.Window.Close();
+                }
+            }
         }
 
         private void SubmitABugButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/issues/new"); }

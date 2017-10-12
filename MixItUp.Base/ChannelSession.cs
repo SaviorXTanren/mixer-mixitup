@@ -346,40 +346,40 @@ namespace MixItUp.Base
             }
         }
 
-        public static async Task Close()
-        {
-            ChannelSession.DisconnectOverlayServer();
+        //public static async Task Close()
+        //{
+        //    ChannelSession.DisconnectOverlayServer();
 
-            ChannelSession.DisconnectOBSStudio();
+        //    ChannelSession.DisconnectOBSStudio();
 
-            ChannelSession.DisconnectXSplitServer();
+        //    ChannelSession.DisconnectXSplitServer();
 
-            if (ChannelSession.ChatClient != null)
-            {
-                ChannelSession.ChatClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
-                await ChannelSession.ChatClient.Disconnect();
-                ChannelSession.ChatClient = null;
-            }
+        //    if (ChannelSession.ChatClient != null)
+        //    {
+        //        ChannelSession.ChatClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
+        //        await ChannelSession.ChatClient.Disconnect();
+        //        ChannelSession.ChatClient = null;
+        //    }
 
-            if (ChannelSession.BotChatClient != null)
-            {
-                ChannelSession.BotChatClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
-                await ChannelSession.BotChatClient.Disconnect();
-                ChannelSession.BotChatClient = null;
-            }
+        //    if (ChannelSession.BotChatClient != null)
+        //    {
+        //        ChannelSession.BotChatClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
+        //        await ChannelSession.BotChatClient.Disconnect();
+        //        ChannelSession.BotChatClient = null;
+        //    }
 
-            if (ChannelSession.InteractiveClient != null)
-            {
-                await ChannelSession.DisconnectInteractiveClient();
-            }
+        //    if (ChannelSession.InteractiveClient != null)
+        //    {
+        //        await ChannelSession.DisconnectInteractiveClient();
+        //    }
 
-            if (ChannelSession.ConstellationClient != null)
-            {
-                ChannelSession.ConstellationClient.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
-                await ChannelSession.ConstellationClient.Disconnect();
-                ChannelSession.ConstellationClient = null;
-            }
-        }
+        //    if (ChannelSession.ConstellationClient != null)
+        //    {
+        //        ChannelSession.ConstellationClient.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
+        //        await ChannelSession.ConstellationClient.Disconnect();
+        //        ChannelSession.ConstellationClient = null;
+        //    }
+        //}
 
         public static async Task SaveSettings() { await ChannelSession.Settings.Save(); }
 
