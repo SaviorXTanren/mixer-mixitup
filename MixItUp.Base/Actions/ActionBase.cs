@@ -60,7 +60,7 @@ namespace MixItUp.Base.Actions
 
                 if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
                 {
-                    str = str.Replace("$currency", ChannelSession.Settings.UserData[user.ID].CurrencyAmount.ToString());
+                    str = str.Replace("$usercurrency", ChannelSession.Settings.UserData[user.ID].CurrencyAmount.ToString());
                 }
             }
 
@@ -81,15 +81,17 @@ namespace MixItUp.Base.Actions
                     UserModel argUser = await ChannelSession.Connection.GetUser(username);
                     if (argUser != null)
                     {
+                        if (ChannelSession.Settings.UserData.ContainsKey(argUser.id))
+                        {
+                            str = str.Replace("$arg" + (i + 1) + "usercurrency", ChannelSession.Settings.UserData[argUser.id].CurrencyAmount.ToString());
+                        }
+                        else
+                        {
+                            str = str.Replace("$arg" + (i + 1) + "usercurrency", "0");
+                        }                  
                         str = str.Replace("$arg" + (i + 1) + "useravatar", argUser.avatarUrl);
                         str = str.Replace("$arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.username);
                         str = str.Replace("$arg" + (i + 1) + "user", argUser.username);
-                    }
-                    else
-                    {
-                        str = str.Replace("$arg" + (i + 1) + "useravatar", "");
-                        str = str.Replace("$arg" + (i + 1) + "userurl", "");
-                        str = str.Replace("$arg" + (i + 1) + "user", "");
                     }
 
                     str = str.Replace("$arg" + (i + 1), arguments.ElementAt(i));
