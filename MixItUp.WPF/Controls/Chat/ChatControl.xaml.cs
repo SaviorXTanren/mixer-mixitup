@@ -167,6 +167,10 @@ namespace MixItUp.WPF.Controls.Chat
             if (await MessageBoxHelper.ShowConfirmationDialog("This will clear all Chat for the stream. Are you sure?"))
             {
                 await ChannelSession.Chat.ClearMessages();
+                foreach (ChatMessageControl control in this.MessageControls)
+                {
+                    control.DeleteMessage();
+                }
             }
         }
 
