@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{2D15E4
 		Wiki\Images\GettingStartedChatCommandRun.png = Wiki\Images\GettingStartedChatCommandRun.png
 		Wiki\Images\Giveaway.png = Wiki\Images\Giveaway.png
 		Wiki\Images\InteractiveCommands.png = Wiki\Images\InteractiveCommands.png
+		Wiki\Images\InternetBrowserAuthentication.png = Wiki\Images\InternetBrowserAuthentication.png
 		Wiki\Images\Login.png = Wiki\Images\Login.png
 		Wiki\Images\Moderation.png = Wiki\Images\Moderation.png
 		Wiki\Images\OptionsMenu.png = Wiki\Images\OptionsMenu.png
