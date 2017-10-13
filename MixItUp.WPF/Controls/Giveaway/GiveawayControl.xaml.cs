@@ -106,7 +106,7 @@ namespace MixItUp.WPF.Controls.Giveaway
 
                 this.GiveawayWinnerTextBlock.Text = winner.UserName;
 
-                await ChannelSession.BotChatClient.SendMessage(string.Format("Congratulations {0}, you won {1}! You'll find out how to get your prize momentarily!", winner.UserName, ChannelSession.Giveaway.Item));
+                await ChannelSession.BotChat.SendMessage(string.Format("Congratulations {0}, you won {1}! You'll find out how to get your prize momentarily!", winner.UserName, ChannelSession.Giveaway.Item));
             }
             else
             {

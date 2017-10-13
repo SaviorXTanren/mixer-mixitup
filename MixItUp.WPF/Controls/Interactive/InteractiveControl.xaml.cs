@@ -99,7 +99,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.MixerConnection.Interactive.GetOwnedInteractiveGames(ChannelSession.Channel);
+                return await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
             });
 
             this.interactiveGames.Clear();
@@ -121,7 +121,7 @@ namespace MixItUp.WPF.Controls.Interactive
                 {
                     this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
 
-                    return await ChannelSession.MixerConnection.Interactive.GetInteractiveGameVersion(this.selectedGame.versions.First());
+                    return await ChannelSession.Connection.GetInteractiveGameVersion(this.selectedGame.versions.First());
                 });
 
                 if (this.selectedGame != null)
@@ -307,7 +307,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.ConnectInteractiveClient(ChannelSession.Channel, this.selectedGame);
+                return await ChannelSession.ConnectInteractiveClient(this.selectedGame);
             });
 
             if (!result)
@@ -318,7 +318,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             InteractiveConnectedSceneGroupCollectionModel scenes = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.InteractiveClient.GetScenes();
+                return await ChannelSession.Interactive.GetScenes();
             });
             this.connectedGameScenes = scenes.scenes;
             this.connectedScene = this.connectedGameScenes.First();
@@ -343,7 +343,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             InteractiveParticipantCollectionModel participants = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.InteractiveClient.GetAllParticipants();
+                return await ChannelSession.Interactive.GetAllParticipants();
             });
 
             ChannelSession.InteractiveUsers.Clear();
@@ -352,10 +352,10 @@ namespace MixItUp.WPF.Controls.Interactive
                 ChannelSession.InteractiveUsers.Add(participant.sessionID, participant);
             }
 
-            ChannelSession.InteractiveClient.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
-            ChannelSession.InteractiveClient.OnParticipantUpdate += InteractiveClient_OnParticipantUpdate;
-            ChannelSession.InteractiveClient.OnParticipantLeave += InteractiveClient_OnParticipantLeave;
-            ChannelSession.InteractiveClient.OnGiveInput += InteractiveClient_OnGiveInput;
+            ChannelSession.Interactive.Client.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
+            ChannelSession.Interactive.Client.OnParticipantUpdate += InteractiveClient_OnParticipantUpdate;
+            ChannelSession.Interactive.Client.OnParticipantLeave += InteractiveClient_OnParticipantLeave;
+            ChannelSession.Interactive.Client.OnGiveInput += InteractiveClient_OnGiveInput;
 
             this.GameSelectionGrid.IsEnabled = false;
             this.GameDetailsGrid.IsEnabled = false;
@@ -365,10 +365,10 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            ChannelSession.InteractiveClient.OnParticipantJoin -= InteractiveClient_OnParticipantJoin;
-            ChannelSession.InteractiveClient.OnParticipantUpdate -= InteractiveClient_OnParticipantUpdate;
-            ChannelSession.InteractiveClient.OnParticipantLeave -= InteractiveClient_OnParticipantLeave;
-            ChannelSession.InteractiveClient.OnGiveInput -= InteractiveClient_OnGiveInput;
+            ChannelSession.Interactive.Client.OnParticipantJoin -= InteractiveClient_OnParticipantJoin;
+            ChannelSession.Interactive.Client.OnParticipantUpdate -= InteractiveClient_OnParticipantUpdate;
+            ChannelSession.Interactive.Client.OnParticipantLeave -= InteractiveClient_OnParticipantLeave;
+            ChannelSession.Interactive.Client.OnGiveInput -= InteractiveClient_OnGiveInput;
 
             await this.Window.RunAsyncOperation(async () =>
             {
@@ -442,7 +442,7 @@ namespace MixItUp.WPF.Controls.Interactive
                             {
                                 try
                                 {
-                                    await ChannelSession.InteractiveClient.CaptureSparkTransaction(interactiveInput.transactionID);
+                                    await ChannelSession.Interactive.CaptureSparkTransaction(interactiveInput.transactionID);
                                 }
                                 catch (Exception) { }
                             });
@@ -486,7 +486,7 @@ namespace MixItUp.WPF.Controls.Interactive
                                     buttons.Add(item.ConnectedButton);
                                 }
 
-                                await ChannelSession.InteractiveClient.UpdateControls(this.connectedScene, buttons);
+                                await ChannelSession.Interactive.UpdateControls(this.connectedScene, buttons);
                             });
                         }
 

@@ -68,10 +68,10 @@ namespace MixItUp.WPF.Controls.Events
 
             if (await ChannelSession.InitializeConstellationClient())
             {
-                ChannelSession.ConstellationClient.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
+                ChannelSession.Constellation.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
             }
 
-            await ChannelSession.ConstellationClient.SubscribeToEvents(ChannelSession.Settings.EventCommands.Select(c => c.GetEventType()));
+            await ChannelSession.Constellation.SubscribeToEvents(ChannelSession.Settings.EventCommands.Select(c => c.GetEventType()));
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)

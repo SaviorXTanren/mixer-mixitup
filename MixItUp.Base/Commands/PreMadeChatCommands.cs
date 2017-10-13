@@ -65,9 +65,9 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
-                    await ChannelSession.BotChatClient.SendMessage("This channel uses the Mix It Up app to improve their stream. Check out https://github.com/SaviorXTanren/mixer-mixitup for more information!");
+                    await ChannelSession.BotChat.SendMessage("This channel uses the Mix It Up app to improve their stream. Check out https://github.com/SaviorXTanren/mixer-mixitup for more information!");
                 }
             }));
         }
@@ -80,9 +80,9 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
-                    await ChannelSession.BotChatClient.SendMessage("All common chat commands can be found here: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Pre-Made-Chat-Commands. For commands specific to this stream, ask your streamer/moderator.");
+                    await ChannelSession.BotChat.SendMessage("All common chat commands can be found here: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Pre-Made-Chat-Commands. For commands specific to this stream, ask your streamer/moderator.");
                 }
             }));
         }
@@ -95,12 +95,12 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
-                    DateTimeOffset? followDate = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, user.GetModel());
+                    DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, user.GetModel());
                     if (followDate != null)
                     {
-                        await ChannelSession.BotChatClient.SendMessage(user.GetModel().GetFollowAge(followDate.GetValueOrDefault()));
+                        await ChannelSession.BotChat.SendMessage(user.GetModel().GetFollowAge(followDate.GetValueOrDefault()));
                     }
                 }
             }));
@@ -114,11 +114,11 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
                     await ChannelSession.RefreshChannel();
 
-                    await ChannelSession.BotChatClient.SendMessage("Game: " + ChannelSession.Channel.type.name);
+                    await ChannelSession.BotChat.SendMessage("Game: " + ChannelSession.Channel.type.name);
                 }
             }));
         }
@@ -131,15 +131,15 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
                     if (ChannelSession.Giveaway.IsEnabled)
                     {
-                        await ChannelSession.BotChatClient.SendMessage(string.Format("There is a giveaway running for {0} for {1}! You must be present in chat to win to receive this giveaway.", ChannelSession.Giveaway.Item, ChannelSession.Giveaway.Type));
+                        await ChannelSession.BotChat.SendMessage(string.Format("There is a giveaway running for {0} for {1}! You must be present in chat to win to receive this giveaway.", ChannelSession.Giveaway.Item, ChannelSession.Giveaway.Type));
                     }
                     else
                     {
-                        await ChannelSession.BotChatClient.SendMessage("A giveaway is not currently running at this time");
+                        await ChannelSession.BotChat.SendMessage("A giveaway is not currently running at this time");
                     }
                 }
             }));
@@ -153,10 +153,10 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
-                    UserModel userModel = await ChannelSession.MixerConnection.Users.GetUser(user.ID);
-                    await ChannelSession.BotChatClient.SendMessage(userModel.GetMixerAge());
+                    UserModel userModel = await ChannelSession.Connection.GetUser(user.GetModel());
+                    await ChannelSession.BotChat.SendMessage(userModel.GetMixerAge());
                 }
             }));
         }
@@ -169,7 +169,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
                     if (arguments.Count() == 1)
                     {
@@ -179,11 +179,11 @@ namespace MixItUp.Base.Commands
                             username = username.Substring(1);
                         }
 
-                        await ChannelSession.ChatClient.PurgeUser(username);
+                        await ChannelSession.Chat.PurgeUser(username);
                     }
                     else
                     {
-                        await ChannelSession.BotChatClient.Whisper(user.UserName, "Usage: !purge @USERNAME");
+                        await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !purge @USERNAME");
                     }
                 }
             }));
@@ -197,13 +197,13 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
+                if (ChannelSession.BotChat != null && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
                 {
                     Random random = new Random();
                     int index = random.Next(ChannelSession.Settings.Quotes.Count);
                     string quote = ChannelSession.Settings.Quotes[index];
 
-                    await ChannelSession.BotChatClient.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
+                    await ChannelSession.BotChat.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
                 }
             }));
         }
@@ -230,9 +230,9 @@ namespace MixItUp.Base.Commands
                     ChannelSession.Settings.Quotes.Add(quote);
                     GlobalEvents.QuoteAdded(quote);
 
-                    if (ChannelSession.BotChatClient != null)
+                    if (ChannelSession.BotChat != null)
                     {
-                        await ChannelSession.BotChatClient.SendMessage("Added Quote #" + (ChannelSession.Settings.Quotes.Count - 1) + ": \"" + quote + "\"");
+                        await ChannelSession.BotChat.SendMessage("Added Quote #" + (ChannelSession.Settings.Quotes.Count - 1) + ": \"" + quote + "\"");
                     }
                 }
             }));
@@ -246,10 +246,10 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
-                    UserWithChannelModel userModel = await ChannelSession.MixerConnection.Users.GetUser(user.ID);
-                    await ChannelSession.BotChatClient.SendMessage(user.UserName + "'s Sparks: " + userModel.sparks);
+                    UserWithChannelModel userModel = await ChannelSession.Connection.GetUser(user.GetModel());
+                    await ChannelSession.BotChat.SendMessage(user.UserName + "'s Sparks: " + userModel.sparks);
                 }
             }));
         }
@@ -262,9 +262,9 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
-                    await ChannelSession.BotChatClient.SendMessage(ChannelSession.Channel.user.GetMixerAge());
+                    await ChannelSession.BotChat.SendMessage(ChannelSession.Channel.user.GetMixerAge());
                 }
             }));
         }
@@ -277,7 +277,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
                     if (arguments.Count() == 1)
                     {
@@ -287,12 +287,12 @@ namespace MixItUp.Base.Commands
                             username = username.Substring(1);
                         }
 
-                        await ChannelSession.BotChatClient.Whisper(username, "You have been timed out for 1 minute");
-                        await ChannelSession.ChatClient.TimeoutUser(username, 60);
+                        await ChannelSession.BotChat.Whisper(username, "You have been timed out for 1 minute");
+                        await ChannelSession.Chat.TimeoutUser(username, 60);
                     }
                     else
                     {
-                        await ChannelSession.BotChatClient.Whisper(user.UserName, "Usage: !timeout @USERNAME");
+                        await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !timeout @USERNAME");
                     }
                 }
             }));
@@ -306,11 +306,11 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
                     await ChannelSession.RefreshChannel();
 
-                    await ChannelSession.BotChatClient.SendMessage("Stream Title: " + ChannelSession.Channel.name);
+                    await ChannelSession.BotChat.SendMessage("Stream Title: " + ChannelSession.Channel.name);
                 }
             }));
         }
@@ -323,20 +323,20 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.BotChatClient != null)
+                if (ChannelSession.BotChat != null)
                 {
-                    IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.MixerConnection.Channels.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromHours(1)));
+                    IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.Connection.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromHours(1)));
                     if (sessions.Count() > 0)
                     {
                         StreamSessionsAnalyticModel session = sessions.OrderBy(s => s.dateTime).Last();
 
                         TimeSpan duration = DateTimeOffset.Now.Subtract(session.dateTime);
 
-                        await ChannelSession.BotChatClient.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                        await ChannelSession.BotChat.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
                     }
                     else
                     {
-                        await ChannelSession.BotChatClient.SendMessage("Stream is currently offline");
+                        await ChannelSession.BotChat.SendMessage("Stream is currently offline");
                     }
                 }
             }));
@@ -350,7 +350,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChatClient != null)
+                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChat != null)
                 {
                     int position = ChannelSession.JoinGameQueue.IndexOf(user);
                     if (position == -1)
@@ -358,7 +358,7 @@ namespace MixItUp.Base.Commands
                         ChannelSession.JoinGameQueue.Add(user);
                         position = ChannelSession.JoinGameQueue.Count;
                     }
-                    await ChannelSession.BotChatClient.Whisper(user.UserName, "You are #" + position + " in the queue to play with " + ChannelSession.Channel.user.username + ".");
+                    await ChannelSession.BotChat.Whisper(user.UserName, "You are #" + position + " in the queue to play with " + ChannelSession.Channel.user.username + ".");
                 }
             }));
         }
@@ -371,7 +371,7 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChatClient != null)
+                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChat != null)
                 {
                     int total = ChannelSession.JoinGameQueue.Count();
 
@@ -392,7 +392,7 @@ namespace MixItUp.Base.Commands
                         message.Append(".");
                     }
 
-                    await ChannelSession.BotChatClient.SendMessage(message.ToString());
+                    await ChannelSession.BotChat.SendMessage(message.ToString());
                 }
             }));
         }
@@ -405,10 +405,10 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChatClient != null)
+                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChat != null)
                 {
                     ChannelSession.JoinGameQueue.Remove(user);
-                    await ChannelSession.BotChatClient.Whisper(user.UserName, "You have been removed from the queue to play with " + ChannelSession.Channel.user.username + ".");
+                    await ChannelSession.BotChat.Whisper(user.UserName, "You have been removed from the queue to play with " + ChannelSession.Channel.user.username + ".");
                 }
             }));
         }

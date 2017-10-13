@@ -139,6 +139,10 @@
     <Compile Include="Commands\InteractiveCommand.cs" />
     <Compile Include="Commands\PreMadeChatCommands.cs" />
     <Compile Include="Commands\TimerCommand.cs" />
+    <Compile Include="MixerAPI\ChatClientWrapper.cs" />
+    <Compile Include="MixerAPI\ConstellationClientWrapper.cs" />
+    <Compile Include="MixerAPI\InteractiveClientWrapper.cs" />
+    <Compile Include="MixerAPI\MixerConnectionWrapper.cs" />
     <Compile Include="Models\GiveawayItemModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\FileSystemHelper.cs" />
@@ -147,6 +151,7 @@
     <Compile Include="Util\LockedList.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\MathHelper.cs" />
+    <Compile Include="MixerAPI\MixerRequestWrapper.cs" />
     <Compile Include="Util\ReflectionHelper.cs" />
     <Compile Include="Util\RequestListenerWebServerBase.cs" />
     <Compile Include="Util\RequestSenderWebServerBase.cs" />

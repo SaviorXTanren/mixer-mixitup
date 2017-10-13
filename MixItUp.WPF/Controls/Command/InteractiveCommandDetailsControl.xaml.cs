@@ -160,7 +160,7 @@ namespace MixItUp.WPF.Controls.Command
                         this.command.IndividualCooldown = cooldown;
                     }
 
-                    await ChannelSession.MixerConnection.Interactive.UpdateInteractiveGameVersion(this.version);
+                    await ChannelSession.Connection.UpdateInteractiveGameVersion(this.version);
                 }
                 return this.command;
             }

@@ -60,17 +60,17 @@ namespace MixItUp.WPF.Controls.Chat
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
-                ChannelSession.ChatClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-                ChannelSession.ChatClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-                ChannelSession.ChatClient.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
-                ChannelSession.ChatClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                ChannelSession.ChatClient.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                ChannelSession.ChatClient.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-                ChannelSession.ChatClient.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-                ChannelSession.ChatClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-                ChannelSession.ChatClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                ChannelSession.ChatClient.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
-                ChannelSession.ChatClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                ChannelSession.Chat.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                ChannelSession.Chat.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                ChannelSession.Chat.Client.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
+                ChannelSession.Chat.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                ChannelSession.Chat.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                ChannelSession.Chat.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                ChannelSession.Chat.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                ChannelSession.Chat.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                ChannelSession.Chat.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                ChannelSession.Chat.Client.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
+                ChannelSession.Chat.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
 
                 if (ChannelSession.Channel.badge != null && !string.IsNullOrEmpty(ChannelSession.Channel.badge.url))
                 {
@@ -92,7 +92,7 @@ namespace MixItUp.WPF.Controls.Chat
 
                 if (this.EnableCommands)
                 {
-                    foreach (PreMadeChatCommand command in ReflectionHelper.GetInstancesImplementingType<PreMadeChatCommand>())
+                    foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
                     {
                         ChannelSession.PreMadeChatCommands.Add(command);
                     }
@@ -166,7 +166,7 @@ namespace MixItUp.WPF.Controls.Chat
         {
             if (await MessageBoxHelper.ShowConfirmationDialog("This will clear all Chat for the stream. Are you sure?"))
             {
-                await ChannelSession.ChatClient.ClearMessages();
+                await ChannelSession.Chat.ClearMessages();
             }
         }
 
@@ -215,14 +215,14 @@ namespace MixItUp.WPF.Controls.Chat
 
                     await this.Window.RunAsyncOperation(async () =>
                     {
-                        await ChannelSession.ChatClient.Whisper(username, message);
+                        await ChannelSession.Chat.Whisper(username, message);
                     });
                 }
                 else
                 {
                     await this.Window.RunAsyncOperation(async () =>
                     {
-                        await ChannelSession.ChatClient.SendMessage(message);
+                        await ChannelSession.Chat.SendMessage(message);
                     });
                 }
             }
@@ -241,14 +241,14 @@ namespace MixItUp.WPF.Controls.Chat
 
             ChannelSession.ChatUsers.Clear();
 
-            foreach (ChatUserModel user in await ChannelSession.MixerConnection.Chats.GetUsers(ChannelSession.Channel))
+            foreach (ChatUserModel user in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel))
             {
                 await this.AddUser(new UserViewModel(user), notMassUpdate: false);
             }
 
             if (ChannelSession.ChatUsers.Count > 0)
             {
-                Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, ChannelSession.ChatUsers.Values.Select(u => u.GetModel()));
+                Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, ChannelSession.ChatUsers.Values.Select(u => u.GetModel()));
                 foreach (var kvp in chatFollowers)
                 {
                     ChannelSession.ChatUsers[kvp.Key.id].IsFollower = true;
@@ -269,7 +269,7 @@ namespace MixItUp.WPF.Controls.Chat
         {
             if (user.ID > 0)
             {
-                UserWithChannelModel userWithChannel = await ChannelSession.MixerConnection.Users.GetUser(user.GetModel());
+                UserWithChannelModel userWithChannel = await ChannelSession.Connection.GetUser(user.GetModel());
                 if (!string.IsNullOrEmpty(userWithChannel.avatarUrl))
                 {
                     user.AvatarLink = userWithChannel.avatarUrl;
@@ -278,7 +278,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             if (notMassUpdate)
             {
-                DateTimeOffset? followDate = await ChannelSession.MixerConnection.Channels.CheckIfFollows(ChannelSession.Channel, user.GetModel());
+                DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, user.GetModel());
                 if (followDate != null)
                 {
                     user.IsFollower = true;
@@ -351,29 +351,29 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.disableChat && !message.ID.Equals(Guid.Empty))
             {
                 messageControl.DeleteMessage();
-                await ChannelSession.ChatClient.DeleteMessage(message.ID);
+                await ChannelSession.Chat.DeleteMessage(message.ID);
             }
             else
             {
                 if (!messageControl.Message.IsWhisper && messageControl.Message.User.PrimaryRole < UserRole.Mod && messageControl.Message.ShouldBeModerated())
                 {
-                    await ChannelSession.ChatClient.DeleteMessage(messageControl.Message.ID);
+                    await ChannelSession.Chat.DeleteMessage(messageControl.Message.ID);
                     messageControl.DeleteMessage();
 
                     messageControl.Message.User.ChatOffenses++;
                     if (ChannelSession.Settings.Timeout5MinuteOffenseCount > 0 && messageControl.Message.User.ChatOffenses >= ChannelSession.Settings.Timeout5MinuteOffenseCount)
                     {
-                        await ChannelSession.ChatClient.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 5 minutes due to chat moderation. Please watch what you type in chat or further actions will be taken.");
-                        await ChannelSession.ChatClient.TimeoutUser(messageControl.Message.User.UserName, 300);
+                        await ChannelSession.Chat.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 5 minutes due to chat moderation. Please watch what you type in chat or further actions will be taken.");
+                        await ChannelSession.Chat.TimeoutUser(messageControl.Message.User.UserName, 300);
                     }
                     else if (ChannelSession.Settings.Timeout1MinuteOffenseCount > 0 && messageControl.Message.User.ChatOffenses >= ChannelSession.Settings.Timeout1MinuteOffenseCount)
                     {
-                        await ChannelSession.ChatClient.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 1 minute due to chat moderation. Please watch what you type in chat or further actions will be taken.");
-                        await ChannelSession.ChatClient.TimeoutUser(messageControl.Message.User.UserName, 60);
+                        await ChannelSession.Chat.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 1 minute due to chat moderation. Please watch what you type in chat or further actions will be taken.");
+                        await ChannelSession.Chat.TimeoutUser(messageControl.Message.User.UserName, 60);
                     }
                     else
                     {
-                        await ChannelSession.ChatClient.Whisper(messageControl.Message.User.UserName, "Your message has been deleted due to chat moderation. Please watch what you type in chat or further actions will be taken.");
+                        await ChannelSession.Chat.Whisper(messageControl.Message.User.UserName, "Your message has been deleted due to chat moderation. Please watch what you type in chat or further actions will be taken.");
                     }
                 }
                 else if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
@@ -397,7 +397,7 @@ namespace MixItUp.WPF.Controls.Chat
                         else
                         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            ChannelSession.BotChatClient.Whisper(message.User.UserName, "You do not permission to run this command");
+                            ChannelSession.BotChat.Whisper(message.User.UserName, "You do not permission to run this command");
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         }
                     }
@@ -411,7 +411,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             if (result == UserDialogResult.Purge)
             {
-                await ChannelSession.ChatClient.PurgeUser(user.UserName);
+                await ChannelSession.Chat.PurgeUser(user.UserName);
                 foreach (ChatMessageControl messageControl in this.MessageControls)
                 {
                     if (messageControl.Message.User.Equals(user) && !messageControl.Message.IsWhisper)
@@ -422,17 +422,17 @@ namespace MixItUp.WPF.Controls.Chat
             }
             else if (result == UserDialogResult.Timeout1)
             {
-                await ChannelSession.ChatClient.TimeoutUser(user.UserName, 60);
+                await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
             }
             else if (result == UserDialogResult.Timeout5)
             {
-                await ChannelSession.ChatClient.TimeoutUser(user.UserName, 300);
+                await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
             }
             else if (result == UserDialogResult.Ban)
             {
                 if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
                 {
-                    await ChannelSession.MixerConnection.Channels.UpdateUserRoles(ChannelSession.Channel, user.GetModel(), new List<string>() { UserRole.Banned.ToString() });
+                    await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<UserRole>() { UserRole.Banned });
                 }
             }
         }
@@ -458,7 +458,7 @@ namespace MixItUp.WPF.Controls.Chat
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
                 if (!control.Message.IsWhisper)
                 {
-                    await ChannelSession.ChatClient.DeleteMessage(control.Message.ID);
+                    await ChannelSession.Chat.DeleteMessage(control.Message.ID);
                     control.DeleteMessage();
                 }
             }

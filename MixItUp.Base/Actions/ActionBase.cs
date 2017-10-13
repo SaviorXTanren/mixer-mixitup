@@ -52,7 +52,7 @@ namespace MixItUp.Base.Actions
                 }
                 else
                 {
-                    UserModel argUser = await ChannelSession.MixerConnection.Users.GetUser(user.UserName);
+                    UserModel argUser = await ChannelSession.Connection.GetUser(user.UserName);
                     str = str.Replace("$useravatar", argUser.avatarUrl);
                 }
                 str = str.Replace("$userurl", "https://www.mixer.com/" + user.UserName);
@@ -78,7 +78,7 @@ namespace MixItUp.Base.Actions
                     string username = arguments.ElementAt(i);
                     username = username.Replace("@", "");
 
-                    UserModel argUser = await ChannelSession.MixerConnection.Users.GetUser(username);
+                    UserModel argUser = await ChannelSession.Connection.GetUser(username);
                     if (argUser != null)
                     {
                         str = str.Replace("$arg" + (i + 1) + "useravatar", argUser.avatarUrl);

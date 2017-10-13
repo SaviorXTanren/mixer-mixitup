@@ -107,7 +107,7 @@ namespace MixItUp.WPF.Windows.Interactive
 
             InteractiveGameListingModel game = await this.RunAsyncOperation(async () =>
             {
-                return await InteractiveGameHelper.CreateInteractive2Game(ChannelSession.MixerConnection, ChannelSession.Channel, ChannelSession.User, this.GameNameTextBox.Text, null);
+                return await ChannelSession.Connection.CreateInteractiveGame(ChannelSession.Channel, ChannelSession.User, this.GameNameTextBox.Text);
             });
 
             if (game == null)
