@@ -10,6 +10,7 @@ using MixItUp.WPF.Controls.Services;
 using MixItUp.WPF.Controls.Timers;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -69,7 +70,7 @@ namespace MixItUp.WPF
 
         private async void ChannelSession_OnDisconectionOccurred(object sender, System.EventArgs e)
         {
-            await MessageBoxHelper.ShowMessageDialog("Disconnection occurred, attempting to reconnect...");
+            await this.Dispatcher.Invoke<Task>(async () => { await MessageBoxHelper.ShowMessageDialog("Disconnection occurred, attempting to reconnect..."); });
         }
     }
 }
