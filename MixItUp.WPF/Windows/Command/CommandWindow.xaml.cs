@@ -65,7 +65,9 @@ namespace MixItUp.WPF.Windows.Command
 
         protected override async Task OnLoaded()
         {
-            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ActionTypeEnum>().OrderBy(s => s);
+            List<string> actionTypes = EnumHelper.GetEnumNames<ActionTypeEnum>().ToList();
+            actionTypes.Remove(EnumHelper.GetEnumName(ActionTypeEnum.Custom));
+            this.TypeComboBox.ItemsSource = actionTypes.OrderBy(s => s);
 
             this.ActionsListView.ItemsSource = this.actionControls;
 
