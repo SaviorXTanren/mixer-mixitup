@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.ViewModel;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,14 +26,14 @@ namespace MixItUp.WPF.Util
 
         public static async Task ShowMessageDialog(string message)
         {
-            LoadingWindowBase window = Application.Current.Windows.OfType<LoadingWindowBase>().FirstOrDefault(x => x.IsActive);
+            LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
             await dialogHost.ShowDialog(new BasicDialogControl(message));
         }
 
         public static async Task<bool> ShowConfirmationDialog(string message)
         {
-            LoadingWindowBase window = Application.Current.Windows.OfType<LoadingWindowBase>().FirstOrDefault(x => x.IsActive);
+            LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
             dialogHost.DialogClosing += ConfirmationDialogHost_DialogClosing;
@@ -44,7 +45,7 @@ namespace MixItUp.WPF.Util
 
         public static async Task<UserDialogResult> ShowUserDialog(UserViewModel user)
         {
-            LoadingWindowBase window = Application.Current.Windows.OfType<LoadingWindowBase>().FirstOrDefault(x => x.IsActive);
+            LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
             dialogHost.DialogClosing += UserDialogHost_DialogClosing;
@@ -52,6 +53,19 @@ namespace MixItUp.WPF.Util
             dialogHost.DialogClosing -= UserDialogHost_DialogClosing;
 
             return MessageBoxHelper.lastUserResult;
+        }
+
+        private static LoadingWindowBase GetWindow()
+        {
+            IEnumerable<LoadingWindowBase> windows = Application.Current.Windows.OfType<LoadingWindowBase>();
+            if (windows.Count() == 1)
+            {
+                return windows.First();
+            }
+            else
+            {
+                return windows.FirstOrDefault(x => x.IsActive);
+            }
         }
 
         private static void ConfirmationDialogHost_DialogClosing(object sender, DialogClosingEventArgs eventArgs)

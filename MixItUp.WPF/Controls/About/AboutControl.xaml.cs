@@ -31,8 +31,8 @@ namespace MixItUp.WPF.Controls.About
 
         private void MixerButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://mixer.com/SaviorXTanren"); }
 
-        private void TwitterButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://twitter.com/SaviorXTanren"); }
+        private void TwitterButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://twitter.com/MixItUpApp"); }
 
-        private void GithubButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren"); }
+        private void GithubButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup"); }
     }
 }

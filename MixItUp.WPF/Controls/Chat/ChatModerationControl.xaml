@@ -53,10 +53,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0">Max Caps Allowed:</TextBlock>
-                <Slider x:Name="MaxCapsAllowedSlider" Grid.Row="1" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Max Caps Allowed (0 = Disabled)" Width="200" ValueChanged="MaxCapsAllowedSlider_ValueChanged" />
+                <Slider x:Name="MaxCapsAllowedSlider" Grid.Row="1" Minimum="0" Maximum="50" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Max Caps Allowed (0 = Disabled)" Width="200" ValueChanged="MaxCapsAllowedSlider_ValueChanged" />
 
                 <TextBlock Grid.Row="3">Max Emote/Symbol Allowed:</TextBlock>
-                <Slider x:Name="MaxEmoteSymbolAllowedSlider" Grid.Row="4" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Max Emote/Symbol Allowed (0 = Disabled)" Width="200" ValueChanged="MaxEmoteSymbolAllowedSlider_ValueChanged" />
+                <Slider x:Name="MaxEmoteSymbolAllowedSlider" Grid.Row="4" Minimum="0" Maximum="50" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Max Emote/Symbol Allowed (0 = Disabled)" Width="200" ValueChanged="MaxEmoteSymbolAllowedSlider_ValueChanged" />
 
                 <Grid Grid.Row="6">
                     <Grid.ColumnDefinitions>
