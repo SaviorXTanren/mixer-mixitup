@@ -436,6 +436,10 @@ namespace MixItUp.WPF.Controls.Chat
                     await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<UserRole>() { UserRole.Banned });
                 }
             }
+            else if (result == UserDialogResult.Unban)
+            {
+                await ChannelSession.Connection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<UserRole>() { UserRole.Banned });
+            }
         }
 
         #endregion Chat Update Methods

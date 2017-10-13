@@ -16,6 +16,7 @@ namespace MixItUp.WPF.Util
         Timeout1,
         Timeout5,
         Ban,
+        Unban,
         Close
     }
 

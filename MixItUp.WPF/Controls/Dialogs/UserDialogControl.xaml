@@ -98,9 +98,14 @@
                 </StackPanel>
             </Button>
 
-            <Button Grid.Column="6" IsDefault="True" ToolTip="Ban" Content="{MaterialDesign:PackIcon BlockHelper}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+            <Button x:Name="BanButton" Grid.Column="6" IsDefault="True" ToolTip="Ban" Content="{MaterialDesign:PackIcon BlockHelper}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
                     <system:String>Ban</system:String>
+                </Button.CommandParameter>
+            </Button>
+            <Button x:Name="UnbanButton" Visibility="Collapsed" Grid.Column="6" IsDefault="True" ToolTip="Unban" Content="{MaterialDesign:PackIcon HumanHandsup}" Style="{DynamicResource MaterialDesignFlatButton}" Command="{x:Static MaterialDesignWPF:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:String>Unban</system:String>
                 </Button.CommandParameter>
             </Button>
 
