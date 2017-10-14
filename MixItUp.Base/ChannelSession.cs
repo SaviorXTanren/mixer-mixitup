@@ -304,7 +304,7 @@ namespace MixItUp.Base
         {
             ChannelSession.CheckMixerConnection();
 
-            ChannelSession.Interactive = await ChannelSession.BotConnection.CreateInteractiveClient(ChannelSession.Channel, game);
+            ChannelSession.Interactive = await ChannelSession.Connection.CreateInteractiveClient(ChannelSession.Channel, game);
             if (await ChannelSession.Interactive.ConnectAndReady())
             {
                 ChannelSession.Interactive.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
