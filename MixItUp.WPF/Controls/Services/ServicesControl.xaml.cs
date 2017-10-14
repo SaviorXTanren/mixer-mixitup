@@ -99,9 +99,12 @@ namespace MixItUp.WPF.Controls.Services
             }
         }
 
-        private void LogOutBotButton_Click(object sender, RoutedEventArgs e)
+        private async void LogOutBotButton_Click(object sender, RoutedEventArgs e)
         {
-            ChannelSession.DisconnectBot();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.DisconnectBot();
+            });
             ChannelSession.Settings.BotOAuthToken = null;
 
             this.ExistingBotGrid.Visibility = Visibility.Collapsed;
