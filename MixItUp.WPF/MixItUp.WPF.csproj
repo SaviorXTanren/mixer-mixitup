@@ -171,6 +171,9 @@
     <Compile Include="Controls\Dialogs\UserDialogControl.xaml.cs">
       <DependentUpon>UserDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\GameQueue\GameQueueControl.xaml.cs">
+      <DependentUpon>GameQueueControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Menu\MainMenuControl.xaml.cs">
       <DependentUpon>MainMenuControl.xaml</DependentUpon>
     </Compile>
@@ -256,6 +259,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\UserDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\GameQueue\GameQueueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

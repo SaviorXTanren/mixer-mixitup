@@ -1,5 +1,4 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.OAuth;
@@ -114,8 +113,9 @@ namespace MixItUp.Base
         public static LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
         public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
-        public static bool JoinGameQueueEnabled { get; set; }
-        public static LockedList<UserViewModel> JoinGameQueue { get; private set; }
+        public static bool GameQueueEnabled { get; set; }
+        public static LockedList<UserViewModel> GameQueue { get; private set; }
+        public static event EventHandler OnGameQueueUpdated;
 
         public static GiveawayItemModel Giveaway { get; set; }
 
@@ -421,6 +421,14 @@ namespace MixItUp.Base
 
         public static UserViewModel GetCurrentUser() { return new UserViewModel(User); }
 
+        public static void GameQueueUpdated()
+        {
+            if (ChannelSession.OnGameQueueUpdated != null)
+            {
+                ChannelSession.OnGameQueueUpdated(null, new EventArgs());
+            }
+        }
+
         private static async Task<bool> InitializeInternal(string channelName = null)
         {
             PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
@@ -435,7 +443,7 @@ namespace MixItUp.Base
                     ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
                     ChannelSession.ChatUsers = new LockedDictionary<uint, UserViewModel>();
                     ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
-                    ChannelSession.JoinGameQueue = new LockedList<UserViewModel>();
+                    ChannelSession.GameQueue = new LockedList<UserViewModel>();
 
                     ChannelSession.Giveaway = new GiveawayItemModel();
 

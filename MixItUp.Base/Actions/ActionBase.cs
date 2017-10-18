@@ -23,6 +23,8 @@ namespace MixItUp.Base.Actions
         OBSStudio,
         XSplit,
         Counter,
+        [Name("Game Queue")]
+        GameQueue,
 
         Custom = 99,
     }

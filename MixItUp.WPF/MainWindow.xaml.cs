@@ -3,6 +3,7 @@ using MixItUp.WPF.Controls.About;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Controls.Events;
+using MixItUp.WPF.Controls.GameQueue;
 using MixItUp.WPF.Controls.Giveaway;
 using MixItUp.WPF.Controls.Interactive;
 using MixItUp.WPF.Controls.Quotes;
@@ -47,6 +48,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Interactive", new InteractiveControl());
                 await this.MainMenu.AddMenuItem("Events", new EventsControl());
                 await this.MainMenu.AddMenuItem("Timers", new TimerControl());
+                await this.MainMenu.AddMenuItem("Game Queue", new GameQueueControl());
                 await this.MainMenu.AddMenuItem("Currency", new CurrencyControl());
                 await this.MainMenu.AddMenuItem("Quotes", new QuoteControl());
                 await this.MainMenu.AddMenuItem("Giveaway", new GiveawayControl());

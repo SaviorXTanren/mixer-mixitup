@@ -154,6 +154,13 @@ namespace MixItUp.WPF.Controls.Actions
                         return new CounterAction(this.CounterNameTextBox.Text, counterAmount);
                     }
                     break;
+                case ActionTypeEnum.GameQueue:
+                    if (this.GameQueueActionTypeComboBox.SelectedIndex >= 0)
+                    {
+                        GameQueueActionType gameQueueType = EnumHelper.GetEnumValueFromString<GameQueueActionType>((string)this.GameQueueActionTypeComboBox.SelectedItem);
+                        return new GameQueueAction(gameQueueType);
+                    }
+                    break;
             }
             return null;
         }
@@ -169,6 +176,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.OverlayTypeComboBox.ItemsSource = new List<string>() { "Image", "Text" };
             this.OBSStudioTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
             this.XSplitTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
+            this.GameQueueActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<GameQueueActionType>();
 
             switch (type)
             {
@@ -213,6 +221,9 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.Counter:
                     this.CounterGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.GameQueue:
+                    this.GameQueueGrid.Visibility = Visibility.Visible;
                     break;
             }
 
@@ -306,6 +317,10 @@ namespace MixItUp.WPF.Controls.Actions
                         CounterAction counterAction = (CounterAction)this.action;
                         this.CounterNameTextBox.Text = counterAction.CounterName;
                         this.CounterAmountTextBox.Text = counterAction.CounterAmount.ToString();
+                        break;
+                    case ActionTypeEnum.GameQueue:
+                        GameQueueAction gameQueueAction = (GameQueueAction)this.action;
+                        this.GameQueueActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(gameQueueAction.GameQueueType);
                         break;
                 }
 

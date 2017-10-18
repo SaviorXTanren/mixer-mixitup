@@ -57,20 +57,7 @@
             </Grid>
 
             <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Visible">
-                <StackPanel>
-                    <local:PreMadeChatCommandControl x:Name="FollowAgeChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="GameChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="GiveawayChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="MixerAgeChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="PurgeChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="AddQuoteChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="QuoteChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="SparksChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="StreamerAgeChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="TimeoutChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="TitleChatCommand" Margin="0,5" />
-                    <local:PreMadeChatCommandControl x:Name="UptimeChatCommand" Margin="0,5" />
-                </StackPanel>
+                <StackPanel x:Name="PreMadeChatCommandsStackPanel" />
             </ScrollViewer>
 
         </Grid>

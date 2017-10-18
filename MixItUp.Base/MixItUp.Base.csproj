@@ -124,6 +124,7 @@
     <Compile Include="Actions\CounterAction.cs" />
     <Compile Include="Actions\CurrencyAction.cs" />
     <Compile Include="Actions\ExternalProgramAction.cs" />
+    <Compile Include="Actions\GameQueueAction.cs" />
     <Compile Include="Actions\InputAction.cs" />
     <Compile Include="Actions\OBSStudioAction.cs" />
     <Compile Include="Actions\OverlayAction.cs" />

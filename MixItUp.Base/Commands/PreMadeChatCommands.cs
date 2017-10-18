@@ -165,7 +165,7 @@ namespace MixItUp.Base.Commands
     public class PurgeChatCommand : PreMadeChatCommand
     {
         public PurgeChatCommand()
-            : base("Purge", "purge", UserRole.Mod, 0)
+            : base("Purge", "purge", UserRole.Mod, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -270,10 +270,10 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class TimeoutChatCommand : PreMadeChatCommand
+    public class Timeout1ChatCommand : PreMadeChatCommand
     {
-        public TimeoutChatCommand()
-            : base("Timeout", "timeout", UserRole.Mod, 0)
+        public Timeout1ChatCommand()
+            : base("Timeout 1", "timeout1", UserRole.Mod, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -292,7 +292,36 @@ namespace MixItUp.Base.Commands
                     }
                     else
                     {
-                        await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !timeout @USERNAME");
+                        await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !timeout1 @USERNAME");
+                    }
+                }
+            }));
+        }
+    }
+
+    public class Timeout5ChatCommand : PreMadeChatCommand
+    {
+        public Timeout5ChatCommand()
+            : base("Timeout 5", "timeout5", UserRole.Mod, 5)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChat != null)
+                {
+                    if (arguments.Count() == 1)
+                    {
+                        string username = arguments.ElementAt(0);
+                        if (username.StartsWith("@"))
+                        {
+                            username = username.Substring(1);
+                        }
+
+                        await ChannelSession.BotChat.Whisper(username, "You have been timed out for 5 minutes");
+                        await ChannelSession.Chat.TimeoutUser(username, 300);
+                    }
+                    else
+                    {
+                        await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !timeout5 @USERNAME");
                     }
                 }
             }));
@@ -338,77 +367,6 @@ namespace MixItUp.Base.Commands
                     {
                         await ChannelSession.BotChat.SendMessage("Stream is currently offline");
                     }
-                }
-            }));
-        }
-    }
-
-    public class JoinGameChatCommand : PreMadeChatCommand
-    {
-        public JoinGameChatCommand()
-            : base("Join Game", new List<string>() { "joingame", "join" }, UserRole.User, 0)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChat != null)
-                {
-                    int position = ChannelSession.JoinGameQueue.IndexOf(user);
-                    if (position == -1)
-                    {
-                        ChannelSession.JoinGameQueue.Add(user);
-                        position = ChannelSession.JoinGameQueue.Count;
-                    }
-                    await ChannelSession.BotChat.Whisper(user.UserName, "You are #" + position + " in the queue to play with " + ChannelSession.Channel.user.username + ".");
-                }
-            }));
-        }
-    }
-
-    public class GameQueueChatCommand : PreMadeChatCommand
-    {
-        public GameQueueChatCommand()
-            : base("Game Queue", new List<string>() { "queue", "gamequeue" }, UserRole.Mod, 5)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChat != null)
-                {
-                    int total = ChannelSession.JoinGameQueue.Count();
-
-                    StringBuilder message = new StringBuilder();
-                    message.Append("There are currently " + total + " waiting to play with " + ChannelSession.Channel.user.username + ".");
-
-                    if (total > 0)
-                    {
-                        message.Append(" The following users are next up to play: ");
-
-                        List<string> users = new List<string>();
-                        for (int i = 0; i < total && i < 5; i++)
-                        {
-                            users.Add(ChannelSession.JoinGameQueue[i].UserName);
-                        }
-
-                        message.Append(string.Join(", ", users));
-                        message.Append(".");
-                    }
-
-                    await ChannelSession.BotChat.SendMessage(message.ToString());
-                }
-            }));
-        }
-    }
-
-    public class RemoveQueueChatCommand : PreMadeChatCommand
-    {
-        public RemoveQueueChatCommand()
-            : base("Leave Game", new List<string>() { "leavegame", "leavequeue" }, UserRole.Mod, 0)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.JoinGameQueueEnabled && ChannelSession.BotChat != null)
-                {
-                    ChannelSession.JoinGameQueue.Remove(user);
-                    await ChannelSession.BotChat.Whisper(user.UserName, "You have been removed from the queue to play with " + ChannelSession.Channel.user.username + ".");
                 }
             }));
         }

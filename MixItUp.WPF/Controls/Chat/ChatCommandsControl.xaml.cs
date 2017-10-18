@@ -27,20 +27,15 @@ namespace MixItUp.WPF.Controls.Chat
 
         protected override Task InitializeInternal()
         {
-            this.CustomCommandsListView.ItemsSource = this.customChatCommands;
+            foreach (PreMadeChatCommand command in ChannelSession.PreMadeChatCommands.OrderBy(c => c.Name))
+            {
+                PreMadeChatCommandControl control = new PreMadeChatCommandControl();
+                control.Margin = new Thickness(0, 5, 0, 5);
+                control.Initialize(this.Window, command);
+                this.PreMadeChatCommandsStackPanel.Children.Add(control);
+            }
 
-            this.FollowAgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Follow Age")));
-            this.GameChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Game")));
-            this.GiveawayChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Giveaway")));
-            this.MixerAgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Mixer Age")));
-            this.PurgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Purge")));
-            this.AddQuoteChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Add Quote")));
-            this.QuoteChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Quote")));
-            this.SparksChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Sparks")));
-            this.StreamerAgeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Streamer Age")));
-            this.TimeoutChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Timeout")));
-            this.TitleChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Title")));
-            this.UptimeChatCommand.Initialize(this.Window, ChannelSession.PreMadeChatCommands.First(c => c.Name.Equals("Uptime")));
+            this.CustomCommandsListView.ItemsSource = this.customChatCommands;
 
             this.RefreshList();
 

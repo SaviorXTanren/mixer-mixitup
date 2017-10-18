@@ -425,6 +425,12 @@
 
             </Grid>
 
+            <Grid x:Name="GameQueueGrid" Grid.Row="2" Visibility="Collapsed">
+
+                <ComboBox x:Name="GameQueueActionTypeComboBox" MaterialDesign:HintAssist.Hint="Game Queue Action" />
+
+            </Grid>
+
         </Grid>
     </GroupBox>
 
