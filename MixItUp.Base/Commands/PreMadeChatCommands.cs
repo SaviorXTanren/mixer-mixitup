@@ -212,7 +212,7 @@ namespace MixItUp.Base.Commands
     public class AddQuoteChatCommand : PreMadeChatCommand
     {
         public AddQuoteChatCommand()
-            : base("Add Quote", "addquote quoteadd", UserRole.Mod, 5)
+            : base("Add Quote", new List<string>() { "addquote", "quoteadd" }, UserRole.Mod, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -232,7 +232,7 @@ namespace MixItUp.Base.Commands
 
                     if (ChannelSession.BotChat != null)
                     {
-                        await ChannelSession.BotChat.SendMessage("Added Quote #" + (ChannelSession.Settings.Quotes.Count - 1) + ": \"" + quote + "\"");
+                        await ChannelSession.BotChat.SendMessage("Added Quote: \"" + quote + "\"");
                     }
                 }
             }));
@@ -258,7 +258,7 @@ namespace MixItUp.Base.Commands
     public class StreamerAgeChatCommand : PreMadeChatCommand
     {
         public StreamerAgeChatCommand()
-            : base("Streamer Age", "streamerage age", UserRole.User, 60)
+            : base("Streamer Age", new List<string>() { "streamerage", "age" }, UserRole.User, 60)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
