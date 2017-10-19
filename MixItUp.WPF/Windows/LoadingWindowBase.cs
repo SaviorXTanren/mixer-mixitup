@@ -14,18 +14,13 @@ namespace MixItUp.WPF.Windows
         public LoadingWindowBase()
         {
             this.Loaded += LoadingWindowBase_Loaded;
+            this.Closing += LoadingWindowBase_Closing;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
         public void Initialize(LoadingStatusBar statusBar)
         {
             this.statusBar = statusBar;
-        }
-
-        public new void Close()
-        {
-            this.OnClosing().Wait();
-            base.Close();
         }
 
         public async Task RunAsyncOperation(Func<Task> action)
@@ -57,6 +52,14 @@ namespace MixItUp.WPF.Windows
             await this.RunAsyncOperation(async () =>
             {
                 await this.OnLoaded();
+            });
+        }
+
+        private async void LoadingWindowBase_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                await this.OnClosing();
             });
         }
 

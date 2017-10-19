@@ -68,7 +68,8 @@ namespace MixItUp.WPF
             {
                 await ChannelSession.Settings.Save();
             }
-            Application.Current.Shutdown();
+
+            ChannelSession.Close();
         }
 
         private async void ChannelSession_OnDisconectionOccurred(object sender, System.EventArgs e)

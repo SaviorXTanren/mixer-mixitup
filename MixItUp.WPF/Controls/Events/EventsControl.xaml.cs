@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Controls.Events
 
             await ChannelSession.Settings.Save();
 
-            if (await ChannelSession.InitializeConstellationClient())
+            if (await ChannelSession.InitializeConstellation())
             {
                 ChannelSession.Constellation.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
             }

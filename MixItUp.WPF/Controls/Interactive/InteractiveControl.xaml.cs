@@ -307,7 +307,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.ConnectInteractiveClient(this.selectedGame);
+                return await ChannelSession.ConnectInteractive(this.selectedGame);
             });
 
             if (!result)
@@ -372,7 +372,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.DisconnectInteractiveClient();
+                await ChannelSession.DisconnectInteractive();
             });
 
             foreach (InteractiveControlCommandItem item in this.interactiveItems)
