@@ -347,9 +347,12 @@ namespace MixItUp.WPF.Controls.Interactive
             });
 
             ChannelSession.InteractiveUsers.Clear();
-            foreach (InteractiveParticipantModel participant in participants.participants)
+            if (participants != null)
             {
-                ChannelSession.InteractiveUsers.Add(participant.sessionID, participant);
+                foreach (InteractiveParticipantModel participant in participants.participants)
+                {
+                    ChannelSession.InteractiveUsers.Add(participant.sessionID, participant);
+                }
             }
 
             ChannelSession.Interactive.Client.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
