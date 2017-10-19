@@ -109,6 +109,11 @@ namespace MixItUp.WPF.Controls.Menu
             }
         }
 
+        private void InstallationDirectoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        }
+
         private void SubmitABugButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/issues/new"); }
 
         private void DocumentationButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); }
