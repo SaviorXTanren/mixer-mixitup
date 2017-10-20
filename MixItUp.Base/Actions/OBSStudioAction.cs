@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -75,24 +76,31 @@ namespace MixItUp.Base.Actions
 
             if (ChannelSession.OBSWebsocket != null)
             {
-                if (!string.IsNullOrEmpty(this.SceneCollection))
+                try
                 {
-                    ChannelSession.OBSWebsocket.SetCurrentSceneCollection(this.SceneCollection);
-                }
-
-                if (!string.IsNullOrEmpty(this.SceneName))
-                {
-                    ChannelSession.OBSWebsocket.SetCurrentScene(this.SceneName);
-                }
-
-                if (!string.IsNullOrEmpty(this.SourceName))
-                {
-                    if (!string.IsNullOrEmpty(this.SourceText))
+                    if (!string.IsNullOrEmpty(this.SceneCollection))
                     {
-                        this.currentTextToWrite = await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
-                        this.UpdateReferenceTextFile();
+                        ChannelSession.OBSWebsocket.SetCurrentSceneCollection(this.SceneCollection);
                     }
-                    ChannelSession.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
+
+                    if (!string.IsNullOrEmpty(this.SceneName))
+                    {
+                        ChannelSession.OBSWebsocket.SetCurrentScene(this.SceneName);
+                    }
+
+                    if (!string.IsNullOrEmpty(this.SourceName))
+                    {
+                        if (!string.IsNullOrEmpty(this.SourceText))
+                        {
+                            this.currentTextToWrite = await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
+                            this.UpdateReferenceTextFile();
+                        }
+                        ChannelSession.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
             }
         }
