@@ -1,18 +1,20 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.ViewModel;
-using MixItUp.Base.ViewModel.Chat;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace MixItUp.Base.Commands
 {
     [DataContract]
     public class ChatCommand : CommandBase
     {
+        private static SemaphoreSlim chatCommandPerformSemaphore = new SemaphoreSlim(1);
+
         public static IEnumerable<string> PermissionsAllowedValues
         {
             get
@@ -54,5 +56,7 @@ namespace MixItUp.Base.Commands
                 await base.Perform(user, arguments);
             }
         }
+
+        protected override SemaphoreSlim AsyncSempahore { get { return ChatCommand.chatCommandPerformSemaphore; } }
     }
 }

@@ -3,13 +3,10 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
-using MixItUp.Base.ViewModel;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
@@ -74,13 +71,6 @@ namespace MixItUp.Base.Commands
 
         public override int GetHashCode() { return this.GetEventType().GetHashCode(); }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
-        {
-            await eventCommandPerformSemaphore.WaitAsync();
-
-            await base.Perform(user, arguments);
-
-            eventCommandPerformSemaphore.Release();
-        }
+        protected override SemaphoreSlim AsyncSempahore { get { return EventCommand.eventCommandPerformSemaphore; } }
     }
 }

@@ -4,6 +4,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -18,7 +19,7 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public class CommandBase
+    public abstract class CommandBase
     {
         [DataMember]
         public string Name { get; set; }
@@ -75,12 +76,18 @@ namespace MixItUp.Base.Commands
                 arguments = new List<string>();
             }
 
+            await this.AsyncSempahore.WaitAsync();
+
             GlobalEvents.CommandExecuted(this);
 
             foreach (ActionBase action in this.Actions)
             {
                 await action.Perform(user, arguments);
             }
+
+            this.AsyncSempahore.Release();
         }
+
+        protected abstract SemaphoreSlim AsyncSempahore { get; }
     }
 }

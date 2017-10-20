@@ -6,10 +6,10 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,7 +20,12 @@ namespace MixItUp.WPF.Windows.Command
     /// </summary>
     public partial class CommandWindow : LoadingWindowBase
     {
-        private class TestCommand : CommandBase { }
+        private class TestCommand : CommandBase
+        {
+            private static SemaphoreSlim testCommandPerformSemaphore = new SemaphoreSlim(1);
+
+            protected override SemaphoreSlim AsyncSempahore { get { return TestCommand.testCommandPerformSemaphore; } }
+        }
 
         private CommandDetailsControlBase commandDetailsControl;
 
