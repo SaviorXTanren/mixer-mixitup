@@ -74,14 +74,20 @@ namespace MixItUp.WPF
 
         private async void ChannelSession_OnDisconectionOccurred(object sender, System.EventArgs e)
         {
-            this.IsEnabled = false;
-            await this.Dispatcher.Invoke<Task>(async () => { await MessageBoxHelper.ShowMessageDialog("Disconnection occurred, attempting to reconnect..."); });
+            await this.Dispatcher.Invoke<Task>(async () =>
+            {
+                this.IsEnabled = false;
+                await MessageBoxHelper.ShowMessageDialog("Disconnection occurred, attempting to reconnect...");
+            });
         }
 
         private async void ChannelSession_OnReconectionOccurred(object sender, EventArgs e)
         {
-            this.IsEnabled = true;
-            await this.Dispatcher.Invoke<Task>(async () => { await MessageBoxHelper.ShowMessageDialog("Successfully reconnected to Mixer services"); });
+            await this.Dispatcher.Invoke<Task>(async () =>
+            {
+                this.IsEnabled = true;
+                await MessageBoxHelper.ShowMessageDialog("Successfully reconnected to Mixer services");
+            });
         }
     }
 }

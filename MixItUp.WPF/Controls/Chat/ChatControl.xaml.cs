@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.Window.Closing += Window_Closing;
 
-            if (await ChannelSession.InitializeChat())
+            if (await ChannelSession.ConnectChat())
             {
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;

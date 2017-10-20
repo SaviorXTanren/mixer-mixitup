@@ -33,13 +33,6 @@ namespace MixItUp.Base.Util
             catch (Exception) { }
         }
 
-        public static void Log(Exception ex)
-        {
-            Logger.Log("Exception caught at:");
-            StackTrace stack = new StackTrace();
-            Logger.Log(stack.ToString());
-
-            Logger.Log(ex.ToString());
-        }
+        public static void Log(Exception ex) { Logger.Log(ex.ToString()); }
     }
 }

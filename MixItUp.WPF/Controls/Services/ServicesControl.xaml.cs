@@ -73,7 +73,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             bool result = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.InitializeBot((OAuthShortCodeModel shortCode) =>
+                return await ChannelSession.ConnectBot((OAuthShortCodeModel shortCode) =>
                 {
                     this.BotShortCodeTextBox.IsEnabled = true;
                     this.BotShortCodeTextBox.Text = shortCode.code;

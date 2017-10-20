@@ -84,7 +84,7 @@ namespace MixItUp.WPF
                         }
                         else
                         {
-                            result = await ChannelSession.Initialize(setting);
+                            result = await ChannelSession.ConnectUser(setting);
                         }
                     }
                     else
@@ -162,7 +162,7 @@ namespace MixItUp.WPF
         {
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Initialize(scopes, channelName);
+                return await ChannelSession.ConnectUser(scopes, channelName);
             });
 
             if (!result)
