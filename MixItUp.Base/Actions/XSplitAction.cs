@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.ViewModel;
-using MixItUp.Base.XSplit;
+﻿using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -65,16 +65,16 @@ namespace MixItUp.Base.Actions
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.XSplitServer == null)
+            if (ChannelSession.Services.XSplitServer == null)
             {
-                ChannelSession.InitializeXSplitServer();
+                await ChannelSession.Services.InitializeXSplitServer();
             }
 
-            if (ChannelSession.XSplitServer != null)
+            if (ChannelSession.Services.XSplitServer != null)
             {
                 if (!string.IsNullOrEmpty(this.SceneName))
                 {
-                    ChannelSession.XSplitServer.SetCurrentScene(new XSplitScene() { sceneName = this.SceneName });
+                    ChannelSession.Services.XSplitServer.SetCurrentScene(new XSplitScene() { sceneName = this.SceneName });
                 }
 
                 if (!string.IsNullOrEmpty(this.SourceName))
@@ -84,7 +84,7 @@ namespace MixItUp.Base.Actions
                         this.currentTextToWrite = await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
                         this.UpdateReferenceTextFile();
                     }
-                    ChannelSession.XSplitServer.UpdateSource(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
+                    ChannelSession.Services.XSplitServer.UpdateSource(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
                 }
             }
         }

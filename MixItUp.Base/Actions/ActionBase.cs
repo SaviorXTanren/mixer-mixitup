@@ -1,6 +1,6 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;

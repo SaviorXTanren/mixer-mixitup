@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixItUp.WPF", "MixItUp.WPF\MixItUp.WPF.csproj", "{90395135-528E-4F2D-93D1-D822B32B5F80}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MixItUp.Base", "MixItUp.Base\MixItUp.Base.csproj", "{9D877984-4F1F-457F-A2B6-E619D8F53A67}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB6A7130-8AA5-43FB-B65E-BAE1C5551C79}"
 	ProjectSection(SolutionItems) = preProject
@@ -64,26 +62,69 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{2D15E4
 		Wiki\Images\XSplitSourceAction.png = Wiki\Images\XSplitSourceAction.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Desktop", "Desktop", "{3C89ACB2-D917-48C0-84FD-974FC6E17A89}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MixItUp.Desktop", "MixItUp.Desktop\MixItUp.Desktop.shproj", "{BB90FE2D-ADD5-410B-A1E6-327C6D54D729}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MixItUp.Base", "MixItUp.Base\MixItUp.Base.shproj", "{AB46E786-D32D-43BD-8A72-C7A07D9E11A6}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		MixItUp.Base\MixItUp.Base.projitems*{90395135-528e-4f2d-93d1-d822b32b5f80}*SharedItemsImports = 4
+		MixItUp.Desktop\MixItUp.Desktop.projitems*{90395135-528e-4f2d-93d1-d822b32b5f80}*SharedItemsImports = 4
+		MixItUp.Base\MixItUp.Base.projitems*{ab46e786-d32d-43bd-8a72-c7a07d9e11a6}*SharedItemsImports = 13
+		MixItUp.Desktop\MixItUp.Desktop.projitems*{bb90fe2d-add5-410b-a1e6-327c6d54d729}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
+		Ad-Hoc|iPhone = Ad-Hoc|iPhone
+		Ad-Hoc|iPhoneSimulator = Ad-Hoc|iPhoneSimulator
+		AppStore|Any CPU = AppStore|Any CPU
+		AppStore|iPhone = AppStore|iPhone
+		AppStore|iPhoneSimulator = AppStore|iPhoneSimulator
 		Debug|Any CPU = Debug|Any CPU
+		Debug|iPhone = Debug|iPhone
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
 		Release|Any CPU = Release|Any CPU
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Ad-Hoc|iPhoneSimulator.Build.0 = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.AppStore|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.AppStore|iPhoneSimulator.Build.0 = Release|Any CPU
 		{90395135-528E-4F2D-93D1-D822B32B5F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{90395135-528E-4F2D-93D1-D822B32B5F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
 		{90395135-528E-4F2D-93D1-D822B32B5F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90395135-528E-4F2D-93D1-D822B32B5F80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D877984-4F1F-457F-A2B6-E619D8F53A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D877984-4F1F-457F-A2B6-E619D8F53A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D877984-4F1F-457F-A2B6-E619D8F53A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D877984-4F1F-457F-A2B6-E619D8F53A67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Release|iPhone.Build.0 = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{90395135-528E-4F2D-93D1-D822B32B5F80}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{90395135-528E-4F2D-93D1-D822B32B5F80} = {3C89ACB2-D917-48C0-84FD-974FC6E17A89}
 		{094A4097-FEB7-4050-A98B-304AE005A19C} = {DB6A7130-8AA5-43FB-B65E-BAE1C5551C79}
 		{2D15E44E-6788-4C9A-BD58-C97FCF5A30F7} = {094A4097-FEB7-4050-A98B-304AE005A19C}
+		{BB90FE2D-ADD5-410B-A1E6-327C6D54D729} = {3C89ACB2-D917-48C0-84FD-974FC6E17A89}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {56FA5777-5A3B-4E2B-B0A5-8EA45A5251F6}
 	EndGlobalSection
 EndGlobal

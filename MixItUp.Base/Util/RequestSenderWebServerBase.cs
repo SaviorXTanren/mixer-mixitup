@@ -16,12 +16,7 @@ namespace MixItUp.Base.Util
             this.socket = IO.Socket(address);
         }
 
-        public void TestConnection()
-        {
-            this.SendData("test", new JObject());
-        }
-
-        public virtual void Close()
+        public virtual void End()
         {
             this.socket.Close();
         }

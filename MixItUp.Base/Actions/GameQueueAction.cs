@@ -1,5 +1,5 @@
 ﻿using Mixer.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;

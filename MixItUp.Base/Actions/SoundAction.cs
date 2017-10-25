@@ -1,10 +1,8 @@
-﻿using MixItUp.Base.ViewModel;
-using System;
+﻿using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace MixItUp.Base.Actions
 {
@@ -24,32 +22,13 @@ namespace MixItUp.Base.Actions
             this.VolumeScale = volumeScale;
         }
 
-        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
             if (File.Exists(this.FilePath))
             {
-                Task.Run(async () =>
-                {
-                    bool mediaEnded = false;
-
-                    MediaPlayer mediaPlayer = new MediaPlayer();
-                    mediaPlayer.MediaEnded += (object sender, EventArgs e) =>
-                    {
-                        mediaEnded = true;
-                    };
-                    mediaPlayer.Open(new Uri(this.FilePath));
-                    mediaPlayer.Volume = ((double)this.VolumeScale / 100.0);
-                    mediaPlayer.Play();
-
-                    while (!mediaEnded)
-                    {
-                        await Task.Delay(500);
-                    }
-
-                    mediaPlayer.Close();
-               });
+                await ChannelSession.Services.InitializeAudioService();
+                await ChannelSession.Services.AudioService.Play(this.FilePath, this.VolumeScale);
             }
-            return Task.FromResult(0);
         }
     }
 }

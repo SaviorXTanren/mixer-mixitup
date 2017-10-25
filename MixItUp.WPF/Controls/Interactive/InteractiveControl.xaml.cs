@@ -1,8 +1,8 @@
 ﻿using Mixer.Base.Model.Interactive;
-using MixItUp.Base;
+using MixItUp;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;

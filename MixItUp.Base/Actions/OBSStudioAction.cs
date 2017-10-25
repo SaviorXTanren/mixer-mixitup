@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -69,23 +69,23 @@ namespace MixItUp.Base.Actions
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.OBSWebsocket == null)
+            if (ChannelSession.Services.OBSWebsocket == null)
             {
-                await ChannelSession.InitializeOBSWebsocket();
+                await ChannelSession.Services.InitializeOBSWebsocket();
             }
 
-            if (ChannelSession.OBSWebsocket != null)
+            if (ChannelSession.Services.OBSWebsocket != null)
             {
                 try
                 {
                     if (!string.IsNullOrEmpty(this.SceneCollection))
                     {
-                        ChannelSession.OBSWebsocket.SetCurrentSceneCollection(this.SceneCollection);
+                        ChannelSession.Services.OBSWebsocket.SetCurrentSceneCollection(this.SceneCollection);
                     }
 
                     if (!string.IsNullOrEmpty(this.SceneName))
                     {
-                        ChannelSession.OBSWebsocket.SetCurrentScene(this.SceneName);
+                        ChannelSession.Services.OBSWebsocket.SetCurrentScene(this.SceneName);
                     }
 
                     if (!string.IsNullOrEmpty(this.SourceName))
@@ -95,7 +95,7 @@ namespace MixItUp.Base.Actions
                             this.currentTextToWrite = await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
                             this.UpdateReferenceTextFile();
                         }
-                        ChannelSession.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
+                        ChannelSession.Services.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
                     }
                 }
                 catch (Exception ex)

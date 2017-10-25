@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;

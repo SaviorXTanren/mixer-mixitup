@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.Overlay;
-using MixItUp.Base.ViewModel;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,7 +63,7 @@ namespace MixItUp.Base.Actions
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.OverlayServer != null)
+            if (ChannelSession.Services.OverlayServer != null)
             {
                 if (!string.IsNullOrEmpty(this.ImagePath))
                 {
@@ -90,7 +90,7 @@ namespace MixItUp.Base.Actions
 
                     if (this.imageData != null)
                     {
-                        ChannelSession.OverlayServer.SetImage(new OverlayImage()
+                        ChannelSession.Services.OverlayServer.SetImage(new OverlayImage()
                         {
                             imagePath = imageFilePath,
                             width = this.ImageWidth,
@@ -105,7 +105,7 @@ namespace MixItUp.Base.Actions
                 else if (!string.IsNullOrEmpty(this.Text))
                 {
                     string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
-                    ChannelSession.OverlayServer.SetText(new OverlayText()
+                    ChannelSession.Services.OverlayServer.SetText(new OverlayText()
                     {
                         text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical
                     });

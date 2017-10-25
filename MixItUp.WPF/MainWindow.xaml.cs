@@ -1,4 +1,4 @@
-﻿using MixItUp.Base;
+﻿using MixItUp;
 using MixItUp.WPF.Controls.About;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Currency;
@@ -69,7 +69,7 @@ namespace MixItUp.WPF
                 await ChannelSession.Settings.Save();
             }
 
-            ChannelSession.Close();
+            await ChannelSession.Close();
         }
 
         private async void ChannelSession_OnDisconectionOccurred(object sender, System.EventArgs e)

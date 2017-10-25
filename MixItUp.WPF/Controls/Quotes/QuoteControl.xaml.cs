@@ -1,4 +1,4 @@
-﻿using MixItUp.Base;
+﻿using MixItUp;
 using MixItUp.Base.Util;
 using System;
 using System.Threading.Tasks;

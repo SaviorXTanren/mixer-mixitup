@@ -2,7 +2,7 @@
 using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base
+namespace MixItUp
 {
     [DataContract]
     public class ChannelSettings

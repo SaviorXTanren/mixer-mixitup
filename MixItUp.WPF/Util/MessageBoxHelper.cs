@@ -1,6 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Mixer.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Windows;
 using System.Collections.Generic;

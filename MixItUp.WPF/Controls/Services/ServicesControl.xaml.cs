@@ -1,12 +1,9 @@
 ﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base;
-using MixItUp.Base.Overlay;
+using MixItUp;
 using MixItUp.WPF.Util;
-using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Services
 {
@@ -39,7 +36,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (ChannelSession.Settings.EnableOverlay)
             {
-                ChannelSession.InitializeOverlayServer();
+                await ChannelSession.Services.InitializeOverlayServer();
 
                 this.EnableOverlayButton.Visibility = Visibility.Collapsed;
                 this.DisableOverlayButton.Visibility = Visibility.Visible;
@@ -54,7 +51,7 @@ namespace MixItUp.WPF.Controls.Services
                 this.OBSStudioEnableConnectionButton.Visibility = Visibility.Collapsed;
                 this.OBSStudioDisableConnectionButton.Visibility = Visibility.Visible;
 
-                await ChannelSession.InitializeOBSWebsocket();
+                await ChannelSession.Services.InitializeOBSWebsocket();
             }
 
             if (ChannelSession.Settings.EnableXSplitConnection)
@@ -63,7 +60,7 @@ namespace MixItUp.WPF.Controls.Services
                 this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
                 this.TestXSplitConnectionButton.IsEnabled = true;
 
-                ChannelSession.InitializeXSplitServer();
+                await ChannelSession.Services.InitializeXSplitServer();
             }
 
             await base.InitializeInternal();
@@ -115,7 +112,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                ChannelSession.InitializeOverlayServer();
+                await ChannelSession.Services.InitializeOverlayServer();
 
                 ChannelSession.Settings.EnableOverlay = true;
                 await ChannelSession.Settings.Save();
@@ -130,7 +127,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                ChannelSession.DisconnectOverlayServer();
+                await ChannelSession.Services.DisconnectOverlayServer();
 
                 ChannelSession.Settings.EnableOverlay = false;
                 await ChannelSession.Settings.Save();
@@ -143,7 +140,7 @@ namespace MixItUp.WPF.Controls.Services
 
         private void TestOverlayButton_Click(object sender, RoutedEventArgs e)
         {
-            ChannelSession.OverlayServer.TestConnection();
+            ChannelSession.Services.OverlayServer.TestConnection();
         }
 
         private async void OBSStudioEnableConnectionButton_Click(object sender, RoutedEventArgs e)
@@ -153,7 +150,7 @@ namespace MixItUp.WPF.Controls.Services
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (await ChannelSession.InitializeOBSWebsocket())
+                if (await ChannelSession.Services.InitializeOBSWebsocket())
                 {
                     this.OBSStudioEnableConnectionButton.Visibility = Visibility.Collapsed;
                     this.OBSStudioDisableConnectionButton.Visibility = Visibility.Visible;
@@ -168,9 +165,9 @@ namespace MixItUp.WPF.Controls.Services
             });
         }
 
-        private void OBSStudioDisableConnectionButton_Click(object sender, RoutedEventArgs e)
+        private async void OBSStudioDisableConnectionButton_Click(object sender, RoutedEventArgs e)
         {
-            ChannelSession.DisconnectOBSStudio();
+            await ChannelSession.Services.DisconnectOBSStudio();
 
             ChannelSession.Settings.OBSStudioServerIP = null;
             ChannelSession.Settings.OBSStudioServerPassword = null;
@@ -188,7 +185,7 @@ namespace MixItUp.WPF.Controls.Services
                 this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
                 this.TestXSplitConnectionButton.IsEnabled = true;
 
-                ChannelSession.InitializeXSplitServer();
+                await ChannelSession.Services.InitializeXSplitServer();
 
                 await ChannelSession.Settings.Save();
             });
@@ -203,7 +200,7 @@ namespace MixItUp.WPF.Controls.Services
                 this.DisableXSplitConnectionButton.Visibility = Visibility.Collapsed;
                 this.TestXSplitConnectionButton.IsEnabled = false;
 
-                ChannelSession.DisconnectXSplitServer();
+                await ChannelSession.Services.DisconnectXSplitServer();
 
                 await ChannelSession.Settings.Save();
             });
@@ -211,11 +208,11 @@ namespace MixItUp.WPF.Controls.Services
 
         private async void TestXSplitConnectionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ChannelSession.XSplitServer != null)
+            if (ChannelSession.Services.XSplitServer != null)
             {
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    if (await ChannelSession.XSplitServer.TestConnection())
+                    if (await ChannelSession.Services.XSplitServer.TestConnection())
                     {
                         await MessageBoxHelper.ShowMessageDialog("Connection successful!");
                     }

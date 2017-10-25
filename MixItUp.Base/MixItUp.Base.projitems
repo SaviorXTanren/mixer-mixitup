@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ab46e786-d32d-43bd-8a72-c7a07d9e11a6</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>MixItUp.Base</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ActionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ChatAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\CounterAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\CurrencyAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\ExternalProgramAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\GameQueueAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\InputAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\OBSStudioAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\OverlayAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\SoundAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\WaitAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Actions\XSplitAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ChannelSession.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ChannelSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Chat\ChatMessageCommandViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ChatCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\EventCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\InteractiveCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\PreMadeChatCommands.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\TimerCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MixerAPI\ChatClientWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MixerAPI\ConstellationClientWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MixerAPI\InteractiveClientWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MixerAPI\MixerConnectionWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MixerAPI\MixerRequestWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IAudioService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IInputService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IOBSService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IOverlayService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IXSplitService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ServicesHandlerBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\GiveawayItemViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystemHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\GlobalEvents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\LockedDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\LockedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\Logger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\MathHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\ReflectionHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\RequestListenerWebServerBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\RequestSenderWebServerBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\SerializerHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\UserModelExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Chat\ChatMessageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Interactive\InteractiveControlViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\User\UserDataViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\User\UserViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Chat\" />
+    <Folder Include="$(MSBuildThisFileDirectory)ViewModel\User\" />
+  </ItemGroup>
+</Project>

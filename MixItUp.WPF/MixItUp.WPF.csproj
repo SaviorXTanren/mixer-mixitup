@@ -67,9 +67,8 @@
       <HintPath>..\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.2.6501.41381, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.3.4-beta\lib\net46\Mixer.Base.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Mixer.Base, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.4.0-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -110,6 +109,7 @@
       <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -415,12 +415,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
-      <Project>{9d877984-4f1f-457f-a2b6-e619d8f53a67}</Project>
-      <Name>MixItUp.Base</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
@@ -443,9 +437,14 @@
   <ItemGroup>
     <Resource Include="Logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LICENSE.txt" />
+  </ItemGroup>
+  <Import Project="..\MixItUp.Desktop\MixItUp.Desktop.projitems" Label="Shared" />
+  <Import Project="..\MixItUp.Base\MixItUp.Base.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>robocopy /E $(SolutionDir)MixItUp.Base\Overlay\node\ $(TargetDir)Overlay\node /NFL /NDL /NJH
+    <PostBuildEvent>robocopy /E $(SolutionDir)MixItUp.Desktop\Overlay\node\ $(TargetDir)Overlay\node /NFL /NDL /NJH
 rmdir /Q /S $(TargetDir)Settings\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,7 +2,7 @@
 using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;

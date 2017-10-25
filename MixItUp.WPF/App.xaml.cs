@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Util;
+using MixItUp.Desktop.Services;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -20,6 +20,8 @@ namespace MixItUp.WPF
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
+            ChannelSession.AssignServicesHandler(new DesktopServicesHandler());
 
             base.OnStartup(e);
         }

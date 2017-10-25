@@ -1,7 +1,8 @@
 ﻿using Microsoft.Win32;
 using Mixer.Base.Util;
-using MixItUp.Base;
+using MixItUp;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Windows.Command;
 using System;

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.ViewModel;
+﻿using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs

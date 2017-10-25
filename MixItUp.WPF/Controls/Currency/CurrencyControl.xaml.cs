@@ -1,5 +1,5 @@
-﻿using MixItUp.Base;
-using MixItUp.Base.ViewModel;
+﻿using MixItUp;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using System;

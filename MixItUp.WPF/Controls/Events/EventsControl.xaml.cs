@@ -2,10 +2,10 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
-using MixItUp.Base;
+using MixItUp;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Threading.Tasks;

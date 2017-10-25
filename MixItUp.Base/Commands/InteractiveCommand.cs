@@ -3,7 +3,7 @@ using Mixer.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Threading;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

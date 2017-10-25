@@ -1,11 +1,9 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
-using MixItUp.Base;
-using MixItUp.Base.Chat;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
@@ -377,9 +375,9 @@ namespace MixItUp.WPF.Controls.Chat
                         await ChannelSession.Chat.Whisper(messageControl.Message.User.UserName, "Your message has been deleted due to chat moderation. Please watch what you type in chat or further actions will be taken.");
                     }
                 }
-                else if (this.EnableCommands && ChatMessageCommand.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
+                else if (this.EnableCommands && ChatMessageCommandViewModel.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
                 {
-                    ChatMessageCommand messageCommand = new ChatMessageCommand(message);
+                    ChatMessageCommandViewModel messageCommand = new ChatMessageCommandViewModel(message);
 
                     ChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
                     if (command == null)

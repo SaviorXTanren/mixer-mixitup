@@ -6,19 +6,16 @@ using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
-using MixItUp.Base.Models;
-using MixItUp.Base.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
-using MixItUp.Base.XSplit;
-using OBSWebsocketDotNet;
+using MixItUp.Base.ViewModel.User;
+using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base
+namespace MixItUp
 {
     public static class ChannelSession
     {
@@ -105,9 +102,7 @@ namespace MixItUp.Base
         public static InteractiveClientWrapper Interactive { get; private set; }
         public static ConstellationClientWrapper Constellation { get; private set; }
 
-        public static OverlayWebServer OverlayServer { get; private set; }
-        public static OBSWebsocket OBSWebsocket { get; private set; }
-        public static XSplitWebServer XSplitServer { get; private set; }
+        public static ServicesHandlerBase Services { get; private set; }
 
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
         public static LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
@@ -117,7 +112,7 @@ namespace MixItUp.Base
         public static LockedList<UserViewModel> GameQueue { get; private set; }
         public static event EventHandler OnGameQueueUpdated;
 
-        public static GiveawayItemModel Giveaway { get; set; }
+        public static GiveawayItemViewModel Giveaway { get; set; }
 
         public static LockedDictionary<string, int> Counters { get; private set; }
 
@@ -316,89 +311,11 @@ namespace MixItUp.Base
             return true;
         }
 
-        public static bool InitializeOverlayServer()
+        public static void AssignServicesHandler(ServicesHandlerBase serviceHandler) { ChannelSession.Services = serviceHandler; }
+
+        public static async Task Close()
         {
-            if (ChannelSession.OverlayServer == null)
-            {
-                ChannelSession.OverlayServer = new OverlayWebServer("http://localhost:8111/");
-            }
-            return true;
-        }
-
-        public static void DisconnectOverlayServer()
-        {
-            if (ChannelSession.OverlayServer != null)
-            {
-                ChannelSession.OverlayServer.Close();
-                ChannelSession.OverlayServer = null;
-            }
-        }
-
-        public static async Task<bool> InitializeOBSWebsocket()
-        {
-            if (ChannelSession.OBSWebsocket == null)
-            {
-                ChannelSession.OBSWebsocket = new OBSWebsocket();
-
-                CancellationTokenSource tokenSource = new CancellationTokenSource();
-                bool connected = false;
-
-                Task t = Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        ChannelSession.OBSWebsocket.Connect(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
-                        connected = true;
-                    }
-                    catch (Exception) { }
-                }, tokenSource.Token);
-
-                await Task.Delay(2000);
-                tokenSource.Cancel();
-
-                if (!connected)
-                {
-                    ChannelSession.OBSWebsocket = null;
-                }
-                return connected;
-            }
-            return false;
-        }
-
-        public static void DisconnectOBSStudio()
-        {
-            if (ChannelSession.OBSWebsocket != null)
-            {
-                ChannelSession.OBSWebsocket.Disconnect();
-                ChannelSession.OBSWebsocket = null;
-            }
-        }
-
-        public static bool InitializeXSplitServer()
-        {
-            if (ChannelSession.XSplitServer == null)
-            {
-                ChannelSession.XSplitServer = new XSplitWebServer("http://localhost:8201/");
-                ChannelSession.XSplitServer.Start();
-            }
-            return true;
-        }
-
-        public static void DisconnectXSplitServer()
-        {
-            if (ChannelSession.XSplitServer != null)
-            {
-                ChannelSession.XSplitServer.End();
-            }
-        }
-
-        public static void Close()
-        {
-            ChannelSession.DisconnectOverlayServer();
-
-            ChannelSession.DisconnectOBSStudio();
-
-            ChannelSession.DisconnectXSplitServer();
+            await ChannelSession.Services.Close();
         }
 
         public static async Task SaveSettings() { await ChannelSession.Settings.Save(); }
@@ -445,7 +362,7 @@ namespace MixItUp.Base
                     ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
                     ChannelSession.GameQueue = new LockedList<UserViewModel>();
 
-                    ChannelSession.Giveaway = new GiveawayItemModel();
+                    ChannelSession.Giveaway = new GiveawayItemViewModel();
 
                     ChannelSession.Counters = new LockedDictionary<string, int>();
                     

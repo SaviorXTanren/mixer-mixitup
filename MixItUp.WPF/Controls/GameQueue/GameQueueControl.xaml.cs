@@ -1,6 +1,6 @@
-﻿using MixItUp.Base;
+﻿using MixItUp;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls;
