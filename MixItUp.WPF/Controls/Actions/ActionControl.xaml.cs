@@ -346,7 +346,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void SoundFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = FileSystemHelper.ShowOpenFileDialog("MP3 Files (*.mp3)|*.mp3|All files (*.*)|*.*");
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("MP3 Files (*.mp3)|*.mp3|All files (*.*)|*.*");
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.SoundFilePathTextBox.Text = filePath;
@@ -355,7 +355,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ProgramFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = FileSystemHelper.ShowOpenFileDialog();
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.ProgramFilePathTextBox.Text = filePath;
@@ -364,7 +364,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void OverlayImageFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = FileSystemHelper.ShowOpenFileDialog();
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.OverlayImageFilePathTextBox.Text = filePath;

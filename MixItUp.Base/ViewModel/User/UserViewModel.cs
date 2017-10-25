@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Windows.Media;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -92,29 +91,29 @@ namespace MixItUp.Base.ViewModel.User
         [JsonIgnore]
         public bool IsSubscriber { get { return this.Roles.Contains(UserRole.Subscriber); } }
 
-        public SolidColorBrush PrimaryRoleColor
+        public string PrimaryRoleColor
         {
             get
             {
                 if (this.Roles.Contains(UserRole.Streamer))
                 {
-                    return Brushes.Black;
+                    return "#FF000000";
                 }
                 else if (this.Roles.Contains(UserRole.Staff))
                 {
-                    return Brushes.Gold;
+                    return "#FFFFD700";
                 }
                 else if (this.Roles.Contains(UserRole.Mod))
                 {
-                    return Brushes.Green;
+                    return "#FF008000";
                 }
                 else if (this.Roles.Contains(UserRole.Pro))
                 {
-                    return Brushes.Purple;
+                    return "#FF800080";
                 }
                 else
                 {
-                    return Brushes.Blue;
+                    return "#FF0000FF";
                 }
             }
         }

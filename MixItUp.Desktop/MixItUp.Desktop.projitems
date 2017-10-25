@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Audio\WindowsAudioService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Files\WindowsFileService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RequestSenderWebServerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\DesktopServicesHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OBS\OBSService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Input\WindowsInputService.cs" />

@@ -12,13 +12,14 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Threading.Tasks;
 
 namespace MixItUp
 {
     public static class ChannelSession
     {
+        public const string ClientID = "5e3140d0719f5842a09dd2700befbfc100b5a246e35f2690";
+
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
             OAuthClientScopeEnum.chat__bypass_links,
@@ -116,9 +117,14 @@ namespace MixItUp
 
         public static LockedDictionary<string, int> Counters { get; private set; }
 
+        public static void Initialize(ServicesHandlerBase serviceHandler)
+        {
+            ChannelSession.Services = serviceHandler;
+        }
+
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
-            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.GetClientID(), scopes);
+            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes);
             if (connection != null)
             {
                 ChannelSession.Connection = new MixerConnectionWrapper(connection);
@@ -177,7 +183,7 @@ namespace MixItUp
 
         public static async Task<bool> ConnectBot(Action<OAuthShortCodeModel> callback)
         {
-            MixerConnection connection = await MixerConnection.ConnectViaShortCode(ChannelSession.GetClientID(), ChannelSession.BotScopes, callback);
+            MixerConnection connection = await MixerConnection.ConnectViaShortCode(ChannelSession.ClientID, ChannelSession.BotScopes, callback);
             if (connection != null)
             {
                 ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
@@ -311,8 +317,6 @@ namespace MixItUp
             return true;
         }
 
-        public static void AssignServicesHandler(ServicesHandlerBase serviceHandler) { ChannelSession.Services = serviceHandler; }
-
         public static async Task Close()
         {
             await ChannelSession.Services.Close();
@@ -400,16 +404,6 @@ namespace MixItUp
             {
                 throw new InvalidOperationException("Mixer client has not been initialized");
             }
-        }
-
-        private static string GetClientID()
-        {
-            string clientID = ConfigurationManager.AppSettings["ClientID"];
-            if (string.IsNullOrEmpty(clientID))
-            {
-                throw new ArgumentException("ClientID value isn't set in application configuration");
-            }
-            return clientID;
         }
 
         private static async void ChatClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
 
-namespace MixItUp.Base.Util
+namespace MixItUp.Desktop
 {
     public class RequestSenderWebServerBase
     {

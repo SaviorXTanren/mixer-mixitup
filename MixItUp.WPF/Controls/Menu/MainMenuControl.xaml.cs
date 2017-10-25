@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Controls.Menu
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                string filePath = FileSystemHelper.ShowSaveFileDialog(ChannelSession.Settings.Channel.user.username + ".mixitup");
+                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Channel.user.username + ".mixitup");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     await ChannelSession.Settings.Save(filePath);
@@ -100,7 +100,7 @@ namespace MixItUp.WPF.Controls.Menu
         {
             if (await MessageBoxHelper.ShowConfirmationDialog("This will overwrite your current settings and close Mix It Up. Are you sure you wish to do this?"))
             {
-                string filePath = FileSystemHelper.ShowOpenFileDialog("Mix It Up Settings (*.mixitup)|*.mixitup|All files (*.*)|*.*");
+                string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Mix It Up Settings (*.mixitup)|*.mixitup|All files (*.*)|*.*");
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     ((MainWindow)this.Window).restoredSettingsFilePath = filePath;

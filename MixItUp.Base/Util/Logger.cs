@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using MixItUp.Base.Services;
+using System;
 using System.Globalization;
 using System.IO;
 
@@ -10,27 +10,19 @@ namespace MixItUp.Base.Util
         private const string LogsDirectoryName = "Logs";
         private const string LogFileNameFormat = "MixItUpLog-{0}.txt";
 
+        private static IFileService fileService;
         private static string CurrentLogFileName;
 
-        public static void Initialize()
+        public static void Initialize(IFileService fileService)
         {
-            if (!Directory.Exists(LogsDirectoryName))
-            {
-                Directory.CreateDirectory(LogsDirectoryName);
-            }
+            Logger.fileService = fileService;
+            Logger.fileService.CreateDirectory(LogsDirectoryName);
             Logger.CurrentLogFileName = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm", CultureInfo.InvariantCulture)));
         }
 
         public static void Log(string message)
         {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(File.Open(Logger.CurrentLogFileName, FileMode.Append)))
-                {
-                    writer.WriteLine(message);
-                }
-            }
-            catch (Exception) { }
+            Logger.fileService.SaveFile(Logger.CurrentLogFileName, message, create: false);
         }
 
         public static void Log(Exception ex) { Logger.Log(ex.ToString()); }

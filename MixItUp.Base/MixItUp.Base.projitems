@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actions\XSplitAction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChannelSession.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ChannelSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IFileService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Chat\ChatMessageCommandViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\ChatCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandBase.cs" />
@@ -45,7 +46,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IXSplitService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServicesHandlerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\GiveawayItemViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\FileSystemHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\GlobalEvents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\LockedDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\LockedList.cs" />
@@ -53,7 +53,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\MathHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\ReflectionHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\RequestListenerWebServerBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Util\RequestSenderWebServerBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\SerializerHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\UserModelExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Chat\ChatMessageViewModel.cs" />

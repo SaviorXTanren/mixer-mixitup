@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MixItUp.Base.Services;
+using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -6,12 +7,16 @@ namespace MixItUp.Base.Util
 {
     public static class SerializerHelper
     {
+        private static IFileService fileService;
+
+        public static void Initialize(IFileService fileService)
+        {
+            SerializerHelper.fileService = fileService;
+        }
+
         public static async Task SerializeToFile<T>(string filePath, T data)
         {
-            using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
-            {
-                await writer.WriteAsync(SerializerHelper.SerializeToString(data));
-            }
+            await SerializerHelper.fileService.SaveFile(filePath, SerializerHelper.SerializeToString(data));
         }
 
         public static string SerializeToString<T>(T data)
@@ -23,10 +28,7 @@ namespace MixItUp.Base.Util
         {
             if (File.Exists(filePath))
             {
-                using (StreamReader reader = new StreamReader(File.OpenRead(filePath)))
-                {
-                    return SerializerHelper.DeserializeFromString<T>(await reader.ReadToEndAsync());
-                }
+                return SerializerHelper.DeserializeFromString<T>(await SerializerHelper.fileService.OpenFile(filePath));
             }
             return default(T);
         }

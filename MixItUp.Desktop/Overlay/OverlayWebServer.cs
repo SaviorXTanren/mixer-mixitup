@@ -1,5 +1,5 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
+using MixItUp.Desktop;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -37,7 +37,7 @@ namespace MixItUp.Overlay
 
         public Task Close()
         {
-            base.End();
+            this.End();
             this.nodeJSProcess.Close();
             return Task.FromResult(0);
         }

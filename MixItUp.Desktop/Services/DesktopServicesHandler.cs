@@ -5,6 +5,7 @@ using MixItUp.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.XSplit;
 using System.Threading.Tasks;
+using MixItUp.Desktop.Files;
 
 namespace MixItUp.Desktop.Services
 {
@@ -17,6 +18,16 @@ namespace MixItUp.Desktop.Services
             await this.DisconnectOBSStudio();
 
             await this.DisconnectXSplitServer();
+        }
+
+        public override Task<bool> InitializeFileService()
+        {
+            if (this.FileService == null)
+            {
+                this.FileService = new WindowsFileService();
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
 
         public override Task<bool> InitializeInputService()
