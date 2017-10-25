@@ -37,6 +37,14 @@ namespace MixItUp.WPF
             ChannelSession.OnDisconectionOccurred += ChannelSession_OnDisconectionOccurred;
             ChannelSession.OnReconectionOccurred += ChannelSession_OnReconectionOccurred;
 
+            if (ChannelSession.Settings.IsStreamer)
+            {
+                this.Title += " - Streamer";
+            }
+            else
+            {
+                this.Title += " - Moderator";
+            }
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             await this.MainMenu.Initialize(this);
