@@ -444,7 +444,7 @@
   <Import Project="..\MixItUp.Base\MixItUp.Base.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>robocopy /E $(SolutionDir)MixItUp.Desktop\Overlay\node\ $(TargetDir)Overlay\node /NFL /NDL /NJH
+    <PostBuildEvent>robocopy /E $(SolutionDir)MixItUp.Desktop\Overlay\node $(TargetDir)Overlay\node /NFL /NDL /NJH
 rmdir /Q /S $(TargetDir)Settings\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

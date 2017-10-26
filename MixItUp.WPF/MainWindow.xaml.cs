@@ -1,5 +1,4 @@
-﻿using MixItUp;
-using MixItUp.WPF.Controls.About;
+﻿using MixItUp.WPF.Controls.About;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Controls.Events;
@@ -15,7 +14,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF
 {
