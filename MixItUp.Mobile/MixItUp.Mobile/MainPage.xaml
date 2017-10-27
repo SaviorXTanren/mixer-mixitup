@@ -3,9 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MixItUp.Mobile"
              x:Class="MixItUp.Mobile.MainPage">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="20, 40, 20, 20" />
+            <On Platform="Android, WinPhone, Windows" Value="20" />
+        </OnPlatform>
+    </ContentPage.Padding>
 
-	<Label Text="Welcome to Xamarin Forms!" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
+    <Grid>
+        <WebView x:Name="LoginWebView" IsVisible="False" />
 
+        <StackLayout x:Name="LoginButtonsStack" VerticalOptions="Center">
+            <Label Text="Mix It Up Mobile" />
+
+            <Button x:Name="StreamerButton" Text="Streamer" Clicked="StreamerButton_Clicked" />
+            <Button x:Name="ModeratorButton" Text="Moderator" Clicked="ModeratorButton_Clicked" />
+            <Button x:Name="RemoteButton" Text="Remote" Clicked="RemoteButton_Clicked" />
+
+        </StackLayout>
+    </Grid>
 </ContentPage>
