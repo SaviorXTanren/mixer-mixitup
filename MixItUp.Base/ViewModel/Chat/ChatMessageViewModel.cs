@@ -115,42 +115,47 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool ShouldBeModerated()
+        public bool ShouldBeModerated(out string reason)
         {
             string lower = this.Message.ToLower();
             foreach (string word in ChannelSession.Settings.BannedWords)
             {
                 if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
                 {
+                    reason = "Banned Word";
                     return true;
                 }
             }
 
             if (ChannelSession.Settings.CapsBlockCount > 0 && this.Message.Count(c => char.IsUpper(c)) >= ChannelSession.Settings.CapsBlockCount)
             {
+                reason = "Too Many Caps";
                 return true;
             }
 
             if (ChannelSession.Settings.SymbolEmoteBlockCount > 0)
             {
-                if (lower.Count(c => char.IsSymbol(c) || char.IsPunctuation(c)) >= ChannelSession.Settings.SymbolEmoteBlockCount)
-                {
-                    return true;
-                }
-
                 MatchCollection matches = EmoteRegex.Matches(lower);
-                if (matches.Count >= ChannelSession.Settings.SymbolEmoteBlockCount)
+                if (matches.Count >= ChannelSession.Settings.SymbolEmoteBlockCount || lower.Count(c => char.IsSymbol(c) || char.IsPunctuation(c)) >= ChannelSession.Settings.SymbolEmoteBlockCount)
                 {
+                    reason = "Too Many Symbols/Emotes";
                     return true;
                 }
             }
 
             if (ChannelSession.Settings.BlockLinks && this.ContainsLink)
             {
+                reason = "No Links";
                 return true;
             }
 
+            reason = "";
             return false;
+        }
+
+        public void AddToMessage(string text)
+        {
+            this.Message += text;
         }
 
         public bool Equals(ChatMessageViewModel other) { return this.ID.Equals(other.ID); }
