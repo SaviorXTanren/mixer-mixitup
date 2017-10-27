@@ -90,6 +90,13 @@ namespace MixItUp
         public Dictionary<string, int> InteractiveCooldownGroups { get; set; }
 
         [JsonProperty]
+        public UserRole GiveawayUserRole { get; set; }
+        [JsonProperty]
+        public string GiveawayCommand { get; set; }
+        [JsonProperty]
+        public int GiveawayTimer { get; set; }
+
+        [JsonProperty]
         public List<string> bannedWordsInternal { get; set; }
         [JsonProperty]
         public int CapsBlockCount { get; set; }
@@ -162,6 +169,10 @@ namespace MixItUp
 
             this.TimerCommandsInterval = 10;
             this.TimerCommandsMinimumMessages = 10;
+
+            this.GiveawayCommand = "giveaway";
+            this.GiveawayUserRole = UserRole.User;
+            this.GiveawayTimer = 60;
 
             this.MaxMessagesInChat = 100;
         }

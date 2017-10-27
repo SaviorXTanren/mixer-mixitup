@@ -124,28 +124,6 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class GiveawayChatCommand : PreMadeChatCommand
-    {
-        public GiveawayChatCommand()
-            : base("Giveaway", "giveaway", UserRole.User, 60)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.BotChat != null)
-                {
-                    if (ChannelSession.Giveaway.IsEnabled)
-                    {
-                        await ChannelSession.BotChat.SendMessage(string.Format("There is a giveaway running for {0} for {1}! You must be present in chat to win to receive this giveaway.", ChannelSession.Giveaway.Item, ChannelSession.Giveaway.Type));
-                    }
-                    else
-                    {
-                        await ChannelSession.BotChat.SendMessage("A giveaway is not currently running at this time");
-                    }
-                }
-            }));
-        }
-    }
-
     public class MixerAgeChatCommand : PreMadeChatCommand
     {
         public MixerAgeChatCommand()

@@ -9,7 +9,6 @@ using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -112,8 +111,6 @@ namespace MixItUp
         public static bool GameQueueEnabled { get; set; }
         public static LockedList<UserViewModel> GameQueue { get; private set; }
         public static event EventHandler OnGameQueueUpdated;
-
-        public static GiveawayItemViewModel Giveaway { get; set; }
 
         public static LockedDictionary<string, int> Counters { get; private set; }
 
@@ -365,8 +362,6 @@ namespace MixItUp
                     ChannelSession.ChatUsers = new LockedDictionary<uint, UserViewModel>();
                     ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
                     ChannelSession.GameQueue = new LockedList<UserViewModel>();
-
-                    ChannelSession.Giveaway = new GiveawayItemViewModel();
 
                     ChannelSession.Counters = new LockedDictionary<string, int>();
                     

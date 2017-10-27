@@ -17,6 +17,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<ChatMessageCommandViewModel> OnChatCommandMessageReceived;
+        public static void ChatCommandMessageReceived(ChatMessageCommandViewModel chatCommandMessage)
+        {
+            if (GlobalEvents.OnChatCommandMessageReceived != null)
+            {
+                GlobalEvents.OnChatCommandMessageReceived(null, chatCommandMessage);
+            }
+        }
+
         public static event EventHandler<InteractiveControlModel> OnInteractiveControlUsed;
         public static void InteractiveControlUsed(InteractiveControlModel control)
         {

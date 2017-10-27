@@ -45,7 +45,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\IOverlayService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IXSplitService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ServicesHandlerBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\GiveawayItemViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\GlobalEvents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\LockedDictionary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\LockedList.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\User\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Chat\" />
     <Folder Include="$(MSBuildThisFileDirectory)ViewModel\User\" />
   </ItemGroup>
 </Project>

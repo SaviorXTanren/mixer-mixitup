@@ -398,6 +398,8 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     ChatMessageCommandViewModel messageCommand = new ChatMessageCommandViewModel(message);
 
+                    GlobalEvents.ChatCommandMessageReceived(messageCommand);
+
                     ChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
                     if (command == null)
                     {

@@ -16,56 +16,93 @@
 
              d:DesignHeight="500" d:DesignWidth="600">
     <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="GiveawayItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="2" x:Name="GiveawayTypeComboBox" MaterialDesign:HintAssist.Hint="Allowed Winners" />
+                <TextBox Grid.Column="0" x:Name="GiveawayItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <ComboBox Grid.Column="2" x:Name="GiveawayTypeComboBox" MaterialDesign:HintAssist.Hint="Allowed Winners" />
+            </Grid>
+
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="GiveawayCommandTextBox" Width="150" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="2" x:Name="GiveawayTimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                
+            </Grid>
+
+            <Button Grid.Row="4" x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
+            <Button Grid.Row="4" x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Cancel Giveaway</Button>
+
+            <Grid Grid.Row="6" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Time Left:</TextBlock>
+
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" x:Name="TimeLeftTextBlock" />
+            </Grid>
+
+            <Grid Grid.Row="8" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Winner:</TextBlock>
+
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" x:Name="GiveawayWinnerTextBlock" />
+            </Grid>
         </Grid>
 
-        <Button Grid.Row="2" x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Enable Giveaway</Button>
-        <Button Grid.Row="2" x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Disable Giveaway</Button>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="4" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center">Entered Users:</TextBlock>
 
-            <Button Grid.Column="0" x:Name="PerformGiveawayButton" Click="PerformGiveawayButton_Click" IsEnabled="False">Perform Giveaway</Button>
-
-            <TextBlock Grid.Column="2" VerticalAlignment="Center">Winner:</TextBlock>
-            <TextBlock Grid.Column="4" VerticalAlignment="Center" x:Name="GiveawayWinnerTextBlock" Width="150" />
+            <DataGrid x:Name="EnteredUsersListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
-
-        <TextBlock Grid.Row="6" HorizontalAlignment="Center">Previous Winners:</TextBlock>
-
-        <DataGrid x:Name="PreviousWinnersListView" Grid.Row="8" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Username}" IsReadOnly="True" Width="*" />
-                <DataGridTextColumn Header="Prize" Binding="{Binding Prize}" IsReadOnly="True" Width="*" />
-            </DataGrid.Columns>
-        </DataGrid>
-
+        
     </Grid>
 </Controls:MainControlBase>
