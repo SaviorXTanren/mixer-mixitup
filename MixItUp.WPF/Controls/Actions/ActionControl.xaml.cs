@@ -73,12 +73,10 @@ namespace MixItUp.WPF.Controls.Actions
                     if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text) || !(string.IsNullOrEmpty(this.OverlayTextTextBox.Text)))
                     {
                         double duration;
-                        int horizontal;
-                        int vertical;
-                        if (double.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0 &&
-                            int.TryParse(this.OverlayHorizontalTextBox.Text, out horizontal) && horizontal >= 0 && horizontal <= 100 &&
-                            int.TryParse(this.OverlayVerticalTextBox.Text, out vertical) && vertical >= 0 && vertical <= 100)
+                        if (double.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0)
                         {
+                            int horizontal = (int)this.OverlayHorizontalSlider.Value;
+                            int vertical = (int)this.OverlayVerticalSlider.Value;
                             if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
                             {
                                 int width;
@@ -269,8 +267,8 @@ namespace MixItUp.WPF.Controls.Actions
                             this.OverlayFontColorTextBox.Text = overlayAction.Color;
                         }
                         this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
-                        this.OverlayHorizontalTextBox.Text = overlayAction.Horizontal.ToString();
-                        this.OverlayVerticalTextBox.Text = overlayAction.Vertical.ToString();
+                        this.OverlayHorizontalSlider.Value = overlayAction.Horizontal;
+                        this.OverlayVerticalSlider.Value = overlayAction.Vertical;
                         break;
                     case ActionTypeEnum.Sound:
                         SoundAction soundAction = (SoundAction)this.action;

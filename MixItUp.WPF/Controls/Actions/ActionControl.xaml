@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              
@@ -234,9 +235,9 @@
 
                     <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="2" x:Name="OverlayHorizontalTextBox" MaterialDesign:HintAssist.Hint="Horizontal %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <Controls:SliderWithHeaderControl Grid.Column="2" x:Name="OverlayHorizontalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Horizontal Position %:" />
 
-                    <TextBox Grid.Column="4" x:Name="OverlayVerticalTextBox" MaterialDesign:HintAssist.Hint="Vertical %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <Controls:SliderWithHeaderControl Grid.Column="4" x:Name="OverlayVerticalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Vertical Position %:" />
                 </Grid>
             </Grid>
 

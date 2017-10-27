@@ -43,12 +43,12 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        private void MaxCapsAllowedSlider_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        private void MaxCapsAllowedSlider_ValueChanged(object sender, int e)
         {
             ChannelSession.Settings.CapsBlockCount = (int)this.MaxCapsAllowedSlider.Value;
         }
 
-        private void MaxEmoteSymbolAllowedSlider_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        private void MaxEmoteSymbolAllowedSlider_ValueChanged(object sender, int e)
         {
             ChannelSession.Settings.SymbolEmoteBlockCount = (int)this.MaxEmoteSymbolAllowedSlider.Value;
         }
@@ -57,12 +57,12 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void BlockLinksToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e) { ChannelSession.Settings.BlockLinks = false; }
 
-        private void Timeout1MinAfterSlider_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        private void Timeout1MinAfterSlider_ValueChanged(object sender, int e)
         {
             ChannelSession.Settings.Timeout1MinuteOffenseCount = (int)this.Timeout1MinAfterSlider.Value;
         }
 
-        private void Timeout5MinAfterSlider_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        private void Timeout5MinAfterSlider_ValueChanged(object sender, int e)
         {
             ChannelSession.Settings.Timeout5MinuteOffenseCount = (int)this.Timeout5MinAfterSlider.Value;
         }

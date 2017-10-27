@@ -44,21 +44,17 @@
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="40" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="40" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0">Max Caps Allowed:</TextBlock>
-                <Slider x:Name="MaxCapsAllowedSlider" Grid.Row="1" Minimum="0" Maximum="50" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Max Caps Allowed (0 = Disabled)" Width="200" ValueChanged="MaxCapsAllowedSlider_ValueChanged" />
+                <Controls:SliderWithHeaderControl x:Name="MaxCapsAllowedSlider" Grid.Row="0" Minimum="0" Maximum="50" Text="Max Caps Allowed (0 = Disabled):" ValueChanged="MaxCapsAllowedSlider_ValueChanged" />
 
-                <TextBlock Grid.Row="3">Max Emote/Symbol Allowed:</TextBlock>
-                <Slider x:Name="MaxEmoteSymbolAllowedSlider" Grid.Row="4" Minimum="0" Maximum="50" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Max Emote/Symbol Allowed (0 = Disabled)" Width="200" ValueChanged="MaxEmoteSymbolAllowedSlider_ValueChanged" />
-
-                <Grid Grid.Row="6">
+                <Controls:SliderWithHeaderControl x:Name="MaxEmoteSymbolAllowedSlider" Grid.Row="2" Minimum="0" Maximum="50" Text="Max Emote/Symbol Allowed (0 = Disabled):" ValueChanged="MaxEmoteSymbolAllowedSlider_ValueChanged" />
+                
+                <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
@@ -74,17 +70,13 @@
             <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="40" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0">Minimum Offenses for 1 Min Timeout:</TextBlock>
-                <Slider x:Name="Timeout1MinAfterSlider" Grid.Row="1" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="1 Min timeout after (0 = Disabled)" Width="200" ValueChanged="Timeout1MinAfterSlider_ValueChanged" />
+                <Controls:SliderWithHeaderControl x:Name="Timeout1MinAfterSlider" Grid.Row="0" Minimum="0" Maximum="10" Text="1 Min Timeout Offenses (0 = Disabled):" ValueChanged="Timeout1MinAfterSlider_ValueChanged" />
 
-                <TextBlock Grid.Row="3">Minimum Offenses for 5 Min Timeout:</TextBlock>
-                <Slider x:Name="Timeout5MinAfterSlider" Grid.Row="4" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="5 Min timeout after (0 = Disabled)" Width="200" ValueChanged="Timeout5MinAfterSlider_ValueChanged" />
+                <Controls:SliderWithHeaderControl x:Name="Timeout5MinAfterSlider" Grid.Row="2" Minimum="0" Maximum="10" Text="5 Min Timeout Offenses (0 = Disabled):" ValueChanged="Timeout5MinAfterSlider_ValueChanged" />
 
             </Grid>
 

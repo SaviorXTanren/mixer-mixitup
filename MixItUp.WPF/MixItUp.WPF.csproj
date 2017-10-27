@@ -176,6 +176,7 @@
     <Compile Include="Controls\Menu\MainMenuControl.xaml.cs">
       <DependentUpon>MainMenuControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NotifyPropertyChangedUserControl.cs" />
     <Compile Include="Controls\Services\ServicesControl.xaml.cs">
       <DependentUpon>ServicesControl.xaml</DependentUpon>
     </Compile>
@@ -216,6 +217,9 @@
     </Compile>
     <Compile Include="Controls\Quotes\QuoteControl.xaml.cs">
       <DependentUpon>QuoteControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SliderWithHeaderControl.xaml.cs">
+      <DependentUpon>SliderWithHeaderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Timers\TimerControl.xaml.cs">
       <DependentUpon>TimerControl.xaml</DependentUpon>
@@ -330,6 +334,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Quotes\QuoteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SliderWithHeaderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

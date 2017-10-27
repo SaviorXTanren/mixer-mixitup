@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
+using System.Windows.Controls;
 
-namespace MixItUp.WPF.Util
+namespace MixItUp.WPF.Controls
 {
-    public class NotifyPropertyChangedBase : INotifyPropertyChanged
+    public class NotifyPropertyChangedUserControl : UserControl
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
