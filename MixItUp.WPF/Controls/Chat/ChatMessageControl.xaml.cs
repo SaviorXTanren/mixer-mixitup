@@ -34,8 +34,14 @@ namespace MixItUp.WPF.Controls.Chat
             }
         }
 
-        public void DeleteMessage()
+        public void DeleteMessage(string reason = null)
         {
+            if (!string.IsNullOrEmpty(reason))
+            {
+                this.Message.AddToMessage(" (Auto-Moderated: " + reason + ")");
+                this.DataContext = null;
+                this.DataContext = this.Message;
+            }
             this.Message.IsDeleted = true;
             this.MessageTextBlock.TextDecorations = TextDecorations.Strikethrough;
         }
