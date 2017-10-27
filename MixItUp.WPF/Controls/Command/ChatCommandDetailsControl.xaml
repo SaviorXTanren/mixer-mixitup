@@ -40,7 +40,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Commands (No !, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Commands (letters &amp; numbers only, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox x:Name="CooldownTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

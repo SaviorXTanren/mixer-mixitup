@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Command
@@ -57,6 +58,12 @@ namespace MixItUp.WPF.Controls.Command
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
             {
                 await MessageBoxHelper.ShowMessageDialog("Commands is missing");
+                return false;
+            }
+
+            if (this.ChatCommandTextBox.Text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c)))
+            {
+                await MessageBoxHelper.ShowMessageDialog("Commands can only contain letters and numbers");
                 return false;
             }
 
