@@ -1,4 +1,4 @@
-﻿using MixItUp;
+﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;

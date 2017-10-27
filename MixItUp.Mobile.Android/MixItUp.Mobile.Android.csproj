@@ -129,8 +129,13 @@
   <ItemGroup>
     <Content Include="LICENSE.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
+      <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
+      <Name>MixItUp.Base</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\MixItUp.Mobile\MixItUp.Mobile.projitems" Label="Shared" Condition="Exists('..\MixItUp.Mobile\MixItUp.Mobile.projitems')" />
-  <Import Project="..\..\MixItUp.Base\MixItUp.Base.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

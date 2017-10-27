@@ -1,11 +1,12 @@
-﻿using MixItUp.Desktop.Audio;
+﻿using MixItUp.Base;
+using MixItUp.Base.Services;
+using MixItUp.Desktop.Audio;
+using MixItUp.Desktop.Files;
 using MixItUp.Input;
 using MixItUp.OBS;
 using MixItUp.Overlay;
-using MixItUp.Base.Services;
 using MixItUp.XSplit;
 using System.Threading.Tasks;
-using MixItUp.Desktop.Files;
 
 namespace MixItUp.Desktop.Services
 {

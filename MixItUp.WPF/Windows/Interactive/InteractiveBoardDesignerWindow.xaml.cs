@@ -1,6 +1,6 @@
 ﻿using Mixer.Base.Interactive;
 using Mixer.Base.Model.Interactive;
-using MixItUp;
+using MixItUp.Base;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;

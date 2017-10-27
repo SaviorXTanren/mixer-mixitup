@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 using Mixer.Base.Util;
-using MixItUp;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;

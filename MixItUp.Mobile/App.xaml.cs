@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Mobile.Services;
 
 using Xamarin.Forms;

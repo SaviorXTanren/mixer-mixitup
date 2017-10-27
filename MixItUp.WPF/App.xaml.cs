@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services;
 using System;

@@ -1,7 +1,7 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
-using MixItUp;
+using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;

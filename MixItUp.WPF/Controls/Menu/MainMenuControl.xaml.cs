@@ -1,4 +1,4 @@
-﻿using MixItUp;
+﻿using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Collections.ObjectModel;

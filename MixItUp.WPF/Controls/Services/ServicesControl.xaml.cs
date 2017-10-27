@@ -1,5 +1,5 @@
 ﻿using Mixer.Base.Model.OAuth;
-using MixItUp;
+using MixItUp.Base;
 using MixItUp.WPF.Util;
 using System.Diagnostics;
 using System.Threading.Tasks;

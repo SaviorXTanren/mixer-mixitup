@@ -74,9 +74,8 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="obs-websocket-dotnet, Version=1.0.2.28605, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\obs-websocket-dotnet.1.0.2-alpha\lib\net45\obs-websocket-dotnet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="obs-websocket-dotnet, Version=4.2.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\obs-websocket-dotnet.4.2.0-beta3\lib\net40\obs-websocket-dotnet.dll</HintPath>
     </Reference>
     <Reference Include="SocketIoClientDotNet, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIoClientDotNet.1.0.3\lib\net45\SocketIoClientDotNet.dll</HintPath>
@@ -440,8 +439,16 @@
   <ItemGroup>
     <Resource Include="LICENSE.txt" />
   </ItemGroup>
-  <Import Project="..\MixItUp.Desktop\MixItUp.Desktop.projitems" Label="Shared" />
-  <Import Project="..\MixItUp.Base\MixItUp.Base.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
+      <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
+      <Name>MixItUp.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MixItUp.Desktop\MixItUp.Desktop.csproj">
+      <Project>{c58e9517-27e2-48a7-9043-3cd4a18e8a27}</Project>
+      <Name>MixItUp.Desktop</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>robocopy /E $(SolutionDir)MixItUp.Desktop\Overlay\node $(TargetDir)Overlay\node /NFL /NDL /NJH

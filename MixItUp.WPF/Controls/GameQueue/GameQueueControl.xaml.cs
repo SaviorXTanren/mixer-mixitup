@@ -1,4 +1,4 @@
-﻿using MixItUp;
+﻿using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.ObjectModel;

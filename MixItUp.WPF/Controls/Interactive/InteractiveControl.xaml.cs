@@ -1,5 +1,5 @@
 ﻿using Mixer.Base.Model.Interactive;
-using MixItUp;
+using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
