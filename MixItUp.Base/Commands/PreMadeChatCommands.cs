@@ -88,25 +88,6 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class FollowAgeChatCommand : PreMadeChatCommand
-    {
-        public FollowAgeChatCommand()
-            : base("Follow Age", "followage", UserRole.Follower, 60)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.BotChat != null)
-                {
-                    DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, user.GetModel());
-                    if (followDate != null)
-                    {
-                        await ChannelSession.BotChat.SendMessage(user.GetModel().GetFollowAge(followDate.GetValueOrDefault()));
-                    }
-                }
-            }));
-        }
-    }
-
     public class GameChatCommand : PreMadeChatCommand
     {
         public GameChatCommand()
@@ -119,6 +100,50 @@ namespace MixItUp.Base.Commands
                     await ChannelSession.RefreshChannel();
 
                     await ChannelSession.BotChat.SendMessage("Game: " + ChannelSession.Channel.type.name);
+                }
+            }));
+        }
+    }
+
+    public class TitleChatCommand : PreMadeChatCommand
+    {
+        public TitleChatCommand()
+            : base("Title", new List<string>() { "title", "stream" }, UserRole.User, 60)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChat != null)
+                {
+                    await ChannelSession.RefreshChannel();
+
+                    await ChannelSession.BotChat.SendMessage("Stream Title: " + ChannelSession.Channel.name);
+                }
+            }));
+        }
+    }
+
+    public class UptimeChatCommand : PreMadeChatCommand
+    {
+        public UptimeChatCommand()
+            : base("Uptime", "uptime", UserRole.User, 60)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChat != null)
+                {
+                    IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.Connection.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromHours(1)));
+                    if (sessions.Count() > 0)
+                    {
+                        StreamSessionsAnalyticModel session = sessions.OrderBy(s => s.dateTime).Last();
+
+                        TimeSpan duration = DateTimeOffset.Now.Subtract(session.dateTime);
+
+                        await ChannelSession.BotChat.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                    }
+                    else
+                    {
+                        await ChannelSession.BotChat.SendMessage("Stream is currently offline");
+                    }
                 }
             }));
         }
@@ -140,29 +165,51 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class PurgeChatCommand : PreMadeChatCommand
+    public class FollowAgeChatCommand : PreMadeChatCommand
     {
-        public PurgeChatCommand()
-            : base("Purge", "purge", UserRole.Mod, 5)
+        public FollowAgeChatCommand()
+            : base("Follow Age", "followage", UserRole.Follower, 60)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.BotChat != null)
                 {
-                    if (arguments.Count() == 1)
+                    DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, user.GetModel());
+                    if (followDate != null)
                     {
-                        string username = arguments.ElementAt(0);
-                        if (username.StartsWith("@"))
-                        {
-                            username = username.Substring(1);
-                        }
+                        await ChannelSession.BotChat.SendMessage(user.GetModel().GetFollowAge(followDate.GetValueOrDefault()));
+                    }
+                }
+            }));
+        }
+    }
 
-                        await ChannelSession.Chat.PurgeUser(username);
-                    }
-                    else
-                    {
-                        await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !purge @USERNAME");
-                    }
+    public class StreamerAgeChatCommand : PreMadeChatCommand
+    {
+        public StreamerAgeChatCommand()
+            : base("Streamer Age", new List<string>() { "streamerage", "age" }, UserRole.User, 60)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChat != null)
+                {
+                    await ChannelSession.BotChat.SendMessage(ChannelSession.Channel.user.GetMixerAge());
+                }
+            }));
+        }
+    }
+
+    public class SparksChatCommand : PreMadeChatCommand
+    {
+        public SparksChatCommand()
+            : base("Sparks", "sparks", UserRole.User, 60)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChat != null)
+                {
+                    UserWithChannelModel userModel = await ChannelSession.Connection.GetUser(user.GetModel());
+                    await ChannelSession.BotChat.SendMessage(user.UserName + "'s Sparks: " + userModel.sparks);
                 }
             }));
         }
@@ -212,37 +259,6 @@ namespace MixItUp.Base.Commands
                     {
                         await ChannelSession.BotChat.SendMessage("Added Quote: \"" + quote + "\"");
                     }
-                }
-            }));
-        }
-    }
-
-    public class SparksChatCommand : PreMadeChatCommand
-    {
-        public SparksChatCommand()
-            : base("Sparks", "sparks", UserRole.User, 60)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.BotChat != null)
-                {
-                    UserWithChannelModel userModel = await ChannelSession.Connection.GetUser(user.GetModel());
-                    await ChannelSession.BotChat.SendMessage(user.UserName + "'s Sparks: " + userModel.sparks);
-                }
-            }));
-        }
-    }
-
-    public class StreamerAgeChatCommand : PreMadeChatCommand
-    {
-        public StreamerAgeChatCommand()
-            : base("Streamer Age", new List<string>() { "streamerage", "age" }, UserRole.User, 60)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.BotChat != null)
-                {
-                    await ChannelSession.BotChat.SendMessage(ChannelSession.Channel.user.GetMixerAge());
                 }
             }));
         }
@@ -306,44 +322,60 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class TitleChatCommand : PreMadeChatCommand
+    public class PurgeChatCommand : PreMadeChatCommand
     {
-        public TitleChatCommand()
-            : base("Title", new List<string>() { "title", "stream" }, UserRole.User, 60)
+        public PurgeChatCommand()
+            : base("Purge", "purge", UserRole.Mod, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.BotChat != null)
                 {
-                    await ChannelSession.RefreshChannel();
+                    if (arguments.Count() == 1)
+                    {
+                        string username = arguments.ElementAt(0);
+                        if (username.StartsWith("@"))
+                        {
+                            username = username.Substring(1);
+                        }
 
-                    await ChannelSession.BotChat.SendMessage("Stream Title: " + ChannelSession.Channel.name);
+                        await ChannelSession.Chat.PurgeUser(username);
+                    }
+                    else
+                    {
+                        await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !purge @USERNAME");
+                    }
                 }
             }));
         }
     }
 
-    public class UptimeChatCommand : PreMadeChatCommand
+    public class BanChatCommand : PreMadeChatCommand
     {
-        public UptimeChatCommand()
-            : base("Uptime", "uptime", UserRole.User, 60)
+        public BanChatCommand()
+            : base("Ban", "ban", UserRole.Mod, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.BotChat != null)
                 {
-                    IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.Connection.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromHours(1)));
-                    if (sessions.Count() > 0)
+                    if (arguments.Count() == 1)
                     {
-                        StreamSessionsAnalyticModel session = sessions.OrderBy(s => s.dateTime).Last();
+                        string username = arguments.ElementAt(0);
+                        if (username.StartsWith("@"))
+                        {
+                            username = username.Substring(1);
+                        }
 
-                        TimeSpan duration = DateTimeOffset.Now.Subtract(session.dateTime);
-
-                        await ChannelSession.BotChat.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                        UserViewModel bannedUser = ChannelSession.ChatUsers.Values.FirstOrDefault(u => u.UserName.Equals(username));
+                        if (bannedUser != null)
+                        {
+                            await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, bannedUser.GetModel(), new List<UserRole>() { UserRole.Banned });
+                        }
                     }
                     else
                     {
-                        await ChannelSession.BotChat.SendMessage("Stream is currently offline");
+                        await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !ban @USERNAME");
                     }
                 }
             }));
