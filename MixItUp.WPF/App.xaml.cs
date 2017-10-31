@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Util;
-using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services;
 using System;
 using System.Diagnostics;
@@ -18,13 +17,16 @@ namespace MixItUp.WPF
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Logger.Initialize(new WindowsFileService());
-            SerializerHelper.Initialize(new WindowsFileService());
+            DesktopServicesHandler desktopServicesHandler = new DesktopServicesHandler();
+            desktopServicesHandler.Initialize();
+
+            Logger.Initialize(desktopServicesHandler.FileService);
+            SerializerHelper.Initialize(desktopServicesHandler.FileService);
 
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            
-            ChannelSession.Initialize(new DesktopServicesHandler());
+
+            ChannelSession.Initialize(desktopServicesHandler);
 
             base.OnStartup(e);
         }

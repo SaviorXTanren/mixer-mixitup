@@ -5,6 +5,13 @@ namespace MixItUp.Mobile.Services
 {
     public class MobileServicesHandler : ServicesHandlerBase
     {
+        public void Initialize()
+        {
+            this.InitializeFileService();
+            this.InitializeAudioService();
+            this.InitializeInputService();
+        }
+
         public override async Task Close()
         {
             await this.DisconnectOverlayServer();

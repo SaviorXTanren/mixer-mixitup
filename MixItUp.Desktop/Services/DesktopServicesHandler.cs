@@ -12,6 +12,13 @@ namespace MixItUp.Desktop.Services
 {
     public class DesktopServicesHandler : ServicesHandlerBase
     {
+        public void Initialize()
+        {
+            this.InitializeAudioService();
+            this.InitializeFileService();
+            this.InitializeInputService();
+        }
+
         public override async Task Close()
         {
             await this.DisconnectOverlayServer();

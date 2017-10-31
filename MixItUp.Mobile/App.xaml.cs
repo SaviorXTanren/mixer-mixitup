@@ -12,10 +12,13 @@ namespace MixItUp.Mobile
 		{
 			InitializeComponent();
 
-            Logger.Initialize(new AndroidFileService());
-            SerializerHelper.Initialize(new AndroidFileService());
+            MobileServicesHandler mobileServicesHandler = new MobileServicesHandler();
+            mobileServicesHandler.Initialize();
 
-            ChannelSession.Initialize(new MobileServicesHandler());
+            Logger.Initialize(mobileServicesHandler.FileService);
+            SerializerHelper.Initialize(mobileServicesHandler.FileService);
+
+            ChannelSession.Initialize(mobileServicesHandler);
 
 			MainPage = new MixItUp.Mobile.MainPage();
 		}
