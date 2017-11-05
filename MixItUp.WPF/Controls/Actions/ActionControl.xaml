@@ -341,9 +341,9 @@
 
                     <Grid x:Name="OBSStudioSourceWebBrowserGrid" Grid.Row="2" Visibility="Hidden">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <TextBox Grid.Row="2" x:Name="OBSStudioSourceWebPageTextBox" MaterialDesign:HintAssist.Hint="Web Page (URL or Local File)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
