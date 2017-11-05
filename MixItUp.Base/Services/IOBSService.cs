@@ -12,6 +12,8 @@ namespace MixItUp.Base.Services
 
         void SetSourceRender(string source, bool isVisible);
 
+        void SetWebBrowserSource(string source, string url);
+
         Task Close();
     }
 }

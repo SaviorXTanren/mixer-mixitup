@@ -21,6 +21,30 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class ActionControl : UserControl
     {
+        private enum OverlayTypeEnum
+        {
+            Image,
+            Text
+        }
+
+        private enum OBSStudioTypeEnum
+        {
+            Scene,
+            [Name("Source Visibility")]
+            SourceVisibility,
+            [Name("Text Source")]
+            TextSource,
+            [Name("Web Browser Source")]
+            WebBrowserSource
+        }
+
+        private enum XSplitTypeEnum
+        {
+            Scene,
+            [Name("Source Visibility")]
+            SourceVisibility,
+        }
+
         private const int MinimzedGroupBoxHeight = 35;
 
         private CommandWindow window;
@@ -124,9 +148,29 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                         else if (this.OBSStudioSourceGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.OBSStudioSourceNameTextBox.Text))
                         {
-                            OBSStudioAction action = new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.OBSStudioSourceTextTextBox.Text);
-                            action.UpdateReferenceTextFile();
-                            return action;
+                            if (this.OBSStudioSourceTextGrid.Visibility == Visibility.Visible)
+                            {
+                                if (!string.IsNullOrEmpty(this.OBSStudioSourceTextTextBox.Text))
+                                {
+                                    OBSStudioAction action = new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.OBSStudioSourceTextTextBox.Text);
+                                    action.UpdateReferenceTextFile();
+                                    return action;
+                                }
+                            }
+                            else if (this.OBSStudioSourceWebBrowserGrid.Visibility == Visibility.Visible)
+                            {
+                                if (!string.IsNullOrEmpty(this.OBSStudioSourceWebPageTextBox.Text))
+                                {
+                                    OBSStudioAction action = new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), null, this.OBSStudioSourceWebPageTextBox.Text);
+                                    action.UpdateReferenceTextFile();
+                                    return action;
+                                }
+                            }
+                            else
+                            {
+                                OBSStudioAction action = new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault());
+                                return action;
+                            }
                         }
                     }
                     break;
@@ -172,9 +216,9 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.GroupBoxHeaderTextBox.Text = EnumHelper.GetEnumName(this.type);
 
-            this.OverlayTypeComboBox.ItemsSource = new List<string>() { "Image", "Text" };
-            this.OBSStudioTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
-            this.XSplitTypeComboBox.ItemsSource = new List<string>() { "Scene", "Source" };
+            this.OverlayTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayTypeEnum>();
+            this.OBSStudioTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OBSStudioTypeEnum>();
+            this.XSplitTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<XSplitTypeEnum>();
             this.GameQueueActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<GameQueueActionType>();
 
             switch (type)
@@ -254,14 +298,14 @@ namespace MixItUp.WPF.Controls.Actions
                         OverlayAction overlayAction = (OverlayAction)this.action;
                         if (!string.IsNullOrEmpty(overlayAction.ImagePath))
                         {
-                            this.OverlayTypeComboBox.SelectedItem = "Image";
+                            this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Image);
                             this.OverlayImageFilePathTextBox.Text = overlayAction.ImagePath;
                             this.OverlayImageWidthTextBox.Text = overlayAction.ImageWidth.ToString();
                             this.OverlayImageHeightTextBox.Text = overlayAction.ImageHeight.ToString();
                         }
                         else if (!string.IsNullOrEmpty(overlayAction.Text))
                         {
-                            this.OverlayTypeComboBox.SelectedItem = "Text";
+                            this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Text);
                             this.OverlayTextTextBox.Text = overlayAction.Text;
                             this.OverlayFontSizeTextBox.Text = overlayAction.FontSize.ToString();
                             this.OverlayFontColorTextBox.Text = overlayAction.Color;
@@ -283,29 +327,41 @@ namespace MixItUp.WPF.Controls.Actions
                         OBSStudioAction obsStudioAction = (OBSStudioAction)this.action;
                         if (!string.IsNullOrEmpty(obsStudioAction.SceneName))
                         {
-                            this.OBSStudioTypeComboBox.SelectedItem = "Scene";
+                            this.OBSStudioTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OBSStudioTypeEnum.Scene);
                             this.OBSStudioSceneCollectionNameTextBox.Text = obsStudioAction.SceneCollection;
                             this.OBSStudioSceneNameTextBox.Text = obsStudioAction.SceneName;
                         }
                         else
                         {
-                            this.OBSStudioTypeComboBox.SelectedItem = "Source";
                             this.OBSStudioSourceNameTextBox.Text = obsStudioAction.SourceName;
                             this.OBSStudioSourceVisibleCheckBox.IsChecked = obsStudioAction.SourceVisible;
-                            this.OBSStudioSourceTextTextBox.Text = obsStudioAction.SourceText;
-                            this.OBSStudioSourceLoadTextFromTextBox.Text = obsStudioAction.LoadTextFromFilePath;
+                            if (!string.IsNullOrEmpty(obsStudioAction.SourceText))
+                            {
+                                this.OBSStudioSourceTextTextBox.Text = obsStudioAction.SourceText;
+                                this.OBSStudioSourceLoadTextFromTextBox.Text = obsStudioAction.LoadTextFromFilePath;
+                                this.OBSStudioTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OBSStudioTypeEnum.TextSource);
+                            }
+                            else if (!string.IsNullOrEmpty(obsStudioAction.SourceURL))
+                            {
+                                this.OBSStudioSourceWebPageTextBox.Text = obsStudioAction.SourceURL;
+                                this.OBSStudioTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OBSStudioTypeEnum.WebBrowserSource);
+                            }
+                            else
+                            {
+                                this.OBSStudioTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OBSStudioTypeEnum.SourceVisibility);
+                            }
                         }
                         break;
                     case ActionTypeEnum.XSplit:
                         XSplitAction xsplitAction = (XSplitAction)this.action;
                         if (!string.IsNullOrEmpty(xsplitAction.SceneName))
                         {
-                            this.XSplitTypeComboBox.SelectedItem = "Scene";
+                            this.XSplitTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.Scene);
                             this.XSplitSceneNameTextBox.Text = xsplitAction.SceneName;
                         }
                         else
                         {
-                            this.XSplitTypeComboBox.SelectedItem = "Source";
+                            this.XSplitTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.SourceVisibility);
                             this.XSplitSourceNameTextBox.Text = xsplitAction.SourceName;
                             this.XSplitSourceVisibleCheckBox.IsChecked = xsplitAction.SourceVisible;
                             this.XSplitSourceTextTextBox.Text = xsplitAction.SourceText;
@@ -381,11 +437,12 @@ namespace MixItUp.WPF.Controls.Actions
             this.OverlayTextGrid.Visibility = Visibility.Hidden;
             if (this.OverlayTypeComboBox.SelectedIndex >= 0)
             {
-                if (this.OverlayTypeComboBox.SelectedItem.ToString().Equals("Image"))
+                OverlayTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayTypeEnum>((string)this.OverlayTypeComboBox.SelectedItem);
+                if (overlayType == OverlayTypeEnum.Image)
                 {
                     this.OverlayImageGrid.Visibility = Visibility.Visible;
                 }
-                else if (this.OverlayTypeComboBox.SelectedItem.ToString().Equals("Text"))
+                else if (overlayType == OverlayTypeEnum.Text)
                 {
                     this.OverlayTextGrid.Visibility = Visibility.Visible;
                 }
@@ -397,15 +454,26 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.OBSStudioSceneGrid.Visibility = Visibility.Hidden;
             this.OBSStudioSourceGrid.Visibility = Visibility.Hidden;
+            this.OBSStudioSourceTextGrid.Visibility = Visibility.Hidden;
+            this.OBSStudioSourceWebBrowserGrid.Visibility = Visibility.Hidden;
             if (this.OBSStudioTypeComboBox.SelectedIndex >= 0)
             {
-                if (this.OBSStudioTypeComboBox.SelectedItem.ToString().Equals("Scene"))
+                OBSStudioTypeEnum obsStudioType = EnumHelper.GetEnumValueFromString<OBSStudioTypeEnum>((string)this.OBSStudioTypeComboBox.SelectedItem);
+                if (obsStudioType == OBSStudioTypeEnum.Scene)
                 {
                     this.OBSStudioSceneGrid.Visibility = Visibility.Visible;
                 }
-                else if (this.OBSStudioTypeComboBox.SelectedItem.ToString().Equals("Source"))
+                else
                 {
                     this.OBSStudioSourceGrid.Visibility = Visibility.Visible;
+                    if (obsStudioType == OBSStudioTypeEnum.TextSource)
+                    {
+                        this.OBSStudioSourceTextGrid.Visibility = Visibility.Visible;
+                    }
+                    else if (obsStudioType == OBSStudioTypeEnum.WebBrowserSource)
+                    {
+                        this.OBSStudioSourceWebBrowserGrid.Visibility = Visibility.Visible;
+                    }
                 }
             }
         }
@@ -416,11 +484,12 @@ namespace MixItUp.WPF.Controls.Actions
             this.XSplitSourceGrid.Visibility = Visibility.Hidden;
             if (this.XSplitTypeComboBox.SelectedIndex >= 0)
             {
-                if (this.XSplitTypeComboBox.SelectedItem.ToString().Equals("Scene"))
+                XSplitTypeEnum xsplitType = EnumHelper.GetEnumValueFromString<XSplitTypeEnum>((string)this.XSplitTypeComboBox.SelectedItem);
+                if (xsplitType == XSplitTypeEnum.Scene)
                 {
                     this.XSplitSceneGrid.Visibility = Visibility.Visible;
                 }
-                else if (this.XSplitTypeComboBox.SelectedItem.ToString().Equals("Source"))
+                else if (xsplitType == XSplitTypeEnum.SourceVisibility)
                 {
                     this.XSplitSourceGrid.Visibility = Visibility.Visible;
                 }
@@ -432,6 +501,15 @@ namespace MixItUp.WPF.Controls.Actions
             if (!string.IsNullOrEmpty(this.OBSStudioSourceNameTextBox.Text))
             {
                 this.OBSStudioSourceLoadTextFromTextBox.Text = Path.Combine(OBSStudioAction.OBSStudioReferenceTextFilesDirectory, this.OBSStudioSourceNameTextBox.Text + ".txt");
+            }
+        }
+
+        private void OBSStudioSourceWebPageBrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                this.OBSStudioSourceWebPageTextBox.Text = filePath;
             }
         }
 

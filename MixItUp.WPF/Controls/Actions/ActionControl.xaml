@@ -300,37 +300,56 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="OBSStudioSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                    <Grid Grid.Row="2">
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0">Visible:</TextBlock>
-                        <CheckBox Grid.Column="2" x:Name="OBSStudioSourceVisibleCheckBox" />
+                        <TextBox Grid.Column="0" Grid.Row="0" x:Name="OBSStudioSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="4" x:Name="OBSStudioSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" TextChanged="OBSStudioSourceTextTextBox_TextChanged" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center">Visible:</TextBlock>
+                        <CheckBox Grid.Column="4" x:Name="OBSStudioSourceVisibleCheckBox" />
                     </Grid>
 
-                    <Grid Grid.Row="4">
+                    <Grid x:Name="OBSStudioSourceTextGrid" Grid.Row="2" Visibility="Hidden">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBox Grid.Row="0" x:Name="OBSStudioSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" TextChanged="OBSStudioSourceTextTextBox_TextChanged" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">File:</TextBlock>
+
+                            <TextBox Grid.Column="2" x:Name="OBSStudioSourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                    </Grid>
+
+                    <Grid x:Name="OBSStudioSourceWebBrowserGrid" Grid.Row="2" Visibility="Hidden">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0">File:</TextBlock>
+                        <TextBox Grid.Row="2" x:Name="OBSStudioSourceWebPageTextBox" MaterialDesign:HintAssist.Hint="Web Page (URL or Local File)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="2" x:Name="OBSStudioSourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <Button Grid.Column="2" Grid.Row="0" x:Name="OBSStudioSourceWebPageBrowseButton" Click="OBSStudioSourceWebPageBrowseButton_Click">Browse</Button>
+
                     </Grid>
 
                 </Grid>

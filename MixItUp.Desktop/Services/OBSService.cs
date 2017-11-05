@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Services;
 using OBSWebsocketDotNet;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,6 +65,19 @@ namespace MixItUp.OBS
             try
             {
                 this.OBSWebsocket.SetSourceRender(source, isVisible);
+            }
+            catch (Exception) { }
+        }
+
+        public void SetWebBrowserSource(string source, string url)
+        {
+            try
+            {
+                this.OBSWebsocket.SetSourceRender(source, false);
+
+                BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(source);
+                properties.URL = url;
+                this.OBSWebsocket.SetBrowserSourceProperties(source, properties);
             }
             catch (Exception) { }
         }

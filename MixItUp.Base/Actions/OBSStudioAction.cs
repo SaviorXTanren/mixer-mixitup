@@ -15,36 +15,46 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public string SceneCollection { get; set; }
-
         [DataMember]
         public string SceneName { get; set; }
 
         [DataMember]
         public string SourceName { get; set; }
-
         [DataMember]
         public bool SourceVisible { get; set; }
 
         [DataMember]
         public string SourceText { get; set; }
 
+        [DataMember]
+        public string SourceURL { get; set; }
+
         [JsonIgnore]
         private string currentTextToWrite { get; set; }
 
-        public OBSStudioAction() { }
+        public OBSStudioAction() : base(ActionTypeEnum.OBSStudio) { }
 
-        public OBSStudioAction(string sceneCollection, string sceneName) : this(sceneCollection, sceneName, null, false, null) { }
-
-        public OBSStudioAction(string sourceName, bool sourceVisible, string sourceText) : this(null, null, sourceName, sourceVisible, sourceText) { }
-
-        private OBSStudioAction(string sceneCollection, string sceneName, string sourceName, bool sourceVisible, string sourceText)
-            : base(ActionTypeEnum.OBSStudio)
+        public OBSStudioAction(string sceneCollection, string sceneName)
+            : this()
         {
             this.SceneCollection = sceneCollection;
             this.SceneName = sceneName;
+        }
+
+        public OBSStudioAction(string sourceName, bool sourceVisible, string sourceText = null, string sourceUrl = null)
+            : this(sourceName, sourceVisible)
+        {
             this.SourceName = sourceName;
             this.SourceVisible = sourceVisible;
             this.SourceText = sourceText;
+            this.SourceURL = sourceUrl;
+        }
+
+        private OBSStudioAction(string sourceName, bool sourceVisible)
+            : this()
+        {
+            this.SourceName = sourceName;
+            this.SourceVisible = sourceVisible;
         }
 
         public string LoadTextFromFilePath { get { return Path.Combine(OBSStudioReferenceTextFilesDirectory, this.SourceName + ".txt"); } }
@@ -94,6 +104,10 @@ namespace MixItUp.Base.Actions
                         {
                             this.currentTextToWrite = await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
                             this.UpdateReferenceTextFile();
+                        }
+                        else if (!string.IsNullOrEmpty(this.SourceURL))
+                        {
+                            ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(this.SourceName, this.SourceURL);
                         }
                         ChannelSession.Services.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
                     }
