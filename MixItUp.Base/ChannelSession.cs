@@ -143,36 +143,12 @@ namespace MixItUp.Base
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
+                    result = await ChannelSession.InitializeInternal();
                 }
             }
             catch (RestServiceRequestException)
             {
                 result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, null);
-            }
-            
-            if (settings.BotOAuthToken != null)
-            {
-                try
-                {
-                    MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
-                    if (connection != null)
-                    {
-                        ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
-                    }
-                }
-                catch (RestServiceRequestException)
-                {
-                    settings.BotOAuthToken = null;
-                }
-            }
-
-            if (ChannelSession.Connection != null)
-            {
-                result = await ChannelSession.InitializeInternal();
-                if (result && ChannelSession.BotConnection != null)
-                {
-                    result = await ChannelSession.InitializeBotInternal();
-                }
             }
 
             return result;
@@ -187,6 +163,31 @@ namespace MixItUp.Base
                 return (await ChannelSession.InitializeBotInternal() && await ChannelSession.ConnectBotChat());
             }
             return false;
+        }
+
+        public static async Task<bool> ConnectBot(ChannelSettings settings)
+        {
+            bool result = true;
+
+            if (settings.BotOAuthToken != null)
+            {
+                try
+                {
+                    MixerConnection connection = await MixerConnection.ConnectViaOAuthToken(settings.BotOAuthToken);
+                    if (connection != null)
+                    {
+                        ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
+                        result = await ChannelSession.InitializeBotInternal();
+                    }
+                }
+                catch (RestServiceRequestException)
+                {
+                    settings.BotOAuthToken = null;
+                    return false;
+                }
+            }
+
+            return result;
         }
 
         public static async Task DisconnectBot()
