@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -12,6 +13,10 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class OverlayAction : ActionBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSempahore { get { return OverlayAction.asyncSemaphore; } }
+
         [DataMember]
         public string ImagePath;
         [DataMember]
@@ -61,7 +66,7 @@ namespace MixItUp.Base.Actions
             this.Vertical = vertical;
         }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.Services.OverlayServer != null)
             {

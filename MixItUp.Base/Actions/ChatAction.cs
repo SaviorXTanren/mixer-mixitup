@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -8,6 +9,10 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class ChatAction : ActionBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSempahore { get { return ChatAction.asyncSemaphore; } }
+
         [DataMember]
         public string ChatText { get; set; }
 
@@ -23,7 +28,7 @@ namespace MixItUp.Base.Actions
             this.IsWhisper = isWhisper;
         }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.BotChat != null)
             {

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -42,7 +43,16 @@ namespace MixItUp.Base.Actions
             this.Type = type;
         }
 
-        public abstract Task Perform(UserViewModel user, IEnumerable<string> arguments);
+        public async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        {
+            await this.AsyncSempahore.WaitAsync();
+
+            await this.PerformInternal(user, arguments);
+
+            this.AsyncSempahore.Release();
+        }
+
+        protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
         {
@@ -107,5 +117,7 @@ namespace MixItUp.Base.Actions
 
             return str;
         }
+
+        protected abstract SemaphoreSlim AsyncSempahore { get; }
     }
 }

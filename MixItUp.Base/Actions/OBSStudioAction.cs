@@ -5,12 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
     public class OBSStudioAction : ActionBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSempahore { get { return OBSStudioAction.asyncSemaphore; } }
+
         public static string OBSStudioReferenceTextFilesDirectory = Path.Combine(Environment.CurrentDirectory, "OBS", "SourceTextFiles");
 
         [DataMember]
@@ -77,7 +82,7 @@ namespace MixItUp.Base.Actions
             }
         }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.Services.OBSWebsocket == null)
             {

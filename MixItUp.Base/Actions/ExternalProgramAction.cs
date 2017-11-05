@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -9,6 +10,10 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class ExternalProgramAction : ActionBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSempahore { get { return ExternalProgramAction.asyncSemaphore; } }
+
         [DataMember]
         public string FilePath { get; set; }
 
@@ -28,7 +33,7 @@ namespace MixItUp.Base.Actions
             this.ShowWindow = showWindow;
         }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             Process process = new Process();
             process.StartInfo.FileName = this.FilePath;

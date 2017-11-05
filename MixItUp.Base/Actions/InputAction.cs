@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -9,6 +10,10 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class InputAction : ActionBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSempahore { get { return InputAction.asyncSemaphore; } }
+
         [DataMember]
         public List<InputTypeEnum> Inputs { get; set; }
 
@@ -20,7 +25,7 @@ namespace MixItUp.Base.Actions
             this.Inputs = new List<InputTypeEnum>(inputs);
         }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             await ChannelSession.Services.InitializeInputService();
 

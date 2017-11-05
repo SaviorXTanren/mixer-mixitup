@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -25,6 +26,10 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class GameQueueAction : ActionBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSempahore { get { return GameQueueAction.asyncSemaphore; } }
+
         [DataMember]
         public GameQueueActionType GameQueueType { get; set; }
 
@@ -36,7 +41,7 @@ namespace MixItUp.Base.Actions
             this.GameQueueType = gameQueueType;
         }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.GameQueueEnabled && ChannelSession.BotChat != null)
             {

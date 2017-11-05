@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
@@ -8,6 +9,10 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class CounterAction : ActionBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSempahore { get { return CounterAction.asyncSemaphore; } }
+
         [DataMember]
         public string CounterName { get; set; }
 
@@ -23,7 +28,7 @@ namespace MixItUp.Base.Actions
             this.CounterAmount = counterAmount;
         }
 
-        public override Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (!ChannelSession.Counters.ContainsKey(this.CounterName))
             {

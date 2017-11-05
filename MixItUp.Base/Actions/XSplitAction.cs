@@ -6,11 +6,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace MixItUp.Base.Actions
 {
     public class XSplitAction : ActionBase
     {
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+        protected override SemaphoreSlim AsyncSempahore { get { return XSplitAction.asyncSemaphore; } }
+
         public static string XSplitReferenceTextFilesDirectory = Path.Combine(Environment.CurrentDirectory, "XSplit", "SourceTextFiles");
 
         [DataMember]
@@ -63,7 +68,7 @@ namespace MixItUp.Base.Actions
             }
         }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.Services.XSplitServer == null)
             {
