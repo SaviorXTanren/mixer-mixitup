@@ -40,6 +40,12 @@ namespace MixItUp.WPF.Windows.Command
 
             InitializeComponent();
 
+            CommandBase command = this.commandDetailsControl.GetExistingCommand();
+            if (command != null)
+            {
+                this.Title = this.Title + " - " + command.Name;
+            }
+
             this.actionControls = new ObservableCollection<ActionControl>();
 
             this.Initialize(this.StatusBar);
@@ -81,7 +87,6 @@ namespace MixItUp.WPF.Windows.Command
             await this.commandDetailsControl.Initialize();
 
             CommandBase command = this.commandDetailsControl.GetExistingCommand();
-
             if (command != null)
             {
                 foreach (ActionBase action in command.Actions)
