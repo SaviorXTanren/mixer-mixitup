@@ -48,13 +48,17 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="40" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <Controls:SliderWithHeaderControl x:Name="MaxCapsAllowedSlider" Grid.Row="0" Minimum="0" Maximum="50" Text="Max Caps Allowed (0 = Disabled):" ValueChanged="MaxCapsAllowedSlider_ValueChanged" />
 
-                <Controls:SliderWithHeaderControl x:Name="MaxEmoteSymbolAllowedSlider" Grid.Row="2" Minimum="0" Maximum="50" Text="Max Emote/Symbol Allowed (0 = Disabled):" ValueChanged="MaxEmoteSymbolAllowedSlider_ValueChanged" />
-                
-                <Grid Grid.Row="4">
+                <Controls:SliderWithHeaderControl x:Name="MaxPunctuationAllowedSlider" Grid.Row="2" Minimum="0" Maximum="50" Text="Max Symbol/Punctuation Allowed (0 = Disabled):" ValueChanged="MaxPunctuationAllowedSlider_ValueChanged" />
+
+                <Controls:SliderWithHeaderControl x:Name="MaxEmoteAllowedSlider" Grid.Row="4" Minimum="0" Maximum="50" Text="Max Emotes Allowed (0 = Disabled):" ValueChanged="MaxEmoteAllowedSlider_ValueChanged" />
+
+                <Grid Grid.Row="6">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />

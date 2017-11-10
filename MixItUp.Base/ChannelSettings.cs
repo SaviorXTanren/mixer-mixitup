@@ -119,7 +119,9 @@ namespace MixItUp.Base
         [JsonProperty]
         public int CapsBlockCount { get; set; }
         [JsonProperty]
-        public int SymbolEmoteBlockCount { get; set; }
+        public int PunctuationBlockCount { get; set; }
+        [JsonProperty]
+        public int EmoteBlockCount { get; set; }
         [JsonProperty]
         public bool BlockLinks { get; set; }
         [JsonProperty]

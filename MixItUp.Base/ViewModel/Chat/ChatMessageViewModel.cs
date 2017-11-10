@@ -17,8 +17,10 @@ namespace MixItUp.Base.ViewModel.Chat
     {
         private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
 
-        private static readonly Regex EmoteRegex = new Regex(":\\w+");
         private static readonly string BannedWordRegexFormat = "(^|\\s){0}(\\s|$)";
+
+        private static readonly Regex EmoteRegex = new Regex(":\\w+");
+        private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
 
         public Guid ID { get; private set; }
 
@@ -133,12 +135,29 @@ namespace MixItUp.Base.ViewModel.Chat
                 return true;
             }
 
-            if (ChannelSession.Settings.SymbolEmoteBlockCount > 0)
+            if (ChannelSession.Settings.PunctuationBlockCount > 0)
             {
                 MatchCollection matches = EmoteRegex.Matches(lower);
-                if (matches.Count >= ChannelSession.Settings.SymbolEmoteBlockCount || lower.Count(c => char.IsSymbol(c) || char.IsPunctuation(c)) >= ChannelSession.Settings.SymbolEmoteBlockCount)
+                if (lower.Count(c => char.IsSymbol(c) || char.IsPunctuation(c)) >= ChannelSession.Settings.PunctuationBlockCount)
                 {
-                    reason = "Too Many Symbols/Emotes";
+                    reason = "Too Many Punctuation/Symbols";
+                    return true;
+                }
+            }
+
+            if (ChannelSession.Settings.EmoteBlockCount > 0)
+            {
+                MatchCollection matches = EmoteRegex.Matches(lower);
+                if (matches.Count >= ChannelSession.Settings.EmoteBlockCount)
+                {
+                    reason = "Too Many Emotes";
+                    return true;
+                }
+
+                matches = EmojiRegex.Matches(lower);
+                if (matches.Count >= ChannelSession.Settings.EmoteBlockCount)
+                {
+                    reason = "Too Many Emotes";
                     return true;
                 }
             }

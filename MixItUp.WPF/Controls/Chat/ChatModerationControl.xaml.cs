@@ -19,7 +19,8 @@ namespace MixItUp.WPF.Controls.Chat
             this.BannedWordsTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.BannedWords);
 
             this.MaxCapsAllowedSlider.Value = ChannelSession.Settings.CapsBlockCount;
-            this.MaxEmoteSymbolAllowedSlider.Value = ChannelSession.Settings.SymbolEmoteBlockCount;
+            this.MaxPunctuationAllowedSlider.Value = ChannelSession.Settings.PunctuationBlockCount;
+            this.MaxEmoteAllowedSlider.Value = ChannelSession.Settings.EmoteBlockCount;
             this.BlockLinksToggleButton.IsChecked = ChannelSession.Settings.BlockLinks;
 
             this.Timeout1MinAfterSlider.Value = ChannelSession.Settings.Timeout1MinuteOffenseCount;
@@ -48,9 +49,14 @@ namespace MixItUp.WPF.Controls.Chat
             ChannelSession.Settings.CapsBlockCount = (int)this.MaxCapsAllowedSlider.Value;
         }
 
-        private void MaxEmoteSymbolAllowedSlider_ValueChanged(object sender, int e)
+        private void MaxPunctuationAllowedSlider_ValueChanged(object sender, int e)
         {
-            ChannelSession.Settings.SymbolEmoteBlockCount = (int)this.MaxEmoteSymbolAllowedSlider.Value;
+            ChannelSession.Settings.CapsBlockCount = (int)this.MaxCapsAllowedSlider.Value;
+        }
+
+        private void MaxEmoteAllowedSlider_ValueChanged(object sender, int e)
+        {
+            ChannelSession.Settings.EmoteBlockCount = (int)this.MaxEmoteAllowedSlider.Value;
         }
 
         private void BlockLinksToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e) { ChannelSession.Settings.BlockLinks = true; }
