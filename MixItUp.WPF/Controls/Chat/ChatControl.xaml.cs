@@ -27,11 +27,6 @@ namespace MixItUp.WPF.Controls.Chat
     {
         public static BitmapImage SubscriberBadgeBitmap { get; private set; }
 
-        private const string UserNameTagRegexPattern = " @\\w+ ";
-
-        private static readonly Regex UserNameTagRegex = new Regex(UserNameTagRegexPattern);
-        private static readonly Regex WhisperRegex = new Regex("/w" + UserNameTagRegexPattern);
-
         private static object userUpdateLock = new object();
 
         public bool EnableCommands { get; set; }
@@ -203,12 +198,12 @@ namespace MixItUp.WPF.Controls.Chat
                 string message = this.ChatMessageTextBox.Text;
                 this.ChatMessageTextBox.Text = string.Empty;
 
-                Match whisperRegexMatch = WhisperRegex.Match(message);
+                Match whisperRegexMatch = ChatMessageViewModel.WhisperRegex.Match(message);
                 if (whisperRegexMatch != null && whisperRegexMatch.Success)
                 {
                     message = message.Substring(whisperRegexMatch.Value.Length);
 
-                    Match usernNameMatch = UserNameTagRegex.Match(whisperRegexMatch.Value);
+                    Match usernNameMatch = ChatMessageViewModel.UserNameTagRegex.Match(whisperRegexMatch.Value);
                     string username = usernNameMatch.Value;
                     username = username.Trim();
                     username = username.Replace("@", "");

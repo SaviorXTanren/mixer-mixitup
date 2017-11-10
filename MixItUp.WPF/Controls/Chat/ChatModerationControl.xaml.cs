@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void MaxPunctuationAllowedSlider_ValueChanged(object sender, int e)
         {
-            ChannelSession.Settings.CapsBlockCount = (int)this.MaxCapsAllowedSlider.Value;
+            ChannelSession.Settings.PunctuationBlockCount = (int)this.MaxPunctuationAllowedSlider.Value;
         }
 
         private void MaxEmoteAllowedSlider_ValueChanged(object sender, int e)

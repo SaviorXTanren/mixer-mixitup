@@ -17,6 +17,9 @@ namespace MixItUp.Base.ViewModel.Chat
     {
         private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
 
+        public static readonly Regex UserNameTagRegex = new Regex("@\\w+");
+        public static readonly Regex WhisperRegex = new Regex("/w @\\w+ ");
+
         private static readonly string BannedWordRegexFormat = "(^|\\s){0}(\\s|$)";
 
         private static readonly Regex EmoteRegex = new Regex(":\\w+");
@@ -120,6 +123,9 @@ namespace MixItUp.Base.ViewModel.Chat
         public bool ShouldBeModerated(out string reason)
         {
             string lower = this.Message.ToLower();
+
+            lower = UserNameTagRegex.Replace(lower, "");
+
             foreach (string word in ChannelSession.Settings.BannedWords)
             {
                 if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
