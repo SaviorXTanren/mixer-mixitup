@@ -2,6 +2,7 @@
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -59,17 +60,16 @@ namespace MixItUp.WPF.Controls.Chat
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
-                ChannelSession.Chat.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-                ChannelSession.Chat.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-                ChannelSession.Chat.Client.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
-                ChannelSession.Chat.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                ChannelSession.Chat.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                ChannelSession.Chat.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-                ChannelSession.Chat.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-                ChannelSession.Chat.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-                ChannelSession.Chat.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                ChannelSession.Chat.Client.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
-                ChannelSession.Chat.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                ChannelSession.Chat.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                ChannelSession.Chat.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                ChannelSession.Chat.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                ChannelSession.Chat.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                ChannelSession.Chat.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                ChannelSession.Chat.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                ChannelSession.Chat.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
+                ChannelSession.Chat.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
 
                 if (ChannelSession.Channel.badge != null && !string.IsNullOrEmpty(ChannelSession.Channel.badge.url))
                 {
@@ -239,112 +239,32 @@ namespace MixItUp.WPF.Controls.Chat
         {
             await ChannelSession.RefreshChannel();
 
-            Dictionary<uint, UserViewModel> refreshUsers = new Dictionary<uint, UserViewModel>();
-            foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel))
-            {
-                UserViewModel user = new UserViewModel(chatUser);
-                if (user.ID > 0)
-                {
-                    await SetUserDetails(user, checkForFollow: false);
-                    refreshUsers.Add(user.ID, user);
-                }
-            }
+            await ChannelSession.Chat.RefreshAllChat();
 
-            if (refreshUsers.Count > 0)
-            {
-                Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, refreshUsers.Values.Select(u => u.GetModel()));
-                foreach (var kvp in chatFollowers)
-                {
-                    refreshUsers[kvp.Key.id].IsFollower = true;
-                }
-            }
+            await this.RefreshUserList();
+        }
 
-            lock (userUpdateLock)
-            {
-                ChannelSession.ChatUsers.Clear();
-                foreach (UserViewModel user in refreshUsers.Values)
-                {
-                    ChannelSession.ChatUsers[user.ID] = user;
-                }
-            }
-
+        private async Task RefreshUserList()
+        {
             await this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lock (userUpdateLock)
                 {
-                    this.RefreshUserList();
+                    this.UserControls.Clear();
+                    var orderedUsers = ChatClientWrapper.ChatUsers.Values.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
+                    foreach (UserViewModel user in orderedUsers)
+                    {
+                        this.UserControls.Add(new ChatUserControl(user));
+                    }
+                    this.UpdateUserViewCount();
                 }
             }));
-        }
-
-        private async Task SetDetailsAndAddUser(UserViewModel user)
-        {
-            await this.SetUserDetails(user);
-            this.AddUser(user);
-        }
-
-        private async Task SetUserDetails(UserViewModel user, bool checkForFollow = true)
-        {
-            if (user.ID > 0)
-            {
-                UserWithChannelModel userWithChannel = await ChannelSession.Connection.GetUser(user.GetModel());
-                if (!string.IsNullOrEmpty(userWithChannel.avatarUrl))
-                {
-                    user.AvatarLink = userWithChannel.avatarUrl;
-                }
-            }
-
-            if (checkForFollow)
-            {
-                DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, user.GetModel());
-                if (followDate != null)
-                {
-                    user.IsFollower = true;
-                }
-            }
-        }
-
-        private void AddUser(UserViewModel user)
-        {
-            lock (userUpdateLock)
-            {
-                if (!ChannelSession.ChatUsers.ContainsKey(user.ID))
-                {
-                    ChannelSession.ChatUsers[user.ID] = user;
-                    this.RefreshUserList();
-                }
-            }
-        }
-
-        private void RemoveUser(UserViewModel user)
-        {
-            lock (userUpdateLock)
-            {
-                ChatUserControl userControl = this.UserControls.FirstOrDefault(u => u.User.Equals(user));
-                if (userControl != null)
-                {
-                    ChannelSession.ChatUsers.Remove(userControl.User.ID);
-                    this.UserControls.Remove(userControl);
-                }
-                this.UpdateUserViewCount();
-            }
-        }
-
-        private void RefreshUserList()
-        {
-            this.UserControls.Clear();
-            var orderedUsers = ChannelSession.ChatUsers.Values.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
-            foreach (UserViewModel user in orderedUsers)
-            {
-                this.UserControls.Add(new ChatUserControl(user));
-            }
-            this.UpdateUserViewCount();
         }
 
         private void UpdateUserViewCount()
         {
             this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
-            this.ChatCountTextBlock.Text = ChannelSession.ChatUsers.Count.ToString();
+            this.ChatCountTextBlock.Text = ChatClientWrapper.ChatUsers.Count.ToString();
         }
 
         private async void AddMessage(ChatMessageViewModel message)
@@ -353,7 +273,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             GlobalEvents.MessageReceived(message);
 
-            await this.SetDetailsAndAddUser(message.User);
+            await ChannelSession.Chat.SetDetailsAndAddUser(message.User);
 
             this.totalMessages++;
             this.MessageControls.Add(messageControl);
@@ -550,27 +470,22 @@ namespace MixItUp.WPF.Controls.Chat
 
         private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel e)
         {
-            UserViewModel user = new UserViewModel(e);
-            await this.SetDetailsAndAddUser(user);
+            await this.RefreshUserList();
         }
 
-        private void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
         {
-            UserViewModel user = new UserViewModel(e);
-            this.RemoveUser(user);
+            await this.RefreshUserList();
         }
 
-        private void ChatClient_OnUserTimeoutOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserTimeoutOccurred(object sender, ChatUserEventModel e)
         {
-            UserViewModel user = new UserViewModel(e);
-            this.RemoveUser(user);
+            await this.RefreshUserList();
         }
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
         {
-            UserViewModel user = new UserViewModel(e);
-            this.RemoveUser(user);
-            await this.SetDetailsAndAddUser(user);
+            await this.RefreshUserList();
         }
 
         #endregion Chat Event Handlers

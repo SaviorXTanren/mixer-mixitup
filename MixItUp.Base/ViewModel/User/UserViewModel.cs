@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -19,12 +20,22 @@ namespace MixItUp.Base.ViewModel.User
         Mod,
         Staff,
         Streamer,
+
+        Custom = 99,
     }
 
     [DataContract]
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
         private const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.jpg";
+
+        public static IEnumerable<UserRole> SelectableUserRoles()
+        {
+            List<UserRole> roles = new List<UserRole>(EnumHelper.GetEnumList<UserRole>());
+            roles.Remove(UserRole.Banned);
+            roles.Remove(UserRole.Custom);
+            return roles;
+        }
 
         [DataMember]
         public uint ID { get; set; }
@@ -114,6 +125,27 @@ namespace MixItUp.Base.ViewModel.User
                 else
                 {
                     return "#FF0000FF";
+                }
+            }
+        }
+
+        public async Task SetDetails(bool checkForFollow = true)
+        {
+            if (this.ID > 0)
+            {
+                UserWithChannelModel userWithChannel = await ChannelSession.Connection.GetUser(this.GetModel());
+                if (!string.IsNullOrEmpty(userWithChannel.avatarUrl))
+                {
+                    this.AvatarLink = userWithChannel.avatarUrl;
+                }
+            }
+
+            if (checkForFollow)
+            {
+                DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
+                if (followDate != null)
+                {
+                    this.IsFollower = true;
                 }
             }
         }

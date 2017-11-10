@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using MixItUp.Base.MixerAPI;
 
 namespace MixItUp.WPF.Controls.Currency
 {
@@ -51,7 +52,7 @@ namespace MixItUp.WPF.Controls.Currency
                 {
                     Thread.Sleep(1000 * 60 * ChannelSession.Settings.CurrencyAcquireInterval);
 
-                    foreach (UserViewModel chatUser in ChannelSession.ChatUsers.Values)
+                    foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
                     {
                         if (!ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
                         {
@@ -63,7 +64,7 @@ namespace MixItUp.WPF.Controls.Currency
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
                         this.userCurrencyData.Clear();
-                        foreach (UserViewModel chatUser in ChannelSession.ChatUsers.Values)
+                        foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
                         {
                             this.userCurrencyData.Add(ChannelSession.Settings.UserData[chatUser.ID]);
                         }

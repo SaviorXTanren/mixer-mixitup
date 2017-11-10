@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Util
 {
@@ -24,6 +25,7 @@ namespace MixItUp.WPF.Util
     {
         private static bool lastConfirmationResult = false;
         private static UserDialogResult lastUserResult = UserDialogResult.Close;
+        private static string lastCustomResult = null;
 
         public static async Task ShowMessageDialog(string message)
         {
@@ -56,6 +58,18 @@ namespace MixItUp.WPF.Util
             return MessageBoxHelper.lastUserResult;
         }
 
+        public static async Task<string> ShowCustomDialog(UserControl control)
+        {
+            LoadingWindowBase window = MessageBoxHelper.GetWindow();
+            DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
+
+            dialogHost.DialogClosing += CustomDialogHost_DialogClosing;
+            await dialogHost.ShowDialog(control);
+            dialogHost.DialogClosing -= CustomDialogHost_DialogClosing;
+
+            return MessageBoxHelper.lastCustomResult;
+        }
+
         private static LoadingWindowBase GetWindow()
         {
             IEnumerable<LoadingWindowBase> windows = Application.Current.Windows.OfType<LoadingWindowBase>();
@@ -77,6 +91,11 @@ namespace MixItUp.WPF.Util
         private static void UserDialogHost_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
         {
             MessageBoxHelper.lastUserResult = EnumHelper.GetEnumValueFromString<UserDialogResult>(eventArgs.Parameter.ToString());
+        }
+
+        private static void CustomDialogHost_DialogClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            MessageBoxHelper.lastCustomResult = (eventArgs.Parameter != null) ? eventArgs.Parameter.ToString() : null;
         }
     }
 }

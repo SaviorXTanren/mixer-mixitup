@@ -2,12 +2,22 @@
 using Mixer.Base.Model.Interactive;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.User;
 using System;
 
 namespace MixItUp.Base.Util
 {
     public static class GlobalEvents
     {
+        public static event EventHandler<UserViewModel> OnChatUserJoined;
+        public static void ChatUserJoined(UserViewModel user)
+        {
+            if (GlobalEvents.OnChatUserJoined != null)
+            {
+                GlobalEvents.OnChatUserJoined(null, user);
+            }
+        }
+
         public static event EventHandler<ChatMessageViewModel> OnMessageReceived;
         public static void MessageReceived(ChatMessageViewModel message)
         {
@@ -61,5 +71,15 @@ namespace MixItUp.Base.Util
                 GlobalEvents.OnQuoteAdded(null, quote);
             }
         }
+
+        public static event EventHandler OnGameQueueUpdated;
+        public static void GameQueueUpdated()
+        {
+            if (GlobalEvents.OnGameQueueUpdated != null)
+            {
+                GlobalEvents.OnGameQueueUpdated(null, new EventArgs());
+            }
+        }
+
     }
 }

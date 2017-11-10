@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -58,9 +59,9 @@ namespace MixItUp.Base.Actions
         {
             if (user != null)
             {
-                if (ChannelSession.ChatUsers.ContainsKey(user.ID))
+                if (ChatClientWrapper.ChatUsers.ContainsKey(user.ID))
                 {
-                    str = str.Replace("$useravatar", ChannelSession.ChatUsers[user.ID].AvatarLink);
+                    str = str.Replace("$useravatar", ChatClientWrapper.ChatUsers[user.ID].AvatarLink);
                 }
                 else
                 {

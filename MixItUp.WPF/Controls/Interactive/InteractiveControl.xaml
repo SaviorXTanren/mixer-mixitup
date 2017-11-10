@@ -33,13 +33,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" x:Name="NewGameButton" Click="NewGameButton_Click" IsEnabled="False">New Game</Button>
-                
-            <ComboBox Grid.Column="2" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="Game" />
+            <ComboBox Grid.Column="0" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="Game" />
 
-            <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
+            <ComboBox Grid.Column="2" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
 
-            <Button Grid.Column="6" x:Name="RefreshSelectedGameButton" Click="RefreshSelectedGameButton_Click" Content="{MaterialDesign:PackIcon Refresh}" />
+            <Button Grid.Column="4" x:Name="GroupsButton" Click="GroupsButton_Click" IsEnabled="False">Groups</Button>
+
+            <Button Grid.Column="6" x:Name="RefreshButton" Click="RefreshButton_Click" Content="{MaterialDesign:PackIcon Refresh}" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -49,7 +49,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid x:Name="GameDetailsGrid" IsEnabled="False">
+            <Grid x:Name="GameDetailsGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />

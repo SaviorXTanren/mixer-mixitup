@@ -105,12 +105,9 @@ namespace MixItUp.Base
         public static ServicesHandlerBase Services { get; private set; }
 
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
-        public static LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
-        public static LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
         public static bool GameQueueEnabled { get; set; }
         public static LockedList<UserViewModel> GameQueue { get; private set; }
-        public static event EventHandler OnGameQueueUpdated;
 
         public static LockedDictionary<string, int> Counters { get; private set; }
 
@@ -135,7 +132,6 @@ namespace MixItUp.Base
             bool result = false;
 
             ChannelSession.Settings = settings;
-            ChannelSession.Settings.Initialize();
 
             try
             {
@@ -340,14 +336,6 @@ namespace MixItUp.Base
 
         public static UserViewModel GetCurrentUser() { return new UserViewModel(User); }
 
-        public static void GameQueueUpdated()
-        {
-            if (ChannelSession.OnGameQueueUpdated != null)
-            {
-                ChannelSession.OnGameQueueUpdated(null, new EventArgs());
-            }
-        }
-
         private static async Task<bool> InitializeInternal(string channelName = null)
         {
             PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
@@ -360,8 +348,6 @@ namespace MixItUp.Base
                     ChannelSession.Channel = channel;
 
                     ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
-                    ChannelSession.ChatUsers = new LockedDictionary<uint, UserViewModel>();
-                    ChannelSession.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
                     ChannelSession.GameQueue = new LockedList<UserViewModel>();
 
                     ChannelSession.Counters = new LockedDictionary<string, int>();
@@ -370,6 +356,8 @@ namespace MixItUp.Base
                     {
                         ChannelSession.Settings = new ChannelSettings(channel, (channelName == null));
                     }
+                    ChannelSession.Settings.Initialize();
+
                     await ChannelSession.SaveSettings();
 
                     await ChannelSession.Settings.SaveBackup();

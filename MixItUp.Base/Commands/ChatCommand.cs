@@ -3,10 +3,9 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
@@ -15,15 +14,7 @@ namespace MixItUp.Base.Commands
     {
         private static SemaphoreSlim chatCommandPerformSemaphore = new SemaphoreSlim(1);
 
-        public static IEnumerable<string> PermissionsAllowedValues
-        {
-            get
-            {
-                List<string> roles = EnumHelper.GetEnumNames<UserRole>().ToList();
-                roles.Remove(EnumHelper.GetEnumName<UserRole>(UserRole.Banned));
-                return roles;
-            }
-        }
+        public static IEnumerable<string> PermissionsAllowedValues { get { return EnumHelper.GetEnumNames(UserViewModel.SelectableUserRoles()); } }
 
         [DataMember]
         public UserRole Permissions { get; set; }

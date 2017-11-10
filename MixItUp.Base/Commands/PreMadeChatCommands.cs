@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -372,7 +373,7 @@ namespace MixItUp.Base.Commands
                             username = username.Substring(1);
                         }
 
-                        UserViewModel bannedUser = ChannelSession.ChatUsers.Values.FirstOrDefault(u => u.UserName.Equals(username));
+                        UserViewModel bannedUser = ChatClientWrapper.ChatUsers.Values.FirstOrDefault(u => u.UserName.Equals(username));
                         if (bannedUser != null)
                         {
                             await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, bannedUser.GetModel(), new List<UserRole>() { UserRole.Banned });

@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.GameQueue
         {
             this.GameQueueUsersListView.ItemsSource = gameQueueUsers;
 
-            ChannelSession.OnGameQueueUpdated += ChannelSession_OnGameQueueUpdated;
+            GlobalEvents.OnGameQueueUpdated += ChannelSession_OnGameQueueUpdated;
 
             return Task.FromResult(0);
         }
@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Controls.GameQueue
             ChannelSession.GameQueue.Remove(user);
             ChannelSession.GameQueue.Insert(index, user);
 
-            ChannelSession.GameQueueUpdated();
+            GlobalEvents.GameQueueUpdated();
         }
 
         private void MoveDownButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Controls.GameQueue
             ChannelSession.GameQueue.Remove(user);
             ChannelSession.GameQueue.Insert(index, user);
 
-            ChannelSession.GameQueueUpdated();
+            GlobalEvents.GameQueueUpdated();
         }
 
         private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.GameQueue
             UserViewModel user = (UserViewModel)button.DataContext;
             ChannelSession.GameQueue.Remove(user);
 
-            ChannelSession.GameQueueUpdated();
+            GlobalEvents.GameQueueUpdated();
         }
 
         private void ChannelSession_OnGameQueueUpdated(object sender, System.EventArgs e)

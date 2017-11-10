@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,7 +96,7 @@ namespace MixItUp.Base.Actions
                     }
                 }
 
-                ChannelSession.GameQueueUpdated();
+                GlobalEvents.GameQueueUpdated();
             }
         }
 

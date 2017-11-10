@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Linq;
@@ -41,9 +42,9 @@ namespace MixItUp.Base.ViewModel.Chat
             this.ChatMessageEvent = chatMessageEvent;
             this.ID = this.ChatMessageEvent.id;
 
-            if (ChannelSession.ChatUsers.ContainsKey(this.ChatMessageEvent.user_id))
+            if (ChatClientWrapper.ChatUsers.ContainsKey(this.ChatMessageEvent.user_id))
             {
-                this.User = ChannelSession.ChatUsers[this.ChatMessageEvent.user_id];
+                this.User = ChatClientWrapper.ChatUsers[this.ChatMessageEvent.user_id];
             }
             else
             {

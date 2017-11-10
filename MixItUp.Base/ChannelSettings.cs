@@ -1,7 +1,10 @@
 ﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.OAuth;
+using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -105,6 +108,8 @@ namespace MixItUp.Base
         public int TimerCommandsMinimumMessages { get; set; }
 
         [JsonProperty]
+        public Dictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }
+        [JsonProperty]
         public Dictionary<string, int> InteractiveCooldownGroups { get; set; }
 
         [JsonProperty]
@@ -174,6 +179,8 @@ namespace MixItUp.Base
             this.quotesInternal = new List<string>();
             this.userDataInternal = new List<UserDataViewModel>();
             this.bannedWordsInternal = new List<string>();
+
+            this.InteractiveUserGroups = new Dictionary<uint, List<InteractiveUserGroupViewModel>>();
             this.InteractiveCooldownGroups = new Dictionary<string, int>();        
 
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();

@@ -1,9 +1,12 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
@@ -24,8 +27,14 @@ namespace MixItUp.WPF.Controls.Interactive
         public InteractiveButtonControlModel Button { get; set; }
         public InteractiveJoystickControlModel Joystick { get; set; }
 
-        public InteractiveConnectedButtonControlModel ConnectedButton { get; set; }
-        public InteractiveConnectedJoystickControlModel ConnectedJoystick { get; set; }
+        public InteractiveConnectedButtonControlModel ConnectedButton
+        {
+            get { return (this.Button != null && this.Button is InteractiveConnectedButtonControlModel) ? (InteractiveConnectedButtonControlModel)this.Button : null; }
+        }
+        public InteractiveConnectedJoystickControlModel ConnectedJoystick
+        {
+            get { return (this.Joystick != null && this.Joystick is InteractiveConnectedJoystickControlModel) ? (InteractiveConnectedJoystickControlModel)this.Joystick : null; }
+        }
 
         public InteractiveCommand Command { get; set; }
 
@@ -76,10 +85,10 @@ namespace MixItUp.WPF.Controls.Interactive
         private ObservableCollection<InteractiveSceneModel> interactiveScenes = new ObservableCollection<InteractiveSceneModel>();
         private InteractiveSceneModel selectedScene = null;
 
-        private ObservableCollection<InteractiveControlCommandItem> interactiveItems = new ObservableCollection<InteractiveControlCommandItem>();
+        private ObservableCollection<InteractiveControlCommandItem> currentSceneControlItems = new ObservableCollection<InteractiveControlCommandItem>();
 
-        private List<InteractiveConnectedSceneGroupModel> connectedGameScenes = new List<InteractiveConnectedSceneGroupModel>();
-        private InteractiveConnectedSceneGroupModel connectedScene = null;
+        private List<InteractiveConnectedSceneGroupModel> connectedSceneGroups = new List<InteractiveConnectedSceneGroupModel>();
+        private Dictionary<string, List<InteractiveControlCommandItem>> connectedSceneControls = new Dictionary<string, List<InteractiveControlCommandItem>>();
 
         public InteractiveControl()
         {
@@ -88,15 +97,21 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected override async Task InitializeInternal()
         {
+            GlobalEvents.OnChatUserJoined += GlobalEvents_OnChatUserJoined;
+
             this.InteractiveGamesComboBox.ItemsSource = this.interactiveGames;
             this.InteractiveScenesComboBox.ItemsSource = this.interactiveScenes;
-            this.InteractiveControlsGridView.ItemsSource = this.interactiveItems;
+            this.InteractiveControlsGridView.ItemsSource = this.currentSceneControlItems;
 
-            await this.RefreshInteractiveGames();
+            await this.RefreshAllInteractiveGames();
         }
 
-        private async Task RefreshInteractiveGames()
+        private async Task RefreshAllInteractiveGames()
         {
+            this.GroupsButton.IsEnabled = false;
+            this.RefreshButton.IsEnabled = false;
+            this.ConnectButton.IsEnabled = false;
+
             IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
             {
                 return await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
@@ -107,73 +122,103 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 this.interactiveGames.Add(game);
             }
-        }
-
-        private async Task RefreshSelectedInteractiveGame()
-        {
-            await this.RefreshInteractiveGames();
 
             if (this.selectedGame != null)
             {
-                this.interactiveScenes.Clear();
-
-                this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
-                {
-                    this.selectedGame = this.interactiveGames.First(g => g.id.Equals(this.selectedGame.id));
-
-                    return await ChannelSession.Connection.GetInteractiveGameVersion(this.selectedGame.versions.First());
-                });
-
-                if (this.selectedGame != null)
-                {
-                    this.InteractiveGamesComboBox.SelectedItem = this.selectedGame;
-                }
-
-                foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
-                {
-                    this.interactiveScenes.Add(scene);
-                }
-
-                if (this.selectedScene != null)
-                {
-                    this.InteractiveScenesComboBox.SelectedItem = this.interactiveScenes.FirstOrDefault(s => s.sceneID.Equals(this.selectedScene.sceneID));
-                }
-                else
-                {
-                    this.InteractiveScenesComboBox.SelectedIndex = 0;
-                }
-
-                this.GameDetailsGrid.IsEnabled = true;
+                this.InteractiveGamesComboBox.SelectedItem = this.interactiveGames.FirstOrDefault(g => g.id.Equals(this.selectedGame.id));
             }
+        }
+
+        private async Task RefreshSelectedGame()
+        {
+            if (!ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.selectedGame.id))
+            {
+                ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id] = new List<InteractiveUserGroupViewModel>();
+            }
+
+            foreach (UserRole role in UserViewModel.SelectableUserRoles())
+            {
+                if (!ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].Any(ug => ug.AssociatedUserRole == role))
+                {
+                    ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].Add(new InteractiveUserGroupViewModel(role));
+                }
+            }
+
+            this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
+            {
+                return await ChannelSession.Connection.GetInteractiveGameVersion(this.selectedGame.versions.First());
+            });
+
+            this.interactiveScenes.Clear();
+            foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
+            {
+                this.interactiveScenes.Add(scene);
+            }
+
+            if (this.selectedScene != null && this.interactiveScenes.Any(s => s.sceneID.Equals(this.selectedScene.sceneID)))
+            {
+                this.InteractiveScenesComboBox.SelectedItem = this.interactiveScenes.First(s => s.sceneID.Equals(this.selectedScene.sceneID));
+            }
+            else
+            {
+                this.InteractiveScenesComboBox.SelectedIndex = 0;
+            }
+
+            this.GroupsButton.IsEnabled = true;
+            this.RefreshButton.IsEnabled = true;
+            this.ConnectButton.IsEnabled = true;
         }
 
         private void RefreshSelectedScene()
         {
-            this.interactiveItems.Clear();
-            if (this.selectedScene != null)
+            this.currentSceneControlItems.Clear();
+            foreach (InteractiveButtonControlModel button in this.selectedScene.buttons)
             {
-                foreach (InteractiveButtonControlModel button in this.selectedScene.buttons)
-                {
-                    this.interactiveItems.Add(this.CreateItem(button));
-                }
+                this.currentSceneControlItems.Add(this.CreateControlItem(this.selectedScene.sceneID, button));
+            }
 
-                foreach (InteractiveJoystickControlModel joystick in this.selectedScene.joysticks)
-                {
-                    this.interactiveItems.Add(this.CreateItem(joystick));
-                }
+            foreach (InteractiveJoystickControlModel joystick in this.selectedScene.joysticks)
+            {
+                this.currentSceneControlItems.Add(this.CreateControlItem(this.selectedScene.sceneID, joystick));
             }
         }
 
-        private InteractiveControlCommandItem CreateItem(InteractiveControlModel control)
+        private InteractiveControlCommandItem CreateControlItem(string sceneID, InteractiveControlModel control)
         {
-            InteractiveCommand command = this.FindCommandFromSettings(this.selectedScene, control);
+            InteractiveCommand command = this.FindCommandForControl(sceneID, control);
+
             if (command != null)
             {
                 command.UpdateWithLatestControl(control);
                 return new InteractiveControlCommandItem(command);
             }
-            else if (control is InteractiveButtonControlModel) { return new InteractiveControlCommandItem((InteractiveButtonControlModel)control); }
-            else { return new InteractiveControlCommandItem((InteractiveJoystickControlModel)control); }
+            else if (control is InteractiveButtonControlModel)
+            {
+                return new InteractiveControlCommandItem((InteractiveButtonControlModel)control);
+            }
+            else
+            {
+                return new InteractiveControlCommandItem((InteractiveJoystickControlModel)control);
+            }
+        }
+
+        private InteractiveCommand FindCommandForControl(string sceneID, InteractiveControlModel control)
+        {
+            return ChannelSession.Settings.InteractiveControls.FirstOrDefault(c => c.GameID.Equals(this.selectedGame.id) &&
+                c.SceneID.Equals(sceneID) && c.Control.controlID.Equals(control.controlID));
+        }
+
+        private void AssignDefaultGroupForParticipant(InteractiveParticipantModel participant)
+        {
+            if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
+            {
+                UserRole role = ChatClientWrapper.ChatUsers[participant.userID].PrimaryRole;
+                InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].FirstOrDefault(g => g.AssociatedUserRole == role);
+                if (group != null)
+                {
+                    participant.groupID = group.GroupName;
+                }
+            }
         }
 
         private void NewGameButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -194,19 +239,21 @@ namespace MixItUp.WPF.Controls.Interactive
             //this.GameDetailsGrid.IsEnabled = true;
         }
 
+        private async void GroupsButton_Click(object sender, RoutedEventArgs e)
+        {
+            InteractiveSceneUserGroupsDialogControl dialogControl = new InteractiveSceneUserGroupsDialogControl(this.selectedGame, this.selectedScene);
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await MessageBoxHelper.ShowCustomDialog(dialogControl);
+            });
+        }
+
         private async void InteractiveGamesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            this.RefreshSelectedGameButton.IsEnabled = false;
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
-                InteractiveGameListingModel newSelectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
-                if (this.selectedGame != newSelectedGame)
-                {
-                    this.selectedGame = newSelectedGame;
-                    await this.RefreshSelectedInteractiveGame();
-                    this.ConnectButton.IsEnabled = true;
-                }
-                this.RefreshSelectedGameButton.IsEnabled = true;
+                this.selectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
+                await this.RefreshSelectedGame();
             }
         }
 
@@ -219,9 +266,9 @@ namespace MixItUp.WPF.Controls.Interactive
             }
         }
 
-        private async void RefreshSelectedGameButton_Click(object sender, RoutedEventArgs e)
+        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.RefreshSelectedInteractiveGame();
+            await this.RefreshAllInteractiveGames();
         }
 
         private async void TestButton_Click(object sender, RoutedEventArgs e)
@@ -305,65 +352,99 @@ namespace MixItUp.WPF.Controls.Interactive
 
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            bool result = await this.Window.RunAsyncOperation(async () =>
+            try
             {
-                return await ChannelSession.ConnectInteractive(this.selectedGame);
-            });
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    return await ChannelSession.ConnectInteractive(this.selectedGame);
+                });
 
-            if (!result)
+                List<InteractiveGroupModel> groupsToAdd = new List<InteractiveGroupModel>();
+                foreach (InteractiveUserGroupViewModel userGroup in ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].Skip(1))
+                {
+                    groupsToAdd.Add(new InteractiveGroupModel() { groupID = userGroup.GroupName, sceneID = userGroup.DefaultScene });
+                }
+
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    return await ChannelSession.Interactive.CreateGroups(groupsToAdd);
+                });
+
+                InteractiveParticipantCollectionModel participants = await this.Window.RunAsyncOperation(async () =>
+                {
+                    return await ChannelSession.Interactive.GetAllParticipants();
+                });
+
+                InteractiveClientWrapper.InteractiveUsers.Clear();
+                if (participants != null)
+                {
+                    foreach (InteractiveParticipantModel participant in participants.participants)
+                    {
+                        InteractiveClientWrapper.InteractiveUsers.Add(participant.sessionID, participant);
+                    }
+                }
+
+                List<InteractiveParticipantModel> participantsToLookUp = new List<InteractiveParticipantModel>();
+                foreach (InteractiveParticipantModel participant in InteractiveClientWrapper.InteractiveUsers.Values)
+                {
+                    if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
+                    {
+                        this.AssignDefaultGroupForParticipant(participant);
+                    }
+                    else
+                    {
+                        participantsToLookUp.Add(participant);
+                    }
+                }
+
+                if (InteractiveClientWrapper.InteractiveUsers.Values.Count > 0)
+                {
+                    await this.Window.RunAsyncOperation(async () =>
+                    {
+                        return await ChannelSession.Interactive.UpdateParticipants(InteractiveClientWrapper.InteractiveUsers.Values);
+                    });
+                }
+
+                InteractiveConnectedSceneGroupCollectionModel scenes = await this.Window.RunAsyncOperation(async () =>
+                {
+                    return await ChannelSession.Interactive.GetScenes();
+                });
+
+                this.connectedSceneGroups = scenes.scenes;
+
+                this.connectedSceneControls.Clear();
+                foreach (InteractiveConnectedSceneModel scene in this.connectedSceneGroups)
+                {
+                    this.connectedSceneControls.Add(scene.sceneID, new List<InteractiveControlCommandItem>());
+
+                    foreach (InteractiveConnectedButtonControlModel button in scene.buttons)
+                    {
+                        this.connectedSceneControls[scene.sceneID].Add(this.CreateControlItem(scene.sceneID, button));
+                    }
+
+                    foreach (InteractiveConnectedJoystickControlModel joystick in scene.joysticks)
+                    {
+                        this.connectedSceneControls[scene.sceneID].Add(this.CreateControlItem(scene.sceneID, joystick));
+                    }
+                }
+
+                ChannelSession.Interactive.Client.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
+                ChannelSession.Interactive.Client.OnParticipantUpdate += InteractiveClient_OnParticipantUpdate;
+                ChannelSession.Interactive.Client.OnParticipantLeave += InteractiveClient_OnParticipantLeave;
+                ChannelSession.Interactive.Client.OnGiveInput += InteractiveClient_OnGiveInput;
+
+                this.GameSelectionGrid.IsEnabled = false;
+                this.GameDetailsGrid.IsEnabled = false;
+                this.ConnectButton.Visibility = Visibility.Collapsed;
+                this.DisconnectButton.Visibility = Visibility.Visible;
+            }
+            catch (Exception ex)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to connect to interactive with selected game. Please try again.");
+                Logger.Log(ex);
+
+                await MessageBoxHelper.ShowMessageDialog("Failed to connect to interactive with selected game. Please try again.");
                 return;
             }
-
-            InteractiveConnectedSceneGroupCollectionModel scenes = await this.Window.RunAsyncOperation(async () =>
-            {
-                return await ChannelSession.Interactive.GetScenes();
-            });
-            this.connectedGameScenes = scenes.scenes;
-            this.connectedScene = this.connectedGameScenes.First();
-
-            foreach (InteractiveConnectedButtonControlModel button in this.connectedScene.buttons)
-            {
-                InteractiveControlCommandItem item = this.FindCommandFromItems(button);
-                if (item != null)
-                {
-                    item.ConnectedButton = button;
-                }
-            }
-
-            foreach (InteractiveConnectedJoystickControlModel joystick in this.connectedScene.joysticks)
-            {
-                InteractiveControlCommandItem item = this.FindCommandFromItems(joystick);
-                if (item != null)
-                {
-                    item.ConnectedJoystick = joystick;
-                }
-            }
-
-            InteractiveParticipantCollectionModel participants = await this.Window.RunAsyncOperation(async () =>
-            {
-                return await ChannelSession.Interactive.GetAllParticipants();
-            });
-
-            ChannelSession.InteractiveUsers.Clear();
-            if (participants != null)
-            {
-                foreach (InteractiveParticipantModel participant in participants.participants)
-                {
-                    ChannelSession.InteractiveUsers.Add(participant.sessionID, participant);
-                }
-            }
-
-            ChannelSession.Interactive.Client.OnParticipantJoin += InteractiveClient_OnParticipantJoin;
-            ChannelSession.Interactive.Client.OnParticipantUpdate += InteractiveClient_OnParticipantUpdate;
-            ChannelSession.Interactive.Client.OnParticipantLeave += InteractiveClient_OnParticipantLeave;
-            ChannelSession.Interactive.Client.OnGiveInput += InteractiveClient_OnGiveInput;
-
-            this.GameSelectionGrid.IsEnabled = false;
-            this.GameDetailsGrid.IsEnabled = false;
-            this.ConnectButton.Visibility = Visibility.Collapsed;
-            this.DisconnectButton.Visibility = Visibility.Visible;
         }
 
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
@@ -378,14 +459,8 @@ namespace MixItUp.WPF.Controls.Interactive
                 await ChannelSession.DisconnectInteractive();
             });
 
-            foreach (InteractiveControlCommandItem item in this.interactiveItems)
-            {
-                item.ConnectedButton = null;
-                item.ConnectedJoystick = null;
-            }
-
-            this.connectedGameScenes.Clear();
-            this.connectedScene = null;
+            this.connectedSceneGroups.Clear();
+            this.connectedSceneControls.Clear();
 
             this.GameSelectionGrid.IsEnabled = true;
             this.GameDetailsGrid.IsEnabled = true;
@@ -393,24 +468,28 @@ namespace MixItUp.WPF.Controls.Interactive
             this.DisconnectButton.Visibility = Visibility.Collapsed;
         }
 
-        private void InteractiveClient_OnParticipantJoin(object sender, InteractiveParticipantCollectionModel participants)
+        private async void InteractiveClient_OnParticipantJoin(object sender, InteractiveParticipantCollectionModel participants)
         {
             if (participants != null)
             {
                 foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    ChannelSession.InteractiveUsers[participant.sessionID] = participant;
+                    InteractiveClientWrapper.InteractiveUsers[participant.sessionID] = participant;
+                    this.AssignDefaultGroupForParticipant(participant);
+                    await ChannelSession.Interactive.UpdateParticipants(new List<InteractiveParticipantModel>() { participant });
                 }
             }
         }
 
-        private void InteractiveClient_OnParticipantUpdate(object sender, InteractiveParticipantCollectionModel participants)
+        private async void InteractiveClient_OnParticipantUpdate(object sender, InteractiveParticipantCollectionModel participants)
         {
             if (participants != null)
             {
                 foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    ChannelSession.InteractiveUsers[participant.sessionID] = participant;
+                    InteractiveClientWrapper.InteractiveUsers[participant.sessionID] = participant;
+                    this.AssignDefaultGroupForParticipant(participant);
+                    await ChannelSession.Interactive.UpdateParticipants(new List<InteractiveParticipantModel>() { participant });
                 }
             }
         }
@@ -421,7 +500,7 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    ChannelSession.InteractiveUsers.Remove(participant.sessionID);
+                    InteractiveClientWrapper.InteractiveUsers.Remove(participant.sessionID);
                 }
             }
         }
@@ -430,87 +509,115 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             if (interactiveInput != null && interactiveInput.input != null)
             {
-                foreach (InteractiveControlCommandItem item in this.interactiveItems)
+                InteractiveControlCommandItem controlCommand = null;
+                foreach (var kvp in this.connectedSceneControls)
                 {
-                    if (item.Name.Equals(interactiveInput.input.controlID) && item.Command != null)
+                    controlCommand = kvp.Value.FirstOrDefault(ci => ci.Control.controlID.Equals(interactiveInput.input.controlID));
+                    if (controlCommand != null)
                     {
-                        if (item.ConnectedButton != null && !item.TriggerTransactionString.Equals(interactiveInput.input.eventType))
-                        {
-                            return;
-                        }
+                        break;
+                    }
+                }
 
-                        if (!string.IsNullOrEmpty(interactiveInput.transactionID))
+                if (controlCommand != null)
+                {
+                    InteractiveConnectedSceneModel scene = this.connectedSceneGroups.FirstOrDefault(s => s.sceneID.Equals(controlCommand.Scene.sceneID));
+
+                    if (controlCommand.ConnectedButton != null && !controlCommand.TriggerTransactionString.Equals(interactiveInput.input.eventType))
+                    {
+                        return;
+                    }
+
+                    if (!string.IsNullOrEmpty(interactiveInput.transactionID))
+                    {
+                        await this.Window.RunAsyncOperation(async () =>
                         {
-                            await this.Window.RunAsyncOperation(async () =>
+                            try
                             {
-                                try
+                                await ChannelSession.Interactive.CaptureSparkTransaction(interactiveInput.transactionID);
+                            }
+                            catch (Exception) { }
+                        });
+                    }
+
+                    GlobalEvents.InteractiveControlUsed(controlCommand.Control);
+
+                    UserViewModel user = ChannelSession.GetCurrentUser();
+                    if (InteractiveClientWrapper.InteractiveUsers.ContainsKey(interactiveInput.participantID))
+                    {
+                        InteractiveParticipantModel participant = InteractiveClientWrapper.InteractiveUsers[interactiveInput.participantID];
+                        if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
+                        {
+                            user = ChatClientWrapper.ChatUsers[participant.userID];
+                        }
+                        else
+                        {
+                            user = new UserViewModel(participant.userID, participant.username);
+                        }
+                    }
+
+                    if (controlCommand.ConnectedButton != null)
+                    {
+                        await this.Window.RunAsyncOperation(async () =>
+                        {
+                            controlCommand.ConnectedButton.cooldown = controlCommand.Command.GetCooldownTimestamp();
+
+                            List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
+                            if (!string.IsNullOrEmpty(controlCommand.Command.CooldownGroup))
+                            {
+                                var otherItems = this.connectedSceneControls[scene.sceneID].Where(i => i.Command != null && i.ConnectedButton != null);
+                                otherItems = otherItems.Where(i => controlCommand.Command.CooldownGroup.Equals(i.Command.CooldownGroup));
+
+                                foreach (var otherItem in otherItems)
                                 {
-                                    await ChannelSession.Interactive.CaptureSparkTransaction(interactiveInput.transactionID);
+                                    otherItem.ConnectedButton.cooldown = controlCommand.ConnectedButton.cooldown;
                                 }
-                                catch (Exception) { }
-                            });
-                        }
-
-                        GlobalEvents.InteractiveControlUsed(item.Control);
-
-                        UserViewModel user = ChannelSession.GetCurrentUser();
-                        if (ChannelSession.InteractiveUsers.ContainsKey(interactiveInput.participantID))
-                        {
-                            InteractiveParticipantModel participant = ChannelSession.InteractiveUsers[interactiveInput.participantID];
-                            if (ChannelSession.ChatUsers.ContainsKey(participant.userID))
-                            {
-                                user = ChannelSession.ChatUsers[participant.userID];
+                                buttons.AddRange(otherItems.Select(i => i.ConnectedButton));
                             }
                             else
                             {
-                                user = new UserViewModel(participant.userID, participant.username);
+                                buttons.Add(controlCommand.ConnectedButton);
                             }
-                        }
 
-                        if (item.ConnectedButton != null)
-                        {
-                            await this.Window.RunAsyncOperation(async () =>
-                            {
-                                item.ConnectedButton.cooldown = item.Command.GetCooldownTimestamp();
+                            await ChannelSession.Interactive.UpdateControls(scene, buttons);
+                        });
+                    }
+                    else if (controlCommand.ConnectedJoystick != null)
+                    {
 
-                                List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();                             
-                                if (!string.IsNullOrEmpty(item.Command.CooldownGroup))
-                                {
-                                    var otherItems = this.interactiveItems.Where(i => i.Command != null && i.ConnectedButton != null);
-                                    otherItems = otherItems.Where(i => item.Command.CooldownGroup.Equals(i.Command.CooldownGroup));
-                                    foreach (var otherItem in otherItems)
-                                    {
-                                        otherItem.ConnectedButton.cooldown = item.ConnectedButton.cooldown;
-                                    }
-                                    buttons.AddRange(otherItems.Select(i => i.ConnectedButton));
-                                }
-                                else
-                                {
-                                    buttons.Add(item.ConnectedButton);
-                                }
-
-                                await ChannelSession.Interactive.UpdateControls(this.connectedScene, buttons);
-                            });
-                        }
+                    }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        item.Command.Perform(user);
+                    controlCommand.Command.Perform(user);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                        return;
-                    }
+                    return;
                 }
             }
         }
 
-        public InteractiveCommand FindCommandFromSettings(InteractiveSceneModel scene, InteractiveControlModel control)
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            return ChannelSession.Settings.InteractiveControls.FirstOrDefault(c => c.GameID.Equals(this.selectedGame.id) && c.SceneID.Equals(scene.sceneID) && c.Name.Equals(control.controlID));
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await this.RefreshSelectedGame();
+            });
         }
 
-        public InteractiveControlCommandItem FindCommandFromItems(InteractiveControlModel control)
+        private async void GlobalEvents_OnChatUserJoined(object sender, UserViewModel e)
         {
-            return this.interactiveItems.FirstOrDefault(i => i.Control.controlID.Equals(control.controlID));
+            if (ChannelSession.Interactive != null && ChannelSession.Interactive.Client.Authenticated)
+            {
+                InteractiveParticipantModel participant = InteractiveClientWrapper.InteractiveUsers.Values.FirstOrDefault(u => u.userID.Equals(e.ID));
+                if (participant != null)
+                {
+                    this.AssignDefaultGroupForParticipant(participant);
+                    await this.Window.RunAsyncOperation(async () =>
+                    {
+                        return await ChannelSession.Interactive.UpdateParticipants(new List<InteractiveParticipantModel>() { participant });
+                    });
+                }
+            }
         }
     }
 }
