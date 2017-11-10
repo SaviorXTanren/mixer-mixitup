@@ -66,7 +66,7 @@ namespace MixItUp.Base.Commands
     public class MixItUpChatCommand : PreMadeChatCommand
     {
         public MixItUpChatCommand()
-            : base("Mix It Up", "mixitup", UserRole.User, 60)
+            : base("Mix It Up", "mixitup", UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -81,7 +81,7 @@ namespace MixItUp.Base.Commands
     public class CommandsChatCommand : PreMadeChatCommand
     {
         public CommandsChatCommand()
-            : base("Commands", "commands", UserRole.User, 60)
+            : base("Commands", "commands", UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -96,7 +96,7 @@ namespace MixItUp.Base.Commands
     public class GameChatCommand : PreMadeChatCommand
     {
         public GameChatCommand()
-            : base("Game", new List<string>() { "game", "status" }, UserRole.User, 60)
+            : base("Game", new List<string>() { "game", "status" }, UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -113,7 +113,7 @@ namespace MixItUp.Base.Commands
     public class TitleChatCommand : PreMadeChatCommand
     {
         public TitleChatCommand()
-            : base("Title", new List<string>() { "title", "stream" }, UserRole.User, 60)
+            : base("Title", new List<string>() { "title", "stream" }, UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Commands
     public class UptimeChatCommand : PreMadeChatCommand
     {
         public UptimeChatCommand()
-            : base("Uptime", "uptime", UserRole.User, 60)
+            : base("Uptime", "uptime", UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -157,7 +157,7 @@ namespace MixItUp.Base.Commands
     public class MixerAgeChatCommand : PreMadeChatCommand
     {
         public MixerAgeChatCommand()
-            : base("Mixer Age", "mixerage", UserRole.User, 60)
+            : base("Mixer Age", "mixerage", UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -173,7 +173,7 @@ namespace MixItUp.Base.Commands
     public class FollowAgeChatCommand : PreMadeChatCommand
     {
         public FollowAgeChatCommand()
-            : base("Follow Age", "followage", UserRole.Follower, 60)
+            : base("Follow Age", "followage", UserRole.Follower, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -192,7 +192,7 @@ namespace MixItUp.Base.Commands
     public class StreamerAgeChatCommand : PreMadeChatCommand
     {
         public StreamerAgeChatCommand()
-            : base("Streamer Age", new List<string>() { "streamerage", "age" }, UserRole.User, 60)
+            : base("Streamer Age", new List<string>() { "streamerage", "age" }, UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -207,7 +207,7 @@ namespace MixItUp.Base.Commands
     public class SparksChatCommand : PreMadeChatCommand
     {
         public SparksChatCommand()
-            : base("Sparks", "sparks", UserRole.User, 60)
+            : base("Sparks", "sparks", UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -223,7 +223,7 @@ namespace MixItUp.Base.Commands
     public class QuoteChatCommand : PreMadeChatCommand
     {
         public QuoteChatCommand()
-            : base("Quote", "quote", UserRole.User, 60)
+            : base("Quote", "quote", UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -382,6 +382,53 @@ namespace MixItUp.Base.Commands
                     {
                         await ChannelSession.BotChat.Whisper(user.UserName, "Usage: !ban @USERNAME");
                     }
+                }
+            }));
+        }
+    }
+
+    public class Magic8BallChatCommand : PreMadeChatCommand
+    {
+        private List<String> responses = new List<string>()
+        {
+            "It is certain",
+            "It is decidedly so",
+            "Without a doubt",
+            "Yes definitely",
+            "You may rely on it",
+            "As I see it, yes",
+            "Most likely",
+            "Outlook good",
+            "Yes",
+            "Signs point to yes",
+            "Reply hazy try again",
+            "Ask again later",
+            "Better not tell you now",
+            "Cannot predict now",
+            "Concentrate and ask again",
+            "Don't count on it",
+            "My reply is no",
+            "My sources say no",
+            "Outlook not so good",
+            "Very doubtful",
+            "Ask your mother",
+            "Ask your father",
+            "Come back later, I'm sleeping",
+            "Yeah...sure, whatever",
+            "Hahaha...no...",
+            "I don't know, blame @SaviorXTanren..."
+        };
+
+        public Magic8BallChatCommand()
+            : base("Magic 8 Ball", new List<string>() { "magic8ball", "8ball" }, UserRole.User, 5)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.BotChat != null)
+                {
+                    Random random = new Random();
+                    int index = random.Next(0, this.responses.Count);
+                    await ChannelSession.BotChat.SendMessage(string.Format("The Magic 8-Ball says: \"{0}\"", this.responses[index]));
                 }
             }));
         }
