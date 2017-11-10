@@ -23,7 +23,6 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public string SourceName { get; set; }
-
         [DataMember]
         public bool SourceVisible { get; set; }
 
@@ -33,19 +32,23 @@ namespace MixItUp.Base.Actions
         [JsonIgnore]
         private string currentTextToWrite { get; set; }
 
-        public XSplitAction() { }
+        public XSplitAction() : base(ActionTypeEnum.XSplit) { }
 
-        public XSplitAction(string sceneName) : this(sceneName, null, false, null) { }
+        public XSplitAction(string sceneName) : this() { this.SceneName = sceneName; }
 
-        public XSplitAction(string sourceName, bool sourceVisible, string sourceText) : this(null, sourceName, sourceVisible, sourceText) { }
-
-        private XSplitAction(string sceneName, string sourceName, bool sourceVisible, string sourceText)
-            : base(ActionTypeEnum.XSplit)
+        public XSplitAction(string sourceName, bool sourceVisible, string sourceText = null)
+            : this(sourceName, sourceVisible)
         {
-            this.SceneName = sceneName;
             this.SourceName = sourceName;
             this.SourceVisible = sourceVisible;
             this.SourceText = sourceText;
+        }
+
+        private XSplitAction(string sourceName, bool sourceVisible)
+            : this()
+        {
+            this.SourceName = sourceName;
+            this.SourceVisible = sourceVisible;
         }
 
         public string LoadTextFromFilePath { get { return Path.Combine(XSplitReferenceTextFilesDirectory, this.SourceName + ".txt"); } }

@@ -43,6 +43,8 @@ namespace MixItUp.WPF.Controls.Actions
             Scene,
             [Name("Source Visibility")]
             SourceVisibility,
+            [Name("Text Source")]
+            TextSource,
         }
 
         private const int MinimzedGroupBoxHeight = 35;
@@ -183,9 +185,21 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                         else if (this.XSplitSourceGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
                         {
-                            XSplitAction action = new XSplitAction(this.XSplitSourceNameTextBox.Text, this.XSplitSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.XSplitSourceTextTextBox.Text);
-                            action.UpdateReferenceTextFile();
-                            return action;
+                            if (this.OBSStudioSourceTextGrid.Visibility == Visibility.Visible)
+                            {
+                                if (!string.IsNullOrEmpty(this.XSplitSourceTextTextBox.Text))
+                                {
+                                    XSplitAction action = new XSplitAction(this.XSplitSourceNameTextBox.Text, this.XSplitSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.XSplitSourceTextTextBox.Text);
+                                    action.UpdateReferenceTextFile();
+                                    return action;
+                                }
+                            }
+                            else
+                            {
+                                XSplitAction action = new XSplitAction(this.XSplitSourceNameTextBox.Text, this.XSplitSourceVisibleCheckBox.IsChecked.GetValueOrDefault());
+                                action.UpdateReferenceTextFile();
+                                return action;
+                            }
                         }
                     }
                     break;
@@ -361,11 +375,18 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                         else
                         {
-                            this.XSplitTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.SourceVisibility);
                             this.XSplitSourceNameTextBox.Text = xsplitAction.SourceName;
                             this.XSplitSourceVisibleCheckBox.IsChecked = xsplitAction.SourceVisible;
-                            this.XSplitSourceTextTextBox.Text = xsplitAction.SourceText;
-                            this.XSplitSourceLoadTextFromTextBox.Text = xsplitAction.LoadTextFromFilePath;
+                            if (!string.IsNullOrEmpty(xsplitAction.SourceText))
+                            {
+                                this.OBSStudioSourceTextTextBox.Text = xsplitAction.SourceText;
+                                this.OBSStudioSourceLoadTextFromTextBox.Text = xsplitAction.LoadTextFromFilePath;
+                                this.OBSStudioTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.TextSource);
+                            }
+                            else
+                            {
+                                this.OBSStudioTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.SourceVisibility);
+                            }
                         }
                         break;
                     case ActionTypeEnum.Counter:
@@ -482,6 +503,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.XSplitSceneGrid.Visibility = Visibility.Hidden;
             this.XSplitSourceGrid.Visibility = Visibility.Hidden;
+            this.XSplitSourceTextGrid.Visibility = Visibility.Hidden;
             if (this.XSplitTypeComboBox.SelectedIndex >= 0)
             {
                 XSplitTypeEnum xsplitType = EnumHelper.GetEnumValueFromString<XSplitTypeEnum>((string)this.XSplitTypeComboBox.SelectedItem);
@@ -489,9 +511,13 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.XSplitSceneGrid.Visibility = Visibility.Visible;
                 }
-                else if (xsplitType == XSplitTypeEnum.SourceVisibility)
+                else
                 {
                     this.XSplitSourceGrid.Visibility = Visibility.Visible;
+                    if (xsplitType == XSplitTypeEnum.TextSource)
+                    {
+                        this.XSplitSourceTextGrid.Visibility = Visibility.Visible;
+                    }
                 }
             }
         }

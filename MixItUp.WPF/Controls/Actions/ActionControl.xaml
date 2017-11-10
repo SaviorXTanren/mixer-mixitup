@@ -282,7 +282,7 @@
                     <TextBlock x:Name="OBSStudioNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable OBS Studio connection in the Services Section!</TextBlock>
                 </Grid>
 
-                <Grid x:Name="OBSStudioSceneGrid" Grid.Row="2" Visibility="Hidden">
+                <Grid x:Name="OBSStudioSceneGrid" Grid.Row="2" Visibility="Hidden" VerticalAlignment="Top">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
@@ -375,7 +375,7 @@
                     <TextBlock x:Name="XSplitNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable XSplit connection in the Services Section!</TextBlock>
                 </Grid>
 
-                <Grid x:Name="XSplitSceneGrid" Grid.Row="2" Visibility="Hidden">
+                <Grid x:Name="XSplitSceneGrid" Grid.Row="2" Visibility="Hidden" VerticalAlignment="Top">
                     <TextBox x:Name="XSplitSceneNameTextBox" MaterialDesign:HintAssist.Hint="Scene Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
@@ -384,37 +384,43 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Column="0" Grid.Row="0" x:Name="XSplitSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" TextChanged="XSplitSourceNameTextBox_TextChanged" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                    <Grid Grid.Row="2">
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0">Visible:</TextBlock>
-                        <CheckBox Grid.Column="2" x:Name="XSplitSourceVisibleCheckBox" />
+                        <TextBox Grid.Column="0" Grid.Row="0" x:Name="XSplitSourceNameTextBox" MaterialDesign:HintAssist.Hint="Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="4" x:Name="XSplitSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text"  Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center">Visible:</TextBlock>
+                        <CheckBox Grid.Column="4" x:Name="XSplitSourceVisibleCheckBox" />
                     </Grid>
 
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                    <Grid x:Name="XSplitSourceTextGrid" Grid.Row="2" Visibility="Hidden">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Column="0">File:</TextBlock>
+                        <TextBox Grid.Row="0" x:Name="XSplitSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" TextChanged="OBSStudioSourceTextTextBox_TextChanged" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="2" x:Name="XSplitSourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">File:</TextBlock>
+
+                            <TextBox Grid.Column="2" x:Name="XSplitSourceLoadTextFromTextBox" IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
                     </Grid>
 
                 </Grid>
