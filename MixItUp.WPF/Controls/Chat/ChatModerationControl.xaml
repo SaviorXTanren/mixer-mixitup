@@ -52,11 +52,11 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Controls:SliderWithHeaderControl x:Name="MaxCapsAllowedSlider" Grid.Row="0" Minimum="0" Maximum="50" Text="Max Caps Allowed (0 = Disabled):" ValueChanged="MaxCapsAllowedSlider_ValueChanged" />
+                <Controls:SliderWithHeaderControl x:Name="MaxCapsAllowedSlider" Grid.Row="0" Minimum="0" Maximum="50" Text="Max Caps Allowed (0 = Disabled):" ValueChanged="MaxCapsAllowedSlider_ValueChanged" LostFocus="Slider_LostFocus" />
 
-                <Controls:SliderWithHeaderControl x:Name="MaxPunctuationAllowedSlider" Grid.Row="2" Minimum="0" Maximum="50" Text="Max Symbol/Punctuation Allowed (0 = Disabled):" ValueChanged="MaxPunctuationAllowedSlider_ValueChanged" />
+                <Controls:SliderWithHeaderControl x:Name="MaxPunctuationAllowedSlider" Grid.Row="2" Minimum="0" Maximum="50" Text="Max Symbol/Punctuation Allowed (0 = Disabled):" ValueChanged="MaxPunctuationAllowedSlider_ValueChanged" LostFocus="Slider_LostFocus" />
 
-                <Controls:SliderWithHeaderControl x:Name="MaxEmoteAllowedSlider" Grid.Row="4" Minimum="0" Maximum="50" Text="Max Emotes Allowed (0 = Disabled):" ValueChanged="MaxEmoteAllowedSlider_ValueChanged" />
+                <Controls:SliderWithHeaderControl x:Name="MaxEmoteAllowedSlider" Grid.Row="4" Minimum="0" Maximum="50" Text="Max Emotes Allowed (0 = Disabled):" ValueChanged="MaxEmoteAllowedSlider_ValueChanged" LostFocus="Slider_LostFocus" />
 
                 <Grid Grid.Row="6">
                     <Grid.ColumnDefinitions>
@@ -66,7 +66,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0">Block Links:</TextBlock>
-                    <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="BlockLinksToggleButton_Checked" Unchecked="BlockLinksToggleButton_Unchecked" />
+                    <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="BlockLinksToggleButton_Checked" Unchecked="BlockLinksToggleButton_Checked" />
                 </Grid>
 
             </Grid>
@@ -78,9 +78,9 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Controls:SliderWithHeaderControl x:Name="Timeout1MinAfterSlider" Grid.Row="0" Minimum="0" Maximum="10" Text="1 Min Timeout Offenses (0 = Disabled):" ValueChanged="Timeout1MinAfterSlider_ValueChanged" />
+                <Controls:SliderWithHeaderControl x:Name="Timeout1MinAfterSlider" Grid.Row="0" Minimum="0" Maximum="10" Text="1 Min Timeout Offenses (0 = Disabled):" ValueChanged="Timeout1MinAfterSlider_ValueChanged" LostFocus="Slider_LostFocus" />
 
-                <Controls:SliderWithHeaderControl x:Name="Timeout5MinAfterSlider" Grid.Row="2" Minimum="0" Maximum="10" Text="5 Min Timeout Offenses (0 = Disabled):" ValueChanged="Timeout5MinAfterSlider_ValueChanged" />
+                <Controls:SliderWithHeaderControl x:Name="Timeout5MinAfterSlider" Grid.Row="2" Minimum="0" Maximum="10" Text="5 Min Timeout Offenses (0 = Disabled):" ValueChanged="Timeout5MinAfterSlider_ValueChanged" LostFocus="Slider_LostFocus" />
 
             </Grid>
 

@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Controls.Chat
             return base.InitializeInternal();
         }
 
-        private void BannedWordsTextBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        private async void BannedWordsTextBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)
         {
             string bannedWords = this.BannedWordsTextBox.Text;
             if (string.IsNullOrEmpty(this.BannedWordsTextBox.Text))
@@ -42,6 +42,11 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 ChannelSession.Settings.BannedWords.Add(split);
             }
+
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.Settings.Save();
+            });
         }
 
         private void MaxCapsAllowedSlider_ValueChanged(object sender, int e)
@@ -59,9 +64,14 @@ namespace MixItUp.WPF.Controls.Chat
             ChannelSession.Settings.EmoteBlockCount = (int)this.MaxEmoteAllowedSlider.Value;
         }
 
-        private void BlockLinksToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e) { ChannelSession.Settings.BlockLinks = true; }
-
-        private void BlockLinksToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e) { ChannelSession.Settings.BlockLinks = false; }
+        private async void BlockLinksToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Settings.BlockLinks = BlockLinksToggleButton.IsChecked.GetValueOrDefault();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.Settings.Save();
+            });
+        }
 
         private void Timeout1MinAfterSlider_ValueChanged(object sender, int e)
         {
@@ -71,6 +81,14 @@ namespace MixItUp.WPF.Controls.Chat
         private void Timeout5MinAfterSlider_ValueChanged(object sender, int e)
         {
             ChannelSession.Settings.Timeout5MinuteOffenseCount = (int)this.Timeout5MinAfterSlider.Value;
+        }
+
+        private async void Slider_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.Settings.Save();
+            });
         }
     }
 }
