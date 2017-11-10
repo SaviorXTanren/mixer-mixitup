@@ -78,7 +78,7 @@ namespace MixItUp.Base.MixerAPI
                 if (user.ID > 0)
                 {
                     await user.SetDetails(checkForFollow: false);
-                    refreshUsers.Add(user.ID, user);
+                    refreshUsers[user.ID] = user;
                 }
             }
 
