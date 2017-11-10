@@ -12,16 +12,16 @@ namespace MixItUp.Base.MixerAPI
 {
     public class ChatClientWrapper : MixerRequestWrapperBase
     {
-        public event EventHandler<ChatClearMessagesEventModel> OnClearMessagesOccurred;
-        public event EventHandler<ChatDeleteMessageEventModel> OnDeleteMessageOccurred;
-        public event EventHandler<ChatPollEventModel> OnPollEndOccurred;
-        public event EventHandler<ChatPollEventModel> OnPollStartOccurred;
-        public event EventHandler<ChatUserEventModel> OnUserTimeoutOccurred;
-        public event EventHandler<ChatUserEventModel> OnUserUpdateOccurred;
-        public event EventHandler<ChatUserEventModel> OnUserLeaveOccurred;
-        public event EventHandler<ChatUserEventModel> OnUserJoinOccurred;
-        public event EventHandler<ChatMessageEventModel> OnMessageOccurred;
-        public event EventHandler<ChatPurgeMessageEventModel> OnPurgeMessageOccurred;
+        public event EventHandler<ChatClearMessagesEventModel> OnClearMessagesOccurred = delegate { };
+        public event EventHandler<ChatDeleteMessageEventModel> OnDeleteMessageOccurred = delegate { };
+        public event EventHandler<ChatPollEventModel> OnPollEndOccurred = delegate { };
+        public event EventHandler<ChatPollEventModel> OnPollStartOccurred = delegate { };
+        public event EventHandler<ChatUserEventModel> OnUserTimeoutOccurred = delegate { };
+        public event EventHandler<ChatUserEventModel> OnUserUpdateOccurred = delegate { };
+        public event EventHandler<ChatUserEventModel> OnUserLeaveOccurred = delegate { };
+        public event EventHandler<ChatUserEventModel> OnUserJoinOccurred = delegate { };
+        public event EventHandler<ChatMessageEventModel> OnMessageOccurred = delegate { };
+        public event EventHandler<ChatPurgeMessageEventModel> OnPurgeMessageOccurred = delegate { };
 
         public static LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
 
@@ -98,6 +98,15 @@ namespace MixItUp.Base.MixerAPI
                 {
                     ChatClientWrapper.ChatUsers[user.ID] = user;
                 }
+            }
+        }
+
+        public async Task GetAndAddUser(uint userID)
+        {
+            UserModel user = await ChannelSession.Connection.GetUser(userID);
+            if (user != null)
+            {
+                await this.SetDetailsAndAddUser(new UserViewModel(user));
             }
         }
 

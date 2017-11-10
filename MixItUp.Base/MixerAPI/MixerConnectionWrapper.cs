@@ -54,6 +54,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<UserModel> GetUser(string username) { return await this.RunAsync(this.Connection.Users.GetUser(username)); }
 
+        public async Task<UserModel> GetUser(uint userID) { return await this.RunAsync(this.Connection.Users.GetUser(userID)); }
+
         public async Task<UserWithChannelModel> GetUser(UserModel user) { return await this.RunAsync(this.Connection.Users.GetUser(user)); }
 
         public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, UserRole role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString())); }

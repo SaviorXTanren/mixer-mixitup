@@ -31,7 +31,10 @@ namespace MixItUp.WPF.Util
         {
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
-            await dialogHost.ShowDialog(new BasicDialogControl(message));
+            if (!dialogHost.IsVisible)
+            {
+                await dialogHost.ShowDialog(new BasicDialogControl(message));
+            }
         }
 
         public static async Task<bool> ShowConfirmationDialog(string message)
@@ -39,9 +42,12 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            dialogHost.DialogClosing += ConfirmationDialogHost_DialogClosing;
-            await dialogHost.ShowDialog(new ConfirmationDialogControl(message));
-            dialogHost.DialogClosing -= ConfirmationDialogHost_DialogClosing;
+            if (!dialogHost.IsVisible)
+            {
+                dialogHost.DialogClosing += ConfirmationDialogHost_DialogClosing;
+                await dialogHost.ShowDialog(new ConfirmationDialogControl(message));
+                dialogHost.DialogClosing -= ConfirmationDialogHost_DialogClosing;
+            }
 
             return MessageBoxHelper.lastConfirmationResult;
         }
@@ -51,9 +57,12 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            dialogHost.DialogClosing += UserDialogHost_DialogClosing;
-            await dialogHost.ShowDialog(new UserDialogControl(user));
-            dialogHost.DialogClosing -= UserDialogHost_DialogClosing;
+            if (!dialogHost.IsVisible)
+            {
+                dialogHost.DialogClosing += UserDialogHost_DialogClosing;
+                await dialogHost.ShowDialog(new UserDialogControl(user));
+                dialogHost.DialogClosing -= UserDialogHost_DialogClosing;
+            }
 
             return MessageBoxHelper.lastUserResult;
         }
@@ -63,9 +72,12 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            dialogHost.DialogClosing += CustomDialogHost_DialogClosing;
-            await dialogHost.ShowDialog(control);
-            dialogHost.DialogClosing -= CustomDialogHost_DialogClosing;
+            if (!dialogHost.IsVisible)
+            {
+                dialogHost.DialogClosing += CustomDialogHost_DialogClosing;
+                await dialogHost.ShowDialog(control);
+                dialogHost.DialogClosing -= CustomDialogHost_DialogClosing;
+            }
 
             return MessageBoxHelper.lastCustomResult;
         }

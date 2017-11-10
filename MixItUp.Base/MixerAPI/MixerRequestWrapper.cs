@@ -60,5 +60,30 @@ namespace MixItUp.Base.MixerAPI
             }
             return ReflectionHelper.CreateInstanceOf<Dictionary<K,V>>();
         }
+
+        public async Task RunAsync(Func<Task> task)
+        {
+            try
+            {
+                await task();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public async Task<T> RunAsync<T>(Func<Task<T>> task)
+        {
+            try
+            {
+                return await task();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return default(T);
+        }
     }
 }

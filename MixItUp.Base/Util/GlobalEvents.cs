@@ -36,15 +36,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<InteractiveControlModel> OnInteractiveControlUsed;
-        public static void InteractiveControlUsed(InteractiveControlModel control)
-        {
-            if (GlobalEvents.OnInteractiveControlUsed != null)
-            {
-                GlobalEvents.OnInteractiveControlUsed(null, control);
-            }
-        }
-
         public static event EventHandler<ConstellationEventType> OnEventOccurred;
         public static void EventOccurred(ConstellationEventType eventType)
         {
