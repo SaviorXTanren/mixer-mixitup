@@ -23,6 +23,8 @@ namespace MixItUp.WPF.Util
 
     public static class MessageBoxHelper
     {
+        private static bool isDialogShown = false;
+
         private static bool lastConfirmationResult = false;
         private static UserDialogResult lastUserResult = UserDialogResult.Close;
         private static string lastCustomResult = null;
@@ -32,9 +34,11 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            if (!dialogHost.IsOpen)
+            if (!isDialogShown)
             {
+                MessageBoxHelper.isDialogShown = true;
                 await dialogHost.ShowDialog(new BasicDialogControl(message));
+                MessageBoxHelper.isDialogShown = false;
             }
         }
 
@@ -43,11 +47,11 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            if (!dialogHost.IsOpen)
+            if (!isDialogShown)
             {
-                dialogHost.DialogClosing += ConfirmationDialogHost_DialogClosing;
+                MessageBoxHelper.isDialogShown = true;
                 await dialogHost.ShowDialog(new ConfirmationDialogControl(message));
-                dialogHost.DialogClosing -= ConfirmationDialogHost_DialogClosing;
+                MessageBoxHelper.isDialogShown = false;
             }
 
             return MessageBoxHelper.lastConfirmationResult;
@@ -58,11 +62,11 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            if (!dialogHost.IsOpen)
+            if (!isDialogShown)
             {
-                dialogHost.DialogClosing += UserDialogHost_DialogClosing;
+                MessageBoxHelper.isDialogShown = true;
                 await dialogHost.ShowDialog(new UserDialogControl(user));
-                dialogHost.DialogClosing -= UserDialogHost_DialogClosing;
+                MessageBoxHelper.isDialogShown = false;
             }
 
             return MessageBoxHelper.lastUserResult;
@@ -73,11 +77,11 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            if (!dialogHost.IsOpen)
+            if (!isDialogShown)
             {
-                dialogHost.DialogClosing += CustomDialogHost_DialogClosing;
+                MessageBoxHelper.isDialogShown = true;
                 await dialogHost.ShowDialog(control);
-                dialogHost.DialogClosing -= CustomDialogHost_DialogClosing;
+                MessageBoxHelper.isDialogShown = false;
             }
 
             return MessageBoxHelper.lastCustomResult;
