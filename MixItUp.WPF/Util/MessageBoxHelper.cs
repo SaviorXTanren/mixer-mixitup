@@ -31,7 +31,8 @@ namespace MixItUp.WPF.Util
         {
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
-            if (!dialogHost.IsVisible)
+
+            if (!dialogHost.IsOpen)
             {
                 await dialogHost.ShowDialog(new BasicDialogControl(message));
             }
@@ -42,7 +43,7 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            if (!dialogHost.IsVisible)
+            if (!dialogHost.IsOpen)
             {
                 dialogHost.DialogClosing += ConfirmationDialogHost_DialogClosing;
                 await dialogHost.ShowDialog(new ConfirmationDialogControl(message));
@@ -57,7 +58,7 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            if (!dialogHost.IsVisible)
+            if (!dialogHost.IsOpen)
             {
                 dialogHost.DialogClosing += UserDialogHost_DialogClosing;
                 await dialogHost.ShowDialog(new UserDialogControl(user));
@@ -72,7 +73,7 @@ namespace MixItUp.WPF.Util
             LoadingWindowBase window = MessageBoxHelper.GetWindow();
             DialogHost dialogHost = (DialogHost)window.FindName("MDDialogHost");
 
-            if (!dialogHost.IsVisible)
+            if (!dialogHost.IsOpen)
             {
                 dialogHost.DialogClosing += CustomDialogHost_DialogClosing;
                 await dialogHost.ShowDialog(control);
