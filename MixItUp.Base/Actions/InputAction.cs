@@ -17,10 +17,10 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public List<InputTypeEnum> Inputs { get; set; }
 
-        public InputAction() { }
+        public InputAction() : base(ActionTypeEnum.Input) { }
 
         public InputAction(IEnumerable<InputTypeEnum> inputs)
-            : base(ActionTypeEnum.Input)
+            : this()
         {
             this.Inputs = new List<InputTypeEnum>(inputs);
         }

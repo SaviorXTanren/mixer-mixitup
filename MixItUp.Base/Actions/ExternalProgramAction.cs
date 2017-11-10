@@ -23,10 +23,10 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public bool ShowWindow { get; set; }
 
-        public ExternalProgramAction() { }
+        public ExternalProgramAction() : base(ActionTypeEnum.ExternalProgram) { }
 
         public ExternalProgramAction(string filePath, string arguments, bool showWindow)
-            : base(ActionTypeEnum.ExternalProgram)
+            : this()
         {
             this.FilePath = filePath;
             this.Arguments = arguments;

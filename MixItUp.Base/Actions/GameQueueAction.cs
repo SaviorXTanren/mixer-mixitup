@@ -34,10 +34,10 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public GameQueueActionType GameQueueType { get; set; }
 
-        public GameQueueAction() { }
+        public GameQueueAction() : base(ActionTypeEnum.GameQueue) { }
 
         public GameQueueAction(GameQueueActionType gameQueueType)
-            : base(ActionTypeEnum.GameQueue)
+            : this()
         {
             this.GameQueueType = gameQueueType;
         }

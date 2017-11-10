@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.ViewModel.User;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -23,10 +22,10 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public bool IsWhisper { get; set; }
 
-        public CurrencyAction() { }
+        public CurrencyAction() : base(ActionTypeEnum.Currency) { }
 
         public CurrencyAction(int amount, string chatText, bool isWhisper)
-            : base(ActionTypeEnum.Currency)
+            : this()
         {
             this.Amount = amount;
             this.ChatText = chatText;

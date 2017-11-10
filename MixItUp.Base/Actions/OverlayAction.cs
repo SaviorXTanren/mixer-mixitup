@@ -40,7 +40,7 @@ namespace MixItUp.Base.Actions
 
         private string imageData { get; set; }
 
-        public OverlayAction() { }
+        public OverlayAction() : base(ActionTypeEnum.Overlay) { }
 
         public OverlayAction(string imagePath, int width, int height, double duration, int horizontal, int vertical)
             : this(duration, horizontal, vertical)
@@ -59,7 +59,7 @@ namespace MixItUp.Base.Actions
         }
 
         public OverlayAction(double duration, int horizontal, int vertical)
-            : base(ActionTypeEnum.Overlay)
+            : this()
         {
             this.Duration = duration;
             this.Horizontal = horizontal;

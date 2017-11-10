@@ -17,8 +17,10 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public double WaitAmount { get; set; }
 
+        public WaitAction() : base(ActionTypeEnum.Wait) { }
+
         public WaitAction(double waitAmount)
-            : base(ActionTypeEnum.Wait)
+            : this()
         {
             this.WaitAmount = waitAmount;
         }

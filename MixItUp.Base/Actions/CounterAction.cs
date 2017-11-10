@@ -19,10 +19,10 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public int CounterAmount { get; set; }
 
-        public CounterAction() { }
+        public CounterAction() : base(ActionTypeEnum.Counter) { }
 
         public CounterAction(string counterName, int counterAmount)
-            : base(ActionTypeEnum.Counter)
+            : this()
         {
             this.CounterName = counterName;
             this.CounterAmount = counterAmount;

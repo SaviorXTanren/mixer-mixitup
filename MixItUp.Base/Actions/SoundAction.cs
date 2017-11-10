@@ -20,8 +20,10 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public int VolumeScale { get; set; }
 
+        public SoundAction() : base(ActionTypeEnum.Sound) { }
+
         public SoundAction(string filePath, int volumeScale)
-            : base(ActionTypeEnum.Sound)
+            : this()
         {
             this.FilePath = filePath;
             this.VolumeScale = volumeScale;

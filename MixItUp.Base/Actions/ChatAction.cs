@@ -19,10 +19,10 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public bool IsWhisper { get; set; }
 
-        public ChatAction() { }
+        public ChatAction() : base(ActionTypeEnum.Chat) { }
 
         public ChatAction(string chatText, bool isWhisper)
-            : base(ActionTypeEnum.Chat)
+            : this()
         {
             this.ChatText = chatText;
             this.IsWhisper = isWhisper;

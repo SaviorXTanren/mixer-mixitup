@@ -27,6 +27,7 @@ namespace MixItUp.Base.Actions
         Counter,
         [Name("Game Queue")]
         GameQueue,
+        Interactive,
 
         Custom = 99,
     }
