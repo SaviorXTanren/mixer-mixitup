@@ -120,6 +120,8 @@ namespace MixItUp.Base.Actions
                 }
             }
 
+            str = str.Replace("$allArgs", string.Join(" ", arguments));
+
             foreach (string counter in ChannelSession.Counters.Keys)
             {
                 str = str.Replace("$" + counter, ChannelSession.Counters[counter].ToString());
