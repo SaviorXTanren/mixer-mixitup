@@ -69,8 +69,6 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task RefreshAllChat()
         {
-            await ChannelSession.RefreshChannel();
- 
             Dictionary<uint, UserViewModel> refreshUsers = new Dictionary<uint, UserViewModel>();
             foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel))
             {

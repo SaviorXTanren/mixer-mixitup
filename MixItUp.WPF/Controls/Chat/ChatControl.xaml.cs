@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
@@ -11,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.WebSockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -55,11 +53,8 @@ namespace MixItUp.WPF.Controls.Chat
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
-                ChannelSession.Chat.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
                 ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
                 ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                ChannelSession.Chat.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                ChannelSession.Chat.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
                 ChannelSession.Chat.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
                 ChannelSession.Chat.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
                 ChannelSession.Chat.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
@@ -73,8 +68,6 @@ namespace MixItUp.WPF.Controls.Chat
                     ChatControl.SubscriberBadgeBitmap.UriSource = new Uri(ChannelSession.Channel.badge.url, UriKind.Absolute);
                     ChatControl.SubscriberBadgeBitmap.EndInit();
                 }
-
-                await this.RefreshAllChat();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
@@ -111,11 +104,11 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-                    await Task.Delay(1000 * 30);
+                    await this.RefreshAllChat();
 
                     this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
 
-                    await this.RefreshAllChat();
+                    await Task.Delay(1000 * 30);
                 }
                 catch (Exception ex) { string str = ex.ToString(); }
             }
@@ -417,16 +410,6 @@ namespace MixItUp.WPF.Controls.Chat
 
         #region Chat Event Handlers
 
-        private void ChatClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
-        {
-            // Show Re-Connecting...
-        }
-
-        private void ChatClient_OnClearMessagesOccurred(object sender, ChatClearMessagesEventModel e)
-        {
-
-        }
-
         private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
             ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(e.id));
@@ -439,16 +422,6 @@ namespace MixItUp.WPF.Controls.Chat
         private void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
             this.AddMessage(new ChatMessageViewModel(e));
-        }
-
-        private void ChatClient_OnPollEndOccurred(object sender, ChatPollEventModel e)
-        {
-            
-        }
-
-        private void ChatClient_OnPollStartOccurred(object sender, ChatPollEventModel e)
-        {
-            
         }
 
         private void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
