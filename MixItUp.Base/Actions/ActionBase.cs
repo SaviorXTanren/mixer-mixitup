@@ -29,6 +29,8 @@ namespace MixItUp.Base.Actions
         [Name("Game Queue")]
         GameQueue,
         Interactive,
+        [Name("Text To Speech")]
+        TextToSpeech,
 
         Custom = 99,
     }

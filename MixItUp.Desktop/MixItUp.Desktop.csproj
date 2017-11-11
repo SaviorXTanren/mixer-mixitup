@@ -87,6 +87,7 @@
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Speech" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -113,6 +114,7 @@
     <Compile Include="Services\WindowsAudioService.cs" />
     <Compile Include="Services\WindowsFileService.cs" />
     <Compile Include="Services\WindowsInputService.cs" />
+    <Compile Include="Services\WindowsTextToSpeechService.cs" />
     <Compile Include="Services\XSplitWebServer.cs" />
   </ItemGroup>
   <ItemGroup>

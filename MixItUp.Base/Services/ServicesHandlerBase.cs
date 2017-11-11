@@ -7,6 +7,7 @@ namespace MixItUp.Base.Services
         public IFileService FileService { get; protected set; }
         public IAudioService AudioService { get; protected set; }
         public IInputService InputService { get; protected set; }
+        public ITextToSpeechService TextToSpeechService { get; protected set; }
         public IOverlayService OverlayServer { get; protected set; }
         public IOBSService OBSWebsocket { get; protected set; }
         public IXSplitService XSplitServer { get; protected set; }
@@ -18,6 +19,8 @@ namespace MixItUp.Base.Services
         public abstract Task<bool> InitializeInputService();
 
         public abstract Task<bool> InitializeAudioService();
+
+        public abstract Task<bool> InitializeTextToSpeechService();
 
         public abstract Task<bool> InitializeOverlayServer();
         public abstract Task DisconnectOverlayServer();

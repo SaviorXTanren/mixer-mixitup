@@ -17,6 +17,7 @@ namespace MixItUp.Desktop.Services
             this.InitializeAudioService();
             this.InitializeFileService();
             this.InitializeInputService();
+            this.InitializeTextToSpeechService();
         }
 
         public override async Task Close()
@@ -53,6 +54,16 @@ namespace MixItUp.Desktop.Services
             if (this.AudioService == null)
             {
                 this.AudioService = new WindowsAudioService();
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+
+        public override Task<bool> InitializeTextToSpeechService()
+        {
+            if (this.TextToSpeechService == null)
+            {
+                this.TextToSpeechService = new WindowsTextToSpeechService();
                 return Task.FromResult(true);
             }
             return Task.FromResult(false);

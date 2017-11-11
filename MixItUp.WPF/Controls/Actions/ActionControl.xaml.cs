@@ -239,6 +239,14 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                     }
                     break;
+                case ActionTypeEnum.TextToSpeech:
+                    if (!string.IsNullOrEmpty(this.TextToSpeechMessageTextBox.Text) && this.TextToSpeechVolumeComboBox.SelectedIndex >= 0 && this.TextToSpeechRateComboBox.SelectedIndex >= 0)
+                    {
+                        SpeechVolume volume = EnumHelper.GetEnumValueFromString<SpeechVolume>(this.TextToSpeechVolumeComboBox.Text);
+                        SpeechRate rate = EnumHelper.GetEnumValueFromString<SpeechRate>(this.TextToSpeechRateComboBox.Text);
+                        return new TextToSpeechAction(this.TextToSpeechMessageTextBox.Text, rate, volume);
+                    }
+                    break;
             }
             return null;
         }
@@ -256,6 +264,8 @@ namespace MixItUp.WPF.Controls.Actions
             this.XSplitTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<XSplitTypeEnum>();
             this.GameQueueActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<GameQueueActionType>();
             this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveTypeEnum>();
+            this.TextToSpeechRateComboBox.ItemsSource = EnumHelper.GetEnumNames<SpeechRate>();
+            this.TextToSpeechVolumeComboBox.ItemsSource = EnumHelper.GetEnumNames<SpeechVolume>();
 
             switch (type)
             {
@@ -306,6 +316,9 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.Interactive:
                     this.InteractiveGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.TextToSpeech:
+                    this.TextToSpeechGrid.Visibility = Visibility.Visible;
                     break;
             }
 
@@ -441,6 +454,12 @@ namespace MixItUp.WPF.Controls.Actions
                         {
                             this.InteractiveTypeComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveTypeEnum.AddUserToGroup);
                         }
+                        break;
+                    case ActionTypeEnum.TextToSpeech:
+                        TextToSpeechAction textToSpeechAction = (TextToSpeechAction)this.action;
+                        this.TextToSpeechMessageTextBox.Text = textToSpeechAction.SpeechText;
+                        this.TextToSpeechRateComboBox.SelectedItem = EnumHelper.GetEnumName(textToSpeechAction.SpeechRate);
+                        this.TextToSpeechVolumeComboBox.SelectedItem = EnumHelper.GetEnumName(textToSpeechAction.SpeechVolume);
                         break;
                 }
 
