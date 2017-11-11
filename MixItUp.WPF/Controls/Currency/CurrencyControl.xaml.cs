@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.ObjectModel;
@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using MixItUp.Base.MixerAPI;
 
 namespace MixItUp.WPF.Controls.Currency
 {
@@ -61,20 +60,25 @@ namespace MixItUp.WPF.Controls.Currency
                         ChannelSession.Settings.UserData[chatUser.ID].CurrencyAmount += ChannelSession.Settings.CurrencyAcquireAmount;
                     }
 
-                    App.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        this.userCurrencyData.Clear();
-                        foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
-                        {
-                            this.userCurrencyData.Add(ChannelSession.Settings.UserData[chatUser.ID]);
-                        }
-                    });
+                    this.RefreshUIListing();
                 }
                 catch (ThreadAbortException) { return; }
                 catch (Exception) { }
             }
 
             this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
+        }
+
+        private void RefreshUIListing()
+        {
+            App.Current.Dispatcher.Invoke((Action)delegate
+            {
+                this.userCurrencyData.Clear();
+                foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
+                {
+                    this.userCurrencyData.Add(ChannelSession.Settings.UserData[chatUser.ID]);
+                }
+            });
         }
 
         private async void CurrencyToggleSwitch_Checked(object sender, System.Windows.RoutedEventArgs e)
@@ -148,6 +152,22 @@ namespace MixItUp.WPF.Controls.Currency
             this.backgroundThreadCancellationTokenSource.Cancel();
         }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            UserDataViewModel userData = (UserDataViewModel)textBox.DataContext;
+
+            int newCurrency = 0;
+            if (int.TryParse(textBox.Text, out newCurrency))
+            {
+                userData.CurrencyAmount = newCurrency;
+            }
+            else
+            {
+                textBox.Text = userData.CurrencyAmount.ToString();
+            }
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this.backgroundThreadCancellationTokenSource.Cancel();
@@ -158,6 +178,7 @@ namespace MixItUp.WPF.Controls.Currency
             Button button = (Button)sender;
             UserDataViewModel userData = (UserDataViewModel)button.DataContext;
             userData.CurrencyAmount = 0;
+            this.RefreshUIListing();
         }
     }
 }
