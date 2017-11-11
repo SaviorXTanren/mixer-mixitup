@@ -50,7 +50,9 @@ namespace MixItUp.WPF.Util
             if (!isDialogShown)
             {
                 MessageBoxHelper.isDialogShown = true;
+                dialogHost.DialogClosing += ConfirmationDialogHost_DialogClosing;
                 await dialogHost.ShowDialog(new ConfirmationDialogControl(message));
+                dialogHost.DialogClosing -= ConfirmationDialogHost_DialogClosing;
                 MessageBoxHelper.isDialogShown = false;
             }
 
@@ -65,7 +67,9 @@ namespace MixItUp.WPF.Util
             if (!isDialogShown)
             {
                 MessageBoxHelper.isDialogShown = true;
+                dialogHost.DialogClosing += UserDialogHost_DialogClosing;
                 await dialogHost.ShowDialog(new UserDialogControl(user));
+                dialogHost.DialogClosing -= UserDialogHost_DialogClosing;
                 MessageBoxHelper.isDialogShown = false;
             }
 
@@ -80,7 +84,9 @@ namespace MixItUp.WPF.Util
             if (!isDialogShown)
             {
                 MessageBoxHelper.isDialogShown = true;
+                dialogHost.DialogClosing += CustomDialogHost_DialogClosing;
                 await dialogHost.ShowDialog(control);
+                dialogHost.DialogClosing -= CustomDialogHost_DialogClosing;
                 MessageBoxHelper.isDialogShown = false;
             }
 
