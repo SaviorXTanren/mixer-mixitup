@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -49,7 +50,14 @@ namespace MixItUp.Base.Actions
         {
             await this.AsyncSempahore.WaitAsync();
 
-            await this.PerformInternal(user, arguments);
+            try
+            {
+                await this.PerformInternal(user, arguments);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
 
             this.AsyncSempahore.Release();
         }

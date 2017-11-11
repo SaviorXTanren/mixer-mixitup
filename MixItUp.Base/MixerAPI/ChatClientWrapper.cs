@@ -103,7 +103,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task GetAndAddUser(uint userID)
         {
-            UserModel user = await ChannelSession.Connection.GetUser(userID);
+            ChatUserModel user = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, userID);
             if (user != null)
             {
                 await this.SetDetailsAndAddUser(new UserViewModel(user));

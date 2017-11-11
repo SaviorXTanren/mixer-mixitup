@@ -62,6 +62,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<PrivatePopulatedUserModel> GetCurrentUser() { return await this.RunAsync(this.Connection.Users.GetCurrentUser()); }
 
+        public async Task<ChatUserModel> GetChatUser(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Chats.GetUser(channel, userID)); }
+
         public async Task<IEnumerable<ChatUserModel>> GetChatUsers(ChannelModel channel) { return await this.RunAsync(this.Connection.Chats.GetUsers(channel)); }
 
         public async Task<ExpandedChannelModel> GetChannel(string name) { return await this.RunAsync(this.Connection.Channels.GetChannel(name)); }

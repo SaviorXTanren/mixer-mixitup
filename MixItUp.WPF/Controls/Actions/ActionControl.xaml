@@ -457,6 +457,35 @@
 
             </Grid>
 
+            <Grid x:Name="InteractiveGrid" Grid.Row="2" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="InteractiveTypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+                </Grid>
+
+                <Grid Grid.Row="2" x:Name="InteractiveGroupNameGrid" Visibility="Hidden">
+                    <TextBox x:Name="InteractiveGroupNameTextBox" MaterialDesign:HintAssist.Hint="Group Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="4" x:Name="InteractiveMoveToSceneGrid" Visibility="Hidden">
+                    <TextBox x:Name="InteractiveMoveToSceneTextBox" MaterialDesign:HintAssist.Hint="Scene Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+            </Grid>
+            
         </Grid>
     </GroupBox>
 

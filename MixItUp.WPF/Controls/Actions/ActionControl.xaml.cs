@@ -1,9 +1,7 @@
-﻿using Microsoft.Win32;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
@@ -45,6 +43,14 @@ namespace MixItUp.WPF.Controls.Actions
             SourceVisibility,
             [Name("Text Source")]
             TextSource,
+        }
+
+        private enum InteractiveTypeEnum
+        {
+            [Name("Add User To Group")]
+            AddUserToGroup,
+            [Name("Move Group To Scene")]
+            MoveGroupToScene,
         }
 
         private const int MinimzedGroupBoxHeight = 35;
@@ -218,6 +224,21 @@ namespace MixItUp.WPF.Controls.Actions
                         return new GameQueueAction(gameQueueType);
                     }
                     break;
+                case ActionTypeEnum.Interactive:
+                    if (this.InteractiveTypeComboBox.SelectedIndex >= 0)
+                    {
+                        InteractiveTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
+
+                        if (interactiveType == InteractiveTypeEnum.AddUserToGroup && !string.IsNullOrEmpty(this.InteractiveGroupNameTextBox.Text))
+                        {
+                            return new InteractiveAction(this.InteractiveGroupNameTextBox.Text);
+                        }
+                        else if (interactiveType == InteractiveTypeEnum.MoveGroupToScene && !string.IsNullOrEmpty(this.InteractiveGroupNameTextBox.Text) && !string.IsNullOrEmpty(this.InteractiveMoveToSceneTextBox.Text))
+                        {
+                            return new InteractiveAction(this.InteractiveGroupNameTextBox.Text, this.InteractiveMoveToSceneTextBox.Text);
+                        }
+                    }
+                    break;
             }
             return null;
         }
@@ -234,6 +255,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.OBSStudioTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OBSStudioTypeEnum>();
             this.XSplitTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<XSplitTypeEnum>();
             this.GameQueueActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<GameQueueActionType>();
+            this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveTypeEnum>();
 
             switch (type)
             {
@@ -281,6 +303,9 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.GameQueue:
                     this.GameQueueGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.Interactive:
+                    this.InteractiveGrid.Visibility = Visibility.Visible;
                     break;
             }
 
@@ -397,6 +422,24 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.GameQueue:
                         GameQueueAction gameQueueAction = (GameQueueAction)this.action;
                         this.GameQueueActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(gameQueueAction.GameQueueType);
+                        break;
+                    case ActionTypeEnum.Interactive:
+                        InteractiveAction interactiveAction = (InteractiveAction)this.action;
+
+                        this.InteractiveGroupNameGrid.Visibility = Visibility.Visible;
+                        this.InteractiveGroupNameTextBox.Text = interactiveAction.GroupName;
+
+                        if (!string.IsNullOrEmpty(interactiveAction.MoveGroupToScene))
+                        {
+                            this.InteractiveTypeComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveTypeEnum.MoveGroupToScene);
+
+                            this.InteractiveMoveToSceneGrid.Visibility = Visibility.Visible;
+                            this.InteractiveMoveToSceneTextBox.Text = interactiveAction.MoveGroupToScene;
+                        }
+                        else
+                        {
+                            this.InteractiveTypeComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveTypeEnum.AddUserToGroup);
+                        }
                         break;
                 }
 
@@ -518,6 +561,25 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         this.XSplitSourceTextGrid.Visibility = Visibility.Visible;
                     }
+                }
+            }
+        }
+
+        private void InteractiveTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.InteractiveGroupNameGrid.Visibility = Visibility.Hidden;
+            this.InteractiveMoveToSceneGrid.Visibility = Visibility.Hidden;
+            if (this.InteractiveTypeComboBox.SelectedIndex >= 0)
+            {
+                InteractiveTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
+                if (interactiveType == InteractiveTypeEnum.AddUserToGroup)
+                {
+                    this.InteractiveGroupNameGrid.Visibility = Visibility.Visible;
+                }
+                else if (interactiveType == InteractiveTypeEnum.MoveGroupToScene)
+                {
+                    this.InteractiveGroupNameGrid.Visibility = Visibility.Visible;
+                    this.InteractiveMoveToSceneGrid.Visibility = Visibility.Visible;
                 }
             }
         }

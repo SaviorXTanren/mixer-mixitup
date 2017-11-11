@@ -1,5 +1,7 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using Mixer.Base.Model.Interactive;
+using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +22,7 @@ namespace MixItUp.Base.Actions
         public bool AddUserToGroup { get; set; }
 
         [DataMember]
-        public string MoveToScene { get; set; }
+        public string MoveGroupToScene { get; set; }
 
         public InteractiveAction() : base(ActionTypeEnum.Interactive) { }
 
@@ -35,7 +37,7 @@ namespace MixItUp.Base.Actions
             : this()
         {
             this.GroupName = groupName;
-            this.MoveToScene = moveToScene;
+            this.MoveGroupToScene = moveToScene;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -44,11 +46,16 @@ namespace MixItUp.Base.Actions
             {
                 if (this.AddUserToGroup)
                 {
-
+                    InteractiveParticipantModel participant = ChannelSession.Interactive.InteractiveUsers.Values.FirstOrDefault(p => p.userID.Equals(user.ID));
+                    if (participant != null)
+                    {
+                        participant.groupID = this.GroupName;
+                        await ChannelSession.Interactive.UpdateParticipants(new List<InteractiveParticipantModel>() { participant });
+                    }
                 }
-                else if ()
+                else if (!string.IsNullOrEmpty(MoveGroupToScene))
                 {
-
+                    await ChannelSession.Interactive.UpdateGroups(new List<InteractiveGroupModel>() { new InteractiveGroupModel() { groupID = this.GroupName, sceneID = this.MoveGroupToScene } });
                 }
             }
         }
