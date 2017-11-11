@@ -5,8 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="mixer-client-csharp" Version="0.4.0.2-beta" />
+    <Content Include="..\Wiki\Images\Logo.png" Link="Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="mixer-client-csharp" Version="0.4.0.3-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LoginRedirectPage.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

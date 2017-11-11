@@ -117,7 +117,7 @@ namespace MixItUp.Base
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
-            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes);
+            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, "LoginRedirectPage.html");
             if (connection != null)
             {
                 ChannelSession.Connection = new MixerConnectionWrapper(connection);
