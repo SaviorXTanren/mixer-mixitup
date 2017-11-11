@@ -201,17 +201,17 @@ namespace MixItUp.WPF.Controls.Chat
                     username = username.Trim();
                     username = username.Replace("@", "");
 
-                    await this.Window.RunAsyncOperation(async () =>
+                    await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
                         await ChannelSession.Chat.Whisper(username, message);
-                    });
+                    }));
                 }
                 else
                 {
-                    await this.Window.RunAsyncOperation(async () =>
+                    await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
                         await ChannelSession.Chat.SendMessage(message);
-                    });
+                    }));
                 }
             }
         }
@@ -326,7 +326,7 @@ namespace MixItUp.WPF.Controls.Chat
                         else
                         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            ChannelSession.BotChat.Whisper(message.User.UserName, "You do not permission to run this command");
+                            ChannelSession.Chat.Whisper(message.User.UserName, "You do not permission to run this command");
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         }
                     }

@@ -92,7 +92,7 @@ namespace MixItUp.WPF.Controls.Giveaway
             this.EnableGiveawayButton.Visibility = Visibility.Collapsed;
             this.DisableGiveawayButton.Visibility = Visibility.Visible;
 
-            await ChannelSession.BotChat.SendMessage(string.Format("A giveaway for {0} for {1}s has started! Type \"!{2}\" in chat in the next {3} seconds to enter!", this.giveawayItem, ChannelSession.Settings.GiveawayUserRole, ChannelSession.Settings.GiveawayCommand, ChannelSession.Settings.GiveawayTimer));
+            await ChannelSession.Chat.SendMessage(string.Format("A giveaway for {0} for {1}s has started! Type \"!{2}\" in chat in the next {3} seconds to enter!", this.giveawayItem, ChannelSession.Settings.GiveawayUserRole, ChannelSession.Settings.GiveawayCommand, ChannelSession.Settings.GiveawayTimer));
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -152,7 +152,7 @@ namespace MixItUp.WPF.Controls.Giveaway
                         this.GiveawayWinnerTextBlock.Text = this.selectedWinner.UserName;
                     }));
 
-                    await ChannelSession.BotChat.SendMessage(string.Format("Congratulations @{0}, you won {1}! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", this.selectedWinner.UserName, this.giveawayItem));
+                    await ChannelSession.Chat.SendMessage(string.Format("Congratulations @{0}, you won {1}! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", this.selectedWinner.UserName, this.giveawayItem));
 
                     this.timeLeft = 60;
                     while (this.timeLeft > 0)
@@ -173,7 +173,7 @@ namespace MixItUp.WPF.Controls.Giveaway
                 }
                 else
                 {
-                    await ChannelSession.BotChat.SendMessage("There are no users that entered/left in the giveaway");
+                    await ChannelSession.Chat.SendMessage("There are no users that entered/left in the giveaway");
                     await this.EndGiveaway();
                     return;
                 }
@@ -198,7 +198,7 @@ namespace MixItUp.WPF.Controls.Giveaway
 
                     if (isUserValid)
                     {
-                        await ChannelSession.BotChat.Whisper(e.User.UserName, "You have been entered into the giveaway, stay tuned to see who wins!");
+                        await ChannelSession.Chat.Whisper(e.User.UserName, "You have been entered into the giveaway, stay tuned to see who wins!");
                         await this.Dispatcher.BeginInvoke(new Action(() =>
                         {
                             if (!this.enteredUsers.Contains(e.User))
@@ -209,12 +209,12 @@ namespace MixItUp.WPF.Controls.Giveaway
                     }
                     else
                     {
-                        await ChannelSession.BotChat.Whisper(e.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}", ChannelSession.Settings.GiveawayUserRole));
+                        await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}", ChannelSession.Settings.GiveawayUserRole));
                     }
                 }
                 else if (this.selectedWinner != null && e.CommandName.Equals("claim") && this.selectedWinner.Equals(e.User))
                 {
-                    await ChannelSession.BotChat.SendMessage(string.Format("@{0} has claimed their prize! Listen closely to the streamer for instructions on getting your prize.", e.User.UserName));
+                    await ChannelSession.Chat.SendMessage(string.Format("@{0} has claimed their prize! Listen closely to the streamer for instructions on getting your prize.", e.User.UserName));
                     await this.EndGiveaway();
                 }
             }

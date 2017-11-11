@@ -46,10 +46,10 @@ namespace MixItUp.Base.Commands
                 this.lastRun = DateTimeOffset.Now;
                 await base.Perform(user, arguments);
             }
-            else if (ChannelSession.BotChat != null)
+            else if (ChannelSession.Chat != null)
             {
                 TimeSpan timeLeft = this.lastRun.AddSeconds(this.Cooldown) - DateTimeOffset.Now;
-                await ChannelSession.BotChat.Whisper(user.UserName, string.Format("This command is currently on cooldown, please wait another {0} second(s).", (int)timeLeft.TotalSeconds));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("This command is currently on cooldown, please wait another {0} second(s).", (int)timeLeft.TotalSeconds));
             }
         }
 

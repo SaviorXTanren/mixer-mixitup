@@ -44,7 +44,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.GameQueueEnabled && ChannelSession.BotChat != null)
+            if (ChannelSession.GameQueueEnabled && ChannelSession.Chat != null)
             {
                 if (this.GameQueueType == GameQueueActionType.JoinQueue)
                 {
@@ -78,12 +78,12 @@ namespace MixItUp.Base.Actions
                         message.Append(".");
                     }
 
-                    await ChannelSession.BotChat.SendMessage(message.ToString());
+                    await ChannelSession.Chat.SendMessage(message.ToString());
                 }
                 else if (this.GameQueueType == GameQueueActionType.LeaveQueue)
                 {
                     ChannelSession.GameQueue.Remove(user);
-                    await ChannelSession.BotChat.Whisper(user.UserName, string.Format("You have left the queue to play with @{0}.", ChannelSession.Channel.user.username));
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You have left the queue to play with @{0}.", ChannelSession.Channel.user.username));
                 }
                 else if (this.GameQueueType == GameQueueActionType.RemoveFirst)
                 {
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Actions
                     {
                         UserViewModel firstUser = ChannelSession.GameQueue.ElementAt(0);
                         ChannelSession.GameQueue.RemoveAt(0);
-                        await ChannelSession.BotChat.SendMessage(string.Format("it's time to play @{0}! Listen carefully for instructions on how to join @{1}", firstUser.UserName,
+                        await ChannelSession.Chat.SendMessage(string.Format("it's time to play @{0}! Listen carefully for instructions on how to join @{1}", firstUser.UserName,
                             ChannelSession.Channel.user.username));
                     }
                 }
@@ -105,11 +105,11 @@ namespace MixItUp.Base.Actions
             int position = ChannelSession.GameQueue.IndexOf(user);
             if (position != -1)
             {
-                await ChannelSession.BotChat.Whisper(user.UserName, string.Format("You are #{0} in the queue to play with @{1}.", (position + 1), ChannelSession.Channel.user.username));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You are #{0} in the queue to play with @{1}.", (position + 1), ChannelSession.Channel.user.username));
             }
             else
             {
-                await ChannelSession.BotChat.Whisper(user.UserName, string.Format("You are not currently in the queue to play with @{0}.", ChannelSession.Channel.user.username));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You are not currently in the queue to play with @{0}.", ChannelSession.Channel.user.username));
             }
         }
     }

@@ -27,43 +27,63 @@ namespace MixItUp.Base.MixerAPI
 
         private static object userUpdateLock = new object();
 
-        public ChatClient Client { get; private set; }
+        public ChatClient StreamerClient { get; private set; }
+        public ChatClient BotClient { get; private set; }
 
         public ChatClientWrapper(ChatClient client)
         {
-            this.Client = client;
+            this.StreamerClient = client;
             if (ChatClientWrapper.ChatUsers == null)
             {
                 ChatClientWrapper.ChatUsers = new LockedDictionary<uint, UserViewModel>();
             }
 
-            this.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-            this.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-            this.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
-            this.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-            this.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-            this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-            this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-            this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-            this.Client.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
-            this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+            this.StreamerClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+            this.StreamerClient.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+            this.StreamerClient.OnMessageOccurred += ChatClient_OnMessageOccurred;
+            this.StreamerClient.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+            this.StreamerClient.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+            this.StreamerClient.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+            this.StreamerClient.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+            this.StreamerClient.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+            this.StreamerClient.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
+            this.StreamerClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
         }
 
-        public async Task<bool> ConnectAndAuthenticate() { return await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Authenticate()); }
+        public ChatClient GetBotClient() { return (this.BotClient != null) ? this.BotClient : this.StreamerClient; }
 
-        public async Task SendMessage(string message) { await this.RunAsync(this.Client.SendMessage(message)); }
+        public async Task<bool> ConnectAndAuthenticate() { return await this.RunAsync(this.StreamerClient.Connect()) && await this.RunAsync(this.StreamerClient.Authenticate()); }
+        public async Task<bool> ConnectAndAuthenticateBot(ChatClient botClient)
+        {
+            this.BotClient = botClient;
+            if (this.BotClient != null)
+            {
+                return await this.RunAsync(this.BotClient.Connect()) && await this.RunAsync(this.BotClient.Authenticate());
+            }
+            return false;
+        }
 
-        public async Task Whisper(string username, string message) { await this.RunAsync(this.Client.Whisper(username, message)); }
+        public async Task SendMessage(string message) { await this.RunAsync(this.GetBotClient().SendMessage(message)); }
 
-        public async Task DeleteMessage(Guid id) { await this.RunAsync(this.Client.DeleteMessage(id)); }
+        public async Task Whisper(string username, string message) { await this.RunAsync(this.GetBotClient().Whisper(username, message)); }
 
-        public async Task ClearMessages() { await this.RunAsync(this.Client.ClearMessages()); }
+        public async Task DeleteMessage(Guid id) { await this.RunAsync(this.StreamerClient.DeleteMessage(id)); }
 
-        public async Task PurgeUser(string username) { await this.RunAsync(this.Client.PurgeUser(username)); }
+        public async Task ClearMessages() { await this.RunAsync(this.StreamerClient.ClearMessages()); }
 
-        public async Task TimeoutUser(string username, uint durationInSeconds) { await this.RunAsync(this.Client.TimeoutUser(username, durationInSeconds)); }
+        public async Task PurgeUser(string username) { await this.RunAsync(this.StreamerClient.PurgeUser(username)); }
 
-        public async Task Disconnect() { await this.RunAsync(this.Client.Disconnect()); }
+        public async Task TimeoutUser(string username, uint durationInSeconds) { await this.RunAsync(this.StreamerClient.TimeoutUser(username, durationInSeconds)); }
+
+        public async Task Disconnect() { await this.RunAsync(this.StreamerClient.Disconnect()); }
+        public async Task DisconnectBot()
+        {
+            if (this.BotClient != null)
+            {
+                await this.RunAsync(this.StreamerClient.Disconnect());
+            }
+            this.BotClient = null;
+        }
 
         #region Chat Update Methods
 

@@ -98,7 +98,6 @@ namespace MixItUp.Base
         public static ChannelSettings Settings { get; private set; }
 
         public static ChatClientWrapper Chat { get; private set; }
-        public static ChatClientWrapper BotChat { get; private set; }
         public static InteractiveClientWrapper Interactive { get; private set; }
         public static ConstellationClientWrapper Constellation { get; private set; }
 
@@ -198,14 +197,14 @@ namespace MixItUp.Base
 
             if (ChannelSession.Chat != null)
             {
-                ChannelSession.Chat.Client.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
+                ChannelSession.Chat.StreamerClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
                 await ChannelSession.Chat.Disconnect();
             }
 
-            ChannelSession.Chat = ChannelSession.BotChat = await ChannelSession.Connection.CreateChatClient(ChannelSession.Channel);
-            if (await ChannelSession.Chat.ConnectAndAuthenticate())
+            ChannelSession.Chat = await ChannelSession.Connection.CreateChatClient(ChannelSession.Channel);
+            if (ChannelSession.Chat != null && await ChannelSession.Chat.ConnectAndAuthenticate())
             {
-                ChannelSession.Chat.Client.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
+                ChannelSession.Chat.StreamerClient.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
 
                 if (ChannelSession.BotConnection != null)
                 {
@@ -214,7 +213,7 @@ namespace MixItUp.Base
                 return true;
             }
 
-            ChannelSession.Chat = ChannelSession.BotChat = null;
+            ChannelSession.Chat = null;
             return false;
         }
 
@@ -222,7 +221,7 @@ namespace MixItUp.Base
         {
             if (ChannelSession.Chat != null)
             {
-                ChannelSession.Chat.Client.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
+                ChannelSession.Chat.StreamerClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
                 await ChannelSession.Chat.Disconnect();
                 ChannelSession.Chat = null;
             }
@@ -230,32 +229,33 @@ namespace MixItUp.Base
 
         public static async Task<bool> ConnectBotChat()
         {
-            if (ChannelSession.BotChat != null && ChannelSession.BotChat != ChannelSession.Chat)
+            if (ChannelSession.Chat.BotClient != null)
             {
-                ChannelSession.BotChat.Client.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
-                await ChannelSession.BotChat.Disconnect();
+                ChannelSession.Chat.BotClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
+                await ChannelSession.Chat.DisconnectBot();
             }
 
-            ChannelSession.BotChat = await ChannelSession.BotConnection.CreateChatClient(ChannelSession.Channel);
-            if (await ChannelSession.BotChat.ConnectAndAuthenticate())
+            ChatClientWrapper botChat = await ChannelSession.BotConnection.CreateChatClient(ChannelSession.Channel);
+            if (botChat != null)
             {
-                ChannelSession.BotChat.Client.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
-                return true;
+                if (await ChannelSession.Chat.ConnectAndAuthenticateBot(botChat.StreamerClient))
+                {
+                    ChannelSession.Chat.BotClient.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
+                    return true;
+                }
             }
 
-            ChannelSession.BotChat = ChannelSession.Chat;
+            await ChannelSession.Chat.DisconnectBot();
             return false;
         }
 
         public static async Task DisconnectBotChat()
         {
-            if (ChannelSession.BotChat != null && ChannelSession.BotChat != ChannelSession.Chat)
+            if (ChannelSession.Chat != null && ChannelSession.Chat.BotClient != null)
             {
-                ChannelSession.BotChat.Client.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
-                await ChannelSession.BotChat.Disconnect();
+                ChannelSession.Chat.BotClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
+                await ChannelSession.Chat.DisconnectBot();
             }
-
-            ChannelSession.BotChat = ChannelSession.Chat;
         }
 
         public static async Task<bool> ConnectConstellation()

@@ -30,16 +30,16 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.BotChat != null)
+            if (ChannelSession.Chat != null)
             {
                 string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)
                 {
-                    await ChannelSession.BotChat.Whisper(user.UserName, message);
+                    await ChannelSession.Chat.Whisper(user.UserName, message);
                 }
                 else
                 {
-                    await ChannelSession.BotChat.SendMessage(message);
+                    await ChannelSession.Chat.SendMessage(message);
                 }
             }
         }
