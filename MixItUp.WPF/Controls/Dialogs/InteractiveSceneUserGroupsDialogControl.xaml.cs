@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Util;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -9,7 +10,7 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs
 {
-    public class GroupListItem
+    public class GroupListItem : NotifyPropertyChangedBase
     {
         public InteractiveUserGroupViewModel Group { get; set; }
 
@@ -17,11 +18,26 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         public string GroupName { get { return this.Group.GroupName; } set { this.Group.GroupName = value; } }
         public string DefaultScene { get { return this.Group.DefaultScene; } set { this.Group.DefaultScene = value; } }
+        public bool IsEnabled
+        {
+            get { return this.Group.IsEnabled; }
+            set
+            {
+                this.Group.IsEnabled = value;
+                this.NotifyPropertyChanged("DefaultScene");
+                this.NotifyPropertyChanged("MatchesCurrentScene");
+                this.NotifyPropertyChanged("IsEnabled");
+                this.NotifyPropertyChanged("CanBeClicked");
+            }
+        }
 
         public bool IsCustomGroup { get { return this.Group.AssociatedUserRole == UserRole.Custom; } }
 
+        public Visibility ShowToggleButton { get { return this.IsCustomGroup ? Visibility.Collapsed : Visibility.Visible; } }
+        public Visibility ShowDeleteButton { get { return this.IsCustomGroup ? Visibility.Visible : Visibility.Collapsed; } }
+
         public bool MatchesCurrentScene { get; set; }
-        public bool CanBeClicked { get { return !this.MatchesCurrentScene || !this.Group.DefaultScene.Equals(InteractiveUserGroupViewModel.DefaultName); } }
+        public bool CanBeClicked { get { return this.IsEnabled && (!this.MatchesCurrentScene || !this.Group.DefaultScene.Equals(InteractiveUserGroupViewModel.DefaultName)); } }
     }
 
     /// <summary>
@@ -113,6 +129,11 @@ namespace MixItUp.WPF.Controls.Dialogs
 
                 this.GroupNameTextBox.Clear();
             }
+        }
+
+        private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

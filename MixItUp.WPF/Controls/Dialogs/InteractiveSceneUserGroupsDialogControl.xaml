@@ -53,9 +53,11 @@
 
                         <CheckBox x:Name="SetDefaultForGroupCheckBox" Grid.Column="0" IsChecked="{Binding MatchesCurrentScene}" IsEnabled="{Binding CanBeClicked}" Checked="SetDefaultForGroupCheckBox_Checked" Unchecked="SetDefaultForGroupCheckBox_Checked" />
 
-                        <TextBlock Text="{Binding GroupName}" Grid.Column="2" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding GroupName}" Grid.Column="2" VerticalAlignment="Center" IsEnabled="{Binding IsEnabled}" />
 
-                        <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" IsEnabled="{Binding IsCustomGroup}">
+                        <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="4" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Group" IsChecked="{Binding IsEnabled}" Visibility="{Binding ShowToggleButton}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
+
+                        <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding ShowDeleteButton}">
                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                         </Button>
                     </Grid>
