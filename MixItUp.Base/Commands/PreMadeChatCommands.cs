@@ -185,6 +185,10 @@ namespace MixItUp.Base.Commands
                     {
                         await ChannelSession.Chat.SendMessage(user.GetModel().GetFollowAge(followDate.GetValueOrDefault()));
                     }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You are not currently following this channel");
+                    }
                 }
             }));
         }
@@ -228,13 +232,20 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
-                if (ChannelSession.Chat != null && ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
+                if (ChannelSession.Chat != null)
                 {
-                    Random random = new Random();
-                    int index = random.Next(ChannelSession.Settings.Quotes.Count);
-                    string quote = ChannelSession.Settings.Quotes[index];
+                    if (ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
+                    {
+                        Random random = new Random();
+                        int index = random.Next(ChannelSession.Settings.Quotes.Count);
+                        string quote = ChannelSession.Settings.Quotes[index];
 
-                    await ChannelSession.Chat.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
+                        await ChannelSession.Chat.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.SendMessage("Quotes must be enabled with Mix It Up for this feature to work");
+                    }
                 }
             }));
         }
@@ -265,6 +276,10 @@ namespace MixItUp.Base.Commands
                     {
                         await ChannelSession.Chat.SendMessage("Added Quote: \"" + quote + "\"");
                     }
+                }
+                else
+                {
+                    await ChannelSession.Chat.SendMessage("Quotes must be enabled with Mix It Up for this feature to work");
                 }
             }));
         }
