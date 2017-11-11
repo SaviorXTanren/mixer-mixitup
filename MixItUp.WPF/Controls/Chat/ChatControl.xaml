@@ -71,13 +71,18 @@
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="ChatMessageTextBox" Grid.Column="0" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <ComboBox x:Name="SendChatAsComboBox" Grid.Column="1" MaterialDesign:HintAssist.Hint="Send As" Width="80" />
 
-                <Button x:Name="SendChatMessageButton" Grid.Column="1" Width="70" Click="SendChatMessageButton_Click">Send</Button>
+                <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Button x:Name="SendChatMessageButton" Grid.Column="4" Width="70" Click="SendChatMessageButton_Click">Send</Button>
             </Grid>
         </Grid>
 

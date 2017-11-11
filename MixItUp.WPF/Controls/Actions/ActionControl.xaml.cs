@@ -79,7 +79,7 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.Chat:
                     if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
                     {
-                        return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperToggleButton.IsChecked.GetValueOrDefault());
+                        return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperToggleButton.IsChecked.GetValueOrDefault(), this.ChatSendAsStreamerToggleButton.IsChecked.GetValueOrDefault());
                     }
                     break;
                 case ActionTypeEnum.Currency:
@@ -317,6 +317,7 @@ namespace MixItUp.WPF.Controls.Actions
                         ChatAction chatAction = (ChatAction)this.action;
                         this.ChatMessageTextBox.Text = chatAction.ChatText;
                         this.ChatWhisperToggleButton.IsChecked = chatAction.IsWhisper;
+                        this.ChatSendAsStreamerToggleButton.IsChecked = chatAction.SendAsStreamer;
                         break;
                     case ActionTypeEnum.Currency:
                         CurrencyAction currencyAction = (CurrencyAction)this.action;

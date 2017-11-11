@@ -68,12 +68,19 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0">Whisper:</TextBlock>
                     <ToggleButton Grid.Column="2" x:Name="ChatWhisperToggleButton" />
 
-                    <TextBlock Grid.Column="4">
+                    <TextBlock Grid.Column="4">Send As Streamer:</TextBlock>
+                    <ToggleButton Grid.Column="6" x:Name="ChatSendAsStreamerToggleButton" />
+
+                    <TextBlock Grid.Column="8">
                         <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
                     </TextBlock>
                 </Grid>

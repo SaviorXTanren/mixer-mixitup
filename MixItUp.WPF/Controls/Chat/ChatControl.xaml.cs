@@ -50,6 +50,13 @@ namespace MixItUp.WPF.Controls.Chat
 
             if (await ChannelSession.ConnectChat())
             {
+                this.SendChatAsComboBox.ItemsSource = new List<string>() { "Streamer", "Bot" };
+                this.SendChatAsComboBox.SelectedIndex = 0;
+                if (ChannelSession.Chat.BotClient != null && ChannelSession.Chat.BotClient.Authenticated)
+                {
+                    this.SendChatAsComboBox.SelectedIndex = 1;
+                }
+
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
@@ -203,14 +210,14 @@ namespace MixItUp.WPF.Controls.Chat
 
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.Whisper(username, message);
+                        await ChannelSession.Chat.Whisper(username, message, (this.SendChatAsComboBox.SelectedIndex == 0));
                     }));
                 }
                 else
                 {
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.SendMessage(message);
+                        await ChannelSession.Chat.SendMessage(message, (this.SendChatAsComboBox.SelectedIndex == 0));
                     }));
                 }
             }

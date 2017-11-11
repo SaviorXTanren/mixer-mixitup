@@ -19,13 +19,17 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public bool IsWhisper { get; set; }
 
+        [DataMember]
+        public bool SendAsStreamer { get; set; }
+
         public ChatAction() : base(ActionTypeEnum.Chat) { }
 
-        public ChatAction(string chatText, bool isWhisper)
+        public ChatAction(string chatText, bool isWhisper, bool sendAsStreamer)
             : this()
         {
             this.ChatText = chatText;
             this.IsWhisper = isWhisper;
+            this.SendAsStreamer = sendAsStreamer;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -35,11 +39,11 @@ namespace MixItUp.Base.Actions
                 string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, message);
+                    await ChannelSession.Chat.Whisper(user.UserName, message, this.SendAsStreamer);
                 }
                 else
                 {
-                    await ChannelSession.Chat.SendMessage(message);
+                    await ChannelSession.Chat.SendMessage(message, this.SendAsStreamer);
                 }
             }
         }

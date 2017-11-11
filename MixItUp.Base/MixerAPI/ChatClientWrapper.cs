@@ -50,7 +50,7 @@ namespace MixItUp.Base.MixerAPI
             this.StreamerClient.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
         }
 
-        public ChatClient GetBotClient() { return (this.BotClient != null) ? this.BotClient : this.StreamerClient; }
+        public ChatClient GetBotClient(bool sendAsStreamer = false) { return (this.BotClient != null && !sendAsStreamer) ? this.BotClient : this.StreamerClient; }
 
         public async Task<bool> ConnectAndAuthenticate() { return await this.RunAsync(this.StreamerClient.Connect()) && await this.RunAsync(this.StreamerClient.Authenticate()); }
         public async Task<bool> ConnectAndAuthenticateBot(ChatClient botClient)
@@ -63,9 +63,9 @@ namespace MixItUp.Base.MixerAPI
             return false;
         }
 
-        public async Task SendMessage(string message) { await this.RunAsync(this.GetBotClient().SendMessage(message)); }
+        public async Task SendMessage(string message, bool sendAsStreamer = false) { await this.RunAsync(this.GetBotClient(sendAsStreamer).SendMessage(message)); }
 
-        public async Task Whisper(string username, string message) { await this.RunAsync(this.GetBotClient().Whisper(username, message)); }
+        public async Task Whisper(string username, string message, bool sendAsStreamer = false) { await this.RunAsync(this.GetBotClient(sendAsStreamer).Whisper(username, message)); }
 
         public async Task DeleteMessage(Guid id) { await this.RunAsync(this.StreamerClient.DeleteMessage(id)); }
 
