@@ -142,7 +142,7 @@ namespace MixItUp.WPF
             if (result)
             {
                 IEnumerable<UserWithGroupsModel> users = await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, UserRole.Mod);
-                if (users.Any(uwg => uwg.id.Equals(ChannelSession.User.id)))
+                if (!users.Any(uwg => uwg.id.Equals(ChannelSession.User.id)))
                 {
                     MainWindow window = new MainWindow();
                     this.Hide();
