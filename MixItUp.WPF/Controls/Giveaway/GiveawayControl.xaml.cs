@@ -92,7 +92,7 @@ namespace MixItUp.WPF.Controls.Giveaway
             this.EnableGiveawayButton.Visibility = Visibility.Collapsed;
             this.DisableGiveawayButton.Visibility = Visibility.Visible;
 
-            await ChannelSession.Chat.SendMessage(string.Format("A giveaway for {0} for {1}s has started! Type \"!{2}\" in chat in the next {3} seconds to enter!", this.giveawayItem, ChannelSession.Settings.GiveawayUserRole, ChannelSession.Settings.GiveawayCommand, ChannelSession.Settings.GiveawayTimer));
+            await ChannelSession.Chat.SendMessage(string.Format("A giveaway for {0} has started! Type \"!{1}\" in chat in the next {2} seconds to enter!", this.giveawayItem, ChannelSession.Settings.GiveawayCommand, ChannelSession.Settings.GiveawayTimer));
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -131,6 +131,19 @@ namespace MixItUp.WPF.Controls.Giveaway
                 {
                     this.TimeLeftTextBlock.Text = this.timeLeft.ToString();
                 }));
+
+                if (this.timeLeft == 60)
+                {
+                    await ChannelSession.Chat.SendMessage("The giveaway will end in 60 seconds");
+                }
+                else if (this.timeLeft == 30)
+                {
+                    await ChannelSession.Chat.SendMessage("The giveaway will end in 30 seconds");
+                }
+                else if (this.timeLeft == 10)
+                {
+                    await ChannelSession.Chat.SendMessage("The giveaway will end in 10 seconds");
+                }
 
                 if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
                 {
