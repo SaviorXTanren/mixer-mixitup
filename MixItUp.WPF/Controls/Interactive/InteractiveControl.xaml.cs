@@ -12,6 +12,7 @@ using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -208,6 +209,11 @@ namespace MixItUp.WPF.Controls.Interactive
 
             //this.SaveChangedButton.IsEnabled = true;
             //this.GameDetailsGrid.IsEnabled = true;
+        }
+
+        private void MixerLabButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://mixer.com/lab/");
         }
 
         private async void GroupsButton_Click(object sender, RoutedEventArgs e)

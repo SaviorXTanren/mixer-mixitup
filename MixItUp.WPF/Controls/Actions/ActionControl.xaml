@@ -484,11 +484,11 @@
                 </Grid>
 
                 <Grid Grid.Row="2" x:Name="InteractiveGroupNameGrid" Visibility="Hidden">
-                    <TextBox x:Name="InteractiveGroupNameTextBox" MaterialDesign:HintAssist.Hint="Group Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox x:Name="InteractiveGroupNameTextBox" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
                 <Grid Grid.Row="4" x:Name="InteractiveMoveToSceneGrid" Visibility="Hidden">
-                    <TextBox x:Name="InteractiveMoveToSceneTextBox" MaterialDesign:HintAssist.Hint="Scene Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox x:Name="InteractiveMoveToSceneTextBox" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
             </Grid>

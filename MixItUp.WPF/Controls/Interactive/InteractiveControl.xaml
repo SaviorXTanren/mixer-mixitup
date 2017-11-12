@@ -14,7 +14,7 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
 
-             d:DesignHeight="500" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="700">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -25,21 +25,37 @@
         <Grid Grid.Row="0" x:Name="GameSelectionGrid" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="Game" />
+            <Button x:Name="MixerLabButton" Click="MixerLabButton_Click" Width="130" Grid.Row="0" HorizontalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="2" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Mixer Labs</TextBlock>
+                    
+                    <MaterialDesign:PackIcon Grid.Column="2" Kind="Launch" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource WhiteColor}" />
+                </Grid>
+            </Button>
 
-            <Button Grid.Column="4" x:Name="GroupsButton" Click="GroupsButton_Click" IsEnabled="False">Groups</Button>
+            <ComboBox Grid.Column="2" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" MaterialDesign:HintAssist.Hint="Game" />
 
-            <Button Grid.Column="6" x:Name="RefreshButton" Click="RefreshButton_Click" Content="{MaterialDesign:PackIcon Refresh}" />
+            <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" MaterialDesign:HintAssist.Hint="Scene" />
+
+            <Button Grid.Column="6" x:Name="GroupsButton" Click="GroupsButton_Click" IsEnabled="False">Groups</Button>
+
+            <Button Grid.Column="8" x:Name="RefreshButton" Click="RefreshButton_Click" Content="{MaterialDesign:PackIcon Refresh}" />
         </Grid>
 
         <Grid Grid.Row="2">
