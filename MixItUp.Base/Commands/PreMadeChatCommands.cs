@@ -138,12 +138,11 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Chat != null)
                 {
                     IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.Connection.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromHours(1)));
-                    if (sessions.Count() > 0)
+                    sessions = sessions.OrderBy(s => s.dateTime);
+                    if (sessions.Count() > 0 && sessions.Last().duration == null)
                     {
-                        StreamSessionsAnalyticModel session = sessions.OrderBy(s => s.dateTime).Last();
-
+                        StreamSessionsAnalyticModel session = sessions.Last();
                         TimeSpan duration = DateTimeOffset.Now.Subtract(session.dateTime);
-
                         await ChannelSession.Chat.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
                     }
                     else
