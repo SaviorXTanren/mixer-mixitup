@@ -228,7 +228,10 @@ namespace MixItUp.Base
             await semaphore.WaitAsync();
 
             this.OAuthToken = ChannelSession.Connection.Connection.GetOAuthTokenCopy();
-            this.BotOAuthToken = (ChannelSession.BotConnection != null) ? ChannelSession.BotConnection.Connection.GetOAuthTokenCopy() : null;
+            if (ChannelSession.BotConnection != null)
+            {
+                this.BotOAuthToken = ChannelSession.BotConnection.Connection.GetOAuthTokenCopy();
+            }
 
             this.preMadeChatCommandSettingsInternal = this.PreMadeChatCommandSettings.ToList();
             this.chatCommandsInternal = this.ChatCommands.ToList();
