@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/SaviorXTanren/mixer-mixitup.svg?branch=master)](https://travis-ci.org/SaviorXTanren/mixer-mixitup)
-
 # Mix It Up
 A desktop client for handling chat, interactivity, and other streamer assistance features for the Mixer streaming platform.
 
