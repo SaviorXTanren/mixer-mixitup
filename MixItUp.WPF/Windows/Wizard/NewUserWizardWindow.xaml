@@ -1,0 +1,44 @@
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Wizard.NewUserWizardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Wizard"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+                           
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+                     
+        Icon="./../../Logo.ico"                        
+        Title="New User Wizard" Height="500" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <Grid x:Name="MainGrid" Grid.Row="0" Margin="10">
+            <Grid x:Name="IntroPageGrid">
+
+            </Grid>
+
+            <Grid x:Name="ImportSettingsPageGrid" Visibility="Collapsed">
+                
+            </Grid>
+
+            <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed">
+                
+            </Grid>
+        </Grid>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+    </Grid>
+</Windows:LoadingWindowBase>
