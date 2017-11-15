@@ -15,9 +15,9 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<bool> Connect() { return await this.RunAsync(this.Client.Connect()); }
 
-        public async Task<bool> SubscribeToEvents(IEnumerable<ConstellationEventType> events) { return await this.RunAsync(this.Client.SubscribeToEvents(events)); }
+        public async Task SubscribeToEvents(IEnumerable<ConstellationEventType> events) { await this.RunAsync(this.Client.SubscribeToEvents(events)); }
 
-        public async Task<bool> UnsubscribeToEvents(IEnumerable<ConstellationEventType> events) { return await this.RunAsync(this.Client.UnsubscribeToEvents(events)); }
+        public async Task UnsubscribeToEvents(IEnumerable<ConstellationEventType> events) { await this.RunAsync(this.Client.UnsubscribeToEvents(events)); }
 
         public async Task Disconnect() { await this.RunAsync(this.Client.Disconnect()); }
     }

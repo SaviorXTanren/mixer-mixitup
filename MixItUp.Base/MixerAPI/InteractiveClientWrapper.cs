@@ -93,19 +93,19 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<bool> ConnectAndReady() { return await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()); }
 
-        public async Task<bool> CreateGroups(IEnumerable<InteractiveGroupModel> groups) { return await this.RunAsync(this.Client.CreateGroups(groups)); }
+        public async Task<bool> CreateGroups(IEnumerable<InteractiveGroupModel> groups) { return await this.RunAsync(this.Client.CreateGroupsWithResponse(groups)); }
         public async Task<InteractiveGroupCollectionModel> GetGroups() { return await this.RunAsync(this.Client.GetGroups()); }
-        public async Task<InteractiveGroupCollectionModel> UpdateGroups(IEnumerable<InteractiveGroupModel> groups) { return await this.RunAsync(this.Client.UpdateGroups(groups)); }
-        public async Task<bool> DeleteGroup(InteractiveGroupModel groupToDelete, InteractiveGroupModel groupToReplace) { return await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
+        public async Task UpdateGroups(IEnumerable<InteractiveGroupModel> groups) { await this.RunAsync(this.Client.UpdateGroupsWithResponse(groups)); }
+        public async Task DeleteGroup(InteractiveGroupModel groupToDelete, InteractiveGroupModel groupToReplace) { await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
 
         public async Task<InteractiveParticipantCollectionModel> GetAllParticipants() { return await this.RunAsync(this.Client.GetAllParticipants()); }
-        public async Task<InteractiveParticipantCollectionModel> UpdateParticipants(IEnumerable<InteractiveParticipantModel> participants) { return await this.RunAsync(this.Client.UpdateParticipants(participants)); }
+        public async Task UpdateParticipants(IEnumerable<InteractiveParticipantModel> participants) { await this.RunAsync(this.Client.UpdateParticipants(participants)); }
 
         public async Task<InteractiveConnectedSceneGroupCollectionModel> GetScenes() { return await this.RunAsync(this.Client.GetScenes()); }
 
-        public async Task<InteractiveConnectedControlCollectionModel> UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveConnectedButtonControlModel> controls) { return await this.RunAsync(this.Client.UpdateControls(scene, controls)); }
+        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveConnectedButtonControlModel> controls) { await this.RunAsync(this.Client.UpdateControls(scene, controls)); }
 
-        public async Task<bool> CaptureSparkTransaction(string transactionID) { return await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
+        public async Task CaptureSparkTransaction(string transactionID) { await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
 
         public async Task Disconnect() { await this.RunAsync(this.Client.Disconnect()); }
 
