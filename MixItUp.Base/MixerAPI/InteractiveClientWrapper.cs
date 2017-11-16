@@ -185,6 +185,44 @@ namespace MixItUp.Base.MixerAPI
             return true;
         }
 
+        private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)
+        {
+            InteractiveCommand command = ChannelSession.Settings.InteractiveControls.FirstOrDefault(c =>
+                c.GameID.Equals(this.Client.InteractiveGame.id) && c.Control.controlID.Equals(control.controlID));
+
+            if (command != null)
+            {
+                command.UpdateWithLatestControl(control);
+                this.Controls.Add(control.controlID, new InteractiveConnectedControlCommand(scene, control, command));
+            }
+        }
+
+        private async Task AddParticipants(IEnumerable<InteractiveParticipantModel> participants)
+        {
+            foreach (InteractiveParticipantModel participant in participants)
+            {
+                if (!string.IsNullOrEmpty(participant.sessionID))
+                {
+                    this.InteractiveUsers[participant.sessionID] = participant;
+
+                    if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
+                    {
+                        UserRole role = ChatClientWrapper.ChatUsers[participant.userID].PrimaryRole;
+                        InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == role);
+                        if (group != null)
+                        {
+                            participant.groupID = group.GroupName;
+                        }
+                    }
+                }
+            }
+
+            if (participants.Any(p => !p.groupID.Equals(InteractiveUserGroupViewModel.DefaultName)))
+            {
+                await ChannelSession.Interactive.UpdateParticipants(participants);
+            }
+        }
+
         #endregion Interactive Update Methods
 
         #region Interactive Event Handlers
@@ -309,44 +347,6 @@ namespace MixItUp.Base.MixerAPI
         }
 
         #endregion Interactive Event Handlers
-
-        private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)
-        {
-            InteractiveCommand command = ChannelSession.Settings.InteractiveControls.FirstOrDefault(c =>
-                c.GameID.Equals(this.Client.InteractiveGame.id) && c.Control.controlID.Equals(control.controlID));
-
-            if (command != null)
-            {
-                command.UpdateWithLatestControl(control);
-                this.Controls.Add(control.controlID, new InteractiveConnectedControlCommand(scene, control, command));
-            }
-        }
-
-        private async Task AddParticipants(IEnumerable<InteractiveParticipantModel> participants)
-        {
-            foreach (InteractiveParticipantModel participant in participants)
-            {
-                if (!string.IsNullOrEmpty(participant.sessionID))
-                {
-                    this.InteractiveUsers[participant.sessionID] = participant;
-
-                    if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
-                    {
-                        UserRole role = ChatClientWrapper.ChatUsers[participant.userID].PrimaryRole;
-                        InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == role);
-                        if (group != null)
-                        {
-                            participant.groupID = group.GroupName;
-                        }
-                    }
-                }
-            }
-
-            if (participants.Any(p => !p.groupID.Equals(InteractiveUserGroupViewModel.DefaultName)))
-            {
-                await ChannelSession.Interactive.UpdateParticipants(participants);
-            }
-        }
 
         private async void GlobalEvents_OnChatUserJoined(object sender, UserViewModel e)
         {
