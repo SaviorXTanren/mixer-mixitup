@@ -57,7 +57,13 @@
 
                     <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Settings From ScorpBot</TextBlock>
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! To get started, use the File Dialog below to select your ScorpBot installation directory:</TextBlock>
+                    <StackPanel Grid.Row="2" Width="450">
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
+
+                        <TextBlock Margin="20,0,0,0">- User Data</TextBlock>
+
+                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory:</TextBlock>
+                    </StackPanel>
 
                     <Grid Grid.Row="4">
                         <Grid.ColumnDefinitions>
@@ -70,10 +76,36 @@
 
                         <Button Grid.Column="2" Grid.Row="0" x:Name="ScorpBotDirectoryBrowseButton" Click="ScorpBotDirectoryBrowseButton_Click">Browse</Button>
                     </Grid>
-                    
+
                 </Grid>
 
-                <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed">
+                <Grid x:Name="ExternalServicesPageGrid" Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Connect To Services</TextBlock>
+
+                    <Grid Grid.Row="2" Width="390">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0">Do you have a Mixer Bot account?</TextBlock>
+
+                        <Button Grid.Column="2" x:Name="BotLogInButton" Click="BotLogInButton_Click">Log In</Button>
+                    </Grid>
+
                     
                 </Grid>
             </Grid>

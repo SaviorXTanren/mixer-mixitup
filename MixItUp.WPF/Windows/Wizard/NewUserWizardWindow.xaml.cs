@@ -131,5 +131,10 @@ namespace MixItUp.WPF.Windows.Wizard
                 return null;
             });
         }
+
+        private void BotLogInButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+
+        }
     }
 }
