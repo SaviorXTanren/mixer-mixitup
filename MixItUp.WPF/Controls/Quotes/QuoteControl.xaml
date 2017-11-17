@@ -30,7 +30,7 @@
             <TextBlock Grid.Column="4">Enter quotes one per line:</TextBlock>
         </Grid>
 
-        <TextBox Grid.Row="2" x:Name="QuotesTextBox" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" LostFocus="QuotesTextBox_LostFocus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="2" x:Name="QuotesTextBox" LostFocus="QuotesTextBox_LostFocus" Style="{StaticResource MultiLineTextBox}" />
 
     </Grid>
 </Controls:MainControlBase>

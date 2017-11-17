@@ -231,6 +231,14 @@
                     <TextBox Grid.Row="2" x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 </Grid>
 
+                <Grid Grid.Row="2" x:Name="OverlayHTMLGrid" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBox x:Name="OverlayHTMLTextBox" MaterialDesign:HintAssist.Hint="HTML Text" Style="{StaticResource MultiLineTextBox}" Height="150" />
+                </Grid>
+
                 <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Hidden">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />

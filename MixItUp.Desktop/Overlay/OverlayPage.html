@@ -15,10 +15,11 @@
 			
 			socket.on('test', function(packet)
 			{
-			    var addedElement = document.createElement('p');
-			    addedElement.innerHTML = 'Connection Test!';
+			    var addedElement = document.createElement('h1');
+                addedElement.innerHTML = 'Connection Test!';
+                addedElement.style.cssText += 'font-size: 100px';
 
-			    var data = { horizontal: 50, vertical: 50, fontSize: 200, duration: 3 };
+			    var data = { horizontal: 50, vertical: 50, duration: 3 };
 
 			    addWaitRemoveElement(data, addedElement);
 			});
@@ -71,7 +72,21 @@
 					
 					addWaitRemoveElement(data, addedElement);
 				}
-			});
+            });
+
+            socket.on('htmlText', function (packet) {
+                data = getDataFromJSON(packet);
+                if (data != null) {
+                    var addedElement = null;
+
+                    if (data.htmlText != null) {
+                        addedElement = document.createElement('div');
+                        addedElement.innerHTML = data.htmlText;
+                    }
+
+                    addWaitRemoveElement(data, addedElement);
+                }
+            });
 			
 			function getDataFromJSON(packet)
 			{

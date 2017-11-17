@@ -11,6 +11,8 @@
 
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Indigo.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Indigo.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <SolidColorBrush x:Key="PrimaryColor">#3F51B5</SolidColorBrush>
@@ -38,6 +40,12 @@
 
             <Style x:Key="HeaderTextBlock" TargetType="TextBlock">
                 <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+
+            <Style x:Key="MultiLineTextBox" TargetType="TextBox" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <Setter Property="AcceptsReturn" Value="True" />
+                <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
             </Style>
 
         </ResourceDictionary>

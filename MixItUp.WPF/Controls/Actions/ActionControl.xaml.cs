@@ -22,7 +22,8 @@ namespace MixItUp.WPF.Controls.Actions
         private enum OverlayTypeEnum
         {
             Image,
-            Text
+            Text,
+            HTML,
         }
 
         private enum OBSStudioTypeEnum
@@ -104,9 +105,9 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     break;
                 case ActionTypeEnum.Overlay:
-                    if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text) || !(string.IsNullOrEmpty(this.OverlayTextTextBox.Text)))
+                    double duration;
+                    if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text) || !(string.IsNullOrEmpty(this.OverlayTextTextBox.Text)) || !string.IsNullOrEmpty(this.OverlayHTMLTextBox.Text))
                     {
-                        double duration;
                         if (double.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0)
                         {
                             int horizontal = (int)this.OverlayHorizontalSlider.Value;
@@ -128,6 +129,10 @@ namespace MixItUp.WPF.Controls.Actions
                                 {
                                     return new OverlayAction(this.OverlayTextTextBox.Text, this.OverlayFontColorTextBox.Text, fontSize, duration, horizontal, vertical);
                                 }
+                            }
+                            else if (!string.IsNullOrEmpty(this.OverlayHTMLTextBox.Text))
+                            {
+                                return new OverlayAction(this.OverlayHTMLTextBox.Text, duration, horizontal, vertical);
                             }
                         }
                     }
@@ -356,23 +361,31 @@ namespace MixItUp.WPF.Controls.Actions
                         break;
                     case ActionTypeEnum.Overlay:
                         OverlayAction overlayAction = (OverlayAction)this.action;
-                        if (!string.IsNullOrEmpty(overlayAction.ImagePath))
+                        if (!string.IsNullOrEmpty(overlayAction.ImagePath) || !string.IsNullOrEmpty(overlayAction.Text) || !string.IsNullOrEmpty(overlayAction.HTMLText))
                         {
-                            this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Image);
-                            this.OverlayImageFilePathTextBox.Text = overlayAction.ImagePath;
-                            this.OverlayImageWidthTextBox.Text = overlayAction.ImageWidth.ToString();
-                            this.OverlayImageHeightTextBox.Text = overlayAction.ImageHeight.ToString();
+                            if (!string.IsNullOrEmpty(overlayAction.ImagePath))
+                            {
+                                this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Image);
+                                this.OverlayImageFilePathTextBox.Text = overlayAction.ImagePath;
+                                this.OverlayImageWidthTextBox.Text = overlayAction.ImageWidth.ToString();
+                                this.OverlayImageHeightTextBox.Text = overlayAction.ImageHeight.ToString();
+                            }
+                            else if (!string.IsNullOrEmpty(overlayAction.Text))
+                            {
+                                this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Text);
+                                this.OverlayTextTextBox.Text = overlayAction.Text;
+                                this.OverlayFontSizeTextBox.Text = overlayAction.FontSize.ToString();
+                                this.OverlayFontColorTextBox.Text = overlayAction.Color;
+                            }
+                            else if (!string.IsNullOrEmpty(overlayAction.HTMLText))
+                            {
+                                this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.HTML);
+                                this.OverlayHTMLTextBox.Text = overlayAction.HTMLText;
+                            }
+                            this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
+                            this.OverlayHorizontalSlider.Value = overlayAction.Horizontal;
+                            this.OverlayVerticalSlider.Value = overlayAction.Vertical;
                         }
-                        else if (!string.IsNullOrEmpty(overlayAction.Text))
-                        {
-                            this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Text);
-                            this.OverlayTextTextBox.Text = overlayAction.Text;
-                            this.OverlayFontSizeTextBox.Text = overlayAction.FontSize.ToString();
-                            this.OverlayFontColorTextBox.Text = overlayAction.Color;
-                        }
-                        this.OverlayDurationTextBox.Text = overlayAction.Duration.ToString();
-                        this.OverlayHorizontalSlider.Value = overlayAction.Horizontal;
-                        this.OverlayVerticalSlider.Value = overlayAction.Vertical;
                         break;
                     case ActionTypeEnum.Sound:
                         SoundAction soundAction = (SoundAction)this.action;
@@ -529,8 +542,10 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void OverlayTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.OverlayPositionGrid.Visibility = Visibility.Hidden;
             this.OverlayImageGrid.Visibility = Visibility.Hidden;
             this.OverlayTextGrid.Visibility = Visibility.Hidden;
+            this.OverlayHTMLGrid.Visibility = Visibility.Hidden;
             if (this.OverlayTypeComboBox.SelectedIndex >= 0)
             {
                 OverlayTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayTypeEnum>((string)this.OverlayTypeComboBox.SelectedItem);
@@ -541,6 +556,11 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (overlayType == OverlayTypeEnum.Text)
                 {
                     this.OverlayTextGrid.Visibility = Visibility.Visible;
+                    
+                }
+                else if (overlayType == OverlayTypeEnum.HTML)
+                {
+                    this.OverlayHTMLGrid.Visibility = Visibility.Visible;
                 }
                 this.OverlayPositionGrid.Visibility = Visibility.Visible;
             }

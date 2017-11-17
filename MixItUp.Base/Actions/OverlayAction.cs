@@ -32,6 +32,9 @@ namespace MixItUp.Base.Actions
         public int FontSize;
 
         [DataMember]
+        public string HTMLText;
+
+        [DataMember]
         public double Duration;
         [DataMember]
         public int Horizontal;
@@ -56,6 +59,12 @@ namespace MixItUp.Base.Actions
             this.Text = text;
             this.Color = color;
             this.FontSize = fontSize;
+        }
+
+        public OverlayAction(string htmlText, double duration, int horizontal, int vertical)
+            : this(duration, horizontal, vertical)
+        {
+            this.HTMLText = htmlText;
         }
 
         public OverlayAction(double duration, int horizontal, int vertical)
@@ -114,6 +123,10 @@ namespace MixItUp.Base.Actions
                     {
                         text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical
                     });
+                }
+                else if (!string.IsNullOrEmpty(this.HTMLText))
+                {
+                    ChannelSession.Services.OverlayServer.SetHTMLText(new OverlayHTML() { htmlText = this.HTMLText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical });
                 }
             }
         }

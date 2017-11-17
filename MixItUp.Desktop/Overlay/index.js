@@ -26,7 +26,12 @@ io.on('connection', function(socket) {
 	socket.on('text', function(packet) {
 		console.log('text receieved');
 		io.emit('text', packet);
-	});
+    });
+
+    socket.on('htmlText', function (packet) {
+        console.log('htmlText receieved');
+        io.emit('htmlText', packet);
+    });
 });
 
 http.listen(8111, function(){

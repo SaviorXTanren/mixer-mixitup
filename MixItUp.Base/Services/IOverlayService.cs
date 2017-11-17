@@ -28,6 +28,13 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
+    public class OverlayHTML : OverlayBase
+    {
+        [DataMember]
+        public string htmlText;
+    }
+
+    [DataContract]
     public abstract class OverlayBase
     {
         [DataMember]
@@ -47,6 +54,8 @@ namespace MixItUp.Base.Services
         void SetImage(OverlayImage image);
 
         void SetText(OverlayText text);
+
+        void SetHTMLText(OverlayHTML htmlText);
 
         Task Close();
     }

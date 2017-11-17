@@ -35,6 +35,8 @@ namespace MixItUp.Overlay
 
         public void SetText(OverlayText text) { this.SendData("text", JObject.FromObject(text)); }
 
+        public void SetHTMLText(OverlayHTML htmlText) { this.SendData("htmlText", JObject.FromObject(htmlText)); }
+
         public Task Close()
         {
             this.End();
