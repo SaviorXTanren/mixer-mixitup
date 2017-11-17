@@ -20,25 +20,77 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
         <Grid x:Name="MainGrid" Grid.Row="0" Margin="10">
-            <Grid x:Name="IntroPageGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
+            <Grid Grid.Row="0" x:Name="PagesGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid x:Name="IntroPageGrid" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Welcome to Mix It Up!</TextBlock>
+
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">This wizard that will walk you through getting start with Mix It Up and getting some initial settings in place. If you wish to, you can skip this wizard by simply closing this window.</TextBlock>
+                </Grid>
+
+                <Grid x:Name="ImportSettingsPageGrid" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Settings From ScorpBot</TextBlock>
+
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! To get started, use the File Dialog below to select your ScorpBot installation directory:</TextBlock>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Row="2" x:Name="ScorpBotDirectoryTextBox" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Button Grid.Column="2" Grid.Row="0" x:Name="ScorpBotDirectoryBrowseButton" Click="ScorpBotDirectoryBrowseButton_Click">Browse</Button>
+                    </Grid>
+                    
+                </Grid>
+
+                <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed">
+                    
+                </Grid>
             </Grid>
 
-            <Grid x:Name="ImportSettingsPageGrid" Visibility="Collapsed">
-                
-            </Grid>
+            <Grid Grid.Row="2" x:Name="WizardButtonsGrid" HorizontalAlignment="Right" Margin="0,0,20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed">
-                
+                <Button x:Name="BackButton" Grid.Column="0" Click="BackButton_Click">&lt; Back</Button>
+
+                <Button x:Name="NextButton" Grid.Column="2" Click="NextButton_Click">Next &gt;</Button>
             </Grid>
         </Grid>
 
-        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
     </Grid>
 </Windows:LoadingWindowBase>

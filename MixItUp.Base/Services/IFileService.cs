@@ -10,6 +10,8 @@ namespace MixItUp.Base.Services
 
         Task SaveFile(string filePath, string data, bool create = true);
 
+        string ShowOpenFolderDialog();
+
         string ShowOpenFileDialog();
         string ShowOpenFileDialog(string filter);
 

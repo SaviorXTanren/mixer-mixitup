@@ -5,6 +5,7 @@ using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
+using MixItUp.WPF.Windows.Wizard;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -91,6 +92,11 @@ namespace MixItUp.WPF
                                 {
                                     await MessageBoxHelper.ShowMessageDialog("Bot Account failed to authenticate. Please re-add it from the Services section.");
                                 }
+
+                                MainWindow window = new MainWindow();
+                                this.Hide();
+                                window.Show();
+                                this.Close();
                             }
                         }
                     }
@@ -104,18 +110,6 @@ namespace MixItUp.WPF
                     result = await this.NewStreamerLogin();
                 }
             });
-
-            if (result)
-            {
-                MainWindow window = new MainWindow();
-                this.Hide();
-                window.Show();
-                this.Close();
-            }
-            else
-            {
-                await MessageBoxHelper.ShowMessageDialog("Unable to initialize session, please try again");
-            }
         }
 
         private void ModeratorChannelTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -162,7 +156,14 @@ namespace MixItUp.WPF
 
         private async Task<bool> NewStreamerLogin()
         {
-            return await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null);
+            if (await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null))
+            {
+                NewUserWizardWindow window = new NewUserWizardWindow();
+                window.Show();
+                this.Close();
+                return true;
+            }
+            return false;
         }
 
         private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
