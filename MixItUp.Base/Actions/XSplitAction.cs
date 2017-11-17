@@ -46,6 +46,13 @@ namespace MixItUp.Base.Actions
             this.SourceVisible = sourceVisible;
             this.SourceText = sourceText;
             this.SourceURL = sourceURL;
+            if (!string.IsNullOrEmpty(this.SourceURL))
+            {
+                if (!File.Exists(this.SourceURL) && !this.SourceURL.Contains("://"))
+                {
+                    this.SourceURL = "http://" + this.SourceURL;
+                }
+            }
         }
 
         private XSplitAction(string sourceName, bool sourceVisible)

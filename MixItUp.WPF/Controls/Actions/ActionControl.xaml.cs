@@ -171,9 +171,7 @@ namespace MixItUp.WPF.Controls.Actions
                             {
                                 if (!string.IsNullOrEmpty(this.OBSStudioSourceWebPageTextBox.Text))
                                 {
-                                    OBSStudioAction action = new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), null, this.OBSStudioSourceWebPageTextBox.Text);
-                                    action.UpdateReferenceTextFile();
-                                    return action;
+                                    return new OBSStudioAction(this.OBSStudioSourceNameTextBox.Text, this.OBSStudioSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), null, this.OBSStudioSourceWebPageTextBox.Text);
                                 }
                             }
                             else
