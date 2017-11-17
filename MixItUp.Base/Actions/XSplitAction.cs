@@ -29,6 +29,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string SourceText { get; set; }
 
+        [DataMember]
+        public string SourceURL { get; set; }
+
         [JsonIgnore]
         private string currentTextToWrite { get; set; }
 
@@ -36,12 +39,13 @@ namespace MixItUp.Base.Actions
 
         public XSplitAction(string sceneName) : this() { this.SceneName = sceneName; }
 
-        public XSplitAction(string sourceName, bool sourceVisible, string sourceText = null)
+        public XSplitAction(string sourceName, bool sourceVisible, string sourceText = null, string sourceURL = null)
             : this(sourceName, sourceVisible)
         {
             this.SourceName = sourceName;
             this.SourceVisible = sourceVisible;
             this.SourceText = sourceText;
+            this.SourceURL = sourceURL;
         }
 
         private XSplitAction(string sourceName, bool sourceVisible)
@@ -92,7 +96,11 @@ namespace MixItUp.Base.Actions
                         this.currentTextToWrite = await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments);
                         this.UpdateReferenceTextFile();
                     }
-                    ChannelSession.Services.XSplitServer.UpdateSource(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
+                    else if (!string.IsNullOrEmpty(this.SourceURL))
+                    {
+                        ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible, webBrowserUrl = this.SourceURL });
+                    }
+                    ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
                 }
             }
         }

@@ -17,7 +17,9 @@ namespace MixItUp.XSplit
 
         public void SetCurrentScene(XSplitScene scene) { this.AddToData(JsonConvert.SerializeObject(scene)); }
 
-        public void UpdateSource(XSplitSource source) { this.AddToData(JsonConvert.SerializeObject(source)); }
+        public void SetSourceVisibility(XSplitSource source) { this.AddToData(JsonConvert.SerializeObject(source)); }
+
+        public void SetWebBrowserSource(XSplitWebBrowserSource source) { this.AddToData(JsonConvert.SerializeObject(source)); }
 
         public Task Close()
         {

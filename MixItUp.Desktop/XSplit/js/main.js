@@ -24,10 +24,10 @@ function processResultAndRepeat(status, result)
 						xjs.Scene.setActiveScene(scenes[0]);
 					}
 				});
-			}
+            }
 			else if (data.sourceName != null)
 			{
-				dataDiv.innerHTML += 'Source Update: ' + data.sourceName + ' - ' + data.sourceVisible + ' - ' + data.sourceText + '<BR>';
+				dataDiv.innerHTML += 'Source Update: ' + data.sourceName + ' - ' + data.sourceVisible + '<BR>';
 				
 				xjs.ready().then(function()
 				{
@@ -42,7 +42,17 @@ function processResultAndRepeat(status, result)
 						for (let i = 0; i < sources.length; i++)
 						{
 							if (sources[i]._cname == data.sourceName)
-							{
+                            {
+                                if (data.webBrowserUrl != null)
+                                {
+                                    dataDiv.innerHTML += 'Source Web Browser Update: ' + data.webBrowserUrl + '<BR>';
+                                    try
+                                    {
+                                        sources[i].setURL(data.webBrowserUrl);
+                                    }
+                                    catch (err) { }
+                                }
+
 								sources[i].getItemList().then(function(items)
 								{
 									if (items != null && items.length > 0)

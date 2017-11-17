@@ -43,6 +43,8 @@ namespace MixItUp.WPF.Controls.Actions
             SourceVisibility,
             [Name("Text Source")]
             TextSource,
+            [Name("Web Browser Source")]
+            WebBrowserSource
         }
 
         private enum InteractiveTypeEnum
@@ -191,13 +193,20 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                         else if (this.XSplitSourceGrid.Visibility == Visibility.Visible && !string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
                         {
-                            if (this.OBSStudioSourceTextGrid.Visibility == Visibility.Visible)
+                            if (this.XSplitSourceTextGrid.Visibility == Visibility.Visible)
                             {
                                 if (!string.IsNullOrEmpty(this.XSplitSourceTextTextBox.Text))
                                 {
                                     XSplitAction action = new XSplitAction(this.XSplitSourceNameTextBox.Text, this.XSplitSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.XSplitSourceTextTextBox.Text);
                                     action.UpdateReferenceTextFile();
                                     return action;
+                                }
+                            }
+                            else if (this.XSplitSourceWebBrowserGrid.Visibility == Visibility.Visible)
+                            {
+                                if (!string.IsNullOrEmpty(this.XSplitSourceWebPageTextBox.Text))
+                                {
+                                    return new XSplitAction(this.XSplitSourceNameTextBox.Text, this.XSplitSourceVisibleCheckBox.IsChecked.GetValueOrDefault(), null, this.XSplitSourceWebPageTextBox.Text);
                                 }
                             }
                             else
@@ -418,13 +427,18 @@ namespace MixItUp.WPF.Controls.Actions
                             this.XSplitSourceVisibleCheckBox.IsChecked = xsplitAction.SourceVisible;
                             if (!string.IsNullOrEmpty(xsplitAction.SourceText))
                             {
-                                this.OBSStudioSourceTextTextBox.Text = xsplitAction.SourceText;
-                                this.OBSStudioSourceLoadTextFromTextBox.Text = xsplitAction.LoadTextFromFilePath;
-                                this.OBSStudioTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.TextSource);
+                                this.XSplitSourceTextTextBox.Text = xsplitAction.SourceText;
+                                this.XSplitSourceLoadTextFromTextBox.Text = xsplitAction.LoadTextFromFilePath;
+                                this.XSplitTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.TextSource);
+                            }
+                            else if (!string.IsNullOrEmpty(xsplitAction.SourceURL))
+                            {
+                                this.XSplitSourceWebPageTextBox.Text = xsplitAction.SourceURL;
+                                this.XSplitTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.WebBrowserSource);
                             }
                             else
                             {
-                                this.OBSStudioTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.SourceVisibility);
+                                this.XSplitTypeComboBox.SelectedItem = EnumHelper.GetEnumName(XSplitTypeEnum.SourceVisibility);
                             }
                         }
                         break;
@@ -567,6 +581,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.XSplitSceneGrid.Visibility = Visibility.Hidden;
             this.XSplitSourceGrid.Visibility = Visibility.Hidden;
             this.XSplitSourceTextGrid.Visibility = Visibility.Hidden;
+            this.XSplitSourceWebBrowserGrid.Visibility = Visibility.Hidden;
             if (this.XSplitTypeComboBox.SelectedIndex >= 0)
             {
                 XSplitTypeEnum xsplitType = EnumHelper.GetEnumValueFromString<XSplitTypeEnum>((string)this.XSplitTypeComboBox.SelectedItem);
@@ -580,6 +595,10 @@ namespace MixItUp.WPF.Controls.Actions
                     if (xsplitType == XSplitTypeEnum.TextSource)
                     {
                         this.XSplitSourceTextGrid.Visibility = Visibility.Visible;
+                    }
+                    else if (xsplitType == XSplitTypeEnum.WebBrowserSource)
+                    {
+                        this.XSplitSourceWebBrowserGrid.Visibility = Visibility.Visible;
                     }
                 }
             }
@@ -626,6 +645,15 @@ namespace MixItUp.WPF.Controls.Actions
             if (!string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
             {
                 this.XSplitSourceLoadTextFromTextBox.Text = Path.Combine(XSplitAction.XSplitReferenceTextFilesDirectory, this.XSplitSourceNameTextBox.Text + ".txt");
+            }
+        }
+
+        private void XSplitSourceWebPageBrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                this.XSplitSourceWebPageTextBox.Text = filePath;
             }
         }
 

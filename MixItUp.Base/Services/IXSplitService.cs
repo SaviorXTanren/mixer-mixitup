@@ -19,6 +19,13 @@ namespace MixItUp.Base.Services
         public bool sourceVisible;
     }
 
+    [DataContract]
+    public class XSplitWebBrowserSource : XSplitSource
+    {
+        [DataMember]
+        public string webBrowserUrl;
+    }
+
     public interface IXSplitService
     {
         Task<bool> Initialize();
@@ -27,7 +34,9 @@ namespace MixItUp.Base.Services
 
         void SetCurrentScene(XSplitScene scene);
 
-        void UpdateSource(XSplitSource source);
+        void SetSourceVisibility(XSplitSource source);
+
+        void SetWebBrowserSource(XSplitWebBrowserSource source);
 
         Task Close();
     }
