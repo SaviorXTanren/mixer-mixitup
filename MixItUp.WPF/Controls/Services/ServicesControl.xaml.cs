@@ -53,6 +53,10 @@ namespace MixItUp.WPF.Controls.Services
 
                 await ChannelSession.Services.InitializeOBSWebsocket();
             }
+            else
+            {
+                this.OBSStudioIPAddressTextBox.Text = ChannelSession.DefaultOBSStudioConnection;
+            }
 
             if (ChannelSession.Settings.EnableXSplitConnection)
             {
@@ -75,7 +79,7 @@ namespace MixItUp.WPF.Controls.Services
                     this.BotShortCodeTextBox.IsEnabled = true;
                     this.BotShortCodeTextBox.Text = shortCode.code;
 
-                    Process.Start("https://mixer.com/oauth/shortcode?code=" + shortCode.code);
+                    Process.Start("https://mixer.com/oauth/shortcode?approval_prompt=force&code=" + shortCode.code);
                 });
             });
 

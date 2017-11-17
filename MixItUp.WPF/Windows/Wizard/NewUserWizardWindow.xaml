@@ -1,0 +1,205 @@
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Wizard.NewUserWizardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Wizard"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+        mc:Ignorable="d"
+                           
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+                     
+        Icon="./../../Logo.ico"                        
+        Title="New User Wizard" Height="500" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <Grid x:Name="MainGrid" Grid.Row="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" x:Name="PagesGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid x:Name="IntroPageGrid" Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Welcome to Mix It Up!</TextBlock>
+
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">This wizard that will walk you through getting start with Mix It Up and getting some initial settings in place. If you wish to, you can skip this wizard by simply closing this window.</TextBlock>
+                </Grid>
+
+                <Grid x:Name="ImportSettingsPageGrid" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Settings From ScorpBot</TextBlock>
+
+                    <StackPanel Grid.Row="2" Width="450">
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
+
+                        <TextBlock Margin="20,0,0,0">- User Data</TextBlock>
+
+                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory or can you skip this by doing nothing and clicking Next:</TextBlock>
+                    </StackPanel>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Row="2" x:Name="ScorpBotDirectoryTextBox" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Button Grid.Column="2" Grid.Row="0" x:Name="ScorpBotDirectoryBrowseButton" Click="ScorpBotDirectoryBrowseButton_Click">Browse</Button>
+                    </Grid>
+
+                </Grid>
+
+                <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed" Width="550">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="0" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Connect To Other Services</TextBlock>
+
+                    <Grid Grid.Row="2" Width="500">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Width="250" TextWrapping="Wrap">Mixer Bot Account (Make sure to switch accounts to your Bot account):</TextBlock>
+
+                        <Grid Grid.Column="2" x:Name="BotLogInGrid" Visibility="Visible" HorizontalAlignment="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" x:Name="BotLogInButton" Click="BotLogInButton_Click">Bot Log In</Button>
+
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,0,0,40">Short Code:</TextBlock>
+                            <TextBox Grid.Column="2" x:Name="BotLoginShortCodeTextBox" IsReadOnly="True" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Grid Grid.Column="2" x:Name="BotLoggedInGrid" Visibility="Hidden" HorizontalAlignment="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <UsersControls:UserProfileAvatarControl Grid.Column="0" x:Name="BotProfileAvatar" />
+                            
+                            <TextBlock Grid.Column="2" x:Name="BotLoggedInNameTextBlock" VerticalAlignment="Center" />
+
+                        </Grid>
+                        
+                    </Grid>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <GroupBox Grid.Column="0" Header="OBS Studio" Margin="0,8,0,8">
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect OBS Studio, you must install the websocket plugin and enable it in OBS Studio under Tools > Websocket server settings.</TextBlock>
+
+                                <Button Grid.Row="2" x:Name="InstallOBSStudioPlugin" Click="InstallOBSStudioPlugin_Click" Width="120">Install Plugin</Button>
+
+                                <TextBlock Grid.Row="4" TextWrapping="Wrap">Once done, you can connect to the OBS Studio with the default settings:</TextBlock>
+
+                                <Button Grid.Row="6" x:Name="ConnectToOBSStudioButton" Click="ConnectToOBSStudioButton_Click" Width="200">Connect To OBS Studio</Button>
+                                <TextBlock Grid.Row="6" x:Name="OBSStudioConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
+                                
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Grid.Column="2" Header="XSplit" Margin="0,8,0,8">
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="15" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect to XSplit, you must install the Mix It Up extension. Navigate to Tools > Add custom extension in XSplit and select the following file:</TextBlock>
+
+                                <TextBox Grid.Row="2" x:Name="XSplitExtensionPathTextBox" IsReadOnly="True" MaterialDesign:HintAssist.Hint="XSplit Mix It Up Extension" Style="{StaticResource MaterialDesignFloatingHintTextBox}"></TextBox>
+
+                                <TextBlock Grid.Row="4" TextWrapping="Wrap">Start the extension by selecting it from the Extensions menu, then you can connect to XSplit:</TextBlock>
+
+                                <Button Grid.Row="6" x:Name="ConnectToXSplitButton" Click="ConnectToXSplitButton_Click" Width="200">Connect To XSplit</Button>
+                                <TextBlock Grid.Row="6" x:Name="XSplitConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
+
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="2" x:Name="WizardButtonsGrid" HorizontalAlignment="Right" Margin="0,0,20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="BackButton" Grid.Column="0" Click="BackButton_Click" IsEnabled="False">&lt; Back</Button>
+
+                <Button x:Name="NextButton" Grid.Column="2" Click="NextButton_Click">Next &gt;</Button>
+            </Grid>
+        </Grid>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
+    </Grid>
+</Windows:LoadingWindowBase>

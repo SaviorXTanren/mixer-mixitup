@@ -19,6 +19,8 @@ namespace MixItUp.Base
     {
         public const string ClientID = "5e3140d0719f5842a09dd2700befbfc100b5a246e35f2690";
 
+        public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
+
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
             OAuthClientScopeEnum.chat__bypass_links,
@@ -117,7 +119,7 @@ namespace MixItUp.Base
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
-            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, "LoginRedirectPage.html");
+            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, "LoginRedirectPage.html");
             if (connection != null)
             {
                 ChannelSession.Connection = new MixerConnectionWrapper(connection);
@@ -155,7 +157,14 @@ namespace MixItUp.Base
             if (connection != null)
             {
                 ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
-                return (await ChannelSession.InitializeBotInternal() && await ChannelSession.ConnectBotChat());
+                if (await ChannelSession.InitializeBotInternal())
+                {
+                    if (ChannelSession.Chat != null)
+                    {
+                        return await ChannelSession.ConnectBotChat();
+                    }
+                    return true;
+                }
             }
             return false;
         }
@@ -235,17 +244,19 @@ namespace MixItUp.Base
                 await ChannelSession.Chat.DisconnectBot();
             }
 
-            ChatClientWrapper botChat = await ChannelSession.BotConnection.CreateChatClient(ChannelSession.Channel);
-            if (botChat != null)
+            if (ChannelSession.Chat != null)
             {
-                if (await ChannelSession.Chat.ConnectAndAuthenticateBot(botChat.StreamerClient))
+                ChatClientWrapper botChat = await ChannelSession.BotConnection.CreateChatClient(ChannelSession.Channel);
+                if (botChat != null)
                 {
-                    ChannelSession.Chat.BotClient.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
-                    return true;
+                    if (await ChannelSession.Chat.ConnectAndAuthenticateBot(botChat.StreamerClient))
+                    {
+                        ChannelSession.Chat.BotClient.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
+                        return true;
+                    }
                 }
+                await ChannelSession.Chat.DisconnectBot();
             }
-
-            await ChannelSession.Chat.DisconnectBot();
             return false;
         }
 

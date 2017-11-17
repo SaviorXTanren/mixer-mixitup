@@ -42,6 +42,18 @@ namespace MixItUp.Desktop.Files
             catch (Exception) { }
         }
 
+        public string ShowOpenFolderDialog()
+        { 
+            using (var folderDialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    return folderDialog.SelectedPath;
+                }
+            }
+            return null;
+        }
+
         public string ShowOpenFileDialog() { return this.ShowOpenFileDialog("All files (*.*)|*.*"); }
 
         public string ShowOpenFileDialog(string filter)

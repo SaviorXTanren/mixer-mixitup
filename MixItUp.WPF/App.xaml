@@ -36,6 +36,10 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="HeaderTextBlock" TargetType="TextBlock">
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
