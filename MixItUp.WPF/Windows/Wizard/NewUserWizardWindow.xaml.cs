@@ -1,9 +1,11 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Model.OAuth;
+using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.ScorpBot;
 using MixItUp.WPF.Util;
 using System;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -14,6 +16,8 @@ namespace MixItUp.WPF.Windows.Wizard
     /// </summary>
     public partial class NewUserWizardWindow : LoadingWindowBase
     {
+        private string directoryPath;
+
         private ScorpBotData scorpBotData;
 
         public NewUserWizardWindow()
@@ -27,6 +31,10 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
             this.BackButton.IsEnabled = false;
+
+            this.directoryPath = AppDomain.CurrentDomain.BaseDirectory;
+            this.XSplitExtensionPathTextBox.Text = Path.Combine(this.directoryPath, "XSplit\\Mix It Up.html");
+
             return base.OnLoaded();
         }
 
@@ -79,7 +87,7 @@ namespace MixItUp.WPF.Windows.Wizard
             }
             else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
             {
-
+                this.Close();
             }
         }
 
@@ -132,9 +140,86 @@ namespace MixItUp.WPF.Windows.Wizard
             });
         }
 
-        private void BotLogInButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void BotLogInButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await ChannelSession.ConnectBot((OAuthShortCodeModel shortCode) =>
+                {
+                    this.BotLoginShortCodeTextBox.Text = shortCode.code;
 
+                    Process.Start("https://mixer.com/oauth/shortcode?approval_prompt=force&code=" + shortCode.code);
+                });
+            });
+
+            if (result)
+            {
+                this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
+                this.BotLogInGrid.Visibility = System.Windows.Visibility.Hidden;
+                this.BotLogOutGrid.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
+        private async void BotLogOutButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.DisconnectBot();
+            });
+
+            this.BotLogInGrid.Visibility = System.Windows.Visibility.Visible;
+            this.BotLogOutGrid.Visibility = System.Windows.Visibility.Hidden;
+        }
+
+        private void InstallOBSStudioPlugin_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            string pluginPath = Path.Combine(this.directoryPath, "OBS\\obs-websocket-4.2.0-Windows-Installer.exe");
+            if (File.Exists(pluginPath))
+            {
+                Process.Start(pluginPath);
+            }
+        }
+
+        private async void ConnectToOBSStudioButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Settings.OBSStudioServerIP = ChannelSession.DefaultOBSStudioConnection;
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await ChannelSession.Services.InitializeOBSWebsocket();
+            });
+
+            if (result)
+            {
+                this.OBSStudioConnectedSuccessfulTextBlock.Visibility = System.Windows.Visibility.Visible;
+                this.ConnectToOBSStudioButton.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password are set to their default settings. If you wish to connect with a specific port and password, you'll need to do this out of the wizard.");
+            }
+        }
+
+        private async void ConnectToXSplitButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await ChannelSession.Services.InitializeXSplitServer() && await ChannelSession.Services.XSplitServer.TestConnection();
+            });
+
+            if (result)
+            {
+                ChannelSession.Settings.EnableXSplitConnection = true;
+                this.XSplitConnectedSuccessfulTextBlock.Visibility = System.Windows.Visibility.Visible;
+                this.ConnectToXSplitButton.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                await this.RunAsyncOperation(async () =>
+                {
+                    await ChannelSession.Services.DisconnectXSplitServer();
+                });
+                await MessageBoxHelper.ShowMessageDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
+            }
         }
     }
 }

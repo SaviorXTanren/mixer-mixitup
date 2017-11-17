@@ -19,6 +19,8 @@ namespace MixItUp.Base
     {
         public const string ClientID = "5e3140d0719f5842a09dd2700befbfc100b5a246e35f2690";
 
+        public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
+
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
             OAuthClientScopeEnum.chat__bypass_links,
@@ -117,7 +119,7 @@ namespace MixItUp.Base
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
-            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, "LoginRedirectPage.html");
+            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, "LoginRedirectPage.html");
             if (connection != null)
             {
                 ChannelSession.Connection = new MixerConnectionWrapper(connection);

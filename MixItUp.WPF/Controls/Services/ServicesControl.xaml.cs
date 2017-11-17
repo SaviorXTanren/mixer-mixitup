@@ -53,6 +53,10 @@ namespace MixItUp.WPF.Controls.Services
 
                 await ChannelSession.Services.InitializeOBSWebsocket();
             }
+            else
+            {
+                this.OBSStudioIPAddressTextBox.Text = ChannelSession.DefaultOBSStudioConnection;
+            }
 
             if (ChannelSession.Settings.EnableXSplitConnection)
             {
