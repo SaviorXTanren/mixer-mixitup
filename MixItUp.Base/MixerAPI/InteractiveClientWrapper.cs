@@ -93,19 +93,19 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<bool> ConnectAndReady() { return await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()); }
 
-        public async Task<bool> CreateGroups(IEnumerable<InteractiveGroupModel> groups) { return await this.RunAsync(this.Client.CreateGroups(groups)); }
+        public async Task<bool> CreateGroups(IEnumerable<InteractiveGroupModel> groups) { return await this.RunAsync(this.Client.CreateGroupsWithResponse(groups)); }
         public async Task<InteractiveGroupCollectionModel> GetGroups() { return await this.RunAsync(this.Client.GetGroups()); }
-        public async Task<InteractiveGroupCollectionModel> UpdateGroups(IEnumerable<InteractiveGroupModel> groups) { return await this.RunAsync(this.Client.UpdateGroups(groups)); }
-        public async Task<bool> DeleteGroup(InteractiveGroupModel groupToDelete, InteractiveGroupModel groupToReplace) { return await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
+        public async Task UpdateGroups(IEnumerable<InteractiveGroupModel> groups) { await this.RunAsync(this.Client.UpdateGroupsWithResponse(groups)); }
+        public async Task DeleteGroup(InteractiveGroupModel groupToDelete, InteractiveGroupModel groupToReplace) { await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
 
         public async Task<InteractiveParticipantCollectionModel> GetAllParticipants() { return await this.RunAsync(this.Client.GetAllParticipants()); }
-        public async Task<InteractiveParticipantCollectionModel> UpdateParticipants(IEnumerable<InteractiveParticipantModel> participants) { return await this.RunAsync(this.Client.UpdateParticipants(participants)); }
+        public async Task UpdateParticipants(IEnumerable<InteractiveParticipantModel> participants) { await this.RunAsync(this.Client.UpdateParticipants(participants)); }
 
         public async Task<InteractiveConnectedSceneGroupCollectionModel> GetScenes() { return await this.RunAsync(this.Client.GetScenes()); }
 
-        public async Task<InteractiveConnectedControlCollectionModel> UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveConnectedButtonControlModel> controls) { return await this.RunAsync(this.Client.UpdateControls(scene, controls)); }
+        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveConnectedButtonControlModel> controls) { await this.RunAsync(this.Client.UpdateControls(scene, controls)); }
 
-        public async Task<bool> CaptureSparkTransaction(string transactionID) { return await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
+        public async Task CaptureSparkTransaction(string transactionID) { await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
 
         public async Task Disconnect() { await this.RunAsync(this.Client.Disconnect()); }
 
@@ -183,6 +183,44 @@ namespace MixItUp.Base.MixerAPI
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             return true;
+        }
+
+        private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)
+        {
+            InteractiveCommand command = ChannelSession.Settings.InteractiveControls.FirstOrDefault(c =>
+                c.GameID.Equals(this.Client.InteractiveGame.id) && c.Control.controlID.Equals(control.controlID));
+
+            if (command != null)
+            {
+                command.UpdateWithLatestControl(control);
+                this.Controls.Add(control.controlID, new InteractiveConnectedControlCommand(scene, control, command));
+            }
+        }
+
+        private async Task AddParticipants(IEnumerable<InteractiveParticipantModel> participants)
+        {
+            foreach (InteractiveParticipantModel participant in participants)
+            {
+                if (!string.IsNullOrEmpty(participant.sessionID))
+                {
+                    this.InteractiveUsers[participant.sessionID] = participant;
+
+                    if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
+                    {
+                        UserRole role = ChatClientWrapper.ChatUsers[participant.userID].PrimaryRole;
+                        InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == role);
+                        if (group != null)
+                        {
+                            participant.groupID = group.GroupName;
+                        }
+                    }
+                }
+            }
+
+            if (participants.Any(p => !p.groupID.Equals(InteractiveUserGroupViewModel.DefaultName)))
+            {
+                await ChannelSession.Interactive.UpdateParticipants(participants);
+            }
         }
 
         #endregion Interactive Update Methods
@@ -309,44 +347,6 @@ namespace MixItUp.Base.MixerAPI
         }
 
         #endregion Interactive Event Handlers
-
-        private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)
-        {
-            InteractiveCommand command = ChannelSession.Settings.InteractiveControls.FirstOrDefault(c =>
-                c.GameID.Equals(this.Client.InteractiveGame.id) && c.Control.controlID.Equals(control.controlID));
-
-            if (command != null)
-            {
-                command.UpdateWithLatestControl(control);
-                this.Controls.Add(control.controlID, new InteractiveConnectedControlCommand(scene, control, command));
-            }
-        }
-
-        private async Task AddParticipants(IEnumerable<InteractiveParticipantModel> participants)
-        {
-            foreach (InteractiveParticipantModel participant in participants)
-            {
-                if (!string.IsNullOrEmpty(participant.sessionID))
-                {
-                    this.InteractiveUsers[participant.sessionID] = participant;
-
-                    if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
-                    {
-                        UserRole role = ChatClientWrapper.ChatUsers[participant.userID].PrimaryRole;
-                        InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == role);
-                        if (group != null)
-                        {
-                            participant.groupID = group.GroupName;
-                        }
-                    }
-                }
-            }
-
-            if (participants.Any(p => !p.groupID.Equals(InteractiveUserGroupViewModel.DefaultName)))
-            {
-                await ChannelSession.Interactive.UpdateParticipants(participants);
-            }
-        }
 
         private async void GlobalEvents_OnChatUserJoined(object sender, UserViewModel e)
         {
