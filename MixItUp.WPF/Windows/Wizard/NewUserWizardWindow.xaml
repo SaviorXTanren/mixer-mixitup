@@ -35,7 +35,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" x:Name="PagesGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid x:Name="IntroPageGrid" Visibility="Collapsed">
+                <Grid x:Name="IntroPageGrid" Visibility="Visible">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
@@ -80,7 +80,7 @@
 
                 </Grid>
 
-                <Grid x:Name="ExternalServicesPageGrid" Visibility="Visible" Width="550">
+                <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed" Width="550">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
@@ -98,31 +98,31 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" VerticalAlignment="Center">Do you have a Mixer Bot account?</TextBlock>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Width="250" TextWrapping="Wrap">Mixer Bot Account (Make sure to switch accounts to your Bot account):</TextBlock>
 
-                        <Grid Grid.Column="2" x:Name="BotLogInGrid" Visibility="Hidden">
+                        <Grid Grid.Column="2" x:Name="BotLogInGrid" Visibility="Visible" HorizontalAlignment="Right">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0" x:Name="BotLogInButton" Click="BotLogInButton_Click">Log In</Button>
+                            <Button Grid.Column="0" x:Name="BotLogInButton" Click="BotLogInButton_Click">Bot Log In</Button>
 
                             <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,0,0,40">Short Code:</TextBlock>
                             <TextBox Grid.Column="2" x:Name="BotLoginShortCodeTextBox" IsReadOnly="True" VerticalAlignment="Center" />
                         </Grid>
 
-                        <Grid Grid.Column="2" x:Name="BotLogOutGrid" Visibility="Hidden">
+                        <Grid Grid.Column="2" x:Name="BotLoggedInGrid" Visibility="Hidden" HorizontalAlignment="Right">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" x:Name="BotLoggedInNameTextBlock" VerticalAlignment="Center" Width="150" />
-
-                            <Button Grid.Column="2" x:Name="BotLogOutButton" Click="BotLogOutButton_Click">Log Out</Button>
+                            <UsersControls:UserProfileAvatarControl Grid.Column="0" x:Name="BotProfileAvatar" />
+                            
+                            <TextBlock Grid.Column="2" x:Name="BotLoggedInNameTextBlock" VerticalAlignment="Center" />
 
                         </Grid>
                         
@@ -194,7 +194,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="BackButton" Grid.Column="0" Click="BackButton_Click">&lt; Back</Button>
+                <Button x:Name="BackButton" Grid.Column="0" Click="BackButton_Click" IsEnabled="False">&lt; Back</Button>
 
                 <Button x:Name="NextButton" Grid.Column="2" Click="NextButton_Click">Next &gt;</Button>
             </Grid>

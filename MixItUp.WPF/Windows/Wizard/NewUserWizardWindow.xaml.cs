@@ -29,9 +29,6 @@ namespace MixItUp.WPF.Windows.Wizard
 
         protected override Task OnLoaded()
         {
-            this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
-            this.BackButton.IsEnabled = false;
-
             this.directoryPath = AppDomain.CurrentDomain.BaseDirectory;
             this.XSplitExtensionPathTextBox.Text = Path.Combine(this.directoryPath, "XSplit\\Mix It Up.html");
 
@@ -155,20 +152,14 @@ namespace MixItUp.WPF.Windows.Wizard
             if (result)
             {
                 this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
+                if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
+                {
+                    this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+                }
+
                 this.BotLogInGrid.Visibility = System.Windows.Visibility.Hidden;
-                this.BotLogOutGrid.Visibility = System.Windows.Visibility.Visible;
+                this.BotLoggedInGrid.Visibility = System.Windows.Visibility.Visible;
             }
-        }
-
-        private async void BotLogOutButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            await this.RunAsyncOperation(async () =>
-            {
-                await ChannelSession.DisconnectBot();
-            });
-
-            this.BotLogInGrid.Visibility = System.Windows.Visibility.Visible;
-            this.BotLogOutGrid.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void InstallOBSStudioPlugin_Click(object sender, System.Windows.RoutedEventArgs e)

@@ -157,7 +157,14 @@ namespace MixItUp.Base
             if (connection != null)
             {
                 ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
-                return (await ChannelSession.InitializeBotInternal() && await ChannelSession.ConnectBotChat());
+                if (await ChannelSession.InitializeBotInternal())
+                {
+                    if (ChannelSession.Chat != null)
+                    {
+                        return await ChannelSession.ConnectBotChat();
+                    }
+                    return true;
+                }
             }
             return false;
         }
@@ -237,17 +244,19 @@ namespace MixItUp.Base
                 await ChannelSession.Chat.DisconnectBot();
             }
 
-            ChatClientWrapper botChat = await ChannelSession.BotConnection.CreateChatClient(ChannelSession.Channel);
-            if (botChat != null)
+            if (ChannelSession.Chat != null)
             {
-                if (await ChannelSession.Chat.ConnectAndAuthenticateBot(botChat.StreamerClient))
+                ChatClientWrapper botChat = await ChannelSession.BotConnection.CreateChatClient(ChannelSession.Channel);
+                if (botChat != null)
                 {
-                    ChannelSession.Chat.BotClient.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
-                    return true;
+                    if (await ChannelSession.Chat.ConnectAndAuthenticateBot(botChat.StreamerClient))
+                    {
+                        ChannelSession.Chat.BotClient.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
+                        return true;
+                    }
                 }
+                await ChannelSession.Chat.DisconnectBot();
             }
-
-            await ChannelSession.Chat.DisconnectBot();
             return false;
         }
 
