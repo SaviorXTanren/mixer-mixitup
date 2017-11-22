@@ -69,21 +69,24 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(false);
         }
 
-        public override async Task<bool> InitializeOverlayServer()
+        public override Task<bool> InitializeOverlayServer()
         {
             if (this.OverlayServer == null)
             {
-                this.OverlayServer = new OverlayWebServer("http://localhost:8111/");
-                return await this.OverlayServer.Initialize();
+                this.OverlayServer = new OverlayWebServer("http://localhost:8111/ws/");
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                this.OverlayServer.Initialize();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                return Task.FromResult(true);
             }
-            return false;
+            return Task.FromResult(false);
         }
 
         public override async Task DisconnectOverlayServer()
         {
             if (this.OverlayServer != null)
             {
-                await this.OverlayServer.Close();
+                await this.OverlayServer.Disconnect();
                 this.OverlayServer = null;
             }
         }

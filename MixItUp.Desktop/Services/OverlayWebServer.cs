@@ -1,47 +1,34 @@
-﻿using MixItUp.Base.Services;
-using MixItUp.Desktop;
+﻿using Mixer.Base.Model.Client;
+using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace MixItUp.Overlay
 {
-    public class OverlayWebServer : RequestSenderWebServerBase, IOverlayService
+    public class OverlayPacket : WebSocketPacket
     {
-        private Process nodeJSProcess;
+        public string data;
 
+        public OverlayPacket(string type, JObject data)
+        {
+            this.type = type;
+            this.data = data.ToString();
+        }
+    }
+
+    public class OverlayWebServer : WebSocketServerBase, IOverlayService
+    {
         public OverlayWebServer(string address) : base(address) { }
 
-        public Task<bool> Initialize()
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.CreateNoWindow = true;
-            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.UseShellExecute = false;
-            startInfo.FileName = "Overlay\\LaunchNode.bat";
+        public async Task TestConnection() { await this.Send(new OverlayPacket("test", new JObject())); }
 
-            this.nodeJSProcess = Process.Start(startInfo);
+        public async Task SetImage(OverlayImage image) { await this.Send(new OverlayPacket("image", JObject.FromObject(image))); }
 
-            return Task.FromResult(true);
-        }
+        public async Task SetText(OverlayText text) { await this.Send(new OverlayPacket("text", JObject.FromObject(text))); }
 
-        public Task TestConnection()
-        {
-            this.SendData("test", new JObject());
-            return Task.FromResult(0);
-        }
+        public async Task SetHTMLText(OverlayHTML htmlText) { await this.Send(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
 
-        public void SetImage(OverlayImage image) { this.SendData("image", JObject.FromObject(image)); }
-
-        public void SetText(OverlayText text) { this.SendData("text", JObject.FromObject(text)); }
-
-        public void SetHTMLText(OverlayHTML htmlText) { this.SendData("htmlText", JObject.FromObject(htmlText)); }
-
-        public Task Close()
-        {
-            this.End();
-            this.nodeJSProcess.Close();
-            return Task.FromResult(0);
-        }
+        protected override Task PacketReceived(WebSocketPacket packet) { return Task.FromResult(0); }
     }
 }

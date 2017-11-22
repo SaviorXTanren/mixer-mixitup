@@ -51,12 +51,12 @@ namespace MixItUp.Base.Services
 
         Task TestConnection();
 
-        void SetImage(OverlayImage image);
+        Task SetImage(OverlayImage image);
 
-        void SetText(OverlayText text);
+        Task SetText(OverlayText text);
 
-        void SetHTMLText(OverlayHTML htmlText);
+        Task SetHTMLText(OverlayHTML htmlText);
 
-        Task Close();
+        Task Disconnect();
     }
 }

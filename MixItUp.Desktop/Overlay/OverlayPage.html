@@ -6,87 +6,26 @@
     <body style="background-color:transparent">
         <div id="mainOverlay" />
 
-		<script src="/socket.io/socket.io.js"></script>
 		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 		<script>
 			var mainOverlayDiv = document.getElementById('mainOverlay');
-			
-			var socket = io();
-			
-			socket.on('test', function(packet)
-			{
-			    var addedElement = document.createElement('h1');
-                addedElement.innerHTML = 'Connection Test!';
-                addedElement.style.cssText += 'font-size: 100px';
 
-			    var data = { horizontal: 50, vertical: 50, duration: 3 };
+			var connection = new WebSocket("ws://localhost:8111/ws/");
 
-			    addWaitRemoveElement(data, addedElement);
-			});
-			
-			socket.on('image', function(packet)
-			{
-				data = getDataFromJSON(packet);
-				if (data != null)
-				{
-					var addedElement = null;
+			// When the connection is open, send some data to the server
+			connection.onopen = function () {
+				connection.send('Ping'); // Send the message 'Ping' to the server
+			};
 
-					if (data.imagePath != null)
-					{
-						addedElement = document.createElement('img');
+			// Log errors
+			connection.onerror = function (error) {
+				console.log('WebSocket Error ' + error);
+			};
 
-						var imageType = "data:image/png";
-						if (data.imagePath.endsWith("gif")) {
-						    imageType = "data:image/gif";
-						}
-						else if (data.imagePath.endsWith("jpg")) {
-						    imageType = "data:image/jpg";
-						}
-						else if (data.imagePath.endsWith("jpeg")) {
-						    imageType = "data:image/jpeg";
-						}
-
-						addedElement.src = imageType + ";base64," + data.imageData;
-
-						addedElement.style.cssText += 'width: ' + data.width + 'px; height: ' + data.height + 'px; ';
-						
-						addWaitRemoveElement(data, addedElement);
-					}
-				}
-			});
-			
-			socket.on('text', function(packet)
-			{
-				data = getDataFromJSON(packet);
-				if (data != null)
-				{
-					var addedElement = null;
-
-					if (data.text != null)
-					{
-						addedElement = document.createElement('h1');
-						addedElement.innerHTML = data.text;
-						addedElement.style.cssText += 'font-size: ' + data.fontSize + 'px; color: ' + data.color + '; ' +
-						    'text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;';
-					}
-					
-					addWaitRemoveElement(data, addedElement);
-				}
-            });
-
-            socket.on('htmlText', function (packet) {
-                data = getDataFromJSON(packet);
-                if (data != null) {
-                    var addedElement = null;
-
-                    if (data.htmlText != null) {
-                        addedElement = document.createElement('div');
-                        addedElement.innerHTML = data.htmlText;
-                    }
-
-                    addWaitRemoveElement(data, addedElement);
-                }
-            });
+			// Log messages from the server
+			connection.onmessage = function (e) {
+				console.log('Server: ' + e.data);
+			};
 			
 			function getDataFromJSON(packet)
 			{
