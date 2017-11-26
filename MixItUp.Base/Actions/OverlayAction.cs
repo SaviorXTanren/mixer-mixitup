@@ -104,7 +104,7 @@ namespace MixItUp.Base.Actions
 
                     if (this.imageData != null)
                     {
-                        ChannelSession.Services.OverlayServer.SetImage(new OverlayImage()
+                        await ChannelSession.Services.OverlayServer.SetImage(new OverlayImage()
                         {
                             imagePath = imageFilePath,
                             width = this.ImageWidth,
@@ -119,14 +119,14 @@ namespace MixItUp.Base.Actions
                 else if (!string.IsNullOrEmpty(this.Text))
                 {
                     string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
-                    ChannelSession.Services.OverlayServer.SetText(new OverlayText()
+                    await ChannelSession.Services.OverlayServer.SetText(new OverlayText()
                     {
                         text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical
                     });
                 }
                 else if (!string.IsNullOrEmpty(this.HTMLText))
                 {
-                    ChannelSession.Services.OverlayServer.SetHTMLText(new OverlayHTML() { htmlText = this.HTMLText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical });
+                    await ChannelSession.Services.OverlayServer.SetHTMLText(new OverlayHTML() { htmlText = this.HTMLText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical });
                 }
             }
         }

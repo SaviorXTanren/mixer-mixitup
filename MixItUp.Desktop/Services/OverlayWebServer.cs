@@ -8,12 +8,12 @@ namespace MixItUp.Overlay
 {
     public class OverlayPacket : WebSocketPacket
     {
-        public string data;
+        public JObject data;
 
         public OverlayPacket(string type, JObject data)
         {
             this.type = type;
-            this.data = data.ToString();
+            this.data = data;
         }
     }
 

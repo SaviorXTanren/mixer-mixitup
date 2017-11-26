@@ -16,6 +16,8 @@ namespace MixItUp.Base.Util
         private UTF8Encoding encoder = new UTF8Encoding();
 
         private string address;
+
+        private HttpListener httpListener;
         private WebSocket webSocket;
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
 
@@ -35,11 +37,11 @@ namespace MixItUp.Base.Util
             {
                 try
                 {
-                    HttpListener s = new HttpListener();
-                    s.Prefixes.Add(this.address);
-                    s.Start();
+                    this.httpListener = new HttpListener();
+                    this.httpListener.Prefixes.Add(this.address);
+                    this.httpListener.Start();
 
-                    var hc = await s.GetContextAsync();
+                    var hc = await this.httpListener.GetContextAsync();
                     if (!hc.Request.IsWebSocketRequest)
                     {
                         hc.Response.StatusCode = 400;
@@ -54,11 +56,17 @@ namespace MixItUp.Base.Util
                         await this.ReceiveInternal();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
+
+                    await this.ShutdownListeners();
                 }
                 catch (Exception ex)
                 {
+                    await this.ShutdownListeners();
+
                     Logger.Log(ex);
                 }
+
+                this.tokenSource.Token.ThrowIfCancellationRequested();
             }
         }
 
@@ -72,10 +80,7 @@ namespace MixItUp.Base.Util
         public async Task Disconnect()
         {
             this.tokenSource.Cancel();
-            if (this.webSocket != null)
-            {
-                await this.webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Done", CancellationToken.None);
-            }
+            await this.ShutdownListeners();
         }
 
         protected abstract Task PacketReceived(WebSocketPacket packet);
@@ -111,8 +116,28 @@ namespace MixItUp.Base.Util
                                 Console.WriteLine(ex);
                             }
                         }
+                        else
+                        {
+                            return;
+                        }
                     }
                 }
+            }
+        }
+
+        private async Task ShutdownListeners()
+        {
+            if (this.httpListener != null)
+            {
+                this.httpListener.Stop();
+                this.httpListener.Close();
+                this.httpListener = null;
+            }
+
+            if (this.webSocket != null)
+            {
+                await this.webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Done", CancellationToken.None);
+                this.webSocket = null;
             }
         }
     }
