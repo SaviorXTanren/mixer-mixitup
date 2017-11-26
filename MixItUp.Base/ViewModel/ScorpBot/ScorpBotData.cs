@@ -9,9 +9,13 @@ namespace MixItUp.Base.ViewModel.ScorpBot
         [DataMember]
         public List<ScorpBotViewer> Viewers { get; set; }
 
+        [DataMember]
+        public List<ScorpBotCommand> Commands { get; set; }
+
         public ScorpBotData()
         {
             this.Viewers = new List<ScorpBotViewer>();
+            this.Commands = new List<ScorpBotCommand>();
         }
     }
 }

@@ -103,38 +103,58 @@ namespace MixItUp.WPF.Windows.Wizard
             {
                 try
                 {
+                    ScorpBotData scorpBotData = new ScorpBotData();
+
                     string dataPath = Path.Combine(folderPath, "Data\\Database");
                     if (Directory.Exists(dataPath))
                     {
-                        string viewersDB = Path.Combine(dataPath, "Viewers3DB.sqlite");
-                        if (File.Exists(viewersDB))
-                        {
-                            ScorpBotData scorpBotData = new ScorpBotData();
-                            using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + viewersDB))
+                        await this.ImportDatabase(scorpBotData, dataPath, "CommandsDB.sqlite", "SELECT * FROM RegCommand",
+                            (reader) =>
                             {
-                                await connection.OpenAsync();
-                                using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Viewer", connection))
+                                if (ScorpBotCommand.IsACommand(reader))
                                 {
-                                    using (SQLiteDataReader reader = command.ExecuteReader())
-                                    {
-                                        while (reader.Read())
-                                        {
-                                            try
-                                            {
-                                                scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
-                                            }
-                                            catch (Exception ex) { Logger.Log(ex); }
-                                        }
-                                    }
+                                    scorpBotData.Commands.Add(new ScorpBotCommand(reader));
                                 }
-                            }
-                            return scorpBotData;
-                        }
+                            });
+
+                        await this.ImportDatabase(scorpBotData, dataPath, "Viewers3DB.sqlite", "SELECT * FROM Viewer",
+                            (reader) =>
+                            {
+                                scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
+                            });
                     }
+
+                    return scorpBotData;
                 }
                 catch (Exception ex) { Logger.Log(ex); }
                 return null;
             });
+        }
+
+        private async Task ImportDatabase(ScorpBotData data, string dataPath, string databaseName, string commandString, Action<SQLiteDataReader> processRow)
+        {
+            string database = Path.Combine(dataPath, databaseName);
+            if (File.Exists(database))
+            {
+                using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + database))
+                {
+                    await connection.OpenAsync();
+                    using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
+                    {
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                try
+                                {
+                                    processRow(reader);
+                                }
+                                catch (Exception ex) { Logger.Log(ex); }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private async void BotLogInButton_Click(object sender, System.Windows.RoutedEventArgs e)
