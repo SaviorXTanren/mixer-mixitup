@@ -98,7 +98,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" TextWrapping="Wrap" TextAlignment="Center">Add "http://localhost:8111/" to a browser source in your streaming software:</TextBlock>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" TextAlignment="Center">Add "OverlayPage.html" in the "Overlays" folder to a browser source in your streaming software:</TextBlock>
 
                 <Button x:Name="EnableOverlayButton" Grid.Row="2" Click="EnableOverlayButton_Click" Width="140">Enable Overlay</Button>
                 <Button x:Name="DisableOverlayButton" Grid.Row="2" Click="DisableOverlayButton_Click" Width="140" Visibility="Collapsed">Disable Overlay</Button>

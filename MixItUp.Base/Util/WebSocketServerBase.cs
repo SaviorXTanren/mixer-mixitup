@@ -52,9 +52,7 @@ namespace MixItUp.Base.Util
                         var wsc = await hc.AcceptWebSocketAsync(null);
                         this.webSocket = wsc.WebSocket;
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         await this.ReceiveInternal();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
 
                     await this.ShutdownListeners();
@@ -88,38 +86,43 @@ namespace MixItUp.Base.Util
         private async Task ReceiveInternal()
         {
             byte[] buffer = new byte[WebSocketServerBase.bufferSize];
-
-            await Task.Delay(100);
             while (this.webSocket != null)
             {
                 if (this.webSocket.State == WebSocketState.Open)
                 {
-                    Array.Clear(buffer, 0, buffer.Length);
-                    WebSocketReceiveResult result = await this.webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-                    if (result != null)
+                    try
                     {
-                        if (result.CloseStatus == null || result.CloseStatus != WebSocketCloseStatus.Empty)
+                        Array.Clear(buffer, 0, buffer.Length);
+                        WebSocketReceiveResult result = await this.webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                        if (result != null)
                         {
-                            try
+                            if (result.CloseStatus == null || result.CloseStatus != WebSocketCloseStatus.Empty)
                             {
-                                string jsonBuffer = this.encoder.GetString(buffer);
-                                dynamic jsonObject = JsonConvert.DeserializeObject(jsonBuffer);
-                                WebSocketPacket packet = JsonConvert.DeserializeObject<WebSocketPacket>(jsonBuffer);
+                                try
+                                {
+                                    string jsonBuffer = this.encoder.GetString(buffer);
+                                    dynamic jsonObject = JsonConvert.DeserializeObject(jsonBuffer);
+                                    WebSocketPacket packet = JsonConvert.DeserializeObject<WebSocketPacket>(jsonBuffer);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                                this.PacketReceived(packet);
+                                    this.PacketReceived(packet);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex);
+                                }
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                Console.WriteLine(ex);
+                                return;
                             }
                         }
-                        else
-                        {
-                            return;
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
                     }
                 }
             }
@@ -127,6 +130,17 @@ namespace MixItUp.Base.Util
 
         private async Task ShutdownListeners()
         {
+            try
+            {
+                if (this.webSocket != null)
+                {
+                    await this.webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Done", CancellationToken.None);
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+
+            this.webSocket = null;
+
             if (this.httpListener != null)
             {
                 this.httpListener.Stop();
@@ -134,11 +148,7 @@ namespace MixItUp.Base.Util
                 this.httpListener = null;
             }
 
-            if (this.webSocket != null)
-            {
-                await this.webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Done", CancellationToken.None);
-                this.webSocket = null;
-            }
+
         }
     }
 }
