@@ -113,10 +113,10 @@
     <Content Include="Overlay\OverlayPage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XSplit\js\main.js">
+    <Content Include="Overlay\webSocketWrapper.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="XSplit\js\xjs.js">
+    <Content Include="XSplit\xjs.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="XSplit\Mix It Up.html">

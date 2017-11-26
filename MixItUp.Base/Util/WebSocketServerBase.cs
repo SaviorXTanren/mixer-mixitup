@@ -11,6 +11,8 @@ namespace MixItUp.Base.Util
 {
     public abstract class WebSocketServerBase
     {
+        public event EventHandler Disconnected;
+
         private const int bufferSize = 1000000;
 
         private UTF8Encoding encoder = new UTF8Encoding();
@@ -116,6 +118,7 @@ namespace MixItUp.Base.Util
                             }
                             else
                             {
+                                this.OnDisconnected();
                                 return;
                             }
                         }
@@ -126,10 +129,18 @@ namespace MixItUp.Base.Util
                     }
                 }
             }
+            this.OnDisconnected();
         }
 
         private async Task ShutdownListeners()
         {
+            if (this.httpListener != null)
+            {
+                this.httpListener.Stop();
+                this.httpListener.Close();
+                this.httpListener = null;
+            }
+
             try
             {
                 if (this.webSocket != null)
@@ -138,17 +149,15 @@ namespace MixItUp.Base.Util
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-
             this.webSocket = null;
+        }
 
-            if (this.httpListener != null)
+        private void OnDisconnected()
+        {
+            if (this.Disconnected != null)
             {
-                this.httpListener.Stop();
-                this.httpListener.Close();
-                this.httpListener = null;
+                this.Disconnected(this, new EventArgs());
             }
-
-
         }
     }
 }

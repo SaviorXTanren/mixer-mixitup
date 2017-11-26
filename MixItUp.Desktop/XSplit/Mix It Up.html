@@ -1,19 +1,129 @@
 ﻿<html>
-  <head>
+<head>
     <meta charset="utf-8">
-	<style>
-		body {
-			color: white;
-		}
-	</style>
-  </head>
-  <body>
-    <div id='data'>
-		Mix It Up Events:<BR><BR>
-	</div>
+    <style>
+        body {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id='eventsDiv'>
+        Mix It Up Events:<BR><BR>
+    </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="js/xjs.js"></script>
-    <script src="js/main.js"></script>
-  </body>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="xjs.js"></script>
+    <script src="../Overlay/webSocketWrapper.js"></script>
+
+    <script>
+        var xjs = require('xjs');
+        var eventsDiv = document.getElementById('eventsDiv');
+        var disconnected = true;
+
+        function connectionOpened()
+        {
+            eventsDiv.innerHTML += 'Connected to Mix It Up!<BR>';
+            disconnected = false;
+        }
+
+        function connectionClosed()
+        {
+            if (!disconnected)
+            {
+                eventsDiv.innerHTML += 'Disconnected from Mix It Up!<BR>';
+                disconnected = true;
+            }
+        }
+
+        function packetReceived(packet)
+        {
+            try
+            {
+                if (packet != null && packet.type != null && packet.data != null)
+                {
+                    if (packet.type === "test")
+                    {
+                        eventsDiv.innerHTML += 'Connection Test Successful!<BR>';
+                    }
+                    else if (packet.type === "sceneTransition")
+                    {
+                        sceneTransition(packet.data);
+                    }
+                    else if (packet.type === "sourceUpdate")
+                    {
+                        sourceUpdate(packet.data);
+                    }
+                }
+            }
+            catch (err) { eventsDiv.innerHTML += 'Error Occurred: ' + err.message + '<BR>'; }
+        }
+
+        function sceneTransition(data)
+        {
+            eventsDiv.innerHTML += 'Scene Transition: ' + data.sceneName + '<BR>';
+
+            xjs.ready().then(function ()
+            {
+                return xjs.Scene.getByName(data.sceneName);
+            }).then(function (scenes)
+            {
+                if (scenes != null && scenes.length > 0)
+                {
+                    xjs.Scene.setActiveScene(scenes[0]);
+                }
+            });
+        }
+
+        function sourceUpdate(data) {
+            eventsDiv.innerHTML += 'Source Update: ' + data.sourceName + ' - ' + data.sourceVisible + '<BR>';
+
+            xjs.ready().then(function ()
+            {
+                return xjs.Scene.getActiveScene();
+            }).then(function (scene)
+            {
+                return scene.getSources();
+            }).then(function (sources)
+            {
+                if (sources != null && sources.length > 0)
+                {
+                    for (let i = 0; i < sources.length; i++)
+                    {
+                        if (sources[i]._cname == data.sourceName)
+                        {
+                            if (data.webBrowserUrl != null)
+                            {
+                                eventsDiv.innerHTML += 'Source Web Browser Update: ' + data.webBrowserUrl + '<BR>';
+                                try
+                                {
+                                    sources[i].setURL(data.webBrowserUrl);
+                                }
+                                catch (err) { }
+                            }
+
+                            sources[i].getItemList().then(function (items)
+                            {
+                                if (items != null && items.length > 0)
+                                {
+                                    for (let j = 0; j < items.length; j++)
+                                    {
+                                        try
+                                        {
+                                            items[j].setVisible(data.sourceVisible);
+                                        }
+                                        catch (err) { }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        openWebsocketConnection("8211");
+    </script>
+</body>
+
 </html>

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -28,16 +29,18 @@ namespace MixItUp.Base.Services
 
     public interface IXSplitService
     {
+        event EventHandler Disconnected;
+
         Task<bool> Initialize();
 
-        Task<bool> TestConnection();
+        Task TestConnection();
 
-        void SetCurrentScene(XSplitScene scene);
+        Task SetCurrentScene(XSplitScene scene);
 
-        void SetSourceVisibility(XSplitSource source);
+        Task SetSourceVisibility(XSplitSource source);
 
-        void SetWebBrowserSource(XSplitWebBrowserSource source);
+        Task SetWebBrowserSource(XSplitWebBrowserSource source);
 
-        Task Close();
+        Task Disconnect();
     }
 }

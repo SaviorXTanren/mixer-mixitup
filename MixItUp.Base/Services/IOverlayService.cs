@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -47,6 +48,8 @@ namespace MixItUp.Base.Services
 
     public interface IOverlayService
     {
+        event EventHandler Disconnected;
+
         Task<bool> Initialize();
 
         Task TestConnection();

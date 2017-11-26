@@ -119,7 +119,7 @@ namespace MixItUp.Desktop.Services
         {
             if (this.XSplitServer == null)
             {
-                this.XSplitServer = new XSplitWebServer("http://localhost:8201/");
+                this.XSplitServer = new XSplitWebServer("http://localhost:8211/");
                 return await this.XSplitServer.Initialize();
             }
             return true;
@@ -129,7 +129,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.XSplitServer != null)
             {
-                await this.XSplitServer.Close();
+                await this.XSplitServer.Disconnect();
+                this.XSplitServer = null;
             }
         }
     }

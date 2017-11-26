@@ -93,7 +93,7 @@ namespace MixItUp.Base.Actions
             {
                 if (!string.IsNullOrEmpty(this.SceneName))
                 {
-                    ChannelSession.Services.XSplitServer.SetCurrentScene(new XSplitScene() { sceneName = this.SceneName });
+                    await ChannelSession.Services.XSplitServer.SetCurrentScene(new XSplitScene() { sceneName = this.SceneName });
                 }
 
                 if (!string.IsNullOrEmpty(this.SourceName))
@@ -105,9 +105,9 @@ namespace MixItUp.Base.Actions
                     }
                     else if (!string.IsNullOrEmpty(this.SourceURL))
                     {
-                        ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible, webBrowserUrl = this.SourceURL });
+                        await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible, webBrowserUrl = this.SourceURL });
                     }
-                    ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
+                    await ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
                 }
             }
         }

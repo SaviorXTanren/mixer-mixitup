@@ -1,30 +1,34 @@
-﻿using MixItUp.Base.Util;
+﻿using Mixer.Base.Model.Client;
 using MixItUp.Base.Services;
-using Newtonsoft.Json;
+using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.XSplit
 {
-    public class XSplitWebServer : RequestListenerWebServerBase, IXSplitService
+    public class XSplitPacket : WebSocketPacket
+    {
+        public JObject data;
+
+        public XSplitPacket(string type, JObject data)
+        {
+            this.type = type;
+            this.data = data;
+        }
+    }
+
+    public class XSplitWebServer : WebSocketServerBase, IXSplitService
     {
         public XSplitWebServer(string address) : base(address) { }
 
-        public Task<bool> Initialize()
-        {
-            this.Start();
-            return Task.FromResult(true);
-        }
+        public async Task TestConnection() { await this.Send(new XSplitPacket("test", new JObject())); }
 
-        public void SetCurrentScene(XSplitScene scene) { this.AddToData(JsonConvert.SerializeObject(scene)); }
+        public async Task SetCurrentScene(XSplitScene scene) { await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(scene))); }
 
-        public void SetSourceVisibility(XSplitSource source) { this.AddToData(JsonConvert.SerializeObject(source)); }
+        public async Task SetSourceVisibility(XSplitSource source) { await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(source))); }
 
-        public void SetWebBrowserSource(XSplitWebBrowserSource source) { this.AddToData(JsonConvert.SerializeObject(source)); }
+        public async Task SetWebBrowserSource(XSplitWebBrowserSource source) { await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(source))); }
 
-        public Task Close()
-        {
-            this.End();
-            return Task.FromResult(0);
-        }
+        protected override Task PacketReceived(WebSocketPacket packet) { return Task.FromResult(0); }
     }
 }

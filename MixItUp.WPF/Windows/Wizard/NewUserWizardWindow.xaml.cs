@@ -194,7 +194,7 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Services.InitializeXSplitServer() && await ChannelSession.Services.XSplitServer.TestConnection();
+                return await ChannelSession.Services.InitializeXSplitServer();
             });
 
             if (result)
