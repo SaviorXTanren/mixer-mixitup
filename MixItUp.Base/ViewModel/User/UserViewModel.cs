@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,12 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public string AvatarLink { get; set; }
 
+        [DataMember]
+        public DateTimeOffset? MixerAccountDate { get; set; }
+
+        [DataMember]
+        public DateTimeOffset? FollowDate { get; set; }
+
         [JsonIgnore]
         public HashSet<UserRole> Roles { get; set; }
 
@@ -54,10 +61,16 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel()
         {
+            this.Roles = new HashSet<UserRole>();
             this.AvatarLink = DefaultAvatarLink;
+            this.SetFollowDate(this.FollowDate);
         }
 
-        public UserViewModel(UserModel user) : this(user.id, user.username) { }
+        public UserViewModel(UserModel user) : this(user.id, user.username)
+        {
+            this.AvatarLink = user.avatarUrl;
+            this.MixerAccountDate = user.createdAt;
+        }
 
         public UserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { }
 
@@ -72,7 +85,6 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.ID = id;
             this.UserName = username;
-            this.Roles = new HashSet<UserRole>();
 
             this.Roles.Add(UserRole.User);
             if (userRoles.Any(r => r.Equals("Owner"))) { this.Roles.Add(UserRole.Streamer); }
@@ -84,7 +96,37 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string RolesString { get { return string.Join(", ", this.Roles.OrderByDescending(r => r).Select(r => EnumHelper.GetEnumName(r))); } }
+        public string RolesDisplayString
+        {
+            get
+            {
+                List<UserRole> displayRoles = this.Roles.ToList();
+                if (this.Roles.Contains(UserRole.Banned))
+                {
+                    displayRoles.Clear();
+                    displayRoles.Add(UserRole.Banned);
+                }
+                else
+                {
+                    if (this.Roles.Count() > 1)
+                    {
+                        displayRoles.Remove(UserRole.User);
+                    }
+
+                    if (this.Roles.Contains(UserRole.Subscriber) || this.Roles.Contains(UserRole.Streamer))
+                    {
+                        displayRoles.Remove(UserRole.Follower);
+                    }
+
+                    if (this.Roles.Contains(UserRole.Streamer))
+                    {
+                        displayRoles.Remove(UserRole.Subscriber);
+                        displayRoles.Remove(UserRole.Mod);
+                    }
+                }
+                return string.Join(", ", displayRoles.OrderByDescending(r => r).Select(r => EnumHelper.GetEnumName(r)));
+            }
+        }
 
         [JsonIgnore]
         public UserRole PrimaryRole { get { return this.Roles.Max(); } }
@@ -93,11 +135,13 @@ namespace MixItUp.Base.ViewModel.User
         public UserRole PrimarySortableRole { get { return this.Roles.Where(r => r != UserRole.Follower).Max(); } }
 
         [JsonIgnore]
-        public bool IsFollower
-        {
-            get { return this.Roles.Contains(UserRole.Follower); }
-            set { this.Roles.Add(UserRole.Follower); }
-        }
+        public string MixerAgeString { get { return (this.MixerAccountDate != null) ? this.MixerAccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
+
+        [JsonIgnore]
+        public bool IsFollower { get { return this.Roles.Contains(UserRole.Follower); } }
+
+        [JsonIgnore]
+        public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
 
         [JsonIgnore]
         public bool IsSubscriber { get { return this.Roles.Contains(UserRole.Subscriber); } }
@@ -138,15 +182,26 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.AvatarLink = userWithChannel.avatarUrl;
                 }
+                this.MixerAccountDate = userWithChannel.createdAt;
             }
 
             if (checkForFollow)
             {
                 DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
-                if (followDate != null)
-                {
-                    this.IsFollower = true;
-                }
+                this.SetFollowDate(followDate);
+            }
+        }
+
+        public void SetFollowDate(DateTimeOffset? followDate)
+        {
+            this.FollowDate = followDate;
+            if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() != DateTimeOffset.MinValue)
+            {
+                this.Roles.Add(UserRole.Follower);
+            }
+            else
+            {
+                this.Roles.Remove(UserRole.Follower);
             }
         }
 

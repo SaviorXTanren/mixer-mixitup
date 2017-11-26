@@ -1,25 +1,18 @@
-﻿using Mixer.Base.Model.User;
-using System;
+﻿using System;
 using System.Text;
 
 namespace MixItUp.Base.Util
 {
-    public static class UserModelExtensions
+    public static class DateTimeOffsetExtensions
     {
-        public static string GetMixerAge(this UserModel user)
-        {
-            return user.username + "'s Mixer Age: " + user.GetAge(user.createdAt.GetValueOrDefault());
-        }
+        public static string ToFriendlyDateString(this DateTimeOffset dt) { return dt.ToString("d"); }
 
-        public static string GetFollowAge(this UserModel user, DateTimeOffset followDate)
-        {
-            return user.username + "'s Follow Age: " + user.GetAge(followDate);
-        }
+        public static string ToFriendlyDateTimeString(this DateTimeOffset dt) { return dt.ToString("g"); }
 
-        public static string GetAge(this UserModel user, DateTimeOffset startDate)
+        public static string GetAge(this DateTimeOffset dt)
         {
-            TimeSpan upTime = DateTimeOffset.Now - startDate.ToOffset(DateTimeOffset.Now.Offset);
-            int days = (int)upTime.TotalDays;
+            TimeSpan difference = DateTimeOffset.Now - dt.ToOffset(DateTimeOffset.Now.Offset);
+            int days = (int)difference.TotalDays;
             int years = days / 365;
             days = days - (years * 365);
             int months = days / 30;

@@ -62,6 +62,16 @@ namespace MixItUp.Base.Commands
             this.Permissions = settings.Permissions;
             this.Cooldown = settings.Cooldown;
         }
+
+        public string GetMixerAge(UserModel user)
+        {
+            return user.username + "'s Mixer Age: " + user.createdAt.GetValueOrDefault().GetAge();
+        }
+
+        public string GetFollowAge(UserModel user, DateTimeOffset followDate)
+        {
+            return user.username + "'s Follow Age: " + followDate.GetAge();
+        }
     }
 
     public class MixItUpChatCommand : PreMadeChatCommand
@@ -164,7 +174,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Chat != null)
                 {
                     UserModel userModel = await ChannelSession.Connection.GetUser(user.GetModel());
-                    await ChannelSession.Chat.SendMessage(userModel.GetMixerAge());
+                    await ChannelSession.Chat.SendMessage(this.GetMixerAge(userModel));
                 }
             }));
         }
@@ -182,7 +192,7 @@ namespace MixItUp.Base.Commands
                     DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, user.GetModel());
                     if (followDate != null)
                     {
-                        await ChannelSession.Chat.SendMessage(user.GetModel().GetFollowAge(followDate.GetValueOrDefault()));
+                        await ChannelSession.Chat.SendMessage(this.GetFollowAge(user.GetModel(), followDate.GetValueOrDefault()));
                     }
                     else
                     {
@@ -202,7 +212,7 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    await ChannelSession.Chat.SendMessage(ChannelSession.Channel.user.GetMixerAge());
+                    await ChannelSession.Chat.SendMessage(this.GetMixerAge(ChannelSession.Channel.user));
                 }
             }));
         }

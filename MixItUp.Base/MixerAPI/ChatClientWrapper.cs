@@ -105,7 +105,7 @@ namespace MixItUp.Base.MixerAPI
                 Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, refreshUsers.Values.Select(u => u.GetModel()));
                 foreach (var kvp in chatFollowers)
                 {
-                    refreshUsers[kvp.Key.id].IsFollower = true;
+                    refreshUsers[kvp.Key.id].SetFollowDate(kvp.Value);
                 }
             }
 
