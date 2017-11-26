@@ -66,6 +66,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Giveaway", new GiveawayControl());
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl());
             }
+            this.MainMenu.AddMenuItem("Statistics", "http://mixdash.cc");
             await this.MainMenu.AddMenuItem("Moderation", new ChatModerationControl());
             await this.MainMenu.AddMenuItem("About", new AboutControl());
         }

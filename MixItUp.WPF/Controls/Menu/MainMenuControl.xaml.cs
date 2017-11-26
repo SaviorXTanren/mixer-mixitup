@@ -15,11 +15,20 @@ namespace MixItUp.WPF.Controls.Menu
     {
         public string Name { get; private set; }
         public MainControlBase Control { get; private set; }
+        public string Link { get; private set; }
+
+        public Visibility LinkIconVisibility { get { return (!string.IsNullOrEmpty(this.Link)) ? Visibility.Visible : Visibility.Collapsed; } }
 
         public MainMenuItem(string name, MainControlBase control)
         {
             this.Name = name;
             this.Control = control;
+        }
+
+        public MainMenuItem(string name, string link)
+        {
+            this.Name = name;
+            this.Link = link;
         }
     }
 
@@ -43,6 +52,11 @@ namespace MixItUp.WPF.Controls.Menu
             {
                 this.MenuItemSelected(this.menuItems.First());
             }
+        }
+
+        public void AddMenuItem(string name, string link)
+        {
+            this.menuItems.Add(new MainMenuItem(name, link));
         }
 
         protected override Task InitializeInternal()
@@ -78,8 +92,15 @@ namespace MixItUp.WPF.Controls.Menu
 
         private void MenuItemSelected(MainMenuItem item)
         {
-            this.DataContext = item;
-            this.ActiveControlContentControl.Content = item.Control;
+            if (item.Control != null)
+            {
+                this.DataContext = item;
+                this.ActiveControlContentControl.Content = item.Control;
+            }
+            else if (!string.IsNullOrEmpty(item.Link))
+            {
+                Process.Start(item.Link);
+            }
             this.MenuToggleButton.IsChecked = false;
         }
 
