@@ -8,6 +8,7 @@ using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -214,6 +215,21 @@ namespace MixItUp.Base
             this.Quotes = new LockedList<string>(this.quotesInternal);
             this.UserData = new LockedDictionary<uint, UserDataViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
+        }
+
+        public async Task<bool> SaveAndValidate()
+        {
+            try
+            {
+                await this.Save();
+                ChannelSettings settings = await ChannelSettings.LoadSettings(this.GetSettingsFileName());
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return false;
         }
 
         public async Task Save()

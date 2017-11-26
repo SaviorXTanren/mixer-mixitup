@@ -38,6 +38,21 @@
 
         <MenuControls:MainMenuControl x:Name="MainMenu" Grid.Row="0" />
 
+        <Grid x:Name="ShuttingDownGrid" Visibility="Collapsed" Margin="16" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="12 12 12 12"/>
+
+            <TextBlock x:Name="SavingTextBlock" Grid.Row="2" HorizontalAlignment="Center" TextAlignment="Center">Please wait while Mix It Up saves your settings and shuts down...</TextBlock>
+
+            <TextBlock x:Name="FailedSaveTextBlock" Visibility="Collapsed" Grid.Row="2" HorizontalAlignment="Center" TextAlignment="Center">Save failed, attempting one more time...</TextBlock>
+
+        </Grid>
+
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>
 </Windows:LoadingWindowBase>

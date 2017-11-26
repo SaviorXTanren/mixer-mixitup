@@ -15,6 +15,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF
 {
@@ -23,11 +24,15 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class MainWindow : LoadingWindowBase
     {
-        public string restoredSettingsFilePath = null;
+        public string RestoredSettingsFilePath = null;
+
+        private bool shutdownStarted = false;
+        private bool shutdownComplete = false;
 
         public MainWindow()
         {
             InitializeComponent();
+            this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
         }
 
@@ -65,18 +70,20 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem("About", new AboutControl());
         }
 
-        protected override async Task OnClosing()
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.restoredSettingsFilePath))
+            if (!this.shutdownStarted)
             {
-                File.Copy(this.restoredSettingsFilePath, ChannelSession.Settings.GetSettingsFileName(), overwrite: true);
+                e.Cancel = true;
+                this.shutdownStarted = true;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                this.StartShutdownProcess();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
-            else
+            else if (!this.shutdownComplete)
             {
-                await ChannelSession.Settings.Save();
+                e.Cancel = true;
             }
-
-            await ChannelSession.Close();
         }
 
         private async void ChannelSession_OnDisconectionOccurred(object sender, System.EventArgs e)
@@ -95,6 +102,30 @@ namespace MixItUp.WPF
                 this.IsEnabled = true;
                 await MessageBoxHelper.ShowMessageDialog("Successfully reconnected to Mixer services");
             });
+        }
+
+        private async Task StartShutdownProcess()
+        {
+            this.ShuttingDownGrid.Visibility = Visibility.Visible;
+            this.MainMenu.Visibility = Visibility.Collapsed;
+
+            if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
+            {
+                File.Copy(this.RestoredSettingsFilePath, ChannelSession.Settings.GetSettingsFileName(), overwrite: true);
+            }
+            else
+            {
+                if (!await ChannelSession.Settings.SaveAndValidate())
+                {
+                    await Task.Delay(1000);
+                    await ChannelSession.Settings.SaveAndValidate();
+                }
+            }
+
+            await Task.Delay(2000);
+
+            this.shutdownComplete = true;
+            this.Close();
         }
     }
 }

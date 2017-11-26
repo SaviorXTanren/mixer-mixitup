@@ -102,7 +102,7 @@ namespace MixItUp.WPF.Controls.Menu
                 string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Mix It Up Settings (*.mixitup)|*.mixitup|All files (*.*)|*.*");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    ((MainWindow)this.Window).restoredSettingsFilePath = filePath;
+                    ((MainWindow)this.Window).RestoredSettingsFilePath = filePath;
                     this.Window.Close();
                 }
             }
