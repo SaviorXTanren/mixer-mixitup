@@ -114,14 +114,14 @@ namespace MixItUp.WPF
 
             if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
             {
-                File.Copy(this.RestoredSettingsFilePath, ChannelSession.Settings.GetSettingsFileName(), overwrite: true);
+                File.Copy(this.RestoredSettingsFilePath, ChannelSession.Services.Settings.GetFilePath(ChannelSession.Settings), overwrite: true);
             }
             else
             {
-                if (!await ChannelSession.Settings.SaveAndValidate())
+                if (!await ChannelSession.Services.Settings.SaveAndValidate(ChannelSession.Settings))
                 {
                     await Task.Delay(1000);
-                    await ChannelSession.Settings.SaveAndValidate();
+                    await ChannelSession.Services.Settings.SaveAndValidate(ChannelSession.Settings);
                 }
             }
 

@@ -14,6 +14,7 @@ namespace MixItUp.Desktop.Services
     {
         public void Initialize()
         {
+            this.InitializeSettingsService();
             this.InitializeAudioService();
             this.InitializeFileService();
             this.InitializeInputService();
@@ -27,6 +28,16 @@ namespace MixItUp.Desktop.Services
             await this.DisconnectOBSStudio();
 
             await this.DisconnectXSplitServer();
+        }
+
+        public override Task<bool> InitializeSettingsService()
+        {
+            if (this.Settings == null)
+            {
+                this.Settings = new WindowsSettingsService();
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
 
         public override Task<bool> InitializeFileService()

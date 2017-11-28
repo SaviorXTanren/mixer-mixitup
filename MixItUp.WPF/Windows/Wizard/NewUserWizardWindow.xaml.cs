@@ -4,6 +4,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.ScorpBot;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Database;
 using MixItUp.WPF.Util;
 using System;
 using System.Data.SQLite;
@@ -114,7 +115,10 @@ namespace MixItUp.WPF.Windows.Wizard
                     string dataPath = Path.Combine(folderPath, "Data\\Database");
                     if (Directory.Exists(dataPath))
                     {
-                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "CommandsDB.sqlite", "SELECT * FROM RegCommand",
+                        SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(dataPath);
+
+                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "CommandsDB.sqlite");
+                        await databaseWrapper.ReadRows("SELECT * FROM RegCommand",
                         (reader) =>
                         {
                             if (ScorpBotCommand.IsACommand(reader))
@@ -123,25 +127,29 @@ namespace MixItUp.WPF.Windows.Wizard
                             }
                         });
 
-                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "FilteredWordsDB.sqlite", "SELECT * FROM Word",
+                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "FilteredWordsDB.sqlite");
+                        await databaseWrapper.ReadRows("SELECT * FROM Word",
                         (reader) =>
                         {
                             scorpBotData.BannedWords.Add((string)reader["word"]);
                         });
 
-                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "QuotesDB.sqlite", "SELECT * FROM Quotes",
+                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "QuotesDB.sqlite");
+                        await databaseWrapper.ReadRows("SELECT * FROM Quotes",
                         (reader) =>
                         {
                             scorpBotData.Quotes.Add((string)reader["quote_text"]);
                         });
 
-                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "RankDB.sqlite", "SELECT * FROM Rank",
+                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "RankDB.sqlite");
+                        await databaseWrapper.ReadRows("SELECT * FROM Rank",
                         (reader) =>
                         {
                             scorpBotData.Ranks.Add(new ScorpBotRank(reader));
                         });
 
-                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "Viewers3DB.sqlite", "SELECT * FROM Viewer",
+                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "Viewers3DB.sqlite");
+                        await databaseWrapper.ReadRows("SELECT * FROM Viewer",
                         (reader) =>
                         {
                             scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
@@ -153,32 +161,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 catch (Exception ex) { Logger.Log(ex); }
                 return null;
             });
-        }
-
-        private async Task ReadDatabaseWrapper(ScorpBotData data, string dataPath, string databaseName, string commandString, Action<SQLiteDataReader> processRow)
-        {
-            string database = Path.Combine(dataPath, databaseName);
-            if (File.Exists(database))
-            {
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + database))
-                {
-                    await connection.OpenAsync();
-                    using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
-                    {
-                        using (SQLiteDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                try
-                                {
-                                    processRow(reader);
-                                }
-                                catch (Exception ex) { Logger.Log(ex); }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         private async void BotLogInButton_Click(object sender, System.Windows.RoutedEventArgs e)

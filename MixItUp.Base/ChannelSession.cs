@@ -97,7 +97,7 @@ namespace MixItUp.Base
         public static PrivatePopulatedUserModel BotUser { get; private set; }
         public static ExpandedChannelModel Channel { get; private set; }
 
-        public static ChannelSettings Settings { get; private set; }
+        public static IChannelSettings Settings { get; private set; }
 
         public static ChatClientWrapper Chat { get; private set; }
         public static InteractiveClientWrapper Interactive { get; private set; }
@@ -128,7 +128,7 @@ namespace MixItUp.Base
             return false;
         }
 
-        public static async Task<bool> ConnectUser(ChannelSettings settings)
+        public static async Task<bool> ConnectUser(IChannelSettings settings)
         {
             bool result = false;
 
@@ -169,7 +169,7 @@ namespace MixItUp.Base
             return false;
         }
 
-        public static async Task<bool> ConnectBot(ChannelSettings settings)
+        public static async Task<bool> ConnectBot(IChannelSettings settings)
         {
             bool result = true;
 
@@ -327,7 +327,7 @@ namespace MixItUp.Base
             await ChannelSession.Services.Close();
         }
 
-        public static async Task SaveSettings() { await ChannelSession.Settings.Save(); }
+        public static async Task SaveSettings() { await ChannelSession.Services.Settings.Save(ChannelSession.Settings); }
 
         public static async Task RefreshUser()
         {
@@ -365,13 +365,12 @@ namespace MixItUp.Base
                     
                     if (ChannelSession.Settings == null)
                     {
-                        ChannelSession.Settings = new ChannelSettings(channel, (channelName == null));
+                        ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, (channelName == null));
                     }
-                    ChannelSession.Settings.Initialize();
+                    ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
                     await ChannelSession.SaveSettings();
-
-                    await ChannelSession.Settings.SaveBackup();
+                    await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
                     return true;
                 }

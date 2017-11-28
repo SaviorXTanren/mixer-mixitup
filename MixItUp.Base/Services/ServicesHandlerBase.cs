@@ -4,6 +4,7 @@ namespace MixItUp.Base.Services
 {
     public abstract class ServicesHandlerBase
     {
+        public ISettingsService Settings { get; protected set; }
         public IFileService FileService { get; protected set; }
         public IAudioService AudioService { get; protected set; }
         public IInputService InputService { get; protected set; }
@@ -13,6 +14,8 @@ namespace MixItUp.Base.Services
         public IXSplitService XSplitServer { get; protected set; }
 
         public abstract Task Close();
+
+        public abstract Task<bool> InitializeSettingsService();
 
         public abstract Task<bool> InitializeFileService();
 

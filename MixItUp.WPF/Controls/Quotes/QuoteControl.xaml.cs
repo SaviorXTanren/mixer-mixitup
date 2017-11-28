@@ -47,7 +47,7 @@ namespace MixItUp.WPF.Controls.Quotes
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Settings.Save();
+                await ChannelSession.SaveSettings();
             });
         }
 

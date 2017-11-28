@@ -111,7 +111,7 @@ namespace MixItUp.WPF.Controls.Menu
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Channel.user.username + ".mixitup");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    await ChannelSession.Settings.Save(filePath);
+                    await ChannelSession.Services.Settings.Save(ChannelSession.Settings, filePath);
                 }
             });
         }

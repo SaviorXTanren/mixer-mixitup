@@ -113,7 +113,7 @@ namespace MixItUp.WPF.Controls.Currency
                 ChannelSession.Settings.CurrencyAcquireInterval = currencyTime;
                 ChannelSession.Settings.CurrencyEnabled = true;
 
-                await ChannelSession.Settings.Save();
+                await ChannelSession.SaveSettings();
 
                 this.userCurrencyData.Clear();
                 foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
@@ -139,7 +139,7 @@ namespace MixItUp.WPF.Controls.Currency
             {
                 ChannelSession.Settings.CurrencyEnabled = false;
 
-                await ChannelSession.Settings.Save();
+                await ChannelSession.SaveSettings();
             });
 
             this.CurrencyNameTextBox.IsEnabled = true;

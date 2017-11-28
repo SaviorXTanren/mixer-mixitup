@@ -122,7 +122,7 @@ namespace MixItUp.WPF.Controls.Services
                 ChannelSession.Services.OverlayServer.Disconnected += OverlayServer_Disconnected;
 
                 ChannelSession.Settings.EnableOverlay = true;
-                await ChannelSession.Settings.Save();
+                await ChannelSession.SaveSettings();
 
                 this.EnableOverlayButton.Visibility = Visibility.Collapsed;
                 this.DisableOverlayButton.Visibility = Visibility.Visible;
@@ -188,7 +188,7 @@ namespace MixItUp.WPF.Controls.Services
                 ChannelSession.Services.XSplitServer.Disconnected += XSplitServer_Disconnected;
 
                 this.TestXSplitConnectionButton.IsEnabled = true;
-                await ChannelSession.Settings.Save();
+                await ChannelSession.SaveSettings();
             });
         }
 
@@ -240,7 +240,7 @@ namespace MixItUp.WPF.Controls.Services
             await ChannelSession.Services.DisconnectOverlayServer();
 
             ChannelSession.Settings.EnableOverlay = false;
-            await ChannelSession.Settings.Save();
+            await ChannelSession.SaveSettings();
         }
 
         private async Task DisconnectXSplitService()
@@ -253,7 +253,7 @@ namespace MixItUp.WPF.Controls.Services
             await ChannelSession.Services.DisconnectXSplitServer();
 
             ChannelSession.Settings.EnableXSplitConnection = false;
-            await ChannelSession.Settings.Save();
+            await ChannelSession.SaveSettings();
         }
     }
 }

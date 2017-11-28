@@ -45,7 +45,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Settings.Save();
+                await ChannelSession.SaveSettings();
             });
         }
 
@@ -69,7 +69,7 @@ namespace MixItUp.WPF.Controls.Chat
             ChannelSession.Settings.BlockLinks = BlockLinksToggleButton.IsChecked.GetValueOrDefault();
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Settings.Save();
+                await ChannelSession.SaveSettings();
             });
         }
 
@@ -87,7 +87,7 @@ namespace MixItUp.WPF.Controls.Chat
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Settings.Save();
+                await ChannelSession.SaveSettings();
             });
         }
     }

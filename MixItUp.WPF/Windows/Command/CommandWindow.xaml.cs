@@ -144,7 +144,7 @@ namespace MixItUp.WPF.Windows.Command
                 command.Actions.Clear();
                 command.Actions = actions;
 
-                await this.RunAsyncOperation(async () => { await ChannelSession.Settings.Save(); });
+                await this.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
                 this.Close();
             }

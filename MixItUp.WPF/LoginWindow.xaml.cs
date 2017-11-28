@@ -3,6 +3,7 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
@@ -23,9 +24,9 @@ namespace MixItUp.WPF
 {
     public class StreamerLoginItem
     {
-        public ChannelSettings Setting;
+        public IChannelSettings Setting;
 
-        public StreamerLoginItem(ChannelSettings setting)
+        public StreamerLoginItem(IChannelSettings setting)
         {
             this.Setting = setting;
         }
@@ -49,12 +50,12 @@ namespace MixItUp.WPF
         {
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
-            List<ChannelSettings> settings = new List<ChannelSettings>(await ChannelSettings.GetAllAvailableSettings());
+            List<IChannelSettings> settings = new List<IChannelSettings>(await ChannelSession.Services.Settings.GetAllSettings());
             settings = settings.Where(s => s.IsStreamer).ToList();
             if (settings.Count() > 0)
             {
                 this.ExistingStreamerComboBox.Visibility = Visibility.Visible;
-                settings.Add(new ChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserModel() { username = "NEW STREAMER" } } });
+                settings.Add(new DesktopChannelSettings() { Channel = new ExpandedChannelModel() { id = 0, user = new UserModel() { username = "NEW STREAMER" } } });
                 this.ExistingStreamerComboBox.ItemsSource = settings.Select(cs => new StreamerLoginItem(cs));
                 if (settings.Count() == 2)
                 {
@@ -78,7 +79,7 @@ namespace MixItUp.WPF
                     if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {
                         StreamerLoginItem loginItem = (StreamerLoginItem)this.ExistingStreamerComboBox.SelectedItem;
-                        ChannelSettings setting = loginItem.Setting;
+                        IChannelSettings setting = loginItem.Setting;
                         if (setting.Channel.id == 0)
                         {
                             result = await this.NewStreamerLogin();

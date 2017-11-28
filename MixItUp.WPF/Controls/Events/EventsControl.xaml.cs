@@ -64,7 +64,7 @@ namespace MixItUp.WPF.Controls.Events
             }
             this.OnResubscribeSharedCommandControl.Initialize(this.Window, resubscribeSharedCommand);
 
-            await ChannelSession.Settings.Save();
+            await ChannelSession.SaveSettings();
 
             if (await ChannelSession.ConnectConstellation())
             {

@@ -86,7 +86,7 @@ namespace MixItUp.WPF.Controls.Giveaway
             ChannelSession.Settings.GiveawayTimer = this.timeLeft;
             this.TimeLeftTextBlock.Text = this.timeLeft.ToString();
 
-            await ChannelSession.Settings.Save();
+            await ChannelSession.SaveSettings();
 
             this.GiveawayWinnerTextBlock.Text = "";
             this.EnableGiveawayButton.Visibility = Visibility.Collapsed;

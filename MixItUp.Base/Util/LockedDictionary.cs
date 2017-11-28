@@ -46,5 +46,7 @@ namespace MixItUp.Base.Util
         public bool Remove(K key) { lock (objLock) { return this.items.Remove(key); } }
 
         public bool TryGetValue(K key, out V value) { lock (objLock) { return this.items.TryGetValue(key, out value); } }
+
+        public Dictionary<K, V> ToDictionary() { return new Dictionary<K, V>(this.items); }
     }
 }
