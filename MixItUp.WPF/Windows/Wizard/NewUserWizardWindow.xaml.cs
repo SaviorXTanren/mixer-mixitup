@@ -1,7 +1,9 @@
 ﻿using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.ScorpBot;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System;
 using System.Data.SQLite;
@@ -61,31 +63,35 @@ namespace MixItUp.WPF.Windows.Wizard
 
         private async void NextButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.IntroPageGrid.Visibility == System.Windows.Visibility.Visible)
+            await this.RunAsyncOperation(async () =>
             {
-                this.BackButton.IsEnabled = true;
-                this.IntroPageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                this.ImportSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
-            }
-            else if (this.ImportSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
-            {
-                if (!string.IsNullOrEmpty(this.ScorpBotDirectoryTextBox.Text))
+                if (this.IntroPageGrid.Visibility == System.Windows.Visibility.Visible)
                 {
-                    this.scorpBotData = await this.ImportScorpBotData(this.ScorpBotDirectoryTextBox.Text);
-                    if (this.scorpBotData == null)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("Failed to import ScorpBot settings, please ensure that you have selected the correct directory. If this continues to fail, please contact Mix it Up support for assitance.");
-                        return;
-                    }
+                    this.BackButton.IsEnabled = true;
+                    this.IntroPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                    this.ImportSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
                 }
+                else if (this.ImportSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
+                {
+                    if (!string.IsNullOrEmpty(this.ScorpBotDirectoryTextBox.Text))
+                    {
+                        this.scorpBotData = await this.GatherScorpBotData(this.ScorpBotDirectoryTextBox.Text);
+                        if (this.scorpBotData == null)
+                        {
+                            await MessageBoxHelper.ShowMessageDialog("Failed to import ScorpBot settings, please ensure that you have selected the correct directory. If this continues to fail, please contact Mix it Up support for assitance.");
+                            return;
+                        }
+                    }
 
-                this.ImportSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Visible;
-            }
-            else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
-            {
-                this.Close();
-            }
+                    this.ImportSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                    this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+                else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
+                {
+                    this.FinalizeNewUser();
+                    this.Close();
+                }
+            });
         }
 
         private void ScorpBotDirectoryBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -97,9 +103,9 @@ namespace MixItUp.WPF.Windows.Wizard
             }
         }
 
-        private async Task<ScorpBotData> ImportScorpBotData(string folderPath)
+        private async Task<ScorpBotData> GatherScorpBotData(string folderPath)
         {
-            return await this.RunAsyncOperation(async () =>
+            return await Task.Run(async () =>
             {
                 try
                 {
@@ -108,7 +114,7 @@ namespace MixItUp.WPF.Windows.Wizard
                     string dataPath = Path.Combine(folderPath, "Data\\Database");
                     if (Directory.Exists(dataPath))
                     {
-                        await this.ImportDatabase(scorpBotData, dataPath, "CommandsDB.sqlite", "SELECT * FROM RegCommand",
+                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "CommandsDB.sqlite", "SELECT * FROM RegCommand",
                         (reader) =>
                         {
                             if (ScorpBotCommand.IsACommand(reader))
@@ -117,25 +123,25 @@ namespace MixItUp.WPF.Windows.Wizard
                             }
                         });
 
-                        await this.ImportDatabase(scorpBotData, dataPath, "FilteredWordsDB.sqlite", "SELECT * FROM Word",
+                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "FilteredWordsDB.sqlite", "SELECT * FROM Word",
                         (reader) =>
                         {
                             scorpBotData.BannedWords.Add((string)reader["word"]);
                         });
 
-                        await this.ImportDatabase(scorpBotData, dataPath, "QuotesDB.sqlite", "SELECT * FROM Quotes",
+                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "QuotesDB.sqlite", "SELECT * FROM Quotes",
                         (reader) =>
                         {
                             scorpBotData.Quotes.Add((string)reader["quote_text"]);
                         });
 
-                        await this.ImportDatabase(scorpBotData, dataPath, "RankDB.sqlite", "SELECT * FROM Rank",
+                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "RankDB.sqlite", "SELECT * FROM Rank",
                         (reader) =>
                         {
                             scorpBotData.Ranks.Add(new ScorpBotRank(reader));
                         });
 
-                        await this.ImportDatabase(scorpBotData, dataPath, "Viewers3DB.sqlite", "SELECT * FROM Viewer",
+                        await this.ReadDatabaseWrapper(scorpBotData, dataPath, "Viewers3DB.sqlite", "SELECT * FROM Viewer",
                         (reader) =>
                         {
                             scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
@@ -149,7 +155,7 @@ namespace MixItUp.WPF.Windows.Wizard
             });
         }
 
-        private async Task ImportDatabase(ScorpBotData data, string dataPath, string databaseName, string commandString, Action<SQLiteDataReader> processRow)
+        private async Task ReadDatabaseWrapper(ScorpBotData data, string dataPath, string databaseName, string commandString, Action<SQLiteDataReader> processRow)
         {
             string database = Path.Combine(dataPath, databaseName);
             if (File.Exists(database))
@@ -248,6 +254,37 @@ namespace MixItUp.WPF.Windows.Wizard
                     await ChannelSession.Services.DisconnectXSplitServer();
                 });
                 await MessageBoxHelper.ShowMessageDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
+            }
+        }
+
+        private void FinalizeNewUser()
+        {
+            if (this.scorpBotData != null)
+            {
+                foreach (ScorpBotViewer viewer in this.scorpBotData.Viewers)
+                {
+                    ChannelSession.Settings.UserData[viewer.ID] = new UserDataViewModel(viewer);
+                }
+
+                foreach (ScorpBotCommand command in this.scorpBotData.Commands)
+                {
+                    ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
+                }
+
+                foreach (string quote in this.scorpBotData.Quotes)
+                {
+                    ChannelSession.Settings.Quotes.Add(quote);
+                }
+
+                if (ChannelSession.Settings.Quotes.Count > 0)
+                {
+                    ChannelSession.Settings.QuotesEnabled = true;
+                }
+
+                foreach (string bannedWord in this.scorpBotData.BannedWords)
+                {
+                    ChannelSession.Settings.BannedWords.Add(bannedWord);
+                }
             }
         }
     }

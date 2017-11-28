@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.ViewModel.ScorpBot;
+using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.User
@@ -7,7 +8,7 @@ namespace MixItUp.Base.ViewModel.User
     public class UserDataViewModel : UserViewModel, IEquatable<UserDataViewModel>
     {
         [DataMember]
-        public int CurrencyAmount { get; set; }
+        public long CurrencyAmount { get; set; }
 
         public UserDataViewModel() { }
 
@@ -15,6 +16,12 @@ namespace MixItUp.Base.ViewModel.User
             : base(id, username)
         {
             this.CurrencyAmount = 0;
+        }
+
+        public UserDataViewModel(ScorpBotViewer viewer)
+            : this(viewer.ID, viewer.UserName)
+        {
+            this.CurrencyAmount = viewer.Points1;
         }
 
         public override bool Equals(object obj)

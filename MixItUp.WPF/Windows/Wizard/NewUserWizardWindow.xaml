@@ -61,7 +61,10 @@
                     <StackPanel Grid.Row="2" Width="450">
                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
 
-                        <TextBlock Margin="20,0,0,0">- User Data</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Chat Commands</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Banned Words</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Viewer Data</TextBlock>
 
                         <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory or can you skip this by doing nothing and clicking Next:</TextBlock>
                     </StackPanel>

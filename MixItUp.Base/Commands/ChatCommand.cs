@@ -1,4 +1,6 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Actions;
+using MixItUp.Base.ViewModel.ScorpBot;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -34,6 +36,12 @@ namespace MixItUp.Base.Commands
         {
             this.Permissions = lowestAllowedRole;
             this.Cooldown = cooldown;
+        }
+
+        public ChatCommand(ScorpBotCommand command)
+            : this(command.Command, command.Command, command.Permission, command.Cooldown)
+        {
+            this.Actions.Add(new ChatAction(command.Text, isWhisper: false, sendAsStreamer: false));
         }
 
         [JsonIgnore]
