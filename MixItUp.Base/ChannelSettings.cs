@@ -56,11 +56,6 @@ namespace MixItUp.Base
             catch (JsonSerializationException) { }
 
             // If we get a serialization error, try doing minor upgrade tweaks and then deserializing the file again
-            string data = File.ReadAllText(filePath);
-
-            data = data.Replace("MixItUp.Base.ViewModel.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserDataViewModel");
-
-            File.WriteAllText(filePath, data);
 
             return await SerializerHelper.DeserializeFromFile<ChannelSettings>(filePath);
         }
