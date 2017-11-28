@@ -1,15 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.WPF.Controls.About;
-using MixItUp.WPF.Controls.Channel;
-using MixItUp.WPF.Controls.Chat;
-using MixItUp.WPF.Controls.Currency;
-using MixItUp.WPF.Controls.Events;
-using MixItUp.WPF.Controls.GameQueue;
-using MixItUp.WPF.Controls.Giveaway;
-using MixItUp.WPF.Controls.Interactive;
-using MixItUp.WPF.Controls.Quotes;
-using MixItUp.WPF.Controls.Services;
-using MixItUp.WPF.Controls.Timers;
+using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using System;
@@ -69,7 +59,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl());
             }
             this.MainMenu.AddMenuItem("Statistics", "http://mixdash.cc");
-            await this.MainMenu.AddMenuItem("Moderation", new ChatModerationControl());
+            await this.MainMenu.AddMenuItem("Moderation", new ModerationControl());
             await this.MainMenu.AddMenuItem("About", new AboutControl());
         }
 

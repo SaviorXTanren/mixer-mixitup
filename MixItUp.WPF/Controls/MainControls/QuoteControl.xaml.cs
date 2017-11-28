@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MixItUp.WPF.Controls.Quotes
+namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for QuoteControl.xaml

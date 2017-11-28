@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace MixItUp.WPF.Controls.GameQueue
+namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for GameQueueControl.xaml

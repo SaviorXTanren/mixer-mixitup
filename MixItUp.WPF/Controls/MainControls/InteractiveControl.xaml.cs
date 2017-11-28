@@ -19,7 +19,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace MixItUp.WPF.Controls.Interactive
+namespace MixItUp.WPF.Controls.MainControls
 {
     public class InteractiveControlCommandItem
     {

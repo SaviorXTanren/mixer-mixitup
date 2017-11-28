@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MixItUp.WPF.Controls.Events
+namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for EventsControl.xaml

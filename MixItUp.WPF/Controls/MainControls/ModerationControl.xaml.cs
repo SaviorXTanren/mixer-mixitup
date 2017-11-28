@@ -2,14 +2,14 @@
 using System;
 using System.Threading.Tasks;
 
-namespace MixItUp.WPF.Controls.Chat
+namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
-    /// Interaction logic for ChatModerationControl.xaml
+    /// Interaction logic for ModerationControl.xaml
     /// </summary>
-    public partial class ChatModerationControl : MainControlBase
+    public partial class ModerationControl : MainControlBase
     {
-        public ChatModerationControl()
+        public ModerationControl()
         {
             InitializeComponent();
         }

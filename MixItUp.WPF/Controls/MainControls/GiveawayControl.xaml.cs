@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MixItUp.WPF.Controls.Giveaway
+namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for GiveawayControl.xaml

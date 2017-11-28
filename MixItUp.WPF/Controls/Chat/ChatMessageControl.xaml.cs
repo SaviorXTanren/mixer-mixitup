@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.Chat;
+using MixItUp.WPF.Controls.MainControls;
 using System.Windows;
 using System.Windows.Controls;
 

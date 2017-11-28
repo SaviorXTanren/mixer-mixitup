@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MixItUp.WPF.Controls.Channel
+namespace MixItUp.WPF.Controls.MainControls
 {
     public enum AgeRatingEnum
     {

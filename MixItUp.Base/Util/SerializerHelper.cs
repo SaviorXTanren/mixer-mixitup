@@ -21,7 +21,7 @@ namespace MixItUp.Base.Util
 
         public static string SerializeToString<T>(T data)
         {
-            return JsonConvert.SerializeObject(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            return JsonConvert.SerializeObject(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
         }
 
         public static async Task<T> DeserializeFromFile<T>(string filePath)
@@ -35,7 +35,7 @@ namespace MixItUp.Base.Util
 
         public static T DeserializeFromString<T>(string data)
         {
-            return JsonConvert.DeserializeObject<T>(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            return JsonConvert.DeserializeObject<T>(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
         }
     }
 }

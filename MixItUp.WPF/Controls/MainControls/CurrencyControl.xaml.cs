@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MixItUp.WPF.Controls.Currency
+namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for CurrencyControl.xaml
