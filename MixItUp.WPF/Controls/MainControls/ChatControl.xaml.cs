@@ -5,6 +5,7 @@ using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
-namespace MixItUp.WPF.Controls.Chat
+namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for ChatControl.xaml

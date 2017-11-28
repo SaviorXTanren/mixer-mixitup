@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 using System.Windows;
+using MixItUp.WPF.Controls.MainControls;
 
 namespace MixItUp.WPF.Controls.Chat
 {

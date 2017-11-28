@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System;
@@ -11,7 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace MixItUp.WPF.Controls.Chat
+namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for ChatCommandsControl.xaml

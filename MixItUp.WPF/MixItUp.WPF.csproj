@@ -159,19 +159,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\About\AboutControl.xaml.cs">
+    <Compile Include="Controls\MainControls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Channel\ChannelControl.xaml.cs">
+    <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
       <DependentUpon>ChannelControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\ChatModerationControl.xaml.cs">
-      <DependentUpon>ChatModerationControl.xaml</DependentUpon>
+    <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
+      <DependentUpon>ModerationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\PreMadeChatCommandControl.xaml.cs">
       <DependentUpon>PreMadeChatCommandControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Currency\CurrencyControl.xaml.cs">
+    <Compile Include="Controls\MainControls\CurrencyControl.xaml.cs">
       <DependentUpon>CurrencyControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml.cs">
@@ -180,14 +180,14 @@
     <Compile Include="Controls\Dialogs\UserDialogControl.xaml.cs">
       <DependentUpon>UserDialogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GameQueue\GameQueueControl.xaml.cs">
+    <Compile Include="Controls\MainControls\GameQueueControl.xaml.cs">
       <DependentUpon>GameQueueControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Menu\MainMenuControl.xaml.cs">
       <DependentUpon>MainMenuControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NotifyPropertyChangedUserControl.cs" />
-    <Compile Include="Controls\Services\ServicesControl.xaml.cs">
+    <Compile Include="Controls\MainControls\ServicesControl.xaml.cs">
       <DependentUpon>ServicesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\ChatCommandDetailsControl.xaml.cs">
@@ -206,32 +206,32 @@
     <Compile Include="Controls\Events\EventCommandControl.xaml.cs">
       <DependentUpon>EventCommandControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Giveaway\GiveawayControl.xaml.cs">
+    <Compile Include="Controls\MainControls\GiveawayControl.xaml.cs">
       <DependentUpon>GiveawayControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControlBase.cs" />
     <Compile Include="Controls\Actions\ActionControl.xaml.cs">
       <DependentUpon>ActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat\ChatCommandsControl.xaml.cs">
+    <Compile Include="Controls\MainControls\ChatCommandsControl.xaml.cs">
       <DependentUpon>ChatCommandsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Events\EventsControl.xaml.cs">
+    <Compile Include="Controls\MainControls\EventsControl.xaml.cs">
       <DependentUpon>EventsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Interactive\InteractiveControl.xaml.cs">
+    <Compile Include="Controls\MainControls\InteractiveControl.xaml.cs">
       <DependentUpon>InteractiveControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingStatusBar.xaml.cs">
       <DependentUpon>LoadingStatusBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Quotes\QuoteControl.xaml.cs">
+    <Compile Include="Controls\MainControls\QuoteControl.xaml.cs">
       <DependentUpon>QuoteControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SliderWithHeaderControl.xaml.cs">
       <DependentUpon>SliderWithHeaderControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Timers\TimerControl.xaml.cs">
+    <Compile Include="Controls\MainControls\TimerControl.xaml.cs">
       <DependentUpon>TimerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Users\UserProfileAvatarControl.xaml.cs">
@@ -258,15 +258,15 @@
     <Compile Include="Windows\Wizard\NewUserWizardWindow.xaml.cs">
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\About\AboutControl.xaml">
+    <Page Include="Controls\MainControls\AboutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Channel\ChannelControl.xaml">
+    <Page Include="Controls\MainControls\ChannelControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Chat\ChatModerationControl.xaml">
+    <Page Include="Controls\MainControls\ModerationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -274,7 +274,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Currency\CurrencyControl.xaml">
+    <Page Include="Controls\MainControls\CurrencyControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -286,7 +286,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\GameQueue\GameQueueControl.xaml">
+    <Page Include="Controls\MainControls\GameQueueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -294,11 +294,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Services\ServicesControl.xaml">
+    <Page Include="Controls\MainControls\ServicesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Chat\ChatControl.xaml">
+    <Page Include="Controls\MainControls\ChatControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -314,7 +314,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Chat\ChatCommandsControl.xaml">
+    <Page Include="Controls\MainControls\ChatCommandsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -338,15 +338,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Events\EventsControl.xaml">
+    <Page Include="Controls\MainControls\EventsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Giveaway\GiveawayControl.xaml">
+    <Page Include="Controls\MainControls\GiveawayControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Interactive\InteractiveControl.xaml">
+    <Page Include="Controls\MainControls\InteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -354,7 +354,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Quotes\QuoteControl.xaml">
+    <Page Include="Controls\MainControls\QuoteControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -362,7 +362,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Timers\TimerControl.xaml">
+    <Page Include="Controls\MainControls\TimerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -382,7 +382,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\Chat\ChatControl.xaml.cs">
+    <Compile Include="Controls\MainControls\ChatControl.xaml.cs">
       <DependentUpon>ChatControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\ChatMessageControl.xaml.cs">
