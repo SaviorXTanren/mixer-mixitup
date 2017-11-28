@@ -8,6 +8,9 @@ namespace MixItUp.Base.ViewModel.User
     public class UserDataViewModel : UserViewModel, IEquatable<UserDataViewModel>
     {
         [DataMember]
+        public long RankPoints { get; set; }
+
+        [DataMember]
         public long CurrencyAmount { get; set; }
 
         public UserDataViewModel() { }
@@ -15,13 +18,15 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataViewModel(uint id, string username)
             : base(id, username)
         {
+            this.RankPoints = 0;
             this.CurrencyAmount = 0;
         }
 
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
         {
-            this.CurrencyAmount = viewer.RankPoints;
+            this.RankPoints = viewer.RankPoints;
+            this.CurrencyAmount = viewer.Currency;
         }
 
         public override bool Equals(object obj)
