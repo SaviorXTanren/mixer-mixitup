@@ -20,9 +20,9 @@ namespace MixItUp.Base.ViewModel.ScorpBot
         public string Rank { get; set; }
 
         [DataMember]
-        public long Points1 { get; set; }
+        public long RankPoints { get; set; }
         [DataMember]
-        public long Points2 { get; set; }
+        public long Currency { get; set; }
 
         [DataMember]
         public double Hours { get; set; }
@@ -38,8 +38,8 @@ namespace MixItUp.Base.ViewModel.ScorpBot
             this.UserName = (string)reader["BeamName"];
             this.Type = (int)reader["Type"];
             this.Rank = (reader["Rank"] != null && reader["Rank"] != DBNull.Value) ? (string)reader["Rank"] : string.Empty;
-            this.Points1 = (long)reader["Points"];
-            this.Points2 = (long)reader["Points2"];
+            this.RankPoints = (long)reader["Points"];
+            this.Currency = (long)reader["Points2"];
             this.Hours = double.Parse((string)reader["Hours"]);
             this.Sub = (string)reader["Sub"];
         }

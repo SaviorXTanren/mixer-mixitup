@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
         {
-            this.CurrencyAmount = viewer.Points1;
+            this.CurrencyAmount = viewer.RankPoints;
         }
 
         public override bool Equals(object obj)
