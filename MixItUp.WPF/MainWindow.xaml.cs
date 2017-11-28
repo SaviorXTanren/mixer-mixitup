@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.WPF.Controls.About;
+using MixItUp.WPF.Controls.Channel;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Controls.Events;
@@ -56,6 +57,7 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem("Chat", new ChatControl() { EnableCommands = true });
             if (ChannelSession.Settings.IsStreamer)
             {
+                await this.MainMenu.AddMenuItem("Channel", new ChannelControl());
                 await this.MainMenu.AddMenuItem("Commands", new ChatCommandsControl());
                 await this.MainMenu.AddMenuItem("Interactive", new InteractiveControl());
                 await this.MainMenu.AddMenuItem("Events", new EventsControl());

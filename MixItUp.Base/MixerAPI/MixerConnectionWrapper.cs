@@ -2,6 +2,7 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Interactive;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
@@ -67,6 +68,10 @@ namespace MixItUp.Base.MixerAPI
         public async Task<IEnumerable<ChatUserModel>> GetChatUsers(ChannelModel channel) { return await this.RunAsync(this.Connection.Chats.GetUsers(channel)); }
 
         public async Task<ExpandedChannelModel> GetChannel(string name) { return await this.RunAsync(this.Connection.Channels.GetChannel(name)); }
+
+        public async Task<ChannelModel> UpdateChannel(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.UpdateChannel(channel)); }
+
+        public async Task<IEnumerable<GameTypeModel>> GetGameTypes(string name, uint maxResults = 1) { return await this.RunAsync(this.Connection.GameTypes.GetGameTypes(name, maxResults)); }
 
         public async Task<DateTimeOffset?> CheckIfFollows(ChannelModel channel, UserModel user) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(ChannelSession.Channel, user)); }
 

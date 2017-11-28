@@ -162,6 +162,9 @@
     <Compile Include="Controls\About\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Channel\ChannelControl.xaml.cs">
+      <DependentUpon>ChannelControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\ChatModerationControl.xaml.cs">
       <DependentUpon>ChatModerationControl.xaml</DependentUpon>
     </Compile>
@@ -256,6 +259,10 @@
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\About\AboutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Channel\ChannelControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
