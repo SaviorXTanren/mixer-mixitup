@@ -109,19 +109,37 @@ namespace MixItUp.WPF.Windows.Wizard
                     if (Directory.Exists(dataPath))
                     {
                         await this.ImportDatabase(scorpBotData, dataPath, "CommandsDB.sqlite", "SELECT * FROM RegCommand",
-                            (reader) =>
+                        (reader) =>
+                        {
+                            if (ScorpBotCommand.IsACommand(reader))
                             {
-                                if (ScorpBotCommand.IsACommand(reader))
-                                {
-                                    scorpBotData.Commands.Add(new ScorpBotCommand(reader));
-                                }
-                            });
+                                scorpBotData.Commands.Add(new ScorpBotCommand(reader));
+                            }
+                        });
+
+                        await this.ImportDatabase(scorpBotData, dataPath, "FilteredWordsDB.sqlite", "SELECT * FROM Word",
+                        (reader) =>
+                        {
+                            scorpBotData.BannedWords.Add((string)reader["word"]);
+                        });
+
+                        await this.ImportDatabase(scorpBotData, dataPath, "QuotesDB.sqlite", "SELECT * FROM Quotes",
+                        (reader) =>
+                        {
+                            scorpBotData.Quotes.Add((string)reader["quote_text"]);
+                        });
+
+                        await this.ImportDatabase(scorpBotData, dataPath, "RankDB.sqlite", "SELECT * FROM Rank",
+                        (reader) =>
+                        {
+                            scorpBotData.Ranks.Add(new ScorpBotRank(reader));
+                        });
 
                         await this.ImportDatabase(scorpBotData, dataPath, "Viewers3DB.sqlite", "SELECT * FROM Viewer",
-                            (reader) =>
-                            {
-                                scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
-                            });
+                        (reader) =>
+                        {
+                            scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
+                        });
                     }
 
                     return scorpBotData;
