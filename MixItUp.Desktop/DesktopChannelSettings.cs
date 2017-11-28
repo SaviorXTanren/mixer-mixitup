@@ -125,14 +125,14 @@ namespace MixItUp.Desktop
     public class DesktopChannelSettings : DesktopSavableChannelSettings, IChannelSettings
     {
         [JsonIgnore]
-        public LockedDictionary<uint, UserDataViewModel> UserData { get { return this.userDataInternal; } }
+        public LockedDictionary<uint, UserDataViewModel> UserData { get; set; }
 
         [JsonIgnore]
-        public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get { return this.preMadeChatCommandSettingsInternal; } }
+        public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
         [JsonIgnore]
-        public LockedList<ChatCommand> ChatCommands { get { return this.chatCommands; } }
+        public LockedList<ChatCommand> ChatCommands { get; set; }
         [JsonIgnore]
-        public LockedList<EventCommand> EventCommands { get { return this.eventCommands; } }
+        public LockedList<EventCommand> EventCommands { get; set; }
         [JsonIgnore]
         public LockedList<InteractiveCommand> InteractiveControls { get; set; }
         [JsonIgnore]

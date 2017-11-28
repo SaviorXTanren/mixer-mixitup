@@ -122,15 +122,8 @@ namespace MixItUp.Desktop.Services
 
         private async Task UpgradeSettingsToLatest(string filePath)
         {
-            string data = File.ReadAllText(filePath);
-            data = data.Replace("MixItUp.Base.ChannelSettings, MixItUp.Base", "MixItUp.Base.DesktopSavableChannelSettings, MixItUp.Desktop");
-            data = data.Replace("MixItUp.Base.ViewModel.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserDataViewModel");
-            File.WriteAllText(filePath, data);
-
-            data = data.Replace("MixItUp.Base.ChannelSettings", "MixItUp.Base.LegacyChannelSettings");
-
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-            LegacyDesktopChannelSettings legacySettings = SerializerHelper.DeserializeFromString<LegacyDesktopChannelSettings>(data);
+            LegacyDesktopChannelSettings legacySettings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
 
             settings.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(legacySettings.InteractiveUserGroups);
             settings.InteractiveCooldownGroups = new LockedDictionary<string, int>(legacySettings.InteractiveCooldownGroups);
