@@ -43,9 +43,8 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             MainWindow window = new MainWindow();
             window.Show();
-            this.Close();
 
-            base.OnClosed(e);
+            base.OnClosing(e);
         }
 
         private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e)
