@@ -17,8 +17,10 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
+        public const int LatestVersion = 1;
+
         [JsonProperty]
-        public string Version { get; set; }
+        public int Version { get; set; }
 
         [JsonProperty]
         public bool IsStreamer { get; set; }
@@ -153,7 +155,7 @@ namespace MixItUp.Desktop
             this.Channel = channel;
             this.IsStreamer = isStreamer;
 
-            this.Version = this.GetLatestVersion().ToString();
+            this.Version = DesktopChannelSettings.LatestVersion;
         }
 
         public DesktopChannelSettings()
@@ -200,7 +202,12 @@ namespace MixItUp.Desktop
 
         public void CopyLatestValues()
         {
-            this.OAuthToken = ChannelSession.Connection.Connection.GetOAuthTokenCopy();
+            this.Version = DesktopChannelSettings.LatestVersion;
+
+            if (ChannelSession.Connection != null)
+            {
+                this.OAuthToken = ChannelSession.Connection.Connection.GetOAuthTokenCopy();
+            }
             if (ChannelSession.BotConnection != null)
             {
                 this.BotOAuthToken = ChannelSession.BotConnection.Connection.GetOAuthTokenCopy();
@@ -219,12 +226,7 @@ namespace MixItUp.Desktop
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }
 
-        public bool ShouldBeUpgraded()
-        {
-            Version latest = this.GetLatestVersion();
-            Version current = (!string.IsNullOrEmpty(this.Version)) ? new Version(this.Version) : new Version();
-            return latest.CompareTo(current) > 0;
-        }
+        public bool ShouldBeUpgraded() { return this.Version < DesktopChannelSettings.LatestVersion; }
     }
 
     [DataContract]

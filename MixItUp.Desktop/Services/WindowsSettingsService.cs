@@ -44,7 +44,13 @@ namespace MixItUp.Desktop.Services
 
         public IChannelSettings Create(ExpandedChannelModel channel, bool isStreamer)
         {
-            return new DesktopChannelSettings(channel, isStreamer);
+            IChannelSettings settings = new DesktopChannelSettings(channel, isStreamer);
+            string databaseFilePath = this.GetDatabaseFilePath(settings);
+            if (!File.Exists(databaseFilePath))
+            {
+                File.Copy(SettingsTemplateDatabaseFileName, databaseFilePath);
+            }
+            return settings;
         }
 
         public void Initialize(IChannelSettings settings)
@@ -88,20 +94,14 @@ namespace MixItUp.Desktop.Services
             string data = File.ReadAllText(filePath);
             if (!data.Contains("\"Version\":"))
             {
-                await this.UpgradeSettingsToLatest(filePath);
+                await this.UpgradeSettingsToLatest(0, filePath);
             }
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
 
-            string databaseFilePath = Path.Combine(SettingsDirectoryName, settings.Channel.id.ToString() + ".sqlite");
-            if (!File.Exists(databaseFilePath))
-            {
-                File.Copy(SettingsTemplateDatabaseFileName, databaseFilePath);
-            }
-
             if (settings.ShouldBeUpgraded())
             {
-                await this.UpgradeSettingsToLatest(filePath);
+                await this.UpgradeSettingsToLatest(settings.Version, filePath);
                 settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             }
             return settings;
@@ -120,26 +120,50 @@ namespace MixItUp.Desktop.Services
             semaphore.Release();
         }
 
-        private async Task UpgradeSettingsToLatest(string filePath)
+        private async Task UpgradeSettingsToLatest(int version, string filePath)
         {
-            string data = File.ReadAllText(filePath);
-            data = data.Replace("MixItUp.Base.ChannelSettings, MixItUp.Base", "MixItUp.Base.DesktopSavableChannelSettings, MixItUp.Desktop");
-            data = data.Replace("MixItUp.Base.ViewModel.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserDataViewModel");
-            data = data.Replace("MixItUp.Base.ViewModel.User.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserViewModel");
-            File.WriteAllText(filePath, data);
+            DesktopChannelSettings settings = null;
 
-            DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-            LegacyDesktopChannelSettings legacySettings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+            if (version < 1)
+            {
+                string data = File.ReadAllText(filePath);
+                data = data.Replace("MixItUp.Base.ChannelSettings, MixItUp.Base", "MixItUp.Desktop.DesktopChannelSettings, MixItUp.Desktop");
+                data = data.Replace("MixItUp.Base.ViewModel.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserDataViewModel");
+                data = data.Replace("MixItUp.Base.ViewModel.User.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserViewModel");
+                File.WriteAllText(filePath, data);
 
-            settings.CurrencyAcquisition.Name = legacySettings.CurrencyName;
-            settings.CurrencyAcquisition.AcquireAmount = legacySettings.CurrencyAcquireAmount;
-            settings.CurrencyAcquisition.AcquireInterval = legacySettings.CurrencyAcquireInterval;
-            settings.CurrencyAcquisition.Enabled = legacySettings.CurrencyEnabled;
-            settings.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(legacySettings.InteractiveUserGroups);
-            settings.InteractiveCooldownGroups = new LockedDictionary<string, int>(legacySettings.InteractiveCooldownGroups);
-            settings.Version = settings.GetLatestVersion().ToString();
+                settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                this.Initialize(settings);
 
-            await SerializerHelper.SerializeToFile(filePath, settings);
+                data = data.Replace("MixItUp.Desktop.DesktopChannelSettings, MixItUp.Desktop", "MixItUp.Desktop.LegacyDesktopChannelSettings, MixItUp.Desktop");
+                LegacyDesktopChannelSettings legacySettings = SerializerHelper.DeserializeFromString<LegacyDesktopChannelSettings>(data);
+
+                settings.CurrencyAcquisition.Name = legacySettings.CurrencyName;
+                settings.CurrencyAcquisition.AcquireAmount = legacySettings.CurrencyAcquireAmount;
+                settings.CurrencyAcquisition.AcquireInterval = legacySettings.CurrencyAcquireInterval;
+                settings.CurrencyAcquisition.Enabled = legacySettings.CurrencyEnabled;
+                settings.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(legacySettings.InteractiveUserGroups);
+                settings.InteractiveCooldownGroups = new LockedDictionary<string, int>(legacySettings.InteractiveCooldownGroups);
+
+                await this.Save(settings);
+
+                string databaseFilePath = this.GetDatabaseFilePath(settings);
+                if (!File.Exists(databaseFilePath))
+                {
+                    File.Copy(SettingsTemplateDatabaseFileName, databaseFilePath);
+                }
+            }
+
+            settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+            this.Initialize(settings);
+            settings.Version = DesktopChannelSettings.LatestVersion;
+
+            await this.Save(settings);
+        }
+
+        public string GetDatabaseFilePath(IChannelSettings settings)
+        {
+            return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.sqlite", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace MixItUp.Base
 {
     public interface ISavableChannelSettings
     {
-        string Version { get; set; }
+        int Version { get; set; }
 
         bool IsStreamer { get; set; }
 
