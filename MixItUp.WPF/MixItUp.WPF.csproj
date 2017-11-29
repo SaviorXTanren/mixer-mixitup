@@ -171,8 +171,8 @@
     <Compile Include="Controls\Chat\PreMadeChatCommandControl.xaml.cs">
       <DependentUpon>PreMadeChatCommandControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\CurrencyControl.xaml.cs">
-      <DependentUpon>CurrencyControl.xaml</DependentUpon>
+    <Compile Include="Controls\MainControls\CurrencyRankControl.xaml.cs">
+      <DependentUpon>CurrencyRankControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml.cs">
       <DependentUpon>InteractiveSceneUserGroupsDialogControl.xaml</DependentUpon>
@@ -274,7 +274,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\CurrencyControl.xaml">
+    <Page Include="Controls\MainControls\CurrencyRankControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

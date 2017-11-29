@@ -1,0 +1,157 @@
+﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.CurrencyRankControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+                          
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                          
+             d:DesignHeight="700" d:DesignWidth="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="0" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Margin="0,8,0,8">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" Foreground="{StaticResource WhiteColor}">Currency</TextBlock>
+
+                    <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" Foreground="{StaticResource WhiteColor}">Enable/Disable:</TextBlock>
+                    <ToggleButton x:Name="CurrencyToggleSwitch" Grid.Column="4" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Currency" Checked="CurrencyToggleSwitch_Checked" Unchecked="CurrencyToggleSwitch_Unchecked" />
+
+                </Grid>
+            </GroupBox.Header>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center" x:Name="CurrencyGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="CurrencyNameTextBox" MaterialDesign:HintAssist.Hint="Currency Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Bottom" Margin="0,0,0,5">Rate:</TextBlock>
+                
+                <TextBox Grid.Column="4" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBlock Grid.Column="6" VerticalAlignment="Bottom">/</TextBlock>
+                <TextBox Grid.Column="8" x:Name="CurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            </Grid>
+
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" Margin="0,8,0,8">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" Foreground="{StaticResource WhiteColor}">Rank</TextBlock>
+
+                    <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" Foreground="{StaticResource WhiteColor}">Enable/Disable:</TextBlock>
+                    <ToggleButton x:Name="RankToggleSwitch" Grid.Column="4" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Rank" Checked="RankToggleSwitch_Checked" Unchecked="RankToggleSwitch_Unchecked" />
+
+                </Grid>
+            </GroupBox.Header>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center" x:Name="RankGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" x:Name="RankPointsNameTextBox" MaterialDesign:HintAssist.Hint="Points Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Bottom" Margin="0,0,0,5">Rate:</TextBlock>
+
+                    <TextBox Grid.Column="4" x:Name="RankPointsAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBlock Grid.Column="6" VerticalAlignment="Bottom">/</TextBlock>
+                    <TextBox Grid.Column="8" x:Name="RankPointsTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="40,0" Height="200">
+                    <DataGrid x:Name="RanksListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Rank Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                            <DataGridTextColumn Header="Minimum Points" Binding="{Binding MinimumPoints}" IsReadOnly="True" Width="*" />
+                            <DataGridTemplateColumn Width="65">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button x:Name="DeleteRankButton" Click="DeleteRankButton_Click" Width="40" HorizontalAlignment="Center">
+                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
+                <Grid Grid.Row="4" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" x:Name="RankNameTextBox" MaterialDesign:HintAssist.Hint="Rank Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Grid.Column="2" x:Name="RankAmountTextBox" MaterialDesign:HintAssist.Hint="Minimum Points" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <Button x:Name="AddRankButton" Grid.Column="4" Click="AddRankButton_Click">Add Rank</Button>
+
+                </Grid>
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</Controls:MainControlBase>

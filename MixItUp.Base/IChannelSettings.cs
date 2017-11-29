@@ -19,10 +19,10 @@ namespace MixItUp.Base
 
         ExpandedChannelModel Channel { get; set; }
 
-        bool CurrencyEnabled { get; set; }
-        string CurrencyName { get; set; }
-        int CurrencyAcquireAmount { get; set; }
-        int CurrencyAcquireInterval { get; set; }
+        UserItemAcquisitonViewModel CurrencyAcquisition { get; set; }
+
+        UserItemAcquisitonViewModel RankAcquisition { get; set; }
+        List<UserRankViewModel> Ranks { get; set; }
         
         bool QuotesEnabled { get; set; }
         
