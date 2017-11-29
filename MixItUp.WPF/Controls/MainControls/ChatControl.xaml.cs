@@ -151,7 +151,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                 }
                 catch (ThreadAbortException) { return; }
-                catch (Exception) { }
+                catch (Exception ex) { Logger.Log(ex); }
             }
 
             this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace MixItUp.Desktop.Files
                     return await reader.ReadToEndAsync();
                 }
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
@@ -39,7 +40,7 @@ namespace MixItUp.Desktop.Files
                     await writer.WriteAsync(data);
                 }
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public string ShowOpenFolderDialog()

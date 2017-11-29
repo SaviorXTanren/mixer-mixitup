@@ -78,7 +78,7 @@ namespace MixItUp.Base.Actions
                         writer.Write(this.currentTextToWrite);
                     }
                 }
-                catch (Exception) { }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
 

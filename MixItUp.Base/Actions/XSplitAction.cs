@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Threading;
+using MixItUp.Base.Util;
 
 namespace MixItUp.Base.Actions
 {
@@ -78,7 +79,7 @@ namespace MixItUp.Base.Actions
                         writer.Write(this.currentTextToWrite);
                     }
                 }
-                catch (Exception) { }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
 

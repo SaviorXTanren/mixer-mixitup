@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System;
@@ -243,7 +244,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                 }
                 catch (ThreadAbortException) { return; }
-                catch (Exception) { }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
 
@@ -269,7 +270,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                 }
                 catch (ThreadAbortException) { return; }
-                catch (Exception) { }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
     }

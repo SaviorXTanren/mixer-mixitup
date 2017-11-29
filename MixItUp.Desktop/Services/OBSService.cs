@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
 using System;
 using System.IO;
@@ -27,7 +28,7 @@ namespace MixItUp.OBS
                         this.OBSWebsocket.Connect(serverIP, password);
                         connected = true;
                     }
-                    catch (Exception) { }
+                    catch (Exception ex) { Logger.Log(ex); }
                 }, tokenSource.Token);
 
                 await Task.Delay(2000);
@@ -48,7 +49,7 @@ namespace MixItUp.OBS
             {
                 this.OBSWebsocket.SetCurrentSceneCollection(sceneCollection);
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public void SetCurrentScene(string scene)
@@ -57,7 +58,7 @@ namespace MixItUp.OBS
             {
                 this.OBSWebsocket.SetCurrentScene(scene);
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public void SetSourceRender(string source, bool isVisible)
@@ -66,7 +67,7 @@ namespace MixItUp.OBS
             {
                 this.OBSWebsocket.SetSourceRender(source, isVisible);
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public void SetWebBrowserSource(string source, string url)
@@ -79,7 +80,7 @@ namespace MixItUp.OBS
                 properties.URL = url;
                 this.OBSWebsocket.SetBrowserSourceProperties(source, properties);
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public Task Close()

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -100,7 +101,7 @@ namespace MixItUp.Base.Actions
                             this.imageData = Convert.ToBase64String(byteData);
                         }
                     }
-                    catch (Exception) { }
+                    catch (Exception ex) { Logger.Log(ex); }
 
                     if (this.imageData != null)
                     {
