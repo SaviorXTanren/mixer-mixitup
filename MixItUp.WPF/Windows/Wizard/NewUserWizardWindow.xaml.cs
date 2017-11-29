@@ -38,15 +38,6 @@ namespace MixItUp.WPF.Windows.Wizard
             return base.OnLoaded();
         }
 
-        protected override void OnClosed(EventArgs e)
-        {
-            MainWindow window = new MainWindow();
-            window.Show();
-            this.Close();
-
-            base.OnClosed(e);
-        }
-
         private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             if (this.ImportSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
@@ -90,6 +81,9 @@ namespace MixItUp.WPF.Windows.Wizard
                 else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
                 {
                     this.FinalizeNewUser();
+
+                    MainWindow window = new MainWindow();
+                    window.Show();
                     this.Close();
                 }
             });
