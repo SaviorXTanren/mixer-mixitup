@@ -81,7 +81,7 @@ namespace MixItUp.Desktop
 
 
         [JsonProperty]
-        protected List<UserDataViewModel> userDataInternal { get; set; }
+        protected List<UserViewModel> userDataInternal { get; set; }
 
         [JsonProperty]
         protected List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; }
@@ -107,7 +107,7 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
-            this.userDataInternal = new List<UserDataViewModel>();
+            this.userDataInternal = new List<UserViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
@@ -124,7 +124,7 @@ namespace MixItUp.Desktop
     public class DesktopChannelSettings : DesktopSavableChannelSettings, IChannelSettings
     {
         [JsonIgnore]
-        public LockedDictionary<uint, UserDataViewModel> UserData { get; set; }
+        public LockedDictionary<uint, UserViewModel> UserData { get; set; }
 
         [JsonIgnore]
         public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
@@ -172,7 +172,7 @@ namespace MixItUp.Desktop
 
             this.MaxMessagesInChat = 100;
 
-            this.UserData = new LockedDictionary<uint, UserDataViewModel>();
+            this.UserData = new LockedDictionary<uint, UserViewModel>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
@@ -186,7 +186,7 @@ namespace MixItUp.Desktop
 
         public void Initialize()
         {
-            this.UserData = new LockedDictionary<uint, UserDataViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
+            this.UserData = new LockedDictionary<uint, UserViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
@@ -230,6 +230,15 @@ namespace MixItUp.Desktop
     [DataContract]
     public class LegacyDesktopChannelSettings : DesktopChannelSettings
     {
+        [JsonProperty]
+        public bool CurrencyEnabled { get; set; }
+        [JsonProperty]
+        public string CurrencyName { get; set; }
+        [JsonProperty]
+        public int CurrencyAcquireAmount { get; set; }
+        [JsonProperty]
+        public int CurrencyAcquireInterval { get; set; }
+
         [JsonProperty]
         public new Dictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }
         [JsonProperty]

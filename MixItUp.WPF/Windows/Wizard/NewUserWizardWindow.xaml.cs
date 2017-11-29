@@ -245,7 +245,7 @@ namespace MixItUp.WPF.Windows.Wizard
             {
                 foreach (ScorpBotViewer viewer in this.scorpBotData.Viewers)
                 {
-                    ChannelSession.Settings.UserData[viewer.ID] = new UserDataViewModel(viewer);
+                    ChannelSession.Settings.UserData[viewer.ID] = new UserViewModel(viewer);
                 }
 
                 foreach (ScorpBotCommand command in this.scorpBotData.Commands)

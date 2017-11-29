@@ -38,7 +38,7 @@ namespace MixItUp.Base.Actions
             {
                 if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
                 {
-                    ChannelSession.Settings.UserData.Add(user.ID, new UserDataViewModel(user.ID, user.UserName));
+                    ChannelSession.Settings.UserData.Add(user.ID, new UserViewModel(user.ID, user.UserName));
                 }
                 ChannelSession.Settings.UserData[user.ID].CurrencyAmount += this.Amount;
 

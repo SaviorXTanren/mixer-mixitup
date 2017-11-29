@@ -30,7 +30,9 @@
     <Grid Margin="16" Width="375">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
@@ -73,7 +75,33 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <MaterialDesign:PackIcon Kind="WeatherLightning" Height="18" Width="18" Grid.Column="0" />
+            <TextBlock Grid.Column="2" Text="{Binding Sparks}" VerticalAlignment="Center" />
+
+            <MaterialDesign:PackIcon Kind="Coin" Height="18" Width="18" Grid.Column="4" />
+            <TextBlock Grid.Column="6" Text="{Binding CurrencyAmount}" VerticalAlignment="Center" />
+
+            <MaterialDesign:PackIcon Kind="Wunderlist" Height="18" Width="18" Grid.Column="8" />
+            <TextBlock Grid.Column="10" Text="{Binding RankNameAndPoints}" VerticalAlignment="Center" />
+
+        </Grid>
+
+        <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />

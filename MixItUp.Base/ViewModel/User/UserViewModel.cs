@@ -2,6 +2,7 @@
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.ScorpBot;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,15 @@ namespace MixItUp.Base.ViewModel.User
         public string UserName { get; set; }
 
         [DataMember]
+        public double ViewingHours { get; set; }
+
+        [DataMember]
+        public long RankPoints { get; set; }
+
+        [DataMember]
+        public long CurrencyAmount { get; set; }
+
+        [DataMember]
         public string AvatarLink { get; set; }
 
         [DataMember]
@@ -59,11 +69,18 @@ namespace MixItUp.Base.ViewModel.User
         [JsonIgnore]
         public int ChatOffenses { get; set; }
 
+        [JsonIgnore]
+        public int Sparks { get; set; }
+
         public UserViewModel()
         {
             this.Roles = new HashSet<UserRole>();
             this.AvatarLink = DefaultAvatarLink;
             this.SetFollowDate(this.FollowDate);
+
+            this.ViewingHours = 0.0;
+            this.RankPoints = 0;
+            this.CurrencyAmount = 0;
         }
 
         public UserViewModel(UserModel user) : this(user.id, user.username)
@@ -77,6 +94,14 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel(ChatUserEventModel userEvent) : this(userEvent.id, userEvent.username, userEvent.roles) { }
 
         public UserViewModel(ChatMessageEventModel messageEvent) : this(messageEvent.user_id, messageEvent.user_name, messageEvent.user_roles) { }
+
+        public UserViewModel(ScorpBotViewer viewer)
+            : this(viewer.ID, viewer.UserName)
+        {
+            this.ViewingHours = viewer.Hours;
+            this.RankPoints = viewer.RankPoints;
+            this.CurrencyAmount = viewer.Currency;
+        }
 
         public UserViewModel(uint id, string username) : this(id, username, new string[] { }) { }
 
@@ -146,6 +171,7 @@ namespace MixItUp.Base.ViewModel.User
         [JsonIgnore]
         public bool IsSubscriber { get { return this.Roles.Contains(UserRole.Subscriber); } }
 
+        [JsonIgnore]
         public string PrimaryRoleColor
         {
             get
@@ -173,6 +199,20 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
+        public string RankNameAndPoints
+        {
+            get
+            {
+                UserRankViewModel rank = null;
+                if (ChannelSession.Settings.Ranks.Count > 0)
+                {
+                    rank = ChannelSession.Settings.Ranks.Where(r => r.MinimumPoints <= this.RankPoints).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
+                }
+                return string.Format("{0} - {1}", (rank != null) ? rank.Name : "No Rank", this.RankPoints);
+            }
+        }
+
         public async Task SetDetails(bool checkForFollow = true)
         {
             if (this.ID > 0)
@@ -183,6 +223,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.AvatarLink = userWithChannel.avatarUrl;
                 }
                 this.MixerAccountDate = userWithChannel.createdAt;
+                this.Sparks = (int)userWithChannel.sparks;
             }
 
             if (checkForFollow)
