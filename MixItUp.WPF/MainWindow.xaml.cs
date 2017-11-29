@@ -53,7 +53,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Events", new EventsControl());
                 await this.MainMenu.AddMenuItem("Timers", new TimerControl());
                 await this.MainMenu.AddMenuItem("Game Queue", new GameQueueControl());
-                await this.MainMenu.AddMenuItem("Currency", new CurrencyControl());
+                await this.MainMenu.AddMenuItem("Currency & Rank", new CurrencyRankControl());
                 await this.MainMenu.AddMenuItem("Quotes", new QuoteControl());
                 await this.MainMenu.AddMenuItem("Giveaway", new GiveawayControl());
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl());

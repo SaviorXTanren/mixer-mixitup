@@ -88,9 +88,9 @@ namespace MixItUp.Base.Actions
                 }
             }
 
-            if (!string.IsNullOrEmpty(ChannelSession.Settings.CurrencyName))
+            if (ChannelSession.Settings.CurrencyAcquisition != null && !string.IsNullOrEmpty(ChannelSession.Settings.CurrencyAcquisition.Name))
             {
-                str = str.Replace("$currencyname", ChannelSession.Settings.CurrencyName);
+                str = str.Replace("$currencyname", ChannelSession.Settings.CurrencyAcquisition.Name);
             }
 
             str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));

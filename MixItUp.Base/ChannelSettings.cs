@@ -87,13 +87,12 @@ namespace MixItUp.Base
         public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]
-        public bool CurrencyEnabled { get; set; }
+        public UserItemAcquisitonViewModel CurrencyAcquisition { get; set; }
+
         [JsonProperty]
-        public string CurrencyName { get; set; }
+        public UserItemAcquisitonViewModel RankAcquisition { get; set; }
         [JsonProperty]
-        public int CurrencyAcquireAmount { get; set; }
-        [JsonProperty]
-        public int CurrencyAcquireInterval { get; set; }
+        public List<UserRankViewModel> Ranks { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
@@ -169,6 +168,10 @@ namespace MixItUp.Base
 
         public ChannelSettings()
         {
+            this.CurrencyAcquisition = new UserItemAcquisitonViewModel();
+            this.RankAcquisition = new UserItemAcquisitonViewModel();
+            this.Ranks = new List<UserRankViewModel>();
+
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();

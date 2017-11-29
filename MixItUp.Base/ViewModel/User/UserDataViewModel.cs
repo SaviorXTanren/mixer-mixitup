@@ -8,6 +8,9 @@ namespace MixItUp.Base.ViewModel.User
     public class UserDataViewModel : UserViewModel, IEquatable<UserDataViewModel>
     {
         [DataMember]
+        public double ViewingHours { get; set; } 
+
+        [DataMember]
         public long RankPoints { get; set; }
 
         [DataMember]
@@ -18,6 +21,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataViewModel(uint id, string username)
             : base(id, username)
         {
+            this.ViewingHours = 0.0;
             this.RankPoints = 0;
             this.CurrencyAmount = 0;
         }
@@ -25,6 +29,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
         {
+            this.ViewingHours = viewer.Hours;
             this.RankPoints = viewer.RankPoints;
             this.CurrencyAmount = viewer.Currency;
         }
