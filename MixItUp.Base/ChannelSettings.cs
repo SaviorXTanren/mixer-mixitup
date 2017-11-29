@@ -76,7 +76,7 @@ namespace MixItUp.Base
         [JsonProperty]
         private List<string> quotesInternal { get; set; }
         [JsonProperty]
-        private List<UserDataViewModel> userDataInternal { get; set; }
+        private List<UserViewModel> userDataInternal { get; set; }
 
         [JsonProperty]
         public OAuthTokenModel OAuthToken { get; set; }
@@ -155,7 +155,7 @@ namespace MixItUp.Base
         [JsonIgnore]
         public LockedList<string> Quotes { get; set; }
         [JsonIgnore]
-        public LockedDictionary<uint, UserDataViewModel> UserData { get; set; }
+        public LockedDictionary<uint, UserViewModel> UserData { get; set; }
         [JsonIgnore]
         public LockedList<string> BannedWords { get; set; }
 
@@ -178,7 +178,7 @@ namespace MixItUp.Base
             this.interactiveControlsInternal = new List<InteractiveCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
             this.quotesInternal = new List<string>();
-            this.userDataInternal = new List<UserDataViewModel>();
+            this.userDataInternal = new List<UserViewModel>();
             this.bannedWordsInternal = new List<string>();
 
             this.InteractiveUserGroups = new Dictionary<uint, List<InteractiveUserGroupViewModel>>();
@@ -190,7 +190,7 @@ namespace MixItUp.Base
             this.InteractiveControls = new LockedList<InteractiveCommand>();
             this.TimerCommands = new LockedList<TimerCommand>();
             this.Quotes = new LockedList<string>();
-            this.UserData = new LockedDictionary<uint, UserDataViewModel>();
+            this.UserData = new LockedDictionary<uint, UserViewModel>();
             this.BannedWords = new LockedList<string>();
 
             this.TimerCommandsInterval = 10;
@@ -211,7 +211,7 @@ namespace MixItUp.Base
             this.InteractiveControls = new LockedList<InteractiveCommand>(this.interactiveControlsInternal);
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.Quotes = new LockedList<string>(this.quotesInternal);
-            this.UserData = new LockedDictionary<uint, UserDataViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
+            this.UserData = new LockedDictionary<uint, UserViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
         }
 

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel.User;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs
@@ -12,15 +13,17 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         public UserDialogControl(UserViewModel user)
         {
-            this.DataContext = this.user = user;
+            this.user = user;
 
             InitializeComponent();
 
             this.Loaded += UserDialogControl_Loaded;
         }
 
-        private void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            await this.user.SetDetails(checkForFollow: true);
+
             this.UserAvatar.SetSize(100);
             this.UserAvatar.SetImageUrl(this.user.AvatarLink);
 
@@ -29,6 +32,8 @@ namespace MixItUp.WPF.Controls.Dialogs
                 this.UnbanButton.Visibility = System.Windows.Visibility.Visible;
                 this.BanButton.Visibility = System.Windows.Visibility.Collapsed;
             }
+
+            this.DataContext = this.user;
         }
     }
 }

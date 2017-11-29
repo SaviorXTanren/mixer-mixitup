@@ -133,6 +133,13 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
+            if (this.ranks.Count() < 1)
+            {
+                await MessageBoxHelper.ShowMessageDialog("At least one rank must be created");
+                this.CurrencyToggleSwitch.IsChecked = false;
+                return;
+            }
+
             await this.Window.RunAsyncOperation(async () =>
             {
                 ChannelSession.Settings.RankAcquisition.Name = this.RankPointsNameTextBox.Text;
@@ -189,6 +196,13 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
+            if (this.ranks.Any(r => r.Name.Equals(this.RankNameTextBox.Text) || r.MinimumPoints == rankAmount))
+            {
+                await MessageBoxHelper.ShowMessageDialog("Every rank must have a unique name and minimum amount");
+                this.CurrencyToggleSwitch.IsChecked = false;
+                return;
+            }
+
             UserRankViewModel newRank = new UserRankViewModel(this.RankNameTextBox.Text, rankAmount);
             ChannelSession.Settings.Ranks.Add(newRank);
 
@@ -197,6 +211,8 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.ranks.Add(rank);
             }
+
+            ChannelSession.Settings.Ranks = this.ranks.ToList();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -221,7 +237,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (!ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
                         {
-                            ChannelSession.Settings.UserData[chatUser.ID] = new UserDataViewModel(chatUser.ID, chatUser.UserName);
+                            ChannelSession.Settings.UserData[chatUser.ID] = new UserViewModel(chatUser.ID, chatUser.UserName);
                         }
                         ChannelSession.Settings.UserData[chatUser.ID].CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.AcquireAmount;
                     }
@@ -247,7 +263,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (!ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
                         {
-                            ChannelSession.Settings.UserData[chatUser.ID] = new UserDataViewModel(chatUser.ID, chatUser.UserName);
+                            ChannelSession.Settings.UserData[chatUser.ID] = new UserViewModel(chatUser.ID, chatUser.UserName);
                         }
                         ChannelSession.Settings.UserData[chatUser.ID].RankPoints += ChannelSession.Settings.RankAcquisition.AcquireAmount;
                     }
