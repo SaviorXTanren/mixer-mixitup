@@ -11,6 +11,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace MixItUp.WPF.Windows.Wizard
 {
@@ -38,7 +39,7 @@ namespace MixItUp.WPF.Windows.Wizard
             return base.OnLoaded();
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             MainWindow window = new MainWindow();
             window.Show();
