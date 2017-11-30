@@ -137,6 +137,7 @@ namespace MixItUp.Desktop.Services
 
                 data = data.Replace("MixItUp.Desktop.DesktopChannelSettings, MixItUp.Desktop", "MixItUp.Desktop.LegacyDesktopChannelSettings, MixItUp.Desktop");
                 LegacyDesktopChannelSettings legacySettings = SerializerHelper.DeserializeFromString<LegacyDesktopChannelSettings>(data);
+                this.Initialize(legacySettings);
 
                 settings.CurrencyAcquisition.Name = legacySettings.CurrencyName;
                 settings.CurrencyAcquisition.AcquireAmount = legacySettings.CurrencyAcquireAmount;
