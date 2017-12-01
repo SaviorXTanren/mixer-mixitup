@@ -12,6 +12,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MixItUp.WPF.Windows.Wizard
 {
@@ -112,48 +114,70 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     ScorpBotData scorpBotData = new ScorpBotData();
 
-                    string dataPath = Path.Combine(folderPath, "Data\\Database");
-                    if (Directory.Exists(dataPath))
+                    string dataPath = Path.Combine(folderPath, "Data");
+                    string settingsFilePath = Path.Combine(dataPath, "settings.ini");
+                    if (Directory.Exists(dataPath) && File.Exists(settingsFilePath))
                     {
-                        SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(dataPath);
+                        IEnumerable<string> lines = File.ReadAllLines(settingsFilePath);
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "CommandsDB.sqlite");
-                        await databaseWrapper.ReadRows("SELECT * FROM RegCommand",
-                        (reader) =>
+                        string currentGroup = null;
+                        foreach (var line in lines)
                         {
-                            if (ScorpBotCommand.IsACommand(reader))
+                            if (line.Contains("="))
                             {
-                                scorpBotData.Commands.Add(new ScorpBotCommand(reader));
+                                string[] splits = line.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+                                scorpBotData.Settings[currentGroup].Add(splits[0], splits[1]);
                             }
-                        });
+                            else
+                            {
+                                currentGroup = line.Replace("[", "").Replace("]", "").ToLower();
+                                scorpBotData.Settings.Add(currentGroup, new Dictionary<string, string>());
+                            }
+                        }
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "FilteredWordsDB.sqlite");
-                        await databaseWrapper.ReadRows("SELECT * FROM Word",
-                        (reader) =>
+                        string databasePath = Path.Combine(dataPath, "Database");
+                        if (Directory.Exists(databasePath))
                         {
-                            scorpBotData.BannedWords.Add((string)reader["word"]);
-                        });
+                            SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(databasePath);
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "QuotesDB.sqlite");
-                        await databaseWrapper.ReadRows("SELECT * FROM Quotes",
-                        (reader) =>
-                        {
-                            scorpBotData.Quotes.Add((string)reader["quote_text"]);
-                        });
+                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "CommandsDB.sqlite");
+                            await databaseWrapper.ReadRows("SELECT * FROM RegCommand",
+                            (reader) =>
+                            {
+                                if (ScorpBotCommand.IsACommand(reader))
+                                {
+                                    scorpBotData.Commands.Add(new ScorpBotCommand(reader));
+                                }
+                            });
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "RankDB.sqlite");
-                        await databaseWrapper.ReadRows("SELECT * FROM Rank",
-                        (reader) =>
-                        {
-                            scorpBotData.Ranks.Add(new ScorpBotRank(reader));
-                        });
+                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "FilteredWordsDB.sqlite");
+                            await databaseWrapper.ReadRows("SELECT * FROM Word",
+                            (reader) =>
+                            {
+                                scorpBotData.BannedWords.Add((string)reader["word"]);
+                            });
 
-                        databaseWrapper.DatabaseFilePath = Path.Combine(dataPath, "Viewers3DB.sqlite");
-                        await databaseWrapper.ReadRows("SELECT * FROM Viewer",
-                        (reader) =>
-                        {
-                            scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
-                        });
+                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "QuotesDB.sqlite");
+                            await databaseWrapper.ReadRows("SELECT * FROM Quotes",
+                            (reader) =>
+                            {
+                                scorpBotData.Quotes.Add((string)reader["quote_text"]);
+                            });
+
+                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "RankDB.sqlite");
+                            await databaseWrapper.ReadRows("SELECT * FROM Rank",
+                            (reader) =>
+                            {
+                                scorpBotData.Ranks.Add(new ScorpBotRank(reader));
+                            });
+
+                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "Viewers3DB.sqlite");
+                            await databaseWrapper.ReadRows("SELECT * FROM Viewer",
+                            (reader) =>
+                            {
+                                scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
+                            });
+                        }
                     }
 
                     return scorpBotData;
@@ -243,6 +267,16 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             if (this.scorpBotData != null)
             {
+                ChannelSession.Settings.RankAcquisition.Name = this.scorpBotData.Settings["currency"]["name"];
+                ChannelSession.Settings.RankAcquisition.AcquireInterval = int.Parse(this.scorpBotData.Settings["currency"]["onlinepayinterval"]);
+                ChannelSession.Settings.RankAcquisition.AcquireAmount = int.Parse(this.scorpBotData.Settings["currency"]["activeuserbonus"]);
+                ChannelSession.Settings.RankAcquisition.Enabled = true;
+
+                ChannelSession.Settings.CurrencyAcquisition.Name = this.scorpBotData.Settings["currency2"]["name"];
+                ChannelSession.Settings.CurrencyAcquisition.AcquireInterval = int.Parse(this.scorpBotData.Settings["currency2"]["onlinepayinterval"]);
+                ChannelSession.Settings.CurrencyAcquisition.AcquireAmount = int.Parse(this.scorpBotData.Settings["currency"]["activeuserbonus"]);
+                ChannelSession.Settings.CurrencyAcquisition.Enabled = true;
+
                 foreach (ScorpBotViewer viewer in this.scorpBotData.Viewers)
                 {
                     ChannelSession.Settings.UserData[viewer.ID] = new UserViewModel(viewer);
@@ -266,6 +300,11 @@ namespace MixItUp.WPF.Windows.Wizard
                 foreach (string bannedWord in this.scorpBotData.BannedWords)
                 {
                     ChannelSession.Settings.BannedWords.Add(bannedWord);
+                }
+
+                foreach (ScorpBotRank rank in this.scorpBotData.Ranks)
+                {
+                    ChannelSession.Settings.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
                 }
             }
         }
