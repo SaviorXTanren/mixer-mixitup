@@ -48,7 +48,7 @@ namespace MixItUp.Base.Commands
 
         public CommandBase(string name, CommandTypeEnum type, string command) : this(name, type, new List<string>() { command }) { }
 
-        public CommandBase(string name, CommandTypeEnum type, List<string> commands)
+        public CommandBase(string name, CommandTypeEnum type, IEnumerable<string> commands)
             : this()
         {
             this.Name = name;

@@ -31,7 +31,7 @@ namespace MixItUp.Base.Commands
 
         public ChatCommand(string name, string command, UserRole lowestAllowedRole, int cooldown) : this(name, new List<string>() { command }, lowestAllowedRole, cooldown) { }
 
-        public ChatCommand(string name, List<string> commands, UserRole lowestAllowedRole, int cooldown)
+        public ChatCommand(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown)
             : base(name, CommandTypeEnum.Chat, commands)
         {
             this.Permissions = lowestAllowedRole;

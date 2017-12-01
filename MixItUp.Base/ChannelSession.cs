@@ -112,6 +112,17 @@ namespace MixItUp.Base
 
         public static LockedDictionary<string, int> Counters { get; private set; }
 
+        public static IEnumerable<ChatCommand> AllChatCommands
+        {
+            get
+            {
+                List<ChatCommand> commands = new List<ChatCommand>();
+                commands.AddRange(ChannelSession.PreMadeChatCommands);
+                commands.AddRange(ChannelSession.Settings.ChatCommands);
+                return commands;
+            }
+        }
+
         public static void Initialize(ServicesHandlerBase serviceHandler)
         {
             ChannelSession.Services = serviceHandler;

@@ -77,6 +77,19 @@ namespace MixItUp.WPF.Controls.Command
                 }
             }
 
+            List<string> allCommandStrings = new List<string>();
+            allCommandStrings.AddRange(this.GetCommandStrings());
+            foreach (var command in ChannelSession.AllChatCommands)
+            {
+                allCommandStrings.AddRange(command.Commands);
+            }
+
+            if (allCommandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("There already exists a chat command that uses one of the command strings you have specified");
+                return false;
+            }
+
             return true;
         }
 
@@ -86,7 +99,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (await this.Validate())
             {
-                List<string> commands = new List<string>(this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                IEnumerable<string> commands = this.GetCommandStrings();
                 UserRole lowestRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem);
 
                 int cooldown = 0;
@@ -103,7 +116,7 @@ namespace MixItUp.WPF.Controls.Command
                 else
                 {
                     this.command.Name = this.NameTextBox.Text;
-                    this.command.Commands = commands;
+                    this.command.Commands = commands.ToList();
                     this.command.Permissions = lowestRole;
                     this.command.Cooldown = cooldown;
                 }
@@ -111,5 +124,7 @@ namespace MixItUp.WPF.Controls.Command
             }
             return null;
         }
+
+        private IEnumerable<string> GetCommandStrings() { return new List<string>(this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)); }
     }
 }

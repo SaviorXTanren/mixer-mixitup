@@ -326,12 +326,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     GlobalEvents.ChatCommandMessageReceived(messageCommand);
 
-                    ChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
-                    if (command == null)
-                    {
-                        command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
-                    }
-
+                    ChatCommand command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
                     if (command != null)
                     {
                         if (message.User.Roles.Any(r => r >= command.Permissions))
