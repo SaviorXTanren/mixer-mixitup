@@ -106,55 +106,64 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task ChannelRefreshBackground()
         {
-            while (!this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
+            bool addViewingMinutes = false;
+
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
-                try
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                await this.RefreshAllChat();
+
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                if (addViewingMinutes)
                 {
-                    this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                    await this.RefreshAllChat();
-
-                    this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                    await Task.Delay(1000 * 30);
+                    await ChannelSession.Chat.UpdateEachUser((user) =>
+                    {
+                        user.ViewingMinutes++;
+                        return Task.FromResult(0);
+                    });
                 }
-                catch (Exception ex) { string str = ex.ToString(); }
-            }
+                addViewingMinutes = !addViewingMinutes;
 
-            this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                await ChannelSession.SaveSettings();
+
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                await Task.Delay(1000 * 30);
+            });
         }
 
         private async Task TimerCommandsBackground()
         {
             int timerCommandIndex = 0;
-            while (!this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
-                try
+                DateTimeOffset startTime = DateTimeOffset.Now;
+                int startMessageCount = this.totalMessages;
+
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                await Task.Delay(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval);
+
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                if (ChannelSession.Settings.TimerCommands.Count > 0)
                 {
-                    DateTimeOffset startTime = DateTimeOffset.Now;
-                    int startMessageCount = this.totalMessages;
+                    TimerCommand command = ChannelSession.Settings.TimerCommands[timerCommandIndex];
 
-                    await Task.Delay(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval);
-                    if (ChannelSession.Settings.TimerCommands.Count > 0)
+                    while ((this.totalMessages - startMessageCount) < ChannelSession.Settings.TimerCommandsMinimumMessages)
                     {
-                        TimerCommand command = ChannelSession.Settings.TimerCommands[timerCommandIndex];
-
-                        while ((this.totalMessages - startMessageCount) < ChannelSession.Settings.TimerCommandsMinimumMessages)
-                        {
-                            await Task.Delay(1000 * 10);
-                        }
-
-                        await command.Perform();
-
-                        timerCommandIndex++;
-                        timerCommandIndex = timerCommandIndex % ChannelSession.Settings.TimerCommands.Count;
+                        tokenSource.Token.ThrowIfCancellationRequested();
+                        await Task.Delay(1000 * 10);
                     }
-                }
-                catch (ThreadAbortException) { return; }
-                catch (Exception ex) { Logger.Log(ex); }
-            }
 
-            this.backgroundThreadCancellationTokenSource.Token.ThrowIfCancellationRequested();
+                    await command.Perform();
+
+                    timerCommandIndex++;
+                    timerCommandIndex = timerCommandIndex % ChannelSession.Settings.TimerCommands.Count;
+                }
+            });
         }
 
         private async void ChatClearMessagesButton_Click(object sender, RoutedEventArgs e)

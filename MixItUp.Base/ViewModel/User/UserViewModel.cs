@@ -46,7 +46,7 @@ namespace MixItUp.Base.ViewModel.User
         public string UserName { get; set; }
 
         [DataMember]
-        public double ViewingHours { get; set; }
+        public int ViewingMinutes { get; set; }
 
         [DataMember]
         public long RankPoints { get; set; }
@@ -78,7 +78,7 @@ namespace MixItUp.Base.ViewModel.User
             this.AvatarLink = DefaultAvatarLink;
             this.SetFollowDate(this.FollowDate);
 
-            this.ViewingHours = 0.0;
+            this.ViewingMinutes = 0;
             this.RankPoints = 0;
             this.CurrencyAmount = 0;
         }
@@ -98,7 +98,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
         {
-            this.ViewingHours = viewer.Hours;
+            this.ViewingMinutes = (int)viewer.Hours * 60;
             this.RankPoints = viewer.RankPoints;
             this.CurrencyAmount = viewer.Currency;
         }
@@ -199,6 +199,17 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     return "#FF0000FF";
                 }
+            }
+        }
+
+        [JsonIgnore]
+        public string ViewingHoursString
+        {
+            get
+            {
+                int hours = this.ViewingMinutes / 60;
+                int minutes = this.ViewingMinutes % 60;
+                return string.Format("{0} H & {1} M", hours, minutes);
             }
         }
 

@@ -85,6 +85,19 @@ namespace MixItUp.Base.MixerAPI
             this.BotClient = null;
         }
 
+        public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction)
+        {
+            foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
+            {
+                if (!ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
+                {
+                    ChannelSession.Settings.UserData[chatUser.ID] = new UserViewModel(chatUser.ID, chatUser.UserName);
+                }
+                await userUpdateFunction(ChannelSession.Settings.UserData[chatUser.ID]);
+            }
+            await ChannelSession.SaveSettings();
+        }
+
         #region Chat Update Methods
 
         public async Task RefreshAllChat()

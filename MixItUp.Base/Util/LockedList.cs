@@ -31,7 +31,7 @@ namespace MixItUp.Base.Util
 
         public void CopyTo(T[] array, int arrayIndex) { lock (objLock) { this.items.CopyTo(array, arrayIndex); } }
 
-        public IEnumerator<T> GetEnumerator() { lock (objLock) { return this.items.GetEnumerator(); } }
+        public IEnumerator<T> GetEnumerator() { lock (objLock) { return this.ToList().GetEnumerator(); } }
 
         public int IndexOf(T item) { lock (objLock) { return this.items.IndexOf(item); } }
 
@@ -41,7 +41,7 @@ namespace MixItUp.Base.Util
 
         public void RemoveAt(int index) { lock (objLock) { this.items.RemoveAt(index); } }
 
-        IEnumerator IEnumerable.GetEnumerator() { lock (objLock) { return this.items.GetEnumerator(); } }
+        IEnumerator IEnumerable.GetEnumerator() { lock (objLock) { return this.ToList().GetEnumerator(); } }
 
         public List<T> ToList() { lock (objLock) { return this.items.ToList(); } }
     }

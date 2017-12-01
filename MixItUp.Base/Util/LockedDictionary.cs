@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MixItUp.Base.Util
 {
@@ -27,9 +28,9 @@ namespace MixItUp.Base.Util
 
         public bool IsReadOnly { get { return false; } }
 
-        public ICollection<K> Keys { get { lock (objLock) { return this.items.Keys; } } }
+        public ICollection<K> Keys { get { lock (objLock) { return this.items.Keys.ToList(); } } }
 
-        public ICollection<V> Values { get { lock (objLock) { return this.items.Values; } } }
+        public ICollection<V> Values { get { lock (objLock) { return this.items.Values.ToList(); } } }
 
         public void Add(KeyValuePair<K, V> item) { this.Add(item.Key, item.Value); }
 
@@ -41,7 +42,7 @@ namespace MixItUp.Base.Util
 
         public bool ContainsValue(V value) { lock (objLock) { return this.items.ContainsValue(value); } }
 
-        public IEnumerator<KeyValuePair<K, V>> GetEnumerator() { lock (objLock) { return this.items.GetEnumerator(); } }
+        public IEnumerator<KeyValuePair<K, V>> GetEnumerator() { lock (objLock) { return this.ToDictionary().GetEnumerator(); } }
 
         public bool Remove(K key) { lock (objLock) { return this.items.Remove(key); } }
 

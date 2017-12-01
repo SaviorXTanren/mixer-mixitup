@@ -21,53 +21,42 @@ namespace MixItUp.Base.Util
 
         private HttpListener httpListener;
         private WebSocket webSocket;
-        private CancellationTokenSource tokenSource = new CancellationTokenSource();
+        private CancellationTokenSource webSocketTokenSource = new CancellationTokenSource();
 
         public WebSocketServerBase(string address) { this.address = address; }
 
         public Task<bool> Initialize()
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async() => { await this.ListenForConnection(); }, this.tokenSource.Token);
+            Task.Run(async() => { await this.ListenForConnection(); }, this.webSocketTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             return Task.FromResult(true);
         }
 
         private async Task ListenForConnection()
         {
-            while (true)
+            await BackgroundTaskWrapper.RunBackgroundTask(this.webSocketTokenSource, async (tokenSource) =>
             {
-                try
+                await this.ShutdownListeners();
+
+                this.httpListener = new HttpListener();
+                this.httpListener.Prefixes.Add(this.address);
+                this.httpListener.Start();
+
+                var hc = await this.httpListener.GetContextAsync();
+                if (!hc.Request.IsWebSocketRequest)
                 {
-                    this.httpListener = new HttpListener();
-                    this.httpListener.Prefixes.Add(this.address);
-                    this.httpListener.Start();
-
-                    var hc = await this.httpListener.GetContextAsync();
-                    if (!hc.Request.IsWebSocketRequest)
-                    {
-                        hc.Response.StatusCode = 400;
-                        hc.Response.Close();
-                    }
-                    else
-                    {
-                        var wsc = await hc.AcceptWebSocketAsync(null);
-                        this.webSocket = wsc.WebSocket;
-
-                        await this.ReceiveInternal();
-                    }
-
-                    await this.ShutdownListeners();
+                    hc.Response.StatusCode = 400;
+                    hc.Response.Close();
                 }
-                catch (Exception ex)
+                else
                 {
-                    await this.ShutdownListeners();
+                    var wsc = await hc.AcceptWebSocketAsync(null);
+                    this.webSocket = wsc.WebSocket;
 
-                    Logger.Log(ex);
+                    await this.ReceiveInternal();
                 }
-
-                this.tokenSource.Token.ThrowIfCancellationRequested();
-            }
+            });
         }
 
         public async Task Send(WebSocketPacket packet)
@@ -79,7 +68,7 @@ namespace MixItUp.Base.Util
 
         public async Task Disconnect()
         {
-            this.tokenSource.Cancel();
+            this.webSocketTokenSource.Cancel();
             await this.ShutdownListeners();
         }
 

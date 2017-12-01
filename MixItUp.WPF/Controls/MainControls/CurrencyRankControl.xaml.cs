@@ -31,6 +31,14 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.Window.Closing += Window_Closing;
+
+            this.RanksListView.ItemsSource = this.ranks;
+            this.ranks.Clear();
+            foreach (UserRankViewModel rank in ChannelSession.Settings.Ranks.OrderBy(r => r.MinimumPoints))
+            {
+                this.ranks.Add(rank);
+            }
+
             this.CurrencyNameTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.Name;
             this.CurrencyAmountTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.AcquireAmount.ToString();
             this.CurrencyTimeTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.AcquireInterval.ToString();
@@ -42,13 +50,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RankPointsTimeTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireInterval.ToString();
             this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
             this.RankGrid.IsEnabled = !ChannelSession.Settings.RankAcquisition.Enabled;
-
-            this.RanksListView.ItemsSource = this.ranks;
-            this.ranks.Clear();
-            foreach (UserRankViewModel rank in ChannelSession.Settings.Ranks.OrderBy(r => r.MinimumPoints))
-            {
-                this.ranks.Add(rank);
-            }
 
             return base.InitializeInternal();
         }
@@ -89,7 +90,7 @@ namespace MixItUp.WPF.Controls.MainControls
             });
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(() => { this.CurrencyAcquireBackground(); }, this.currencyAcquisitionCancellationTokenSource.Token);
+            Task.Run(async () => { await this.CurrencyAcquireBackground(); }, this.currencyAcquisitionCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             this.CurrencyGrid.IsEnabled = false;
@@ -122,7 +123,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (string.IsNullOrEmpty(this.RankPointsAmountTextBox.Text) || !int.TryParse(this.RankPointsAmountTextBox.Text, out rankAmount) || rankAmount < 1)
             {
                 await MessageBoxHelper.ShowMessageDialog("A valid points amount must be specified");
-                this.CurrencyToggleSwitch.IsChecked = false;
+                this.RankToggleSwitch.IsChecked = false;
                 return;
             }
 
@@ -137,7 +138,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.ranks.Count() < 1)
             {
                 await MessageBoxHelper.ShowMessageDialog("At least one rank must be created");
-                this.CurrencyToggleSwitch.IsChecked = false;
+                this.RankToggleSwitch.IsChecked = false;
                 return;
             }
 
@@ -154,7 +155,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RankGrid.IsEnabled = false;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(() => { this.RankAcquireBackground(); }, this.rankAcquisitionCancellationTokenSource.Token);
+            Task.Run(async () => { await this.RankAcquireBackground(); }, this.rankAcquisitionCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
@@ -214,6 +215,9 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             ChannelSession.Settings.Ranks = this.ranks.ToList();
+
+            this.RankNameTextBox.Clear();
+            this.RankAmountTextBox.Clear();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -222,56 +226,40 @@ namespace MixItUp.WPF.Controls.MainControls
             this.rankAcquisitionCancellationTokenSource.Cancel();
         }
 
-        private void CurrencyAcquireBackground()
+        private async Task CurrencyAcquireBackground()
         {
-            while (true)
+            await BackgroundTaskWrapper.RunBackgroundTask(this.currencyAcquisitionCancellationTokenSource, async (tokenSource) =>
             {
-                try
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                await Task.Delay(1000 * 60 * ChannelSession.Settings.CurrencyAcquisition.AcquireInterval);
+
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                await ChannelSession.Chat.UpdateEachUser((user) =>
                 {
-                    this.currencyAcquisitionCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                    Thread.Sleep(1000 * 60 * ChannelSession.Settings.CurrencyAcquisition.AcquireInterval);
-
-                    this.currencyAcquisitionCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                    foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
-                    {
-                        if (!ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
-                        {
-                            ChannelSession.Settings.UserData[chatUser.ID] = new UserViewModel(chatUser.ID, chatUser.UserName);
-                        }
-                        ChannelSession.Settings.UserData[chatUser.ID].CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.AcquireAmount;
-                    }
-                }
-                catch (ThreadAbortException) { return; }
-                catch (Exception ex) { Logger.Log(ex); }
-            }
+                    user.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.AcquireAmount;
+                    return Task.FromResult(0);
+                });
+            });
         }
 
-        private void RankAcquireBackground()
+        private async Task RankAcquireBackground()
         {
-            while (true)
+            await BackgroundTaskWrapper.RunBackgroundTask(this.rankAcquisitionCancellationTokenSource, async (tokenSource) =>
             {
-                try
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                await Task.Delay(1000 * 60 * ChannelSession.Settings.RankAcquisition.AcquireInterval);
+
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                await ChannelSession.Chat.UpdateEachUser((user) =>
                 {
-                    this.rankAcquisitionCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                    Thread.Sleep(1000 * 60 * ChannelSession.Settings.RankAcquisition.AcquireInterval);
-
-                    this.rankAcquisitionCancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                    foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
-                    {
-                        if (!ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
-                        {
-                            ChannelSession.Settings.UserData[chatUser.ID] = new UserViewModel(chatUser.ID, chatUser.UserName);
-                        }
-                        ChannelSession.Settings.UserData[chatUser.ID].RankPoints += ChannelSession.Settings.RankAcquisition.AcquireAmount;
-                    }
-                }
-                catch (ThreadAbortException) { return; }
-                catch (Exception ex) { Logger.Log(ex); }
-            }
+                    user.RankPoints += ChannelSession.Settings.RankAcquisition.AcquireAmount;
+                    return Task.FromResult(0);
+                });
+            });
         }
     }
 }
