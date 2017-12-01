@@ -203,7 +203,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string ViewingHoursString
+        public string ViewingTimeString
         {
             get
             {
