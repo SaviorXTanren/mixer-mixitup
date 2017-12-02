@@ -80,17 +80,18 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(false);
         }
 
-        public override Task<bool> InitializeOverlayServer()
+        public override async Task<bool> InitializeOverlayServer()
         {
             if (this.OverlayServer == null)
             {
                 this.OverlayServer = new OverlayWebServer("http://localhost:8111/ws/");
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                this.OverlayServer.Initialize();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                return Task.FromResult(true);
+                if (await this.OverlayServer.Initialize())
+                {
+                    return true;
+                }
+                this.OverlayServer = null;
             }
-            return Task.FromResult(false);
+            return false;
         }
 
         public override async Task DisconnectOverlayServer()
@@ -107,12 +108,12 @@ namespace MixItUp.Desktop.Services
             if (this.OBSWebsocket == null)
             {
                 this.OBSWebsocket = new OBSService();
-                bool result = await this.OBSWebsocket.Initialize(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
-                if (!result)
+                if (await this.OBSWebsocket.Initialize(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword))
                 {
-                    this.OBSWebsocket = null;
+                    this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
+                    return true;
                 }
-                return result;
+                this.OBSWebsocket = null;
             }
             return false;
         }
@@ -122,6 +123,7 @@ namespace MixItUp.Desktop.Services
             if (this.OBSWebsocket != null)
             {
                 await this.OBSWebsocket.Close();
+                this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
                 this.OBSWebsocket = null;
             }
         }
@@ -143,6 +145,11 @@ namespace MixItUp.Desktop.Services
                 await this.XSplitServer.Disconnect();
                 this.XSplitServer = null;
             }
+        }
+
+        private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)
+        {
+            await this.DisconnectOBSStudio();
         }
     }
 }

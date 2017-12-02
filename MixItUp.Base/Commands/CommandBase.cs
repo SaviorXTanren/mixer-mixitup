@@ -64,28 +64,30 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(IEnumerable<string> arguments) { await this.Perform(ChannelSession.GetCurrentUser(), arguments); }
 
-        public virtual async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        public virtual Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!this.IsEnabled)
+            if (this.IsEnabled)
             {
-                return;
+                if (arguments == null)
+                {
+                    arguments = new List<string>();
+                }
+
+                Task.Run(async () =>
+                {
+                    await this.AsyncSempahore.WaitAsync();
+
+                    GlobalEvents.CommandExecuted(this);
+
+                    foreach (ActionBase action in this.Actions)
+                    {
+                        await action.Perform(user, arguments);
+                    }
+
+                    this.AsyncSempahore.Release();
+                });
             }
-
-            if (arguments == null)
-            {
-                arguments = new List<string>();
-            }
-
-            await this.AsyncSempahore.WaitAsync();
-
-            GlobalEvents.CommandExecuted(this);
-
-            foreach (ActionBase action in this.Actions)
-            {
-                await action.Perform(user, arguments);
-            }
-
-            this.AsyncSempahore.Release();
+            return Task.FromResult(0);
         }
 
         protected abstract SemaphoreSlim AsyncSempahore { get; }

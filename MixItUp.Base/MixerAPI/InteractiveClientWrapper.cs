@@ -335,10 +335,7 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    connectedControl.Command.Perform(user);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
+                    await connectedControl.Command.Perform(user);
                     return;
                 }
             }

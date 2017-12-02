@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +9,8 @@ namespace MixItUp.OBS
 {
     public class OBSService : IOBSService
     {
+        public event EventHandler Disconnected;
+
         private OBSWebsocket OBSWebsocket;
 
         public async Task<bool> Initialize(string serverIP, string password)
@@ -26,6 +27,7 @@ namespace MixItUp.OBS
                     try
                     {
                         this.OBSWebsocket.Connect(serverIP, password);
+                        this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
                         connected = true;
                     }
                     catch (Exception ex) { Logger.Log(ex); }
@@ -91,6 +93,15 @@ namespace MixItUp.OBS
                 this.OBSWebsocket = null;
             }
             return Task.FromResult(0);
+        }
+
+        private void OBSWebsocket_Disconnected(object sender, EventArgs e)
+        {
+            this.Close();
+            if (this.Disconnected != null)
+            {
+                this.Disconnected(this, new EventArgs());
+            }
         }
     }
 }

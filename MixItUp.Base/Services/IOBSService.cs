@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
     public interface IOBSService
     {
+        event EventHandler Disconnected;
+
         Task<bool> Initialize(string serverIP, string password);
 
         void SetCurrentSceneCollection(string sceneCollection);

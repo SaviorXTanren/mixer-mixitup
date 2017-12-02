@@ -331,15 +331,11 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (message.User.Roles.Any(r => r >= command.Permissions))
                         {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            command.Perform(message.User, messageCommand.CommandArguments);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            await command.Perform(message.User, messageCommand.CommandArguments);
                         }
                         else
                         {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            ChannelSession.Chat.Whisper(message.User.UserName, "You do not permission to run this command");
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            await ChannelSession.Chat.Whisper(message.User.UserName, "You do not permission to run this command");
                         }
                     }
                 }
