@@ -1,13 +1,17 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
+using Mixer.Base.Web;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -536,6 +540,77 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "Usage: !spin <AMOUNT>");
+                    }
+                }
+            }));
+        }
+    }
+
+    public class SteamChatCommand : PreMadeChatCommand
+    {
+        private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
+
+        public SteamChatCommand()
+            : base("Steam", "steam", UserRole.User, 60)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    string gameName;
+                    if (arguments.Count() > 0)
+                    {
+                        gameName = string.Join(" ", arguments);
+                    }
+                    else
+                    {
+                        await ChannelSession.RefreshChannel();
+                        gameName = ChannelSession.Channel.type.name;
+                    }
+
+                    if (steamGameList.Count == 0)
+                    {
+                        using (HttpClientWrapper client = new HttpClientWrapper())
+                        {
+                            HttpResponseMessage response = await client.GetAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                string result = await response.Content.ReadAsStringAsync();
+                                JObject jobj = JObject.Parse(result);
+                                JToken list = jobj["applist"]["apps"];
+                                JArray games = (JArray)list;
+                                foreach (JToken game in games)
+                                {
+                                    this.steamGameList[game["name"].ToString().ToLower()] = (int)game["appid"];
+                                }
+                            }
+                        }
+                    }
+
+                    if (this.steamGameList.ContainsKey(gameName.ToLower()))
+                    {
+                        int gameID = this.steamGameList[gameName.ToLower()];
+                        using (HttpClientWrapper client = new HttpClientWrapper())
+                        {
+                            HttpResponseMessage response = await client.GetAsync("http://store.steampowered.com/api/appdetails?appids=" + gameID);
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                string result = await response.Content.ReadAsStringAsync();
+                                JObject jobj = JObject.Parse(result);
+                                jobj = (JObject)jobj[gameID.ToString()]["data"];
+
+                                double price = (int)jobj["price_overview"]["final"];
+                                price = price / 100.0;
+
+                                string url = string.Format("http://store.steampowered.com/app/{0}", gameID);
+
+                                await ChannelSession.Chat.SendMessage(string.Format("{0} - ${1} - {2}", jobj["name"], price, url));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.SendMessage(string.Format("Could not find the game \"{0}\" on Steam", gameName));
                     }
                 }
             }));
