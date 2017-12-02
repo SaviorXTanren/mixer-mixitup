@@ -467,7 +467,7 @@ namespace MixItUp.Base.Commands
             result = result.ToLower();
             if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Settings.UserData.ContainsKey(userID))
             {
-                UserViewModel user = ChannelSession.Settings.UserData[userID];
+                UserDataViewModel user = ChannelSession.Settings.UserData[userID];
                 if (result.Equals("lose"))
                 {
                     await ChannelSession.Chat.SendMessage(string.Format("Sorry @{0}, you lost the spin!", user.UserName));
@@ -505,9 +505,9 @@ namespace MixItUp.Base.Commands
                             return;
                         }
 
-                        if (user.CurrencyAmount >= bet)
+                        if (user.Data.CurrencyAmount >= bet)
                         {
-                            user.CurrencyAmount -= bet;
+                            user.Data.CurrencyAmount -= bet;
                             if (ChannelSession.Services.OverlayServer != null)
                             {
                                 await ChannelSession.Services.OverlayServer.SetRouletteWheel(new OverlayRoluetteWheel() { userID = user.ID, bet = bet });

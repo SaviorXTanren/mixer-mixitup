@@ -129,7 +129,7 @@ namespace MixItUp.Desktop.Services
                 string data = File.ReadAllText(filePath);
                 data = data.Replace("MixItUp.Base.ChannelSettings, MixItUp.Base", "MixItUp.Desktop.DesktopChannelSettings, MixItUp.Desktop");
                 data = data.Replace("MixItUp.Base.ViewModel.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserDataViewModel");
-                data = data.Replace("MixItUp.Base.ViewModel.User.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserViewModel");
+                data = data.Replace("MixItUp.Base.ViewModel.User.UserViewModel", "MixItUp.Base.ViewModel.User.UserDataViewModel");
                 File.WriteAllText(filePath, data);
 
                 settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);

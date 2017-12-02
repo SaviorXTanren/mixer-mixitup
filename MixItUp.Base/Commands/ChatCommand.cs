@@ -65,7 +65,7 @@ namespace MixItUp.Base.Commands
 
             if (this.CurrencyCost > 0 && ChannelSession.Settings.CurrencyAcquisition.Enabled)
             {
-                if (user.CurrencyAmount < this.CurrencyCost)
+                if (user.Data.CurrencyAmount < this.CurrencyCost)
                 {
                     if (ChannelSession.Chat != null)
                     {
@@ -74,7 +74,7 @@ namespace MixItUp.Base.Commands
                     return;
                 }
 
-                user.CurrencyAmount -= this.CurrencyCost;
+                user.Data.CurrencyAmount -= this.CurrencyCost;
             }
 
             this.lastRun = DateTimeOffset.Now;

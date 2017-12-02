@@ -36,7 +36,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
-                ChannelSession.Settings.UserData.GetValueIfExists(user.ID, user).CurrencyAmount += this.Amount;
+                user.Data.CurrencyAmount += this.Amount;
 
                 string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)

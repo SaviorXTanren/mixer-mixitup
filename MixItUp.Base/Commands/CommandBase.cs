@@ -66,7 +66,7 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            await this.PerformInternal(ChannelSession.Settings.UserData.GetValueIfExists(user.ID, user), arguments);
+            await this.PerformInternal(user, arguments);
         }
 
         public virtual Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)

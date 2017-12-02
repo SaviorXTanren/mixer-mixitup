@@ -1,8 +1,9 @@
-﻿using Mixer.Base.Model.Chat;
+﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -39,37 +40,20 @@ namespace MixItUp.Base.ViewModel.User
             return roles;
         }
 
-        [DataMember]
         public uint ID { get; set; }
 
-        [DataMember]
         public string UserName { get; set; }
 
-        [DataMember]
-        public int ViewingMinutes { get; set; }
-
-        [DataMember]
-        public long RankPoints { get; set; }
-
-        [DataMember]
-        public long CurrencyAmount { get; set; }
-
-        [DataMember]
         public string AvatarLink { get; set; }
 
-        [DataMember]
         public DateTimeOffset? MixerAccountDate { get; set; }
 
-        [DataMember]
         public DateTimeOffset? FollowDate { get; set; }
 
-        [JsonIgnore]
         public HashSet<UserRole> Roles { get; set; }
 
-        [JsonIgnore]
         public int ChatOffenses { get; set; }
 
-        [JsonIgnore]
         public int Sparks { get; set; }
 
         public UserViewModel()
@@ -77,10 +61,6 @@ namespace MixItUp.Base.ViewModel.User
             this.Roles = new HashSet<UserRole>();
             this.AvatarLink = DefaultAvatarLink;
             this.SetFollowDate(this.FollowDate);
-
-            this.ViewingMinutes = 0;
-            this.RankPoints = 0;
-            this.CurrencyAmount = 0;
         }
 
         public UserViewModel(UserModel user) : this(user.id, user.username)
@@ -89,19 +69,15 @@ namespace MixItUp.Base.ViewModel.User
             this.MixerAccountDate = user.createdAt;
         }
 
+        public UserViewModel(ChannelModel channel) : this(channel.id, channel.token) { }
+
         public UserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { }
 
         public UserViewModel(ChatUserEventModel userEvent) : this(userEvent.id, userEvent.username, userEvent.roles) { }
 
         public UserViewModel(ChatMessageEventModel messageEvent) : this(messageEvent.user_id, messageEvent.user_name, messageEvent.user_roles) { }
 
-        public UserViewModel(ScorpBotViewer viewer)
-            : this(viewer.ID, viewer.UserName)
-        {
-            this.ViewingMinutes = (int)viewer.Hours * 60;
-            this.RankPoints = viewer.RankPoints;
-            this.CurrencyAmount = viewer.Currency;
-        }
+        public UserViewModel(InteractiveParticipantModel participant) : this(participant.userID, participant.username) { }
 
         public UserViewModel(uint id, string username) : this(id, username, new string[] { }) { }
 
@@ -122,6 +98,8 @@ namespace MixItUp.Base.ViewModel.User
                 if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
             }
         }
+
+        public UserDataViewModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.ID, new UserDataViewModel(this)); } }
 
         [JsonIgnore]
         public string RolesDisplayString
@@ -199,31 +177,6 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     return "#FF0000FF";
                 }
-            }
-        }
-
-        [JsonIgnore]
-        public string ViewingTimeString
-        {
-            get
-            {
-                int hours = this.ViewingMinutes / 60;
-                int minutes = this.ViewingMinutes % 60;
-                return string.Format("{0} H & {1} M", hours, minutes);
-            }
-        }
-
-        [JsonIgnore]
-        public string RankNameAndPoints
-        {
-            get
-            {
-                UserRankViewModel rank = null;
-                if (ChannelSession.Settings.Ranks.Count > 0)
-                {
-                    rank = ChannelSession.Settings.Ranks.Where(r => r.MinimumPoints <= this.RankPoints).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
-                }
-                return string.Format("{0} - {1}", (rank != null) ? rank.Name : "No Rank", this.RankPoints);
             }
         }
 

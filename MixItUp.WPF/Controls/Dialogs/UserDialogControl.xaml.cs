@@ -13,7 +13,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         public UserDialogControl(UserViewModel user)
         {
-            this.user = ChannelSession.Settings.UserData.GetValueIfExists(user.ID, user);
+            this.user = user;
 
             InitializeComponent();
 

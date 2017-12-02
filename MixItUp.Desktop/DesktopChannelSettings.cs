@@ -88,7 +88,7 @@ namespace MixItUp.Desktop
 
 
         [JsonProperty]
-        protected List<UserViewModel> userDataInternal { get; set; }
+        protected List<UserDataViewModel> userDataInternal { get; set; }
 
         [JsonProperty]
         protected List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; }
@@ -114,7 +114,7 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
-            this.userDataInternal = new List<UserViewModel>();
+            this.userDataInternal = new List<UserDataViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
@@ -131,7 +131,7 @@ namespace MixItUp.Desktop
     public class DesktopChannelSettings : DesktopSavableChannelSettings, IChannelSettings
     {
         [JsonIgnore]
-        public LockedDictionary<uint, UserViewModel> UserData { get; set; }
+        public LockedDictionary<uint, UserDataViewModel> UserData { get; set; }
 
         [JsonIgnore]
         public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
@@ -179,7 +179,7 @@ namespace MixItUp.Desktop
 
             this.MaxMessagesInChat = 100;
 
-            this.UserData = new LockedDictionary<uint, UserViewModel>();
+            this.UserData = new LockedDictionary<uint, UserDataViewModel>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
@@ -193,7 +193,7 @@ namespace MixItUp.Desktop
 
         public void Initialize()
         {
-            this.UserData = new LockedDictionary<uint, UserViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
+            this.UserData = new LockedDictionary<uint, UserDataViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);

@@ -238,7 +238,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 await ChannelSession.Chat.UpdateEachUser((user) =>
                 {
-                    user.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.AcquireAmount;
+                    user.Data.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.AcquireAmount;
                     return Task.FromResult(0);
                 });
             });
@@ -256,7 +256,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 await ChannelSession.Chat.UpdateEachUser((user) =>
                 {
-                    user.RankPoints += ChannelSession.Settings.RankAcquisition.AcquireAmount;
+                    user.Data.RankPoints += ChannelSession.Settings.RankAcquisition.AcquireAmount;
                     return Task.FromResult(0);
                 });
             });

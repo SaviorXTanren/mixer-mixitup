@@ -72,7 +72,7 @@
                 <TextBlock x:Name="MixerAgeTextBlock" Grid.Column="2" Grid.Row="4" Text="{Binding MixerAgeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="6">Watch Time:</TextBlock>
-                <TextBlock x:Name="ViewingHoursTextBlock" Grid.Column="2" Grid.Row="6" Text="{Binding ViewingTimeString}" />
+                <TextBlock x:Name="ViewingHoursTextBlock" Grid.Column="2" Grid.Row="6" Text="{Binding Data.ViewingTimeString}" />
 
                 <TextBlock Grid.Column="0" Grid.Row="8">Follow Age:</TextBlock>
                 <TextBlock x:Name="FollowAgeTextBlock" Grid.Column="2" Grid.Row="8" Text="{Binding FollowAgeString}" />
@@ -99,10 +99,10 @@
             <TextBlock Grid.Column="2" Text="{Binding Sparks}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="Coin" Height="18" Width="18" Grid.Column="4" />
-            <TextBlock Grid.Column="6" Text="{Binding CurrencyAmount}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="6" Text="{Binding Data.CurrencyAmount}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="Wunderlist" Height="18" Width="18" Grid.Column="8" />
-            <TextBlock Grid.Column="10" Text="{Binding RankNameAndPoints}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="10" Text="{Binding Data.RankNameAndPoints}" VerticalAlignment="Center" />
 
         </Grid>
 

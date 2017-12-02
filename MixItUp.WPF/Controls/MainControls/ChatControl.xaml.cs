@@ -120,7 +120,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     await ChannelSession.Chat.UpdateEachUser((user) =>
                     {
-                        user.ViewingMinutes++;
+                        user.Data.ViewingMinutes++;
                         return Task.FromResult(0);
                     });
                 }
