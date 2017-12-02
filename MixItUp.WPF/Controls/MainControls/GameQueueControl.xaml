@@ -27,16 +27,36 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0">Enable Game Queue:</TextBlock>
-            <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Checked" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+            <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Checked" ToolTip="Enable/Disable" />
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center">Must Follow:</TextBlock>
+            <ToggleButton Grid.Column="6" x:Name="MustFollowToggleButton" Checked="MustFollowToggleButton_Checked" Unchecked="MustFollowToggleButton_Checked" ToolTip="Must Be A Follower" />
+
+            <TextBlock Grid.Column="8" VerticalAlignment="Center">Sub Priority:</TextBlock>
+            <ToggleButton Grid.Column="10" x:Name="SubPriorityToggleButton" Checked="SubPriorityToggleButton_Checked" Unchecked="SubPriorityToggleButton_Checked" ToolTip="Subscribers Receive Priority" />
+
+            <Button x:Name="ClearQueueButton" Grid.Column="12" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
 
         </Grid>
 
         <DataGrid x:Name="GameQueueUsersListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Pos #" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="55" />
                 <DataGridTextColumn Header="Name" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Role" Binding="{Binding PrimaryRole}" IsReadOnly="True" Width="*" />
                 <DataGridTemplateColumn Width="65">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

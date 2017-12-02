@@ -1,18 +1,37 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
+    public class QueueUser
+    {
+        public UserViewModel user { get; set; }
+
+        public int QueuePosition { get; set; }
+
+        public string UserName { get { return this.user.UserName; } }
+
+        public string PrimaryRole { get { return EnumHelper.GetEnumName(this.user.PrimaryRole); } }
+
+        public QueueUser(UserViewModel user, int queuePosition)
+        {
+            this.user = user;
+            this.QueuePosition = queuePosition;
+        }
+    }
+
     /// <summary>
     /// Interaction logic for GameQueueControl.xaml
     /// </summary>
     public partial class GameQueueControl : MainControlBase
     {
-        private ObservableCollection<UserViewModel> gameQueueUsers = new ObservableCollection<UserViewModel>();
+        private ObservableCollection<QueueUser> gameQueueUsers = new ObservableCollection<QueueUser>();
 
         public GameQueueControl()
         {
@@ -21,7 +40,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.GameQueueUsersListView.ItemsSource = gameQueueUsers;
+            this.GameQueueUsersListView.ItemsSource = this.gameQueueUsers;
+
+            this.MustFollowToggleButton.IsChecked = ChannelSession.Settings.GameQueueMustFollow;
+            this.SubPriorityToggleButton.IsChecked = ChannelSession.Settings.GameQueueSubPriority;
 
             GlobalEvents.OnGameQueueUpdated += ChannelSession_OnGameQueueUpdated;
 
@@ -31,6 +53,25 @@ namespace MixItUp.WPF.Controls.MainControls
         private void EnableGameQueueToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.GameQueueEnabled = this.EnableGameQueueToggleButton.IsChecked.GetValueOrDefault();
+            this.MustFollowToggleButton.IsEnabled = ChannelSession.GameQueueEnabled;
+            this.SubPriorityToggleButton.IsEnabled = ChannelSession.GameQueueEnabled;
+            this.ClearQueueButton.IsEnabled = ChannelSession.GameQueueEnabled;
+        }
+
+        private void MustFollowToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Settings.GameQueueMustFollow = this.MustFollowToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void SubPriorityToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Settings.GameQueueSubPriority = this.SubPriorityToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void ClearQueueButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.GameQueue.Clear();
+            GlobalEvents.GameQueueUpdated();
         }
 
         private void MoveUpButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -72,11 +113,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void ChannelSession_OnGameQueueUpdated(object sender, System.EventArgs e)
         {
-            gameQueueUsers.Clear();
-            foreach (UserViewModel user in ChannelSession.GameQueue)
+            this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                gameQueueUsers.Add(user);
-            }
+                this.gameQueueUsers.Clear();
+                for (int i = 0; i < ChannelSession.GameQueue.Count; i++)
+                {
+                    this.gameQueueUsers.Add(new QueueUser(ChannelSession.GameQueue[i], (i + 1)));
+                }
+            }));
         }
     }
 }

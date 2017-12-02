@@ -23,7 +23,10 @@ namespace MixItUp.Base
 
         UserItemAcquisitonViewModel RankAcquisition { get; set; }
         List<UserRankViewModel> Ranks { get; set; }
-        
+
+        bool GameQueueMustFollow { get; set; }
+        bool GameQueueSubPriority { get; set; }
+
         bool QuotesEnabled { get; set; }
         
         int TimerCommandsInterval { get; set; }

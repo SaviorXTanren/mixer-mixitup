@@ -12,15 +12,15 @@ namespace MixItUp.Base.Actions
 {
     public enum GameQueueActionType
     {
-        [Name("Join Queue")]
+        [Name("User Join Queue")]
         JoinQueue,
-        [Name("Queue Position")]
+        [Name("User's Queue Position")]
         QueuePosition,
         [Name("Queue Status")]
         QueueStatus,
-        [Name("Leave Queue")]
+        [Name("User Leave Queue")]
         LeaveQueue,
-        [Name("Remove Front User")]
+        [Name("Remove User in Front of Queue")]
         RemoveFirst
     }
 
@@ -44,14 +44,39 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.GameQueueEnabled && ChannelSession.Chat != null)
+            if (ChannelSession.Chat != null)
             {
+                if (!ChannelSession.GameQueueEnabled)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
+                    return;
+                }
+
+                if (!user.IsFollower)
+                {
+                    await user.SetDetails(true);
+                }
+
+                if (ChannelSession.Settings.GameQueueMustFollow && !user.IsFollower)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "You must be a follower of the channel to use the game queue");
+                    return;
+                }
+
                 if (this.GameQueueType == GameQueueActionType.JoinQueue)
                 {
                     int position = ChannelSession.GameQueue.IndexOf(user);
                     if (position == -1)
                     {
-                        ChannelSession.GameQueue.Add(user);
+                        if (ChannelSession.Settings.GameQueueSubPriority && user.Roles.Contains(UserRole.Subscriber))
+                        {
+                            int totalSubs = ChannelSession.GameQueue.Count(u => u.Roles.Contains(UserRole.Subscriber));
+                            ChannelSession.GameQueue.Insert(totalSubs, user);
+                        }
+                        else
+                        {
+                            ChannelSession.GameQueue.Add(user);
+                        }
                     }
                     await this.PrintUserPosition(user);
                 }
