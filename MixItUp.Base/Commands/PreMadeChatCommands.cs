@@ -53,9 +53,9 @@ namespace MixItUp.Base.Commands
 
     public class PreMadeChatCommand : ChatCommand
     {
-        public PreMadeChatCommand(string name, string command, UserRole lowestAllowedRole, int cooldown) : base(name, command, lowestAllowedRole, cooldown) { }
+        public PreMadeChatCommand(string name, string command, UserRole lowestAllowedRole, int cooldown, int currencyCost = 0) : base(name, command, lowestAllowedRole, cooldown, currencyCost) { }
 
-        public PreMadeChatCommand(string name, List<string> commands, UserRole lowestAllowedRole, int cooldown) : base(name, commands, lowestAllowedRole, cooldown) { }
+        public PreMadeChatCommand(string name, List<string> commands, UserRole lowestAllowedRole, int cooldown, int currencyCost = 0) : base(name, commands, lowestAllowedRole, cooldown, currencyCost) { }
 
         public void UpdateFromSettings(PreMadeChatCommandSettings settings)
         {
@@ -505,9 +505,9 @@ namespace MixItUp.Base.Commands
                             return;
                         }
 
-                        if (ChannelSession.Settings.UserData.ContainsKey(user.ID) && ChannelSession.Settings.UserData[user.ID].CurrencyAmount >= bet)
+                        if (user.CurrencyAmount >= bet)
                         {
-                            ChannelSession.Settings.UserData[user.ID].CurrencyAmount -= bet;
+                            user.CurrencyAmount -= bet;
                             if (ChannelSession.Services.OverlayServer != null)
                             {
                                 await ChannelSession.Services.OverlayServer.SetRouletteWheel(new OverlayRoluetteWheel() { userID = user.ID, bet = bet });

@@ -30,10 +30,13 @@ namespace MixItUp.WPF.Controls.Command
             this.LowestRoleAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
             this.LowestRoleAllowedComboBox.SelectedIndex = 0;
 
+            this.CurrencyCostTextBox.IsEnabled = ChannelSession.Settings.CurrencyAcquisition.Enabled;
+
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
                 this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Permissions);
+                this.CurrencyCostTextBox.Text = this.command.CurrencyCost.ToString();
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.CooldownTextBox.Text = this.command.Cooldown.ToString();
             }
@@ -53,6 +56,16 @@ namespace MixItUp.WPF.Controls.Command
             {
                 await MessageBoxHelper.ShowMessageDialog("A permission level must be selected");
                 return false;
+            }
+
+            if (!string.IsNullOrEmpty(this.CurrencyCostTextBox.Text))
+            {
+                int cost = 0;
+                if (!int.TryParse(this.CurrencyCostTextBox.Text, out cost) || cost < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Currency cost must be 0 or greater");
+                    return false;
+                }
             }
 
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
@@ -77,11 +90,23 @@ namespace MixItUp.WPF.Controls.Command
                 }
             }
 
+            foreach (ChatCommand command in ChannelSession.AllChatCommands)
+            {
+                if (this.GetExistingCommand() != command && this.NameTextBox.Text.Equals(command.Name))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("There already exists a chat command with the same name");
+                    return false;
+                }
+            }
+
             List<string> allCommandStrings = new List<string>();
             allCommandStrings.AddRange(this.GetCommandStrings());
-            foreach (var command in ChannelSession.AllChatCommands)
+            foreach (ChatCommand command in ChannelSession.AllChatCommands)
             {
-                allCommandStrings.AddRange(command.Commands);
+                if (this.GetExistingCommand() != command)
+                {
+                    allCommandStrings.AddRange(command.Commands);
+                }
             }
 
             if (allCommandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
@@ -108,9 +133,15 @@ namespace MixItUp.WPF.Controls.Command
                     cooldown = int.Parse(this.CooldownTextBox.Text);
                 }
 
+                int cost = 0;
+                if (!string.IsNullOrEmpty(this.CurrencyCostTextBox.Text))
+                {
+                    cost = int.Parse(this.CurrencyCostTextBox.Text);
+                }
+
                 if (this.command == null)
                 {
-                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown);
+                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown, cost);
                     ChannelSession.Settings.ChatCommands.Add(this.command);
                 }
                 else
@@ -118,6 +149,7 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.Name = this.NameTextBox.Text;
                     this.command.Commands = commands.ToList();
                     this.command.Permissions = lowestRole;
+                    this.command.CurrencyCost = cost;
                     this.command.Cooldown = cooldown;
                 }
                 return this.command;

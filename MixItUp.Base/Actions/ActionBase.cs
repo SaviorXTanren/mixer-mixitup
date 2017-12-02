@@ -70,32 +70,22 @@ namespace MixItUp.Base.Actions
         {
             if (user != null)
             {
-                if (ChatClientWrapper.ChatUsers.ContainsKey(user.ID))
+                user = ChannelSession.Settings.UserData.GetValueIfExists(user.ID, user);
+
+                if (user.AvatarLink.Equals(UserViewModel.DefaultAvatarLink))
                 {
-                    str = str.Replace("$useravatar", ChatClientWrapper.ChatUsers[user.ID].AvatarLink);
+                    UserModel avatarUser = await ChannelSession.Connection.GetUser(user.UserName);
+                    user.AvatarLink = avatarUser.avatarUrl;
                 }
-                else
-                {
-                    UserModel argUser = await ChannelSession.Connection.GetUser(user.UserName);
-                    str = str.Replace("$useravatar", argUser.avatarUrl);
-                }
+
+                str = str.Replace("$usercurrency", user.CurrencyAmount.ToString());
+                str = str.Replace("$userrank", user.RankNameAndPoints);
+                str = str.Replace("$usertime", user.ViewingTimeString);
+
+                str = str.Replace("$useravatar", user.AvatarLink);
                 str = str.Replace("$userurl", "https://www.mixer.com/" + user.UserName);
+
                 str = str.Replace("$user", user.UserName);
-
-                if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
-                {
-                    str = str.Replace("$usercurrency", ChannelSession.Settings.UserData[user.ID].CurrencyAmount.ToString());
-                }
-
-                if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
-                {
-                    str = str.Replace("$userrank", ChannelSession.Settings.UserData[user.ID].RankNameAndPoints);
-                }
-
-                if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
-                {
-                    str = str.Replace("$usertime", ChannelSession.Settings.UserData[user.ID].ViewingTimeString);
-                }
             }
 
             str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
@@ -110,24 +100,16 @@ namespace MixItUp.Base.Actions
                     UserModel argUser = await ChannelSession.Connection.GetUser(username);
                     if (argUser != null)
                     {
-                        if (ChannelSession.Settings.UserData.ContainsKey(argUser.id))
-                        {
-                            str = str.Replace("$arg" + (i + 1) + "usercurrency", ChannelSession.Settings.UserData[argUser.id].CurrencyAmount.ToString());
-                        }
+                        UserViewModel argUserViewModel = ChannelSession.Settings.UserData.GetValueIfExists(user.ID, new UserViewModel(argUser));
 
-                        if (ChannelSession.Settings.UserData.ContainsKey(argUser.id))
-                        {
-                            str = str.Replace("$arg" + (i + 1) + "userrank", ChannelSession.Settings.UserData[argUser.id].RankNameAndPoints);
-                        }
+                        str = str.Replace("$arg" + (i + 1) + "usercurrency", argUserViewModel.CurrencyAmount.ToString());
+                        str = str.Replace("$arg" + (i + 1) + "userrank", argUserViewModel.RankNameAndPoints);
+                        str = str.Replace("$arg" + (i + 1) + "usertime", argUserViewModel.ViewingTimeString);
 
-                        if (ChannelSession.Settings.UserData.ContainsKey(argUser.id))
-                        {
-                            str = str.Replace("$arg" + (i + 1) + "usertime", ChannelSession.Settings.UserData[argUser.id].ViewingTimeString);
-                        }
+                        str = str.Replace("$arg" + (i + 1) + "useravatar", argUserViewModel.AvatarLink);
+                        str = str.Replace("$arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUserViewModel.UserName);
 
-                        str = str.Replace("$arg" + (i + 1) + "useravatar", argUser.avatarUrl);
-                        str = str.Replace("$arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.username);
-                        str = str.Replace("$arg" + (i + 1) + "user", argUser.username);             
+                        str = str.Replace("$arg" + (i + 1) + "user", argUserViewModel.UserName);             
                     }
 
                     str = str.Replace("$arg" + (i + 1), arguments.ElementAt(i));

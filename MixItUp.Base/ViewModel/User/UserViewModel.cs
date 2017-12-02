@@ -29,7 +29,7 @@ namespace MixItUp.Base.ViewModel.User
     [DataContract]
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
-        private const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.jpg";
+        public const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.jpg";
 
         public static IEnumerable<UserRole> SelectableUserRoles()
         {

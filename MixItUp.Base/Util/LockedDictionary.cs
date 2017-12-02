@@ -49,5 +49,14 @@ namespace MixItUp.Base.Util
         public bool TryGetValue(K key, out V value) { lock (objLock) { return this.items.TryGetValue(key, out value); } }
 
         public Dictionary<K, V> ToDictionary() { return new Dictionary<K, V>(this.items); }
+
+        public V GetValueIfExists(K key, V valueIfNotExists)
+        {
+            if (!this.ContainsKey(key))
+            {
+                this[key] = valueIfNotExists;
+            }
+            return this[key];
+        }
     }
 }

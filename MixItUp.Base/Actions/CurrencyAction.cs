@@ -36,11 +36,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
-                if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
-                {
-                    ChannelSession.Settings.UserData.Add(user.ID, new UserViewModel(user.ID, user.UserName));
-                }
-                ChannelSession.Settings.UserData[user.ID].CurrencyAmount += this.Amount;
+                ChannelSession.Settings.UserData.GetValueIfExists(user.ID, user).CurrencyAmount += this.Amount;
 
                 string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
                 if (this.IsWhisper)

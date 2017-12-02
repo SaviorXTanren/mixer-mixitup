@@ -89,11 +89,7 @@ namespace MixItUp.Base.MixerAPI
         {
             foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
             {
-                if (!ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
-                {
-                    ChannelSession.Settings.UserData[chatUser.ID] = new UserViewModel(chatUser.ID, chatUser.UserName);
-                }
-                await userUpdateFunction(ChannelSession.Settings.UserData[chatUser.ID]);
+                await userUpdateFunction(ChannelSession.Settings.UserData.GetValueIfExists(chatUser.ID, new UserViewModel(chatUser.ID, chatUser.UserName)));
             }
             await ChannelSession.SaveSettings();
         }
