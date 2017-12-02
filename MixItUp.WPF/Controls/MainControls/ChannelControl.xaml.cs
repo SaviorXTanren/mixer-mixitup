@@ -1,7 +1,10 @@
-﻿using Mixer.Base.Model.Game;
+﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Game;
+using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.WPF.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,13 +20,30 @@ namespace MixItUp.WPF.Controls.MainControls
         Adult,
     }
 
+    public enum RaidSearchCriteriaEnum
+    {
+        [Name("Same Game")]
+        SameGame,
+        [Name("Same Age Rating")]
+        AgeRating,
+        [Name("Small Streamer")]
+        SmallStreamer,
+        [Name("Medium Streamer")]
+        MediumStreamer,
+        [Name("Large Streamer")]
+        LargeStreamer,
+        [Name("Partnered Streamer")]
+        PartneredStreamer,
+        [Name("Random Streamer")]
+        Random,
+    }
+
     /// <summary>
     /// Interaction logic for ChannelControl.xaml
     /// </summary>
     public partial class ChannelControl : MainControlBase
     {
         private ObservableCollection<GameTypeModel> relatedGames = new ObservableCollection<GameTypeModel>();
-
 
         public ChannelControl()
         {
@@ -43,6 +63,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
             List<string> ageRatingList = EnumHelper.GetEnumNames<AgeRatingEnum>().Select(s => s.ToLower()).ToList();
             this.AgeRatingComboBox.SelectedIndex = ageRatingList.IndexOf(ChannelSession.Channel.audience);
+
+            this.ChannelToRaidSearchCriteriaComboBox.ItemsSource = EnumHelper.GetEnumNames<RaidSearchCriteriaEnum>();
 
             return base.InitializeInternal();
         }
@@ -92,6 +114,63 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChannelSession.Channel.audience = ((string)this.AgeRatingComboBox.SelectedItem).ToLower();
 
                 await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
+            });
+        }
+
+        private async void FindChannelToRaidButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (this.ChannelToRaidSearchCriteriaComboBox.SelectedIndex < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Must select a search criteria for finding a channel to raid");
+                    return;
+                }
+
+                await ChannelSession.RefreshChannel();
+
+                IEnumerable<ChannelModel> channels = null;
+                RaidSearchCriteriaEnum searchCriteria = EnumHelper.GetEnumValueFromString<RaidSearchCriteriaEnum>((string)this.ChannelToRaidSearchCriteriaComboBox.SelectedItem);
+                if (searchCriteria == RaidSearchCriteriaEnum.SameGame)
+                {
+                    channels = await ChannelSession.Connection.GetChannelsByGameTypes(ChannelSession.Channel.type, 1);
+                }
+                else
+                {
+                    channels = await ChannelSession.Connection.GetChannels(500);
+                    switch (searchCriteria)
+                    {
+                        case RaidSearchCriteriaEnum.AgeRating:
+                            channels = channels.Where(c => c.audience.Equals(ChannelSession.Channel.audience));
+                            break;
+                        case RaidSearchCriteriaEnum.LargeStreamer:
+                            channels = channels.Where(c => c.viewersCurrent >= 25);
+                            break;
+                        case RaidSearchCriteriaEnum.MediumStreamer:
+                            channels = channels.Where(c => c.viewersCurrent >= 10 && c.viewersCurrent < 25);
+                            break;
+                        case RaidSearchCriteriaEnum.SmallStreamer:
+                            channels = channels.Where(c => c.viewersCurrent < 10);
+                            break;
+                        case RaidSearchCriteriaEnum.PartneredStreamer:
+                            channels = channels.Where(c => c.partnered);
+                            break;
+                    }
+                }
+
+                this.ChannelRaidNameTextBox.Clear();
+                if (channels != null && channels.Count() > 0)
+                {
+                    Random random = new Random();
+                    ChannelModel channelToRaid = channels.ElementAt(random.Next(0, channels.Count()));
+
+                    UserModel user = await ChannelSession.Connection.GetUser(channelToRaid.userId);
+                    this.ChannelRaidNameTextBox.Text = user.username;
+                }
+                else
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Unable to find a channel that met your search critera, please try selecting a different option");
+                }
             });
         }
 

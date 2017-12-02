@@ -19,51 +19,70 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Margin="20,0" Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <GroupBox Header="Channel Info" Grid.Row="0">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Stream Title:</TextBlock>
+                    <TextBox Grid.Row="0" Grid.Column="2" x:Name="StreamTitleTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="25" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Game Name:</TextBlock>
+                    <ComboBox Grid.Column="2" x:Name="GameNameComboBox" IsEditable="True" TextBoxBase.TextChanged="GameNameComboBox_TextChanged" DisplayMemberPath="name" LostFocus="GameNameTextBox_LostFocus" />
+
+                    <TextBlock Grid.Column="4" VerticalAlignment="Center">Age Rating:</TextBlock>
+                    <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" Width="60" HorizontalAlignment="Left" />
+                </Grid>
+
+                <Button Grid.Row="4" x:Name="UpdateChannelDataButton" HorizontalAlignment="Center" Click="UpdateChannelDataButton_Click">Update Channel</Button>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Find Channel To Raid" Grid.Row="2">
+            <Grid HorizontalAlignment="Center" Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Stream Title:</TextBlock>
-                <TextBox Grid.Row="0" Grid.Column="2" x:Name="StreamTitleTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            </Grid>
-
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="25" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="40" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Game Name:</TextBlock>
-                <ComboBox Grid.Column="2" x:Name="GameNameComboBox" IsEditable="True" TextBoxBase.TextChanged="GameNameComboBox_TextChanged" DisplayMemberPath="name" LostFocus="GameNameTextBox_LostFocus" />
+                <ComboBox Grid.Column="0" x:Name="ChannelToRaidSearchCriteriaComboBox" MaterialDesign:HintAssist.Hint="Search Criteria" Width="140" HorizontalAlignment="Left" />
 
-                <TextBlock Grid.Column="4" VerticalAlignment="Center">Age Rating:</TextBlock>
-                <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" Width="60" HorizontalAlignment="Left" />
+                <Button Grid.Column="2" x:Name="FindChannelToRaidButton" Click="FindChannelToRaidButton_Click">Search</Button>
+
+                <TextBox Grid.Column="4" x:Name="ChannelRaidNameTextBox" MaterialDesign:HintAssist.Hint="Channel To Raid" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True" />
+
             </Grid>
-        </Grid>
-
-        <Grid Grid.Row="4">
-            <Button x:Name="UpdateChannelDataButton" HorizontalAlignment="Center" Click="UpdateChannelDataButton_Click">Update Channel</Button>
-        </Grid>
+        </GroupBox>
 
     </Grid>
 </Controls:MainControlBase>
