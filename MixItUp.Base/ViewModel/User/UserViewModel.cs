@@ -144,7 +144,7 @@ namespace MixItUp.Base.ViewModel.User
         public string MixerAgeString { get { return (this.MixerAccountDate != null) ? this.MixerAccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
 
         [JsonIgnore]
-        public bool IsFollower { get { return this.Roles.Contains(UserRole.Follower); } }
+        public bool IsFollower { get { return this.Roles.Contains(UserRole.Follower) || this.Roles.Contains(UserRole.Streamer); } }
 
         [JsonIgnore]
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }

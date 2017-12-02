@@ -77,13 +77,13 @@ namespace MixItUp.WPF.Controls.MainControls
         private void MoveUpButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserViewModel user = (UserViewModel)button.DataContext;
+            QueueUser user = (QueueUser)button.DataContext;
 
-            int index = ChannelSession.GameQueue.IndexOf(user);
+            int index = ChannelSession.GameQueue.IndexOf(user.user);
             index = MathHelper.Clamp((index - 1), 0, ChannelSession.GameQueue.Count - 1);
 
-            ChannelSession.GameQueue.Remove(user);
-            ChannelSession.GameQueue.Insert(index, user);
+            ChannelSession.GameQueue.Remove(user.user);
+            ChannelSession.GameQueue.Insert(index, user.user);
 
             GlobalEvents.GameQueueUpdated();
         }
@@ -91,13 +91,13 @@ namespace MixItUp.WPF.Controls.MainControls
         private void MoveDownButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserViewModel user = (UserViewModel)button.DataContext;
+            QueueUser user = (QueueUser)button.DataContext;
 
-            int index = ChannelSession.GameQueue.IndexOf(user);
+            int index = ChannelSession.GameQueue.IndexOf(user.user);
             index = MathHelper.Clamp((index + 1), 0, ChannelSession.GameQueue.Count - 1);
 
-            ChannelSession.GameQueue.Remove(user);
-            ChannelSession.GameQueue.Insert(index, user);
+            ChannelSession.GameQueue.Remove(user.user);
+            ChannelSession.GameQueue.Insert(index, user.user);
 
             GlobalEvents.GameQueueUpdated();
         }
@@ -105,8 +105,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private void DeleteButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            UserViewModel user = (UserViewModel)button.DataContext;
-            ChannelSession.GameQueue.Remove(user);
+            QueueUser user = (QueueUser)button.DataContext;
+            ChannelSession.GameQueue.Remove(user.user);
 
             GlobalEvents.GameQueueUpdated();
         }

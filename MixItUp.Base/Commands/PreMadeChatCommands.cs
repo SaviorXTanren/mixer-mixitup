@@ -77,6 +77,16 @@ namespace MixItUp.Base.Commands
         {
             return user.username + "'s Follow Age: " + followDate.GetAge();
         }
+
+        public async Task<bool> CheckForRequiredCurrency(UserViewModel user, int cost)
+        {
+            if (user.Data.CurrencyAmount < cost)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to use this command!", cost, ChannelSession.Settings.CurrencyAcquisition.Name));
+                return false;
+            }
+            return true;
+        }
     }
 
     public class MixItUpChatCommand : PreMadeChatCommand
@@ -509,7 +519,7 @@ namespace MixItUp.Base.Commands
                             return;
                         }
 
-                        if (user.Data.CurrencyAmount >= bet)
+                        if (await this.CheckForRequiredCurrency(user, bet))
                         {
                             user.Data.CurrencyAmount -= bet;
                             if (ChannelSession.Services.OverlayServer != null)
@@ -531,10 +541,6 @@ namespace MixItUp.Base.Commands
                                 }
                                 await RoluetteSpinChatCommand.MessageRoluetteSpinResults(result, user.ID, bet);
                             }
-                        }
-                        else
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the amount of {0} that you specified for your roluette bet", ChannelSession.Settings.CurrencyAcquisition.Name));
                         }
                     }
                     else
