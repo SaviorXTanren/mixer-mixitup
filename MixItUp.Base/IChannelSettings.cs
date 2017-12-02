@@ -36,6 +36,7 @@ namespace MixItUp.Base
 
         UserRole GiveawayUserRole { get; set; }
         string GiveawayCommand { get; set; }
+        int GiveawayCurrencyCost { get; set; }
         int GiveawayTimer { get; set; }
 
         int CapsBlockCount { get; set; }

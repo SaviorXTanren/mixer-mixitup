@@ -62,6 +62,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string GiveawayCommand { get; set; }
         [JsonProperty]
+        public int GiveawayCurrencyCost { get; set; }
+        [JsonProperty]
         public int GiveawayTimer { get; set; }
 
         [JsonProperty]
