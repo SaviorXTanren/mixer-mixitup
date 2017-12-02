@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
@@ -21,7 +20,7 @@ using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
-    public class InteractiveControlCommandItem
+    public class InteractiveControlCommandItem : NotifyPropertyChangedBase
     {
         public InteractiveSceneModel Scene { get; set; }
 
@@ -63,6 +62,17 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
         public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
+
+        public bool ButtonsEnabled
+        {
+            get { return this.buttonsEnabled; }
+            set
+            {
+                this.buttonsEnabled = value;
+                this.NotifyPropertyChanged("ButtonsEnabled");
+            }
+        }
+        private bool buttonsEnabled = true;
     }
 
     /// <summary>
@@ -209,6 +219,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             //this.SaveChangedButton.IsEnabled = true;
             //this.GameDetailsGrid.IsEnabled = true;
+            //this.ConnectDisconectGrid.IsEnabled = true;
         }
 
         private void MixerLabButton_Click(object sender, RoutedEventArgs e)
@@ -343,7 +354,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (result)
                 {
                     this.GameSelectionGrid.IsEnabled = false;
-                    this.GameDetailsGrid.IsEnabled = false;
+                    this.ChangeButtonsEnableState(false);
                     this.ConnectButton.Visibility = Visibility.Collapsed;
                     this.DisconnectButton.Visibility = Visibility.Visible;
                     return;
@@ -375,7 +386,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.connectedSceneControls.Clear();
 
             this.GameSelectionGrid.IsEnabled = true;
-            this.GameDetailsGrid.IsEnabled = true;
+            this.ChangeButtonsEnableState(true);
             this.ConnectButton.Visibility = Visibility.Visible;
             this.DisconnectButton.Visibility = Visibility.Collapsed;
         }
@@ -386,6 +397,14 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.RefreshSelectedGame();
             });
+        }
+
+        private void ChangeButtonsEnableState(bool isEnabled)
+        {
+            foreach (var button in this.currentSceneControlItems)
+            {
+                button.ButtonsEnabled = isEnabled;
+            }
         }
     }
 }
