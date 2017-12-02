@@ -62,6 +62,16 @@ namespace MixItUp.WPF.Controls.Menu
         protected override Task InitializeInternal()
         {
             this.MenuItemsListBox.ItemsSource = this.menuItems;
+
+            if (ChannelSession.Settings.DiagnosticLogging)
+            {
+                this.DisableDiagnosticLogsButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.EnableDiagnosticLogsButton.Visibility = Visibility.Visible;
+            }
+
             return base.InitializeInternal();
         }
 
@@ -137,5 +147,23 @@ namespace MixItUp.WPF.Controls.Menu
         private void SubmitABugButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/issues/new"); }
 
         private void DocumentationButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); }
+
+        private async void EnableDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will enable diagnostic logging for assisting with diagnosing bugs. Mix It Up will close if this is done. Are you sure you wish to do this?"))
+            {
+                ChannelSession.Settings.DiagnosticLogging = true;
+                this.Window.Close();
+            }
+        }
+
+        private async void DisableDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will disable diagnostic logging and close Mix It Up. Are you sure you wish to do this?"))
+            {
+                ChannelSession.Settings.DiagnosticLogging = false;
+                this.Window.Close();
+            }
+        }
     }
 }

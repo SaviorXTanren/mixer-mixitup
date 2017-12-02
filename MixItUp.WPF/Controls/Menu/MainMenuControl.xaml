@@ -52,6 +52,8 @@
                                 <Separator />
                                 <Button x:Name="DocumentationButton" Content="Documentation" Click="DocumentationButton_Click" />
                                 <Button x:Name="SubmitABugButton" Content="Submit a Bug" Click="SubmitABugButton_Click" />
+                                <Button x:Name="EnableDiagnosticLogsButton" Content="Enable Diagnostics" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
+                                <Button x:Name="DisableDiagnosticLogsButton" Content="Disable Diagnostics" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
                             </StackPanel>
                         </MaterialDesign:PopupBox>
 

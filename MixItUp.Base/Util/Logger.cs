@@ -22,7 +22,7 @@ namespace MixItUp.Base.Util
 
         public static void Log(string message)
         {
-            Logger.fileService.SaveFile(Logger.CurrentLogFileName, message, create: false);
+            Logger.fileService.SaveFile(Logger.CurrentLogFileName, message + Environment.NewLine, create: false);
         }
 
         public static void Log(Exception ex) { Logger.Log(ex.ToString()); }

@@ -1,5 +1,6 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Client;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
@@ -218,6 +219,12 @@ namespace MixItUp.Base
             if (ChannelSession.Chat != null)
             {
                 ChannelSession.Chat.StreamerClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    ChannelSession.Chat.StreamerClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                    ChannelSession.Chat.StreamerClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                    ChannelSession.Chat.StreamerClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                }
                 await ChannelSession.Chat.Disconnect();
             }
 
@@ -225,6 +232,12 @@ namespace MixItUp.Base
             if (ChannelSession.Chat != null && await ChannelSession.Chat.ConnectAndAuthenticate())
             {
                 ChannelSession.Chat.StreamerClient.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    ChannelSession.Chat.StreamerClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                    ChannelSession.Chat.StreamerClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                    ChannelSession.Chat.StreamerClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                }
 
                 if (ChannelSession.BotConnection != null)
                 {
@@ -252,6 +265,12 @@ namespace MixItUp.Base
             if (ChannelSession.Chat.BotClient != null)
             {
                 ChannelSession.Chat.BotClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    ChannelSession.Chat.BotClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                    ChannelSession.Chat.BotClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                    ChannelSession.Chat.BotClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                }
                 await ChannelSession.Chat.DisconnectBot();
             }
 
@@ -263,6 +282,12 @@ namespace MixItUp.Base
                     if (await ChannelSession.Chat.ConnectAndAuthenticateBot(botChat.StreamerClient))
                     {
                         ChannelSession.Chat.BotClient.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
+                        {
+                            ChannelSession.Chat.BotClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            ChannelSession.Chat.BotClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            ChannelSession.Chat.BotClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        }
                         return true;
                     }
                 }
@@ -288,6 +313,12 @@ namespace MixItUp.Base
             if (await ChannelSession.Constellation.Connect())
             {
                 ChannelSession.Constellation.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    ChannelSession.Constellation.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                    ChannelSession.Constellation.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                    ChannelSession.Constellation.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                }
                 return true;
             }
 
@@ -300,6 +331,12 @@ namespace MixItUp.Base
             if (ChannelSession.Constellation != null)
             {
                 ChannelSession.Constellation.Client.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    ChannelSession.Constellation.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                    ChannelSession.Constellation.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                    ChannelSession.Constellation.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                }
                 await ChannelSession.Constellation.Disconnect();
                 ChannelSession.Constellation = null;
             }
@@ -313,6 +350,12 @@ namespace MixItUp.Base
             if (await ChannelSession.Interactive.ConnectAndReady())
             {
                 ChannelSession.Interactive.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    ChannelSession.Interactive.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                    ChannelSession.Interactive.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                    ChannelSession.Interactive.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                }
                 return true;
             }
 
@@ -325,6 +368,12 @@ namespace MixItUp.Base
             if (ChannelSession.Interactive != null)
             {
                 ChannelSession.Interactive.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    ChannelSession.Interactive.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                    ChannelSession.Interactive.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                    ChannelSession.Interactive.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                }
                 await ChannelSession.Interactive.Disconnect();
 
                 ChannelSession.Interactive = null;
@@ -486,6 +535,21 @@ namespace MixItUp.Base
             {
                 ChannelSession.OnReconectionOccurred(null, new EventArgs());
             }
+        }
+
+        private static void WebSocketClient_OnMethodOccurred(object sender, MethodPacket e)
+        {
+            Logger.Log(string.Format(Environment.NewLine + "Method: {0} - {1} - {2} - {3} - {4}" + Environment.NewLine, e.id, e.type, e.method, e.arguments, e.parameters));
+        }
+
+        private static void WebSocketClient_OnReplyOccurred(object sender, ReplyPacket e)
+        {
+            Logger.Log(string.Format(Environment.NewLine + "Reply: {0} - {1} - {2} - {3} - {4}" + Environment.NewLine, e.id, e.type, e.result, e.error, e.data));
+        }
+
+        private static void WebSocketClient_OnEventOccurred(object sender, EventPacket e)
+        {
+            Logger.Log(string.Format(Environment.NewLine + "Event: {0} - {1} - {2} - {3}" + Environment.NewLine, e.id, e.type, e.eventName, e.data));
         }
     }
 }
