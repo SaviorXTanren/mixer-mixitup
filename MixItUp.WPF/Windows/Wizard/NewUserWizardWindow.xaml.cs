@@ -2,18 +2,16 @@
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.ScorpBot;
+using MixItUp.Base.ViewModel.Import;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
 using MixItUp.WPF.Util;
 using System;
-using System.Data.SQLite;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MixItUp.WPF.Windows.Wizard
 {
@@ -22,6 +20,9 @@ namespace MixItUp.WPF.Windows.Wizard
     /// </summary>
     public partial class NewUserWizardWindow : LoadingWindowBase
     {
+        private const string SoundwaveInteractiveAppDataSettingsFolder = "%appdata%\\Soundwave Interactive";
+        private const string FirebotAppDataSettingsFolder = "%appdata%\\Firebot\\firebot-data\\user-settings";
+
         private string directoryPath;
 
         private ScorpBotData scorpBotData;

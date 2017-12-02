@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.ScorpBot
+namespace MixItUp.Base.ViewModel.Import
 {
     [DataContract]
     public class ScorpBotRank

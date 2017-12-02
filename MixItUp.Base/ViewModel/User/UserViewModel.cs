@@ -2,7 +2,7 @@
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.ScorpBot;
+using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
