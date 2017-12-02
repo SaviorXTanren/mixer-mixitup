@@ -7,6 +7,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +18,8 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class EventsControl : MainControlBase
     {
+        private static readonly ConstellationEventType resubscribeSharedEvent = new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id);
+
         public EventsControl()
         {
             InitializeComponent();
@@ -59,10 +62,9 @@ namespace MixItUp.WPF.Controls.MainControls
             EventCommand resubscribeSharedCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__resubShared));
             if (resubscribeSharedCommand == null)
             {
-                resubscribeSharedCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel);
+                resubscribeSharedCommand = new EventCommand();
                 ChannelSession.Settings.EventCommands.Add(resubscribeSharedCommand);
             }
-            this.OnResubscribeSharedCommandControl.Initialize(this.Window, resubscribeSharedCommand);
 
             await ChannelSession.SaveSettings();
 
@@ -70,7 +72,10 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 ChannelSession.Constellation.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
 
-                await ChannelSession.Constellation.SubscribeToEvents(ChannelSession.Settings.EventCommands.Select(c => c.GetEventType()));
+                List<ConstellationEventType> eventsToSubscribeTo = ChannelSession.Settings.EventCommands.Select(c => c.GetEventType()).ToList();
+                eventsToSubscribeTo.Add(resubscribeSharedEvent);
+
+                await ChannelSession.Constellation.SubscribeToEvents(eventsToSubscribeTo);
             }
         }
 
@@ -78,7 +83,19 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             foreach (EventCommand command in ChannelSession.Settings.EventCommands)
             {
+                EventCommand foundCommand = null;
+
                 if (command.MatchesEvent(e))
+                {
+                    foundCommand = command;
+                }
+
+                if (command.EventType == ConstellationEventTypeEnum.channel__id__subscribed && e.channel.Equals(resubscribeSharedEvent.ToString()))
+                {
+                    foundCommand = command;
+                }
+
+                if (foundCommand != null)
                 {
                     GlobalEvents.EventOccurred(command.GetEventType());
 
@@ -102,6 +119,8 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         await command.Perform();
                     }
+
+                    return;
                 }
             }
         }
