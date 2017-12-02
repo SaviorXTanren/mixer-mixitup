@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MixItUp.Base.ViewModel.User;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -36,6 +37,15 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
+    public class OverlayRoluetteWheel
+    {
+        [DataMember]
+        public uint userID;
+        [DataMember]
+        public int bet;
+    }
+
+    [DataContract]
     public abstract class OverlayBase
     {
         [DataMember]
@@ -59,6 +69,8 @@ namespace MixItUp.Base.Services
         Task SetText(OverlayText text);
 
         Task SetHTMLText(OverlayHTML htmlText);
+
+        Task SetRouletteWheel(OverlayRoluetteWheel roluetteWheel);
 
         Task Disconnect();
     }

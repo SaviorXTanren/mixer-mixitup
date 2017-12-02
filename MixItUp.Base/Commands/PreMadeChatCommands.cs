@@ -2,6 +2,7 @@
 using Mixer.Base.Model.User;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -454,6 +455,88 @@ namespace MixItUp.Base.Commands
                     Random random = new Random();
                     int index = random.Next(0, this.responses.Count);
                     await ChannelSession.Chat.SendMessage(string.Format("The Magic 8-Ball says: \"{0}\"", this.responses[index]));
+                }
+            }));
+        }
+    }
+
+    public class RoluetteSpinChatCommand : PreMadeChatCommand
+    {
+        public static async Task MessageRoluetteSpinResults(string result, uint userID, int bet)
+        {
+            result = result.ToLower();
+            if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Settings.UserData.ContainsKey(userID))
+            {
+                UserViewModel user = ChannelSession.Settings.UserData[userID];
+                if (result.Equals("lose"))
+                {
+                    await ChannelSession.Chat.SendMessage(string.Format("Sorry @{0}, you lost the spin!", user.UserName));
+                }
+                else if (result.Equals("win"))
+                {
+                    int winAmount = bet * 2;
+                    user.CurrencyAmount += winAmount;
+                    await ChannelSession.Chat.SendMessage(string.Format("Congrats @{0}, you won the spin and got {1} {2}!", user.UserName,
+                        winAmount, ChannelSession.Settings.CurrencyAcquisition.Name));
+                }
+                else if (result.Equals("bonus"))
+                {
+                    int winAmount = bet * 3;
+                    user.CurrencyAmount += winAmount;
+                    await ChannelSession.Chat.SendMessage(string.Format("Congrats @{0}, you won the BONUS spin and got {1} {2}!", user.UserName,
+                        winAmount, ChannelSession.Settings.CurrencyAcquisition.Name));
+                }
+            }
+        }
+
+        public RoluetteSpinChatCommand()
+            : base("Roluette Spin", new List<string>() { "spin", "roluette" }, UserRole.User, 10)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Chat != null)
+                {
+                    if (arguments.Count() == 1)
+                    {
+                        int bet = 0;
+                        if (!int.TryParse(arguments.ElementAt(0), out bet) || bet < 0)
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "Spin bet amount must be greater than 0");
+                            return;
+                        }
+
+                        if (ChannelSession.Settings.UserData.ContainsKey(user.ID) && ChannelSession.Settings.UserData[user.ID].CurrencyAmount >= bet)
+                        {
+                            ChannelSession.Settings.UserData[user.ID].CurrencyAmount -= bet;
+                            if (ChannelSession.Services.OverlayServer != null)
+                            {
+                                await ChannelSession.Services.OverlayServer.SetRouletteWheel(new OverlayRoluetteWheel() { userID = user.ID, bet = bet });
+                            }
+                            else
+                            {
+                                Random random = new Random();
+                                int resultNumber = random.Next(0, 8);
+                                string result = "lose";
+                                if (resultNumber == 7)
+                                {
+                                    result = "bonus";
+                                }
+                                else if (resultNumber >= 4)
+                                {
+                                    result = "win";
+                                }
+                                await RoluetteSpinChatCommand.MessageRoluetteSpinResults(result, user.ID, bet);
+                            }
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the amount of {0} that you specified for your roluette bet", ChannelSession.Settings.CurrencyAcquisition.Name));
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !spin <AMOUNT>");
+                    }
                 }
             }));
         }

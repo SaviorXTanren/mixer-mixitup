@@ -29,6 +29,6 @@ namespace MixItUp.XSplit
 
         public async Task SetWebBrowserSource(XSplitWebBrowserSource source) { await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(source))); }
 
-        protected override Task PacketReceived(WebSocketPacket packet) { return Task.FromResult(0); }
+        protected override Task PacketReceived(string packet) { return Task.FromResult(0); }
     }
 }

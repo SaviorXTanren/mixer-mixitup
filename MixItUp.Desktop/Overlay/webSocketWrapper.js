@@ -1,15 +1,16 @@
+var connection;
+
 function openWebsocketConnection(port)
 {
     try
     {
-        var connection = new WebSocket("ws://localhost:" + port + "/ws/");
+        connection = new WebSocket("ws://localhost:" + port + "/ws/");
 
         // When the connection is open, send some data to the server
         connection.onopen = function ()
         {
             connectionOpened();
-            var packet = { type: 'ping', data: '' };
-            connection.send(JSON.stringify(packet));
+            sendPacket('ping', '');
         };
 
         // Log messages from the server
@@ -29,6 +30,15 @@ function openWebsocketConnection(port)
         };
     }
     catch (err) { console.log(err); }
+}
+
+function sendPacket(type, data)
+{
+    if (connection != null && connection.readyState == WebSocket.OPEN)
+    {
+        var packet = { type: type, data: data };
+        connection.send(JSON.stringify(packet));
+    }
 }
 
 function getDataFromJSON(packet)

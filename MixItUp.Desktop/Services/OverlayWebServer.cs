@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Client;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -10,6 +11,8 @@ namespace MixItUp.Overlay
     {
         public JObject data;
 
+        public OverlayPacket() { }
+
         public OverlayPacket(string type, JObject data)
         {
             this.type = type;
@@ -19,6 +22,8 @@ namespace MixItUp.Overlay
 
     public class OverlayWebServer : WebSocketServerBase, IOverlayService
     {
+        private OverlayRoluetteWheel lastRoluetteSpin = null;
+
         public OverlayWebServer(string address) : base(address) { }
 
         public async Task TestConnection() { await this.Send(new OverlayPacket("test", new JObject())); }
@@ -29,6 +34,23 @@ namespace MixItUp.Overlay
 
         public async Task SetHTMLText(OverlayHTML htmlText) { await this.Send(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
 
-        protected override Task PacketReceived(WebSocketPacket packet) { return Task.FromResult(0); }
+        public async Task SetRouletteWheel(OverlayRoluetteWheel roluetteWheel)
+        {
+            this.lastRoluetteSpin = roluetteWheel;
+            await this.Send(new OverlayPacket("rouletteWheel", JObject.FromObject(roluetteWheel)));
+        }
+
+        protected override async Task PacketReceived(string packet)
+        {
+            if (packet != null)
+            {
+                JObject packetObj = JObject.Parse(packet);
+                if (packetObj["type"].ToString().Equals("rouletteWheelResult") && this.lastRoluetteSpin != null)
+                {
+                    string winningSegment = packetObj["data"].ToString();
+                    await RoluetteSpinChatCommand.MessageRoluetteSpinResults(winningSegment, this.lastRoluetteSpin.userID, this.lastRoluetteSpin.bet);
+                }
+            }
+        }
     }
 }

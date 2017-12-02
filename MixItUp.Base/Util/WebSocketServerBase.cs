@@ -72,7 +72,7 @@ namespace MixItUp.Base.Util
             await this.ShutdownListeners();
         }
 
-        protected abstract Task PacketReceived(WebSocketPacket packet);
+        protected abstract Task PacketReceived(string packet);
 
         private async Task ReceiveInternal()
         {
@@ -94,11 +94,8 @@ namespace MixItUp.Base.Util
                                 {
                                     string jsonBuffer = this.encoder.GetString(buffer);
                                     dynamic jsonObject = JsonConvert.DeserializeObject(jsonBuffer);
-                                    WebSocketPacket packet = JsonConvert.DeserializeObject<WebSocketPacket>(jsonBuffer);
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                                    this.PacketReceived(packet);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                                    await this.PacketReceived(jsonBuffer);
                                 }
                                 catch (Exception ex)
                                 {
