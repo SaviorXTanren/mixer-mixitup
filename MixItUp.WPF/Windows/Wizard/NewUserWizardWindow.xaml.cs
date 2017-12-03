@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using Mixer.Base.Interactive;
+using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
@@ -16,9 +17,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Windows.Wizard
 {
+    public class SoundwaveProfileItem
+    {
+        public string Name { get; set; }
+        public bool AddProfile { get; set; }
+        public bool CanBeImported { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for NewUserWizardWindow.xaml
     /// </summary>
@@ -32,9 +41,11 @@ namespace MixItUp.WPF.Windows.Wizard
 
         private string directoryPath;
 
+        private IEnumerable<InteractiveGameListingModel> interactiveGames;
+
         private ScorpBotData scorpBotData;
         private SoundwaveSettings soundwaveData;
-        private List<string> selectedSoundwaveProfiles;
+        private List<SoundwaveProfileItem> soundwaveProfiles;
 
         public NewUserWizardWindow()
         {
@@ -49,10 +60,13 @@ namespace MixItUp.WPF.Windows.Wizard
             this.XSplitExtensionPathTextBox.Text = Path.Combine(this.directoryPath, "XSplit\\Mix It Up.html");
             this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
 
+            this.interactiveGames = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
+
             await this.GatherSoundwaveSettings();
             if (this.soundwaveData != null)
             {
-                this.SoundwaveInteractiveProfilesDataGrid.ItemsSource = this.soundwaveData.Profiles.Keys;
+                this.soundwaveProfiles = this.soundwaveData.Profiles.Keys.Select(p => new SoundwaveProfileItem() { Name = p, AddProfile = false, CanBeImported = !this.interactiveGames.Any(g => g.name.Equals(p)) }).ToList();
+                this.SoundwaveInteractiveProfilesDataGrid.ItemsSource = this.soundwaveProfiles;
             }
         }
 
@@ -139,11 +153,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 }
                 else if (this.ImportSoundwaveInteractiveSettingsGrid.Visibility == System.Windows.Visibility.Visible)
                 {
-                    if (this.SoundwaveInteractiveProfilesComboBox.SelectedIndex >= 0)
-                    {
-                        this.selectedSoundwaveProfiles = (string)this.SoundwaveInteractiveProfilesComboBox.SelectedItem;
-                    }
-
                     this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
                     this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Visible;
                 }
@@ -246,6 +255,13 @@ namespace MixItUp.WPF.Windows.Wizard
             {
                 this.ScorpBotDirectoryTextBox.Text = folderPath;
             }
+        }
+
+        private void SoundwaveProfileCheckBox_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+            SoundwaveProfileItem profile = (SoundwaveProfileItem)checkBox.DataContext;
+            this.soundwaveProfiles.First(p => p.Name.Equals(profile.Name)).AddProfile = checkBox.IsChecked.GetValueOrDefault();
         }
 
         private void FirebotDirectoryBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -401,42 +417,50 @@ namespace MixItUp.WPF.Windows.Wizard
                 }
             }
 
-            if (this.soundwaveData != null && !string.IsNullOrEmpty(this.selectedSoundwaveProfiles) && this.soundwaveData.Profiles.ContainsKey(this.selectedSoundwaveProfiles))
+            if (this.soundwaveData != null && this.soundwaveProfiles != null && this.soundwaveProfiles.Count(p => p.AddProfile) > 0)
             {
                 if (this.soundwaveData.StaticCooldown)
                 {
                     ChannelSession.Settings.InteractiveCooldownGroups.Add(SoundwaveInteractiveCooldownGroupName, this.soundwaveData.StaticCooldownAmount / 1000);
                 }
 
-                IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                InteractiveGameListingModel soundwaveGame = games.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
+                InteractiveGameListingModel soundwaveGame = this.interactiveGames.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
                 if (soundwaveGame != null)
                 {
                     InteractiveGameVersionModel soundwaveGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(soundwaveGame.versions.First());
                     InteractiveSceneModel soundwaveGameScene = soundwaveGameVersion.controls.scenes.First();
 
-                    // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
-
-                    for (int i = 0; i < this.soundwaveData.Profiles[this.selectedSoundwaveProfiles].Count(); i++)
+                    foreach (string profile in this.soundwaveProfiles.Where(p => p.AddProfile).Select(p => p.Name))
                     {
-                        SoundwaveButton soundwaveButton = this.soundwaveData.Profiles[this.selectedSoundwaveProfiles][i];
+                        // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
+                        InteractiveSceneModel profileScene = InteractiveGameHelper.CreateDefaultScene();
+                        InteractiveGameListingModel profileGame = await ChannelSession.Connection.CreateInteractiveGame(ChannelSession.Channel, ChannelSession.User, profile, profileScene);
+                        InteractiveGameVersionModel profileGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(profileGame.versions.First());
+                        profileScene = profileGameVersion.controls.scenes.First();
 
-                        InteractiveButtonControlModel button = new InteractiveButtonControlModel();
-                        button.controlID = i.ToString();
-                        button.text = soundwaveButton.name;
-                        button.cost = soundwaveButton.sparks;
-
-                        InteractiveCommand command = new InteractiveCommand(soundwaveGame, soundwaveGameScene, button, InteractiveButtonCommandTriggerType.MouseDown);
-                        command.IndividualCooldown = soundwaveButton.cooldown;
-                        if (this.soundwaveData.StaticCooldown)
+                        for (int i = 0; i < this.soundwaveData.Profiles[profile].Count(); i++)
                         {
-                            command.CooldownGroup = SoundwaveInteractiveCooldownGroupName;
+                            SoundwaveButton soundwaveButton = this.soundwaveData.Profiles[profile][i];
+                            InteractiveButtonControlModel soundwaveControl = (InteractiveButtonControlModel)soundwaveGameScene.allControls.FirstOrDefault(c => c.controlID.Equals(i.ToString()));
+
+                            InteractiveButtonControlModel button = InteractiveGameHelper.CreateButton(soundwaveButton.name, soundwaveButton.name, soundwaveButton.sparks);
+                            button.position = soundwaveControl.position;
+
+                            InteractiveCommand command = new InteractiveCommand(profileGame, profileScene, button, InteractiveButtonCommandTriggerType.MouseDown);
+                            command.IndividualCooldown = soundwaveButton.cooldown;
+                            if (this.soundwaveData.StaticCooldown)
+                            {
+                                command.CooldownGroup = SoundwaveInteractiveCooldownGroupName;
+                            }
+
+                            SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
+                            command.Actions.Add(action);
+
+                            ChannelSession.Settings.InteractiveControls.Add(command);
+                            profileScene.buttons.Add(button);
                         }
 
-                        SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
-                        command.Actions.Add(action);
-
-                        ChannelSession.Settings.InteractiveControls.Add(command);
+                        await ChannelSession.Connection.UpdateInteractiveGameVersion(profileGameVersion);
                     }
                 }
             }

@@ -184,25 +184,34 @@
                     </Grid>
                 </Grid>
 
-                <Grid x:Name="ImportSoundwaveInteractiveSettingsGrid" Visibility="Visible">
+                <Grid x:Name="ImportSoundwaveInteractiveSettingsGrid" Grid.Row="6" Visibility="Collapsed" Width="400">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
+                        <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock TextWrapping="Wrap" Grid.Row="0">We can import your profiles from Soundwave Interactive that you used.</TextBlock>
 
-                    <TextBlock TextWrapping="Wrap" Grid.Row="2">We will create a brand new Interactive Game on Mixer for every profile you wish to import. If you created any other Interactive Games that share the same name as one of your Soundwave Interactive profiles, we will be unable to import that profile over.</TextBlock>
+                    <TextBlock TextWrapping="Wrap" Grid.Row="2">We will create a brand new Interactive Game on Mixer for every profile you wish to import. If you created any other Interactive Games that share the same name as one of your Soundwave Interactive profiles, we will be unable to import that profile over and its checkbox will be disabled.</TextBlock>
 
                     <TextBlock TextWrapping="Wrap" Grid.Row="4">Please select the profiles below that you would like us to import for you:</TextBlock>
 
-                    <DataGrid x:Name="SoundwaveInteractiveProfilesDataGrid" Width="300" Grid.Row="6">
-                        
+                    <DataGrid x:Name="SoundwaveInteractiveProfilesDataGrid" Grid.Row="6" Style="{StaticResource StandardDataGrid}" Width="300" Height="150" VerticalScrollBarVisibility="Visible">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Profile" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                            <DataGridTemplateColumn Header="Add">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox x:Name="SoundwaveProfileCheckBox" DataContext="{Binding}" IsEnabled="{Binding CanBeImported}" Checked="SoundwaveProfileCheckBox_Checked" Unchecked="SoundwaveProfileCheckBox_Checked" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
 
