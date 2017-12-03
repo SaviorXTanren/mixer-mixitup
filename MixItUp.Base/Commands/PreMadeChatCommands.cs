@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
 using Mixer.Base.Web;
 using MixItUp.Base.Actions;
@@ -557,7 +558,7 @@ namespace MixItUp.Base.Commands
         private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
         public SteamChatCommand()
-            : base("Steam", "steam", UserRole.User, 60)
+            : base("Steam", "steam", UserRole.User, 30)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -617,6 +618,70 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         await ChannelSession.Chat.SendMessage(string.Format("Could not find the game \"{0}\" on Steam", gameName));
+                    }
+                }
+            }));
+        }
+    }
+
+    public class TitleChangeChatCommand : PreMadeChatCommand
+    {
+        private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
+
+        public TitleChangeChatCommand()
+            : base("Title Change", "titlechange", UserRole.Mod, 5)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    if (arguments.Count() > 0)
+                    {
+                        string newTitle = string.Join(" ", arguments);
+                        ChannelSession.Channel.name = newTitle;
+                        await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
+                        await ChannelSession.RefreshChannel();
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !titlechange <TITLE NAME>");
+                    }
+                }
+            }));
+        }
+    }
+
+    public class GameChangeChatCommand : PreMadeChatCommand
+    {
+        private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
+
+        public GameChangeChatCommand()
+            : base("Game Change", "gamechange", UserRole.Mod, 5)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    if (arguments.Count() > 0)
+                    {
+                        string newGameName = string.Join(" ", arguments);
+                        IEnumerable<GameTypeModel> games = await ChannelSession.Connection.GetGameTypes(newGameName);
+
+                        GameTypeModel newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
+                        if (newGame != null)
+                        {
+                            ChannelSession.Channel.typeId = newGame.id;
+                            await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
+                            await ChannelSession.RefreshChannel();
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "We could not find a game with that name");
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !gamechange <GAME NAME>");
                     }
                 }
             }));
