@@ -23,13 +23,25 @@ namespace MixItUp.Base.ViewModel.Import
             this.Profiles = new Dictionary<string, List<SoundwaveButton>>();
         }
 
-        public SoundwaveSettings(JObject settings, JObject profiles, JObject sounds)
-            : base()
+        public SoundwaveSettings(JObject interactive, JObject profiles, JObject sounds)
+            : this()
         {
-            this.StaticCooldown = settings["cooldownOption"].Equals("static");
-            this.StaticCooldownAmount = (int)settings["staticCooldown"];
+            string cooldownOption = interactive["cooldownOption"].ToString();
+            this.StaticCooldown = cooldownOption.Equals("static");
+            this.StaticCooldownAmount = (int)interactive["staticCooldown"];
 
-            this.DynamicCooldown = settings["cooldownOption"].Equals("dynamic");
+            this.DynamicCooldown = cooldownOption.Equals("dynamic");
+
+            Dictionary<string, SoundwaveButton> buttons = new Dictionary<string, SoundwaveButton>();
+
+            int defaultCooldown = (int)sounds["default_cooldown"];
+            int defaultSparks = (int)sounds["default_sparks"];
+            JArray soundArray = (JArray)sounds["sounds"];
+            foreach (JToken sound in soundArray)
+            {
+                SoundwaveButton button = sound.ToObject<SoundwaveButton>();
+                buttons.Add(button.id, button);
+            }
 
             JArray profileArray = (JArray)profiles["profiles"];
             foreach (JToken profile in profileArray)
@@ -38,21 +50,9 @@ namespace MixItUp.Base.ViewModel.Import
                 JArray profileSoundArray = (JArray)profile["sounds"];
                 foreach (JToken sound in profileSoundArray)
                 {
-                    this.Profiles[profile["name"].ToString()].Add(new SoundwaveButton() { id = sound.ToString() });
-                }
-            }
-
-            int defaultCooldown = (int)sounds["default_cooldown"];
-            int defaultSparks = (int)sounds["default_sparks"];
-            JArray soundArray = (JArray)sounds["sounds"];
-            foreach (JToken sound in soundArray)
-            {
-                SoundwaveButton button = sound.ToObject<SoundwaveButton>();
-                foreach (var kvp in this.Profiles)
-                {
-                    foreach (var profileButton in kvp.Value)
+                    if (buttons.ContainsKey(sound.ToString()))
                     {
-
+                        this.Profiles[profile["name"].ToString()].Add(buttons[sound.ToString()]);
                     }
                 }
             }

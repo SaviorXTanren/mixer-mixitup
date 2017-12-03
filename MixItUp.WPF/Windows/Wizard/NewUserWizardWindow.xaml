@@ -17,7 +17,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                      
         Icon="./../../Logo.ico"                        
-        Title="New User Wizard" Height="500" Width="600">
+        Title="Mix It Up - New User Wizard" Height="500" Width="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -35,7 +35,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" x:Name="PagesGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid x:Name="IntroPageGrid" Visibility="Visible">
+                <Grid x:Name="IntroPageGrid" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
@@ -45,42 +45,6 @@
                     <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Welcome to Mix It Up!</TextBlock>
 
                     <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">This wizard that will walk you through getting start with Mix It Up and getting some initial settings in place. If you wish to, you can skip this wizard by simply closing this window.</TextBlock>
-                </Grid>
-
-                <Grid x:Name="ImportSettingsPageGrid" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Settings From ScorpBot</TextBlock>
-
-                    <StackPanel Grid.Row="2" Width="450">
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
-
-                        <TextBlock Margin="20,0,0,0">- Chat Commands</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Banned Words</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Viewer Data</TextBlock>
-
-                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory or can you skip this by doing nothing and clicking Next:</TextBlock>
-                    </StackPanel>
-
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox Grid.Row="2" x:Name="ScorpBotDirectoryTextBox" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <Button Grid.Column="2" Grid.Row="0" x:Name="ScorpBotDirectoryBrowseButton" Click="ScorpBotDirectoryBrowseButton_Click">Browse</Button>
-                    </Grid>
-
                 </Grid>
 
                 <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed" Width="550">
@@ -124,11 +88,11 @@
                             </Grid.ColumnDefinitions>
 
                             <UsersControls:UserProfileAvatarControl Grid.Column="0" x:Name="BotProfileAvatar" />
-                            
+
                             <TextBlock Grid.Column="2" x:Name="BotLoggedInNameTextBlock" VerticalAlignment="Center" />
 
                         </Grid>
-                        
+
                     </Grid>
 
                     <Grid Grid.Row="4">
@@ -158,7 +122,7 @@
 
                                 <Button Grid.Row="6" x:Name="ConnectToOBSStudioButton" Click="ConnectToOBSStudioButton_Click" Width="200">Connect To OBS Studio</Button>
                                 <TextBlock Grid.Row="6" x:Name="OBSStudioConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
-                                
+
                             </Grid>
                         </GroupBox>
 
@@ -187,6 +151,91 @@
                         </GroupBox>
                     </Grid>
 
+                </Grid>
+
+                <Grid x:Name="ImportScorpBotSettingsPageGrid" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Width="450">
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
+
+                        <TextBlock Margin="20,0,0,0">- Chat Commands</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Banned Words</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Viewer Data (Currency, Rank, &amp; Time)</TextBlock>
+
+                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory or can you skip this by doing nothing and clicking Next:</TextBlock>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Row="2" x:Name="ScorpBotDirectoryTextBox" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Button Grid.Column="2" Grid.Row="0" x:Name="ScorpBotDirectoryBrowseButton" Click="ScorpBotDirectoryBrowseButton_Click">Browse</Button>
+                    </Grid>
+                </Grid>
+
+                <Grid x:Name="ImportSoundwaveInteractiveSettingsGrid" Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock TextWrapping="Wrap" Grid.Row="0">We can import your profiles from Soundwave Interactive that you used.</TextBlock>
+
+                    <TextBlock TextWrapping="Wrap" Grid.Row="2">We will create a brand new Interactive Game on Mixer for every profile you wish to import. If you created any other Interactive Games that share the same name as one of your Soundwave Interactive profiles, we will be unable to import that profile over.</TextBlock>
+
+                    <TextBlock TextWrapping="Wrap" Grid.Row="4">Please select the profiles below that you would like us to import for you:</TextBlock>
+
+                    <DataGrid x:Name="SoundwaveInteractiveProfilesDataGrid" Width="300" Grid.Row="6">
+                        
+                    </DataGrid>
+                </Grid>
+
+                <Grid x:Name="ImportFirebotSettingsGrid" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Width="500">
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">We can import the following data from your ScorpBot installation:</TextBlock>
+
+                        <TextBlock Margin="30,0,0,0" TextWrapping="Wrap">Chat Commands, Banned Words, Quotes, Viewer Data</TextBlock>
+
+                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">Specify your ScorpBot directory below or can you ignore this:</TextBlock>
+                    </StackPanel>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Row="2" x:Name="FirebotDirectoryTextBox" MaterialDesign:HintAssist.Hint="Firebot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Button Grid.Column="2" Grid.Row="0" x:Name="FirebotDirectoryBrowseButton" Click="FirebotDirectoryBrowseButton_Click">Browse</Button>
+                    </Grid>
+                </Grid>
+
+                <Grid x:Name="SetupCompletePageGrid" Visibility="Collapsed">
+                    
                 </Grid>
             </Grid>
 

@@ -1,16 +1,20 @@
-﻿using Mixer.Base.Model.OAuth;
+﻿using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Import;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
 using MixItUp.WPF.Util;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Windows.Wizard
@@ -20,12 +24,17 @@ namespace MixItUp.WPF.Windows.Wizard
     /// </summary>
     public partial class NewUserWizardWindow : LoadingWindowBase
     {
-        private const string SoundwaveInteractiveAppDataSettingsFolder = "%appdata%\\Soundwave Interactive";
-        private const string FirebotAppDataSettingsFolder = "%appdata%\\Firebot\\firebot-data\\user-settings";
+        private const string SoundwaveInteractiveGameName = "Soundwave Interactive Soundboard";
+        private const string SoundwaveInteractiveCooldownGroupName = "Soundwave Buttons";
+
+        private static readonly string SoundwaveInteractiveAppDataSettingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Soundwave Interactive");
+        private static readonly string FirebotAppDataSettingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Firebot\\firebot-data\\user-settings");
 
         private string directoryPath;
 
         private ScorpBotData scorpBotData;
+        private SoundwaveSettings soundwaveData;
+        private List<string> selectedSoundwaveProfiles;
 
         public NewUserWizardWindow()
         {
@@ -34,12 +43,17 @@ namespace MixItUp.WPF.Windows.Wizard
             this.Initialize(this.StatusBar);
         }
 
-        protected override Task OnLoaded()
+        protected override async Task OnLoaded()
         {
             this.directoryPath = AppDomain.CurrentDomain.BaseDirectory;
             this.XSplitExtensionPathTextBox.Text = Path.Combine(this.directoryPath, "XSplit\\Mix It Up.html");
+            this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
 
-            return base.OnLoaded();
+            await this.GatherSoundwaveSettings();
+            if (this.soundwaveData != null)
+            {
+                this.SoundwaveInteractiveProfilesDataGrid.ItemsSource = this.soundwaveData.Profiles.Keys;
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -52,16 +66,37 @@ namespace MixItUp.WPF.Windows.Wizard
 
         private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.ImportSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
-            {
-                this.BackButton.IsEnabled = false;
-                this.ImportSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
-            }
-            else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
+            if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
             {
                 this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                this.ImportSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
+                this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
+            }
+            else if (this.ImportScorpBotSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
+            {
+                this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Visible;
+            }
+            else if (this.ImportSoundwaveInteractiveSettingsGrid.Visibility == System.Windows.Visibility.Visible)
+            {
+                this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
+                this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
+            }
+            else if (this.ImportFirebotSettingsGrid.Visibility == System.Windows.Visibility.Visible)
+            {
+                this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
+                if (this.soundwaveData != null)
+                {
+                    this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+                else
+                {
+                    this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+            }
+            else if (this.SetupCompletePageGrid.Visibility == System.Windows.Visibility.Visible)
+            {
+                this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Visible;
             }
         }
 
@@ -73,9 +108,14 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     this.BackButton.IsEnabled = true;
                     this.IntroPageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                    this.ImportSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
+                    this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Visible;
                 }
-                else if (this.ImportSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
+                else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
+                {
+                    this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                    this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+                else if (this.ImportScorpBotSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
                 {
                     if (!string.IsNullOrEmpty(this.ScorpBotDirectoryTextBox.Text))
                     {
@@ -87,15 +127,116 @@ namespace MixItUp.WPF.Windows.Wizard
                         }
                     }
 
-                    this.ImportSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                    this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Visible;
+                    this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                    if (this.soundwaveData != null)
+                    {
+                        this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Visible;
+                    }
+                    else
+                    {
+                        this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Visible;
+                    }
                 }
-                else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
+                else if (this.ImportSoundwaveInteractiveSettingsGrid.Visibility == System.Windows.Visibility.Visible)
                 {
-                    this.FinalizeNewUser();
-                    this.Close();
+                    if (this.SoundwaveInteractiveProfilesComboBox.SelectedIndex >= 0)
+                    {
+                        this.selectedSoundwaveProfiles = (string)this.SoundwaveInteractiveProfilesComboBox.SelectedItem;
+                    }
+
+                    this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
+                    this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+                else if (this.ImportFirebotSettingsGrid.Visibility == System.Windows.Visibility.Visible)
+                {
+                    this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
+                    this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+                else if (this.SetupCompletePageGrid.Visibility == System.Windows.Visibility.Visible)
+                {
+                    await this.RunAsyncOperation(async () =>
+                    {
+                        await this.FinalizeNewUser();
+                        this.Close();
+                    });
                 }
             });
+        }
+
+        private async void BotLogInButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await ChannelSession.ConnectBot((OAuthShortCodeModel shortCode) =>
+                {
+                    this.BotLoginShortCodeTextBox.Text = shortCode.code;
+
+                    Process.Start("https://mixer.com/oauth/shortcode?approval_prompt=force&code=" + shortCode.code);
+                });
+            });
+
+            if (result)
+            {
+                this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
+                if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
+                {
+                    this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+                }
+
+                this.BotLogInGrid.Visibility = System.Windows.Visibility.Hidden;
+                this.BotLoggedInGrid.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
+
+        private void InstallOBSStudioPlugin_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            string pluginPath = Path.Combine(this.directoryPath, "OBS\\obs-websocket-4.2.0-Windows-Installer.exe");
+            if (File.Exists(pluginPath))
+            {
+                Process.Start(pluginPath);
+            }
+        }
+
+        private async void ConnectToOBSStudioButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Settings.OBSStudioServerIP = ChannelSession.DefaultOBSStudioConnection;
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await ChannelSession.Services.InitializeOBSWebsocket();
+            });
+
+            if (result)
+            {
+                this.OBSStudioConnectedSuccessfulTextBlock.Visibility = System.Windows.Visibility.Visible;
+                this.ConnectToOBSStudioButton.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password are set to their default settings. If you wish to connect with a specific port and password, you'll need to do this out of the wizard.");
+            }
+        }
+
+        private async void ConnectToXSplitButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await ChannelSession.Services.InitializeXSplitServer();
+            });
+
+            if (result)
+            {
+                ChannelSession.Settings.EnableXSplitConnection = true;
+                this.XSplitConnectedSuccessfulTextBlock.Visibility = System.Windows.Visibility.Visible;
+                this.ConnectToXSplitButton.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                await this.RunAsyncOperation(async () =>
+                {
+                    await ChannelSession.Services.DisconnectXSplitServer();
+                });
+                await MessageBoxHelper.ShowMessageDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
+            }
         }
 
         private void ScorpBotDirectoryBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -104,6 +245,15 @@ namespace MixItUp.WPF.Windows.Wizard
             if (!string.IsNullOrEmpty(folderPath))
             {
                 this.ScorpBotDirectoryTextBox.Text = folderPath;
+            }
+        }
+
+        private void FirebotDirectoryBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
+            if (!string.IsNullOrEmpty(folderPath))
+            {
+                this.FirebotDirectoryTextBox.Text = folderPath;
             }
         }
 
@@ -188,83 +338,25 @@ namespace MixItUp.WPF.Windows.Wizard
             });
         }
 
-        private async void BotLogInButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async Task GatherSoundwaveSettings()
         {
-            bool result = await this.RunAsyncOperation(async () =>
+            if (Directory.Exists(SoundwaveInteractiveAppDataSettingsFolder))
             {
-                return await ChannelSession.ConnectBot((OAuthShortCodeModel shortCode) =>
+                string interactiveFilePath = Path.Combine(SoundwaveInteractiveAppDataSettingsFolder, "interactive.json");
+                string profilesFilePath = Path.Combine(SoundwaveInteractiveAppDataSettingsFolder, "profiles.json");
+                string soundsFilePath = Path.Combine(SoundwaveInteractiveAppDataSettingsFolder, "sounds.json");
+                if (File.Exists(interactiveFilePath) && File.Exists(profilesFilePath) && File.Exists(soundsFilePath))
                 {
-                    this.BotLoginShortCodeTextBox.Text = shortCode.code;
+                    JObject interactive = await SerializerHelper.DeserializeFromFile<JObject>(interactiveFilePath);
+                    JObject profiles = await SerializerHelper.DeserializeFromFile<JObject>(profilesFilePath);
+                    JObject sounds = await SerializerHelper.DeserializeFromFile<JObject>(soundsFilePath);
 
-                    Process.Start("https://mixer.com/oauth/shortcode?approval_prompt=force&code=" + shortCode.code);
-                });
-            });
-
-            if (result)
-            {
-                this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
-                if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
-                {
-                    this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+                    this.soundwaveData = new SoundwaveSettings(interactive, profiles, sounds);
                 }
-
-                this.BotLogInGrid.Visibility = System.Windows.Visibility.Hidden;
-                this.BotLoggedInGrid.Visibility = System.Windows.Visibility.Visible;
             }
         }
 
-        private void InstallOBSStudioPlugin_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            string pluginPath = Path.Combine(this.directoryPath, "OBS\\obs-websocket-4.2.0-Windows-Installer.exe");
-            if (File.Exists(pluginPath))
-            {
-                Process.Start(pluginPath);
-            }
-        }
-
-        private async void ConnectToOBSStudioButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ChannelSession.Settings.OBSStudioServerIP = ChannelSession.DefaultOBSStudioConnection;
-            bool result = await this.RunAsyncOperation(async () =>
-            {
-                return await ChannelSession.Services.InitializeOBSWebsocket();
-            });
-
-            if (result)
-            {
-                this.OBSStudioConnectedSuccessfulTextBlock.Visibility = System.Windows.Visibility.Visible;
-                this.ConnectToOBSStudioButton.Visibility = System.Windows.Visibility.Collapsed;
-            }
-            else
-            {
-                await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please make sure OBS Studio is running, the obs-websocket plugin is installed, and the connection and password are set to their default settings. If you wish to connect with a specific port and password, you'll need to do this out of the wizard.");
-            }
-        }
-
-        private async void ConnectToXSplitButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            bool result = await this.RunAsyncOperation(async () =>
-            {
-                return await ChannelSession.Services.InitializeXSplitServer();
-            });
-
-            if (result)
-            {
-                ChannelSession.Settings.EnableXSplitConnection = true;
-                this.XSplitConnectedSuccessfulTextBlock.Visibility = System.Windows.Visibility.Visible;
-                this.ConnectToXSplitButton.Visibility = System.Windows.Visibility.Collapsed;
-            }
-            else
-            {
-                await this.RunAsyncOperation(async () =>
-                {
-                    await ChannelSession.Services.DisconnectXSplitServer();
-                });
-                await MessageBoxHelper.ShowMessageDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
-            }
-        }
-
-        private void FinalizeNewUser()
+        private async Task FinalizeNewUser()
         {
             if (this.scorpBotData != null)
             {
@@ -306,6 +398,46 @@ namespace MixItUp.WPF.Windows.Wizard
                 foreach (ScorpBotRank rank in this.scorpBotData.Ranks)
                 {
                     ChannelSession.Settings.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
+                }
+            }
+
+            if (this.soundwaveData != null && !string.IsNullOrEmpty(this.selectedSoundwaveProfiles) && this.soundwaveData.Profiles.ContainsKey(this.selectedSoundwaveProfiles))
+            {
+                if (this.soundwaveData.StaticCooldown)
+                {
+                    ChannelSession.Settings.InteractiveCooldownGroups.Add(SoundwaveInteractiveCooldownGroupName, this.soundwaveData.StaticCooldownAmount / 1000);
+                }
+
+                IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
+                InteractiveGameListingModel soundwaveGame = games.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
+                if (soundwaveGame != null)
+                {
+                    InteractiveGameVersionModel soundwaveGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(soundwaveGame.versions.First());
+                    InteractiveSceneModel soundwaveGameScene = soundwaveGameVersion.controls.scenes.First();
+
+                    // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
+
+                    for (int i = 0; i < this.soundwaveData.Profiles[this.selectedSoundwaveProfiles].Count(); i++)
+                    {
+                        SoundwaveButton soundwaveButton = this.soundwaveData.Profiles[this.selectedSoundwaveProfiles][i];
+
+                        InteractiveButtonControlModel button = new InteractiveButtonControlModel();
+                        button.controlID = i.ToString();
+                        button.text = soundwaveButton.name;
+                        button.cost = soundwaveButton.sparks;
+
+                        InteractiveCommand command = new InteractiveCommand(soundwaveGame, soundwaveGameScene, button, InteractiveButtonCommandTriggerType.MouseDown);
+                        command.IndividualCooldown = soundwaveButton.cooldown;
+                        if (this.soundwaveData.StaticCooldown)
+                        {
+                            command.CooldownGroup = SoundwaveInteractiveCooldownGroupName;
+                        }
+
+                        SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
+                        command.Actions.Add(action);
+
+                        ChannelSession.Settings.InteractiveControls.Add(command);
+                    }
                 }
             }
         }
