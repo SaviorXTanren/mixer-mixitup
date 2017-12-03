@@ -624,12 +624,12 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class TitleChangeChatCommand : PreMadeChatCommand
+    public class SetTitleChatCommand : PreMadeChatCommand
     {
         private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
-        public TitleChangeChatCommand()
-            : base("Title Change", "titlechange", UserRole.Mod, 5)
+        public SetTitleChatCommand()
+            : base("Set Title", "settitle", UserRole.Mod, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -644,19 +644,19 @@ namespace MixItUp.Base.Commands
                     }
                     else
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !titlechange <TITLE NAME>");
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !settitle <TITLE NAME>");
                     }
                 }
             }));
         }
     }
 
-    public class GameChangeChatCommand : PreMadeChatCommand
+    public class SetGameChatCommand : PreMadeChatCommand
     {
         private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
-        public GameChangeChatCommand()
-            : base("Game Change", "gamechange", UserRole.Mod, 5)
+        public SetGameChatCommand()
+            : base("Set Game", "setgame", UserRole.Mod, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -681,7 +681,7 @@ namespace MixItUp.Base.Commands
                     }
                     else
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !gamechange <GAME NAME>");
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !setgame <GAME NAME>");
                     }
                 }
             }));
