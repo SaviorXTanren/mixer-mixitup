@@ -243,7 +243,44 @@
                     </Grid>
                 </Grid>
 
-                <Grid x:Name="SetupCompletePageGrid" Visibility="Collapsed">
+                <Grid x:Name="SetupCompletePageGrid" Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock TextWrapping="Wrap" Grid.Row="0" HorizontalAlignment="Center">Congratulations, you're all set to start using Mix It Up! </TextBlock>
+
+                    <TextBlock TextWrapping="Wrap" Grid.Row="2">We have several resources available to you for how to get starting using Mix It Up, including a YouTube tutorial series, our extensive Wiki, as well as direct contact for questions or support:</TextBlock>
+
+                    <Grid Grid.Row="4" Margin="20,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <TextBlock>YouTube Series: <Hyperlink NavigateUri="https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA">https://www.youtube.com/channel/MixItUp</Hyperlink></TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <TextBlock>Wiki Documentation: <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki">https://github.com/SaviorXTanren/mixer-mixitup/wiki</Hyperlink></TextBlock>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+                            <TextBlock>Questions/Support: <Hyperlink NavigateUri="support@mixitup.com">support@mixitup.com</Hyperlink></TextBlock>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock TextWrapping="Wrap" Grid.Row="6" HorizontalAlignment="Center">Thanks for giving Mix It Up a try and we hope it meets all your needs!</TextBlock>
                     
                 </Grid>
             </Grid>
