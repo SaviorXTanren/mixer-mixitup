@@ -120,12 +120,16 @@ namespace MixItUp.Base.Util
 
         private async Task ShutdownListeners()
         {
-            if (this.httpListener != null)
+            try
             {
-                this.httpListener.Stop();
-                this.httpListener.Close();
-                this.httpListener = null;
+                if (this.httpListener != null)
+                {
+                    this.httpListener.Stop();
+                    this.httpListener.Close();
+                }
             }
+            catch (Exception ex) { Logger.Log(ex); }
+            this.httpListener = null;
 
             try
             {
@@ -135,6 +139,7 @@ namespace MixItUp.Base.Util
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
+
             this.webSocket = null;
         }
 

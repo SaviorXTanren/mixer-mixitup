@@ -48,8 +48,6 @@ namespace MixItUp.WPF.Windows.Wizard
         private SoundwaveSettings soundwaveData;
         private List<SoundwaveProfileItem> soundwaveProfiles;
 
-        private FirebotSettings firebotData;
-
         public NewUserWizardWindow()
         {
             InitializeComponent();
