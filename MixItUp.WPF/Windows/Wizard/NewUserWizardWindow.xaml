@@ -215,34 +215,6 @@
                     </DataGrid>
                 </Grid>
 
-                <Grid x:Name="ImportFirebotSettingsGrid" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <StackPanel Grid.Row="0" Width="500">
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">We can import the following data from your ScorpBot installation:</TextBlock>
-
-                        <TextBlock Margin="30,0,0,0" TextWrapping="Wrap">Chat Commands, Banned Words, Quotes, Viewer Data</TextBlock>
-
-                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">Specify your ScorpBot directory below or can you ignore this:</TextBlock>
-                    </StackPanel>
-
-                    <Grid Grid.Row="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox Grid.Row="2" x:Name="FirebotDirectoryTextBox" MaterialDesign:HintAssist.Hint="Firebot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <Button Grid.Column="2" Grid.Row="0" x:Name="FirebotDirectoryBrowseButton" Click="FirebotDirectoryBrowseButton_Click">Browse</Button>
-                    </Grid>
-                </Grid>
-
                 <Grid x:Name="SetupCompletePageGrid" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />

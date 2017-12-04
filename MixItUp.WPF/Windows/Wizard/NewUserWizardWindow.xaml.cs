@@ -71,8 +71,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 this.soundwaveProfiles = this.soundwaveData.Profiles.Keys.Select(p => new SoundwaveProfileItem() { Name = p, AddProfile = false, CanBeImported = !this.interactiveGames.Any(g => g.name.Equals(p)) }).ToList();
                 this.SoundwaveInteractiveProfilesDataGrid.ItemsSource = this.soundwaveProfiles;
             }
-
-            await this.GatherFirebotSettings();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -100,9 +98,9 @@ namespace MixItUp.WPF.Windows.Wizard
                 this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
                 this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
             }
-            else if (this.ImportFirebotSettingsGrid.Visibility == System.Windows.Visibility.Visible)
+            else if (this.SetupCompletePageGrid.Visibility == System.Windows.Visibility.Visible)
             {
-                this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
+                this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Collapsed;
                 if (this.soundwaveData != null)
                 {
                     this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Visible;
@@ -111,11 +109,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
                 }
-            }
-            else if (this.SetupCompletePageGrid.Visibility == System.Windows.Visibility.Visible)
-            {
-                this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Visible;
             }
         }
 
@@ -153,17 +146,12 @@ namespace MixItUp.WPF.Windows.Wizard
                     }
                     else
                     {
-                        this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Visible;
+                        this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Visible;
                     }
                 }
                 else if (this.ImportSoundwaveInteractiveSettingsGrid.Visibility == System.Windows.Visibility.Visible)
                 {
                     this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
-                    this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Visible;
-                }
-                else if (this.ImportFirebotSettingsGrid.Visibility == System.Windows.Visibility.Visible)
-                {
-                    this.ImportFirebotSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
                     this.SetupCompletePageGrid.Visibility = System.Windows.Visibility.Visible;
                 }
                 else if (this.SetupCompletePageGrid.Visibility == System.Windows.Visibility.Visible)
@@ -269,15 +257,6 @@ namespace MixItUp.WPF.Windows.Wizard
             this.soundwaveProfiles.First(p => p.Name.Equals(profile.Name)).AddProfile = checkBox.IsChecked.GetValueOrDefault();
         }
 
-        private void FirebotDirectoryBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
-            if (!string.IsNullOrEmpty(folderPath))
-            {
-                this.FirebotDirectoryTextBox.Text = folderPath;
-            }
-        }
-
         private async Task<ScorpBotData> GatherScorpBotData(string folderPath)
         {
             return await Task.Run(async () =>
@@ -373,27 +352,6 @@ namespace MixItUp.WPF.Windows.Wizard
                     JObject sounds = await SerializerHelper.DeserializeFromFile<JObject>(soundsFilePath);
 
                     this.soundwaveData = new SoundwaveSettings(interactive, profiles, sounds);
-                }
-            }
-        }
-
-        private async Task GatherFirebotSettings()
-        {
-            if (Directory.Exists(FirebotAppDataSettingsFolder))
-            {
-                string settingsFilePath = Path.Combine(FirebotAppDataSettingsFolder, "settings.json");
-                string controlsFolderPath = Path.Combine(FirebotAppDataSettingsFolder, "controls");
-                if (File.Exists(settingsFilePath) && Directory.Exists(controlsFolderPath))
-                {
-                    JObject settings = await SerializerHelper.DeserializeFromFile<JObject>(settingsFilePath);
-
-                    Dictionary<string, JObject> controls = new Dictionary<string, JObject>();
-                    foreach (string controlFilePath in Directory.GetFiles(controlsFolderPath))
-                    {
-                        controls.Add(Path.GetFileNameWithoutExtension(controlFilePath), await SerializerHelper.DeserializeFromFile<JObject>(controlFilePath));
-                    }
-
-                    this.firebotData = new FirebotSettings(settings, controls);
                 }
             }
         }
