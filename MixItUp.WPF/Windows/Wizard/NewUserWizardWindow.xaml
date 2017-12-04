@@ -243,7 +243,7 @@
                     </Grid>
                 </Grid>
 
-                <Grid x:Name="SetupCompletePageGrid" Visibility="Visible">
+                <Grid x:Name="SetupCompletePageGrid" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />

@@ -44,8 +44,11 @@ namespace MixItUp.WPF.Windows.Wizard
         private IEnumerable<InteractiveGameListingModel> interactiveGames;
 
         private ScorpBotData scorpBotData;
+
         private SoundwaveSettings soundwaveData;
         private List<SoundwaveProfileItem> soundwaveProfiles;
+
+        private FirebotSettings firebotData;
 
         public NewUserWizardWindow()
         {
@@ -68,6 +71,8 @@ namespace MixItUp.WPF.Windows.Wizard
                 this.soundwaveProfiles = this.soundwaveData.Profiles.Keys.Select(p => new SoundwaveProfileItem() { Name = p, AddProfile = false, CanBeImported = !this.interactiveGames.Any(g => g.name.Equals(p)) }).ToList();
                 this.SoundwaveInteractiveProfilesDataGrid.ItemsSource = this.soundwaveProfiles;
             }
+
+            await this.GatherFirebotSettings();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -368,6 +373,27 @@ namespace MixItUp.WPF.Windows.Wizard
                     JObject sounds = await SerializerHelper.DeserializeFromFile<JObject>(soundsFilePath);
 
                     this.soundwaveData = new SoundwaveSettings(interactive, profiles, sounds);
+                }
+            }
+        }
+
+        private async Task GatherFirebotSettings()
+        {
+            if (Directory.Exists(FirebotAppDataSettingsFolder))
+            {
+                string settingsFilePath = Path.Combine(FirebotAppDataSettingsFolder, "settings.json");
+                string controlsFolderPath = Path.Combine(FirebotAppDataSettingsFolder, "controls");
+                if (File.Exists(settingsFilePath) && Directory.Exists(controlsFolderPath))
+                {
+                    JObject settings = await SerializerHelper.DeserializeFromFile<JObject>(settingsFilePath);
+
+                    Dictionary<string, JObject> controls = new Dictionary<string, JObject>();
+                    foreach (string controlFilePath in Directory.GetFiles(controlsFolderPath))
+                    {
+                        controls.Add(Path.GetFileNameWithoutExtension(controlFilePath), await SerializerHelper.DeserializeFromFile<JObject>(controlFilePath));
+                    }
+
+                    this.firebotData = new FirebotSettings(settings, controls);
                 }
             }
         }
