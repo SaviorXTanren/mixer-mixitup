@@ -123,7 +123,7 @@ namespace MixItUp.Base.Commands
     public class GameChatCommand : PreMadeChatCommand
     {
         public GameChatCommand()
-            : base("Game", new List<string>() { "game", "status" }, UserRole.User, 5)
+            : base("Game", new List<string>() { "game" }, UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -131,7 +131,15 @@ namespace MixItUp.Base.Commands
                 {
                     await ChannelSession.RefreshChannel();
 
-                    await ChannelSession.Chat.SendMessage("Game: " + ChannelSession.Channel.type.name);
+                    string details = await SteamGameChatCommand.GetSteamGameInfo(ChannelSession.Channel.type.name);
+                    if (!string.IsNullOrEmpty(details))
+                    {
+                        await ChannelSession.Chat.SendMessage(details);
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.SendMessage("Game: " + ChannelSession.Channel.type.name);
+                    }
                 }
             }));
         }
@@ -553,12 +561,57 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class SteamChatCommand : PreMadeChatCommand
+    public class SteamGameChatCommand : PreMadeChatCommand
     {
-        private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
+        private static Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
-        public SteamChatCommand()
-            : base("Steam", "steam", UserRole.User, 30)
+        public static async Task<string> GetSteamGameInfo(string gameName)
+        {
+            if (steamGameList.Count == 0)
+            {
+                using (HttpClientWrapper client = new HttpClientWrapper())
+                {
+                    HttpResponseMessage response = await client.GetAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        string result = await response.Content.ReadAsStringAsync();
+                        JObject jobj = JObject.Parse(result);
+                        JToken list = jobj["applist"]["apps"];
+                        JArray games = (JArray)list;
+                        foreach (JToken game in games)
+                        {
+                            SteamGameChatCommand.steamGameList[game["name"].ToString().ToLower()] = (int)game["appid"];
+                        }
+                    }
+                }
+            }
+
+            if (SteamGameChatCommand.steamGameList.ContainsKey(gameName.ToLower()))
+            {
+                int gameID = SteamGameChatCommand.steamGameList[gameName.ToLower()];
+                using (HttpClientWrapper client = new HttpClientWrapper())
+                {
+                    HttpResponseMessage response = await client.GetAsync("http://store.steampowered.com/api/appdetails?appids=" + gameID);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        string result = await response.Content.ReadAsStringAsync();
+                        JObject jobj = JObject.Parse(result);
+                        jobj = (JObject)jobj[gameID.ToString()]["data"];
+
+                        double price = (int)jobj["price_overview"]["final"];
+                        price = price / 100.0;
+
+                        string url = string.Format("http://store.steampowered.com/app/{0}", gameID);
+
+                        return string.Format("Game: {0} - ${1} - {2}", jobj["name"], price, url);
+                    }
+                }
+            }
+            return null;
+        }
+
+        public SteamGameChatCommand()
+            : base("Steam Game", "steamgame", UserRole.User, 30)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -575,45 +628,10 @@ namespace MixItUp.Base.Commands
                         gameName = ChannelSession.Channel.type.name;
                     }
 
-                    if (steamGameList.Count == 0)
+                    string details = await SteamGameChatCommand.GetSteamGameInfo(gameName);
+                    if (!string.IsNullOrEmpty(details))
                     {
-                        using (HttpClientWrapper client = new HttpClientWrapper())
-                        {
-                            HttpResponseMessage response = await client.GetAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
-                            if (response.StatusCode == HttpStatusCode.OK)
-                            {
-                                string result = await response.Content.ReadAsStringAsync();
-                                JObject jobj = JObject.Parse(result);
-                                JToken list = jobj["applist"]["apps"];
-                                JArray games = (JArray)list;
-                                foreach (JToken game in games)
-                                {
-                                    this.steamGameList[game["name"].ToString().ToLower()] = (int)game["appid"];
-                                }
-                            }
-                        }
-                    }
-
-                    if (this.steamGameList.ContainsKey(gameName.ToLower()))
-                    {
-                        int gameID = this.steamGameList[gameName.ToLower()];
-                        using (HttpClientWrapper client = new HttpClientWrapper())
-                        {
-                            HttpResponseMessage response = await client.GetAsync("http://store.steampowered.com/api/appdetails?appids=" + gameID);
-                            if (response.StatusCode == HttpStatusCode.OK)
-                            {
-                                string result = await response.Content.ReadAsStringAsync();
-                                JObject jobj = JObject.Parse(result);
-                                jobj = (JObject)jobj[gameID.ToString()]["data"];
-
-                                double price = (int)jobj["price_overview"]["final"];
-                                price = price / 100.0;
-
-                                string url = string.Format("http://store.steampowered.com/app/{0}", gameID);
-
-                                await ChannelSession.Chat.SendMessage(string.Format("{0} - ${1} - {2}", jobj["name"], price, url));
-                            }
-                        }
+                        await ChannelSession.Chat.SendMessage(details);
                     }
                     else
                     {
