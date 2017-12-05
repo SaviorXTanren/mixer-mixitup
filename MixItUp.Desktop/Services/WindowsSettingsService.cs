@@ -3,6 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,10 +54,11 @@ namespace MixItUp.Desktop.Services
             return settings;
         }
 
-        public void Initialize(IChannelSettings settings)
+        public async Task Initialize(IChannelSettings settings)
         {
             DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
-            desktopSettings.Initialize();
+            desktopSettings.DatabasePath = this.GetDatabaseFilePath(desktopSettings);
+            await desktopSettings.Initialize();
         }
 
         public async Task<bool> SaveAndValidate(IChannelSettings settings)
@@ -112,9 +114,7 @@ namespace MixItUp.Desktop.Services
             await semaphore.WaitAsync();
 
             DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
-
-            desktopSettings.CopyLatestValues();
-
+            await desktopSettings.CopyLatestValues();
             await SerializerHelper.SerializeToFile(filePath, desktopSettings);
 
             semaphore.Release();
@@ -133,11 +133,16 @@ namespace MixItUp.Desktop.Services
                 File.WriteAllText(filePath, data);
 
                 settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-                this.Initialize(settings);
+                await this.Initialize(settings);
 
                 data = data.Replace("MixItUp.Desktop.DesktopChannelSettings, MixItUp.Desktop", "MixItUp.Desktop.LegacyDesktopChannelSettings, MixItUp.Desktop");
                 LegacyDesktopChannelSettings legacySettings = SerializerHelper.DeserializeFromString<LegacyDesktopChannelSettings>(data);
-                this.Initialize(legacySettings);
+                await this.Initialize(legacySettings);
+
+                foreach (UserDataViewModel userData in legacySettings.userDataInternal)
+                {
+                    settings.UserData.Add(userData.ID, userData);
+                }
 
                 settings.CurrencyAcquisition.Name = legacySettings.CurrencyName;
                 settings.CurrencyAcquisition.AcquireAmount = legacySettings.CurrencyAcquireAmount;
@@ -156,7 +161,7 @@ namespace MixItUp.Desktop.Services
             }
 
             settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-            this.Initialize(settings);
+            await this.Initialize(settings);
             settings.Version = DesktopChannelSettings.LatestVersion;
 
             await this.Save(settings);

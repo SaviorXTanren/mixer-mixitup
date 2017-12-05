@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Windows.Wizard
 {
@@ -127,6 +128,7 @@ namespace MixItUp.WPF.Windows.Wizard
                 }
                 else if (this.ImportScorpBotSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
                 {
+                    this.StatusMessageTextBlock.Text = "Gathering ScorpBot Data...";
                     if (!string.IsNullOrEmpty(this.ScorpBotDirectoryTextBox.Text))
                     {
                         this.scorpBotData = await this.GatherScorpBotData(this.ScorpBotDirectoryTextBox.Text);
@@ -156,11 +158,13 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     await this.RunAsyncOperation(async () =>
                     {
+                        this.StatusMessageTextBlock.Text = "Importing data, this may take a few moments...";
                         await this.FinalizeNewUser();
                         this.Close();
                     });
                 }
             });
+            this.StatusMessageTextBlock.Text = string.Empty;
         }
 
         private async void BotLogInButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -257,83 +261,80 @@ namespace MixItUp.WPF.Windows.Wizard
 
         private async Task<ScorpBotData> GatherScorpBotData(string folderPath)
         {
-            return await Task.Run(async () =>
+            try
             {
-                try
+                ScorpBotData scorpBotData = new ScorpBotData();
+
+                string dataPath = Path.Combine(folderPath, "Data");
+                string settingsFilePath = Path.Combine(dataPath, "settings.ini");
+                if (Directory.Exists(dataPath) && File.Exists(settingsFilePath))
                 {
-                    ScorpBotData scorpBotData = new ScorpBotData();
+                    IEnumerable<string> lines = File.ReadAllLines(settingsFilePath);
 
-                    string dataPath = Path.Combine(folderPath, "Data");
-                    string settingsFilePath = Path.Combine(dataPath, "settings.ini");
-                    if (Directory.Exists(dataPath) && File.Exists(settingsFilePath))
+                    string currentGroup = null;
+                    foreach (var line in lines)
                     {
-                        IEnumerable<string> lines = File.ReadAllLines(settingsFilePath);
-
-                        string currentGroup = null;
-                        foreach (var line in lines)
+                        if (line.Contains("="))
                         {
-                            if (line.Contains("="))
-                            {
-                                string[] splits = line.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
-                                scorpBotData.Settings[currentGroup].Add(splits[0], splits[1]);
-                            }
-                            else
-                            {
-                                currentGroup = line.Replace("[", "").Replace("]", "").ToLower();
-                                scorpBotData.Settings.Add(currentGroup, new Dictionary<string, string>());
-                            }
+                            string[] splits = line.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+                            scorpBotData.Settings[currentGroup].Add(splits[0], splits[1]);
                         }
-
-                        string databasePath = Path.Combine(dataPath, "Database");
-                        if (Directory.Exists(databasePath))
+                        else
                         {
-                            SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(databasePath);
-
-                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "CommandsDB.sqlite");
-                            await databaseWrapper.ReadRows("SELECT * FROM RegCommand",
-                            (reader) =>
-                            {
-                                if (ScorpBotCommand.IsACommand(reader))
-                                {
-                                    scorpBotData.Commands.Add(new ScorpBotCommand(reader));
-                                }
-                            });
-
-                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "FilteredWordsDB.sqlite");
-                            await databaseWrapper.ReadRows("SELECT * FROM Word",
-                            (reader) =>
-                            {
-                                scorpBotData.BannedWords.Add((string)reader["word"]);
-                            });
-
-                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "QuotesDB.sqlite");
-                            await databaseWrapper.ReadRows("SELECT * FROM Quotes",
-                            (reader) =>
-                            {
-                                scorpBotData.Quotes.Add((string)reader["quote_text"]);
-                            });
-
-                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "RankDB.sqlite");
-                            await databaseWrapper.ReadRows("SELECT * FROM Rank",
-                            (reader) =>
-                            {
-                                scorpBotData.Ranks.Add(new ScorpBotRank(reader));
-                            });
-
-                            databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "Viewers3DB.sqlite");
-                            await databaseWrapper.ReadRows("SELECT * FROM Viewer",
-                            (reader) =>
-                            {
-                                scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
-                            });
+                            currentGroup = line.Replace("[", "").Replace("]", "").ToLower();
+                            scorpBotData.Settings.Add(currentGroup, new Dictionary<string, string>());
                         }
                     }
 
-                    return scorpBotData;
+                    string databasePath = Path.Combine(dataPath, "Database");
+                    if (Directory.Exists(databasePath))
+                    {
+                        SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(databasePath);
+
+                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "CommandsDB.sqlite");
+                        await databaseWrapper.RunReadCommand("SELECT * FROM RegCommand",
+                        (reader) =>
+                        {
+                            if (ScorpBotCommand.IsACommand(reader))
+                            {
+                                scorpBotData.Commands.Add(new ScorpBotCommand(reader));
+                            }
+                        });
+
+                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "FilteredWordsDB.sqlite");
+                        await databaseWrapper.RunReadCommand("SELECT * FROM Word",
+                        (reader) =>
+                        {
+                            scorpBotData.BannedWords.Add((string)reader["word"]);
+                        });
+
+                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "QuotesDB.sqlite");
+                        await databaseWrapper.RunReadCommand("SELECT * FROM Quotes",
+                        (reader) =>
+                        {
+                            scorpBotData.Quotes.Add((string)reader["quote_text"]);
+                        });
+
+                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "RankDB.sqlite");
+                        await databaseWrapper.RunReadCommand("SELECT * FROM Rank",
+                        (reader) =>
+                        {
+                            scorpBotData.Ranks.Add(new ScorpBotRank(reader));
+                        });
+
+                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "Viewers3DB.sqlite");
+                        await databaseWrapper.RunReadCommand("SELECT * FROM Viewer",
+                        (reader) =>
+                        {
+                            scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
+                        });
+                    }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
-                return null;
-            });
+
+                return scorpBotData;
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return null;
         }
 
         private async Task GatherSoundwaveSettings()
@@ -446,6 +447,14 @@ namespace MixItUp.WPF.Windows.Wizard
                     }
                 }
             }
+
+            await ChannelSession.SaveSettings();
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(e.Uri.AbsoluteUri);
+            e.Handled = true;
         }
     }
 }

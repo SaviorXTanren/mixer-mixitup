@@ -6,7 +6,7 @@ namespace MixItUp.Base.Util
     public class LockedDictionary<K, V>
     {
         private Dictionary<K, V> items = new Dictionary<K, V>();
-        private object objLock = new object();
+        protected object objLock = new object();
 
         public LockedDictionary() { }
 
@@ -18,7 +18,7 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public V this[K key]
+        public virtual V this[K key]
         {
             get { lock (objLock) { return this.items[key]; } }
             set { lock (objLock) { this.items[key] = value; } }
@@ -34,7 +34,7 @@ namespace MixItUp.Base.Util
 
         public void Add(KeyValuePair<K, V> item) { this.Add(item.Key, item.Value); }
 
-        public void Add(K key, V value) { lock (objLock) { this.items.Add(key, value); } }
+        public virtual void Add(K key, V value) { lock (objLock) { this.items.Add(key, value); } }
 
         public void Clear() { lock (objLock) { this.items.Clear(); } }
 
@@ -44,7 +44,7 @@ namespace MixItUp.Base.Util
 
         public IEnumerator<KeyValuePair<K, V>> GetEnumerator() { lock (objLock) { return this.ToDictionary().GetEnumerator(); } }
 
-        public bool Remove(K key) { lock (objLock) { return this.items.Remove(key); } }
+        public virtual bool Remove(K key) { lock (objLock) { return this.items.Remove(key); } }
 
         public bool TryGetValue(K key, out V value) { lock (objLock) { return this.items.TryGetValue(key, out value); } }
 

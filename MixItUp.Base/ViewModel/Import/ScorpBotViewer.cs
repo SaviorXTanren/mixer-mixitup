@@ -39,7 +39,7 @@ namespace MixItUp.Base.ViewModel.Import
             this.Rank = (reader["Rank"] != null && reader["Rank"] != DBNull.Value) ? (string)reader["Rank"] : string.Empty;
             this.RankPoints = (long)reader["Points"];
             this.Currency = (long)reader["Points2"];
-            this.Hours = double.Parse((string)reader["Hours"]);
+            this.Hours = double.Parse(reader["Hours"].ToString());
             this.Sub = (string)reader["Sub"];
         }
     }

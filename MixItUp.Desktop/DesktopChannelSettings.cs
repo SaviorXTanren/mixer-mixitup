@@ -5,12 +5,17 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Database;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Desktop
 {
@@ -91,10 +96,6 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int MaxMessagesInChat { get; set; }
 
-
-        [JsonProperty]
-        protected List<UserDataViewModel> userDataInternal { get; set; }
-
         [JsonProperty]
         protected List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; }
         [JsonProperty]
@@ -119,7 +120,6 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
-            this.userDataInternal = new List<UserDataViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
@@ -136,7 +136,7 @@ namespace MixItUp.Desktop
     public class DesktopChannelSettings : DesktopSavableChannelSettings, IChannelSettings
     {
         [JsonIgnore]
-        public LockedDictionary<uint, UserDataViewModel> UserData { get; set; }
+        public DatabaseDictionary<uint, UserDataViewModel> UserData { get; set; }
 
         [JsonIgnore]
         public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
@@ -158,6 +158,11 @@ namespace MixItUp.Desktop
         public LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }
         [JsonIgnore]
         public LockedDictionary<string, int> InteractiveCooldownGroups { get; set; }
+
+        [JsonIgnore]
+        public string DatabasePath { get; set; }
+        [JsonIgnore]
+        private SQLiteDatabaseWrapper databaseWrapper;
 
         public DesktopChannelSettings(ExpandedChannelModel channel, bool isStreamer = true)
             : this()
@@ -184,7 +189,7 @@ namespace MixItUp.Desktop
 
             this.MaxMessagesInChat = 100;
 
-            this.UserData = new LockedDictionary<uint, UserDataViewModel>();
+            this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
@@ -196,9 +201,15 @@ namespace MixItUp.Desktop
             this.InteractiveCooldownGroups = new LockedDictionary<string, int>();
         }
 
-        public void Initialize()
+        public async Task Initialize()
         {
-            this.UserData = new LockedDictionary<uint, UserDataViewModel>(this.userDataInternal.ToDictionary(u => u.ID, u => u));
+            this.databaseWrapper = new SQLiteDatabaseWrapper(this.DatabasePath);
+            await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+            {
+                UserDataViewModel userData = new UserDataViewModel(dataReader);
+                this.UserData.Add(userData.ID, userData);
+            });
+
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
@@ -210,7 +221,7 @@ namespace MixItUp.Desktop
             this.InteractiveCooldownGroups = new LockedDictionary<string, int>(this.interactiveCooldownGroupsInternal);
         }
 
-        public void CopyLatestValues()
+        public async Task CopyLatestValues()
         {
             this.Version = DesktopChannelSettings.LatestVersion;
 
@@ -223,7 +234,6 @@ namespace MixItUp.Desktop
                 this.BotOAuthToken = ChannelSession.BotConnection.Connection.GetOAuthTokenCopy();
             }
 
-            this.userDataInternal = this.UserData.Values.ToList();
             this.preMadeChatCommandSettingsInternal = this.PreMadeChatCommandSettings.ToList();
             this.chatCommandsInternal = this.ChatCommands.ToList();
             this.eventCommandsInternal = this.EventCommands.ToList();
@@ -233,6 +243,19 @@ namespace MixItUp.Desktop
             this.bannedWordsInternal = this.BannedWords.ToList();
             this.interactiveUserGroupsInternal = this.InteractiveUserGroups.ToDictionary();
             this.interactiveCooldownGroupsInternal = this.InteractiveCooldownGroups.ToDictionary();
+
+            IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
+            await this.databaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, RankPoints, CurrencyAmount) VALUES(?,?,?,?,?)",
+                addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
+                    new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.Int32, value: u.RankPoints), new SQLiteParameter(DbType.Int32, value: u.CurrencyAmount) }));
+
+            IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
+            await this.databaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, RankPoints = @RankPoints, CurrencyAmount = @CurrencyAmount WHERE ID = @ID",
+                changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
+                    new SQLiteParameter("@RankPoints", value: u.RankPoints), new SQLiteParameter("@CurrencyAmount", value: u.CurrencyAmount), new SQLiteParameter("@ID", value: (int)u.ID) }));
+
+            IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
+            await this.databaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }
@@ -251,6 +274,9 @@ namespace MixItUp.Desktop
         public int CurrencyAcquireAmount { get; set; }
         [JsonProperty]
         public int CurrencyAcquireInterval { get; set; }
+
+        [JsonProperty]
+        public List<UserDataViewModel> userDataInternal { get; set; }
 
         [JsonProperty]
         public new Dictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }

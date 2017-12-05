@@ -56,7 +56,7 @@ namespace MixItUp.Base
 
     public interface IChannelSettings : ISavableChannelSettings
     {
-        LockedDictionary<uint, UserDataViewModel> UserData { get; }
+        DatabaseDictionary<uint, UserDataViewModel> UserData { get; }
 
         LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; }
         LockedList<ChatCommand> ChatCommands { get; }

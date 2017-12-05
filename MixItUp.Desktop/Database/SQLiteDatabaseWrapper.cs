@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
@@ -22,23 +23,26 @@ namespace MixItUp.Desktop.Database
 
         public async Task EstablishConnection(Func<SQLiteConnection, Task> databaseQuery)
         {
-            if (File.Exists(this.DatabaseFilePath))
+            await this.AsyncWrapper(async () =>
             {
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + this.DatabaseFilePath))
+                if (File.Exists(this.DatabaseFilePath))
                 {
-                    await connection.OpenAsync();
-                    await databaseQuery(connection);
+                    using (SQLiteConnection connection = new SQLiteConnection("Data Source=" + this.DatabaseFilePath))
+                    {
+                        await connection.OpenAsync();
+                        await databaseQuery(connection);
+                    }
                 }
-            }
+            });
         }
 
-        public async Task ReadRows(string commandString, Action<DbDataReader> processRow)
+        public async Task RunReadCommand(string commandString, Action<SQLiteDataReader> processRow)
         {
-            await this.EstablishConnection(async (connection) =>
+            await this.EstablishConnection((connection) =>
             {
                 using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
                 {
-                    using (DbDataReader reader = await command.ExecuteReaderAsync())
+                    using (SQLiteDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -50,10 +54,11 @@ namespace MixItUp.Desktop.Database
                         }
                     }
                 }
+                return Task.FromResult(0);
             });
         }
 
-        public async Task Insert(string commandString, IEnumerable<object> parameters)
+        public async Task RunWriteCommand(string commandString, IEnumerable<object> parameters)
         {
             await this.EstablishConnection(async (connection) =>
             {
@@ -68,27 +73,30 @@ namespace MixItUp.Desktop.Database
             });
         }
 
-        public async Task BulkInsert(string commandString, IEnumerable<IEnumerable<object>> parameters)
+        public async Task RunBulkWriteCommand(string commandString, IEnumerable<IEnumerable<SQLiteParameter>> parameters)
         {
-
             await this.EstablishConnection(async (connection) =>
             {
-                for (int i = 0; i < (parameters.Count() / SQLiteDatabaseWrapper.MaxBulkInsertRows); i++)
+                for (int i = 0; i < parameters.Count(); i += SQLiteDatabaseWrapper.MaxBulkInsertRows)
                 {
-                    var rowsToInsert = parameters.Skip(i * SQLiteDatabaseWrapper.MaxBulkInsertRows).Take(SQLiteDatabaseWrapper.MaxBulkInsertRows);
+                    var rowsToInsert = parameters.Skip(i).Take(SQLiteDatabaseWrapper.MaxBulkInsertRows);
 
                     using (SQLiteTransaction transaction = connection.BeginTransaction())
                     {
                         using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
                         {
-                            foreach (IEnumerable<object> rowParameters in rowsToInsert)
+                            foreach (IEnumerable<SQLiteParameter> rowParameters in rowsToInsert)
                             {
-                                foreach (object rowParam in rowParameters)
+                                try
                                 {
-                                    command.Parameters.Add(rowParam);
+                                    foreach (SQLiteParameter rowParam in rowParameters)
+                                    {
+                                        command.Parameters.Add(rowParam);
+                                    }
+                                    await command.ExecuteNonQueryAsync();
+                                    command.Parameters.Clear();
                                 }
-                                await command.ExecuteNonQueryAsync();
-                                command.Parameters.Clear();
+                                catch (Exception ex) { Logger.Log(ex); }
                             }
                         }
                         transaction.Commit();
@@ -96,5 +104,7 @@ namespace MixItUp.Desktop.Database
                 }
             });
         }
+
+        private async Task AsyncWrapper(Func<Task> function) { await Task.Run(async () => { await function(); }); }
     }
 }

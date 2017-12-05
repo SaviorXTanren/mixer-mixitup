@@ -427,7 +427,7 @@ namespace MixItUp.Base
                     {
                         ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, (channelName == null));
                     }
-                    ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
+                    await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);

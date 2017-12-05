@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
 using System;
+using System.Data.Common;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -19,10 +20,10 @@ namespace MixItUp.Base.ViewModel.User
         public int ViewingMinutes { get; set; }
 
         [DataMember]
-        public long RankPoints { get; set; }
+        public int RankPoints { get; set; }
 
         [DataMember]
-        public long CurrencyAmount { get; set; }
+        public int CurrencyAmount { get; set; }
 
         public UserDataViewModel() { }
 
@@ -37,9 +38,17 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
         {
-            this.ViewingMinutes = (int)viewer.Hours * 60;
-            this.RankPoints = viewer.RankPoints;
-            this.CurrencyAmount = viewer.Currency;
+            this.ViewingMinutes = (int)(viewer.Hours * 60.0);
+            this.RankPoints = (int)viewer.RankPoints;
+            this.CurrencyAmount = (int)viewer.Currency;
+        }
+
+        public UserDataViewModel(DbDataReader dataReader)
+            : this(uint.Parse(dataReader["ID"].ToString()), dataReader["UserName"].ToString())
+        {
+            this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
+            this.RankPoints = int.Parse(dataReader["RankPoints"].ToString());
+            this.CurrencyAmount = int.Parse(dataReader["CurrencyAmount"].ToString());
         }
 
         [JsonIgnore]

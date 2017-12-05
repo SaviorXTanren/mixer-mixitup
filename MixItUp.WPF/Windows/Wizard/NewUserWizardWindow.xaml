@@ -240,15 +240,15 @@
                         </Grid.RowDefinitions>
 
                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                            <TextBlock>YouTube Series: <Hyperlink NavigateUri="https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA">https://www.youtube.com/channel/MixItUp</Hyperlink></TextBlock>
+                            <TextBlock>YouTube Series: <Hyperlink NavigateUri="https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA" RequestNavigate="Hyperlink_RequestNavigate">https://www.youtube.com/channel/MixItUp</Hyperlink></TextBlock>
                         </StackPanel>
 
                         <StackPanel Grid.Row="2" Orientation="Horizontal">
-                            <TextBlock>Wiki Documentation: <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki">https://github.com/SaviorXTanren/mixer-mixitup/wiki</Hyperlink></TextBlock>
+                            <TextBlock>Wiki Documentation: <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki" RequestNavigate="Hyperlink_RequestNavigate">https://github.com/SaviorXTanren/mixer-mixitup/wiki</Hyperlink></TextBlock>
                         </StackPanel>
 
                         <StackPanel Grid.Row="4" Orientation="Horizontal">
-                            <TextBlock>Questions/Support: <Hyperlink NavigateUri="support@mixitup.com">support@mixitup.com</Hyperlink></TextBlock>
+                            <TextBlock>Questions/Support: <Hyperlink NavigateUri="support@mixitup.com" RequestNavigate="Hyperlink_RequestNavigate">support@mixitup.com</Hyperlink></TextBlock>
                         </StackPanel>
                     </Grid>
 
@@ -257,16 +257,20 @@
                 </Grid>
             </Grid>
 
-            <Grid Grid.Row="2" x:Name="WizardButtonsGrid" HorizontalAlignment="Right" Margin="0,0,20,0">
+            <Grid Grid.Row="2" x:Name="WizardButtonsGrid" Margin="20,0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="BackButton" Grid.Column="0" Click="BackButton_Click" IsEnabled="False">&lt; Back</Button>
+                <TextBlock x:Name="StatusMessageTextBlock" Grid.Column="0" VerticalAlignment="Center" />
 
-                <Button x:Name="NextButton" Grid.Column="2" Click="NextButton_Click">Next &gt;</Button>
+                <Button x:Name="BackButton" Grid.Column="2" Click="BackButton_Click" IsEnabled="False">&lt; Back</Button>
+
+                <Button x:Name="NextButton" Grid.Column="4" Click="NextButton_Click">Next &gt;</Button>
             </Grid>
         </Grid>
 

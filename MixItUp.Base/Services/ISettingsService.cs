@@ -10,7 +10,7 @@ namespace MixItUp.Base.Services
 
         IChannelSettings Create(ExpandedChannelModel channel, bool isStreamer);
 
-        void Initialize(IChannelSettings settings);
+        Task Initialize(IChannelSettings settings);
 
         Task Save(IChannelSettings settings);
 
