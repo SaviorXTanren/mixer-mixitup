@@ -68,7 +68,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             int currencyCost = 0;
-            if (string.IsNullOrEmpty(this.GiveawayCurrencyCostTextBox.Text) || !int.TryParse(this.GiveawayTimerTextBox.Text, out currencyCost) || currencyCost < 0)
+            if (string.IsNullOrEmpty(this.GiveawayCurrencyCostTextBox.Text) || !int.TryParse(this.GiveawayCurrencyCostTextBox.Text, out currencyCost) || currencyCost < 0)
             {
                 await MessageBoxHelper.ShowMessageDialog("Currency Cost must be 0 or greater");
                 return;
