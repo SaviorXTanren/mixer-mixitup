@@ -83,7 +83,7 @@ namespace MixItUp.Base.Commands
         {
             if (user.Data.CurrencyAmount < cost)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to use this command!", cost, ChannelSession.Settings.CurrencyAcquisition.Name));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to use this command", cost, ChannelSession.Settings.CurrencyAcquisition.Name));
                 return false;
             }
             return true;
@@ -522,7 +522,7 @@ namespace MixItUp.Base.Commands
                     if (arguments.Count() == 1)
                     {
                         int bet = 0;
-                        if (!int.TryParse(arguments.ElementAt(0), out bet) || bet < 0)
+                        if (!int.TryParse(arguments.ElementAt(0), out bet) || bet <= 0)
                         {
                             await ChannelSession.Chat.Whisper(user.UserName, "Spin bet amount must be greater than 0");
                             return;
@@ -555,6 +555,51 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "Usage: !spin <AMOUNT>");
+                    }
+                }
+            }));
+        }
+    }
+
+    public class GiveChatCommand : PreMadeChatCommand
+    {
+        public GiveChatCommand()
+            : base("Give", new List<string>() { "give" }, UserRole.User, 10)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Chat != null)
+                {
+                    if (arguments.Count() == 2)
+                    {
+                        string username = arguments.ElementAt(0);
+                        username = username.Replace("@", "");
+                        UserModel userModelToReceieve = await ChannelSession.Connection.GetUser(username);
+                        if (userModelToReceieve == null || !ChannelSession.Settings.UserData.ContainsKey(userModelToReceieve.id))
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "The username you specified does not exist or has not visited this channel yet");
+                            return;
+                        }
+
+                        int currencyAmount = 0;
+                        if (!int.TryParse(arguments.ElementAt(1), out currencyAmount) || currencyAmount <= 0)
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "The give amount must be greater than 0");
+                            return;
+                        }
+
+                        if (await this.CheckForRequiredCurrency(user, currencyAmount))
+                        {
+                            ChannelSession.Settings.UserData[userModelToReceieve.id].CurrencyAmount += currencyAmount;
+                            user.Data.CurrencyAmount -= currencyAmount;
+
+                            await ChannelSession.Chat.SendMessage(string.Format("@{0} has given @{1} {2} {3}!", user.UserName,
+                                userModelToReceieve.username, currencyAmount, ChannelSession.Settings.CurrencyAcquisition.Name));
+                        }
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !give @<USERNAME> <AMOUNT>");
                     }
                 }
             }));
