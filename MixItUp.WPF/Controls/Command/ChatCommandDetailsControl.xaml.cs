@@ -99,20 +99,23 @@ namespace MixItUp.WPF.Controls.Command
                 }
             }
 
-            List<string> allCommandStrings = new List<string>();
-            allCommandStrings.AddRange(this.GetCommandStrings());
-            foreach (ChatCommand command in ChannelSession.AllChatCommands)
+            IEnumerable<string> commandStrings = this.GetCommandStrings();
+            if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
             {
-                if (this.GetExistingCommand() != command)
-                {
-                    allCommandStrings.AddRange(command.Commands);
-                }
+                await MessageBoxHelper.ShowMessageDialog("Each command string must be unique");
+                return false;
             }
 
-            if (allCommandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
+            foreach (ChatCommand command in ChannelSession.AllChatCommands)
             {
-                await MessageBoxHelper.ShowMessageDialog("There already exists a chat command that uses one of the command strings you have specified");
-                return false;
+                if (command.IsEnabled && this.GetExistingCommand() != command)
+                {
+                    if (commandStrings.Any(c => command.Commands.Contains(c)))
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("There already exists a chat command that uses one of the command strings you have specified");
+                        return false;
+                    }
+                }
             }
 
             return true;
