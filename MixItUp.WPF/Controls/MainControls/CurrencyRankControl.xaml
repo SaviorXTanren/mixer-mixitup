@@ -94,7 +94,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -152,11 +152,11 @@
                     <TextBox Grid.Column="2" x:Name="RankAmountTextBox" MaterialDesign:HintAssist.Hint="Minimum Points" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     <Button x:Name="AddRankButton" Grid.Column="4" Click="AddRankButton_Click">Add Rank</Button>
-               
-                      
-                    </Grid>
+                 
+                </Grid>
+                
                 <Grid Grid.Row="6" HorizontalAlignment="Center">
-                    <CustomControls:CustomCommandControl Grid.Row="5"  x:Name="RankChangedCommandControl"   />
+                    <CustomControls:CustomCommandControl Grid.Row="5" x:Name="RankChangedCommandControl"   />
                 </Grid>
             </Grid>
                 

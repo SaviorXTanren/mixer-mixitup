@@ -449,10 +449,10 @@ namespace MixItUp.Base
 
         private static async void GlobalEvents_OnRankChanged(object sender, UserDataViewModel e)
         {
-           if(ChannelSession.Settings.RankChanged != null && ChatClientWrapper.ChatUsers.ContainsKey(e.ID) == true)
+           if(ChannelSession.Settings.RankChangedCommand != null && ChatClientWrapper.ChatUsers.ContainsKey(e.ID) == true)
             {
                 var user = ChatClientWrapper.ChatUsers[e.ID];
-                await ChannelSession.Settings.RankChanged.Perform(user);
+                await ChannelSession.Settings.RankChangedCommand.Perform(user);
             }
         }
 

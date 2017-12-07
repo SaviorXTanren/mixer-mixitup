@@ -14,13 +14,7 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-        <Label Content="Poop"></Label>
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock x:Name="NameTextBlock" Text="{Binding Name}" />
     </Grid>
 </local:CommandDetailsControlBase>

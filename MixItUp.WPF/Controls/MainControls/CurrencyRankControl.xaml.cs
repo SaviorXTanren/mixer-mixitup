@@ -47,13 +47,13 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
             this.RankGrid.IsEnabled = !ChannelSession.Settings.RankAcquisition.Enabled;
 
-            CustomCommand rankChangeCommand = ChannelSession.Settings.RankChanged; 
+            CustomCommand rankChangeCommand = ChannelSession.Settings.RankChangedCommand; 
             if (rankChangeCommand == null)
             {
-                rankChangeCommand = new CustomCommand("RankChanged");
-                ChannelSession.Settings.RankChanged = rankChangeCommand;
+                rankChangeCommand = new CustomCommand("User Rank Changed");
+                ChannelSession.Settings.RankChangedCommand = rankChangeCommand;
             }
-            this.RankChangedCommandControl.Initialize(this.Window, ChannelSession.Settings.RankChanged);
+            this.RankChangedCommandControl.Initialize(this.Window, ChannelSession.Settings.RankChangedCommand);
             return base.InitializeInternal();
         }
 

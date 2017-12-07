@@ -48,9 +48,8 @@ namespace MixItUp.Desktop
         public UserItemAcquisitonViewModel RankAcquisition { get; set; }
         [JsonProperty]
         public List<UserRankViewModel> Ranks { get; set; }
-
         [JsonProperty]
-        public CustomCommand RankChanged { get; set; }
+        public CustomCommand RankChangedCommand { get; set; }
 
         [JsonProperty]
         public bool GameQueueMustFollow { get; set; }

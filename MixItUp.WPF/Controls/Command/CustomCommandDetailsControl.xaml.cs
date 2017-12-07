@@ -12,12 +12,9 @@ namespace MixItUp.WPF.Controls.Command
 
         public CustomCommandDetailsControl(CustomCommand command)
         {
-            this.command = command;
-            InitializeComponent();
-        }
+            this.DataContext = this.command = command;
 
-        public CustomCommandDetailsControl() : this(null)
-        {
+            InitializeComponent();
         }
 
         public override Task Initialize()
@@ -25,9 +22,9 @@ namespace MixItUp.WPF.Controls.Command
             return Task.FromResult(0);
         }
 
-        public override async Task<bool> Validate()
+        public override Task<bool> Validate()
         {
-            return await Task.FromResult(true);
+            return Task.FromResult(true);
         }
 
         public override CommandBase GetExistingCommand()
