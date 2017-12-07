@@ -15,6 +15,8 @@ namespace MixItUp.Base.Util
 
         private const int bufferSize = 1000000;
 
+        private SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
         private UTF8Encoding encoder = new UTF8Encoding();
 
         private string address;
@@ -50,7 +52,12 @@ namespace MixItUp.Base.Util
             {
                 string packetJson = JsonConvert.SerializeObject(packet);
                 byte[] buffer = this.encoder.GetBytes(packetJson);
+
+                await this.asyncSemaphore.WaitAsync();
+
                 await this.webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+
+                this.asyncSemaphore.Release();
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
