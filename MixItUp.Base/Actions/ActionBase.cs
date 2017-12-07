@@ -77,6 +77,8 @@ namespace MixItUp.Base.Actions
                 }
 
                 str = str.Replace("$usercurrency", user.Data.CurrencyAmount.ToString());
+                str = str.Replace("$userrankname", user.Data.RankName);
+                str = str.Replace("$userrankpoints", user.Data.RankPoints.ToString());
                 str = str.Replace("$userrank", user.Data.RankNameAndPoints);
                 str = str.Replace("$usertime", user.Data.ViewingTimeString);
 

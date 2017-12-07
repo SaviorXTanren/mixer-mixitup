@@ -63,7 +63,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string RankNameAndPoints
+        public UserRankViewModel Rank
         {
             get
             {
@@ -72,7 +72,27 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     rank = ChannelSession.Settings.Ranks.Where(r => r.MinimumPoints <= this.RankPoints).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
                 }
-                return string.Format("{0} - {1}", (rank != null) ? rank.Name : "No Rank", this.RankPoints);
+                return rank;
+            }
+        }
+
+        [JsonIgnore]
+        public string RankName
+        {
+            get
+            {
+                UserRankViewModel rank = this.Rank;
+                return (rank != null) ? rank.Name : "No Rank";
+            }
+        }
+
+        [JsonIgnore]
+        public string RankNameAndPoints
+        {
+            get
+            {
+                UserRankViewModel rank = this.Rank;
+                return string.Format("{0} - {1}", this.RankName, this.RankPoints);
             }
         }
 
