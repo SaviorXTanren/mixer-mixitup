@@ -89,6 +89,7 @@ namespace MixItUp.Base
         };
 
         public static event EventHandler OnDisconectionOccurred;
+
         public static event EventHandler OnReconectionOccurred;
 
         public static MixerConnectionWrapper Connection { get; private set; }
@@ -387,7 +388,10 @@ namespace MixItUp.Base
             await ChannelSession.Services.Close();
         }
 
-        public static async Task SaveSettings() { await ChannelSession.Services.Settings.Save(ChannelSession.Settings); }
+        public static async Task SaveSettings()
+        {
+            await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
+        }
 
         public static async Task RefreshUser()
         {
@@ -405,7 +409,10 @@ namespace MixItUp.Base
             }
         }
 
-        public static UserViewModel GetCurrentUser() { return new UserViewModel(User); }
+        public static UserViewModel GetCurrentUser()
+        {
+            return new UserViewModel(User);
+        }
 
         private static async Task<bool> InitializeInternal(string channelName = null)
         {
@@ -422,12 +429,14 @@ namespace MixItUp.Base
                     ChannelSession.GameQueue = new LockedList<UserViewModel>();
 
                     ChannelSession.Counters = new LockedDictionary<string, int>();
-                    
+
                     if (ChannelSession.Settings == null)
                     {
                         ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, (channelName == null));
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
+
+                    GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
@@ -436,6 +445,15 @@ namespace MixItUp.Base
                 }
             }
             return false;
+        }
+
+        private static async void GlobalEvents_OnRankChanged(object sender, UserDataViewModel e)
+        {
+           if(ChannelSession.Settings.RankChanged != null && ChatClientWrapper.ChatUsers.ContainsKey(e.ID) == true)
+            {
+                var user = ChatClientWrapper.ChatUsers[e.ID];
+                await ChannelSession.Settings.RankChanged.Perform(user);
+            }
         }
 
         private static async Task<bool> InitializeBotInternal()
@@ -469,7 +487,6 @@ namespace MixItUp.Base
                 await ChannelSession.DisconnectChat();
 
                 await Task.Delay(2000);
-
             } while (!await ChannelSession.ConnectChat());
 
             ChannelSession.ReconnectionOccurred();
@@ -484,7 +501,6 @@ namespace MixItUp.Base
                 await ChannelSession.DisconnectBotChat();
 
                 await Task.Delay(2000);
-
             } while (!await ChannelSession.ConnectBotChat());
 
             ChannelSession.ReconnectionOccurred();
@@ -499,7 +515,6 @@ namespace MixItUp.Base
                 await ChannelSession.DisconnectConstellation();
 
                 await Task.Delay(2000);
-
             } while (!await ChannelSession.ConnectConstellation());
 
             ChannelSession.ReconnectionOccurred();
@@ -515,7 +530,6 @@ namespace MixItUp.Base
                 await ChannelSession.DisconnectInteractive();
 
                 await Task.Delay(2000);
-
             } while (!await ChannelSession.ConnectInteractive(game));
 
             ChannelSession.ReconnectionOccurred();

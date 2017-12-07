@@ -159,6 +159,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Command\CustomCommandControl.xaml.cs">
+      <DependentUpon>CustomCommandControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
+      <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
@@ -258,6 +264,14 @@
     <Compile Include="Windows\Wizard\NewUserWizardWindow.xaml.cs">
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\Command\CustomCommandControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Command\CustomCommandDetailsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\MainControls\AboutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

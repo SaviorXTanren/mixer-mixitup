@@ -15,7 +15,8 @@ namespace MixItUp.Base.Commands
         Chat,
         Interactive,
         Event,
-        Timer
+        Timer,
+        Custom
     }
 
     [DataContract]

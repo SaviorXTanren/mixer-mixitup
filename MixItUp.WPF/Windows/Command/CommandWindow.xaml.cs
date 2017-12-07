@@ -33,7 +33,7 @@ namespace MixItUp.WPF.Windows.Command
 
         private bool allowActionChanges;
 
-        public CommandWindow(CommandDetailsControlBase commandDetailsControl, bool allowActionChanges = true)
+        public CommandWindow(CommandDetailsControlBase commandDetailsControl, bool allowActionChanges = true) 
         {
             this.commandDetailsControl = commandDetailsControl;
             this.allowActionChanges = allowActionChanges;

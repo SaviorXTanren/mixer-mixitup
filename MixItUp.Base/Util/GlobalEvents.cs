@@ -72,5 +72,13 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<UserDataViewModel> OnRankChanged;
+        public static void RankChanged(UserDataViewModel user)
+        {
+            if (GlobalEvents.OnRankChanged != null)
+            {
+                GlobalEvents.OnRankChanged(null, user);
+            }
+        }
     }
 }

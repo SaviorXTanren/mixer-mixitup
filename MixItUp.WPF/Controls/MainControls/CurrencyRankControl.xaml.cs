@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -46,6 +47,13 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
             this.RankGrid.IsEnabled = !ChannelSession.Settings.RankAcquisition.Enabled;
 
+            CustomCommand rankChangeCommand = ChannelSession.Settings.RankChanged; 
+            if (rankChangeCommand == null)
+            {
+                rankChangeCommand = new CustomCommand("RankChanged");
+                ChannelSession.Settings.RankChanged = rankChangeCommand;
+            }
+            this.RankChangedCommandControl.Initialize(this.Window, ChannelSession.Settings.RankChanged);
             return base.InitializeInternal();
         }
 

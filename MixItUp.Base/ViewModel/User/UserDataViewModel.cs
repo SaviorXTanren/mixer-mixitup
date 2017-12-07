@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Import;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
 using System;
 using System.Data.Common;
@@ -19,13 +20,30 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public int ViewingMinutes { get; set; }
 
+        private int _RankPoints;
+
         [DataMember]
-        public int RankPoints { get; set; }
+        public int RankPoints
+        {
+            get { return _RankPoints; }
+            set
+            {
+                UserRankViewModel tempRank = this.Rank;
+                this._RankPoints = value;
+                UserRankViewModel newRank = this.Rank;
+                if (tempRank != newRank)
+                {
+                    GlobalEvents.RankChanged(this);
+                }
+            }
+        }
 
         [DataMember]
         public int CurrencyAmount { get; set; }
 
-        public UserDataViewModel() { }
+        public UserDataViewModel()
+        {
+        }
 
         public UserDataViewModel(uint id, string username)
         {
@@ -33,7 +51,9 @@ namespace MixItUp.Base.ViewModel.User
             this.UserName = username;
         }
 
-        public UserDataViewModel(UserViewModel user) : this(user.ID, user.UserName) { }
+        public UserDataViewModel(UserViewModel user) : this(user.ID, user.UserName)
+        {
+        }
 
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
@@ -105,10 +125,19 @@ namespace MixItUp.Base.ViewModel.User
             return false;
         }
 
-        public bool Equals(UserDataViewModel other) { return this.ID.Equals(other.ID); }
+        public bool Equals(UserDataViewModel other)
+        {
+            return this.ID.Equals(other.ID);
+        }
 
-        public override int GetHashCode() { return this.ID.GetHashCode(); }
+        public override int GetHashCode()
+        {
+            return this.ID.GetHashCode();
+        }
 
-        public override string ToString() { return this.UserName; }
+        public override string ToString()
+        {
+            return this.UserName;
+        }
     }
 }
