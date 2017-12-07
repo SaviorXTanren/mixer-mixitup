@@ -159,7 +159,7 @@ namespace MixItUp.Base.Util
             this.OnDisconnected();
             try
             {
-                if (this.webSocket != null)
+                if (this.webSocket != null && this.webSocket.CloseStatus != null)
                 {
                     await this.webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Done", CancellationToken.None);
                 }
