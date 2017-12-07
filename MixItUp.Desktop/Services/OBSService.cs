@@ -79,6 +79,7 @@ namespace MixItUp.OBS
                 this.OBSWebsocket.SetSourceRender(source, false);
 
                 BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(source);
+                properties.IsLocalFile = false;
                 properties.URL = url;
                 this.OBSWebsocket.SetBrowserSourceProperties(source, properties);
             }
