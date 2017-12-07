@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -31,6 +30,7 @@ namespace MixItUp.Base.Actions
         Interactive,
         [Name("Text To Speech")]
         TextToSpeech,
+        Rank,
 
         Custom = 99,
     }

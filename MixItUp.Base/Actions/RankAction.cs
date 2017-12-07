@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Actions
 {
     [DataContract]
-    public class CurrencyAction : ActionBase
+    public class RankAction : ActionBase
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return CurrencyAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSempahore { get { return RankAction.asyncSemaphore; } }
 
         [DataMember]
         public int Amount { get; set; }
@@ -22,9 +22,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public bool IsWhisper { get; set; }
 
-        public CurrencyAction() : base(ActionTypeEnum.Currency) { }
+        public RankAction() : base(ActionTypeEnum.Rank) { }
 
-        public CurrencyAction(int amount, string chatText, bool isWhisper)
+        public RankAction(int amount, string chatText, bool isWhisper)
             : this()
         {
             this.Amount = amount;
@@ -36,7 +36,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
-                user.Data.CurrencyAmount += this.Amount;
+                user.Data.RankPoints += this.Amount;
 
                 if (!string.IsNullOrEmpty(this.ChatText))
                 {

@@ -542,6 +542,39 @@
                 <TextBox Grid.Row="2" x:Name="TextToSpeechMessageTextBox" MaterialDesign:HintAssist.Hint="Speech Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
+            <Grid x:Name="RankGrid" Grid.Row="2" Visibility="Collapsed">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBox Grid.Row="0" x:Name="RankAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0">Whisper:</TextBlock>
+                    <ToggleButton Grid.Column="2" x:Name="RankWhisperToggleButton" />
+
+                    <TextBlock Grid.Column="4">
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Chat Special Identifiers Reference</Hyperlink>
+                    </TextBlock>
+                </Grid>
+
+                <TextBox Grid.Row="4" x:Name="RankMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            </Grid>
+
         </Grid>
     </GroupBox>
 

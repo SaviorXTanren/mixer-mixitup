@@ -87,7 +87,7 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.Currency:
                     int currencyAmount;
-                    if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) && !string.IsNullOrEmpty(this.CurrencyMessageTextBox.Text))
+                    if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount))
                     {
                         return new CurrencyAction(currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
                     }
@@ -259,6 +259,13 @@ namespace MixItUp.WPF.Controls.Actions
                         return new TextToSpeechAction(this.TextToSpeechMessageTextBox.Text, rate, volume);
                     }
                     break;
+                case ActionTypeEnum.Rank:
+                    int rankAmount;
+                    if (!string.IsNullOrEmpty(this.RankAmountTextBox.Text) && int.TryParse(this.RankAmountTextBox.Text, out rankAmount))
+                    {
+                        return new RankAction(rankAmount, this.RankMessageTextBox.Text, this.RankWhisperToggleButton.IsChecked.GetValueOrDefault());
+                    }
+                    break;
             }
             return null;
         }
@@ -331,6 +338,9 @@ namespace MixItUp.WPF.Controls.Actions
                     break;
                 case ActionTypeEnum.TextToSpeech:
                     this.TextToSpeechGrid.Visibility = Visibility.Visible;
+                    break;
+                case ActionTypeEnum.Rank:
+                    this.RankGrid.Visibility = Visibility.Visible;
                     break;
             }
 
@@ -485,6 +495,12 @@ namespace MixItUp.WPF.Controls.Actions
                         this.TextToSpeechMessageTextBox.Text = textToSpeechAction.SpeechText;
                         this.TextToSpeechRateComboBox.SelectedItem = EnumHelper.GetEnumName(textToSpeechAction.SpeechRate);
                         this.TextToSpeechVolumeComboBox.SelectedItem = EnumHelper.GetEnumName(textToSpeechAction.SpeechVolume);
+                        break;
+                    case ActionTypeEnum.Rank:
+                        RankAction rankAction = (RankAction)this.action;
+                        this.RankAmountTextBox.Text = rankAction.Amount.ToString();
+                        this.RankMessageTextBox.Text = rankAction.ChatText;
+                        this.RankWhisperToggleButton.IsChecked = rankAction.IsWhisper;
                         break;
                 }
 
