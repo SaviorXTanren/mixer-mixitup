@@ -106,6 +106,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task ChannelRefreshBackground()
         {
+            int totalMinutes = 0;
             bool addViewingMinutes = false;
 
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
@@ -118,11 +119,27 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (addViewingMinutes)
                 {
+                    bool addCurrency = ChannelSession.Settings.CurrencyAcquisition.Enabled && (totalMinutes % ChannelSession.Settings.CurrencyAcquisition.AcquireInterval) == 0;
+                    bool addRank = ChannelSession.Settings.RankAcquisition.Enabled && (totalMinutes % ChannelSession.Settings.RankAcquisition.AcquireInterval) == 0;
+
                     await ChannelSession.Chat.UpdateEachUser((user) =>
                     {
                         user.Data.ViewingMinutes++;
+
+                        if (addCurrency)
+                        {
+                            user.Data.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.AcquireAmount;
+                        }
+
+                        if (addRank)
+                        {
+                            user.Data.RankPoints += ChannelSession.Settings.RankAcquisition.AcquireAmount;
+                        }
+
                         return Task.FromResult(0);
                     });
+
+                    totalMinutes++;
                 }
                 addViewingMinutes = !addViewingMinutes;
 

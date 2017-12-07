@@ -20,9 +20,6 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
-        private CancellationTokenSource currencyAcquisitionCancellationTokenSource = new CancellationTokenSource();
-        private CancellationTokenSource rankAcquisitionCancellationTokenSource = new CancellationTokenSource();
-
         public CurrencyRankControl()
         {
             InitializeComponent();
@@ -30,8 +27,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.Window.Closing += Window_Closing;
-
             this.RanksListView.ItemsSource = this.ranks;
             this.ranks.Clear();
             foreach (UserRankViewModel rank in ChannelSession.Settings.Ranks.OrderBy(r => r.MinimumPoints))
@@ -89,10 +84,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 await ChannelSession.SaveSettings();
             });
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.CurrencyAcquireBackground(); }, this.currencyAcquisitionCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
             this.CurrencyGrid.IsEnabled = false;
         }
 
@@ -106,8 +97,6 @@ namespace MixItUp.WPF.Controls.MainControls
             });
 
             this.CurrencyGrid.IsEnabled = true;
-
-            this.currencyAcquisitionCancellationTokenSource.Cancel();
         }
 
         private async void RankToggleSwitch_Checked(object sender, RoutedEventArgs e)
@@ -153,10 +142,6 @@ namespace MixItUp.WPF.Controls.MainControls
             });
 
             this.RankGrid.IsEnabled = false;
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.RankAcquireBackground(); }, this.rankAcquisitionCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         private async void RankToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
@@ -169,8 +154,6 @@ namespace MixItUp.WPF.Controls.MainControls
             });
 
             this.RankGrid.IsEnabled = true;
-
-            this.rankAcquisitionCancellationTokenSource.Cancel();
         }
 
         private void DeleteRankButton_Click(object sender, RoutedEventArgs e)
@@ -218,48 +201,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.RankNameTextBox.Clear();
             this.RankAmountTextBox.Clear();
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            this.currencyAcquisitionCancellationTokenSource.Cancel();
-            this.rankAcquisitionCancellationTokenSource.Cancel();
-        }
-
-        private async Task CurrencyAcquireBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.currencyAcquisitionCancellationTokenSource, async (tokenSource) =>
-            {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await Task.Delay(1000 * 60 * ChannelSession.Settings.CurrencyAcquisition.AcquireInterval);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.Chat.UpdateEachUser((user) =>
-                {
-                    user.Data.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.AcquireAmount;
-                    return Task.FromResult(0);
-                });
-            });
-        }
-
-        private async Task RankAcquireBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.rankAcquisitionCancellationTokenSource, async (tokenSource) =>
-            {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await Task.Delay(1000 * 60 * ChannelSession.Settings.RankAcquisition.AcquireInterval);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.Chat.UpdateEachUser((user) =>
-                {
-                    user.Data.RankPoints += ChannelSession.Settings.RankAcquisition.AcquireAmount;
-                    return Task.FromResult(0);
-                });
-            });
         }
     }
 }
