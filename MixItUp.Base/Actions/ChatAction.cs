@@ -11,7 +11,7 @@ namespace MixItUp.Base.Actions
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return ChatAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return ChatAction.asyncSemaphore; } }
 
         [DataMember]
         public string ChatText { get; set; }

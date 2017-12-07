@@ -12,7 +12,7 @@ namespace MixItUp.Base.Actions
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return TextToSpeechAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return TextToSpeechAction.asyncSemaphore; } }
 
         [DataMember]
         public string SpeechText { get; set; }

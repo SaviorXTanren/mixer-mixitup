@@ -15,7 +15,7 @@ namespace MixItUp.Base.Actions
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return XSplitAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return XSplitAction.asyncSemaphore; } }
 
         public static string XSplitReferenceTextFilesDirectory = Path.Combine(Environment.CurrentDirectory, "XSplit", "SourceTextFiles");
 

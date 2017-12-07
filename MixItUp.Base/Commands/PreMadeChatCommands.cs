@@ -47,7 +47,7 @@ namespace MixItUp.Base.Commands
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return CustomAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return CustomAction.asyncSemaphore; } }
 
         private Func<UserViewModel, IEnumerable<string>, Task> action;
 

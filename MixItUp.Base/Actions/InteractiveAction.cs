@@ -13,7 +13,7 @@ namespace MixItUp.Base.Actions
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return InteractiveAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveAction.asyncSemaphore; } }
 
         [DataMember]
         public string GroupName { get; set; }

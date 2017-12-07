@@ -50,7 +50,7 @@ namespace MixItUp.Base.Actions
 
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments)
         {
-            await this.AsyncSempahore.WaitAsync();
+            await this.AsyncSemaphore.WaitAsync();
 
             try
             {
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Actions
                 Logger.Log(ex);
             }
 
-            this.AsyncSempahore.Release();
+            this.AsyncSemaphore.Release();
         }
 
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
@@ -129,6 +129,6 @@ namespace MixItUp.Base.Actions
             return str;
         }
 
-        protected abstract SemaphoreSlim AsyncSempahore { get; }
+        protected abstract SemaphoreSlim AsyncSemaphore { get; }
     }
 }

@@ -12,7 +12,7 @@ namespace MixItUp.Base.Actions
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return SoundAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return SoundAction.asyncSemaphore; } }
 
         [DataMember]
         public string FilePath { get; set; }

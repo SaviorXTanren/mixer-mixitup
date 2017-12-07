@@ -29,7 +29,7 @@ namespace MixItUp.Base.Actions
     {
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return GameQueueAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return GameQueueAction.asyncSemaphore; } }
 
         [DataMember]
         public GameQueueActionType GameQueueType { get; set; }

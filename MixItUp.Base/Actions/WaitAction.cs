@@ -12,7 +12,7 @@ namespace MixItUp.Base.Actions
         // Allow multiple wait actions to be executed at the same time
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(int.MaxValue);
 
-        protected override SemaphoreSlim AsyncSempahore { get { return WaitAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return WaitAction.asyncSemaphore; } }
 
         [DataMember]
         public double WaitAmount { get; set; }
