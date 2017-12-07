@@ -57,7 +57,13 @@ namespace MixItUp.Desktop.Services
         public async Task Initialize(IChannelSettings settings)
         {
             DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
+
             desktopSettings.DatabasePath = this.GetDatabaseFilePath(desktopSettings);
+            if (!File.Exists(desktopSettings.DatabasePath))
+            {
+                File.Copy(SettingsTemplateDatabaseFileName, desktopSettings.DatabasePath);
+            }
+
             await desktopSettings.Initialize();
         }
 
@@ -152,12 +158,6 @@ namespace MixItUp.Desktop.Services
                 settings.InteractiveCooldownGroups = new LockedDictionary<string, int>(legacySettings.InteractiveCooldownGroups);
 
                 await this.Save(settings);
-
-                string databaseFilePath = this.GetDatabaseFilePath(settings);
-                if (!File.Exists(databaseFilePath))
-                {
-                    File.Copy(SettingsTemplateDatabaseFileName, databaseFilePath);
-                }
             }
 
             settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
