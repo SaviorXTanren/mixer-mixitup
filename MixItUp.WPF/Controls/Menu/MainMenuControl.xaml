@@ -61,9 +61,7 @@
                     </DockPanel>
                 </MaterialDesign:ColorZone>
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ContentControl x:Name="ActiveControlContentControl" />
-                </ScrollViewer>
+                <ContentControl x:Name="ActiveControlContentControl" />
             </DockPanel>
         </MaterialDesign:DrawerHost>
     </MaterialDesign:DialogHost>
