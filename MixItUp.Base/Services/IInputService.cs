@@ -1,7 +1,5 @@
 ﻿using Mixer.Base.Util;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -15,14 +13,17 @@ namespace MixItUp.Base.Services
         //
         // Summary:
         //     Middle mouse button (three-button mouse) - NOT contiguous with LBUTTON and RBUTTON
+        [Name("Middle Mouse")]
         MBUTTON = 4,
         //
         // Summary:
         //     Windows 2000/XP: X1 mouse button - NOT contiguous with LBUTTON and RBUTTON
+        [Name("Side Mouse 1")]
         XBUTTON1 = 5,
         //
         // Summary:
         //     Windows 2000/XP: X2 mouse button - NOT contiguous with LBUTTON and RBUTTON
+        [Name("Side Mouse 2")]
         XBUTTON2 = 6,
         //
         // Summary:
@@ -111,147 +112,147 @@ namespace MixItUp.Base.Services
         //
         // Summary:
         //     0 key
-        VK_0 = 48,
+        NUM0 = 48,
         //
         // Summary:
         //     1 key
-        VK_1 = 49,
+        NUM1 = 49,
         //
         // Summary:
         //     2 key
-        VK_2 = 50,
+        NUM2 = 50,
         //
         // Summary:
         //     3 key
-        VK_3 = 51,
+        NUM3 = 51,
         //
         // Summary:
         //     4 key
-        VK_4 = 52,
+        NUM4 = 52,
         //
         // Summary:
         //     5 key
-        VK_5 = 53,
+        NUM5 = 53,
         //
         // Summary:
         //     6 key
-        VK_6 = 54,
+        NUM6 = 54,
         //
         // Summary:
         //     7 key
-        VK_7 = 55,
+        NUM7 = 55,
         //
         // Summary:
         //     8 key
-        VK_8 = 56,
+        NUM8 = 56,
         //
         // Summary:
         //     9 key
-        VK_9 = 57,
+        NUM9 = 57,
         //
         // Summary:
         //     A key
-        VK_A = 65,
+        A = 65,
         //
         // Summary:
         //     B key
-        VK_B = 66,
+        B = 66,
         //
         // Summary:
         //     C key
-        VK_C = 67,
+        C = 67,
         //
         // Summary:
         //     D key
-        VK_D = 68,
+        D = 68,
         //
         // Summary:
         //     E key
-        VK_E = 69,
+        E = 69,
         //
         // Summary:
         //     F key
-        VK_F = 70,
+        F = 70,
         //
         // Summary:
         //     G key
-        VK_G = 71,
+        G = 71,
         //
         // Summary:
         //     H key
-        VK_H = 72,
+        H = 72,
         //
         // Summary:
         //     I key
-        VK_I = 73,
+        I = 73,
         //
         // Summary:
         //     J key
-        VK_J = 74,
+        J = 74,
         //
         // Summary:
         //     K key
-        VK_K = 75,
+        K = 75,
         //
         // Summary:
         //     L key
-        VK_L = 76,
+        L = 76,
         //
         // Summary:
         //     M key
-        VK_M = 77,
+        M = 77,
         //
         // Summary:
         //     N key
-        VK_N = 78,
+        N = 78,
         //
         // Summary:
         //     O key
-        VK_O = 79,
+        O = 79,
         //
         // Summary:
         //     P key
-        VK_P = 80,
+        P = 80,
         //
         // Summary:
         //     Q key
-        VK_Q = 81,
+        Q = 81,
         //
         // Summary:
         //     R key
-        VK_R = 82,
+        R = 82,
         //
         // Summary:
         //     S key
-        VK_S = 83,
+        S = 83,
         //
         // Summary:
         //     T key
-        VK_T = 84,
+        T = 84,
         //
         // Summary:
         //     U key
-        VK_U = 85,
+        U = 85,
         //
         // Summary:
         //     V key
-        VK_V = 86,
+        V = 86,
         //
         // Summary:
         //     W key
-        VK_W = 87,
+        W = 87,
         //
         // Summary:
         //     X key
-        VK_X = 88,
+        X = 88,
         //
         // Summary:
         //     Y key
-        VK_Y = 89,
+        Y = 89,
         //
         // Summary:
         //     Z key
-        VK_Z = 90,
+        Z = 90,
         //
         // Summary:
         //     Left Windows key (Microsoft Natural keyboard)

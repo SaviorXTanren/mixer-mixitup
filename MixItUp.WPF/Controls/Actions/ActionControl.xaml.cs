@@ -278,6 +278,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.GroupBoxHeaderTextBox.Text = EnumHelper.GetEnumName(this.type);
 
+            this.InputButtonComboBox.ItemsSource = EnumHelper.GetEnumNames<InputTypeEnum>();
             this.OverlayTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayTypeEnum>();
             this.OBSStudioTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OBSStudioTypeEnum>();
             this.XSplitTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<XSplitTypeEnum>();
