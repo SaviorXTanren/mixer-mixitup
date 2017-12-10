@@ -33,7 +33,7 @@ namespace MixItUp.WPF.Controls.Command
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(this.command));
             window.Show();
         }
 

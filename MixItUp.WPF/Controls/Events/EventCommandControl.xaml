@@ -34,9 +34,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="TestButton" Grid.Column="0" Content="{MaterialDesign:PackIcon Play}" ToolTip="Test" Click="TestButton_Click" />
-            
-            <Button x:Name="EditButton" Grid.Column="2" Content="{MaterialDesign:PackIcon TooltipEdit}" ToolTip="Edit" Click="EditButton_Click" />
+            <Button x:Name="TestButton" Grid.Column="0" Content="{MaterialDesign:PackIcon Play}" ToolTip="Test Command" Click="TestButton_Click" />
+
+            <Button x:Name="EditButton" Grid.Column="2" Content="{MaterialDesign:PackIcon TooltipEdit}" ToolTip="Edit Command" Click="EditButton_Click" />
 
             <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="4" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" IsChecked="{Binding IsEnabled}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Unchecked" />
             

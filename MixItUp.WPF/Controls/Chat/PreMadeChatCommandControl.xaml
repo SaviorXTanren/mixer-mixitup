@@ -31,8 +31,8 @@
         <ComboBox Grid.Column="2" x:Name="PermissionsComboBox" SelectionChanged="PermissionsComboBox_SelectionChanged" VerticalAlignment="Center" />
 
         <TextBox Grid.Column="3" x:Name="CooldownTextBox" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Text="{Binding Cooldown}" LostFocus="CooldownTextBox_LostFocus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        
-        <Button Grid.Column="4" x:Name="TestButton" Click="TestButton_Click" Width="40" HorizontalAlignment="Center">
+
+        <Button Grid.Column="4" x:Name="TestButton" Click="TestButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Test Command">
             <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
 

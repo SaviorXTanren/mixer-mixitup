@@ -79,7 +79,7 @@
                     <DataGridTemplateColumn Width="65">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="TestButton" Click="TestButton_Click" Width="40" HorizontalAlignment="Center">
+                                <Button x:Name="TestButton" Click="TestButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Test Command">
                                     <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
                             </DataTemplate>
@@ -88,7 +88,7 @@
                     <DataGridTemplateColumn Width="65">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="EditButton" Click="EditButton_Click" Width="40" HorizontalAlignment="Center">
+                                <Button x:Name="EditButton" Click="EditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Command">
                                     <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
                             </DataTemplate>
@@ -97,7 +97,7 @@
                     <DataGridTemplateColumn Width="65">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center">
+                                <Button x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
                                     <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                 </Button>
                             </DataTemplate>
