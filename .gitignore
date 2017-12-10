@@ -200,3 +200,4 @@ ModelManifest.xml
 /3DTest/packages
 /Releases
 *.sqlite3-journal
+/Wiki/Videos

@@ -98,6 +98,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0">
@@ -105,18 +107,22 @@
                     </TextBlock>
 
                     <TextBlock Grid.Row="2">
-                        • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues" RequestNavigate="Hyperlink_RequestNavigate">Known Issues</Hyperlink>
+                        • <Hyperlink NavigateUri="https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA" RequestNavigate="Hyperlink_RequestNavigate">YouTube Tutorials</Hyperlink>
                     </TextBlock>
 
                     <TextBlock Grid.Row="4">
-                        • <Hyperlink NavigateUri="https://forums.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Forums</Hyperlink>
+                        • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues" RequestNavigate="Hyperlink_RequestNavigate">Known Issues</Hyperlink>
                     </TextBlock>
 
                     <TextBlock Grid.Row="6">
-                        • <Hyperlink NavigateUri="https://obsproject.com/" RequestNavigate="Hyperlink_RequestNavigate">OBS Studio</Hyperlink>
+                        • <Hyperlink NavigateUri="https://forums.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Forums</Hyperlink>
                     </TextBlock>
 
                     <TextBlock Grid.Row="8">
+                        • <Hyperlink NavigateUri="https://obsproject.com/" RequestNavigate="Hyperlink_RequestNavigate">OBS Studio</Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="10">
                         • <Hyperlink NavigateUri="https://www.xsplit.com/" RequestNavigate="Hyperlink_RequestNavigate">XSplit</Hyperlink>
                     </TextBlock>
                 </Grid>
