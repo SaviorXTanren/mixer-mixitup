@@ -6,10 +6,12 @@ using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
@@ -21,6 +23,37 @@ namespace MixItUp.Base.MixerAPI
         public MixerConnectionWrapper(MixerConnection connection)
         {
             this.Connection = connection;
+        }
+
+        public void Initialize()
+        {
+            if (ChannelSession.Settings.DiagnosticLogging)
+            {
+                this.Connection.Channels.OnRequestSent += RestAPIService_OnRequestSent;
+                this.Connection.Channels.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
+                this.Connection.Channels.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+                this.Connection.Chats.OnRequestSent += RestAPIService_OnRequestSent;
+                this.Connection.Chats.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
+                this.Connection.Chats.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+                this.Connection.Costream.OnRequestSent += RestAPIService_OnRequestSent;
+                this.Connection.Costream.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
+                this.Connection.Costream.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+                this.Connection.GameTypes.OnRequestSent += RestAPIService_OnRequestSent;
+                this.Connection.GameTypes.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
+                this.Connection.GameTypes.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+                this.Connection.Interactive.OnRequestSent += RestAPIService_OnRequestSent;
+                this.Connection.Interactive.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
+                this.Connection.Interactive.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+                this.Connection.OAuth.OnRequestSent += RestAPIService_OnRequestSent;
+                this.Connection.OAuth.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
+                this.Connection.OAuth.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+                this.Connection.Teams.OnRequestSent += RestAPIService_OnRequestSent;
+                this.Connection.Teams.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
+                this.Connection.Teams.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+                this.Connection.Users.OnRequestSent += RestAPIService_OnRequestSent;
+                this.Connection.Users.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
+                this.Connection.Users.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+            }
         }
 
         public async Task<ChatClientWrapper> CreateChatClient(ChannelModel channel)
@@ -94,5 +127,11 @@ namespace MixItUp.Base.MixerAPI
         public async Task<InteractiveGameVersionModel> GetInteractiveGameVersion(InteractiveGameVersionModel version) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGameVersion(version)); }
 
         public async Task UpdateInteractiveGameVersion(InteractiveGameVersionModel version) { await this.RunAsync(this.Connection.Interactive.UpdateInteractiveGameVersion(version)); }
+
+        private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e) { Logger.Log(string.Format("Rest API Request: {0} - {1}", e.Item1, e.Item2)); }
+
+        private void RestAPIService_OnSuccessResponseReceived(object sender, string e) { Logger.Log(string.Format("Rest API Success Response: {0}", e)); }
+
+        private void RestAPIServices_OnFailureResponseReceived(object sender, RestServiceRequestException e) { Logger.Log(string.Format("Rest API Failure Response: {0}", e.ToString())); }
     }
 }

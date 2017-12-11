@@ -436,6 +436,8 @@ namespace MixItUp.Base
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
+                    ChannelSession.Connection.Initialize();
+
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
                     await ChannelSession.SaveSettings();
@@ -462,6 +464,8 @@ namespace MixItUp.Base
             if (user != null)
             {
                 ChannelSession.BotUser = user;
+
+                ChannelSession.BotConnection.Initialize();
 
                 await ChannelSession.SaveSettings();
 
@@ -553,17 +557,17 @@ namespace MixItUp.Base
 
         private static void WebSocketClient_OnMethodOccurred(object sender, MethodPacket e)
         {
-            Logger.Log(string.Format(Environment.NewLine + "Method: {0} - {1} - {2} - {3} - {4}" + Environment.NewLine, e.id, e.type, e.method, e.arguments, e.parameters));
+            Logger.Log(string.Format(Environment.NewLine + "WebSocket Method: {0} - {1} - {2} - {3} - {4}" + Environment.NewLine, e.id, e.type, e.method, e.arguments, e.parameters));
         }
 
         private static void WebSocketClient_OnReplyOccurred(object sender, ReplyPacket e)
         {
-            Logger.Log(string.Format(Environment.NewLine + "Reply: {0} - {1} - {2} - {3} - {4}" + Environment.NewLine, e.id, e.type, e.result, e.error, e.data));
+            Logger.Log(string.Format(Environment.NewLine + "WebSocket Reply: {0} - {1} - {2} - {3} - {4}" + Environment.NewLine, e.id, e.type, e.result, e.error, e.data));
         }
 
         private static void WebSocketClient_OnEventOccurred(object sender, EventPacket e)
         {
-            Logger.Log(string.Format(Environment.NewLine + "Event: {0} - {1} - {2} - {3}" + Environment.NewLine, e.id, e.type, e.eventName, e.data));
+            Logger.Log(string.Format(Environment.NewLine + "WebSocket Event: {0} - {1} - {2} - {3}" + Environment.NewLine, e.id, e.type, e.eventName, e.data));
         }
     }
 }
