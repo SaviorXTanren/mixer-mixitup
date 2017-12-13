@@ -129,7 +129,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
             foreach (string word in ChannelSession.Settings.BannedWords)
             {
-                if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
+                if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word.ToLower())))
                 {
                     reason = "Banned Word";
                     return true;
