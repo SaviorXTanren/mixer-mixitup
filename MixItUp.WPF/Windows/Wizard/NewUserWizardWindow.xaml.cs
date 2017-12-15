@@ -359,15 +359,15 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             if (this.scorpBotData != null)
             {
-                ChannelSession.Settings.RankAcquisition.Name = this.scorpBotData.Settings["currency"]["name"];
-                ChannelSession.Settings.RankAcquisition.AcquireInterval = int.Parse(this.scorpBotData.Settings["currency"]["onlinepayinterval"]);
-                ChannelSession.Settings.RankAcquisition.AcquireAmount = int.Parse(this.scorpBotData.Settings["currency"]["activeuserbonus"]);
-                ChannelSession.Settings.RankAcquisition.Enabled = true;
+                ChannelSession.Settings.RankAcquisition.Name = this.scorpBotData.GetSettingsValue("currency", "name", "Rank");
+                ChannelSession.Settings.RankAcquisition.AcquireInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onlinepayinterval", "0"));
+                ChannelSession.Settings.RankAcquisition.AcquireAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency", "activeuserbonus", "0"));
+                ChannelSession.Settings.RankAcquisition.Enabled = (ChannelSession.Settings.RankAcquisition.AcquireInterval > 0 && ChannelSession.Settings.RankAcquisition.AcquireAmount > 0);
 
-                ChannelSession.Settings.CurrencyAcquisition.Name = this.scorpBotData.Settings["currency2"]["name"];
-                ChannelSession.Settings.CurrencyAcquisition.AcquireInterval = int.Parse(this.scorpBotData.Settings["currency2"]["onlinepayinterval"]);
-                ChannelSession.Settings.CurrencyAcquisition.AcquireAmount = int.Parse(this.scorpBotData.Settings["currency"]["activeuserbonus"]);
-                ChannelSession.Settings.CurrencyAcquisition.Enabled = true;
+                ChannelSession.Settings.CurrencyAcquisition.Name = this.scorpBotData.GetSettingsValue("currency2", "name", "Currency");
+                ChannelSession.Settings.CurrencyAcquisition.AcquireInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onlinepayinterval", "0"));
+                ChannelSession.Settings.CurrencyAcquisition.AcquireAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "activeuserbonus", "0"));
+                ChannelSession.Settings.CurrencyAcquisition.Enabled = (ChannelSession.Settings.CurrencyAcquisition.AcquireInterval > 0 && ChannelSession.Settings.CurrencyAcquisition.AcquireAmount > 0);
 
                 foreach (ScorpBotViewer viewer in this.scorpBotData.Viewers)
                 {

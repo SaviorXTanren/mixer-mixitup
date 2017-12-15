@@ -44,5 +44,14 @@ namespace MixItUp.Base.ViewModel.Import
             this.Quotes = new List<string>();
             this.Ranks = new List<ScorpBotRank>();
         }
+
+        public string GetSettingsValue(string key, string value, string defaultValue)
+        {
+            if (this.Settings.ContainsKey(key) && this.Settings[key].ContainsKey(value))
+            {
+                return this.Settings[key][value];
+            }
+            return defaultValue;
+        }
     }
 }
