@@ -7,31 +7,13 @@ namespace MixItUp.Base.MixerAPI
 {
     public abstract class MixerRequestWrapperBase
     {
-        public async Task RunAsync(Task task)
-        {
-            try
-            {
-                await task;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
+        public async Task RunAsync(Task task) { await AsyncRunner.RunAsync(task); }
 
-        public async Task<T> RunAsync<T>(Task<T> task)
-        {
-            try
-            {
-                await task;
-                return task.Result;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            return default(T);
-        }
+        public async Task<T> RunAsync<T>(Task<T> task) { return await AsyncRunner.RunAsync(task); }
+
+        public async Task RunAsync(Func<Task> task) { await AsyncRunner.RunAsync(task); }
+
+        public async Task<T> RunAsync<T>(Func<Task<T>> task) { return await AsyncRunner.RunAsync(task); }
 
         public async Task<IEnumerable<T>> RunAsync<T>(Task<IEnumerable<T>> task)
         {
@@ -59,31 +41,6 @@ namespace MixItUp.Base.MixerAPI
                 Logger.Log(ex);
             }
             return ReflectionHelper.CreateInstanceOf<Dictionary<K,V>>();
-        }
-
-        public async Task RunAsync(Func<Task> task)
-        {
-            try
-            {
-                await task();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public async Task<T> RunAsync<T>(Func<Task<T>> task)
-        {
-            try
-            {
-                return await task();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-            return default(T);
         }
     }
 }

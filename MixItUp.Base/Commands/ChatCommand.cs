@@ -81,6 +81,6 @@ namespace MixItUp.Base.Commands
             await base.PerformInternal(user, arguments);
         }
 
-        protected override SemaphoreSlim AsyncSempahore { get { return ChatCommand.chatCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
     }
 }

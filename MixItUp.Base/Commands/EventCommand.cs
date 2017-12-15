@@ -71,6 +71,6 @@ namespace MixItUp.Base.Commands
 
         public override int GetHashCode() { return this.GetEventType().GetHashCode(); }
 
-        protected override SemaphoreSlim AsyncSempahore { get { return EventCommand.eventCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return EventCommand.eventCommandPerformSemaphore; } }
     }
 }

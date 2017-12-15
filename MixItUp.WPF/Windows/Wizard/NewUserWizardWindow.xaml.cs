@@ -439,7 +439,7 @@ namespace MixItUp.WPF.Windows.Wizard
                             SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
                             command.Actions.Add(action);
 
-                            ChannelSession.Settings.InteractiveControls.Add(command);
+                            ChannelSession.Settings.InteractiveCommands.Add(command);
                             profileScene.buttons.Add(button);
                         }
 

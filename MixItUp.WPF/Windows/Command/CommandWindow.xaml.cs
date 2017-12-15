@@ -24,7 +24,7 @@ namespace MixItUp.WPF.Windows.Command
         {
             private static SemaphoreSlim testCommandPerformSemaphore = new SemaphoreSlim(1);
 
-            protected override SemaphoreSlim AsyncSempahore { get { return TestCommand.testCommandPerformSemaphore; } }
+            protected override SemaphoreSlim AsyncSemaphore { get { return TestCommand.testCommandPerformSemaphore; } }
         }
 
         private CommandDetailsControlBase commandDetailsControl;

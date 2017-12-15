@@ -2,6 +2,7 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -81,21 +82,24 @@ namespace MixItUp.Base.Commands
 
                 Task.Run(async () =>
                 {
-                    await this.AsyncSempahore.WaitAsync();
-
-                    GlobalEvents.CommandExecuted(this);
-
-                    foreach (ActionBase action in this.Actions)
+                    try
                     {
-                        await action.Perform(user, arguments);
-                    }
+                        await this.AsyncSemaphore.WaitAsync();
 
-                    this.AsyncSempahore.Release();
+                        GlobalEvents.CommandExecuted(this);
+
+                        foreach (ActionBase action in this.Actions)
+                        {
+                            await action.Perform(user, arguments);
+                        }
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+                    finally { this.AsyncSemaphore.Release(); }
                 });
             }
             return Task.FromResult(0);
         }
 
-        protected abstract SemaphoreSlim AsyncSempahore { get; }
+        protected abstract SemaphoreSlim AsyncSemaphore { get; }
     }
 }

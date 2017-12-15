@@ -88,6 +88,6 @@ namespace MixItUp.Base.Commands
 
         public long GetCooldownTimestamp() { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount)); }
 
-        protected override SemaphoreSlim AsyncSempahore { get { return InteractiveCommand.interactiveCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveCommand.interactiveCommandPerformSemaphore; } }
     }
 }

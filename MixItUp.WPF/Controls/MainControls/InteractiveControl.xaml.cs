@@ -185,7 +185,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private InteractiveControlCommandItem CreateControlItem(string sceneID, InteractiveControlModel control)
         {
-            InteractiveCommand command = ChannelSession.Settings.InteractiveControls.FirstOrDefault(c => c.GameID.Equals(this.selectedGame.id) &&
+            InteractiveCommand command = ChannelSession.Settings.InteractiveCommands.FirstOrDefault(c => c.GameID.Equals(this.selectedGame.id) &&
                 c.SceneID.Equals(sceneID) && c.Control.controlID.Equals(control.controlID));
 
             if (command != null)
@@ -292,7 +292,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (command.Command != null)
             {
-                ChannelSession.Settings.InteractiveControls.Remove(command.Command);
+                ChannelSession.Settings.InteractiveCommands.Remove(command.Command);
                 command.Command = null;
 
                 await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });

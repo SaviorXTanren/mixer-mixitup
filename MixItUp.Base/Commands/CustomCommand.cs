@@ -8,6 +8,6 @@ namespace MixItUp.Base.Commands
 
         public CustomCommand(string name) : base(name, CommandTypeEnum.Custom, name) { }
 
-        protected override SemaphoreSlim AsyncSempahore { get { return CustomCommand.customCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return CustomCommand.customCommandPerformSemaphore; } }
     }
 }

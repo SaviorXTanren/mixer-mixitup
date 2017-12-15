@@ -34,7 +34,7 @@ namespace MixItUp.Desktop.Services
         {
             if (this.Settings == null)
             {
-                this.Settings = new WindowsSettingsService();
+                this.Settings = new DesktopSettingsService();
                 return Task.FromResult(true);
             }
             return Task.FromResult(false);

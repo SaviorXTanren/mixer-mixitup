@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
 using System.Reflection;
@@ -22,7 +21,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 1;
+        public const int LatestVersion = 2;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -105,7 +104,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         protected List<EventCommand> eventCommandsInternal { get; set; }
         [JsonProperty]
-        protected List<InteractiveCommand> interactiveControlsInternal { get; set; }
+        protected List<InteractiveCommand> interactiveCommandsInternal { get; set; }
         [JsonProperty]
         protected List<TimerCommand> timerCommandsInternal { get; set; }
 
@@ -125,7 +124,7 @@ namespace MixItUp.Desktop
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
-            this.interactiveControlsInternal = new List<InteractiveCommand>();
+            this.interactiveCommandsInternal = new List<InteractiveCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
             this.quotesInternal = new List<string>();
             this.bannedWordsInternal = new List<string>();
@@ -147,7 +146,7 @@ namespace MixItUp.Desktop
         [JsonIgnore]
         public LockedList<EventCommand> EventCommands { get; set; }
         [JsonIgnore]
-        public LockedList<InteractiveCommand> InteractiveControls { get; set; }
+        public LockedList<InteractiveCommand> InteractiveCommands { get; set; }
         [JsonIgnore]
         public LockedList<TimerCommand> TimerCommands { get; set; }
 
@@ -195,7 +194,7 @@ namespace MixItUp.Desktop
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
-            this.InteractiveControls = new LockedList<InteractiveCommand>();
+            this.InteractiveCommands = new LockedList<InteractiveCommand>();
             this.TimerCommands = new LockedList<TimerCommand>();
             this.Quotes = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
@@ -215,7 +214,7 @@ namespace MixItUp.Desktop
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
-            this.InteractiveControls = new LockedList<InteractiveCommand>(this.interactiveControlsInternal);
+            this.InteractiveCommands = new LockedList<InteractiveCommand>(this.interactiveCommandsInternal);
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.Quotes = new LockedList<string>(this.quotesInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
@@ -239,7 +238,7 @@ namespace MixItUp.Desktop
             this.preMadeChatCommandSettingsInternal = this.PreMadeChatCommandSettings.ToList();
             this.chatCommandsInternal = this.ChatCommands.ToList();
             this.eventCommandsInternal = this.EventCommands.ToList();
-            this.interactiveControlsInternal = this.InteractiveControls.ToList();
+            this.interactiveCommandsInternal = this.InteractiveCommands.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.quotesInternal = this.Quotes.ToList();
             this.bannedWordsInternal = this.BannedWords.ToList();

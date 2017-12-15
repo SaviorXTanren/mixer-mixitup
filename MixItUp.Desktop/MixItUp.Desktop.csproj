@@ -123,7 +123,7 @@
     <Compile Include="Services\WindowsAudioService.cs" />
     <Compile Include="Services\WindowsFileService.cs" />
     <Compile Include="Services\WindowsInputService.cs" />
-    <Compile Include="Services\WindowsSettingsService.cs" />
+    <Compile Include="Services\DesktopSettingsService.cs" />
     <Compile Include="Services\WindowsTextToSpeechService.cs" />
     <Compile Include="Services\XSplitWebServer.cs" />
   </ItemGroup>

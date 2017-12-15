@@ -56,10 +56,9 @@ namespace MixItUp.Base.Util
                 await this.asyncSemaphore.WaitAsync();
 
                 await this.webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
-
-                this.asyncSemaphore.Release();
             }
             catch (Exception ex) { Logger.Log(ex); }
+            finally { this.asyncSemaphore.Release(); }
         }
 
         public async Task Disconnect()

@@ -137,7 +137,7 @@ namespace MixItUp.WPF.Controls.Command
                     {
                         this.command = new InteractiveCommand(this.game, this.scene, (InteractiveJoystickControlModel)this.control);
                     }
-                    ChannelSession.Settings.InteractiveControls.Add(this.command);
+                    ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
 
                 if (this.control is InteractiveButtonControlModel)

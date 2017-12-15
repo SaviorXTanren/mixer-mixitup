@@ -12,6 +12,6 @@ namespace MixItUp.Base.Commands
             : base(name, CommandTypeEnum.Timer, name)
         { }
 
-        protected override SemaphoreSlim AsyncSempahore { get { return TimerCommand.timerCommandPerformSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return TimerCommand.timerCommandPerformSemaphore; } }
     }
 }

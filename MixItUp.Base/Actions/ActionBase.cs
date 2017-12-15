@@ -56,12 +56,8 @@ namespace MixItUp.Base.Actions
             {
                 await this.PerformInternal(user, arguments);
             }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-
-            this.AsyncSemaphore.Release();
+            catch (Exception ex) { Logger.Log(ex); }
+            finally { this.AsyncSemaphore.Release(); }
         }
 
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
@@ -85,7 +81,7 @@ namespace MixItUp.Base.Actions
                 str = str.Replace("$useravatar", user.AvatarLink);
                 str = str.Replace("$userurl", "https://www.mixer.com/" + user.UserName);
 
-                str = str.Replace("$user", user.UserName);
+                str = str.Replace("$username", user.UserName);
             }
 
             str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
@@ -111,11 +107,10 @@ namespace MixItUp.Base.Actions
 
                         str = str.Replace("$arg" + (i + 1) + "useravatar", argUser.avatarUrl);
                         str = str.Replace("$arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.username);
-
-                        str = str.Replace("$arg" + (i + 1) + "user", argUser.username);             
+                        str = str.Replace("$arg" + (i + 1) + "username", argUser.username);             
                     }
 
-                    str = str.Replace("$arg" + (i + 1), arguments.ElementAt(i));
+                    str = str.Replace("$arg" + (i + 1) + "string", arguments.ElementAt(i));
                 }
             }
 

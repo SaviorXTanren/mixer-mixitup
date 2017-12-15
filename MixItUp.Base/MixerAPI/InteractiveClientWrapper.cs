@@ -187,7 +187,7 @@ namespace MixItUp.Base.MixerAPI
 
         private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)
         {
-            InteractiveCommand command = ChannelSession.Settings.InteractiveControls.FirstOrDefault(c =>
+            InteractiveCommand command = ChannelSession.Settings.InteractiveCommands.FirstOrDefault(c =>
                 c.GameID.Equals(this.Client.InteractiveGame.id) && c.Control.controlID.Equals(control.controlID));
 
             if (command != null)
