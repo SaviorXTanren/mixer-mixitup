@@ -127,7 +127,8 @@ namespace MixItUp.Base.Actions
                 }
                 else if (!string.IsNullOrEmpty(this.HTMLText))
                 {
-                    await ChannelSession.Services.OverlayServer.SetHTMLText(new OverlayHTML() { htmlText = this.HTMLText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical });
+                    string htmlText = await this.ReplaceStringWithSpecialModifiers(this.HTMLText, user, arguments);
+                    await ChannelSession.Services.OverlayServer.SetHTMLText(new OverlayHTML() { htmlText = htmlText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical });
                 }
             }
         }

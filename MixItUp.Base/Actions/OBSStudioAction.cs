@@ -112,7 +112,8 @@ namespace MixItUp.Base.Actions
                         }
                         else if (!string.IsNullOrEmpty(this.SourceURL))
                         {
-                            ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(this.SourceName, this.SourceURL);
+                            string url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
+                            ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(this.SourceName, url);
                         }
                         ChannelSession.Services.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
                     }

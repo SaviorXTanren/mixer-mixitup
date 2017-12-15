@@ -106,7 +106,8 @@ namespace MixItUp.Base.Actions
                     }
                     else if (!string.IsNullOrEmpty(this.SourceURL))
                     {
-                        await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible, webBrowserUrl = this.SourceURL });
+                        string url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
+                        await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible, webBrowserUrl = url });
                     }
                     await ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
                 }

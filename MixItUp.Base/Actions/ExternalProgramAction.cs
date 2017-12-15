@@ -37,7 +37,7 @@ namespace MixItUp.Base.Actions
         {
             Process process = new Process();
             process.StartInfo.FileName = this.FilePath;
-            process.StartInfo.Arguments = this.Arguments;
+            process.StartInfo.Arguments = await this.ReplaceStringWithSpecialModifiers(this.Arguments, user, arguments);
             process.StartInfo.CreateNoWindow = !this.ShowWindow;
 
             process.Start();
