@@ -40,6 +40,11 @@ namespace MixItUp.WPF.Controls.Command
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.CooldownTextBox.Text = this.command.Cooldown.ToString();
             }
+            else
+            {
+                this.CurrencyCostTextBox.Text = "0";
+                this.CooldownTextBox.Text = "0";
+            }
 
             return Task.FromResult(0);
         }
