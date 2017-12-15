@@ -28,10 +28,10 @@ namespace MixItUp.Base.ViewModel.User
             get { return _RankPoints; }
             set
             {
-                UserRankViewModel tempRank = this.Rank;
+                UserRankViewModel prevRank = this.Rank;
                 this._RankPoints = value;
                 UserRankViewModel newRank = this.Rank;
-                if (tempRank != newRank)
+                if (prevRank != newRank)
                 {
                     GlobalEvents.RankChanged(this);
                 }
@@ -41,9 +41,7 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public int CurrencyAmount { get; set; }
 
-        public UserDataViewModel()
-        {
-        }
+        public UserDataViewModel() { }
 
         public UserDataViewModel(uint id, string username)
         {
@@ -51,15 +49,13 @@ namespace MixItUp.Base.ViewModel.User
             this.UserName = username;
         }
 
-        public UserDataViewModel(UserViewModel user) : this(user.ID, user.UserName)
-        {
-        }
+        public UserDataViewModel(UserViewModel user) : this(user.ID, user.UserName) { }
 
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
         {
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
-            this.RankPoints = (int)viewer.RankPoints;
+            this._RankPoints = (int)viewer.RankPoints;
             this.CurrencyAmount = (int)viewer.Currency;
         }
 
@@ -67,7 +63,7 @@ namespace MixItUp.Base.ViewModel.User
             : this(uint.Parse(dataReader["ID"].ToString()), dataReader["UserName"].ToString())
         {
             this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
-            this.RankPoints = int.Parse(dataReader["RankPoints"].ToString());
+            this._RankPoints = int.Parse(dataReader["RankPoints"].ToString());
             this.CurrencyAmount = int.Parse(dataReader["CurrencyAmount"].ToString());
         }
 

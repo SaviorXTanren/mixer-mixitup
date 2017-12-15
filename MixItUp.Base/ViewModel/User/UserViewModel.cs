@@ -59,13 +59,13 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel()
         {
             this.Roles = new HashSet<UserRole>();
-            this.AvatarLink = DefaultAvatarLink;
+            this.AvatarLink = UserViewModel.DefaultAvatarLink;
             this.SetFollowDate(this.FollowDate);
         }
 
         public UserViewModel(UserModel user) : this(user.id, user.username)
         {
-            this.AvatarLink = user.avatarUrl;
+            this.AvatarLink = (!string.IsNullOrEmpty(user.avatarUrl)) ? user.avatarUrl : UserViewModel.DefaultAvatarLink;
             this.MixerAccountDate = user.createdAt;
         }
 
@@ -185,12 +185,15 @@ namespace MixItUp.Base.ViewModel.User
             if (this.ID > 0)
             {
                 UserWithChannelModel userWithChannel = await ChannelSession.Connection.GetUser(this.GetModel());
-                if (!string.IsNullOrEmpty(userWithChannel.avatarUrl))
+                if (userWithChannel != null)
                 {
-                    this.AvatarLink = userWithChannel.avatarUrl;
+                    if (!string.IsNullOrEmpty(userWithChannel.avatarUrl))
+                    {
+                        this.AvatarLink = userWithChannel.avatarUrl;
+                    }
+                    this.MixerAccountDate = userWithChannel.createdAt;
+                    this.Sparks = (int)userWithChannel.sparks;
                 }
-                this.MixerAccountDate = userWithChannel.createdAt;
-                this.Sparks = (int)userWithChannel.sparks;
             }
 
             if (checkForFollow)
