@@ -58,8 +58,12 @@
 
                 <Controls:SliderWithHeaderControl x:Name="MaxEmoteAllowedSlider" Grid.Row="4" Minimum="0" Maximum="50" Text="Max Emotes Allowed (0 = Disabled):" ValueChanged="MaxEmoteAllowedSlider_ValueChanged" LostFocus="Slider_LostFocus" />
 
-                <Grid Grid.Row="6">
+                <Grid Grid.Row="6" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="Auto" />
@@ -67,6 +71,9 @@
 
                     <TextBlock Grid.Column="0">Block Links:</TextBlock>
                     <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="BlockLinksToggleButton_Checked" Unchecked="BlockLinksToggleButton_Checked" />
+
+                    <TextBlock Grid.Column="4">Include Moderators:</TextBlock>
+                    <ToggleButton x:Name="IncludeModeratorsToggleButton" Grid.Column="6" Checked="IncludeModeratorsToggleButton_Checked" Unchecked="IncludeModeratorsToggleButton_Checked" />
                 </Grid>
 
             </Grid>

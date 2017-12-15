@@ -68,6 +68,12 @@ namespace MixItUp.Desktop.Services
             {
                 string data = File.ReadAllText(filePath);
                 data = data.Replace("interactiveControlsInternal", "interactiveCommandsInternal");
+                data = data.Replace("CapsBlockCount", "ModerationCapsBlockCount");
+                data = data.Replace("PunctuationBlockCount", "ModerationPunctuationBlockCount");
+                data = data.Replace("EmoteBlockCount", "ModerationEmoteBlockCount");
+                data = data.Replace("BlockLinks", "ModerationBlockLinks");
+                data = data.Replace("Timeout1MinuteOffenseCount", "ModerationTimeout1MinuteOffenseCount");
+                data = data.Replace("Timeout5MinuteOffenseCount", "ModerationTimeout5MinuteOffenseCount");
                 File.WriteAllText(filePath, data);
 
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);

@@ -73,17 +73,19 @@ namespace MixItUp.Desktop
         public int GiveawayTimer { get; set; }
 
         [JsonProperty]
-        public int CapsBlockCount { get; set; }
+        public int ModerationCapsBlockCount { get; set; }
         [JsonProperty]
-        public int PunctuationBlockCount { get; set; }
+        public int ModerationPunctuationBlockCount { get; set; }
         [JsonProperty]
-        public int EmoteBlockCount { get; set; }
+        public int ModerationEmoteBlockCount { get; set; }
         [JsonProperty]
-        public bool BlockLinks { get; set; }
+        public bool ModerationBlockLinks { get; set; }
         [JsonProperty]
-        public int Timeout1MinuteOffenseCount { get; set; }
+        public bool ModerationIncludeModerators { get; set; }
         [JsonProperty]
-        public int Timeout5MinuteOffenseCount { get; set; }
+        public int ModerationTimeout1MinuteOffenseCount { get; set; }
+        [JsonProperty]
+        public int ModerationTimeout5MinuteOffenseCount { get; set; }
 
         [JsonProperty]
         public bool EnableOverlay { get; set; }

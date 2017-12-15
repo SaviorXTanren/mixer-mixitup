@@ -305,7 +305,7 @@ namespace MixItUp.WPF.Windows.Wizard
                         await databaseWrapper.RunReadCommand("SELECT * FROM Word",
                         (reader) =>
                         {
-                            scorpBotData.BannedWords.Add((string)reader["word"]);
+                            scorpBotData.BannedWords.Add(((string)reader["word"]).ToLower());
                         });
 
                         databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "QuotesDB.sqlite");

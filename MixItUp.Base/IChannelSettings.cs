@@ -40,12 +40,13 @@ namespace MixItUp.Base
         int GiveawayCurrencyCost { get; set; }
         int GiveawayTimer { get; set; }
 
-        int CapsBlockCount { get; set; }
-        int PunctuationBlockCount { get; set; }
-        int EmoteBlockCount { get; set; }
-        bool BlockLinks { get; set; }
-        int Timeout1MinuteOffenseCount { get; set; }
-        int Timeout5MinuteOffenseCount { get; set; }
+        int ModerationCapsBlockCount { get; set; }
+        int ModerationPunctuationBlockCount { get; set; }
+        int ModerationEmoteBlockCount { get; set; }
+        bool ModerationBlockLinks { get; set; }
+        bool ModerationIncludeModerators { get; set; }
+        int ModerationTimeout1MinuteOffenseCount { get; set; }
+        int ModerationTimeout5MinuteOffenseCount { get; set; }
 
         bool EnableOverlay { get; set; }
         string OBSStudioServerIP { get; set; }

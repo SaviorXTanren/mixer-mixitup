@@ -314,7 +314,7 @@ namespace MixItUp.WPF.Controls.MainControls
             else
             {
                 string moderationReason;
-                if (!messageControl.Message.IsWhisper && messageControl.Message.User.PrimaryRole < UserRole.Mod && messageControl.Message.ShouldBeModerated(out moderationReason))
+                if (messageControl.Message.ShouldBeModerated(out moderationReason))
                 {
                     await ChannelSession.Chat.DeleteMessage(messageControl.Message.ID);
                     messageControl.DeleteMessage(moderationReason);
@@ -322,12 +322,12 @@ namespace MixItUp.WPF.Controls.MainControls
                     string whisperMessage = " due to chat moderation for the following reason: " + moderationReason + ". Please watch what you type in chat or further actions will be taken.";
 
                     messageControl.Message.User.ChatOffenses++;
-                    if (ChannelSession.Settings.Timeout5MinuteOffenseCount > 0 && messageControl.Message.User.ChatOffenses >= ChannelSession.Settings.Timeout5MinuteOffenseCount)
+                    if (ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount > 0 && messageControl.Message.User.ChatOffenses >= ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount)
                     {
                         await ChannelSession.Chat.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 5 minutes" + whisperMessage);
                         await ChannelSession.Chat.TimeoutUser(messageControl.Message.User.UserName, 300);
                     }
-                    else if (ChannelSession.Settings.Timeout1MinuteOffenseCount > 0 && messageControl.Message.User.ChatOffenses >= ChannelSession.Settings.Timeout1MinuteOffenseCount)
+                    else if (ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount > 0 && messageControl.Message.User.ChatOffenses >= ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount)
                     {
                         await ChannelSession.Chat.Whisper(messageControl.Message.User.UserName, "You have been timed out from chat for 1 minute" + whisperMessage);
                         await ChannelSession.Chat.TimeoutUser(messageControl.Message.User.UserName, 60);

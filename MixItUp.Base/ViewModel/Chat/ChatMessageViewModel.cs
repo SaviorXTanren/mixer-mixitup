@@ -123,59 +123,72 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool ShouldBeModerated(out string reason)
         {
-            string lower = this.Message.ToLower();
+            reason = "";
 
+            if (this.User.PrimaryRole > UserRole.Mod)
+            {
+                return false;
+            }
+            if (this.User.PrimaryRole == UserRole.Mod && !ChannelSession.Settings.ModerationIncludeModerators)
+            {
+                return false;
+            }
+            if (this.IsWhisper)
+            {
+                return false;
+            }
+
+            string lower = this.Message.ToLower();
             lower = UserNameTagRegex.Replace(lower, "");
 
             foreach (string word in ChannelSession.Settings.BannedWords)
             {
-                if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word.ToLower())))
+                if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
                 {
                     reason = "Banned Word";
                     return true;
                 }
             }
 
-            if (ChannelSession.Settings.CapsBlockCount > 0 && this.Message.Count(c => char.IsUpper(c)) >= ChannelSession.Settings.CapsBlockCount)
+            if (ChannelSession.Settings.ModerationCapsBlockCount > 0 && this.Message.Count(c => char.IsUpper(c)) >= ChannelSession.Settings.ModerationCapsBlockCount)
             {
                 reason = "Too Many Caps";
                 return true;
             }
 
-            if (ChannelSession.Settings.PunctuationBlockCount > 0)
+            if (ChannelSession.Settings.ModerationPunctuationBlockCount > 0)
             {
                 MatchCollection matches = EmoteRegex.Matches(lower);
-                if (lower.Count(c => char.IsSymbol(c) || char.IsPunctuation(c)) >= ChannelSession.Settings.PunctuationBlockCount)
+                if (lower.Count(c => char.IsSymbol(c) || char.IsPunctuation(c)) >= ChannelSession.Settings.ModerationPunctuationBlockCount)
                 {
                     reason = "Too Many Punctuation/Symbols";
                     return true;
                 }
             }
 
-            if (ChannelSession.Settings.EmoteBlockCount > 0)
+            if (ChannelSession.Settings.ModerationEmoteBlockCount > 0)
             {
                 MatchCollection matches = EmoteRegex.Matches(lower);
-                if (matches.Count >= ChannelSession.Settings.EmoteBlockCount)
+                if (matches.Count >= ChannelSession.Settings.ModerationEmoteBlockCount)
                 {
                     reason = "Too Many Emotes";
                     return true;
                 }
 
                 matches = EmojiRegex.Matches(lower);
-                if (matches.Count >= ChannelSession.Settings.EmoteBlockCount)
+                if (matches.Count >= ChannelSession.Settings.ModerationEmoteBlockCount)
                 {
                     reason = "Too Many Emotes";
                     return true;
                 }
             }
 
-            if (ChannelSession.Settings.BlockLinks && this.ContainsLink)
+            if (ChannelSession.Settings.ModerationBlockLinks && this.ContainsLink)
             {
                 reason = "No Links";
                 return true;
             }
 
-            reason = "";
             return false;
         }
 
