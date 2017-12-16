@@ -443,19 +443,12 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
+                    await Logger.LogUsage();
+
                     return true;
                 }
             }
             return false;
-        }
-
-        private static async void GlobalEvents_OnRankChanged(object sender, UserDataViewModel e)
-        {
-           if(ChannelSession.Settings.RankChangedCommand != null && ChatClientWrapper.ChatUsers.ContainsKey(e.ID) == true)
-            {
-                var user = ChatClientWrapper.ChatUsers[e.ID];
-                await ChannelSession.Settings.RankChangedCommand.Perform(user);
-            }
         }
 
         private static async Task<bool> InitializeBotInternal()
@@ -552,6 +545,15 @@ namespace MixItUp.Base
             if (ChannelSession.OnReconectionOccurred != null)
             {
                 ChannelSession.OnReconectionOccurred(null, new EventArgs());
+            }
+        }
+
+        private static async void GlobalEvents_OnRankChanged(object sender, UserDataViewModel e)
+        {
+            if (ChannelSession.Settings.RankChangedCommand != null && ChatClientWrapper.ChatUsers.ContainsKey(e.ID) == true)
+            {
+                var user = ChatClientWrapper.ChatUsers[e.ID];
+                await ChannelSession.Settings.RankChangedCommand.Perform(user);
             }
         }
 
