@@ -2,6 +2,7 @@
 using MixItUp.WPF.Util;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -141,7 +142,7 @@ namespace MixItUp.WPF.Controls.Menu
 
         private void InstallationDirectoryButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            Process.Start(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
         }
 
         private void SubmitABugButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/issues/new"); }

@@ -48,7 +48,7 @@
                                 <Button x:Name="BackupSettingsButton" Content="Backup Settings" Click="BackupSettingsButton_Click" />
                                 <Button x:Name="RestoreSettingsButton" Content="Restore Settings" Click="RestoreSettingsButton_Click" />
                                 <Separator />
-                                <Button x:Name="InstallationDirectoryButton" Content="Install Folder" Click="InstallationDirectoryButton_Click" />
+                                <Button x:Name="InstallationDirectoryButton" Content="Installation Folder" Click="InstallationDirectoryButton_Click" />
                                 <Separator />
                                 <Button x:Name="DocumentationButton" Content="Documentation" Click="DocumentationButton_Click" />
                                 <Button x:Name="SubmitABugButton" Content="Submit a Bug" Click="SubmitABugButton_Click" />
