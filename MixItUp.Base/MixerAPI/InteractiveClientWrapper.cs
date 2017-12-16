@@ -285,6 +285,11 @@ namespace MixItUp.Base.MixerAPI
                 {
                     InteractiveConnectedControlCommand connectedControl = this.Controls[e.input.controlID];
 
+                    if (!connectedControl.Command.IsEnabled)
+                    {
+                        return;
+                    }
+
                     if (connectedControl.Button != null && !connectedControl.TriggerTransactionString.Equals(e.input.eventType))
                     {
                         return;
