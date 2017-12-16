@@ -423,7 +423,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBox Grid.Row="0" x:Name="XSplitSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" TextChanged="OBSStudioSourceTextTextBox_TextChanged" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Row="0" x:Name="XSplitSourceTextTextBox" MaterialDesign:HintAssist.Hint="Source Text" TextChanged="XSplitSourceTextTextBox_TextChanged" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <Grid Grid.Row="2">
                             <Grid.ColumnDefinitions>

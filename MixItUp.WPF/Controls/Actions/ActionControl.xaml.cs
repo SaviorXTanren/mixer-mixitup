@@ -675,7 +675,7 @@ namespace MixItUp.WPF.Controls.Actions
             }
         }
 
-        private void XSplitSourceNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void XSplitSourceTextTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
             {
