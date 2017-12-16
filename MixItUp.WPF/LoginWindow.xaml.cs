@@ -198,19 +198,16 @@ namespace MixItUp.WPF
                         JArray result = JArray.Parse(resultString);
                         for (int i = 0; i < result.Count; i++)
                         {
-                            if (!((bool)result[i]["prerelease"]))
+                            Version latestVersion = new Version(result[0]["tag_name"].ToString());
+                            if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0)
                             {
-                                Version latestVersion = new Version(result[0]["tag_name"].ToString());
-                                if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0)
+                                if (MessageBox.Show("There is a newer version of Mix It Up, would you like to download it?", "Mix It Up - Newer Version",
+                                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                                 {
-                                    if (MessageBox.Show("There is a newer version of Mix It Up, would you like to download it?", "Mix It Up - Newer Version",
-                                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                                    {
-                                        Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/releases");
-                                        this.Close();
-                                        return;
-                                    }
+                                    Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/releases");
+                                    this.Close();
                                 }
+                                return;
                             }
                         }
                     }
