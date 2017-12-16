@@ -37,7 +37,7 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
-    public class OverlayRoluetteWheel
+    public class OverlayRouletteWheel
     {
         [DataMember]
         public uint userID;
@@ -70,7 +70,7 @@ namespace MixItUp.Base.Services
 
         Task SetHTMLText(OverlayHTML htmlText);
 
-        Task SetRouletteWheel(OverlayRoluetteWheel roluetteWheel);
+        Task SetRouletteWheel(OverlayRouletteWheel rouletteWheel);
 
         Task Disconnect();
     }

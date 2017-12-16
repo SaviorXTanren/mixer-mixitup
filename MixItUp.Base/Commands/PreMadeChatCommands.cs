@@ -483,9 +483,9 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class RoluetteSpinChatCommand : PreMadeChatCommand
+    public class RouletteSpinChatCommand : PreMadeChatCommand
     {
-        public static async Task MessageRoluetteSpinResults(string result, uint userID, int bet)
+        public static async Task MessageRouletteSpinResults(string result, uint userID, int bet)
         {
             result = result.ToLower();
             if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Settings.UserData.ContainsKey(userID))
@@ -512,8 +512,8 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        public RoluetteSpinChatCommand()
-            : base("Roluette Spin", new List<string>() { "spin", "roluette" }, UserRole.User, 10)
+        public RouletteSpinChatCommand()
+            : base("Roulette Spin", new List<string>() { "spin", "roulette" }, UserRole.User, 10)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -533,7 +533,7 @@ namespace MixItUp.Base.Commands
                             user.Data.CurrencyAmount -= bet;
                             if (ChannelSession.Services.OverlayServer != null)
                             {
-                                await ChannelSession.Services.OverlayServer.SetRouletteWheel(new OverlayRoluetteWheel() { userID = user.ID, bet = bet });
+                                await ChannelSession.Services.OverlayServer.SetRouletteWheel(new OverlayRouletteWheel() { userID = user.ID, bet = bet });
                             }
                             else
                             {
@@ -548,7 +548,7 @@ namespace MixItUp.Base.Commands
                                 {
                                     result = "win";
                                 }
-                                await RoluetteSpinChatCommand.MessageRoluetteSpinResults(result, user.ID, bet);
+                                await RouletteSpinChatCommand.MessageRouletteSpinResults(result, user.ID, bet);
                             }
                         }
                     }

@@ -22,7 +22,7 @@ namespace MixItUp.Overlay
 
     public class OverlayWebServer : WebSocketServerBase, IOverlayService
     {
-        private OverlayRoluetteWheel lastRoluetteSpin = null;
+        private OverlayRouletteWheel lastRouletteSpin = null;
 
         public OverlayWebServer(string address) : base(address) { }
 
@@ -34,10 +34,10 @@ namespace MixItUp.Overlay
 
         public async Task SetHTMLText(OverlayHTML htmlText) { await this.Send(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
 
-        public async Task SetRouletteWheel(OverlayRoluetteWheel roluetteWheel)
+        public async Task SetRouletteWheel(OverlayRouletteWheel rouletteWheel)
         {
-            this.lastRoluetteSpin = roluetteWheel;
-            await this.Send(new OverlayPacket("rouletteWheel", JObject.FromObject(roluetteWheel)));
+            this.lastRouletteSpin = rouletteWheel;
+            await this.Send(new OverlayPacket("rouletteWheel", JObject.FromObject(rouletteWheel)));
         }
 
         protected override async Task PacketReceived(string packet)
@@ -45,10 +45,10 @@ namespace MixItUp.Overlay
             if (packet != null)
             {
                 JObject packetObj = JObject.Parse(packet);
-                if (packetObj["type"].ToString().Equals("rouletteWheelResult") && this.lastRoluetteSpin != null)
+                if (packetObj["type"].ToString().Equals("rouletteWheelResult") && this.lastRouletteSpin != null)
                 {
                     string winningSegment = packetObj["data"].ToString();
-                    await RoluetteSpinChatCommand.MessageRoluetteSpinResults(winningSegment, this.lastRoluetteSpin.userID, this.lastRoluetteSpin.bet);
+                    await RouletteSpinChatCommand.MessageRouletteSpinResults(winningSegment, this.lastRouletteSpin.userID, this.lastRouletteSpin.bet);
                 }
             }
         }
