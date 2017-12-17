@@ -66,6 +66,11 @@ namespace MixItUp.Base.Actions
         {
             if (user != null)
             {
+                if (string.IsNullOrEmpty(user.AvatarLink))
+                {
+                    user.AvatarLink = UserViewModel.DefaultAvatarLink;
+                }
+
                 if (user.AvatarLink.Equals(UserViewModel.DefaultAvatarLink))
                 {
                     UserModel avatarUser = await ChannelSession.Connection.GetUser(user.UserName);
@@ -103,6 +108,11 @@ namespace MixItUp.Base.Actions
                             str = str.Replace("$arg" + (i + 1) + "usercurrency", userData.CurrencyAmount.ToString());
                             str = str.Replace("$arg" + (i + 1) + "userrank", userData.RankNameAndPoints);
                             str = str.Replace("$arg" + (i + 1) + "usertime", userData.ViewingTimeString);
+                        }
+
+                        if (string.IsNullOrEmpty(argUser.avatarUrl))
+                        {
+                            argUser.avatarUrl = UserViewModel.DefaultAvatarLink;
                         }
 
                         str = str.Replace("$arg" + (i + 1) + "useravatar", argUser.avatarUrl);
