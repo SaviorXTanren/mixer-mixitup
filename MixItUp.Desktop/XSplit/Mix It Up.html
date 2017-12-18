@@ -40,7 +40,7 @@
         {
             try
             {
-                if (packet != null && packet.type != null && packet.data != null)
+                if (packet != null && typeof packet.type !== 'undefined' && typeof packet.data !== 'undefined')
                 {
                     if (packet.type === "test")
                     {
@@ -56,7 +56,7 @@
                     }
                 }
             }
-            catch (err) { eventsDiv.innerHTML += 'Error Occurred: ' + err.message + '<BR>'; }
+            catch (err) { logException(err); }
         }
 
         function sceneTransition(data)
@@ -99,7 +99,7 @@
                                 {
                                     sources[i].setURL(data.webBrowserUrl);
                                 }
-                                catch (err) { }
+                                catch (err) { logException(err); }
                             }
 
                             sources[i].getItemList().then(function (items)
@@ -112,7 +112,7 @@
                                         {
                                             items[j].setVisible(data.sourceVisible);
                                         }
-                                        catch (err) { }
+                                        catch (err) { logException(err); }
                                     }
                                 }
                             });
@@ -120,6 +120,12 @@
                     }
                 }
             });
+        }
+
+        function logException(err)
+        {
+            eventsDiv.innerHTML += 'Error Occurred: ' + err.toString() + '<BR>';
+            logToSessionStorage(err);
         }
 
         openWebsocketConnection("8211");

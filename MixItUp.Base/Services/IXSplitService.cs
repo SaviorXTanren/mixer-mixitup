@@ -33,7 +33,7 @@ namespace MixItUp.Base.Services
 
         Task<bool> Initialize();
 
-        Task TestConnection();
+        Task<bool> TestConnection();
 
         Task SetCurrentScene(XSplitScene scene);
 

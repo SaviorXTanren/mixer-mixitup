@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Client;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Net.WebSockets;
@@ -25,6 +26,8 @@ namespace MixItUp.Base.Util
         private WebSocket webSocket;
         private CancellationTokenSource webSocketTokenSource = new CancellationTokenSource();
 
+        private bool connectionTestSuccessful;
+
         public WebSocketServerBase(string address) { this.address = address; }
 
         public Task<bool> Initialize()
@@ -37,6 +40,11 @@ namespace MixItUp.Base.Util
                     await this.ListenForConnection();
                     if (this.webSocket != null)
                     {
+                        if (ChannelSession.Settings.DiagnosticLogging)
+                        {
+                            this.Send(new WebSocketPacket() { type = "debug" });
+                        }
+
                         await this.ReceiveInternal();
                         await this.ShutdownWebsocket();
                     }
@@ -68,7 +76,33 @@ namespace MixItUp.Base.Util
             await this.ShutdownWebsocket();
         }
 
-        protected abstract Task PacketReceived(string packet);
+        public async Task<bool> TestConnection()
+        {
+            this.connectionTestSuccessful = false;
+            await this.Send(new WebSocketPacket() { type = "test" });
+            for (int i = 0; i < 5 && !this.connectionTestSuccessful; i++)
+            {
+                await Task.Delay(500);
+            }
+            return this.connectionTestSuccessful;
+        }
+
+        protected virtual Task PacketReceived(string packet)
+        {
+            if (packet != null)
+            {
+                JObject packetObj = JObject.Parse(packet);
+                if (packetObj["type"].ToString().Equals("exception"))
+                {
+                    Logger.Log("WebSocket Client Exception: " + packetObj["data"].ToString());
+                }
+                else if (packetObj["type"].ToString().Equals("test"))
+                {
+                    this.connectionTestSuccessful = true;
+                }
+            }
+            return Task.FromResult(0);
+        }
 
         private async Task ListenForConnection()
         {
@@ -158,7 +192,7 @@ namespace MixItUp.Base.Util
             this.OnDisconnected();
             try
             {
-                if (this.webSocket != null && this.webSocket.CloseStatus != null)
+                if (this.webSocket != null && this.webSocket.State == WebSocketState.Open && this.webSocket.CloseStatus != null)
                 {
                     await this.webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Done", CancellationToken.None);
                 }

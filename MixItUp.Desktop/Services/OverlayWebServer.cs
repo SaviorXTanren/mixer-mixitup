@@ -26,8 +26,6 @@ namespace MixItUp.Overlay
 
         public OverlayWebServer(string address) : base(address) { }
 
-        public async Task TestConnection() { await this.Send(new OverlayPacket("test", new JObject())); }
-
         public async Task SetImage(OverlayImage image) { await this.Send(new OverlayPacket("image", JObject.FromObject(image))); }
 
         public async Task SetText(OverlayText text) { await this.Send(new OverlayPacket("text", JObject.FromObject(text))); }
@@ -51,6 +49,7 @@ namespace MixItUp.Overlay
                     await RouletteSpinChatCommand.MessageRouletteSpinResults(winningSegment, this.lastRouletteSpin.userID, this.lastRouletteSpin.bet);
                 }
             }
+            await base.PacketReceived(packet);
         }
     }
 }

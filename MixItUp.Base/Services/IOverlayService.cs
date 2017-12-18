@@ -62,7 +62,7 @@ namespace MixItUp.Base.Services
 
         Task<bool> Initialize();
 
-        Task TestConnection();
+        Task<bool> TestConnection();
 
         Task SetImage(OverlayImage image);
 

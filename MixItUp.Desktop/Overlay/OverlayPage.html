@@ -64,28 +64,34 @@
             {
                 try
                 {
-                    if (packet != null && packet.type != null && packet.data != null) {
-                        if (packet.type === "test") {
-                            testPacket(packet.data);
+                    if (packet != null && typeof packet.type !== 'undefined')
+                    {
+                        if (packet.type === "test")
+                        {
+                            testPacket();
                         }
-                        else if (packet.type === "image") {
+                        else if (packet.type === "image")
+                        {
                             imagePacket(packet.data);
                         }
-                        else if (packet.type === "text") {
+                        else if (packet.type === "text")
+                        {
                             textPacket(packet.data);
                         }
-                        else if (packet.type === "htmlText") {
+                        else if (packet.type === "htmlText")
+                        {
                             htmlTextPacket(packet.data);
                         }
-						else if (packet.type === "rouletteWheel") {
+						else if (packet.type === "rouletteWheel")
+                        {
                             rouletteWheelPacket(packet.data);
                         }
                     }
                 }
-                catch (err) { console.log(err); }
+                catch (err) { logException(err); }
             }
 
-            function testPacket(data)
+            function testPacket()
             {
                 var addedElement = document.createElement('h1');
                 addedElement.innerHTML = 'Connection Test!';
@@ -199,6 +205,21 @@
                     }
 
                 }, 3000);
+            }
+
+            function logException(err)
+            {
+                if (isDebug)
+                {
+                    var addedElement = document.createElement('h1');
+                    addedElement.innerHTML = err.toString();
+                    addedElement.style.cssText += 'font-size: 100px';
+
+                    var data = { horizontal: 50, vertical: 50, duration: 10 };
+
+                    addWaitRemoveElement(data, addedElement);
+                }
+                logToSessionStorage(err);
             }
 
             openWebsocketConnection("8111");

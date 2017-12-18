@@ -1,4 +1,5 @@
 var connection;
+var isDebug = false;
 
 function openWebsocketConnection(port)
 {
@@ -17,11 +18,25 @@ function openWebsocketConnection(port)
         connection.onmessage = function (e)
         {
             var packet = getDataFromJSON(e.data);
+            if (packet != null && typeof packet.type !== 'undefined')
+            {
+                if (packet.type === "debug")
+                {
+                    isDebug = true;
+                }
+                else if (packet.type === "test")
+                {
+                    sendPacket('test', '');
+                }
+            }
             packetReceived(packet);
         };
 
         // Log errors
-        connection.onerror = function (error) { console.log('WebSocket Error ' + error); };
+        connection.onerror = function (error)
+        {
+            logToSessionStorage('WebSocket Error ' + error.toString());
+        };
 
         connection.onclose = function (e)
         {
@@ -29,16 +44,19 @@ function openWebsocketConnection(port)
             setTimeout(function () { openWebsocketConnection(port); }, 2000);
         };
     }
-    catch (err) { console.log(err); }
+    catch (err) { logToSessionStorage(err); }
 }
 
 function sendPacket(type, data)
 {
-    if (connection != null && connection.readyState == WebSocket.OPEN)
+    try 
     {
-        var packet = { type: type, data: data };
-        connection.send(JSON.stringify(packet));
+        if (connection != null && connection.readyState == WebSocket.OPEN) {
+            var packet = { type: type, data: data };
+            connection.send(JSON.stringify(packet));
+        }
     }
+    catch (err) { logToSessionStorage(err); }
 }
 
 function getDataFromJSON(packet)
@@ -50,6 +68,24 @@ function getDataFromJSON(packet)
             return JSON.parse(packet);
         }
     }
-    catch (err) { console.log(err); }
+    catch (err) { logToSessionStorage(err); }
     return null;
+}
+
+function logToSessionStorage(log)
+{
+    try
+    {
+        if (typeof (Storage) !== "undefined")
+        {
+            if (!sessionStorage.logs)
+            {
+                sessionStorage.logs = "";
+            }
+            sessionStorage.logs += "\n\n" + log.toString();
+
+            console.log(log.toString());
+        }
+    }
+    catch (err) { }
 }
