@@ -443,7 +443,7 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
-                    await Logger.LogUsage();
+                    await Logger.LogAnalyticsUsage("LogIn", "Desktop");
 
                     return true;
                 }
