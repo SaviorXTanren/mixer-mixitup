@@ -1,4 +1,5 @@
-﻿using Mixer.Base;
+﻿using AutoUpdaterDotNET;
+using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
@@ -7,14 +8,8 @@ using MixItUp.Desktop;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -65,7 +60,9 @@ namespace MixItUp.WPF
 
             await base.OnLoaded();
 
-            await this.CheckIfNewerVersionExists();
+            AutoUpdater.ReportErrors = true;
+            AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
+            AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater.xml");
         }
 
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
@@ -181,36 +178,24 @@ namespace MixItUp.WPF
             return result;
         }
 
-        private async Task CheckIfNewerVersionExists()
+        private void AutoUpdater_CheckForUpdateEvent(UpdateInfoEventArgs args)
         {
-            using (HttpClient httpClient = new HttpClient())
+            if (args != null && args.IsUpdateAvailable)
             {
-                httpClient.BaseAddress = new Uri("https://api.github.com/");
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-                httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Mozilla", "5.0"));
-
-                HttpResponseMessage response = await httpClient.GetAsync("repos/SaviorXTanren/mixer-mixitup/releases");
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (args.Mandatory)
                 {
-                    string resultString = await response.Content.ReadAsStringAsync();
-                    if (!string.IsNullOrEmpty(resultString))
-                    {
-                        JArray result = JArray.Parse(resultString);
-                        for (int i = 0; i < result.Count; i++)
-                        {
-                            Version latestVersion = new Version(result[0]["tag_name"].ToString());
-                            if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0)
-                            {
-                                if (MessageBox.Show("There is a newer version of Mix It Up, would you like to download it?", "Mix It Up - Newer Version",
-                                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                                {
-                                    Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/releases");
-                                    this.Close();
-                                }
-                                return;
-                            }
-                        }
-                    }
+                    MessageBox.Show("There is a new version of Mix It Up is available and it is a required update. Press OK to download and install the update.",
+                        "Mix It Up - Newer Version", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else if (MessageBox.Show("A new version of Mix It Up is available, would you like to download it?", "Mix It Up - Newer Version",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                {
+                    return;
+                }
+
+                if (AutoUpdater.DownloadUpdate())
+                {
+                    this.Close();
                 }
             }
         }
