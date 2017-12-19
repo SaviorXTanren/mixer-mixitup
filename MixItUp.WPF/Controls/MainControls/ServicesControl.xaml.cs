@@ -213,10 +213,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.Invoke<Task>(async () =>
             {
-                await MessageBoxHelper.ShowMessageDialog("Overlay service disconnected, attempting to reconnect...");
                 await this.DisconnectOverlayService();
                 await this.ConnectOverlayService();
-                MessageBoxHelper.CloseDialog();
             });
         }
 
@@ -224,10 +222,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.Invoke<Task>(async () =>
             {
-                await MessageBoxHelper.ShowMessageDialog("XSplit service disconnected, attempting to reconnect...");
                 await this.DisconnectXSplitService();
                 await this.ConnectXSplitService();
-                MessageBoxHelper.CloseDialog();
             });
         }
 
