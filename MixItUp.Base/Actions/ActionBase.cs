@@ -106,6 +106,8 @@ namespace MixItUp.Base.Actions
                             UserDataViewModel userData = ChannelSession.Settings.UserData[argUser.id];
 
                             str = str.Replace("$arg" + (i + 1) + "usercurrency", userData.CurrencyAmount.ToString());
+                            str = str.Replace("$arg" + (i + 1) + "userrankname", userData.RankName);
+                            str = str.Replace("$arg" + (i + 1) + "userrankpoints", userData.RankPoints.ToString());
                             str = str.Replace("$arg" + (i + 1) + "userrank", userData.RankNameAndPoints);
                             str = str.Replace("$arg" + (i + 1) + "usertime", userData.ViewingTimeString);
                         }
