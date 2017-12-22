@@ -36,6 +36,7 @@ namespace MixItUp.Base
         int TimerCommandsMinimumMessages { get; set; }
 
         UserRole GiveawayUserRole { get; set; }
+        string GiveawayUserRank { get; set; }
         string GiveawayCommand { get; set; }
         int GiveawayCurrencyCost { get; set; }
         int GiveawayTimer { get; set; }
