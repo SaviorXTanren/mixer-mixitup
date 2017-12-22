@@ -344,6 +344,18 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 bool result = await this.Window.RunAsyncOperation(async () =>
                 {
+                    // Disable all controls that do not have an associated Interactive Command or the Interactive Command is disabled
+                    foreach (InteractiveSceneModel scene in this.interactiveScenes)
+                    {
+                        List<InteractiveControlModel> controlsToUpdate = new List<InteractiveControlModel>();
+                        foreach (InteractiveControlModel control in scene.allControls)
+                        {
+                            InteractiveControlCommandItem controlCommand = this.CreateControlItem(scene.sceneID, control);
+                            control.disabled = (controlCommand.Command == null || !controlCommand.Command.IsEnabled);
+                        }
+                    }
+                    await ChannelSession.Connection.UpdateInteractiveGameVersion(this.selectedGameVersion);
+
                     if (await ChannelSession.ConnectInteractive(this.selectedGame))
                     {
                         return await ChannelSession.Interactive.Initialize();
