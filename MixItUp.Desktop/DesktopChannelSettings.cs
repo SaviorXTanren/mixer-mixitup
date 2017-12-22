@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -74,6 +75,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int GiveawayTimer { get; set; }
 
+        [JsonProperty]
+        public bool ModerationUseCommunityBannedWords { get; set; }
         [JsonProperty]
         public int ModerationCapsBlockCount { get; set; }
         [JsonProperty]
@@ -140,6 +143,8 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopChannelSettings : DesktopSavableChannelSettings, IChannelSettings
     {
+        private const string CommunityBannedWordsFilePath = "Assets\\CommunityBannedWords.txt";
+
         [JsonIgnore]
         public DatabaseDictionary<uint, UserDataViewModel> UserData { get; set; }
 
@@ -158,6 +163,8 @@ namespace MixItUp.Desktop
         public LockedList<string> Quotes { get; set; }
         [JsonIgnore]
         public LockedList<string> BannedWords { get; set; }
+        [JsonIgnore]
+        public LockedList<string> CommunityBannedWords { get; set; }
 
         [JsonIgnore]
         public LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }
@@ -202,6 +209,7 @@ namespace MixItUp.Desktop
             this.TimerCommands = new LockedList<TimerCommand>();
             this.Quotes = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
+            this.CommunityBannedWords = new LockedList<string>();
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>();
             this.InteractiveCooldownGroups = new LockedDictionary<string, int>();
         }
@@ -224,6 +232,11 @@ namespace MixItUp.Desktop
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(this.interactiveUserGroupsInternal);
             this.InteractiveCooldownGroups = new LockedDictionary<string, int>(this.interactiveCooldownGroupsInternal);
+
+            if (File.Exists(DesktopChannelSettings.CommunityBannedWordsFilePath))
+            {
+                this.CommunityBannedWords = new LockedList<string>(File.ReadAllLines(DesktopChannelSettings.CommunityBannedWordsFilePath));
+            }
         }
 
         public async Task CopyLatestValues()

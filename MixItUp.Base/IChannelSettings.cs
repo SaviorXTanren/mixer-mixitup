@@ -41,6 +41,7 @@ namespace MixItUp.Base
         int GiveawayCurrencyCost { get; set; }
         int GiveawayTimer { get; set; }
 
+        bool ModerationUseCommunityBannedWords { get; set; }
         int ModerationCapsBlockCount { get; set; }
         int ModerationPunctuationBlockCount { get; set; }
         int ModerationEmoteBlockCount { get; set; }
@@ -69,6 +70,7 @@ namespace MixItUp.Base
 
         LockedList<string> Quotes { get; }
         LockedList<string> BannedWords { get; }
+        LockedList<string> CommunityBannedWords { get; }
 
         LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; }
         LockedDictionary<string, int> InteractiveCooldownGroups { get; }

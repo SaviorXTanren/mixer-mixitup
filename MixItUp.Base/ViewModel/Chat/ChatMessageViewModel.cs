@@ -141,6 +141,18 @@ namespace MixItUp.Base.ViewModel.Chat
             string lower = this.Message.ToLower();
             lower = UserNameTagRegex.Replace(lower, "");
 
+            if (ChannelSession.Settings.ModerationUseCommunityBannedWords)
+            {
+                foreach (string word in ChannelSession.Settings.CommunityBannedWords)
+                {
+                    if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
+                    {
+                        reason = "Banned Word";
+                        return true;
+                    }
+                }
+            }
+
             foreach (string word in ChannelSession.Settings.BannedWords)
             {
                 if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
@@ -169,13 +181,6 @@ namespace MixItUp.Base.ViewModel.Chat
             if (ChannelSession.Settings.ModerationEmoteBlockCount > 0)
             {
                 MatchCollection matches = EmoteRegex.Matches(lower);
-                if (matches.Count >= ChannelSession.Settings.ModerationEmoteBlockCount)
-                {
-                    reason = "Too Many Emotes";
-                    return true;
-                }
-
-                matches = EmojiRegex.Matches(lower);
                 if (matches.Count >= ChannelSession.Settings.ModerationEmoteBlockCount)
                 {
                     reason = "Too Many Emotes";

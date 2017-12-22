@@ -25,13 +25,27 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0">Banned Words (One Per Line):</TextBlock>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="BannedWordsTextBox" Grid.Row="2" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" LostFocus="BannedWordsTextBox_LostFocus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBlock Grid.Column="0">Use Community Banned Words:</TextBlock>
+
+                <ToggleButton x:Name="CommunityBannedWordsToggleButton" Grid.Column="2" Checked="CommunityBannedWordsToggleButton_Checked" Unchecked="CommunityBannedWordsToggleButton_Checked" />
+            </Grid>
+
+            <TextBlock Grid.Row="2">Custom Banned Words (One Per Line):</TextBlock>
+
+            <TextBox x:Name="BannedWordsTextBox" Grid.Row="4" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" LostFocus="BannedWordsTextBox_LostFocus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Column="2">

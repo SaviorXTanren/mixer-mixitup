@@ -16,6 +16,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
+            this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityBannedWords;
             this.BannedWordsTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.BannedWords);
 
             this.MaxCapsAllowedSlider.Value = ChannelSession.Settings.ModerationCapsBlockCount;
@@ -27,6 +28,15 @@ namespace MixItUp.WPF.Controls.MainControls
             this.Timeout5MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount;
 
             return base.InitializeInternal();
+        }
+
+        private async void CommunityBannedWordsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ModerationUseCommunityBannedWords = this.CommunityBannedWordsToggleButton.IsChecked.GetValueOrDefault();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.SaveSettings();
+            });
         }
 
         private async void BannedWordsTextBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)

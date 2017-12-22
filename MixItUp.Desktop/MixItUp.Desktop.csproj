@@ -128,6 +128,9 @@
     <Compile Include="Services\XSplitWebServer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\CommunityBannedWords.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="LICENSE.txt" />
     <Content Include="OBS\obs-websocket-4.2.0-Windows-Installer.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
