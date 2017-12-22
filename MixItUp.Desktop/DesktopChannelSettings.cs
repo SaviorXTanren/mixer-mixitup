@@ -66,6 +66,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public UserRole GiveawayUserRole { get; set; }
         [JsonProperty]
+        public string GiveawayUserRank { get; set; }
+        [JsonProperty]
         public string GiveawayCommand { get; set; }
         [JsonProperty]
         public int GiveawayCurrencyCost { get; set; }

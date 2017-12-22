@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -38,6 +39,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.EnteredUsersListView.ItemsSource = this.enteredUsers;
 
             this.GiveawayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.GiveawayUserRole);
+
             this.GiveawayCommandTextBox.Text = ChannelSession.Settings.GiveawayCommand;
             this.GiveawayCurrencyCostTextBox.Text = ChannelSession.Settings.GiveawayCurrencyCost.ToString();
             this.GiveawayTimerTextBox.Text = ChannelSession.Settings.GiveawayTimer.ToString();
@@ -50,6 +52,10 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task VisibilityChanged()
         {
             this.GiveawayCurrencyCostTextBox.IsEnabled = ChannelSession.Settings.CurrencyAcquisition.Enabled;
+            this.GiveawayRankComboBox.IsEnabled = ChannelSession.Settings.RankAcquisition.Enabled;
+            //Putting This In Visibility Changed To Catch Any New Ranks Added After Initialization
+            this.GiveawayRankComboBox.ItemsSource = new List<string>(new string[] { "Any" }).Union(ChannelSession.Settings.Ranks.Select(x => x.Name)).ToList();
+            this.GiveawayRankComboBox.SelectedItem = ChannelSession.Settings.GiveawayUserRank ?? "Any";
             return Task.FromResult(0);
         }
 
@@ -64,6 +70,11 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.GiveawayTypeComboBox.SelectedIndex < 0)
             {
                 await MessageBoxHelper.ShowMessageDialog("The allowed winners must be specified");
+                return;
+            }
+            if (this.GiveawayRankComboBox.SelectedIndex < 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("The minimum rank must be specified");
                 return;
             }
 
@@ -96,6 +107,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.giveawayEnabled = true;
             this.giveawayItem = this.GiveawayItemTextBox.Text;
             ChannelSession.Settings.GiveawayUserRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.GiveawayTypeComboBox.SelectedItem);
+            ChannelSession.Settings.GiveawayUserRank = (string)this.GiveawayRankComboBox.SelectedItem;
             ChannelSession.Settings.GiveawayCommand = this.GiveawayCommandTextBox.Text.ToLower();
             ChannelSession.Settings.GiveawayCurrencyCost = currencyCost;
             ChannelSession.Settings.GiveawayTimer = this.timeLeft;
@@ -232,7 +244,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     if (isUserValid)
                     {
-                        if (ChannelSession.Settings.GiveawayCurrencyCost > 0 && ChannelSession.Settings.CurrencyAcquisition.Enabled)
+                        if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Settings.GiveawayCurrencyCost > 0)
                         {
                             if (e.User.Data.CurrencyAmount < ChannelSession.Settings.GiveawayCurrencyCost)
                             {
@@ -241,6 +253,16 @@ namespace MixItUp.WPF.Controls.MainControls
                                 return;
                             }
                             e.User.Data.CurrencyAmount -= ChannelSession.Settings.GiveawayCurrencyCost;
+                        }
+
+                        if (ChannelSession.Settings.RankAcquisition.Enabled && ChannelSession.Settings.GiveawayUserRank != "Any" && ChannelSession.Settings.Ranks.FirstOrDefault(x => x.Name == ChannelSession.Settings.GiveawayUserRank) != null)
+                        {
+                            if (e.User.Data.RankPoints < ChannelSession.Settings.Ranks.FirstOrDefault(x => x.Name == ChannelSession.Settings.GiveawayUserRank).MinimumPoints)
+                            {
+                                await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You do not have the required rank of {0} to participate in this giveaway!",
+                                    ChannelSession.Settings.GiveawayUserRank));
+                                return;
+                            }
                         }
 
                         await ChannelSession.Chat.Whisper(e.User.UserName, "You have been entered into the giveaway, stay tuned to see who wins!");
