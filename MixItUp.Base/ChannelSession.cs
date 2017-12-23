@@ -534,18 +534,12 @@ namespace MixItUp.Base
 
         private static void DisconnectionOccurred()
         {
-            if (ChannelSession.OnDisconectionOccurred != null)
-            {
-                ChannelSession.OnDisconectionOccurred(null, new EventArgs());
-            }
+            Logger.Log("Service disconnection occurred, attempting to reconnect now...");
         }
 
         private static void ReconnectionOccurred()
         {
-            if (ChannelSession.OnReconectionOccurred != null)
-            {
-                ChannelSession.OnReconectionOccurred(null, new EventArgs());
-            }
+            Logger.Log("Service reconnection successful");
         }
 
         private static async void GlobalEvents_OnRankChanged(object sender, UserDataViewModel e)
