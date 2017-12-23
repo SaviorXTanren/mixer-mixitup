@@ -14,7 +14,7 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
              
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="500">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -242,18 +242,22 @@
 
                 <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Hidden">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                    <Controls:SliderWithHeaderControl Grid.Column="2" x:Name="OverlayHorizontalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Horizontal Position %:" />
+                    <ComboBox Grid.Column="2" x:Name="OverlayFadeEffectComboBox" MaterialDesign:HintAssist.Hint="Fade Effect" Width="100" />
 
-                    <Controls:SliderWithHeaderControl Grid.Column="4" x:Name="OverlayVerticalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Vertical Position %:" />
+                    <Controls:SliderWithHeaderControl Grid.Column="4" x:Name="OverlayHorizontalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Horizontal Position %:" />
+
+                    <Controls:SliderWithHeaderControl Grid.Column="6" x:Name="OverlayVerticalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Vertical Position %:" />
                 </Grid>
             </Grid>
 

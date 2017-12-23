@@ -38,6 +38,8 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public double Duration;
         [DataMember]
+        public int FadeDuration;
+        [DataMember]
         public int Horizontal;
         [DataMember]
         public int Vertical;
@@ -46,34 +48,35 @@ namespace MixItUp.Base.Actions
 
         public OverlayAction() : base(ActionTypeEnum.Overlay) { }
 
-        public OverlayAction(string imagePath, int width, int height, double duration, int horizontal, int vertical)
-            : this(duration, horizontal, vertical)
+        public OverlayAction(string imagePath, int width, int height, double duration, int horizontal, int vertical, int fadeDuration)
+            : this(duration, horizontal, vertical, fadeDuration)
         {
             this.ImagePath = imagePath;
             this.ImageWidth = width;
             this.ImageHeight = height;
         }
 
-        public OverlayAction(string text, string color, int fontSize, double duration, int horizontal, int vertical)
-            : this(duration, horizontal, vertical)
+        public OverlayAction(string text, string color, int fontSize, double duration, int horizontal, int vertical, int fadeDuration)
+            : this(duration, horizontal, vertical, fadeDuration)
         {
             this.Text = text;
             this.Color = color;
             this.FontSize = fontSize;
         }
 
-        public OverlayAction(string htmlText, double duration, int horizontal, int vertical)
-            : this(duration, horizontal, vertical)
+        public OverlayAction(string htmlText, double duration, int horizontal, int vertical, int fadeDuration)
+            : this(duration, horizontal, vertical, fadeDuration)
         {
             this.HTMLText = htmlText;
         }
 
-        public OverlayAction(double duration, int horizontal, int vertical)
+        public OverlayAction(double duration, int horizontal, int vertical, int fadeDuration)
             : this()
         {
             this.Duration = duration;
             this.Horizontal = horizontal;
             this.Vertical = vertical;
+            this.FadeDuration = fadeDuration;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -107,13 +110,8 @@ namespace MixItUp.Base.Actions
                     {
                         await ChannelSession.Services.OverlayServer.SetImage(new OverlayImage()
                         {
-                            imagePath = imageFilePath,
-                            width = this.ImageWidth,
-                            height = this.ImageHeight,
-                            duration = this.Duration,
-                            horizontal = this.Horizontal,
-                            vertical = this.Vertical,
-                            imageData = this.imageData
+                            imagePath = imageFilePath, imageData = this.imageData, width = this.ImageWidth, height = this.ImageHeight,
+                            duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
                         });
                     }
                 }
@@ -122,13 +120,17 @@ namespace MixItUp.Base.Actions
                     string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
                     await ChannelSession.Services.OverlayServer.SetText(new OverlayText()
                     {
-                        text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical
+                        text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal,
+                        vertical = this.Vertical, fadeDuration = this.FadeDuration,
                     });
                 }
                 else if (!string.IsNullOrEmpty(this.HTMLText))
                 {
                     string htmlText = await this.ReplaceStringWithSpecialModifiers(this.HTMLText, user, arguments);
-                    await ChannelSession.Services.OverlayServer.SetHTMLText(new OverlayHTML() { htmlText = htmlText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical });
+                    await ChannelSession.Services.OverlayServer.SetHTMLText(new OverlayHTML()
+                    {
+                        htmlText = htmlText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
+                    });
                 }
             }
         }

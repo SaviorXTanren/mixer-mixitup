@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.ViewModel.User;
-using System;
+﻿using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -54,6 +53,8 @@ namespace MixItUp.Base.Services
         public int horizontal;
         [DataMember]
         public int vertical;
+        [DataMember]
+        public int fadeDuration;
     }
 
     public interface IOverlayService

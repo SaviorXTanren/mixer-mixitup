@@ -97,7 +97,7 @@
                 addedElement.innerHTML = 'Connection Test!';
                 addedElement.style.cssText += 'font-size: 100px';
 
-                var data = { horizontal: 50, vertical: 50, duration: 3 };
+                var data = { horizontal: 50, vertical: 50, duration: 3, fadeDuration: 400 };
 
                 addWaitRemoveElement(data, addedElement);
             }
@@ -171,21 +171,27 @@
 			}
 
 			function addWaitRemoveElement(data, addedElement)
-			{
+            {
 				if (addedElement != null)
-				{
+                {
 					addedElement.style.cssText += 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
-						data.vertical.toString() + '%; transform: translate(-50%, -50%);'
+                        data.vertical.toString() + '%; transform: translate(-50%, -50%); display: none;'
 
-					mainOverlayDiv.appendChild(addedElement);
+                    mainOverlayDiv.appendChild(addedElement);
 
-					setTimeout(function ()
-					{
-						mainOverlayDiv.removeChild(addedElement);
-					}, data.duration * 1000);
+                    $(addedElement).fadeIn(data.fadeDuration, function ()
+                    {
+                        setTimeout(function ()
+                        {
+                            $(addedElement).fadeOut(data.fadeDuration, function ()
+                            {
+                                mainOverlayDiv.removeChild(addedElement);
+                            });
+                        }, data.duration * 1000);
+                    });
 				}
             }
-			
+
 			function rouletteWheelResult()
             {
                 setTimeout(function () {

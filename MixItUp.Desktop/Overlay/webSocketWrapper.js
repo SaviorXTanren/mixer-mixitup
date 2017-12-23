@@ -41,7 +41,7 @@ function openWebsocketConnection(port)
         connection.onclose = function (e)
         {
             connectionClosed();
-            setTimeout(function () { openWebsocketConnection(port); }, 2000);
+            setTimeout(function () { openWebsocketConnection(port); }, 1000);
         };
     }
     catch (err) { logToSessionStorage(err); }
