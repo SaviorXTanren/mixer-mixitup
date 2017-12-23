@@ -39,6 +39,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" />
+                <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryColor}" />
 
                 <Button Grid.Column="2" x:Name="MoveUpActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowUpBold}" Click="MoveUpActionButton_Click" />
                 <Button Grid.Column="4" x:Name="MoveDownActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowDownBold}" Click="MoveDownActionButton_Click" />
