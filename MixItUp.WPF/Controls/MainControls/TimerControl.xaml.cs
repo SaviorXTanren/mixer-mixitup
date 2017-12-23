@@ -1,13 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -29,6 +28,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
 
+            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
+
             this.RefreshList();
 
             return base.InitializeInternal();
@@ -41,54 +42,6 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.timerCommands.Add(command);
             }
-        }
-
-        private async void TestButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            TimerCommand command = (TimerCommand)button.DataContext;
-
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                await command.Perform();
-            });
-        }
-
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            TimerCommand command = (TimerCommand)button.DataContext;
-
-            CommandWindow window = new CommandWindow(new TimerCommandDetailsControl(command));
-            window.Closed += Window_Closed;
-            window.Show();
-        }
-
-        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            TimerCommand command = (TimerCommand)button.DataContext;
-            ChannelSession.Settings.TimerCommands.Remove(command);
-
-            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-
-            this.TimerCommandsListView.SelectedIndex = -1;
-
-            this.RefreshList();
-        }
-
-        private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton button = (ToggleButton)sender;
-            CommandBase command = (CommandBase)button.DataContext;
-            command.IsEnabled = true;
-        }
-
-        private void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton button = (ToggleButton)sender;
-            CommandBase command = (CommandBase)button.DataContext;
-            command.IsEnabled = false;
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
@@ -128,6 +81,18 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await MessageBoxHelper.ShowMessageDialog("Interval must be 0 or greater");
                 this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
+            }
+        }
+
+        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
+        {
+            if (e is TimerCommand)
+            {
+                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+
+                this.TimerCommandsListView.SelectedIndex = -1;
+
+                this.RefreshList();
             }
         }
     }

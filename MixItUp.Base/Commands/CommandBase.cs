@@ -41,6 +41,11 @@ namespace MixItUp.Base.Commands
         [XmlIgnore]
         public string TypeName { get { return EnumHelper.GetEnumName(this.Type); } }
 
+        [XmlIgnore]
+        private Task currentTaskRun;
+        [XmlIgnore]
+        private CancellationTokenSource currentCancellationTokenSource;
+
         public CommandBase()
         {
             this.Commands = new List<string>();
@@ -66,9 +71,12 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(IEnumerable<string> arguments) { await this.Perform(ChannelSession.GetCurrentUser(), arguments); }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null) { await this.PerformInternal(user, arguments); }
+
+        public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            await this.PerformInternal(user, arguments);
+            await this.Perform(user, arguments);
+            await this.currentTaskRun;
         }
 
         public virtual Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
@@ -80,8 +88,10 @@ namespace MixItUp.Base.Commands
                     arguments = new List<string>();
                 }
 
-                Task.Run(async () =>
+                this.currentCancellationTokenSource = new CancellationTokenSource();
+                this.currentTaskRun = Task.Run(async () =>
                 {
+                    CancellationToken token = this.currentCancellationTokenSource.Token;
                     try
                     {
                         await this.AsyncSemaphore.WaitAsync();
@@ -90,14 +100,24 @@ namespace MixItUp.Base.Commands
 
                         foreach (ActionBase action in this.Actions)
                         {
+                            token.ThrowIfCancellationRequested();
                             await action.Perform(user, arguments);
                         }
-                    }
+                    } 
+                    catch (TaskCanceledException) { }
                     catch (Exception ex) { Logger.Log(ex); }
                     finally { this.AsyncSemaphore.Release(); }
-                });
+                }, this.currentCancellationTokenSource.Token);
             }
             return Task.FromResult(0);
+        }
+
+        public void StopCurrentRun()
+        {
+            if (this.currentCancellationTokenSource != null)
+            {
+                this.currentCancellationTokenSource.Cancel();
+            }
         }
 
         protected abstract SemaphoreSlim AsyncSemaphore { get; }

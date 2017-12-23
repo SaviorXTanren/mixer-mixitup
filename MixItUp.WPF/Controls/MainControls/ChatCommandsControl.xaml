@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -76,37 +77,10 @@
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                     <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="*" />
                     <DataGridTextColumn Header="Permission" Binding="{Binding PermissionsString}" IsReadOnly="True" Width="*" />
-                    <DataGridTemplateColumn Width="65">
+                    <DataGridTemplateColumn Header="Actions" Width="240">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="TestButton" Click="TestButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Test Command">
-                                    <MaterialDesign:PackIcon Kind="Play" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="65">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button x:Name="EditButton" Click="EditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Command">
-                                    <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="65">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
-                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="60">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ToggleButton x:Name="EnableDisableToggleSwitch" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" IsChecked="{Binding IsEnabled}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Unchecked" />
+                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" DataContext="{Binding}" HorizontalAlignment="Center" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

@@ -1,16 +1,14 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -51,6 +49,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.PreMadeCommandsGrid.Visibility = Visibility.Visible;
             }
 
+            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
+
             return base.InitializeInternal();
         }
 
@@ -79,64 +79,22 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CustomCommandsGrid.Visibility = Visibility.Visible;
         }
 
-        private async void TestButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            ChatCommand command = (ChatCommand)button.DataContext;
-
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                await command.Perform(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
-            });
-        }
-
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            ChatCommand command = (ChatCommand)button.DataContext;
-
-            CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command));
-            window.Closed += Window_Closed;
-            window.Show();
-        }
-
-        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            ChatCommand command = (ChatCommand)button.DataContext;
-            ChannelSession.Settings.ChatCommands.Remove(command);
-
-            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-
-            this.CustomCommandsListView.SelectedIndex = -1;
-
-            this.RefreshList();
-        }
-
-        private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton button = (ToggleButton)sender;
-            CommandBase command = (CommandBase)button.DataContext;
-            command.IsEnabled = true;
-        }
-
-        private void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton button = (ToggleButton)sender;
-            CommandBase command = (CommandBase)button.DataContext;
-            command.IsEnabled = false;
-        }
-
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandWindow window = new CommandWindow(new ChatCommandDetailsControl());
-            window.Closed += Window_Closed;
             window.Show();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
         {
-            this.RefreshList();
+            if (e is ChatCommand)
+            {
+                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+
+                this.CustomCommandsListView.SelectedIndex = -1;
+
+                this.RefreshList();
+            }
         }
     }
 }

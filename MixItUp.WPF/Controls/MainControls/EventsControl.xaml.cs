@@ -20,6 +20,12 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         private static readonly ConstellationEventType resubscribeSharedEvent = new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id);
 
+        private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
+        {
+            ConstellationEventTypeEnum.channel__id__followed, ConstellationEventTypeEnum.channel__id__hosted, ConstellationEventTypeEnum.channel__id__subscribed,
+            ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared
+        };
+
         public EventsControl()
         {
             InitializeComponent();
@@ -27,56 +33,25 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override async Task InitializeInternal()
         {
-            EventCommand followCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__followed));
-            if (followCommand == null)
-            {
-                followCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel);
-                ChannelSession.Settings.EventCommands.Add(followCommand);
-            }
-            this.OnFollowCommandControl.Initialize(this.Window, followCommand);
-
-            EventCommand hostCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__hosted));
-            if (hostCommand == null)
-            {
-                hostCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__hosted, ChannelSession.Channel);
-                ChannelSession.Settings.EventCommands.Add(hostCommand);
-            }
-            this.OnHostCommandControl.Initialize(this.Window, hostCommand);
-
-            EventCommand subscribeCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__subscribed));
-            if (subscribeCommand == null)
-            {
-                subscribeCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel);
-                ChannelSession.Settings.EventCommands.Add(subscribeCommand);
-            }
-            this.OnSubscribeCommandControl.Initialize(this.Window, subscribeCommand);
-
-            EventCommand resubscribeCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__resubscribed));
-            if (resubscribeCommand == null)
-            {
-                resubscribeCommand = new EventCommand(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.Channel);
-                ChannelSession.Settings.EventCommands.Add(resubscribeCommand);
-            }
-            this.OnResubscribeCommandControl.Initialize(this.Window, resubscribeCommand);
-
-            EventCommand resubscribeSharedCommand = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(ConstellationEventTypeEnum.channel__id__resubShared));
-            if (resubscribeSharedCommand == null)
-            {
-                resubscribeSharedCommand = new EventCommand();
-                ChannelSession.Settings.EventCommands.Add(resubscribeSharedCommand);
-            }
+            this.RefreshEventControls();
 
             await ChannelSession.SaveSettings();
+
+            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
 
             if (await ChannelSession.ConnectConstellation())
             {
                 ChannelSession.Constellation.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
-
-                List<ConstellationEventType> eventsToSubscribeTo = ChannelSession.Settings.EventCommands.Select(c => c.GetEventType()).ToList();
-                eventsToSubscribeTo.Add(resubscribeSharedEvent);
-
-                await ChannelSession.Constellation.SubscribeToEvents(eventsToSubscribeTo);
+                await ChannelSession.Constellation.SubscribeToEvents(EventsControl.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.User.id)));
             }
+        }
+
+        private void RefreshEventControls()
+        {
+            this.OnFollowCommandControl.Initialize(this.Window, ConstellationEventTypeEnum.channel__id__followed);
+            this.OnHostCommandControl.Initialize(this.Window, ConstellationEventTypeEnum.channel__id__hosted);
+            this.OnSubscribeCommandControl.Initialize(this.Window, ConstellationEventTypeEnum.channel__id__subscribed);
+            this.OnResubscribeCommandControl.Initialize(this.Window, ConstellationEventTypeEnum.channel__id__resubscribed);
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
@@ -122,6 +97,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     return;
                 }
+            }
+        }
+
+        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
+        {
+            if (e is EventCommand)
+            {
+                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+
+                this.RefreshEventControls();
             }
         }
     }

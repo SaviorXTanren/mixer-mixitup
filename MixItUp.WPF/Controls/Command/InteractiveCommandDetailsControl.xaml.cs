@@ -4,6 +4,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -21,10 +22,12 @@ namespace MixItUp.WPF.Controls.Command
 
         private InteractiveCommand command;
 
-        public InteractiveCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveCommand command)
-            : this(game, version, scene, command.Control)
+        public InteractiveCommandDetailsControl(InteractiveCommand command)
         {
             this.command = command;
+            this.control = command.Control;
+
+            InitializeComponent();
         }
 
         public InteractiveCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveControlModel control)
@@ -37,7 +40,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public override Task Initialize()
+        public override async Task Initialize()
         {
             this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandTriggerType>();
             this.CooldownTypeComboBox.ItemsSource = new List<string>() { "Individual", "Group" };
@@ -71,9 +74,16 @@ namespace MixItUp.WPF.Controls.Command
                         this.CooldownTextBox.Text = this.command.IndividualCooldown.ToString();
                     }
                 }
-            }
 
-            return Task.FromResult(0);
+                IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
+                this.game = games.FirstOrDefault(g => g.name.Equals(this.command.GameID));
+                if (this.game != null)
+                {
+                    this.version = this.game.versions.First();
+                    this.version = await ChannelSession.Connection.GetInteractiveGameVersion(this.version);
+                    this.scene = this.version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
+                }
+            }
         }
 
         public override async Task<bool> Validate()

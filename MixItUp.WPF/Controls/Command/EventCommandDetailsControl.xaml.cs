@@ -17,10 +17,13 @@ namespace MixItUp.WPF.Controls.Command
     public partial class EventCommandDetailsControl : CommandDetailsControlBase
     {
         private EventCommand command;
+        private ConstellationEventTypeEnum eventType;
 
-        public EventCommandDetailsControl(EventCommand command)
+        public EventCommandDetailsControl(EventCommand command) : this(command.EventType) { this.command = command; }
+
+        public EventCommandDetailsControl(ConstellationEventTypeEnum eventType)
         {
-            this.command = command;
+            this.eventType = eventType;
             InitializeComponent();
         }
 
@@ -32,12 +35,16 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.command != null)
             {
-                this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.EventType);
-                this.EventIDTextBox.Text = this.command.UniqueEventID;
-
-                this.EventTypeComboBox.IsEnabled = false;
-                this.EventIDTextBox.IsEnabled = false;
+                this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.eventType);
+                this.EventIDTextBox.Text = this.command.Commands.First();
             }
+            else
+            {
+                this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.eventType);
+                this.EventIDTextBox.Text = ChannelSession.User.username;
+            }
+            this.EventTypeComboBox.IsEnabled = false;
+            this.EventIDTextBox.IsEnabled = false;
 
             return Task.FromResult(0);
         }

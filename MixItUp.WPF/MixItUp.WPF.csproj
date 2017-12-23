@@ -237,6 +237,9 @@
     <Compile Include="Controls\MainControls\QuoteControl.xaml.cs">
       <DependentUpon>QuoteControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
+      <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SliderWithHeaderControl.xaml.cs">
       <DependentUpon>SliderWithHeaderControl.xaml</DependentUpon>
     </Compile>
@@ -372,6 +375,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\QuoteControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\CommandButtonsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

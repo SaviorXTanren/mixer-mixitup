@@ -16,7 +16,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -28,6 +27,8 @@ namespace MixItUp.WPF.Controls.MainControls
         public InteractiveJoystickControlModel Joystick { get; set; }
 
         public InteractiveCommand Command { get; set; }
+        public Visibility NewCommandButtonVisibility { get { return (this.Command == null) ? Visibility.Visible : Visibility.Collapsed; } }
+        public Visibility ExistingCommandButtonVisibility { get { return (this.Command != null) ? Visibility.Visible : Visibility.Collapsed; } }
 
         public InteractiveControlCommandItem(InteractiveButtonControlModel button) { this.Button = button; }
         public InteractiveControlCommandItem(InteractiveJoystickControlModel joystick) { this.Joystick = joystick; }
@@ -102,6 +103,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.InteractiveGamesComboBox.ItemsSource = this.interactiveGames;
             this.InteractiveScenesComboBox.ItemsSource = this.interactiveScenes;
             this.InteractiveControlsGridView.ItemsSource = this.currentSceneControlItems;
+
+            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
 
             await this.RefreshAllInteractiveGames();
         }
@@ -259,83 +262,23 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.RefreshAllInteractiveGames();
         }
 
-        private async void TestButton_Click(object sender, RoutedEventArgs e)
+        private void NewInteractiveCommandButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
 
-            if (command.Command != null)
-            {
-                await this.Window.RunAsyncOperation(async () =>
-                {
-                    await command.Command.Perform();
-                });
-            }
-        }
-
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
-
-            CommandWindow window = (command.Command == null) ?
-                new CommandWindow(new InteractiveCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control)) :
-                new CommandWindow(new InteractiveCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Command));
-            window.Closed += Window_Closed;
+            CommandWindow window = new CommandWindow(new InteractiveCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control));
             window.Show();
         }
 
-        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
         {
-            Button button = (Button)sender;
-            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
-
-            if (command.Command != null)
+            if (e is InteractiveCommand)
             {
-                ChannelSession.Settings.InteractiveCommands.Remove(command.Command);
-                command.Command = null;
-
                 await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-
-                this.InteractiveControlsGridView.SelectedIndex = -1;
 
                 this.RefreshSelectedScene();
             }
-        }
-
-        private async void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton button = (ToggleButton)sender;
-            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
-            if (command.Command != null)
-            {
-                command.Command.IsEnabled = true;
-                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-            }
-            else
-            {
-                button.IsChecked = false;
-            }
-        }
-
-        private async void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton button = (ToggleButton)sender;
-            InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
-            if (command.Command != null)
-            {
-                command.Command.IsEnabled = false;
-                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-            }
-            else
-            {
-                button.IsChecked = false;
-            }
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.RefreshSelectedScene();
         }
 
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)

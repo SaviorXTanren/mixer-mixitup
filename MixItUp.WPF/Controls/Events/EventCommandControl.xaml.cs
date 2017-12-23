@@ -1,14 +1,29 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Clients;
+using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Command;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.Events
 {
+    public class EventCommandItem
+    {
+        public ConstellationEventTypeEnum EventType { get; set; }
+
+        public EventCommand Command { get; set; }
+
+        public EventCommandItem(EventCommand command) : this(command.EventType) { this.Command = command; }
+
+        public EventCommandItem(ConstellationEventTypeEnum eventType) { this.EventType = eventType; }
+
+        public string Name { get { return EnumHelper.GetEnumName(this.EventType); } }
+    }
+
     /// <summary>
     /// Interaction logic for EventCommandControl.xaml
     /// </summary>
@@ -16,41 +31,28 @@ namespace MixItUp.WPF.Controls.Events
     {
         private LoadingWindowBase window;
 
-        private EventCommand command;
+        private EventCommandItem commandItem;
 
         public EventCommandControl() { InitializeComponent(); }
 
-        public void Initialize(LoadingWindowBase window, EventCommand command)
+        public void Initialize(LoadingWindowBase window, ConstellationEventTypeEnum eventType)
         {
             this.window = window;
-            this.DataContext = this.command = command;
+
+            EventCommand command = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(eventType));
+            this.commandItem = (command != null) ? new EventCommandItem(command) : new EventCommandItem(eventType);
+            this.DataContext = this.commandItem;
+
+            this.CommandButtons.Initialize(this.commandItem.Command);
+
+            this.NewInteractiveCommandButton.Visibility = (this.commandItem.Command == null) ? Visibility.Visible : Visibility.Collapsed;
+            this.CommandButtons.Visibility = (this.commandItem.Command != null) ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private async void TestButton_Click(object sender, RoutedEventArgs e)
+        private void NewInteractiveCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            this.TestButton.IsEnabled = false;
-            await this.command.Perform();
-            this.TestButton.IsEnabled = true;
-        }
-
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandWindow window = new CommandWindow(new EventCommandDetailsControl(this.command));
+            CommandWindow window = new CommandWindow(new EventCommandDetailsControl(this.commandItem.EventType));
             window.Show();
-        }
-
-        private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton button = (ToggleButton)sender;
-            CommandBase command = (CommandBase)button.DataContext;
-            command.IsEnabled = true;
-        }
-
-        private void EnableDisableToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton button = (ToggleButton)sender;
-            CommandBase command = (CommandBase)button.DataContext;
-            command.IsEnabled = false;
         }
     }
 }

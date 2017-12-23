@@ -20,18 +20,13 @@ namespace MixItUp.WPF.Windows.Command
     /// </summary>
     public partial class CommandWindow : LoadingWindowBase
     {
-        private class TestCommand : CommandBase
-        {
-            private static SemaphoreSlim testCommandPerformSemaphore = new SemaphoreSlim(1);
-
-            protected override SemaphoreSlim AsyncSemaphore { get { return TestCommand.testCommandPerformSemaphore; } }
-        }
-
         private CommandDetailsControlBase commandDetailsControl;
 
         private ObservableCollection<ActionControl> actionControls;
 
         private bool allowActionChanges;
+
+        private CommandBase newCommand = null;
 
         public CommandWindow(CommandDetailsControlBase commandDetailsControl, bool allowActionChanges = true) 
         {
@@ -102,6 +97,12 @@ namespace MixItUp.WPF.Windows.Command
             await base.OnLoaded();
         }
 
+        protected override async Task OnClosing()
+        {
+            GlobalEvents.CommandUpdated(this.newCommand);
+            await base.OnClosing();
+        }
+
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.TypeComboBox.SelectedIndex >= 0)
@@ -138,11 +139,11 @@ namespace MixItUp.WPF.Windows.Command
                 return;
             }
 
-            CommandBase command = await this.RunAsyncOperation(async () => { return await this.commandDetailsControl.GetNewCommand(); });
-            if (command != null)
+            this.newCommand = await this.RunAsyncOperation(async () => { return await this.commandDetailsControl.GetNewCommand(); });
+            if (this.newCommand != null)
             {
-                command.Actions.Clear();
-                command.Actions = actions;
+                this.newCommand.Actions.Clear();
+                this.newCommand.Actions = actions;
 
                 await this.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
