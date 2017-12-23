@@ -65,6 +65,10 @@ namespace MixItUp.Base.Actions
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
         {
+            str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
+
+            str = str.Replace("$currencyname", ChannelSession.Settings.CurrencyAcquisition.Name);
+
             if (user != null)
             {
                 if (string.IsNullOrEmpty(user.AvatarLink))
@@ -89,8 +93,6 @@ namespace MixItUp.Base.Actions
 
                 str = str.Replace("$username", user.UserName);
             }
-
-            str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
 
             if (arguments != null)
             {
