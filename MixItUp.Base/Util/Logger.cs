@@ -37,16 +37,20 @@ namespace MixItUp.Base.Util
 
         public static async Task LogAnalyticsUsage(string eventName, string eventDetails)
         {
-            try
-            {
-                using (HttpClientWrapper client = new HttpClientWrapper())
+            #if DEBUG
+                await Task.FromResult(0);
+            #else
+                try
                 {
-                    client.BaseAddress = new Uri("https://api.mixitupapp.com/analytics/");
-                    HttpResponseMessage response = await client.GetAsync(string.Format("log?username={0}&eventName={1}&eventDetails={2}&appVersion={3}",
-                        ChannelSession.User.username, eventName, eventDetails, Assembly.GetEntryAssembly().GetName().Version.ToString()));
+                    using (HttpClientWrapper client = new HttpClientWrapper())
+                    {
+                        client.BaseAddress = new Uri("https://api.mixitupapp.com/analytics/");
+                        HttpResponseMessage response = await client.GetAsync(string.Format("log?username={0}&eventName={1}&eventDetails={2}&appVersion={3}",
+                            ChannelSession.User.username, eventName, eventDetails, Assembly.GetEntryAssembly().GetName().Version.ToString()));
+                    }
                 }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { Logger.Log(ex); }
+            #endif
         }
 
         public static async Task LogAnalyticsException(Exception ex) { await Logger.LogAnalyticsUsage("Exception", ex.ToString()); }
