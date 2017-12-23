@@ -162,9 +162,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Command\CustomCommandControl.xaml.cs">
-      <DependentUpon>CustomCommandControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -174,14 +171,17 @@
     <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
       <DependentUpon>ChannelControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\CurrencyControl.xaml.cs">
+      <DependentUpon>CurrencyControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
       <DependentUpon>ModerationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\PreMadeChatCommandControl.xaml.cs">
       <DependentUpon>PreMadeChatCommandControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\CurrencyRankControl.xaml.cs">
-      <DependentUpon>CurrencyRankControl.xaml</DependentUpon>
+    <Compile Include="Controls\MainControls\RankControl.xaml.cs">
+      <DependentUpon>RankControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml.cs">
       <DependentUpon>InteractiveSceneUserGroupsDialogControl.xaml</DependentUpon>
@@ -270,10 +270,6 @@
     <Compile Include="Windows\Wizard\NewUserWizardWindow.xaml.cs">
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\Command\CustomCommandControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\Command\CustomCommandDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -286,6 +282,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\CurrencyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\ModerationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -294,7 +294,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\CurrencyRankControl.xaml">
+    <Page Include="Controls\MainControls\RankControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,13 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
-using System;
+using MixItUp.WPF.Windows.Command;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,13 +14,15 @@ using System.Windows.Controls;
 namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
-    /// Interaction logic for CurrencyRankControl.xaml
+    /// Interaction logic for RankControl.xaml
     /// </summary>
-    public partial class CurrencyRankControl : MainControlBase
+    public partial class RankControl : MainControlBase
     {
+        private const string RankChangedCommandName = "User Rank Changed";
+
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
-        public CurrencyRankControl()
+        public RankControl()
         {
             InitializeComponent();
         }
@@ -35,76 +36,20 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.ranks.Add(rank);
             }
 
-            this.CurrencyNameTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.Name;
-            this.CurrencyAmountTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.AcquireAmount.ToString();
-            this.CurrencyTimeTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.AcquireInterval.ToString();
-            this.CurrencyToggleSwitch.IsChecked = ChannelSession.Settings.CurrencyAcquisition.Enabled;
-            this.CurrencyGrid.IsEnabled = !ChannelSession.Settings.CurrencyAcquisition.Enabled;
-
             this.RankPointsNameTextBox.Text = ChannelSession.Settings.RankAcquisition.Name;
             this.RankPointsAmountTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireAmount.ToString();
             this.RankPointsTimeTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireInterval.ToString();
             this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
             this.RankGrid.IsEnabled = !ChannelSession.Settings.RankAcquisition.Enabled;
 
-            CustomCommand rankChangeCommand = ChannelSession.Settings.RankChangedCommand; 
-            if (rankChangeCommand == null)
-            {
-                rankChangeCommand = new CustomCommand("User Rank Changed");
-                ChannelSession.Settings.RankChangedCommand = rankChangeCommand;
-            }
-            this.RankChangedCommandControl.Initialize(this.Window, ChannelSession.Settings.RankChangedCommand);
+            this.CommandButtons.CommandUpdated += CommandButtons_CommandUpdated;
+            this.CommandButtons.CommandDeleted += CommandButtons_CommandDeleted;
+
+            this.UpdateRankChangedCommand();
+
+            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
+
             return base.InitializeInternal();
-        }
-
-        private async void CurrencyToggleSwitch_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(this.CurrencyNameTextBox.Text))
-            {
-                await MessageBoxHelper.ShowMessageDialog("A currency name must be specified");
-                this.CurrencyToggleSwitch.IsChecked = false;
-                return;
-            }
-
-            int currencyAmount = 0;
-            if (string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) || !int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) || currencyAmount < 1)
-            {
-                await MessageBoxHelper.ShowMessageDialog("A valid currency amount must be specified");
-                this.CurrencyToggleSwitch.IsChecked = false;
-                return;
-            }
-
-            int currencyTime = 0;
-            if (string.IsNullOrEmpty(this.CurrencyTimeTextBox.Text) || !int.TryParse(this.CurrencyTimeTextBox.Text, out currencyTime) || currencyTime < 1)
-            {
-                await MessageBoxHelper.ShowMessageDialog("A valid currency interval must be specified");
-                this.CurrencyToggleSwitch.IsChecked = false;
-                return;
-            }
-
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                ChannelSession.Settings.CurrencyAcquisition.Name = this.CurrencyNameTextBox.Text;
-                ChannelSession.Settings.CurrencyAcquisition.AcquireAmount = currencyAmount;
-                ChannelSession.Settings.CurrencyAcquisition.AcquireInterval = currencyTime;
-                ChannelSession.Settings.CurrencyAcquisition.Enabled = true;
-
-                await ChannelSession.SaveSettings();
-            });
-
-            this.CurrencyGrid.IsEnabled = false;
-        }
-
-        private async void CurrencyToggleSwitch_Unchecked(object sender, RoutedEventArgs e)
-        {
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                ChannelSession.Settings.CurrencyAcquisition.Enabled = false;
-
-                await ChannelSession.SaveSettings();
-            });
-
-            this.CurrencyGrid.IsEnabled = true;
         }
 
         private async void RankToggleSwitch_Checked(object sender, RoutedEventArgs e)
@@ -185,14 +130,14 @@ namespace MixItUp.WPF.Controls.MainControls
             if (string.IsNullOrEmpty(this.RankAmountTextBox.Text) || !int.TryParse(this.RankAmountTextBox.Text, out rankAmount) || rankAmount < 0)
             {
                 await MessageBoxHelper.ShowMessageDialog("A rank amount must be specified");
-                this.CurrencyToggleSwitch.IsChecked = false;
+                this.RankToggleSwitch.IsChecked = false;
                 return;
             }
 
             if (this.ranks.Any(r => r.Name.Equals(this.RankNameTextBox.Text) || r.MinimumPoints == rankAmount))
             {
                 await MessageBoxHelper.ShowMessageDialog("Every rank must have a unique name and minimum amount");
-                this.CurrencyToggleSwitch.IsChecked = false;
+                this.RankToggleSwitch.IsChecked = false;
                 return;
             }
 
@@ -210,5 +155,51 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RankNameTextBox.Clear();
             this.RankAmountTextBox.Clear();
         }
+
+        private void UpdateRankChangedCommand()
+        {
+            if (ChannelSession.Settings.RankChangedCommand != null)
+            {
+                this.NewInteractiveCommandButton.Visibility = Visibility.Collapsed;
+                this.CommandButtons.Visibility = Visibility.Visible;
+                this.CommandButtons.Initialize(ChannelSession.Settings.RankChangedCommand);
+            }
+            else
+            {
+                this.NewInteractiveCommandButton.Visibility = Visibility.Visible;
+                this.CommandButtons.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void NewInteractiveCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(RankControl.RankChangedCommandName)));
+            window.Show();
+        }
+
+        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
+        {
+            if (e is CustomCommand && e.Name.Equals(RankControl.RankChangedCommandName))
+            {
+                ChannelSession.Settings.RankChangedCommand = (CustomCommand)e;
+                this.UpdateRankChangedCommand();
+                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+            }
+        }
+
+        private async void CommandButtons_CommandUpdated(object sender, CommandBase e)
+        {
+            ChannelSession.Settings.RankChangedCommand = (CustomCommand)e;
+            this.UpdateRankChangedCommand();
+            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+        }
+
+        private async void CommandButtons_CommandDeleted(object sender, CommandBase e)
+        {
+            ChannelSession.Settings.RankChangedCommand = null;
+            this.UpdateRankChangedCommand();
+            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+        }
     }
 }
+

@@ -14,6 +14,9 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class CommandButtonsControl : UserControl
     {
+        public event EventHandler<CommandBase> CommandUpdated;
+        public event EventHandler<CommandBase> CommandDeleted;
+
         private CommandBase command;
 
         public CommandButtonsControl()
@@ -24,7 +27,13 @@ namespace MixItUp.WPF.Controls.Command
 
         public void Initialize(CommandBase command) { this.DataContext = this.command = command; }
 
-        private void CommandButtonsControl_Loaded(object sender, RoutedEventArgs e) { this.Initialize((CommandBase)this.DataContext); }
+        private void CommandButtonsControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is CommandBase)
+            {
+                this.Initialize((CommandBase)this.DataContext);
+            }
+        }
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
@@ -61,9 +70,19 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.command is InteractiveCommand) { commandDetails = new InteractiveCommandDetailsControl((InteractiveCommand)command); }
                 if (this.command is EventCommand) { commandDetails = new EventCommandDetailsControl((EventCommand)command); }
                 if (this.command is TimerCommand) { commandDetails = new TimerCommandDetailsControl((TimerCommand)command); }
+                if (this.command is CustomCommand) { commandDetails = new CustomCommandDetailsControl((CustomCommand)command); }
 
                 CommandWindow window = new CommandWindow(commandDetails);
+                window.Closed += Window_Closed;
                 window.Show();
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (this.CommandUpdated != null)
+            {
+                this.CommandUpdated(this, this.command);
             }
         }
 
@@ -77,6 +96,10 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.command is TimerCommand) { ChannelSession.Settings.TimerCommands.Remove((TimerCommand)command); }
 
                 GlobalEvents.CommandUpdated(command);
+                if (this.CommandDeleted != null)
+                {
+                    this.CommandDeleted(this, this.command);
+                }
             }
         }
 
