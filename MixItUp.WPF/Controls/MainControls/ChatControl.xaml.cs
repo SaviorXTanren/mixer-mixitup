@@ -417,8 +417,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (!control.Message.IsWhisper)
                 {
                     await ChannelSession.Chat.DeleteMessage(control.Message.ID);
-                    control.DeleteMessage();
                 }
+                control.DeleteMessage();
             }
         }
 

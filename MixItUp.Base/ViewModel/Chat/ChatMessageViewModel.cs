@@ -1,8 +1,12 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace MixItUp.Base.ViewModel.Chat
@@ -20,6 +24,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public static readonly Regex UserNameTagRegex = new Regex("@\\w+");
         public static readonly Regex WhisperRegex = new Regex("/w @\\w+ ");
+
+        public static Dictionary<string, EmoticonImage> EmoticonImages = new Dictionary<string, EmoticonImage>();
 
         private static readonly string BannedWordRegexFormat = "(^|\\s){0}(\\s|$)";
 
@@ -42,6 +48,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public ChatMessageEventModel ChatMessageEvent { get; private set; }
 
+        public List<ChatMessageDataModel> MessageComponents = new List<ChatMessageDataModel>();
+
         public ChatMessageViewModel(ChatMessageEventModel chatMessageEvent)
         {
             this.ChatMessageEvent = chatMessageEvent;
@@ -61,33 +69,42 @@ namespace MixItUp.Base.ViewModel.Chat
             this.Message = string.Empty;
             foreach (ChatMessageDataModel message in this.ChatMessageEvent.message.message)
             {
+                this.MessageComponents.Add(message);
                 switch (message.type)
                 {
                     case "emoticon":
                         // Special code here to process emoticons
-                        //string imageLink = null;
-                        //if (message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
-                        //{
-                        //    imageLink = message.pack;
-                        //}
-                        //else if (message.source.Equals("builtin"))
-                        //{
-                        //    imageLink = string.Format(ChatMessageViewModel.DefaultEmoticonsLinkFormat, message.pack);
-                        //}
+                        string imageLink = null;
+                        if (message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
+                        {
+                            imageLink = message.pack;
+                        }
+                        else if (message.source.Equals("builtin"))
+                        {
+                            imageLink = string.Format(ChatMessageViewModel.DefaultEmoticonsLinkFormat, message.pack);
+                        }
 
-                        //if (!string.IsNullOrEmpty(imageLink))
-                        //{
-                        //    string imageFilePath = Path.GetTempFileName();
-                        //    using (WebClient client = new WebClient())
-                        //    {
-                        //        client.DownloadFile(new Uri(imageLink), imageFilePath);
-                        //    }
-
-                        //    EmoticonImage emoticonImage = new EmoticonImage() { Name = message.text, FilePath = imageFilePath, Coordinates = message.coords };
-                        //}
+                        if (!string.IsNullOrEmpty(imageLink))
+                        {
+                            if (!ChatMessageViewModel.EmoticonImages.ContainsKey(message.text))
+                            {
+                                try
+                                {
+                                    string imageFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(imageLink));
+                                    if (!File.Exists(imageFilePath))
+                                    {
+                                        using (WebClient client = new WebClient())
+                                        {
+                                            client.DownloadFile(new Uri(imageLink), imageFilePath);
+                                        }
+                                    }
+                                    ChatMessageViewModel.EmoticonImages[message.text] = new EmoticonImage() { Name = message.text, FilePath = imageFilePath, Coordinates = message.coords };
+                                }
+                                catch (Exception ex) { Logger.Log(ex); }
+                            }
+                        }
 
                         this.Message += message.text;
-
                         break;
                     case "link":
                         this.ContainsLink = true;
