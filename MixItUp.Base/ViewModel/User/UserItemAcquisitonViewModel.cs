@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Mixer.Base.Clients;
+using Newtonsoft.Json;
+using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.User
@@ -6,12 +8,30 @@ namespace MixItUp.Base.ViewModel.User
     [DataContract]
     public class UserItemAcquisitonViewModel
     {
+        [JsonIgnore]
+        public static readonly ConstellationEventType ChannelFollowEvent = new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel.id);
+        [JsonIgnore]
+        public static readonly ConstellationEventType ChannelHostedEvent = new ConstellationEventType(ConstellationEventTypeEnum.channel__id__hosted, ChannelSession.Channel.id);
+        [JsonIgnore]
+        public static readonly ConstellationEventType ChannelSubscribedEvent = new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel.id);
+        [JsonIgnore]
+        public static readonly ConstellationEventType ChannelResubscribedEvent = new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.Channel.id);
+        [JsonIgnore]
+        public static readonly ConstellationEventType ChannelResubscribedSharedEvent = new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id);
+
         [DataMember]
         public string Name { get; set; }
         [DataMember]
         public int AcquireAmount { get; set; }
         [DataMember]
         public int AcquireInterval { get; set; }
+
+        [DataMember]
+        public int FollowBonus { get; set; }
+        [DataMember]
+        public int HostBonus { get; set; }
+        [DataMember]
+        public int SubscribeBonus { get; set; }
 
         [DataMember]
         public string ResetInterval { get; set; }
@@ -24,14 +44,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserItemAcquisitonViewModel()
         {
             this.ResetInterval = "Never";
-        }
-
-        public UserItemAcquisitonViewModel(string name, int acquireAmount, int acquireInterval, string resetInterval)
-        {
-            this.Name = name;
-            this.AcquireAmount = acquireAmount;
-            this.AcquireInterval = acquireInterval;
-            this.ResetInterval = resetInterval;
+            this.LastReset = DateTimeOffset.MinValue;
         }
 
         public bool ShouldBeReset()

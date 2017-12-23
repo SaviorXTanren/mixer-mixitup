@@ -41,6 +41,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -68,6 +70,23 @@
                     <Grid Grid.Row="2" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0" x:Name="CurrencyFollowBonusTextBox" MaterialDesign:HintAssist.Hint="Follow Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <TextBox Grid.Column="2" x:Name="CurrencyHostBonusTextBox" MaterialDesign:HintAssist.Hint="Host Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <TextBox Grid.Column="4" x:Name="CurrencySubscribeBonusTextBox" MaterialDesign:HintAssist.Hint="Subscribe Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    </Grid>
+
+                    <Grid Grid.Row="4" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="40" />
@@ -75,7 +94,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Reset Currency:</TextBlock>
-                        <ComboBox Grid.Column="2" x:Name="ResetCurrencyComboBox" Width="150" SelectionChanged="ResetCurrencyComboBox_SelectionChanged" />
+                        <ComboBox Grid.Column="2" x:Name="ResetCurrencyComboBox" Width="150" />
 
                         <Button Grid.Column="4" x:Name="ResetCurrencyManuallyButton" Click="ResetCurrencyManuallyButton_Click">Manual Reset</Button>
                     </Grid>

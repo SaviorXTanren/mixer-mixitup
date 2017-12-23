@@ -44,7 +44,9 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
                         <RowDefinition Height="Auto" />
@@ -75,6 +77,23 @@
                     <Grid Grid.Row="2" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0" x:Name="RankFollowBonusTextBox" MaterialDesign:HintAssist.Hint="Follow Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <TextBox Grid.Column="2" x:Name="RankHostBonusTextBox" MaterialDesign:HintAssist.Hint="Host Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <TextBox Grid.Column="4" x:Name="RankSubscribeBonusTextBox" MaterialDesign:HintAssist.Hint="Subscribe Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    </Grid>
+
+                    <Grid Grid.Row="4" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="40" />
@@ -82,12 +101,12 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Reset Rank:</TextBlock>
-                        <ComboBox Grid.Column="2" x:Name="ResetRankComboBox" Width="150" SelectionChanged="ResetRankComboBox_SelectionChanged" />
+                        <ComboBox Grid.Column="2" x:Name="ResetRankComboBox" Width="150" />
 
                         <Button Grid.Column="4" x:Name="ResetRankManuallyButton" Click="ResetRankManuallyButton_Click">Manual Reset</Button>
                     </Grid>
 
-                    <Grid Grid.Row="4" Margin="40,0" Height="200">
+                    <Grid Grid.Row="6" Margin="40,0" Height="200">
                         <DataGrid x:Name="RanksListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Visible">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Rank Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
@@ -105,7 +124,7 @@
                         </DataGrid>
                     </Grid>
 
-                    <Grid Grid.Row="6" HorizontalAlignment="Center">
+                    <Grid Grid.Row="8" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="20" />
@@ -122,7 +141,7 @@
 
                     </Grid>
 
-                    <Grid Grid.Row="8" HorizontalAlignment="Center">
+                    <Grid Grid.Row="10" HorizontalAlignment="Center">
                         <GroupBox Header="User Rank Changed">
                             <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
                                 <Button x:Name="NewInteractiveCommandButton" HorizontalAlignment="Center" Click="NewInteractiveCommandButton_Click">Add Command</Button>

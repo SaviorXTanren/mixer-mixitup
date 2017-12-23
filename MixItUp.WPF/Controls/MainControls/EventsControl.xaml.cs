@@ -56,6 +56,40 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
         {
+            JToken userToken;
+            UserViewModel user = null;
+            if (e.payload.TryGetValue("user", out userToken))
+            {
+                user = new UserViewModel(userToken.ToObject<UserModel>());
+            }
+            else if (e.payload.TryGetValue("hoster", out userToken))
+            {
+                ChannelModel channel = userToken.ToObject<ChannelModel>();
+                user = new UserViewModel(channel.id, channel.token);
+            }
+
+            if (user != null)
+            {
+                UserDataViewModel userData = ChannelSession.Settings.UserData.GetValueIfExists(user.ID, new UserDataViewModel(user));
+
+                if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelFollowEvent))
+                {
+                    userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.FollowBonus;
+                    userData.RankPoints += ChannelSession.Settings.RankAcquisition.FollowBonus;
+                }
+                else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelHostedEvent))
+                {
+                    userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.HostBonus;
+                    userData.RankPoints += ChannelSession.Settings.RankAcquisition.HostBonus;
+                }
+                else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelSubscribedEvent) || e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedEvent) ||
+                    e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedSharedEvent))
+                {
+                    userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.SubscribeBonus;
+                    userData.RankPoints += ChannelSession.Settings.RankAcquisition.SubscribeBonus;
+                }
+            }
+
             foreach (EventCommand command in ChannelSession.Settings.EventCommands)
             {
                 EventCommand foundCommand = null;
@@ -73,18 +107,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (foundCommand != null)
                 {
                     GlobalEvents.EventOccurred(command.GetEventType());
-
-                    JToken userToken;
-                    UserViewModel user = null;
-                    if (e.payload.TryGetValue("user", out userToken))
-                    {
-                        user = new UserViewModel(userToken.ToObject<UserModel>());
-                    }
-                    else if (e.payload.TryGetValue("hoster", out userToken))
-                    {
-                        ChannelModel channel = userToken.ToObject<ChannelModel>();
-                        user = new UserViewModel(channel.id, channel.token);
-                    }
 
                     if (user != null)
                     {

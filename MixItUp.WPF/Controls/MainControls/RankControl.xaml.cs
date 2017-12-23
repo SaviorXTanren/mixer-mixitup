@@ -40,10 +40,13 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ResetRankComboBox.ItemsSource = new List<string>() { "Never", "Yearly", "Monthly", "Weekly", "Daily" };
 
+            this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
             this.RankPointsNameTextBox.Text = ChannelSession.Settings.RankAcquisition.Name;
             this.RankPointsAmountTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireAmount.ToString();
             this.RankPointsTimeTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireInterval.ToString();
-            this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
+            this.RankFollowBonusTextBox.Text = ChannelSession.Settings.RankAcquisition.FollowBonus.ToString();
+            this.RankHostBonusTextBox.Text = ChannelSession.Settings.RankAcquisition.HostBonus.ToString();
+            this.RankSubscribeBonusTextBox.Text = ChannelSession.Settings.RankAcquisition.SubscribeBonus.ToString();
             this.ResetRankComboBox.SelectedItem = ChannelSession.Settings.RankAcquisition.ResetInterval;
             this.RankGrid.IsEnabled = !ChannelSession.Settings.RankAcquisition.Enabled;
 
@@ -72,9 +75,9 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             int rankAmount = 0;
-            if (string.IsNullOrEmpty(this.RankPointsAmountTextBox.Text) || !int.TryParse(this.RankPointsAmountTextBox.Text, out rankAmount) || rankAmount < 1)
+            if (string.IsNullOrEmpty(this.RankPointsAmountTextBox.Text) || !int.TryParse(this.RankPointsAmountTextBox.Text, out rankAmount) || rankAmount < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("A valid points amount must be specified");
+                await MessageBoxHelper.ShowMessageDialog("The points rate must be 0 or greater");
                 this.RankToggleSwitch.IsChecked = false;
                 return;
             }
@@ -82,7 +85,31 @@ namespace MixItUp.WPF.Controls.MainControls
             int rankTime = 0;
             if (string.IsNullOrEmpty(this.RankPointsTimeTextBox.Text) || !int.TryParse(this.RankPointsTimeTextBox.Text, out rankTime) || rankTime < 1)
             {
-                await MessageBoxHelper.ShowMessageDialog("A valid points interval must be specified");
+                await MessageBoxHelper.ShowMessageDialog("The points interval be greater than 1");
+                this.RankToggleSwitch.IsChecked = false;
+                return;
+            }
+
+            int followBonus = 0;
+            if (string.IsNullOrEmpty(this.RankFollowBonusTextBox.Text) || !int.TryParse(this.RankFollowBonusTextBox.Text, out followBonus) || followBonus < 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("The Follow bonus must be 0 or greater");
+                this.RankToggleSwitch.IsChecked = false;
+                return;
+            }
+
+            int hostBonus = 0;
+            if (string.IsNullOrEmpty(this.RankHostBonusTextBox.Text) || !int.TryParse(this.RankHostBonusTextBox.Text, out hostBonus) || hostBonus < 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("The Host bonus must be 0 or greater");
+                this.RankToggleSwitch.IsChecked = false;
+                return;
+            }
+
+            int subscribeBonus = 0;
+            if (string.IsNullOrEmpty(this.RankSubscribeBonusTextBox.Text) || !int.TryParse(this.RankSubscribeBonusTextBox.Text, out subscribeBonus) || subscribeBonus < 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("The Subscribe bonus must be 0 or greater");
                 this.RankToggleSwitch.IsChecked = false;
                 return;
             }
@@ -99,6 +126,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChannelSession.Settings.RankAcquisition.Name = this.RankPointsNameTextBox.Text;
                 ChannelSession.Settings.RankAcquisition.AcquireAmount = rankAmount;
                 ChannelSession.Settings.RankAcquisition.AcquireInterval = rankTime;
+                ChannelSession.Settings.RankAcquisition.FollowBonus = followBonus;
+                ChannelSession.Settings.RankAcquisition.HostBonus = hostBonus;
+                ChannelSession.Settings.RankAcquisition.SubscribeBonus = subscribeBonus;
+                ChannelSession.Settings.RankAcquisition.ResetInterval = (string)this.ResetRankComboBox.SelectedItem;
                 ChannelSession.Settings.RankAcquisition.Enabled = true;
 
                 await ChannelSession.SaveSettings();
@@ -211,19 +242,11 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
         }
 
-        private void ResetRankComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.ResetRankComboBox.SelectedIndex >= 0)
-            {
-                ChannelSession.Settings.RankAcquisition.ResetInterval = (string)this.ResetRankComboBox.SelectedItem;
-            }
-        }
-
         private async void ResetRankManuallyButton_Click(object sender, RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (await MessageBoxHelper.ShowConfirmationDialog("This will reset the ranks for all users. Are you sure?"))
+                if (await MessageBoxHelper.ShowConfirmationDialog("Do you want to reset all ranks?"))
                 {
                     this.ResetRanks();
                 }
