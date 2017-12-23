@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.WPF.Util;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -17,11 +19,19 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
+            this.ResetCurrencyComboBox.ItemsSource = new List<string>() { "Never", "Yearly", "Monthly", "Weekly", "Daily" };
+
             this.CurrencyNameTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.Name;
             this.CurrencyAmountTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.AcquireAmount.ToString();
             this.CurrencyTimeTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.AcquireInterval.ToString();
             this.CurrencyToggleSwitch.IsChecked = ChannelSession.Settings.CurrencyAcquisition.Enabled;
+            this.ResetCurrencyComboBox.SelectedItem = ChannelSession.Settings.CurrencyAcquisition.ResetInterval;
             this.CurrencyGrid.IsEnabled = !ChannelSession.Settings.CurrencyAcquisition.Enabled;
+
+            if (ChannelSession.Settings.CurrencyAcquisition.ShouldBeReset())
+            {
+                this.ResetCurrency();
+            }
 
             return base.InitializeInternal();
         }
@@ -74,6 +84,34 @@ namespace MixItUp.WPF.Controls.MainControls
             });
 
             this.CurrencyGrid.IsEnabled = true;
+        }
+
+        private void ResetCurrencyComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.ResetCurrencyComboBox.SelectedIndex >= 0)
+            {
+                ChannelSession.Settings.CurrencyAcquisition.ResetInterval = (string)this.ResetCurrencyComboBox.SelectedItem;
+            }
+        }
+
+        private async void ResetCurrencyManuallyButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (await MessageBoxHelper.ShowConfirmationDialog("This will reset the currency for all users. Are you sure?"))
+                {
+                    this.ResetCurrency();
+                }
+            });
+        }
+
+        private void ResetCurrency()
+        {
+            foreach (var kvp in ChannelSession.Settings.UserData)
+            {
+                kvp.Value.ResetCurrency();
+            }
+            ChannelSession.Settings.CurrencyAcquisition.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);
         }
     }
 }

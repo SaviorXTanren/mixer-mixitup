@@ -5,6 +5,8 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,11 +38,19 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.ranks.Add(rank);
             }
 
+            this.ResetRankComboBox.ItemsSource = new List<string>() { "Never", "Yearly", "Monthly", "Weekly", "Daily" };
+
             this.RankPointsNameTextBox.Text = ChannelSession.Settings.RankAcquisition.Name;
             this.RankPointsAmountTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireAmount.ToString();
             this.RankPointsTimeTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireInterval.ToString();
             this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
+            this.ResetRankComboBox.SelectedItem = ChannelSession.Settings.RankAcquisition.ResetInterval;
             this.RankGrid.IsEnabled = !ChannelSession.Settings.RankAcquisition.Enabled;
+
+            if (ChannelSession.Settings.RankAcquisition.ShouldBeReset())
+            {
+                this.ResetRanks();
+            }
 
             this.CommandButtons.CommandUpdated += CommandButtons_CommandUpdated;
             this.CommandButtons.CommandDeleted += CommandButtons_CommandDeleted;
@@ -199,6 +209,34 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Settings.RankChangedCommand = null;
             this.UpdateRankChangedCommand();
             await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+        }
+
+        private void ResetRankComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.ResetRankComboBox.SelectedIndex >= 0)
+            {
+                ChannelSession.Settings.RankAcquisition.ResetInterval = (string)this.ResetRankComboBox.SelectedItem;
+            }
+        }
+
+        private async void ResetRankManuallyButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (await MessageBoxHelper.ShowConfirmationDialog("This will reset the ranks for all users. Are you sure?"))
+                {
+                    this.ResetRanks();
+                }
+            });
+        }
+
+        private void ResetRanks()
+        {
+            foreach (var kvp in ChannelSession.Settings.UserData)
+            {
+                kvp.Value.ResetRank();
+            }
+            ChannelSession.Settings.RankAcquisition.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);
         }
     }
 }

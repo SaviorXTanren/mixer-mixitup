@@ -135,5 +135,9 @@ namespace MixItUp.Base.ViewModel.User
         {
             return this.UserName;
         }
+
+        public void ResetCurrency() { this.CurrencyAmount = 0; }
+
+        public void ResetRank() { this._RankPoints = 0; }
     }
 }
