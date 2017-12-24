@@ -612,6 +612,8 @@ namespace MixItUp.Base.Commands
 
         public static async Task<string> GetSteamGameInfo(string gameName)
         {
+            gameName = gameName.ToLower();
+
             if (steamGameList.Count == 0)
             {
                 using (HttpClientWrapper client = new HttpClientWrapper())
@@ -631,9 +633,22 @@ namespace MixItUp.Base.Commands
                 }
             }
 
-            if (SteamGameChatCommand.steamGameList.ContainsKey(gameName.ToLower()))
+            int gameID = -1;
+            if (SteamGameChatCommand.steamGameList.ContainsKey(gameName))
             {
-                int gameID = SteamGameChatCommand.steamGameList[gameName.ToLower()];
+                gameID = SteamGameChatCommand.steamGameList[gameName];
+            }
+            else
+            {
+                string foundGame = SteamGameChatCommand.steamGameList.Keys.FirstOrDefault(g => g.Contains(gameName));
+                if (foundGame != null)
+                {
+                    gameID = SteamGameChatCommand.steamGameList[foundGame];
+                }
+            }
+
+            if (gameID > 0)
+            {
                 using (HttpClientWrapper client = new HttpClientWrapper())
                 {
                     HttpResponseMessage response = await client.GetAsync("http://store.steampowered.com/api/appdetails?appids=" + gameID);
@@ -656,7 +671,7 @@ namespace MixItUp.Base.Commands
         }
 
         public SteamGameChatCommand()
-            : base("Steam Game", "steamgame", UserRole.User, 30)
+            : base("Steam Game", new List<string>() { "steamgame", "steam" }, UserRole.User, 30)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
