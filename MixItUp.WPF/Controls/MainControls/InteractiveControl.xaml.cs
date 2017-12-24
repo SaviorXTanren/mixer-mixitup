@@ -105,6 +105,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.InteractiveControlsGridView.ItemsSource = this.currentSceneControlItems;
 
             GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
+            GlobalEvents.OnCommandDeleted += GlobalEvents_OnCommandDeleted;
 
             await this.RefreshAllInteractiveGames();
         }
@@ -278,6 +279,16 @@ namespace MixItUp.WPF.Controls.MainControls
                 await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
                 this.RefreshSelectedScene();
+            }
+        }
+
+        private void GlobalEvents_OnCommandDeleted(object sender, CommandBase e)
+        {
+            if (e is InteractiveCommand)
+            {
+                ChannelSession.Settings.InteractiveCommands.Remove((InteractiveCommand)e);
+
+                this.GlobalEvents_OnCommandUpdated(sender, e);
             }
         }
 

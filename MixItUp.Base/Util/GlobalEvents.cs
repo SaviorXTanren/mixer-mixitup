@@ -63,6 +63,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<CommandBase> OnCommandDeleted;
+        public static void CommandDeleted(CommandBase command)
+        {
+            if (GlobalEvents.OnCommandDeleted != null)
+            {
+                GlobalEvents.OnCommandDeleted(null, command);
+            }
+        }
+
         public static event EventHandler<string> OnQuoteAdded;
         public static void QuoteAdded(string quote)
         {

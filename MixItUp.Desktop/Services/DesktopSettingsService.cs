@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Model.Channel;
+﻿using Mixer.Base.Clients;
+using Mixer.Base.Model.Channel;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -9,6 +10,7 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +23,7 @@ namespace MixItUp.Desktop.Services
         {
             await DesktopSettingsUpgrader.Version1Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version2Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version3Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             await ChannelSession.Services.Settings.Initialize(settings);
@@ -121,6 +124,28 @@ namespace MixItUp.Desktop.Services
                             nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiers(nAction.SourceText);
                         }
                     }
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version3Upgrade(int version, string filePath)
+        {
+            if (version < 3)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                IEnumerable<EventCommand> commands = settings.EventCommands.Where(c => c.Actions.Count == 0);
+                foreach (EventCommand command in commands)
+                {
+                    settings.EventCommands.Remove(command);
+                }
+
+                if (settings.RankChangedCommand != null && settings.RankChangedCommand.Actions.Count == 0)
+                {
+                    settings.RankChangedCommand = null;
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);

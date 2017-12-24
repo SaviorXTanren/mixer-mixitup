@@ -56,6 +56,9 @@
   <PropertyGroup>
     <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoUpdater.NET, Version=1.4.5.0, Culture=neutral, PublicKeyToken=942f95247e354701, processorArchitecture=MSIL">
       <HintPath>..\packages\Autoupdater.NET.Official.1.4.5\lib\net452\AutoUpdater.NET.dll</HintPath>

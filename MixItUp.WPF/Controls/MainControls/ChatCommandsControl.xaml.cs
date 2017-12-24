@@ -50,6 +50,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
+            GlobalEvents.OnCommandDeleted += GlobalEvents_OnCommandDeleted;
 
             return base.InitializeInternal();
         }
@@ -94,6 +95,16 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.CustomCommandsListView.SelectedIndex = -1;
 
                 this.RefreshList();
+            }
+        }
+
+        private void GlobalEvents_OnCommandDeleted(object sender, CommandBase e)
+        {
+            if (e is ChatCommand)
+            {
+                ChannelSession.Settings.ChatCommands.Remove((ChatCommand)e);
+
+                this.GlobalEvents_OnCommandUpdated(sender, e);
             }
         }
     }

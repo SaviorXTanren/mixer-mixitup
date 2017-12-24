@@ -41,7 +41,7 @@ namespace MixItUp.WPF.Controls.Events
 
             EventCommand command = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(eventType));
             this.commandItem = (command != null) ? new EventCommandItem(command) : new EventCommandItem(eventType);
-            this.DataContext = this.commandItem;
+            this.GroupBox.Header = this.commandItem.Name;
 
             this.CommandButtons.Initialize(this.commandItem.Command);
 

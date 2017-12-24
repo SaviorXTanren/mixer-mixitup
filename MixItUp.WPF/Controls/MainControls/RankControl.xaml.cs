@@ -55,12 +55,11 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.ResetRanks();
             }
 
+            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
             this.CommandButtons.CommandUpdated += CommandButtons_CommandUpdated;
             this.CommandButtons.CommandDeleted += CommandButtons_CommandDeleted;
 
             this.UpdateRankChangedCommand();
-
-            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
 
             return base.InitializeInternal();
         }
@@ -220,7 +219,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
         {
-            if (e is CustomCommand && e.Name.Equals(RankControl.RankChangedCommandName))
+            if (e is CustomCommand && ChannelSession.Settings.RankChangedCommand == null && e.Name.Equals(RankControl.RankChangedCommandName))
             {
                 ChannelSession.Settings.RankChangedCommand = (CustomCommand)e;
                 this.UpdateRankChangedCommand();

@@ -35,9 +35,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.RefreshEventControls();
 
-            await ChannelSession.SaveSettings();
-
             GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
+            GlobalEvents.OnCommandDeleted += GlobalEvents_OnCommandDeleted;
 
             if (await ChannelSession.ConnectConstellation())
             {
@@ -74,19 +73,19 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelFollowEvent))
                 {
-                    userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.FollowBonus;
-                    userData.RankPoints += ChannelSession.Settings.RankAcquisition.FollowBonus;
+                    if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.FollowBonus; }
+                    if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.FollowBonus; }
                 }
                 else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelHostedEvent))
                 {
-                    userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.HostBonus;
-                    userData.RankPoints += ChannelSession.Settings.RankAcquisition.HostBonus;
+                    if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.HostBonus; }
+                    if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.HostBonus; }
                 }
                 else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelSubscribedEvent) || e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedEvent) ||
                     e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedSharedEvent))
                 {
-                    userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.SubscribeBonus;
-                    userData.RankPoints += ChannelSession.Settings.RankAcquisition.SubscribeBonus;
+                    if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.SubscribeBonus; }
+                    if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.SubscribeBonus; }
                 }
             }
 
@@ -129,6 +128,16 @@ namespace MixItUp.WPF.Controls.MainControls
                 await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
                 this.RefreshEventControls();
+            }
+        }
+
+        private void GlobalEvents_OnCommandDeleted(object sender, CommandBase e)
+        {
+            if (e is EventCommand)
+            {
+                ChannelSession.Settings.EventCommands.Remove((EventCommand)e);
+
+                this.GlobalEvents_OnCommandUpdated(sender, e);
             }
         }
     }

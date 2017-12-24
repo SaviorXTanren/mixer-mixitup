@@ -29,6 +29,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
 
             GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
+            GlobalEvents.OnCommandDeleted += GlobalEvents_OnCommandDeleted;
 
             this.RefreshList();
 
@@ -88,11 +89,23 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (e is TimerCommand)
             {
+                ChannelSession.Settings.TimerCommands.Remove((TimerCommand)e);
+
                 await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 
                 this.TimerCommandsListView.SelectedIndex = -1;
 
                 this.RefreshList();
+            }
+        }
+
+        private void GlobalEvents_OnCommandDeleted(object sender, CommandBase e)
+        {
+            if (e is TimerCommand)
+            {
+                ChannelSession.Settings.TimerCommands.Remove((TimerCommand)e);
+
+                this.GlobalEvents_OnCommandUpdated(sender, e);
             }
         }
     }

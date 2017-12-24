@@ -25,7 +25,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public void Initialize(CommandBase command) { this.DataContext = this.command = command; }
+        public void Initialize(CommandBase command) { this.command = command; }
 
         private void CommandButtonsControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -66,11 +66,11 @@ namespace MixItUp.WPF.Controls.Command
             if (this.command != null)
             {
                 CommandDetailsControlBase commandDetails = null;
-                if (this.command is ChatCommand) { commandDetails = new ChatCommandDetailsControl((ChatCommand)command); }
-                if (this.command is InteractiveCommand) { commandDetails = new InteractiveCommandDetailsControl((InteractiveCommand)command); }
-                if (this.command is EventCommand) { commandDetails = new EventCommandDetailsControl((EventCommand)command); }
-                if (this.command is TimerCommand) { commandDetails = new TimerCommandDetailsControl((TimerCommand)command); }
-                if (this.command is CustomCommand) { commandDetails = new CustomCommandDetailsControl((CustomCommand)command); }
+                if (this.command is ChatCommand) { commandDetails = new ChatCommandDetailsControl((ChatCommand)this.command); }
+                else if (this.command is InteractiveCommand) { commandDetails = new InteractiveCommandDetailsControl((InteractiveCommand)this.command); }
+                else if (this.command is EventCommand) { commandDetails = new EventCommandDetailsControl((EventCommand)this.command); }
+                else if (this.command is TimerCommand) { commandDetails = new TimerCommandDetailsControl((TimerCommand)this.command); }
+                else if (this.command is CustomCommand) { commandDetails = new CustomCommandDetailsControl((CustomCommand)this.command); }
 
                 CommandWindow window = new CommandWindow(commandDetails);
                 window.Closed += Window_Closed;
@@ -80,9 +80,13 @@ namespace MixItUp.WPF.Controls.Command
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            if (this.CommandUpdated != null)
+            if (this.command != null)
             {
-                this.CommandUpdated(this, this.command);
+                GlobalEvents.CommandUpdated(this.command);
+                if (this.CommandUpdated != null)
+                {
+                    this.CommandUpdated(this, this.command);
+                }
             }
         }
 
@@ -90,12 +94,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.command != null)
             {
-                if (this.command is ChatCommand) { ChannelSession.Settings.ChatCommands.Remove((ChatCommand)command); }
-                if (this.command is InteractiveCommand) { ChannelSession.Settings.InteractiveCommands.Remove((InteractiveCommand)command); }
-                if (this.command is EventCommand) { ChannelSession.Settings.EventCommands.Remove((EventCommand)command); }
-                if (this.command is TimerCommand) { ChannelSession.Settings.TimerCommands.Remove((TimerCommand)command); }
-
-                GlobalEvents.CommandUpdated(command);
+                GlobalEvents.CommandDeleted(this.command);
                 if (this.CommandDeleted != null)
                 {
                     this.CommandDeleted(this, this.command);

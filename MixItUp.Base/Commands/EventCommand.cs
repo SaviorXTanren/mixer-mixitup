@@ -67,7 +67,7 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
-        public bool Equals(EventCommand other) { return this.Type.Equals(other.Type) && this.EventID.Equals(other.EventID); }
+        public bool Equals(EventCommand other) { return this.EventType.Equals(other.EventType) && this.EventID.Equals(other.EventID); }
 
         public override int GetHashCode() { return this.GetEventType().GetHashCode(); }
 
