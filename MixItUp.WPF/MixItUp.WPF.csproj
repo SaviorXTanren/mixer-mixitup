@@ -180,6 +180,7 @@
     <Compile Include="Controls\MainControls\CurrencyControl.xaml.cs">
       <DependentUpon>CurrencyControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\MainCommandControlBase.cs" />
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
       <DependentUpon>ModerationControl.xaml</DependentUpon>
     </Compile>
@@ -198,7 +199,7 @@
     <Compile Include="Controls\MainControls\GameQueueControl.xaml.cs">
       <DependentUpon>GameQueueControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Menu\MainMenuControl.xaml.cs">
+    <Compile Include="Controls\MainControls\MainMenuControl.xaml.cs">
       <DependentUpon>MainMenuControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NotifyPropertyChangedUserControl.cs" />
@@ -224,7 +225,7 @@
     <Compile Include="Controls\MainControls\GiveawayControl.xaml.cs">
       <DependentUpon>GiveawayControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControlBase.cs" />
+    <Compile Include="Controls\MainControls\MainControlBase.cs" />
     <Compile Include="Controls\Actions\ActionControl.xaml.cs">
       <DependentUpon>ActionControl.xaml</DependentUpon>
     </Compile>
@@ -320,7 +321,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Menu\MainMenuControl.xaml">
+    <Page Include="Controls\MainControls\MainMenuControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -527,7 +528,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rmdir /Q /S $(TargetDir)Settings\</PostBuildEvent>
+    <PostBuildEvent>rmdir /Q /S $(TargetDir)Settings\
+mkdir $(TargetDir)Settings\</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.106.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.106.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

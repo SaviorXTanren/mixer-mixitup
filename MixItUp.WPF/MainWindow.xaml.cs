@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.WPF.Controls.MainControls;
-using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
-using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;

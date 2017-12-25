@@ -6,6 +6,7 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace MixItUp.WPF.Windows.Command
     /// </summary>
     public partial class CommandWindow : LoadingWindowBase
     {
+        public event EventHandler<CommandBase> CommandSaveSuccessfully;
+
         private CommandDetailsControlBase commandDetailsControl;
 
         private ObservableCollection<ActionControl> actionControls;
@@ -96,12 +99,6 @@ namespace MixItUp.WPF.Windows.Command
             await base.OnLoaded();
         }
 
-        protected override async Task OnClosing()
-        {
-            GlobalEvents.CommandUpdated(this.newCommand);
-            await base.OnClosing();
-        }
-
         private void AddActionButton_Click(object sender, RoutedEventArgs e)
         {
             if (this.TypeComboBox.SelectedIndex >= 0)
@@ -143,6 +140,11 @@ namespace MixItUp.WPF.Windows.Command
             {
                 this.newCommand.Actions.Clear();
                 this.newCommand.Actions = actions;
+
+                if (this.CommandSaveSuccessfully != null)
+                {
+                    this.CommandSaveSuccessfully(this, this.newCommand);
+                }
 
                 await this.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
 

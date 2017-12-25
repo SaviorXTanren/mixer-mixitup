@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
@@ -18,7 +17,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for RankControl.xaml
     /// </summary>
-    public partial class RankControl : MainControlBase
+    public partial class RankControl : MainCommandControlBase
     {
         private const string RankChangedCommandName = "User Rank Changed";
 
@@ -54,10 +53,6 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.ResetRanks();
             }
-
-            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
-            this.CommandButtons.CommandUpdated += CommandButtons_CommandUpdated;
-            this.CommandButtons.CommandDeleted += CommandButtons_CommandDeleted;
 
             this.UpdateRankChangedCommand();
 
@@ -196,49 +191,77 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RankAmountTextBox.Clear();
         }
 
+        private void NewInteractiveCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(RankControl.RankChangedCommandName)));
+            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
+        {
+            await this.HandleCommandPlay(sender);
+        }
+
+        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
+        {
+            this.HandleCommandStop(sender);
+        }
+
+        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CustomCommand command = this.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
+        }
+
+        private async void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                CustomCommand command = this.GetCommandFromCommandButtons<CustomCommand>(sender);
+                if (command != null)
+                {
+                    ChannelSession.Settings.RankChangedCommand = null;
+                    await ChannelSession.SaveSettings();
+                    this.UpdateRankChangedCommand();
+                }
+            });
+        }
+
+        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
+        {
+            this.HandleCommandEnableDisable(sender);
+        }
+
+        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        {
+            ChannelSession.Settings.RankChangedCommand = (CustomCommand)e;
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.UpdateRankChangedCommand();
+        }
+
         private void UpdateRankChangedCommand()
         {
             if (ChannelSession.Settings.RankChangedCommand != null)
             {
                 this.NewInteractiveCommandButton.Visibility = Visibility.Collapsed;
                 this.CommandButtons.Visibility = Visibility.Visible;
-                this.CommandButtons.Initialize(ChannelSession.Settings.RankChangedCommand);
+                this.CommandButtons.DataContext = ChannelSession.Settings.RankChangedCommand;
             }
             else
             {
                 this.NewInteractiveCommandButton.Visibility = Visibility.Visible;
                 this.CommandButtons.Visibility = Visibility.Collapsed;
             }
-        }
-
-        private void NewInteractiveCommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(RankControl.RankChangedCommandName)));
-            window.Show();
-        }
-
-        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
-        {
-            if (e is CustomCommand && ChannelSession.Settings.RankChangedCommand == null && e.Name.Equals(RankControl.RankChangedCommandName))
-            {
-                ChannelSession.Settings.RankChangedCommand = (CustomCommand)e;
-                this.UpdateRankChangedCommand();
-                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-            }
-        }
-
-        private async void CommandButtons_CommandUpdated(object sender, CommandBase e)
-        {
-            ChannelSession.Settings.RankChangedCommand = (CustomCommand)e;
-            this.UpdateRankChangedCommand();
-            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-        }
-
-        private async void CommandButtons_CommandDeleted(object sender, CommandBase e)
-        {
-            ChannelSession.Settings.RankChangedCommand = null;
-            this.UpdateRankChangedCommand();
-            await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
         }
 
         private async void ResetRankManuallyButton_Click(object sender, RoutedEventArgs e)

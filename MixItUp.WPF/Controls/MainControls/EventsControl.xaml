@@ -1,4 +1,4 @@
-﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.EventsControl"
+﻿<local:MainCommandControlBase x:Class="MixItUp.WPF.Controls.MainControls.EventsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -33,4 +33,4 @@
         <EventControls:EventCommandControl x:Name="OnResubscribeCommandControl" Grid.Column="3" Grid.Row="3" />
 
     </Grid>
-</Controls:MainControlBase>
+</local:MainCommandControlBase>

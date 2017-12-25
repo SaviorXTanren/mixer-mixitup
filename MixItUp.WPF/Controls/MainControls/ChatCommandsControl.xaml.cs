@@ -1,10 +1,10 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for ChatCommandsControl.xaml
     /// </summary>
-    public partial class ChatCommandsControl : MainControlBase
+    public partial class ChatCommandsControl : MainCommandControlBase
     {
         private ObservableCollection<ChatCommand> customChatCommands = new ObservableCollection<ChatCommand>();
 
@@ -49,14 +49,13 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.PreMadeCommandsGrid.Visibility = Visibility.Visible;
             }
 
-            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
-            GlobalEvents.OnCommandDeleted += GlobalEvents_OnCommandDeleted;
-
             return base.InitializeInternal();
         }
 
         private void RefreshList()
         {
+            this.CustomCommandsListView.SelectedIndex = -1;
+
             this.customChatCommands.Clear();
             foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
             {
@@ -80,32 +79,56 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CustomCommandsGrid.Visibility = Visibility.Visible;
         }
 
+        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
+        {
+            await this.HandleCommandPlay(sender);
+        }
+
+        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
+        {
+            this.HandleCommandStop(sender);
+        }
+
+        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            ChatCommand command = this.GetCommandFromCommandButtons<ChatCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
+        }
+
+        private async void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                ChatCommand command = this.GetCommandFromCommandButtons<ChatCommand>(sender);
+                if (command != null)
+                {
+                    ChannelSession.Settings.ChatCommands.Remove(command);
+                    await ChannelSession.SaveSettings();
+                    this.RefreshList();
+                }
+            });
+        }
+
+        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
+        {
+            this.HandleCommandEnableDisable(sender);
+        }
+
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandWindow window = new CommandWindow(new ChatCommandDetailsControl());
+            window.Closed += Window_Closed;
             window.Show();
         }
 
-        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
+        private void Window_Closed(object sender, EventArgs e)
         {
-            if (e is ChatCommand)
-            {
-                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-
-                this.CustomCommandsListView.SelectedIndex = -1;
-
-                this.RefreshList();
-            }
-        }
-
-        private void GlobalEvents_OnCommandDeleted(object sender, CommandBase e)
-        {
-            if (e is ChatCommand)
-            {
-                ChannelSession.Settings.ChatCommands.Remove((ChatCommand)e);
-
-                this.GlobalEvents_OnCommandUpdated(sender, e);
-            }
+            this.RefreshList();
         }
     }
 }

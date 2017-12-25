@@ -2,16 +2,13 @@
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace MixItUp.WPF.Controls
+namespace MixItUp.WPF.Controls.MainControls
 {
     public class MainControlBase : UserControl
     {
         public LoadingWindowBase Window { get; private set; }
 
-        public MainControlBase()
-        {
-            this.IsVisibleChanged += MainControlBase_IsVisibleChanged;
-        }
+        public MainControlBase() { this.IsVisibleChanged += MainControlBase_IsVisibleChanged; }
 
         public async Task Initialize(LoadingWindowBase window)
         {
@@ -23,9 +20,6 @@ namespace MixItUp.WPF.Controls
 
         protected virtual Task VisibilityChanged() { return Task.FromResult(0); }
 
-        private async void MainControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
-        {
-            await this.VisibilityChanged();
-        }
+        private async void MainControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e) { await this.VisibilityChanged(); }
     }
 }

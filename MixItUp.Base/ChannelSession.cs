@@ -88,10 +88,6 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.user__details__self,
         };
 
-        public static event EventHandler OnDisconectionOccurred;
-
-        public static event EventHandler OnReconectionOccurred;
-
         public static MixerConnectionWrapper Connection { get; private set; }
         public static MixerConnectionWrapper BotConnection { get; private set; }
 

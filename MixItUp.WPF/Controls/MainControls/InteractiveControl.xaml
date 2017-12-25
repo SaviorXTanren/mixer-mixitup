@@ -1,4 +1,4 @@
-﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.InteractiveControl"
+﻿<local:MainCommandControlBase x:Class="MixItUp.WPF.Controls.MainControls.InteractiveControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -84,12 +84,12 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Grid DataContext="{Binding}" Visibility="{Binding NewCommandButtonVisibility}">
-                                    <Button x:Name="NewInteractiveCommandButton" DataContext="{Binding}" HorizontalAlignment="Center" Click="NewInteractiveCommandButton_Click">Add Command</Button>
+                                <Grid Visibility="{Binding NewCommandButtonVisibility}">
+                                    <Button x:Name="NewInteractiveCommandButton" HorizontalAlignment="Center" Click="NewInteractiveCommandButton_Click">Add Command</Button>
                                 </Grid>
 
-                                <Grid DataContext="{Binding}" Visibility="{Binding ExistingCommandButtonVisibility}">
-                                    <CommandControls:CommandButtonsControl x:Name="CommandButtons" DataContext="{Binding Command}" HorizontalAlignment="Center" />
+                                <Grid Visibility="{Binding ExistingCommandButtonVisibility}">
+                                    <CommandControls:CommandButtonsControl x:Name="CommandButtons" DataContext="{Binding Command}" HorizontalAlignment="Center" PlayClicked="CommandButtons_PlayClicked" StopClicked="CommandButtons_StopClicked" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtons_EnableDisableToggled" />
                                 </Grid>
                             </Grid>
                         </DataTemplate>
@@ -107,4 +107,4 @@
             <Button Grid.Column="0" x:Name="DisconnectButton" Click="DisconnectButton_Click" Width="110" Visibility="Collapsed">Disconnect</Button>
         </Grid>
     </Grid>
-</Controls:MainControlBase>
+</local:MainCommandControlBase>

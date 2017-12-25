@@ -1,4 +1,4 @@
-﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.ChatCommandsControl"
+﻿<local:MainCommandControlBase x:Class="MixItUp.WPF.Controls.MainControls.ChatCommandsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -80,7 +80,7 @@
                     <DataGridTemplateColumn Header="Actions" Width="240">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" DataContext="{Binding}" HorizontalAlignment="Center" />
+                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" PlayClicked="CommandButtons_PlayClicked" StopClicked="CommandButtons_StopClicked" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtons_EnableDisableToggled" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -90,4 +90,4 @@
             <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="130">New Command</Button>
         </Grid>
     </Grid>
-</Controls:MainControlBase>
+</local:MainCommandControlBase>

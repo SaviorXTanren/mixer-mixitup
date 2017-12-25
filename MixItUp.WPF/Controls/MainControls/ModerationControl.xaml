@@ -1,4 +1,4 @@
-﻿<Controls:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.ModerationControl"
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.ModerationControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -107,4 +107,4 @@
 
         </Grid>
     </Grid>
-</Controls:MainControlBase>
+</local:MainControlBase>

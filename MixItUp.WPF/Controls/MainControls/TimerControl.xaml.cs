@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
@@ -13,7 +12,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for TimerControl.xaml
     /// </summary>
-    public partial class TimerControl : MainControlBase
+    public partial class TimerControl : MainCommandControlBase
     {
         private ObservableCollection<TimerCommand> timerCommands = new ObservableCollection<TimerCommand>();
 
@@ -28,9 +27,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
 
-            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
-            GlobalEvents.OnCommandDeleted += GlobalEvents_OnCommandDeleted;
-
             this.RefreshList();
 
             return base.InitializeInternal();
@@ -38,11 +34,53 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void RefreshList()
         {
+            this.TimerCommandsListView.SelectedIndex = -1;
+
             this.timerCommands.Clear();
             foreach (TimerCommand command in ChannelSession.Settings.TimerCommands)
             {
                 this.timerCommands.Add(command);
             }
+        }
+
+        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
+        {
+            await this.HandleCommandPlay(sender);
+        }
+
+        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
+        {
+            this.HandleCommandStop(sender);
+        }
+
+        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            TimerCommand command = this.GetCommandFromCommandButtons<TimerCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new TimerCommandDetailsControl(command));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
+        }
+
+        private async void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                TimerCommand command = this.GetCommandFromCommandButtons<TimerCommand>(sender);
+                if (command != null)
+                {
+                    ChannelSession.Settings.TimerCommands.Remove(command);
+                    await ChannelSession.SaveSettings();
+                    this.RefreshList();
+                }
+            });
+        }
+
+        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
+        {
+            this.HandleCommandEnableDisable(sender);
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)
@@ -82,30 +120,6 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await MessageBoxHelper.ShowMessageDialog("Interval must be 0 or greater");
                 this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
-            }
-        }
-
-        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
-        {
-            if (e is TimerCommand)
-            {
-                ChannelSession.Settings.TimerCommands.Remove((TimerCommand)e);
-
-                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-
-                this.TimerCommandsListView.SelectedIndex = -1;
-
-                this.RefreshList();
-            }
-        }
-
-        private void GlobalEvents_OnCommandDeleted(object sender, CommandBase e)
-        {
-            if (e is TimerCommand)
-            {
-                ChannelSession.Settings.TimerCommands.Remove((TimerCommand)e);
-
-                this.GlobalEvents_OnCommandUpdated(sender, e);
             }
         }
     }

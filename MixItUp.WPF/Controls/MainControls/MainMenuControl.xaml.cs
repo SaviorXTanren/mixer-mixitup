@@ -10,7 +10,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace MixItUp.WPF.Controls.Menu
+namespace MixItUp.WPF.Controls.MainControls
 {
     public class MainMenuItem : NotifyPropertyChangedBase
     {

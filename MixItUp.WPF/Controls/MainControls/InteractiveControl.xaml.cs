@@ -79,7 +79,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for InteractiveControl.xaml
     /// </summary>
-    public partial class InteractiveControl : MainControlBase
+    public partial class InteractiveControl : MainCommandControlBase
     {
         private ObservableCollection<InteractiveGameListingModel> interactiveGames = new ObservableCollection<InteractiveGameListingModel>();
         private InteractiveGameListingModel selectedGame = null;
@@ -103,9 +103,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.InteractiveGamesComboBox.ItemsSource = this.interactiveGames;
             this.InteractiveScenesComboBox.ItemsSource = this.interactiveScenes;
             this.InteractiveControlsGridView.ItemsSource = this.currentSceneControlItems;
-
-            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
-            GlobalEvents.OnCommandDeleted += GlobalEvents_OnCommandDeleted;
 
             await this.RefreshAllInteractiveGames();
         }
@@ -269,27 +266,53 @@ namespace MixItUp.WPF.Controls.MainControls
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
 
             CommandWindow window = new CommandWindow(new InteractiveCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control));
+            window.Closed += Window_Closed;
             window.Show();
         }
 
-        private async void GlobalEvents_OnCommandUpdated(object sender, CommandBase e)
+        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
         {
-            if (e is InteractiveCommand)
-            {
-                await this.Window.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
+            await this.HandleCommandPlay(sender);
+        }
 
-                this.RefreshSelectedScene();
+        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
+        {
+            this.HandleCommandStop(sender);
+        }
+
+        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            InteractiveCommand command = this.GetCommandFromCommandButtons<InteractiveCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new InteractiveCommandDetailsControl(command));
+                window.Closed += Window_Closed;
+                window.Show();
             }
         }
 
-        private void GlobalEvents_OnCommandDeleted(object sender, CommandBase e)
+        private async void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
         {
-            if (e is InteractiveCommand)
+            await this.Window.RunAsyncOperation(async () =>
             {
-                ChannelSession.Settings.InteractiveCommands.Remove((InteractiveCommand)e);
+                InteractiveCommand command = this.GetCommandFromCommandButtons<InteractiveCommand>(sender);
+                if (command != null)
+                {
+                    ChannelSession.Settings.InteractiveCommands.Remove(command);
+                    await ChannelSession.SaveSettings();
+                    this.RefreshSelectedScene();
+                }
+            });
+        }
 
-                this.GlobalEvents_OnCommandUpdated(sender, e);
-            }
+        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
+        {
+            this.HandleCommandEnableDisable(sender);
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            this.RefreshSelectedScene();
         }
 
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)

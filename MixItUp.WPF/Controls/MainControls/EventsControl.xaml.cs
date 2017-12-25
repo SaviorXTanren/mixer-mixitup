@@ -16,7 +16,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for EventsControl.xaml
     /// </summary>
-    public partial class EventsControl : MainControlBase
+    public partial class EventsControl : MainCommandControlBase
     {
         private static readonly ConstellationEventType resubscribeSharedEvent = new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id);
 
@@ -35,9 +35,6 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.RefreshEventControls();
 
-            GlobalEvents.OnCommandUpdated += GlobalEvents_OnCommandUpdated;
-            GlobalEvents.OnCommandDeleted += GlobalEvents_OnCommandDeleted;
-
             if (await ChannelSession.ConnectConstellation())
             {
                 ChannelSession.Constellation.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
@@ -47,10 +44,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void RefreshEventControls()
         {
-            this.OnFollowCommandControl.Initialize(this.Window, ConstellationEventTypeEnum.channel__id__followed);
-            this.OnHostCommandControl.Initialize(this.Window, ConstellationEventTypeEnum.channel__id__hosted);
-            this.OnSubscribeCommandControl.Initialize(this.Window, ConstellationEventTypeEnum.channel__id__subscribed);
-            this.OnResubscribeCommandControl.Initialize(this.Window, ConstellationEventTypeEnum.channel__id__resubscribed);
+            this.OnFollowCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__followed);
+            this.OnHostCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__hosted);
+            this.OnSubscribeCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__subscribed);
+            this.OnResubscribeCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__resubscribed);
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
