@@ -165,6 +165,49 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
+      <DependentUpon>ActionContainerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ActionControlBase.cs" />
+    <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
+      <DependentUpon>ChatActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\CounterActionControl.xaml.cs">
+      <DependentUpon>CounterActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\CurrencyActionControl.xaml.cs">
+      <DependentUpon>CurrencyActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\ExternalProgramActionControl.xaml.cs">
+      <DependentUpon>ExternalProgramActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\GameQueueActionControl.xaml.cs">
+      <DependentUpon>GameQueueActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\InputActionControl.xaml.cs">
+      <DependentUpon>InputActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\InteractiveActionControl.xaml.cs">
+      <DependentUpon>InteractiveActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\OBSStudioActionControl.xaml.cs">
+      <DependentUpon>OBSStudioActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\OverlayActionControl.xaml.cs">
+      <DependentUpon>OverlayActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\RankActionControl.xaml.cs">
+      <DependentUpon>RankActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\SoundActionControl.xaml.cs">
+      <DependentUpon>SoundActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
+      <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\WaitActionControl.xaml.cs">
+      <DependentUpon>WaitActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
     </Compile>
@@ -226,9 +269,6 @@
       <DependentUpon>GiveawayControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\MainControlBase.cs" />
-    <Compile Include="Controls\Actions\ActionControl.xaml.cs">
-      <DependentUpon>ActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainControls\ChatCommandsControl.xaml.cs">
       <DependentUpon>ChatCommandsControl.xaml</DependentUpon>
     </Compile>
@@ -256,6 +296,9 @@
     <Compile Include="Controls\Users\UserProfileAvatarControl.xaml.cs">
       <DependentUpon>UserProfileAvatarControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\XSplitActionControl.xaml.cs">
+      <DependentUpon>XSplitActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -277,6 +320,62 @@
     <Compile Include="Windows\Wizard\NewUserWizardWindow.xaml.cs">
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\Actions\ActionContainerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ChatActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\CounterActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\CurrencyActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\ExternalProgramActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\GameQueueActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\InputActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\InteractiveActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\OBSStudioActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\OverlayActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\RankActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SoundActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\TextToSpeechActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\WaitActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Chat\ChatMessageHeaderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -341,10 +440,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\ActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainControls\ChatCommandsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -402,6 +497,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Users\UserProfileAvatarControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\XSplitActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

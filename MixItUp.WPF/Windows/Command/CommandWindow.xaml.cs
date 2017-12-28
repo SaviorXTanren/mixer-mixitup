@@ -24,7 +24,7 @@ namespace MixItUp.WPF.Windows.Command
 
         private CommandDetailsControlBase commandDetailsControl;
 
-        private ObservableCollection<ActionControl> actionControls;
+        private ObservableCollection<ActionContainerControl> actionControls;
 
         private bool allowActionChanges;
 
@@ -43,12 +43,12 @@ namespace MixItUp.WPF.Windows.Command
                 this.Title = this.Title + " - " + command.Name;
             }
 
-            this.actionControls = new ObservableCollection<ActionControl>();
+            this.actionControls = new ObservableCollection<ActionContainerControl>();
 
             this.Initialize(this.StatusBar);
         }
 
-        public void MoveActionUp(ActionControl control)
+        public void MoveActionUp(ActionContainerControl control)
         {
             int index = this.actionControls.IndexOf(control);
             index = MathHelper.Clamp((index - 1), 0, this.actionControls.Count() - 1);
@@ -57,7 +57,7 @@ namespace MixItUp.WPF.Windows.Command
             this.actionControls.Insert(index, control);
         }
 
-        public void MoveActionDown(ActionControl control)
+        public void MoveActionDown(ActionContainerControl control)
         {
             int index = this.actionControls.IndexOf(control);
             index = MathHelper.Clamp((index + 1), 0, this.actionControls.Count() - 1);
@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Windows.Command
             this.actionControls.Insert(index, control);
         }
 
-        public void DeleteAction(ActionControl control)
+        public void DeleteAction(ActionContainerControl control)
         {
             this.actionControls.Remove(control);
         }
@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Windows.Command
             {
                 foreach (ActionBase action in command.Actions)
                 {
-                    ActionControl actionControl = new ActionControl(this, action);
+                    ActionContainerControl actionControl = new ActionContainerControl(this, action);
                     actionControl.Minimize();
                     this.actionControls.Add(actionControl);
                 }
@@ -103,13 +103,13 @@ namespace MixItUp.WPF.Windows.Command
         {
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
-                foreach (ActionControl control in this.actionControls)
+                foreach (ActionContainerControl control in this.actionControls)
                 {
                     control.Minimize();
                 }
 
                 ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                ActionControl actionControl = new ActionControl(this, type);
+                ActionContainerControl actionControl = new ActionContainerControl(this, type);
                 this.actionControls.Add(actionControl);
 
                 this.TypeComboBox.SelectedIndex = -1;
@@ -155,7 +155,7 @@ namespace MixItUp.WPF.Windows.Command
         private async Task<List<ActionBase>> GetActions()
         {
             List<ActionBase> actions = new List<ActionBase>();
-            foreach (ActionControl control in this.actionControls)
+            foreach (ActionContainerControl control in this.actionControls)
             {
                 ActionBase action = control.GetAction();
                 if (action == null)

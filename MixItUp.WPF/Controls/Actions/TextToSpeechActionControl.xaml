@@ -1,0 +1,37 @@
+﻿<local:ActionControlBase x:Class="MixItUp.WPF.Controls.Actions.TextToSpeechActionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="TextToSpeechVolumeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Speech Volume" Width="130" />
+
+            <ComboBox x:Name="TextToSpeechRateComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Speech Rate" Width="130" />
+
+            <TextBlock Grid.Column="4">
+                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+            </TextBlock>
+        </Grid>
+
+        <TextBox Grid.Row="2" x:Name="TextToSpeechMessageTextBox" MaterialDesign:HintAssist.Hint="Speech Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+    </Grid>
+</local:ActionControlBase>

@@ -1,0 +1,127 @@
+﻿<local:ActionControlBase x:Class="MixItUp.WPF.Controls.Actions.OverlayActionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="OverlayTypeComboBox" Grid.Column="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+
+            <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="2" x:Name="OverlayImageGrid" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <Button Grid.Column="2" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" x:Name="OverlayImageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Grid.Column="2" x:Name="OverlayImageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2" x:Name="OverlayTextGrid" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="OverlayFontSizeTextBox" MaterialDesign:HintAssist.Hint="Font Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="2" x:Name="OverlayFontColorTextBox" MaterialDesign:HintAssist.Hint="Color Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBlock Grid.Column="4">
+                            <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+                </TextBlock>
+            </Grid>
+
+            <TextBox Grid.Row="2" x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Row="2" x:Name="OverlayHTMLGrid" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBox x:Name="OverlayHTMLTextBox" MaterialDesign:HintAssist.Hint="HTML Text" Style="{StaticResource MultiLineTextBox}" Height="150" />
+        </Grid>
+
+        <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+
+            <ComboBox Grid.Column="2" x:Name="OverlayFadeEffectComboBox" MaterialDesign:HintAssist.Hint="Fade Effect" Width="100" />
+
+            <Controls:SliderWithHeaderControl Grid.Column="4" x:Name="OverlayHorizontalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Horizontal Position %:" />
+
+            <Controls:SliderWithHeaderControl Grid.Column="6" x:Name="OverlayVerticalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Vertical Position %:" />
+        </Grid>
+    </Grid>
+</local:ActionControlBase>
