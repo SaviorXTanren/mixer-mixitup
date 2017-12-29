@@ -39,7 +39,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ResetRankComboBox.ItemsSource = new List<string>() { "Never", "Yearly", "Monthly", "Weekly", "Daily" };
 
-            this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
             this.RankPointsNameTextBox.Text = ChannelSession.Settings.RankAcquisition.Name;
             this.RankPointsAmountTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireAmount.ToString();
             this.RankPointsTimeTextBox.Text = ChannelSession.Settings.RankAcquisition.AcquireInterval.ToString();
@@ -48,6 +47,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RankSubscribeBonusTextBox.Text = ChannelSession.Settings.RankAcquisition.SubscribeBonus.ToString();
             this.ResetRankComboBox.SelectedItem = ChannelSession.Settings.RankAcquisition.ResetInterval;
             this.RankGrid.IsEnabled = !ChannelSession.Settings.RankAcquisition.Enabled;
+
+            this.RankToggleSwitch.IsChecked = ChannelSession.Settings.RankAcquisition.Enabled;
 
             if (ChannelSession.Settings.RankAcquisition.ShouldBeReset())
             {

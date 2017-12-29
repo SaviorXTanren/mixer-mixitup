@@ -21,7 +21,6 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.ResetCurrencyComboBox.ItemsSource = new List<string>() { "Never", "Yearly", "Monthly", "Weekly", "Daily" };
 
-            this.CurrencyToggleSwitch.IsChecked = ChannelSession.Settings.CurrencyAcquisition.Enabled;
             this.CurrencyNameTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.Name;
             this.CurrencyAmountTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.AcquireAmount.ToString();
             this.CurrencyTimeTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.AcquireInterval.ToString();
@@ -30,6 +29,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CurrencySubscribeBonusTextBox.Text = ChannelSession.Settings.CurrencyAcquisition.SubscribeBonus.ToString();
             this.ResetCurrencyComboBox.SelectedItem = ChannelSession.Settings.CurrencyAcquisition.ResetInterval;
             this.CurrencyGrid.IsEnabled = !ChannelSession.Settings.CurrencyAcquisition.Enabled;
+
+            this.CurrencyToggleSwitch.IsChecked = ChannelSession.Settings.CurrencyAcquisition.Enabled;
 
             if (ChannelSession.Settings.CurrencyAcquisition.ShouldBeReset())
             {
