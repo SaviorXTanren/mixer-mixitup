@@ -38,7 +38,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (await ChannelSession.ConnectConstellation())
             {
                 ChannelSession.Constellation.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
-                await ChannelSession.Constellation.SubscribeToEvents(EventsControl.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.User.id)));
+                await ChannelSession.Constellation.SubscribeToEvents(EventsControl.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.Channel.id)));
             }
         }
 
@@ -68,18 +68,18 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 UserDataViewModel userData = ChannelSession.Settings.UserData.GetValueIfExists(user.ID, new UserDataViewModel(user));
 
-                if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelFollowEvent))
+                if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelFollowEvent.ToString()))
                 {
                     if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.FollowBonus; }
                     if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.FollowBonus; }
                 }
-                else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelHostedEvent))
+                else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelHostedEvent.ToString()))
                 {
                     if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.HostBonus; }
                     if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.HostBonus; }
                 }
-                else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelSubscribedEvent) || e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedEvent) ||
-                    e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedSharedEvent))
+                else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelSubscribedEvent.ToString()) || e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedEvent.ToString()) ||
+                    e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedSharedEvent.ToString()))
                 {
                     if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.SubscribeBonus; }
                     if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.SubscribeBonus; }
