@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,6 +27,19 @@ namespace MixItUp.Input
             this.simulator.Keyboard.KeyPress(keyCodes.ToArray());
 
             return Task.FromResult(0);
+        }
+
+        public Task<IEnumerable<InputTypeEnum>> GetCurrentInputs()
+        {
+            List<InputTypeEnum> inputs = new List<InputTypeEnum>();
+            foreach (VirtualKeyCode key in EnumHelper.GetEnumList<VirtualKeyCode>())
+            {
+                if (this.simulator.InputDeviceState.IsKeyDown(key))
+                {
+                    inputs.Add((InputTypeEnum)((int)key));
+                }
+            }
+            return Task.FromResult((IEnumerable<InputTypeEnum>)inputs);
         }
     }
 }

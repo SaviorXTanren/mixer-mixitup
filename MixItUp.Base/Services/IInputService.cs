@@ -14,141 +14,154 @@ namespace MixItUp.Base.Services
         // Summary:
         //     Middle mouse button (three-button mouse) - NOT contiguous with LBUTTON and RBUTTON
         [Name("Middle Mouse")]
-        MBUTTON = 4,
+        MiddleMouse = 4,
         //
         // Summary:
         //     Windows 2000/XP: X1 mouse button - NOT contiguous with LBUTTON and RBUTTON
         [Name("Side Mouse 1")]
-        XBUTTON1 = 5,
+        SideMouse1 = 5,
         //
         // Summary:
         //     Windows 2000/XP: X2 mouse button - NOT contiguous with LBUTTON and RBUTTON
         [Name("Side Mouse 2")]
-        XBUTTON2 = 6,
+        SideMouse2 = 6,
         //
         // Summary:
         //     BACKSPACE key
-        BACK = 8,
+        Backspace = 8,
         //
         // Summary:
         //     TAB key
-        TAB = 9,
+        Tab = 9,
         //
         // Summary:
         //     CLEAR key
-        CLEAR = 12,
+        Clear = 12,
         //
         // Summary:
         //     ENTER key
-        RETURN = 13,
+        Enter = 13,
         //
         // Summary:
         //     SHIFT key
-        SHIFT = 16,
+        Shift = 16,
         //
         // Summary:
         //     CTRL key
-        CONTROL = 17,
+        Control = 17,
         //
         // Summary:
         //     ALT key
-        MENU = 18,
+        Alt = 18,
         //
         // Summary:
         //     PAUSE key
-        PAUSE = 19,
+        Pause = 19,
         //
         // Summary:
         //     CAPS LOCK key
-        CAPITAL = 20,
+        [Name("Caps Lock")]
+        CapsLock = 20,
         //
         // Summary:
         //     ESC key
-        ESCAPE = 27,
+        Escape = 27,
         //
         // Summary:
         //     SPACEBAR
-        SPACE = 32,
+        Space = 32,
         //
         // Summary:
         //     PAGE UP key
-        PRIOR = 33,
+        [Name("Page Up")]
+        PageUp = 33,
         //
         // Summary:
         //     PAGE DOWN key
-        NEXT = 34,
+        [Name("Page Down")]
+        PageDown = 34,
         //
         // Summary:
         //     END key
-        END = 35,
+        End = 35,
         //
         // Summary:
         //     HOME key
-        HOME = 36,
+        Home = 36,
         //
         // Summary:
         //     LEFT ARROW key
-        LEFT = 37,
+        Left = 37,
         //
         // Summary:
         //     UP ARROW key
-        UP = 38,
+        Up = 38,
         //
         // Summary:
         //     RIGHT ARROW key
-        RIGHT = 39,
+        Right = 39,
         //
         // Summary:
         //     DOWN ARROW key
-        DOWN = 40,
+        Down = 40,
         //
         // Summary:
         //     INS key
-        INSERT = 45,
+        Insert = 45,
         //
         // Summary:
         //     DEL key
-        DELETE = 46,
+        Delete = 46,
         //
         // Summary:
         //     0 key
-        NUM0 = 48,
+        [Name("0")]
+        Num0 = 48,
         //
         // Summary:
         //     1 key
-        NUM1 = 49,
+        [Name("1")]
+        Num1 = 49,
         //
         // Summary:
         //     2 key
-        NUM2 = 50,
+        [Name("2")]
+        Num2 = 50,
         //
         // Summary:
         //     3 key
-        NUM3 = 51,
+        [Name("3")]
+        Num3 = 51,
         //
         // Summary:
         //     4 key
-        NUM4 = 52,
+        [Name("4")]
+        Num4 = 52,
         //
         // Summary:
         //     5 key
-        NUM5 = 53,
+        [Name("5")]
+        Num5 = 53,
         //
         // Summary:
         //     6 key
-        NUM6 = 54,
+        [Name("6")]
+        Num6 = 54,
         //
         // Summary:
         //     7 key
-        NUM7 = 55,
+        [Name("7")]
+        Num7 = 55,
         //
         // Summary:
         //     8 key
-        NUM8 = 56,
+        [Name("8")]
+        Num8 = 56,
         //
         // Summary:
         //     9 key
-        NUM9 = 57,
+        [Name("9")]
+        Num9 = 57,
         //
         // Summary:
         //     A key
@@ -256,75 +269,87 @@ namespace MixItUp.Base.Services
         //
         // Summary:
         //     Left Windows key (Microsoft Natural keyboard)
-        LWIN = 91,
+        [Name("Left Windows")]
+        LeftWindows = 91,
         //
         // Summary:
         //     Right Windows key (Natural keyboard)
-        RWIN = 92,
+        [Name("Right Window")]
+        RightWindow = 92,
         //
         // Summary:
         //     Numeric keypad 0 key
+        [Name("Num Pad 0")]
         NUMPAD0 = 96,
         //
         // Summary:
         //     Numeric keypad 1 key
+        [Name("Num Pad 1")]
         NUMPAD1 = 97,
         //
         // Summary:
         //     Numeric keypad 2 key
+        [Name("Num Pad 2")]
         NUMPAD2 = 98,
         //
         // Summary:
         //     Numeric keypad 3 key
+        [Name("Num Pad 3")]
         NUMPAD3 = 99,
         //
         // Summary:
         //     Numeric keypad 4 key
+        [Name("Num Pad 4")]
         NUMPAD4 = 100,
         //
         // Summary:
         //     Numeric keypad 5 key
+        [Name("Num Pad 5")]
         NUMPAD5 = 101,
         //
         // Summary:
         //     Numeric keypad 6 key
+        [Name("Num Pad 6")]
         NUMPAD6 = 102,
         //
         // Summary:
         //     Numeric keypad 7 key
+        [Name("Num Pad 7")]
         NUMPAD7 = 103,
         //
         // Summary:
         //     Numeric keypad 8 key
+        [Name("Num Pad 8")]
         NUMPAD8 = 104,
         //
         // Summary:
         //     Numeric keypad 9 key
+        [Name("Num Pad 9")]
         NUMPAD9 = 105,
         //
         // Summary:
         //     Multiply key
-        MULTIPLY = 106,
+        Multiply = 106,
         //
         // Summary:
         //     Add key
-        ADD = 107,
+        Add = 107,
         //
         // Summary:
         //     Separator key
-        SEPARATOR = 108,
+        Separator = 108,
         //
         // Summary:
         //     Subtract key
-        SUBTRACT = 109,
+        Subtract = 109,
         //
         // Summary:
         //     Decimal key
-        DECIMAL = 110,
+        Decimal = 110,
         //
         // Summary:
         //     Divide key
-        DIVIDE = 111,
+        Divide = 111,
         //
         // Summary:
         //     F1 key
@@ -376,43 +401,64 @@ namespace MixItUp.Base.Services
         //
         // Summary:
         //     NUM LOCK key
-        NUMLOCK = 144,
+        [Name("Num Lock")]
+        NumLock = 144,
         //
         // Summary:
         //     Left SHIFT key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
-        LSHIFT = 160,
+        [Name("Left Shift")]
+        LeftShift = 160,
         //
         // Summary:
         //     Right SHIFT key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
-        RSHIFT = 161,
+        [Name("Right Shift")]
+        RightShift = 161,
         //
         // Summary:
         //     Left CONTROL key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
-        LCONTROL = 162,
+        [Name("Left Control")]
+        LeftControl = 162,
         //
         // Summary:
         //     Right CONTROL key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
-        RCONTROL = 163,
+        [Name("Right Control")]
+        RightControl = 163,
+        //
+        // Summary:
+        //     Left MENU key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+        [Name("Left Alt")]
+        LeftAlt = 164,
+        //
+        // Summary:
+        //     Right MENU key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+        [Name("Right Alt")]
+        RightAlt = 165,
         //
         // Summary:
         //     Windows 2000/XP: For any country/region, the '+' key
+        [Name("Plus")]
         OEM_PLUS = 187,
         //
         // Summary:
         //     Windows 2000/XP: For any country/region, the ',' key
+        [Name("Comma")]
         OEM_COMMA = 188,
         //
         // Summary:
         //     Windows 2000/XP: For any country/region, the '-' key
+        [Name("Dash")]
         OEM_MINUS = 189,
         //
         // Summary:
         //     Windows 2000/XP: For any country/region, the '.' key
+        [Name("Period")]
         OEM_PERIOD = 190,
     }
 
     public interface IInputService
     {
         Task SendInput(IEnumerable<InputTypeEnum> inputs);
+
+        Task<IEnumerable<InputTypeEnum>> GetCurrentInputs();
     }
 }

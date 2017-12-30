@@ -8,6 +8,29 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ComboBox x:Name="InputButtonComboBox" MaterialDesign:HintAssist.Hint="Input Button" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0">Click the "Record Keys" button and hold all keys you wish to use:</TextBlock>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Recorded Keys:</TextBlock>
+
+            <TextBlock Grid.Column="2" x:Name="RecordedKeysTextBlock" TextWrapping="Wrap" VerticalAlignment="Center" />
+
+            <Button Grid.Column="4" x:Name="RecordKeysButton" Width="110" Click="RecordKeysButton_Click">Record Keys</Button>
+        </Grid>
+
     </Grid>
 </local:ActionControlBase>

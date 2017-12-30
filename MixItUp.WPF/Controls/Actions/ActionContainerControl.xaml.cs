@@ -2,6 +2,7 @@
 using MixItUp.Base.Actions;
 using MixItUp.WPF.Windows.Command;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -96,6 +97,8 @@ namespace MixItUp.WPF.Controls.Actions
             }
             return null;
         }
+
+        public async Task RunAsyncOperation(Func<Task> function) { await this.window.RunAsyncOperation(function); }
 
         public void Minimize() { this.GroupBox.Height = MinimizedGroupBoxHeight; }
 
