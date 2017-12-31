@@ -14,9 +14,11 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="500">
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
@@ -35,8 +37,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
@@ -48,11 +48,26 @@
             <TextBlock Grid.Column="8" VerticalAlignment="Center">Sub Priority:</TextBlock>
             <ToggleButton Grid.Column="10" x:Name="SubPriorityToggleButton" Checked="SubPriorityToggleButton_Checked" Unchecked="SubPriorityToggleButton_Checked" ToolTip="Subscribers Receive Priority" />
 
-            <Button x:Name="ClearQueueButton" Grid.Column="12" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="MinimumRankComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Minimum Rank" Width="120" IsEnabled="False" DisplayMemberPath="Name" SelectionChanged="MinimumRankComboBox_SelectionChanged" />
+
+            <TextBox x:Name="CurrencyCostTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Currency Cost" Width="100" IsEnabled="False" TextChanged="CurrencyCostTextBox_TextChanged" />
+
+            <Button x:Name="ClearQueueButton" Grid.Column="4" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
 
         </Grid>
 
-        <DataGrid x:Name="GameQueueUsersListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+        <DataGrid x:Name="GameQueueUsersListView" Grid.Row="4" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Pos #" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="55" />
                 <DataGridTextColumn Header="Name" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />

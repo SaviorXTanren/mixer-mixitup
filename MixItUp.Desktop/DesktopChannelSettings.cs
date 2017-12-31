@@ -55,6 +55,10 @@ namespace MixItUp.Desktop
         public bool GameQueueMustFollow { get; set; }
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
+        [JsonProperty]
+        public UserRankViewModel GameQueueMinimumRank { get; set; }
+        [JsonProperty]
+        public int GameQueueCurrencyCost { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }

@@ -63,11 +63,26 @@ namespace MixItUp.Base.Actions
                     return;
                 }
 
+                if (ChannelSession.Settings.GameQueueMinimumRank != null && user.Data.RankPoints < ChannelSession.Settings.GameQueueMinimumRank.MinimumPoints)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to enter the game queue",
+                        ChannelSession.Settings.GameQueueMinimumRank.Name, ChannelSession.Settings.GameQueueMinimumRank.MinimumPoints, ChannelSession.Settings.RankAcquisition.Name));
+                    return;
+                }
+
+                if (ChannelSession.Settings.GameQueueCurrencyCost > 0 && user.Data.CurrencyAmount < ChannelSession.Settings.GameQueueCurrencyCost)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to enter the game queue",
+                        ChannelSession.Settings.GameQueueCurrencyCost, ChannelSession.Settings.CurrencyAcquisition.Name));
+                    return;
+                }
+
                 if (this.GameQueueType == GameQueueActionType.JoinQueue)
                 {
                     int position = ChannelSession.GameQueue.IndexOf(user);
                     if (position == -1)
                     {
+                        user.Data.CurrencyAmount -= ChannelSession.Settings.GameQueueCurrencyCost;
                         if (ChannelSession.Settings.GameQueueSubPriority && user.Roles.Contains(UserRole.Subscriber))
                         {
                             int totalSubs = ChannelSession.GameQueue.Count(u => u.Roles.Contains(UserRole.Subscriber));

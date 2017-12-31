@@ -29,6 +29,8 @@ namespace MixItUp.Base
 
         bool GameQueueMustFollow { get; set; }
         bool GameQueueSubPriority { get; set; }
+        UserRankViewModel GameQueueMinimumRank { get; set; }
+        int GameQueueCurrencyCost { get; set; }
 
         bool QuotesEnabled { get; set; }
         

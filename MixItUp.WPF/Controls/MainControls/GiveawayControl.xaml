@@ -33,6 +33,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -40,41 +42,43 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
 
                 <TextBox Grid.Column="0" x:Name="GiveawayItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-
                 <TextBox Grid.Column="2" x:Name="GiveawayCommandTextBox" Width="150" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <ComboBox Grid.Column="0" Grid.Row="1" x:Name="GiveawayTypeComboBox" MaterialDesign:HintAssist.Hint="Permissions" />
-
-                <ComboBox Grid.Column="2" Grid.Row="1" x:Name="GiveawayRankComboBox" MaterialDesign:HintAssist.Hint="Minimum Rank" />
             </Grid>
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox Grid.Column="0" x:Name="GiveawayTypeComboBox" MaterialDesign:HintAssist.Hint="Permissions" Width="120" />
+
+                <ComboBox Grid.Column="2" x:Name="GiveawayRankComboBox" MaterialDesign:HintAssist.Hint="Minimum Rank" Width="120" />
+            </Grid>
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="40" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                
                 <TextBox Grid.Column="0" x:Name="GiveawayCurrencyCostTextBox" MaterialDesign:HintAssist.Hint="Currency Cost (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                
                 <TextBox Grid.Column="2" x:Name="GiveawayTimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 
             </Grid>
 
-            <Button Grid.Row="4" x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
-            <Button Grid.Row="4" x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Cancel Giveaway</Button>
+            <Button Grid.Row="6" x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
+            <Button Grid.Row="6" x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Cancel Giveaway</Button>
 
-            <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid Grid.Row="8" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
@@ -86,7 +90,7 @@
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" x:Name="TimeLeftTextBlock" />
             </Grid>
 
-            <Grid Grid.Row="8" HorizontalAlignment="Center">
+            <Grid Grid.Row="10" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
