@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base;
+using MixItUp.Desktop;
 using MixItUp.WPF.Util;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -122,7 +124,21 @@ namespace MixItUp.WPF.Controls.MainControls
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Channel.user.username + ".mixitup");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    await ChannelSession.Services.Settings.Save(ChannelSession.Settings, filePath);
+                    await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
+
+                    DesktopChannelSettings desktopSettings = (DesktopChannelSettings)ChannelSession.Settings;
+                    string settingsFilePath = ChannelSession.Services.Settings.GetFilePath(desktopSettings);
+
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+
+                    using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
+                    {
+                        zipFile.CreateEntryFromFile(settingsFilePath, Path.GetFileName(settingsFilePath));
+                        zipFile.CreateEntryFromFile(desktopSettings.DatabasePath, Path.GetFileName(desktopSettings.DatabasePath));
+                    }
                 }
             });
         }

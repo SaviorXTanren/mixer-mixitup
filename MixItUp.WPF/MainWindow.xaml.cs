@@ -1,7 +1,10 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
+using System;
 using System.IO;
+using System.IO.Compression;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -82,7 +85,20 @@ namespace MixItUp.WPF
 
             if (!string.IsNullOrEmpty(this.RestoredSettingsFilePath))
             {
-                File.Copy(this.RestoredSettingsFilePath, ChannelSession.Services.Settings.GetFilePath(ChannelSession.Settings), overwrite: true);
+                string settingsFilePath = ChannelSession.Services.Settings.GetFilePath(ChannelSession.Settings);
+                string settingsFolder = Path.GetDirectoryName(settingsFilePath);
+                using (ZipArchive zipFile = ZipFile.Open(this.RestoredSettingsFilePath, ZipArchiveMode.Read))
+                {
+                    foreach (ZipArchiveEntry entry in zipFile.Entries)
+                    {
+                        string filePath = Path.Combine(settingsFolder, entry.Name);
+                        if (File.Exists(filePath))
+                        {
+                            File.Delete(filePath);
+                        }
+                    }
+                    zipFile.ExtractToDirectory(settingsFolder);
+                }
             }
             else
             {

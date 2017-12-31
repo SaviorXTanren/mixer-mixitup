@@ -213,7 +213,7 @@ namespace MixItUp.Desktop.Services
             desktopSettings.DatabasePath = this.GetDatabaseFilePath(desktopSettings);
             if (!File.Exists(desktopSettings.DatabasePath))
             {
-                File.Copy(SettingsTemplateDatabaseFileName, desktopSettings.DatabasePath);
+                File.Copy(SettingsTemplateDatabaseFileName, desktopSettings.DatabasePath, overwrite: true);
             }
 
             await desktopSettings.Initialize();
@@ -242,6 +242,9 @@ namespace MixItUp.Desktop.Services
         {
             string filePath = this.GetFilePath(settings);
             await this.SaveSettings(settings, filePath + ".backup");
+
+            DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
+            File.Copy(desktopSettings.DatabasePath, desktopSettings.DatabasePath + ".backup", overwrite: true);
         }
 
         public string GetFilePath(IChannelSettings settings)
