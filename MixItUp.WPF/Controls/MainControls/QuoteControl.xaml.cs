@@ -26,27 +26,31 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
-        private void EnableQuotesToggleButton_Checked(object sender, RoutedEventArgs e)
+        private async void EnableQuotesToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Settings.QuotesEnabled = this.EnableQuotesToggleButton.IsChecked.GetValueOrDefault();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                ChannelSession.Settings.QuotesEnabled = this.EnableQuotesToggleButton.IsChecked.GetValueOrDefault();
+                await ChannelSession.SaveSettings();
+            });
         }
 
         private async void QuotesTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            string quotes = this.QuotesTextBox.Text;
-            if (string.IsNullOrEmpty(this.QuotesTextBox.Text))
-            {
-                quotes = "";
-            }
-
-            ChannelSession.Settings.Quotes.Clear();
-            foreach (string split in quotes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                ChannelSession.Settings.Quotes.Add(split);
-            }
-
             await this.Window.RunAsyncOperation(async () =>
             {
+                string quotes = this.QuotesTextBox.Text;
+                if (string.IsNullOrEmpty(this.QuotesTextBox.Text))
+                {
+                    quotes = "";
+                }
+
+                ChannelSession.Settings.Quotes.Clear();
+                foreach (string split in quotes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    ChannelSession.Settings.Quotes.Add(split);
+                }
+
                 await ChannelSession.SaveSettings();
             });
         }
