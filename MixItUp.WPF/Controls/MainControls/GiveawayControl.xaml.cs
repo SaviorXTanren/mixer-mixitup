@@ -41,22 +41,18 @@ namespace MixItUp.WPF.Controls.MainControls
             this.GiveawayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.GiveawayUserRole);
 
             this.GiveawayCommandTextBox.Text = ChannelSession.Settings.GiveawayCommand;
-            this.GiveawayCurrencyCostTextBox.Text = ChannelSession.Settings.GiveawayCurrencyCost.ToString();
             this.GiveawayTimerTextBox.Text = ChannelSession.Settings.GiveawayTimer.ToString();
+            this.CurrencySelector.SetCurrencyRequirement(ChannelSession.Settings.GiveawayCurrencyCost);
+            this.RankSelector.SetCurrencyRequirement(ChannelSession.Settings.GiveawayUserRank);
 
             GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
 
             return base.InitializeInternal();
         }
 
-        protected override Task VisibilityChanged()
+        protected override async Task OnVisibilityChanged()
         {
-            this.GiveawayCurrencyCostTextBox.IsEnabled = ChannelSession.Settings.CurrencyAcquisition.Enabled;
-            this.GiveawayRankComboBox.IsEnabled = ChannelSession.Settings.RankAcquisition.Enabled;
-            //Putting This In Visibility Changed To Catch Any New Ranks Added After Initialization
-            this.GiveawayRankComboBox.ItemsSource = new List<string>(new string[] { "Any" }).Union(ChannelSession.Settings.Ranks.Select(x => x.Name)).ToList();
-            this.GiveawayRankComboBox.SelectedItem = ChannelSession.Settings.GiveawayUserRank ?? "Any";
-            return Task.FromResult(0);
+            await this.InitializeInternal();
         }
 
         private async void EnableGiveawayButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -70,18 +66,6 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.GiveawayTypeComboBox.SelectedIndex < 0)
             {
                 await MessageBoxHelper.ShowMessageDialog("The allowed winners must be specified");
-                return;
-            }
-            if (this.GiveawayRankComboBox.SelectedIndex < 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("The minimum rank must be specified");
-                return;
-            }
-
-            int currencyCost = 0;
-            if (string.IsNullOrEmpty(this.GiveawayCurrencyCostTextBox.Text) || !int.TryParse(this.GiveawayCurrencyCostTextBox.Text, out currencyCost) || currencyCost < 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("Currency Cost must be 0 or greater");
                 return;
             }
 
@@ -104,13 +88,23 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
+            if (!await this.CurrencySelector.Validate())
+            {
+                return;
+            }
+
+            if (!await this.RankSelector.Validate())
+            {
+                return;
+            }
+
             this.giveawayEnabled = true;
             this.giveawayItem = this.GiveawayItemTextBox.Text;
             ChannelSession.Settings.GiveawayUserRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.GiveawayTypeComboBox.SelectedItem);
-            ChannelSession.Settings.GiveawayUserRank = (string)this.GiveawayRankComboBox.SelectedItem;
             ChannelSession.Settings.GiveawayCommand = this.GiveawayCommandTextBox.Text.ToLower();
-            ChannelSession.Settings.GiveawayCurrencyCost = currencyCost;
             ChannelSession.Settings.GiveawayTimer = this.timeLeft;
+            ChannelSession.Settings.GiveawayCurrencyCost = this.CurrencySelector.GetCurrencyRequirement();
+            ChannelSession.Settings.GiveawayUserRank = this.RankSelector.GetCurrencyRequirement();
             this.TimeLeftTextBlock.Text = this.timeLeft.ToString();
 
             await ChannelSession.SaveSettings();
@@ -244,23 +238,26 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     if (isUserValid)
                     {
-                        if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Settings.GiveawayCurrencyCost > 0)
+                        if (ChannelSession.Settings.GiveawayCurrencyCost != null && ChannelSession.Settings.GiveawayCurrencyCost.GetCurrency() != null && ChannelSession.Settings.GiveawayCurrencyCost.GetCurrency().Enabled)
                         {
-                            if (e.User.Data.CurrencyAmount < ChannelSession.Settings.GiveawayCurrencyCost)
+                            UserCurrencyDataViewModel currencyData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayCurrencyCost.GetCurrency());
+                            if (currencyData.Amount < ChannelSession.Settings.GiveawayCurrencyCost.RequiredAmount)
                             {
                                 await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You do not have the required {0} {1} to participate in this giveaway!",
-                                    ChannelSession.Settings.GiveawayCurrencyCost, ChannelSession.Settings.CurrencyAcquisition.Name));
+                                    ChannelSession.Settings.GiveawayCurrencyCost.RequiredAmount, currencyData.Currency.Name));
                                 return;
                             }
-                            e.User.Data.CurrencyAmount -= ChannelSession.Settings.GiveawayCurrencyCost;
+                            currencyData.Amount -= ChannelSession.Settings.GiveawayCurrencyCost.RequiredAmount;
                         }
 
-                        if (ChannelSession.Settings.RankAcquisition.Enabled && ChannelSession.Settings.GiveawayUserRank != "Any" && ChannelSession.Settings.Ranks.FirstOrDefault(x => x.Name == ChannelSession.Settings.GiveawayUserRank) != null)
+                        if (ChannelSession.Settings.GiveawayUserRank != null && ChannelSession.Settings.GiveawayUserRank.GetCurrency() != null && ChannelSession.Settings.GiveawayUserRank.GetCurrency().Enabled)
                         {
-                            if (e.User.Data.RankPoints < ChannelSession.Settings.Ranks.FirstOrDefault(x => x.Name == ChannelSession.Settings.GiveawayUserRank).MinimumPoints)
+                            UserCurrencyDataViewModel rankData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayUserRank.GetCurrency());
+                            if (rankData.Amount < ChannelSession.Settings.GiveawayUserRank.RequiredRank.MinimumPoints)
                             {
-                                await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You do not have the required rank of {0} to participate in this giveaway!",
-                                    ChannelSession.Settings.GiveawayUserRank));
+                                await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You must be rank {0} ({1} {2}) to participate in this giveaway!",
+                                    ChannelSession.Settings.GiveawayUserRank.RequiredRank.Name, ChannelSession.Settings.GiveawayUserRank.RequiredRank.MinimumPoints,
+                                    rankData.Currency.Name));
                                 return;
                             }
                         }

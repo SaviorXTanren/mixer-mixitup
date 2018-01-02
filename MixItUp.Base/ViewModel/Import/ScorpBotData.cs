@@ -11,10 +11,10 @@ namespace MixItUp.Base.ViewModel.Import
         public Dictionary<string, Dictionary<string, string>> Settings { get; set; }
 
         [DataMember]
-        public UserItemAcquisitonViewModel CurrencyAcquisition { get; set; }
+        public UserCurrencyViewModel CurrencyAcquisition { get; set; }
 
         [DataMember]
-        public UserItemAcquisitonViewModel RankAcquisition { get; set; }
+        public UserCurrencyViewModel RankAcquisition { get; set; }
 
         [DataMember]
         public List<ScorpBotViewer> Viewers { get; set; }
@@ -35,8 +35,8 @@ namespace MixItUp.Base.ViewModel.Import
         {
             this.Settings = new Dictionary<string, Dictionary<string, string>>();
 
-            this.CurrencyAcquisition = new UserItemAcquisitonViewModel();
-            this.RankAcquisition = new UserItemAcquisitonViewModel();
+            this.CurrencyAcquisition = new UserCurrencyViewModel();
+            this.RankAcquisition = new UserCurrencyViewModel();
 
             this.Viewers = new List<ScorpBotViewer>();
             this.Commands = new List<ScorpBotCommand>();

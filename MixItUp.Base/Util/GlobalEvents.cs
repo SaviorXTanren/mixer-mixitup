@@ -72,12 +72,12 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserDataViewModel> OnRankChanged;
-        public static void RankChanged(UserDataViewModel user)
+        public static event EventHandler<UserCurrencyDataViewModel> OnRankChanged;
+        public static void RankChanged(UserCurrencyDataViewModel currency)
         {
             if (GlobalEvents.OnRankChanged != null)
             {
-                GlobalEvents.OnRankChanged(null, user);
+                GlobalEvents.OnRankChanged(null, currency);
             }
         }
     }

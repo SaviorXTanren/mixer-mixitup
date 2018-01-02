@@ -8,7 +8,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace MixItUp.Base.Actions
 {
@@ -31,6 +30,7 @@ namespace MixItUp.Base.Actions
         Interactive,
         [Name("Text To Speech")]
         TextToSpeech,
+        [Obsolete]
         Rank,
 
         Custom = 99,
@@ -67,8 +67,6 @@ namespace MixItUp.Base.Actions
         {
             str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
 
-            str = str.Replace("$currencyname", ChannelSession.Settings.CurrencyAcquisition.Name);
-
             if (user != null)
             {
                 if (string.IsNullOrEmpty(user.AvatarLink))
@@ -82,7 +80,10 @@ namespace MixItUp.Base.Actions
                     user.AvatarLink = avatarUser.avatarUrl;
                 }
 
-                str = str.Replace("$usercurrency", user.Data.CurrencyAmount.ToString());
+                for (int i = 0; i < ChannelSession.Settings.Currencies.Count; i++)
+                {
+                    str = str.Replace("$usercurrency" + (i + 1), user.Data.GetCurrencyAmount(ChannelSession.Settings.Currencies.Values.ElementAt(i)).ToString());
+                }
                 str = str.Replace("$userrankname", user.Data.RankName);
                 str = str.Replace("$userrankpoints", user.Data.RankPoints.ToString());
                 str = str.Replace("$userrank", user.Data.RankNameAndPoints);
@@ -108,7 +109,10 @@ namespace MixItUp.Base.Actions
                         {
                             UserDataViewModel userData = ChannelSession.Settings.UserData[argUser.id];
 
-                            str = str.Replace("$arg" + (i + 1) + "usercurrency", userData.CurrencyAmount.ToString());
+                            for (int c = 0; c < ChannelSession.Settings.Currencies.Count; c++)
+                            {
+                                str = str.Replace("$arg" + (i + 1) + "usercurrency" + (c + 1), userData.GetCurrencyAmount(ChannelSession.Settings.Currencies.Values.ElementAt(c)).ToString());
+                            }
                             str = str.Replace("$arg" + (i + 1) + "userrankname", userData.RankName);
                             str = str.Replace("$arg" + (i + 1) + "userrankpoints", userData.RankPoints.ToString());
                             str = str.Replace("$arg" + (i + 1) + "userrank", userData.RankNameAndPoints);

@@ -1,16 +1,18 @@
-﻿using Mixer.Base.Clients;
-using Mixer.Base.Model.Channel;
+﻿using Mixer.Base.Model.Channel;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Database;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,50 +21,34 @@ namespace MixItUp.Desktop.Services
 {
     internal static class DesktopSettingsUpgrader
     {
+        private class LegacyUserDataViewModel : UserDataViewModel
+        {
+            [DataMember]
+            public new int RankPoints { get; set; }
+
+            [DataMember]
+            public int CurrencyAmount { get; set; }
+
+            public LegacyUserDataViewModel(DbDataReader dataReader)
+                : base(uint.Parse(dataReader["ID"].ToString()), dataReader["UserName"].ToString())
+            {
+                this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
+                this.RankPoints = int.Parse(dataReader["RankPoints"].ToString());
+                this.CurrencyAmount = int.Parse(dataReader["CurrencyAmount"].ToString());
+            }
+        }
+
         internal static async Task UpgradeSettingsToLatest(int version, string filePath)
         {
-            await DesktopSettingsUpgrader.Version1Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version2Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version3Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version4Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             await ChannelSession.Services.Settings.Initialize(settings);
             settings.Version = DesktopChannelSettings.LatestVersion;
 
             await ChannelSession.Services.Settings.Save(settings);
-        }
-
-        private static async Task Version1Upgrade(int version, string filePath)
-        {
-            if (version < 1)
-            {
-                string data = File.ReadAllText(filePath);
-                data = data.Replace("MixItUp.Base.ChannelSettings, MixItUp.Base", "MixItUp.Desktop.DesktopChannelSettings, MixItUp.Desktop");
-                data = data.Replace("MixItUp.Base.ViewModel.UserDataViewModel", "MixItUp.Base.ViewModel.User.UserDataViewModel");
-                data = data.Replace("MixItUp.Base.ViewModel.User.UserViewModel", "MixItUp.Base.ViewModel.User.UserDataViewModel");
-                File.WriteAllText(filePath, data);
-
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                data = data.Replace("MixItUp.Desktop.DesktopChannelSettings, MixItUp.Desktop", "MixItUp.Desktop.LegacyDesktopChannelSettings, MixItUp.Desktop");
-                LegacyDesktopChannelSettings legacySettings = SerializerHelper.DeserializeFromString<LegacyDesktopChannelSettings>(data);
-                await ChannelSession.Services.Settings.Initialize(legacySettings);
-
-                foreach (UserDataViewModel userData in legacySettings.userDataInternal)
-                {
-                    settings.UserData.Add(userData.ID, userData);
-                }
-
-                settings.CurrencyAcquisition.Name = legacySettings.CurrencyName;
-                settings.CurrencyAcquisition.AcquireAmount = legacySettings.CurrencyAcquireAmount;
-                settings.CurrencyAcquisition.AcquireInterval = legacySettings.CurrencyAcquireInterval;
-                settings.CurrencyAcquisition.Enabled = legacySettings.CurrencyEnabled;
-                settings.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(legacySettings.InteractiveUserGroups);
-                settings.InteractiveCooldownGroups = new LockedDictionary<string, int>(legacySettings.InteractiveCooldownGroups);
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
         }
 
         private static async Task Version2Upgrade(int version, string filePath)
@@ -95,33 +81,33 @@ namespace MixItUp.Desktop.Services
                         if (action is ChatAction)
                         {
                             ChatAction nAction = (ChatAction)action;
-                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiers(nAction.ChatText);
+                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion2(nAction.ChatText);
                         }
                         else if (action is CurrencyAction)
                         {
                             CurrencyAction nAction = (CurrencyAction)action;
-                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiers(nAction.ChatText);
+                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion2(nAction.ChatText);
                         }
                         else if (action is OBSStudioAction)
                         {
                             OBSStudioAction nAction = (OBSStudioAction)action;
-                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiers(nAction.SourceText);
+                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion2(nAction.SourceText);
                         }
                         else if (action is OverlayAction)
                         {
                             OverlayAction nAction = (OverlayAction)action;
-                            nAction.ImagePath = DesktopSettingsUpgrader.ReplaceSpecialIdentifiers(nAction.ImagePath);
-                            nAction.Text = DesktopSettingsUpgrader.ReplaceSpecialIdentifiers(nAction.Text);
+                            nAction.ImagePath = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion2(nAction.ImagePath);
+                            nAction.Text = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion2(nAction.Text);
                         }
                         else if (action is TextToSpeechAction)
                         {
                             TextToSpeechAction nAction = (TextToSpeechAction)action;
-                            nAction.SpeechText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiers(nAction.SpeechText);
+                            nAction.SpeechText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion2(nAction.SpeechText);
                         }
                         else if (action is XSplitAction)
                         {
                             XSplitAction nAction = (XSplitAction)action;
-                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiers(nAction.SourceText);
+                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion2(nAction.SourceText);
                         }
                     }
                 }
@@ -134,7 +120,7 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 3)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                LegacyDesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 IEnumerable<EventCommand> commands = settings.EventCommands.Where(c => c.Actions.Count == 0);
@@ -152,7 +138,103 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private static string ReplaceSpecialIdentifiers(string text)
+        private static async Task Version4Upgrade(int version, string filePath)
+        {
+            if (version < 4)
+            {
+                string data = File.ReadAllText(filePath);
+                data = data.Replace("MixItUp.Base.Actions.RankAction", "MixItUp.Base.Actions.CurrencyAction");
+                data = data.Replace("\"Type\": 13\n", "\"Type\": 1\n");
+                File.WriteAllText(filePath, data);
+
+                LegacyDesktopChannelSettings legacySettings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+
+                string dbPath = ((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(legacySettings);
+                List<LegacyUserDataViewModel> legacyUsers = new List<LegacyUserDataViewModel>();
+                SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(dbPath);
+                await databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+                {
+                    LegacyUserDataViewModel userData = new LegacyUserDataViewModel(dataReader);
+                    legacyUsers.Add(userData);
+                });
+
+                File.Copy(DesktopSettingsService.SettingsTemplateDatabaseFileName, dbPath, overwrite: true);
+
+                await ChannelSession.Services.Settings.Initialize(legacySettings);
+
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                UserCurrencyViewModel currency = null;
+                if (!string.IsNullOrEmpty(legacySettings.CurrencyAcquisition.Name))
+                {
+                    currency = legacySettings.CurrencyAcquisition;
+                    settings.Currencies.Add(legacySettings.CurrencyAcquisition.Name, legacySettings.CurrencyAcquisition);
+                }
+
+                UserCurrencyViewModel rank = null;
+                if (!string.IsNullOrEmpty(legacySettings.RankAcquisition.Name))
+                {
+                    rank = legacySettings.RankAcquisition;
+                    settings.Currencies.Add(legacySettings.RankAcquisition.Name, legacySettings.RankAcquisition);
+                }
+
+                foreach (LegacyUserDataViewModel user in legacyUsers)
+                {
+                    settings.UserData[user.ID] = user;
+                    if (rank != null) { settings.UserData[user.ID].SetCurrencyAmount(rank, user.RankPoints); }
+                    if (currency != null) { settings.UserData[user.ID].SetCurrencyAmount(currency, user.CurrencyAmount); }
+                }
+
+                List<CommandBase> commands = new List<CommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.InteractiveCommands);
+                commands.AddRange(settings.EventCommands);
+                commands.AddRange(settings.TimerCommands);
+
+                foreach (CommandBase command in commands)
+                {
+                    foreach (ActionBase action in command.Actions)
+                    {
+                        if (action is ChatAction)
+                        {
+                            ChatAction nAction = (ChatAction)action;
+                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ChatText);
+                        }
+                        else if (action is CurrencyAction)
+                        {
+                            CurrencyAction nAction = (CurrencyAction)action;
+                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ChatText);
+                        }
+                        else if (action is OBSStudioAction)
+                        {
+                            OBSStudioAction nAction = (OBSStudioAction)action;
+                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SourceText);
+                        }
+                        else if (action is OverlayAction)
+                        {
+                            OverlayAction nAction = (OverlayAction)action;
+                            nAction.ImagePath = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ImagePath);
+                            nAction.Text = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.Text);
+                        }
+                        else if (action is TextToSpeechAction)
+                        {
+                            TextToSpeechAction nAction = (TextToSpeechAction)action;
+                            nAction.SpeechText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SpeechText);
+                        }
+                        else if (action is XSplitAction)
+                        {
+                            XSplitAction nAction = (XSplitAction)action;
+                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SourceText);
+                        }
+                    }
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static string ReplaceSpecialIdentifiersVersion2(string text)
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -162,14 +244,25 @@ namespace MixItUp.Desktop.Services
             }
             return text;
         }
+
+        private static string ReplaceSpecialIdentifiersVersion4(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                text = Regex.Replace(text, "$arg1usercurrency", "$arg1usercurrency1");
+                text = Regex.Replace(text, "$currencyname", "$currencyname1");
+                text = Regex.Replace(text, "$usercurrency", "$usercurrency1");
+            }
+            return text;
+        }
     }
 
     public class DesktopSettingsService : ISettingsService
     {
-        private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
+        public const string SettingsDirectoryName = "Settings";
+        public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.sqlite";
 
-        private const string SettingsDirectoryName = "Settings";
-        private const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.sqlite";
+        private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
         public async Task<IEnumerable<IChannelSettings>> GetAllSettings()
         {

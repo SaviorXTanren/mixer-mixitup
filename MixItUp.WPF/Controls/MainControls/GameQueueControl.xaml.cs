@@ -2,9 +2,9 @@
 using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Util;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -45,18 +45,15 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.MustFollowToggleButton.IsChecked = ChannelSession.Settings.GameQueueMustFollow;
             this.SubPriorityToggleButton.IsChecked = ChannelSession.Settings.GameQueueSubPriority;
-            
-            if (ChannelSession.Settings.RankAcquisition.Enabled)
+
+            if (ChannelSession.Settings.GameQueueMinimumRank != null && ChannelSession.Settings.GameQueueMinimumRank.GetCurrency() != null && ChannelSession.Settings.GameQueueMinimumRank.GetCurrency().Enabled)
             {
-                this.MinimumRankComboBox.IsEnabled = true;
-                this.MinimumRankComboBox.ItemsSource = ChannelSession.Settings.Ranks;
-                this.MinimumRankComboBox.SelectedItem = ChannelSession.Settings.GameQueueMinimumRank;
+                this.RankSelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueMinimumRank);
             }
 
-            if (ChannelSession.Settings.CurrencyAcquisition.Enabled)
+            if (ChannelSession.Settings.GameQueueCurrencyCost != null && ChannelSession.Settings.GameQueueCurrencyCost.GetCurrency() != null && ChannelSession.Settings.GameQueueCurrencyCost.GetCurrency().Enabled)
             {
-                this.CurrencyCostTextBox.IsEnabled = true;
-                this.CurrencyCostTextBox.Text = ChannelSession.Settings.GameQueueCurrencyCost.ToString();
+                this.CurrencySelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueCurrencyCost);
             }
 
             GlobalEvents.OnGameQueueUpdated += ChannelSession_OnGameQueueUpdated;
@@ -74,32 +71,33 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Settings.GameQueueSubPriority = this.SubPriorityToggleButton.IsChecked.GetValueOrDefault();
         }
 
-        private void MinimumRankComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void EnableGameQueueToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.MinimumRankComboBox.SelectedIndex >= 0)
+            if (!await this.RankSelector.Validate())
             {
-                ChannelSession.Settings.GameQueueMinimumRank = (UserRankViewModel)this.MinimumRankComboBox.SelectedItem;
+                this.EnableGameQueueToggleButton.IsChecked = false;
+                return;
             }
+
+            if (!await this.CurrencySelector.Validate())
+            {
+                this.EnableGameQueueToggleButton.IsChecked = false;
+                return;
+            }
+
+            ChannelSession.Settings.GameQueueMinimumRank = this.RankSelector.GetCurrencyRequirement();
+            ChannelSession.Settings.GameQueueCurrencyCost = this.CurrencySelector.GetCurrencyRequirement();
+
+            ChannelSession.GameQueueEnabled = true;
+            this.MustFollowToggleButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.RankSelector.IsEnabled =
+                this.CurrencySelector.IsEnabled = !ChannelSession.GameQueueEnabled;
         }
 
-        private void CurrencyCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void EnableGameQueueToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
-            int currencyCost = 0;
-            if (int.TryParse(this.CurrencyCostTextBox.Text, out currencyCost) && currencyCost >= 0)
-            {
-                ChannelSession.Settings.GameQueueCurrencyCost = currencyCost;
-            }
-            else
-            {
-                this.CurrencyCostTextBox.Text = ChannelSession.Settings.GameQueueCurrencyCost.ToString();
-            }
-        }
-
-        private void EnableGameQueueToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ChannelSession.GameQueueEnabled = this.EnableGameQueueToggleButton.IsChecked.GetValueOrDefault();
-            this.MustFollowToggleButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.MinimumRankComboBox.IsEnabled =
-                this.CurrencyCostTextBox.IsEnabled = !ChannelSession.GameQueueEnabled;
+            ChannelSession.GameQueueEnabled = false;
+            this.MustFollowToggleButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.RankSelector.IsEnabled =
+                this.CurrencySelector.IsEnabled = !ChannelSession.GameQueueEnabled;
         }
 
         private void ClearQueueButton_Click(object sender, System.Windows.RoutedEventArgs e)

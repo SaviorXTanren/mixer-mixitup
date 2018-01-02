@@ -4,7 +4,6 @@ using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,6 +49,12 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             return base.InitializeInternal();
+        }
+
+        protected override Task OnVisibilityChanged()
+        {
+            this.RefreshList();
+            return Task.FromResult(0);
         }
 
         private void RefreshList()

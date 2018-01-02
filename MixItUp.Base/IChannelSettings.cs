@@ -21,16 +21,10 @@ namespace MixItUp.Base
 
         ExpandedChannelModel Channel { get; set; }
 
-        UserItemAcquisitonViewModel CurrencyAcquisition { get; set; }
-
-        UserItemAcquisitonViewModel RankAcquisition { get; set; }
-        List<UserRankViewModel> Ranks { get; set; }
-        CustomCommand RankChangedCommand { get; set; }
-
         bool GameQueueMustFollow { get; set; }
         bool GameQueueSubPriority { get; set; }
-        UserRankViewModel GameQueueMinimumRank { get; set; }
-        int GameQueueCurrencyCost { get; set; }
+        UserCurrencyRequirementViewModel GameQueueMinimumRank { get; set; }
+        UserCurrencyRequirementViewModel GameQueueCurrencyCost { get; set; }
 
         bool QuotesEnabled { get; set; }
         
@@ -38,10 +32,10 @@ namespace MixItUp.Base
         int TimerCommandsMinimumMessages { get; set; }
 
         UserRole GiveawayUserRole { get; set; }
-        string GiveawayUserRank { get; set; }
         string GiveawayCommand { get; set; }
-        int GiveawayCurrencyCost { get; set; }
         int GiveawayTimer { get; set; }
+        UserCurrencyRequirementViewModel GiveawayCurrencyCost { get; set; }
+        UserCurrencyRequirementViewModel GiveawayUserRank { get; set; }
 
         bool ModerationUseCommunityBannedWords { get; set; }
         int ModerationCapsBlockCount { get; set; }
@@ -63,6 +57,8 @@ namespace MixItUp.Base
     public interface IChannelSettings : ISavableChannelSettings
     {
         DatabaseDictionary<uint, UserDataViewModel> UserData { get; }
+
+        LockedDictionary<string, UserCurrencyViewModel> Currencies { get; }
 
         LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; }
         LockedList<ChatCommand> ChatCommands { get; }

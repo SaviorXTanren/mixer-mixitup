@@ -200,9 +200,6 @@
     <Compile Include="Controls\Actions\OverlayActionControl.xaml.cs">
       <DependentUpon>OverlayActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\RankActionControl.xaml.cs">
-      <DependentUpon>RankActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\SoundActionControl.xaml.cs">
       <DependentUpon>SoundActionControl.xaml</DependentUpon>
     </Compile>
@@ -218,14 +215,21 @@
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Currency\CurrencyDataControl.xaml.cs">
+      <DependentUpon>CurrencyDataControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Currency\CurrencySelectorControl.xaml.cs">
+      <DependentUpon>CurrencySelectorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LoadingControlBase.cs" />
     <Compile Include="Controls\MainControls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
       <DependentUpon>ChannelControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\CurrencyControl.xaml.cs">
-      <DependentUpon>CurrencyControl.xaml</DependentUpon>
+    <Compile Include="Controls\MainControls\CurrencyAndRankControl.xaml.cs">
+      <DependentUpon>CurrencyAndRankControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\MainCommandControlBase.cs" />
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
@@ -233,9 +237,6 @@
     </Compile>
     <Compile Include="Controls\Chat\PreMadeChatCommandControl.xaml.cs">
       <DependentUpon>PreMadeChatCommandControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MainControls\RankControl.xaml.cs">
-      <DependentUpon>RankControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\InteractiveSceneUserGroupsDialogControl.xaml.cs">
       <DependentUpon>InteractiveSceneUserGroupsDialogControl.xaml</DependentUpon>
@@ -290,6 +291,9 @@
     </Compile>
     <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
       <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Currency\RankSelectorControl.xaml.cs">
+      <DependentUpon>RankSelectorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SliderWithHeaderControl.xaml.cs">
       <DependentUpon>SliderWithHeaderControl.xaml</DependentUpon>
@@ -364,10 +368,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\RankActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Actions\SoundActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -388,6 +388,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\Currency\CurrencyDataControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Currency\CurrencySelectorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\AboutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -396,7 +404,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\CurrencyControl.xaml">
+    <Page Include="Controls\MainControls\CurrencyAndRankControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -405,10 +413,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat\PreMadeChatCommandControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\MainControls\RankControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -489,6 +493,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\CommandButtonsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Currency\RankSelectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -630,7 +638,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rmdir /Q /S $(TargetDir)Settings\
-mkdir $(TargetDir)Settings\</PostBuildEvent>
+mkdir $(TargetDir)Settings\
+
+rmdir /Q /S $(TargetDir)Logs\</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.106.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.106.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

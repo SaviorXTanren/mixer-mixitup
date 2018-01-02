@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CurrencyControls="clr-namespace:MixItUp.WPF.Controls.Currency"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -37,10 +38,12 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
-            <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Checked" ToolTip="Enable/Disable" />
+            <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Unchecked" ToolTip="Enable/Disable" />
 
             <TextBlock Grid.Column="4" VerticalAlignment="Center">Must Follow:</TextBlock>
             <ToggleButton Grid.Column="6" x:Name="MustFollowToggleButton" Checked="MustFollowToggleButton_Checked" Unchecked="MustFollowToggleButton_Checked" ToolTip="Must Be A Follower" />
@@ -48,6 +51,8 @@
             <TextBlock Grid.Column="8" VerticalAlignment="Center">Sub Priority:</TextBlock>
             <ToggleButton Grid.Column="10" x:Name="SubPriorityToggleButton" Checked="SubPriorityToggleButton_Checked" Unchecked="SubPriorityToggleButton_Checked" ToolTip="Subscribers Receive Priority" />
 
+            <Button x:Name="ClearQueueButton" Grid.Column="12" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
+            
         </Grid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
@@ -55,15 +60,11 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="MinimumRankComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Minimum Rank" Width="120" IsEnabled="False" DisplayMemberPath="Name" SelectionChanged="MinimumRankComboBox_SelectionChanged" />
+            <CurrencyControls:RankSelectorControl Grid.Column="0" x:Name="RankSelector" />
 
-            <TextBox x:Name="CurrencyCostTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Currency Cost" Width="100" IsEnabled="False" TextChanged="CurrencyCostTextBox_TextChanged" />
-
-            <Button x:Name="ClearQueueButton" Grid.Column="4" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
+            <CurrencyControls:CurrencySelectorControl Grid.Column="2" x:Name="CurrencySelector" />
 
         </Grid>
 

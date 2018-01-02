@@ -119,23 +119,22 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (addViewingMinutes)
                 {
-                    bool addCurrency = ChannelSession.Settings.CurrencyAcquisition.Enabled && (totalMinutes % ChannelSession.Settings.CurrencyAcquisition.AcquireInterval) == 0;
-                    bool addRank = ChannelSession.Settings.RankAcquisition.Enabled && (totalMinutes % ChannelSession.Settings.RankAcquisition.AcquireInterval) == 0;
+                    List<UserCurrencyViewModel> currenciesToUpdate = new List<UserCurrencyViewModel>();
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        if (currency.Enabled && currency.AcquireInterval > 0 && (totalMinutes % currency.AcquireInterval) == 0)
+                        {
+                            currenciesToUpdate.Add(currency);
+                        }
+                    }
 
                     await ChannelSession.Chat.UpdateEachUser((user) =>
                     {
                         user.Data.ViewingMinutes++;
-
-                        if (addCurrency)
+                        foreach (UserCurrencyViewModel currency in currenciesToUpdate)
                         {
-                            user.Data.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.AcquireAmount;
+                            user.Data.AddCurrencyAmount(currency, currency.AcquireAmount);
                         }
-
-                        if (addRank)
-                        {
-                            user.Data.RankPoints += ChannelSession.Settings.RankAcquisition.AcquireAmount;
-                        }
-
                         return Task.FromResult(0);
                     });
 

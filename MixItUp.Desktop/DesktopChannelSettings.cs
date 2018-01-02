@@ -22,7 +22,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 3;
+        public const int LatestVersion = 4;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -42,23 +42,13 @@ namespace MixItUp.Desktop
         public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]
-        public UserItemAcquisitonViewModel CurrencyAcquisition { get; set; }
-
-        [JsonProperty]
-        public UserItemAcquisitonViewModel RankAcquisition { get; set; }
-        [JsonProperty]
-        public List<UserRankViewModel> Ranks { get; set; }
-        [JsonProperty]
-        public CustomCommand RankChangedCommand { get; set; }
-
-        [JsonProperty]
         public bool GameQueueMustFollow { get; set; }
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
-        public UserRankViewModel GameQueueMinimumRank { get; set; }
+        public UserCurrencyRequirementViewModel GameQueueMinimumRank { get; set; }
         [JsonProperty]
-        public int GameQueueCurrencyCost { get; set; }
+        public UserCurrencyRequirementViewModel GameQueueCurrencyCost { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
@@ -71,13 +61,13 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public UserRole GiveawayUserRole { get; set; }
         [JsonProperty]
-        public string GiveawayUserRank { get; set; }
-        [JsonProperty]
         public string GiveawayCommand { get; set; }
         [JsonProperty]
-        public int GiveawayCurrencyCost { get; set; }
-        [JsonProperty]
         public int GiveawayTimer { get; set; }
+        [JsonProperty]
+        public UserCurrencyRequirementViewModel GiveawayUserRank { get; set; }
+        [JsonProperty]
+        public UserCurrencyRequirementViewModel GiveawayCurrencyCost { get; set; }
 
         [JsonProperty]
         public bool ModerationUseCommunityBannedWords { get; set; }
@@ -109,6 +99,9 @@ namespace MixItUp.Desktop
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]
+        protected Dictionary<string, UserCurrencyViewModel> currenciesInternal { get; set; }
+
+        [JsonProperty]
         protected List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; }
         [JsonProperty]
         protected List<ChatCommand> chatCommandsInternal { get; set; }
@@ -132,6 +125,7 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
+            this.currenciesInternal = new Dictionary<string, UserCurrencyViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
@@ -151,6 +145,9 @@ namespace MixItUp.Desktop
 
         [JsonIgnore]
         public DatabaseDictionary<uint, UserDataViewModel> UserData { get; set; }
+
+        [JsonIgnore]
+        public LockedDictionary<string, UserCurrencyViewModel> Currencies { get; set; }
 
         [JsonIgnore]
         public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
@@ -192,10 +189,6 @@ namespace MixItUp.Desktop
         public DesktopChannelSettings()
             : base()
         {
-            this.CurrencyAcquisition = new UserItemAcquisitonViewModel();
-            this.RankAcquisition = new UserItemAcquisitonViewModel();
-            this.Ranks = new List<UserRankViewModel>();
-
             this.TimerCommandsInterval = 10;
             this.TimerCommandsMinimumMessages = 10;
 
@@ -206,6 +199,7 @@ namespace MixItUp.Desktop
             this.MaxMessagesInChat = 100;
 
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
+            this.Currencies = new LockedDictionary<string, UserCurrencyViewModel>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
@@ -227,6 +221,7 @@ namespace MixItUp.Desktop
                 this.UserData.Add(userData.ID, userData);
             });
 
+            this.Currencies = new LockedDictionary<string, UserCurrencyViewModel>(this.currenciesInternal);
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);
@@ -256,6 +251,7 @@ namespace MixItUp.Desktop
                 this.BotOAuthToken = ChannelSession.BotConnection.Connection.GetOAuthTokenCopy();
             }
 
+            this.currenciesInternal = this.Currencies.ToDictionary();
             this.preMadeChatCommandSettingsInternal = this.PreMadeChatCommandSettings.ToList();
             this.chatCommandsInternal = this.ChatCommands.ToList();
             this.eventCommandsInternal = this.EventCommands.ToList();
@@ -267,14 +263,14 @@ namespace MixItUp.Desktop
             this.interactiveCooldownGroupsInternal = this.InteractiveCooldownGroups.ToDictionary();
 
             IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
-            await this.databaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, RankPoints, CurrencyAmount) VALUES(?,?,?,?,?)",
+            await this.databaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts) VALUES(?,?,?,?)",
                 addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
-                    new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.Int32, value: u.RankPoints), new SQLiteParameter(DbType.Int32, value: u.CurrencyAmount) }));
+                    new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()) }));
 
             IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
-            await this.databaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, RankPoints = @RankPoints, CurrencyAmount = @CurrencyAmount WHERE ID = @ID",
+            await this.databaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts WHERE ID = @ID",
                 changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
-                    new SQLiteParameter("@RankPoints", value: u.RankPoints), new SQLiteParameter("@CurrencyAmount", value: u.CurrencyAmount), new SQLiteParameter("@ID", value: (int)u.ID) }));
+                    new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
 
             IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
             await this.databaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
@@ -296,6 +292,16 @@ namespace MixItUp.Desktop
         public int CurrencyAcquireAmount { get; set; }
         [JsonProperty]
         public int CurrencyAcquireInterval { get; set; }
+
+        [JsonProperty]
+        public UserCurrencyViewModel CurrencyAcquisition { get; set; }
+
+        [JsonProperty]
+        public UserCurrencyViewModel RankAcquisition { get; set; }
+        [JsonProperty]
+        public List<UserRankViewModel> Ranks { get; set; }
+        [JsonProperty]
+        public CustomCommand RankChangedCommand { get; set; }
 
         [JsonProperty]
         public List<UserDataViewModel> userDataInternal { get; set; }

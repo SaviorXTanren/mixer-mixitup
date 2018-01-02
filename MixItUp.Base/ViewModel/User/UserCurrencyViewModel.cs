@@ -1,12 +1,15 @@
 ﻿using Mixer.Base.Clients;
+using MixItUp.Base.Commands;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.User
 {
     [DataContract]
-    public class UserItemAcquisitonViewModel
+    public class UserCurrencyViewModel : IEquatable<UserCurrencyViewModel>
     {
         [JsonIgnore]
         public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel.id); } }
@@ -39,12 +42,21 @@ namespace MixItUp.Base.ViewModel.User
         public DateTimeOffset LastReset { get; set; }
 
         [DataMember]
+        public List<UserRankViewModel> Ranks { get; set; }
+        [DataMember]
+        public CustomCommand RankChangedCommand { get; set; }
+
+        [DataMember]
         public bool Enabled { get; set; }
 
-        public UserItemAcquisitonViewModel()
+        [JsonIgnore]
+        public bool IsRank { get { return this.Ranks.Count > 0; } }
+
+        public UserCurrencyViewModel()
         {
             this.ResetInterval = "Never";
             this.LastReset = DateTimeOffset.MinValue;
+            this.Ranks = new List<UserRankViewModel>();
         }
 
         public bool ShouldBeReset()
@@ -70,6 +82,35 @@ namespace MixItUp.Base.ViewModel.User
                 return (newResetDate < DateTimeOffset.Now);
             }
             return false;
+        }
+
+        public UserRankViewModel GetRankForPoints(int points)
+        {
+            UserRankViewModel rank = null;
+            if (this.Ranks.Count > 0)
+            {
+                rank = this.Ranks.Where(r => r.MinimumPoints <= points).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
+            }
+            return rank;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is UserCurrencyViewModel)
+            {
+                return this.Equals((UserCurrencyViewModel)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(UserCurrencyViewModel other)
+        {
+            return (!string.IsNullOrEmpty(this.Name)) ? this.Name.Equals(other.Name) : false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (!string.IsNullOrEmpty(this.Name)) ? this.Name.GetHashCode() : string.Empty.GetHashCode();
         }
     }
 }

@@ -68,21 +68,36 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 UserDataViewModel userData = ChannelSession.Settings.UserData.GetValueIfExists(user.ID, new UserDataViewModel(user));
 
-                if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelFollowEvent.ToString()))
+                if (e.channel.Equals(UserCurrencyViewModel.ChannelFollowEvent.ToString()))
                 {
-                    if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.FollowBonus; }
-                    if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.FollowBonus; }
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        if (currency.Enabled)
+                        {
+                            userData.SetCurrencyAmount(currency, currency.FollowBonus);
+                        }
+                    }
                 }
-                else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelHostedEvent.ToString()))
+                else if (e.channel.Equals(UserCurrencyViewModel.ChannelHostedEvent.ToString()))
                 {
-                    if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.HostBonus; }
-                    if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.HostBonus; }
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        if (currency.Enabled)
+                        {
+                            userData.SetCurrencyAmount(currency, currency.HostBonus);
+                        }
+                    }
                 }
-                else if (e.channel.Equals(UserItemAcquisitonViewModel.ChannelSubscribedEvent.ToString()) || e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedEvent.ToString()) ||
-                    e.channel.Equals(UserItemAcquisitonViewModel.ChannelResubscribedSharedEvent.ToString()))
+                else if (e.channel.Equals(UserCurrencyViewModel.ChannelSubscribedEvent.ToString()) || e.channel.Equals(UserCurrencyViewModel.ChannelResubscribedEvent.ToString()) ||
+                    e.channel.Equals(UserCurrencyViewModel.ChannelResubscribedSharedEvent.ToString()))
                 {
-                    if (ChannelSession.Settings.CurrencyAcquisition.Enabled) { userData.CurrencyAmount += ChannelSession.Settings.CurrencyAcquisition.SubscribeBonus; }
-                    if (ChannelSession.Settings.RankAcquisition.Enabled) { userData.RankPoints += ChannelSession.Settings.RankAcquisition.SubscribeBonus; }
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        if (currency.Enabled)
+                        {
+                            userData.SetCurrencyAmount(currency, currency.SubscribeBonus);
+                        }
+                    }
                 }
             }
 

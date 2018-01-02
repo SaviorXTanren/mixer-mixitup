@@ -25,25 +25,27 @@ namespace MixItUp.Base.Commands
         public int Cooldown { get; set; }
 
         [DataMember]
-        public int CurrencyCost { get; set; }
+        public UserCurrencyRequirementViewModel CurrencyCost { get; set; }
 
         [JsonIgnore]
         private DateTimeOffset lastRun = DateTimeOffset.MinValue;
 
         public ChatCommand() { }
 
-        public ChatCommand(string name, string command, UserRole lowestAllowedRole, int cooldown, int currencyCost) : this(name, new List<string>() { command }, lowestAllowedRole, cooldown, currencyCost) { }
+        public ChatCommand(string name, string command, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyCost)
+            : this(name, new List<string>() { command }, lowestAllowedRole, cooldown, currencyCost)
+        { }
 
-        public ChatCommand(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, int currencyCost)
+        public ChatCommand(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyCost)
             : base(name, CommandTypeEnum.Chat, commands)
         {
             this.Permissions = lowestAllowedRole;
             this.Cooldown = cooldown;
-            this.CurrencyCost = CurrencyCost;
+            this.CurrencyCost = currencyCost;
         }
 
         public ChatCommand(ScorpBotCommand command)
-            : this(command.Command, command.Command, command.Permission, command.Cooldown, 0)
+            : this(command.Command, command.Command, command.Permission, command.Cooldown, null)
         {
             this.Actions.Add(new ChatAction(command.Text, isWhisper: false, sendAsStreamer: false));
         }
@@ -63,18 +65,19 @@ namespace MixItUp.Base.Commands
                 return;
             }
 
-            if (this.CurrencyCost > 0 && ChannelSession.Settings.CurrencyAcquisition.Enabled)
+            if (this.CurrencyCost != null && this.CurrencyCost.GetCurrency() != null && this.CurrencyCost.GetCurrency().Enabled)
             {
-                if (user.Data.CurrencyAmount < this.CurrencyCost)
+                UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(this.CurrencyCost.GetCurrency());
+                if (currencyData.Amount < this.CurrencyCost.RequiredAmount)
                 {
                     if (ChannelSession.Chat != null)
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have enough {0} to run this command.", ChannelSession.Settings.CurrencyAcquisition.Name));
+                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to run this command.",
+                            this.CurrencyCost.RequiredAmount, currencyData.Currency.Name));
                     }
                     return;
                 }
-
-                user.Data.CurrencyAmount -= this.CurrencyCost;
+                currencyData.Amount -= this.CurrencyCost.RequiredAmount;
             }
 
             this.lastRun = DateTimeOffset.Now;
