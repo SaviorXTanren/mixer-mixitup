@@ -28,6 +28,8 @@ namespace MixItUp.Base.ViewModel.User
         public int AcquireAmount { get; set; }
         [DataMember]
         public int AcquireInterval { get; set; }
+        [DataMember]
+        public string SpecialIdentifier { get; set; }
 
         [DataMember]
         public int FollowBonus { get; set; }
@@ -54,10 +56,15 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserCurrencyViewModel()
         {
+            this.SpecialIdentifier = string.Empty;
             this.ResetInterval = "Never";
             this.LastReset = DateTimeOffset.MinValue;
             this.Ranks = new List<UserRankViewModel>();
         }
+
+        public string SpecialIdentifierName { get { return string.Format("{0}name", this.SpecialIdentifier); } }
+
+        public string SpecialIdentifierRank { get { return string.Format("{0}rank", this.SpecialIdentifier); } }
 
         public bool ShouldBeReset()
         {

@@ -169,6 +169,7 @@ namespace MixItUp.Desktop.Services
                 if (!string.IsNullOrEmpty(legacySettings.CurrencyAcquisition.Name))
                 {
                     currency = legacySettings.CurrencyAcquisition;
+                    currency.SpecialIdentifier = "usercurrency";
                     settings.Currencies.Add(legacySettings.CurrencyAcquisition.Name, legacySettings.CurrencyAcquisition);
                 }
 
@@ -176,6 +177,7 @@ namespace MixItUp.Desktop.Services
                 if (!string.IsNullOrEmpty(legacySettings.RankAcquisition.Name))
                 {
                     rank = legacySettings.RankAcquisition;
+                    currency.SpecialIdentifier = "userrank";
                     settings.Currencies.Add(legacySettings.RankAcquisition.Name, legacySettings.RankAcquisition);
                 }
 
@@ -249,9 +251,9 @@ namespace MixItUp.Desktop.Services
         {
             if (!string.IsNullOrEmpty(text))
             {
-                text = Regex.Replace(text, "$arg1usercurrency", "$arg1usercurrency1");
-                text = Regex.Replace(text, "$currencyname", "$currencyname1");
-                text = Regex.Replace(text, "$usercurrency", "$usercurrency1");
+                text = Regex.Replace(text, "$userrank", "$userrankname - $userrank");
+                text = Regex.Replace(text, "$userrankpoints", "$userrank");
+                text = Regex.Replace(text, "$arg1usercurrency", "$arg1usercurrency");
             }
             return text;
         }

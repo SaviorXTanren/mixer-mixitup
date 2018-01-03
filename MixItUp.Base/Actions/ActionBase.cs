@@ -82,11 +82,17 @@ namespace MixItUp.Base.Actions
 
                 for (int i = 0; i < ChannelSession.Settings.Currencies.Count; i++)
                 {
-                    str = str.Replace("$usercurrency" + (i + 1), user.Data.GetCurrencyAmount(ChannelSession.Settings.Currencies.Values.ElementAt(i)).ToString());
+                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.ElementAt(i);
+                    UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(currency);
+
+                    str = str.Replace("$" + currency.SpecialIdentifierName, currency.Name);
+                    UserRankViewModel rank = currencyData.GetRank();
+                    if (rank != null)
+                    {
+                        str = str.Replace("$" + currency.SpecialIdentifierRank, rank.Name);
+                    }
+                    str = str.Replace("$" + currency.SpecialIdentifier, currencyData.Amount.ToString());
                 }
-                str = str.Replace("$userrankname", user.Data.RankName);
-                str = str.Replace("$userrankpoints", user.Data.RankPoints.ToString());
-                str = str.Replace("$userrank", user.Data.RankNameAndPoints);
                 str = str.Replace("$usertime", user.Data.ViewingTimeString);
 
                 str = str.Replace("$useravatar", user.AvatarLink);
@@ -111,11 +117,17 @@ namespace MixItUp.Base.Actions
 
                             for (int c = 0; c < ChannelSession.Settings.Currencies.Count; c++)
                             {
-                                str = str.Replace("$arg" + (i + 1) + "usercurrency" + (c + 1), userData.GetCurrencyAmount(ChannelSession.Settings.Currencies.Values.ElementAt(c)).ToString());
+                                UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.ElementAt(i);
+                                UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
+
+                                str = str.Replace("$arg" + (i + 1) + currency.SpecialIdentifierName, currency.Name);
+                                UserRankViewModel rank = currencyData.GetRank();
+                                if (rank != null)
+                                {
+                                    str = str.Replace("$arg" + (i + 1) + currency.SpecialIdentifierRank, rank.Name);
+                                }
+                                str = str.Replace("$arg" + (i + 1) + currency.SpecialIdentifier, currencyData.Amount.ToString());
                             }
-                            str = str.Replace("$arg" + (i + 1) + "userrankname", userData.RankName);
-                            str = str.Replace("$arg" + (i + 1) + "userrankpoints", userData.RankPoints.ToString());
-                            str = str.Replace("$arg" + (i + 1) + "userrank", userData.RankNameAndPoints);
                             str = str.Replace("$arg" + (i + 1) + "usertime", userData.ViewingTimeString);
                         }
 

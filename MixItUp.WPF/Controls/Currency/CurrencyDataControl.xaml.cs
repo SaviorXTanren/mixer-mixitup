@@ -55,6 +55,7 @@ namespace MixItUp.WPF.Controls.Currency
                 this.CurrencyNameTextBox.Text = this.currency.Name;
                 this.CurrencyAmountTextBox.Text = this.currency.AcquireAmount.ToString();
                 this.CurrencyTimeTextBox.Text = this.currency.AcquireInterval.ToString();
+                this.CurrencySpecialIdentifierTextBox.Text = this.currency.SpecialIdentifier;
                 this.CurrencyFollowBonusTextBox.Text = this.currency.FollowBonus.ToString();
                 this.CurrencyHostBonusTextBox.Text = this.currency.HostBonus.ToString();
                 this.CurrencySubscribeBonusTextBox.Text = this.currency.SubscribeBonus.ToString();
@@ -129,6 +130,14 @@ namespace MixItUp.WPF.Controls.Currency
                     return;
                 }
 
+                string specialIdentifier = this.CurrencySpecialIdentifierTextBox.Text;
+                if (string.IsNullOrEmpty(this.currency.SpecialIdentifier) || specialIdentifier.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c)))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A currency special identifier must be entered");
+                    this.CurrencyToggleSwitch.IsChecked = false;
+                    return;
+                }
+
                 int followBonus = 0;
                 if (string.IsNullOrEmpty(this.CurrencyFollowBonusTextBox.Text) || !int.TryParse(this.CurrencyFollowBonusTextBox.Text, out followBonus) || followBonus < 0)
                 {
@@ -163,6 +172,7 @@ namespace MixItUp.WPF.Controls.Currency
                 this.HeaderTextBlock.Text = this.currency.Name = this.CurrencyNameTextBox.Text;
                 this.currency.AcquireAmount = currencyAmount;
                 this.currency.AcquireInterval = currencyTime;
+                this.currency.SpecialIdentifier = specialIdentifier.ToLower();
                 this.currency.FollowBonus = followBonus;
                 this.currency.HostBonus = hostBonus;
                 this.currency.SubscribeBonus = subscribeBonus;
@@ -197,6 +207,25 @@ namespace MixItUp.WPF.Controls.Currency
         private void IsRankToggleSwitch_Checked(object sender, RoutedEventArgs e)
         {
             this.RankGrid.Visibility = (this.IsRankToggleSwitch.IsChecked.GetValueOrDefault()) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void CurrencySpecialIdentifierTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string text = this.CurrencySpecialIdentifierTextBox.Text;
+            if (!string.IsNullOrEmpty(text))
+            {
+                if (text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c)))
+                {
+                    this.CurrencySpecialIdentifierTextBox.Text = this.currency.SpecialIdentifier;
+                }
+                else
+                {
+                    this.currency.SpecialIdentifier = text.ToLower();
+                    this.CurrencySpecialIdentifierNameTextBlock.Text = "$" + this.currency.SpecialIdentifierName;
+                    this.CurrencySpecialIdentifierAmountTextBlock.Text = "$" + this.currency.SpecialIdentifier;
+                    this.CurrencySpecialIdentifierRankTextBlock.Text = "$" + this.currency.SpecialIdentifierRank;
+                }
+            }
         }
 
         private async void ResetCurrencyManuallyButton_Click(object sender, RoutedEventArgs e)

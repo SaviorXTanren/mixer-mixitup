@@ -9,7 +9,7 @@
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="500">
     <GroupBox x:Name="GroupBox">
         <GroupBox.Header>
             <Grid MouseLeftButtonUp="GroupBoxHeader_MouseLeftButtonUp">
@@ -44,17 +44,24 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Enable/Disable:</TextBlock>
-                <ToggleButton x:Name="CurrencyToggleSwitch" Grid.Column="2" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Currency" Checked="CurrencyToggleSwitch_Checked" Unchecked="CurrencyToggleSwitch_Unchecked" />
+                <TextBox Grid.Column="0" x:Name="CurrencyNameTextBox" MaterialDesign:HintAssist.Hint="Currency Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                
+                <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+                <ToggleButton x:Name="CurrencyToggleSwitch" Grid.Column="4" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Currency" Checked="CurrencyToggleSwitch_Checked" Unchecked="CurrencyToggleSwitch_Unchecked" />
 
-                <TextBlock Grid.Column="4" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Is Rank:</TextBlock>
-                <ToggleButton x:Name="IsRankToggleSwitch" Grid.Column="6" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Is Rank" Checked="IsRankToggleSwitch_Checked" Unchecked="IsRankToggleSwitch_Checked" />
+                <TextBlock Grid.Column="6" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Is Rank:</TextBlock>
+                <ToggleButton x:Name="IsRankToggleSwitch" Grid.Column="8" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Is Rank" Checked="IsRankToggleSwitch_Checked" Unchecked="IsRankToggleSwitch_Checked" />
+
             </Grid>
 
             <Grid Grid.Row="2" x:Name="CurrencyGrid">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
@@ -67,26 +74,51 @@
                 <Grid Grid.Row="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" x:Name="CurrencyNameTextBox" MaterialDesign:HintAssist.Hint="Currency Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Bottom" Margin="0,0,0,5">Rate:</TextBlock>
 
-                    <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Bottom" Margin="0,0,0,5">Rate:</TextBlock>
+                    <TextBox Grid.Column="2" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBlock Grid.Column="4" VerticalAlignment="Bottom">/</TextBlock>
+                    <TextBox Grid.Column="6" x:Name="CurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="4" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <TextBlock Grid.Column="6" VerticalAlignment="Bottom">/</TextBlock>
-                    <TextBox Grid.Column="8" x:Name="CurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="8" x:Name="CurrencySpecialIdentifierTextBox" MaterialDesign:HintAssist.Hint="Special Identifier (No '$')" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="CurrencySpecialIdentifierTextBox_TextChanged" />
+
                 </Grid>
 
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline">Currency Name:</TextBlock>
+                    <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" x:Name="CurrencySpecialIdentifierNameTextBlock" />
+
+                    <TextBlock Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline">User Currency Amount:</TextBlock>
+                    <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" x:Name="CurrencySpecialIdentifierAmountTextBlock" />
+
+                    <TextBlock Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" TextDecorations="Underline">User Rank Name:</TextBlock>
+                    <TextBlock Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" x:Name="CurrencySpecialIdentifierRankTextBlock" />
+
+                </Grid>
+
+                <Grid Grid.Row="4" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="30" />
@@ -103,7 +135,7 @@
 
                 </Grid>
 
-                <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid Grid.Row="6" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
@@ -118,7 +150,7 @@
                     <Button Grid.Column="4" x:Name="ResetCurrencyManuallyButton" Click="ResetCurrencyManuallyButton_Click">Manual Reset</Button>
                 </Grid>
 
-                <Grid x:Name="RankGrid" Grid.Row="6" Visibility="Collapsed">
+                <Grid x:Name="RankGrid" Grid.Row="8" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="20" />
