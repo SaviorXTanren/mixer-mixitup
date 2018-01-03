@@ -115,9 +115,16 @@ namespace MixItUp.WPF.Controls.Currency
                 }
 
                 int currencyTime = 0;
-                if (string.IsNullOrEmpty(this.CurrencyTimeTextBox.Text) || !int.TryParse(this.CurrencyTimeTextBox.Text, out currencyTime) || currencyTime < 1)
+                if (string.IsNullOrEmpty(this.CurrencyTimeTextBox.Text) || !int.TryParse(this.CurrencyTimeTextBox.Text, out currencyTime) || currencyTime < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The currency interval be greater than 1");
+                    await MessageBoxHelper.ShowMessageDialog("The currency interval must be 0 or greater");
+                    this.CurrencyToggleSwitch.IsChecked = false;
+                    return;
+                }
+
+                if ((currencyAmount == 0 && currencyTime != 0) || (currencyAmount != 0 && currencyTime == 0))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The currency rate and interval must be both greater than 0 or both equal to 0");
                     this.CurrencyToggleSwitch.IsChecked = false;
                     return;
                 }
