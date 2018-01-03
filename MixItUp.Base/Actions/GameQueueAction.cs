@@ -67,7 +67,7 @@ namespace MixItUp.Base.Actions
                 if (ChannelSession.Settings.GameQueueMinimumRank != null)
                 {
                     rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueMinimumRank.CurrencyName);
-                    if (ChannelSession.Settings.GameQueueMinimumRank.DoesUserMeetRequirement(user.Data))
+                    if (!ChannelSession.Settings.GameQueueMinimumRank.DoesUserMeetRequirement(user.Data))
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to enter the game queue",
                             ChannelSession.Settings.GameQueueMinimumRank.RequiredRank.Name, ChannelSession.Settings.GameQueueMinimumRank.RequiredRank.MinimumPoints, rankData.Currency.Name));
@@ -79,7 +79,7 @@ namespace MixItUp.Base.Actions
                 if (ChannelSession.Settings.GameQueueCurrencyCost != null)
                 {
                     currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyCost.CurrencyName);
-                    if (ChannelSession.Settings.GameQueueCurrencyCost.DoesUserMeetRequirement(user.Data))
+                    if (!ChannelSession.Settings.GameQueueCurrencyCost.DoesUserMeetRequirement(user.Data))
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to enter the game queue",
                             ChannelSession.Settings.GameQueueCurrencyCost.RequiredAmount, currencyData.Currency.Name));

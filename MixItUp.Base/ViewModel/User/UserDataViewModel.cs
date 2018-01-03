@@ -201,7 +201,6 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                UserRankViewModel rank = this.Rank;
                 return string.Format("{0} - {1}", this.RankName, this.RankPoints);
             }
         }
