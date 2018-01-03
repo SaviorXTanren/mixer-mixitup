@@ -241,7 +241,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         if (ChannelSession.Settings.GiveawayCurrencyCost != null && ChannelSession.Settings.GiveawayCurrencyCost.GetCurrency() != null && ChannelSession.Settings.GiveawayCurrencyCost.GetCurrency().Enabled)
                         {
                             UserCurrencyDataViewModel currencyData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayCurrencyCost.GetCurrency());
-                            if (currencyData.Amount < ChannelSession.Settings.GiveawayCurrencyCost.RequiredAmount)
+                            if (ChannelSession.Settings.GiveawayCurrencyCost.DoesUserMeetRequirement(e.User.Data))
                             {
                                 await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You do not have the required {0} {1} to participate in this giveaway!",
                                     ChannelSession.Settings.GiveawayCurrencyCost.RequiredAmount, currencyData.Currency.Name));
@@ -253,11 +253,11 @@ namespace MixItUp.WPF.Controls.MainControls
                         if (ChannelSession.Settings.GiveawayUserRank != null && ChannelSession.Settings.GiveawayUserRank.GetCurrency() != null && ChannelSession.Settings.GiveawayUserRank.GetCurrency().Enabled)
                         {
                             UserCurrencyDataViewModel rankData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayUserRank.GetCurrency());
-                            if (rankData.Amount < ChannelSession.Settings.GiveawayUserRank.RequiredRank.MinimumPoints)
+                            if (ChannelSession.Settings.GiveawayUserRank.DoesUserMeetRequirement(e.User.Data))
                             {
                                 await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You must be rank {0} ({1} {2}) to participate in this giveaway!",
                                     ChannelSession.Settings.GiveawayUserRank.RequiredRank.Name, ChannelSession.Settings.GiveawayUserRank.RequiredRank.MinimumPoints,
-                                    rankData.Currency.Name));
+                                    ChannelSession.Settings.GiveawayUserRank.GetCurrency().Name));
                                 return;
                             }
                         }

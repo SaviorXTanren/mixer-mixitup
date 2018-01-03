@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Linq;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -12,7 +13,9 @@ namespace MixItUp.Base.ViewModel.User
         public int RequiredAmount { get; set; }
 
         [DataMember]
-        public UserRankViewModel RequiredRank { get; set; }
+        public string RankName { get; set; }
+        [DataMember]
+        public bool MustEqual { get; set; }
 
         public UserCurrencyRequirementViewModel() { }
 
@@ -22,10 +25,28 @@ namespace MixItUp.Base.ViewModel.User
             this.RequiredAmount = amount;
         }
 
-        public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, UserRankViewModel rank)
+        public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, UserRankViewModel rank, bool mustEqual = false)
         {
             this.CurrencyName = currency.Name;
-            this.RequiredRank = rank;
+            this.RankName = rank.Name;
+            this.MustEqual = mustEqual;
+        }
+
+        public UserRankViewModel RequiredRank
+        {
+            get
+            {
+                UserCurrencyViewModel currency = this.GetCurrency();
+                if (currency != null)
+                {
+                    UserRankViewModel rank = currency.Ranks.FirstOrDefault(r => r.Name.Equals(this.RankName));
+                    if (rank != null)
+                    {
+                        return rank;
+                    }
+                }
+                return new UserRankViewModel("No Rank", 0);
+            }
         }
 
         public UserCurrencyViewModel GetCurrency()
@@ -35,6 +56,37 @@ namespace MixItUp.Base.ViewModel.User
                 return ChannelSession.Settings.Currencies[this.CurrencyName];
             }
             return null;
+        }
+
+        public bool DoesUserMeetRequirement(UserDataViewModel userData)
+        {
+            UserCurrencyViewModel currency = this.GetCurrency();
+            if (currency == null)
+            {
+                return false;
+            }
+
+            UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
+            if (userCurrencyData.Amount < this.RequiredAmount)
+            {
+                return false;
+            }
+
+            UserRankViewModel rank = this.RequiredRank;
+            if (rank != null)
+            {
+                if (userCurrencyData.Amount < rank.MinimumPoints)
+                {
+                    return false;
+                }
+
+                if (this.MustEqual && userCurrencyData.GetRank() != rank)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

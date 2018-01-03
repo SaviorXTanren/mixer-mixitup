@@ -67,17 +67,16 @@ namespace MixItUp.Base.Commands
 
             if (this.CurrencyCost != null && this.CurrencyCost.GetCurrency() != null && this.CurrencyCost.GetCurrency().Enabled)
             {
-                UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(this.CurrencyCost.GetCurrency());
-                if (currencyData.Amount < this.CurrencyCost.RequiredAmount)
+                if (!this.CurrencyCost.DoesUserMeetRequirement(user.Data))
                 {
                     if (ChannelSession.Chat != null)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to run this command.",
-                            this.CurrencyCost.RequiredAmount, currencyData.Currency.Name));
+                            this.CurrencyCost.RequiredAmount, this.CurrencyCost.CurrencyName));
                     }
                     return;
                 }
-                currencyData.Amount -= this.CurrencyCost.RequiredAmount;
+                user.Data.SubtractCurrencyAmount(this.CurrencyCost.GetCurrency(), this.CurrencyCost.RequiredAmount);
             }
 
             this.lastRun = DateTimeOffset.Now;
