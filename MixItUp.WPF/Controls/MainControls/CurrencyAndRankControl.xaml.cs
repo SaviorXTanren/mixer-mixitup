@@ -36,7 +36,10 @@ namespace MixItUp.WPF.Controls.MainControls
             if (!string.IsNullOrEmpty(currency.Name))
             {
                 ChannelSession.Settings.Currencies.Remove(currency.Name);
-                ChannelSession.Settings.UserData
+                foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.ToList())
+                {
+                    userData.ResetCurrency(currency);
+                }
             }
             await this.RefreshList();
         }
