@@ -87,7 +87,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction)
         {
-            foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values)
+            foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values.ToList())
             {
                 await userUpdateFunction(chatUser);
             }
@@ -99,7 +99,9 @@ namespace MixItUp.Base.MixerAPI
         public async Task RefreshAllChat()
         {
             Dictionary<uint, UserViewModel> refreshUsers = new Dictionary<uint, UserViewModel>();
-            foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel))
+
+            await ChannelSession.RefreshChannel();
+            foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, ChannelSession.Channel.viewersCurrent))
             {
                 UserViewModel user = new UserViewModel(chatUser);
                 if (user.ID > 0)

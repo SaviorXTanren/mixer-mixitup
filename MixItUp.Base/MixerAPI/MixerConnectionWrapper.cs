@@ -98,7 +98,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<ChatUserModel> GetChatUser(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Chats.GetUser(channel, userID)); }
 
-        public async Task<IEnumerable<ChatUserModel>> GetChatUsers(ChannelModel channel) { return await this.RunAsync(this.Connection.Chats.GetUsers(channel)); }
+        public async Task<IEnumerable<ChatUserModel>> GetChatUsers(ChannelModel channel, uint maxResults = 1) { return await this.RunAsync(this.Connection.Chats.GetUsers(channel, maxResults)); }
 
         public async Task<ExpandedChannelModel> GetChannel(string name) { return await this.RunAsync(this.Connection.Channels.GetChannel(name)); }
 

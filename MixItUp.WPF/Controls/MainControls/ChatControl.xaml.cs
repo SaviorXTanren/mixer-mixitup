@@ -272,7 +272,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 lock (userUpdateLock)
                 {
                     this.UserControls.Clear();
-                    var orderedUsers = ChatClientWrapper.ChatUsers.Values.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
+                    var orderedUsers = ChatClientWrapper.ChatUsers.Values.ToList().OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
                     foreach (UserViewModel user in orderedUsers)
                     {
                         this.UserControls.Add(new ChatUserControl(user));
