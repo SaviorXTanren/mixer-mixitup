@@ -32,6 +32,8 @@ namespace MixItUp.Base.Actions
         TextToSpeech,
         [Obsolete]
         Rank,
+        [Name("Web Request")]
+        WebRequest,
 
         Custom = 99,
     }
@@ -145,7 +147,7 @@ namespace MixItUp.Base.Actions
                 }
             }
 
-            str = str.Replace("$allArgs", string.Join(" ", arguments));
+            str = str.Replace("$allargs", string.Join(" ", arguments));
 
             foreach (string counter in ChannelSession.Counters.Keys)
             {

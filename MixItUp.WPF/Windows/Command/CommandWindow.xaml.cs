@@ -48,6 +48,8 @@ namespace MixItUp.WPF.Windows.Command
             this.Initialize(this.StatusBar);
         }
 
+        public CommandBase GetExistingCommand() { return this.commandDetailsControl.GetExistingCommand(); }
+
         public void MoveActionUp(ActionContainerControl control)
         {
             int index = this.actionControls.IndexOf(control);

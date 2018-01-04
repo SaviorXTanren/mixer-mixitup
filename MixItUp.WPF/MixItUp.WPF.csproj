@@ -209,6 +209,9 @@
     <Compile Include="Controls\Actions\WaitActionControl.xaml.cs">
       <DependentUpon>WaitActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\WebRequestAction.xaml.cs">
+      <DependentUpon>WebRequestAction.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
     </Compile>
@@ -377,6 +380,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\WaitActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\WebRequestAction.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

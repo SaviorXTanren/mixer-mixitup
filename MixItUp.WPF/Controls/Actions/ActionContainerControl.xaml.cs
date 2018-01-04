@@ -15,7 +15,8 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private const int MinimizedGroupBoxHeight = 34;
 
-        private CommandWindow window;
+        public CommandWindow Window { get; private set; }
+
         private ActionControlBase actionControl;
 
         private ActionBase action;
@@ -23,7 +24,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public ActionContainerControl(CommandWindow window, ActionTypeEnum type)
         {
-            this.window = window;
+            this.Window = window;
             this.type = type;
 
             InitializeComponent();
@@ -78,6 +79,9 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.TextToSpeech:
                     this.actionControl = (this.action != null) ? new TextToSpeechActionControl(this, (TextToSpeechAction)this.action) : new TextToSpeechActionControl(this);
                     break;
+                case ActionTypeEnum.WebRequest:
+                    this.actionControl = (this.action != null) ? new WebRequestActionControl(this, (WebRequestAction)this.action) : new WebRequestActionControl(this);
+                    break;
             }
 
             if (this.actionControl != null)
@@ -95,15 +99,15 @@ namespace MixItUp.WPF.Controls.Actions
             return null;
         }
 
-        public async Task RunAsyncOperation(Func<Task> function) { await this.window.RunAsyncOperation(function); }
+        public async Task RunAsyncOperation(Func<Task> function) { await this.Window.RunAsyncOperation(function); }
 
         public void Minimize() { this.GroupBox.Height = MinimizedGroupBoxHeight; }
 
-        private void MoveUpActionButton_Click(object sender, RoutedEventArgs e) { this.window.MoveActionUp(this); }
+        private void MoveUpActionButton_Click(object sender, RoutedEventArgs e) { this.Window.MoveActionUp(this); }
 
-        private void MoveDownActionButton_Click(object sender, RoutedEventArgs e) { this.window.MoveActionDown(this); }
+        private void MoveDownActionButton_Click(object sender, RoutedEventArgs e) { this.Window.MoveActionDown(this); }
 
-        private void DeleteActionButton_Click(object sender, RoutedEventArgs e) { this.window.DeleteAction(this); }
+        private void DeleteActionButton_Click(object sender, RoutedEventArgs e) { this.Window.DeleteAction(this); }
 
         public void GroupBoxHeader_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
