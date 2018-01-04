@@ -67,7 +67,9 @@ namespace MixItUp.Base.Actions
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
         {
-            str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
+            str = str.Replace("$date", DateTimeOffset.Now.ToString("d"));
+            str = str.Replace("$time", DateTimeOffset.Now.ToString("t"));
+            str = str.Replace("$datetime", DateTimeOffset.Now.ToString("g"));
 
             if (user != null)
             {
