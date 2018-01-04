@@ -272,7 +272,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 lock (userUpdateLock)
                 {
                     this.UserControls.Clear();
-                    var orderedUsers = ChatClientWrapper.ChatUsers.Values.ToList().OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
+                    var orderedUsers = ChannelSession.Chat.ChatUsers.Values.ToList().OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
                     foreach (UserViewModel user in orderedUsers)
                     {
                         this.UserControls.Add(new ChatUserControl(user));
@@ -285,7 +285,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void UpdateUserViewCount()
         {
             this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
-            this.ChatCountTextBlock.Text = ChatClientWrapper.ChatUsers.Count.ToString();
+            this.ChatCountTextBlock.Text = ChannelSession.Chat.ChatUsers.Count.ToString();
         }
 
         private async void AddMessage(ChatMessageViewModel message)
