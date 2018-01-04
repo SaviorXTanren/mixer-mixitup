@@ -23,9 +23,9 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<ChatMessageEventModel> OnMessageOccurred = delegate { };
         public event EventHandler<ChatPurgeMessageEventModel> OnPurgeMessageOccurred = delegate { };
 
-        public static LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
+        public LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
 
-        private static object userUpdateLock = new object();
+        private object userUpdateLock = new object();
 
         public ChatClient StreamerClient { get; private set; }
         public ChatClient BotClient { get; private set; }
@@ -33,9 +33,9 @@ namespace MixItUp.Base.MixerAPI
         public ChatClientWrapper(ChatClient client)
         {
             this.StreamerClient = client;
-            if (ChatClientWrapper.ChatUsers == null)
+            if (this.ChatUsers == null)
             {
-                ChatClientWrapper.ChatUsers = new LockedDictionary<uint, UserViewModel>();
+                this.ChatUsers = new LockedDictionary<uint, UserViewModel>();
             }
 
             this.StreamerClient.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
@@ -87,7 +87,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction)
         {
-            foreach (UserViewModel chatUser in ChatClientWrapper.ChatUsers.Values.ToList())
+            foreach (UserViewModel chatUser in this.ChatUsers.Values.ToList())
             {
                 await userUpdateFunction(chatUser);
             }
@@ -122,10 +122,10 @@ namespace MixItUp.Base.MixerAPI
 
             lock (userUpdateLock)
             {
-                ChatClientWrapper.ChatUsers.Clear();
+                this.ChatUsers.Clear();
                 foreach (UserViewModel user in refreshUsers.Values)
                 {
-                    ChatClientWrapper.ChatUsers[user.ID] = user;
+                    this.ChatUsers[user.ID] = user;
                 }
             }
         }
@@ -149,9 +149,9 @@ namespace MixItUp.Base.MixerAPI
         {
             lock (userUpdateLock)
             {
-                if (!ChatClientWrapper.ChatUsers.ContainsKey(user.ID))
+                if (!this.ChatUsers.ContainsKey(user.ID))
                 {
-                    ChatClientWrapper.ChatUsers[user.ID] = user;
+                    this.ChatUsers[user.ID] = user;
                 }
             }
         }
@@ -160,7 +160,7 @@ namespace MixItUp.Base.MixerAPI
         {
             lock (userUpdateLock)
             {
-                ChatClientWrapper.ChatUsers.Remove(user.ID);
+                this.ChatUsers.Remove(user.ID);
             }
         }
 

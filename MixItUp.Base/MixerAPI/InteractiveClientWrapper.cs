@@ -158,7 +158,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
+                    if (ChannelSession.Chat.ChatUsers.ContainsKey(participant.userID))
                     {
                         participantsToAdd.Add(participant);
                     }
@@ -205,9 +205,9 @@ namespace MixItUp.Base.MixerAPI
                 {
                     this.InteractiveUsers[participant.sessionID] = participant;
 
-                    if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
+                    if (ChannelSession.Chat.ChatUsers.ContainsKey(participant.userID))
                     {
-                        UserRole role = ChatClientWrapper.ChatUsers[participant.userID].PrimaryRole;
+                        UserRole role = ChannelSession.Chat.ChatUsers[participant.userID].PrimaryRole;
                         InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == role);
                         if (group != null)
                         {
@@ -330,9 +330,9 @@ namespace MixItUp.Base.MixerAPI
                     if (this.InteractiveUsers.ContainsKey(e.participantID))
                     {
                         InteractiveParticipantModel participant = this.InteractiveUsers[e.participantID];
-                        if (ChatClientWrapper.ChatUsers.ContainsKey(participant.userID))
+                        if (ChannelSession.Chat.ChatUsers.ContainsKey(participant.userID))
                         {
-                            user = ChatClientWrapper.ChatUsers[participant.userID];
+                            user = ChannelSession.Chat.ChatUsers[participant.userID];
                         }
                         else
                         {

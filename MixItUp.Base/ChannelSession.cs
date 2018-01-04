@@ -543,9 +543,9 @@ namespace MixItUp.Base
 
         private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)
         {
-            if (currency.Currency.RankChangedCommand != null && ChatClientWrapper.ChatUsers.ContainsKey(currency.User.ID) == true)
+            if (currency.Currency.RankChangedCommand != null && ChannelSession.Chat.ChatUsers.ContainsKey(currency.User.ID) == true)
             {
-                var user = ChatClientWrapper.ChatUsers[currency.User.ID];
+                var user = ChannelSession.Chat.ChatUsers[currency.User.ID];
                 await currency.Currency.RankChangedCommand.Perform(user);
             }
         }
