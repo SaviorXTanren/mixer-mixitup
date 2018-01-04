@@ -145,7 +145,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Reset Currency:</TextBlock>
-                    <ComboBox Grid.Column="2" x:Name="ResetCurrencyComboBox" Width="150" />
+                    <ComboBox Grid.Column="2" x:Name="ResetCurrencyComboBox" Width="150" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                     <Button Grid.Column="4" x:Name="ResetCurrencyManuallyButton" Click="ResetCurrencyManuallyButton_Click">Manual Reset</Button>
                 </Grid>

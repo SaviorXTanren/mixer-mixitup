@@ -28,7 +28,7 @@
 
         <TextBlock Grid.Column="1" Text="{Binding CommandsString}" VerticalAlignment="Center" />
 
-        <ComboBox Grid.Column="2" x:Name="PermissionsComboBox" SelectionChanged="PermissionsComboBox_SelectionChanged" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="2" x:Name="PermissionsComboBox" SelectionChanged="PermissionsComboBox_SelectionChanged" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
         <TextBox Grid.Column="3" x:Name="CooldownTextBox" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Text="{Binding Cooldown}" LostFocus="CooldownTextBox_LostFocus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

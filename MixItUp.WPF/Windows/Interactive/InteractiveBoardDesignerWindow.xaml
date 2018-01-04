@@ -57,8 +57,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ComboBox x:Name="SceneComboBox" Width="150" Grid.Column="1" SelectionChanged="SceneComboBox_SelectionChanged" DisplayMemberPath="sceneID" />
-                <ComboBox x:Name="BoardSizeComboBox" Width="100" Grid.Column="3" SelectionChanged="BoardSizeComboBox_SelectionChanged" DisplayMemberPath="Name" />
+                <ComboBox x:Name="SceneComboBox" Width="150" Grid.Column="1" SelectionChanged="SceneComboBox_SelectionChanged" DisplayMemberPath="sceneID" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox x:Name="BoardSizeComboBox" Width="100" Grid.Column="3" SelectionChanged="BoardSizeComboBox_SelectionChanged" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                 <Border x:Name="InteractiveBoardBorder" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="2">
                     <Canvas x:Name="InteractiveBoardCanvas" Margin="10" />

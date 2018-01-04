@@ -55,10 +55,10 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" VerticalAlignment="Center">Game Name:</TextBlock>
-                    <ComboBox Grid.Column="2" x:Name="GameNameComboBox" IsEditable="True" TextBoxBase.TextChanged="GameNameComboBox_TextChanged" DisplayMemberPath="name" LostFocus="GameNameTextBox_LostFocus" />
+                    <ComboBox Grid.Column="2" x:Name="GameNameComboBox" IsEditable="True" TextBoxBase.TextChanged="GameNameComboBox_TextChanged" DisplayMemberPath="name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" LostFocus="GameNameTextBox_LostFocus" />
 
                     <TextBlock Grid.Column="4" VerticalAlignment="Center">Age Rating:</TextBlock>
-                    <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" Width="60" HorizontalAlignment="Left" />
+                    <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" Width="60" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                 </Grid>
 
                 <Button Grid.Row="4" x:Name="UpdateChannelDataButton" HorizontalAlignment="Center" Click="UpdateChannelDataButton_Click">Update Channel</Button>
@@ -75,7 +75,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0" x:Name="ChannelToRaidSearchCriteriaComboBox" MaterialDesign:HintAssist.Hint="Search Criteria" Width="140" HorizontalAlignment="Left" />
+                <ComboBox Grid.Column="0" x:Name="ChannelToRaidSearchCriteriaComboBox" MaterialDesign:HintAssist.Hint="Search Criteria" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="140" HorizontalAlignment="Left" />
 
                 <Button Grid.Column="2" x:Name="FindChannelToRaidButton" Click="FindChannelToRaidButton_Click">Search</Button>
 
