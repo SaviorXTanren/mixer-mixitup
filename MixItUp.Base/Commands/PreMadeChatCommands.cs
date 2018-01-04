@@ -261,17 +261,24 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    if (ChannelSession.Settings.QuotesEnabled && ChannelSession.Settings.Quotes.Count > 0)
+                    if (ChannelSession.Settings.QuotesEnabled)
                     {
-                        Random random = new Random();
-                        int index = random.Next(ChannelSession.Settings.Quotes.Count);
-                        string quote = ChannelSession.Settings.Quotes[index];
+                        if (ChannelSession.Settings.Quotes.Count > 0)
+                        {
+                            Random random = new Random();
+                            int index = random.Next(ChannelSession.Settings.Quotes.Count);
+                            string quote = ChannelSession.Settings.Quotes[index];
 
-                        await ChannelSession.Chat.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
+                            await ChannelSession.Chat.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.SendMessage("At least 1 quote must be added for this feature to work");
+                        }
                     }
                     else
                     {
-                        await ChannelSession.Chat.SendMessage("Quotes must be enabled with Mix It Up for this feature to work");
+                        await ChannelSession.Chat.SendMessage("Quotes must be enabled for this feature to work");
                     }
                 }
             }));
