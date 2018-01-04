@@ -12,7 +12,10 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
+[assembly: InternalsVisibleTo("MixItUp.Desktop")]
 
 namespace MixItUp.Base
 {
@@ -538,12 +541,12 @@ namespace MixItUp.Base
             Logger.Log("Service reconnection successful");
         }
 
-        private static async void GlobalEvents_OnRankChanged(object sender, UserDataViewModel e)
+        private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)
         {
-            if (ChannelSession.Settings.RankChangedCommand != null && ChatClientWrapper.ChatUsers.ContainsKey(e.ID) == true)
+            if (currency.Currency.RankChangedCommand != null && ChatClientWrapper.ChatUsers.ContainsKey(currency.User.ID) == true)
             {
-                var user = ChatClientWrapper.ChatUsers[e.ID];
-                await ChannelSession.Settings.RankChangedCommand.Perform(user);
+                var user = ChatClientWrapper.ChatUsers[currency.User.ID];
+                await currency.Currency.RankChangedCommand.Perform(user);
             }
         }
 

@@ -359,15 +359,25 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             if (this.scorpBotData != null)
             {
-                ChannelSession.Settings.RankAcquisition.Name = this.scorpBotData.GetSettingsValue("currency", "name", "Rank");
-                ChannelSession.Settings.RankAcquisition.AcquireInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onlinepayinterval", "0"));
-                ChannelSession.Settings.RankAcquisition.AcquireAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency", "activeuserbonus", "0"));
-                ChannelSession.Settings.RankAcquisition.Enabled = (ChannelSession.Settings.RankAcquisition.AcquireInterval > 0 && ChannelSession.Settings.RankAcquisition.AcquireAmount > 0);
+                string rankName = this.scorpBotData.GetSettingsValue("currency", "name", "Rank");
+                int rankInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onlinepayinterval", "0"));
+                int rankAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency", "activeuserbonus", "0"));
 
-                ChannelSession.Settings.CurrencyAcquisition.Name = this.scorpBotData.GetSettingsValue("currency2", "name", "Currency");
-                ChannelSession.Settings.CurrencyAcquisition.AcquireInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onlinepayinterval", "0"));
-                ChannelSession.Settings.CurrencyAcquisition.AcquireAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "activeuserbonus", "0"));
-                ChannelSession.Settings.CurrencyAcquisition.Enabled = (ChannelSession.Settings.CurrencyAcquisition.AcquireInterval > 0 && ChannelSession.Settings.CurrencyAcquisition.AcquireAmount > 0);
+                UserCurrencyViewModel rankCurrency = null;
+                if (!string.IsNullOrEmpty(rankName) && rankInterval >= 0 && rankAmount >= 0)
+                {
+                    rankCurrency = new UserCurrencyViewModel() { Name = rankName, AcquireInterval = rankInterval, AcquireAmount = rankAmount };
+                    ChannelSession.Settings.Currencies.Add(rankName, rankCurrency);
+                }
+
+                string currencyName = this.scorpBotData.GetSettingsValue("currency2", "name", "Currency");
+                int currencyInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onlinepayinterval", "0"));
+                int currencyAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "activeuserbonus", "0"));
+
+                if (!string.IsNullOrEmpty(currencyName) && currencyInterval >= 0 && currencyAmount >= 0)
+                {
+                    ChannelSession.Settings.Currencies.Add(currencyName, new UserCurrencyViewModel() { Name = currencyName, AcquireInterval = currencyInterval, AcquireAmount = currencyAmount });
+                }
 
                 foreach (ScorpBotViewer viewer in this.scorpBotData.Viewers)
                 {
@@ -394,9 +404,12 @@ namespace MixItUp.WPF.Windows.Wizard
                     ChannelSession.Settings.BannedWords.Add(bannedWord);
                 }
 
-                foreach (ScorpBotRank rank in this.scorpBotData.Ranks)
+                if (rankCurrency != null)
                 {
-                    ChannelSession.Settings.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
+                    foreach (ScorpBotRank rank in this.scorpBotData.Ranks)
+                    {
+                        rankCurrency.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
+                    }
                 }
             }
 

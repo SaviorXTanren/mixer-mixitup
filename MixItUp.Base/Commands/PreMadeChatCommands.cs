@@ -58,9 +58,13 @@ namespace MixItUp.Base.Commands
 
     public class PreMadeChatCommand : ChatCommand
     {
-        public PreMadeChatCommand(string name, string command, UserRole lowestAllowedRole, int cooldown, int currencyCost = 0) : base(name, command, lowestAllowedRole, cooldown, currencyCost) { }
+        public PreMadeChatCommand(string name, string command, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyCost = null)
+            : base(name, command, lowestAllowedRole, cooldown, currencyCost)
+        { }
 
-        public PreMadeChatCommand(string name, List<string> commands, UserRole lowestAllowedRole, int cooldown, int currencyCost = 0) : base(name, commands, lowestAllowedRole, cooldown, currencyCost) { }
+        public PreMadeChatCommand(string name, List<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyCost = null)
+            : base(name, commands, lowestAllowedRole, cooldown, currencyCost)
+        { }
 
         public void UpdateFromSettings(PreMadeChatCommandSettings settings)
         {
@@ -77,16 +81,6 @@ namespace MixItUp.Base.Commands
         public string GetFollowAge(UserModel user, DateTimeOffset followDate)
         {
             return user.username + "'s Follow Age: " + followDate.GetAge();
-        }
-
-        public async Task<bool> CheckForRequiredCurrency(UserViewModel user, int cost)
-        {
-            if (user.Data.CurrencyAmount < cost)
-            {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to use this command", cost, ChannelSession.Settings.CurrencyAcquisition.Name));
-                return false;
-            }
-            return true;
         }
     }
 
@@ -485,124 +479,80 @@ namespace MixItUp.Base.Commands
 
     public class RouletteSpinChatCommand : PreMadeChatCommand
     {
-        public static async Task MessageRouletteSpinResults(string result, uint userID, int bet)
+        public static Task MessageRouletteSpinResults(string result, uint userID, int bet)
         {
-            result = result.ToLower();
-            if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Settings.UserData.ContainsKey(userID))
-            {
-                UserDataViewModel user = ChannelSession.Settings.UserData[userID];
-                if (result.Equals("lose"))
-                {
-                    await ChannelSession.Chat.SendMessage(string.Format("Sorry @{0}, you lost the spin!", user.UserName));
-                }
-                else if (result.Equals("win"))
-                {
-                    int winAmount = bet * 2;
-                    user.CurrencyAmount += winAmount;
-                    await ChannelSession.Chat.SendMessage(string.Format("Congrats @{0}, you won the spin and got {1} {2}!", user.UserName,
-                        winAmount, ChannelSession.Settings.CurrencyAcquisition.Name));
-                }
-                else if (result.Equals("bonus"))
-                {
-                    int winAmount = bet * 3;
-                    user.CurrencyAmount += winAmount;
-                    await ChannelSession.Chat.SendMessage(string.Format("Congrats @{0}, you won the BONUS spin and got {1} {2}!", user.UserName,
-                        winAmount, ChannelSession.Settings.CurrencyAcquisition.Name));
-                }
-            }
+            //result = result.ToLower();
+            //if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Settings.UserData.ContainsKey(userID))
+            //{
+            //    UserDataViewModel user = ChannelSession.Settings.UserData[userID];
+            //    if (result.Equals("lose"))
+            //    {
+            //        await ChannelSession.Chat.SendMessage(string.Format("Sorry @{0}, you lost the spin!", user.UserName));
+            //    }
+            //    else if (result.Equals("win"))
+            //    {
+            //        int winAmount = bet * 2;
+            //        user.CurrencyAmount += winAmount;
+            //        await ChannelSession.Chat.SendMessage(string.Format("Congrats @{0}, you won the spin and got {1} {2}!", user.UserName,
+            //            winAmount, ChannelSession.Settings.CurrencyAcquisition.Name));
+            //    }
+            //    else if (result.Equals("bonus"))
+            //    {
+            //        int winAmount = bet * 3;
+            //        user.CurrencyAmount += winAmount;
+            //        await ChannelSession.Chat.SendMessage(string.Format("Congrats @{0}, you won the BONUS spin and got {1} {2}!", user.UserName,
+            //            winAmount, ChannelSession.Settings.CurrencyAcquisition.Name));
+            //    }
+            //}
+            return Task.FromResult(0);
         }
 
         public RouletteSpinChatCommand()
             : base("Roulette Spin", new List<string>() { "spin", "roulette" }, UserRole.User, 10)
         {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Chat != null)
-                {
-                    if (arguments.Count() == 1)
-                    {
-                        int bet = 0;
-                        if (!int.TryParse(arguments.ElementAt(0), out bet) || bet <= 0)
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, "Spin bet amount must be greater than 0");
-                            return;
-                        }
+            //this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            //{
+            //    if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Chat != null)
+            //    {
+            //        if (arguments.Count() == 1)
+            //        {
+            //            int bet = 0;
+            //            if (!int.TryParse(arguments.ElementAt(0), out bet) || bet <= 0)
+            //            {
+            //                await ChannelSession.Chat.Whisper(user.UserName, "Spin bet amount must be greater than 0");
+            //                return;
+            //            }
 
-                        if (await this.CheckForRequiredCurrency(user, bet))
-                        {
-                            user.Data.CurrencyAmount -= bet;
-                            if (ChannelSession.Services.OverlayServer != null)
-                            {
-                                await ChannelSession.Services.OverlayServer.SetRouletteWheel(new OverlayRouletteWheel() { userID = user.ID, bet = bet });
-                            }
-                            else
-                            {
-                                Random random = new Random();
-                                int resultNumber = random.Next(0, 8);
-                                string result = "lose";
-                                if (resultNumber == 7)
-                                {
-                                    result = "bonus";
-                                }
-                                else if (resultNumber >= 4)
-                                {
-                                    result = "win";
-                                }
-                                await RouletteSpinChatCommand.MessageRouletteSpinResults(result, user.ID, bet);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !spin <AMOUNT>");
-                    }
-                }
-            }));
-        }
-    }
-
-    public class GiveChatCommand : PreMadeChatCommand
-    {
-        public GiveChatCommand()
-            : base("Give", new List<string>() { "give" }, UserRole.User, 10)
-        {
-            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
-            {
-                if (ChannelSession.Settings.CurrencyAcquisition.Enabled && ChannelSession.Chat != null)
-                {
-                    if (arguments.Count() == 2)
-                    {
-                        string username = arguments.ElementAt(0);
-                        username = username.Replace("@", "");
-                        UserModel userModelToReceieve = await ChannelSession.Connection.GetUser(username);
-                        if (userModelToReceieve == null || !ChannelSession.Settings.UserData.ContainsKey(userModelToReceieve.id))
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, "The username you specified does not exist or has not visited this channel yet");
-                            return;
-                        }
-
-                        int currencyAmount = 0;
-                        if (!int.TryParse(arguments.ElementAt(1), out currencyAmount) || currencyAmount <= 0)
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, "The give amount must be greater than 0");
-                            return;
-                        }
-
-                        if (await this.CheckForRequiredCurrency(user, currencyAmount))
-                        {
-                            ChannelSession.Settings.UserData[userModelToReceieve.id].CurrencyAmount += currencyAmount;
-                            user.Data.CurrencyAmount -= currencyAmount;
-
-                            await ChannelSession.Chat.SendMessage(string.Format("@{0} has given @{1} {2} {3}!", user.UserName,
-                                userModelToReceieve.username, currencyAmount, ChannelSession.Settings.CurrencyAcquisition.Name));
-                        }
-                    }
-                    else
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !give @<USERNAME> <AMOUNT>");
-                    }
-                }
-            }));
+            //            if (await this.CheckForRequiredCurrency(user, bet))
+            //            {
+            //                user.Data.CurrencyAmount -= bet;
+            //                if (ChannelSession.Services.OverlayServer != null)
+            //                {
+            //                    await ChannelSession.Services.OverlayServer.SetRouletteWheel(new OverlayRouletteWheel() { userID = user.ID, bet = bet });
+            //                }
+            //                else
+            //                {
+            //                    Random random = new Random();
+            //                    int resultNumber = random.Next(0, 8);
+            //                    string result = "lose";
+            //                    if (resultNumber == 7)
+            //                    {
+            //                        result = "bonus";
+            //                    }
+            //                    else if (resultNumber >= 4)
+            //                    {
+            //                        result = "win";
+            //                    }
+            //                    await RouletteSpinChatCommand.MessageRouletteSpinResults(result, user.ID, bet);
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            await ChannelSession.Chat.Whisper(user.UserName, "Usage: !spin <AMOUNT>");
+            //        }
+            //    }
+            //}));
         }
     }
 

@@ -14,6 +14,9 @@ namespace MixItUp.Base.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return CurrencyAction.asyncSemaphore; } }
 
         [DataMember]
+        public string CurrencyName { get; set; }
+
+        [DataMember]
         public int Amount { get; set; }
 
         [DataMember]
@@ -36,18 +39,21 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
-                user.Data.CurrencyAmount += this.Amount;
-
-                if (!string.IsNullOrEmpty(this.ChatText))
+                UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(this.CurrencyName);
+                if (currencyData != null)
                 {
-                    string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
-                    if (this.IsWhisper)
+                    currencyData.Amount += this.Amount;
+                    if (!string.IsNullOrEmpty(this.ChatText))
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, message);
-                    }
-                    else
-                    {
-                        await ChannelSession.Chat.SendMessage(message);
+                        string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
+                        if (this.IsWhisper)
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, message);
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.SendMessage(message);
+                        }
                     }
                 }
             }

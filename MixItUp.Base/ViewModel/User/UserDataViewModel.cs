@@ -2,12 +2,77 @@
 using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.User
 {
+    [DataContract]
+    public class UserCurrencyDataViewModel : IEquatable<UserCurrencyDataViewModel>
+    {
+        [JsonIgnore]
+        public UserDataViewModel User { get; set; }
+
+        [JsonIgnore]
+        public UserCurrencyViewModel Currency { get; set; }
+
+        [JsonIgnore]
+        private int _Amount;
+        [DataMember]
+        public int Amount
+        {
+            get { return _Amount; }
+            set
+            {
+                UserRankViewModel prevRank = this.GetRank();
+                this._Amount = value;
+                UserRankViewModel newRank = this.GetRank();
+                if (prevRank != newRank)
+                {
+                    GlobalEvents.RankChanged(this);
+                }
+            }
+        }
+
+        public UserCurrencyDataViewModel() { }
+
+        public UserCurrencyDataViewModel(UserDataViewModel user, UserCurrencyViewModel currency, int amount = 0)
+        {
+            this.User = user;
+            this.Currency = currency;
+            this.Amount = amount;
+        }
+
+        public UserRankViewModel GetRank() { return this.Currency.GetRankForPoints(this.Amount); }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is UserCurrencyDataViewModel)
+            {
+                return this.Equals((UserCurrencyDataViewModel)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(UserCurrencyDataViewModel other)
+        {
+            return this.Currency.Equals(other.Currency);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Currency.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            UserRankViewModel rank = this.Currency.GetRankForPoints(this.Amount);
+            return string.Format("{0} - {1}", rank.Name, this.Amount);
+        }
+    }
+
     [DataContract]
     public class UserDataViewModel : IEquatable<UserDataViewModel>
     {
@@ -20,30 +85,16 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public int ViewingMinutes { get; set; }
 
-        private int _RankPoints;
-
         [DataMember]
-        public int RankPoints
+        public LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel> CurrencyAmounts { get; set; }
+
+        public UserDataViewModel()
         {
-            get { return _RankPoints; }
-            set
-            {
-                UserRankViewModel prevRank = this.Rank;
-                this._RankPoints = value;
-                UserRankViewModel newRank = this.Rank;
-                if (prevRank != newRank)
-                {
-                    GlobalEvents.RankChanged(this);
-                }
-            }
+            this.CurrencyAmounts = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
         }
 
-        [DataMember]
-        public int CurrencyAmount { get; set; }
-
-        public UserDataViewModel() { }
-
         public UserDataViewModel(uint id, string username)
+            : this()
         {
             this.ID = id;
             this.UserName = username;
@@ -55,16 +106,33 @@ namespace MixItUp.Base.ViewModel.User
             : this(viewer.ID, viewer.UserName)
         {
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
-            this._RankPoints = (int)viewer.RankPoints;
-            this.CurrencyAmount = (int)viewer.Currency;
+
+            UserCurrencyViewModel rank = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.IsRank);
+            if (rank != null)
+            {
+                this.CurrencyAmounts[rank].Amount = (int)viewer.RankPoints;
+            }
+
+            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank);
+            if (currency != null)
+            {
+                this.CurrencyAmounts[currency].Amount = (int)viewer.Currency;
+            }
         }
 
         public UserDataViewModel(DbDataReader dataReader)
             : this(uint.Parse(dataReader["ID"].ToString()), dataReader["UserName"].ToString())
         {
             this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
-            this._RankPoints = int.Parse(dataReader["RankPoints"].ToString());
-            this.CurrencyAmount = int.Parse(dataReader["CurrencyAmount"].ToString());
+
+            Dictionary<string, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<string, int>>(dataReader["CurrencyAmounts"].ToString());
+            foreach (var kvp in currencyAmounts)
+            {
+                if (ChannelSession.Settings.Currencies.ContainsKey(kvp.Key))
+                {
+                    this.SetCurrencyAmount(ChannelSession.Settings.Currencies[kvp.Key], kvp.Value);
+                }
+            }
         }
 
         [JsonIgnore]
@@ -79,16 +147,45 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
+        public int PrimaryCurrency
+        {
+            get
+            {
+                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => !c.Currency.IsRank && c.Currency.Enabled);
+                if (currency != null)
+                {
+                    return currency.Amount;
+                }
+                return 0;
+            }
+        }
+
+        [JsonIgnore]
         public UserRankViewModel Rank
         {
             get
             {
                 UserRankViewModel rank = null;
-                if (ChannelSession.Settings.Ranks.Count > 0)
+                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank && c.Currency.Enabled);
+                if (currency != null)
                 {
-                    rank = ChannelSession.Settings.Ranks.Where(r => r.MinimumPoints <= this.RankPoints).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
+                    rank = currency.GetRank();
                 }
                 return rank;
+            }
+        }
+
+        [JsonIgnore]
+        public string RankPoints
+        {
+            get
+            {
+                UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank && c.Currency.Enabled);
+                if (currency != null)
+                {
+                    return currency.Amount.ToString();
+                }
+                return "0";
             }
         }
 
@@ -107,8 +204,50 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                UserRankViewModel rank = this.Rank;
                 return string.Format("{0} - {1}", this.RankName, this.RankPoints);
+            }
+        }
+
+        public UserCurrencyDataViewModel GetCurrency(string currencyName)
+        {
+            if (ChannelSession.Settings.Currencies.ContainsKey(currencyName))
+            {
+                return this.GetCurrency(ChannelSession.Settings.Currencies[currencyName]);
+            }
+            return null;
+        }
+
+        public UserCurrencyDataViewModel GetCurrency(UserCurrencyViewModel currency)
+        {
+            return this.CurrencyAmounts.GetValueIfExists(currency, new UserCurrencyDataViewModel(this, currency));
+        }
+
+        public int GetCurrencyAmount(UserCurrencyViewModel currency)
+        {
+            return this.GetCurrency(currency).Amount;
+        }
+
+        public void SetCurrencyAmount(UserCurrencyViewModel currency, int amount)
+        {
+            this.GetCurrency(currency).Amount = amount;
+        }
+
+        public void AddCurrencyAmount(UserCurrencyViewModel currency, int amount)
+        {
+            this.SetCurrencyAmount(currency, this.GetCurrencyAmount(currency) + amount);
+        }
+
+        public void SubtractCurrencyAmount(UserCurrencyViewModel currency, int amount)
+        {
+            this.AddCurrencyAmount(currency, -1 * amount);
+        }
+
+        public void ResetCurrency(UserCurrencyViewModel currency)
+        {
+            UserCurrencyDataViewModel currencyData = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.Equals(currency));
+            if (currencyData != null)
+            {
+                currencyData.Amount = 0;
             }
         }
 
@@ -136,8 +275,14 @@ namespace MixItUp.Base.ViewModel.User
             return this.UserName;
         }
 
-        public void ResetCurrency() { this.CurrencyAmount = 0; }
-
-        public void ResetRank() { this._RankPoints = 0; }
+        internal string GetCurrencyAmountsString()
+        {
+            Dictionary<string, int> amounts = new Dictionary<string, int>();
+            foreach (UserCurrencyDataViewModel currencyData in this.CurrencyAmounts.Values.ToList())
+            {
+                amounts.Add(currencyData.Currency.Name, currencyData.Amount);
+            }
+            return JsonConvert.SerializeObject(amounts);
+        }
     }
 }

@@ -63,18 +63,28 @@ namespace MixItUp.Base.Actions
                     return;
                 }
 
-                if (ChannelSession.Settings.GameQueueMinimumRank != null && user.Data.RankPoints < ChannelSession.Settings.GameQueueMinimumRank.MinimumPoints)
+                UserCurrencyDataViewModel rankData = null;
+                if (ChannelSession.Settings.GameQueueRankRequirement != null)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to enter the game queue",
-                        ChannelSession.Settings.GameQueueMinimumRank.Name, ChannelSession.Settings.GameQueueMinimumRank.MinimumPoints, ChannelSession.Settings.RankAcquisition.Name));
-                    return;
+                    rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueRankRequirement.CurrencyName);
+                    if (!ChannelSession.Settings.GameQueueRankRequirement.DoesUserMeetRequirement(user.Data))
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to enter the game queue",
+                            ChannelSession.Settings.GameQueueRankRequirement.RequiredRank.Name, ChannelSession.Settings.GameQueueRankRequirement.RequiredRank.MinimumPoints, rankData.Currency.Name));
+                        return;
+                    }
                 }
 
-                if (ChannelSession.Settings.GameQueueCurrencyCost > 0 && user.Data.CurrencyAmount < ChannelSession.Settings.GameQueueCurrencyCost)
+                UserCurrencyDataViewModel currencyData = null;
+                if (ChannelSession.Settings.GameQueueCurrencyRequirement != null)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to enter the game queue",
-                        ChannelSession.Settings.GameQueueCurrencyCost, ChannelSession.Settings.CurrencyAcquisition.Name));
-                    return;
+                    currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyRequirement.CurrencyName);
+                    if (!ChannelSession.Settings.GameQueueCurrencyRequirement.DoesUserMeetRequirement(user.Data))
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to enter the game queue",
+                            ChannelSession.Settings.GameQueueCurrencyRequirement.RequiredAmount, currencyData.Currency.Name));
+                        return;
+                    }
                 }
 
                 if (this.GameQueueType == GameQueueActionType.JoinQueue)
@@ -82,7 +92,11 @@ namespace MixItUp.Base.Actions
                     int position = ChannelSession.GameQueue.IndexOf(user);
                     if (position == -1)
                     {
-                        user.Data.CurrencyAmount -= ChannelSession.Settings.GameQueueCurrencyCost;
+                        if (currencyData != null)
+                        {
+                            currencyData.Amount -= ChannelSession.Settings.GameQueueCurrencyRequirement.RequiredAmount;
+                        }
+
                         if (ChannelSession.Settings.GameQueueSubPriority && user.Roles.Contains(UserRole.Subscriber))
                         {
                             int totalSubs = ChannelSession.GameQueue.Count(u => u.Roles.Contains(UserRole.Subscriber));

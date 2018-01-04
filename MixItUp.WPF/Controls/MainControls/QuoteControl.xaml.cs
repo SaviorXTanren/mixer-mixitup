@@ -14,6 +14,8 @@ namespace MixItUp.WPF.Controls.MainControls
         public QuoteControl()
         {
             InitializeComponent();
+
+            GlobalEvents.OnQuoteAdded += GlobalEvent_OnQuoteAdded;
         }
 
         protected override Task InitializeInternal()
@@ -21,9 +23,12 @@ namespace MixItUp.WPF.Controls.MainControls
             this.EnableQuotesToggleButton.IsChecked = ChannelSession.Settings.QuotesEnabled;
             this.QuotesTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.Quotes);
 
-            GlobalEvents.OnQuoteAdded += GlobalEvent_OnQuoteAdded;
-
             return base.InitializeInternal();
+        }
+
+        protected override async Task OnVisibilityChanged()
+        {
+            await this.InitializeInternal();
         }
 
         private async void EnableQuotesToggleButton_Checked(object sender, RoutedEventArgs e)

@@ -8,7 +8,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace MixItUp.Base.Actions
 {
@@ -31,6 +30,7 @@ namespace MixItUp.Base.Actions
         Interactive,
         [Name("Text To Speech")]
         TextToSpeech,
+        [Obsolete]
         Rank,
 
         Custom = 99,
@@ -67,8 +67,6 @@ namespace MixItUp.Base.Actions
         {
             str = str.Replace("$date", DateTimeOffset.Now.ToString("g"));
 
-            str = str.Replace("$currencyname", ChannelSession.Settings.CurrencyAcquisition.Name);
-
             if (user != null)
             {
                 if (string.IsNullOrEmpty(user.AvatarLink))
@@ -82,10 +80,19 @@ namespace MixItUp.Base.Actions
                     user.AvatarLink = avatarUser.avatarUrl;
                 }
 
-                str = str.Replace("$usercurrency", user.Data.CurrencyAmount.ToString());
-                str = str.Replace("$userrankname", user.Data.RankName);
-                str = str.Replace("$userrankpoints", user.Data.RankPoints.ToString());
-                str = str.Replace("$userrank", user.Data.RankNameAndPoints);
+                for (int i = 0; i < ChannelSession.Settings.Currencies.Count; i++)
+                {
+                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.ElementAt(i);
+                    UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(currency);
+
+                    str = str.Replace("$" + currency.SpecialIdentifierName, currency.Name);
+                    UserRankViewModel rank = currencyData.GetRank();
+                    if (rank != null)
+                    {
+                        str = str.Replace("$" + currency.SpecialIdentifierRank, rank.Name);
+                    }
+                    str = str.Replace("$" + currency.SpecialIdentifier, currencyData.Amount.ToString());
+                }
                 str = str.Replace("$usertime", user.Data.ViewingTimeString);
 
                 str = str.Replace("$useravatar", user.AvatarLink);
@@ -108,10 +115,19 @@ namespace MixItUp.Base.Actions
                         {
                             UserDataViewModel userData = ChannelSession.Settings.UserData[argUser.id];
 
-                            str = str.Replace("$arg" + (i + 1) + "usercurrency", userData.CurrencyAmount.ToString());
-                            str = str.Replace("$arg" + (i + 1) + "userrankname", userData.RankName);
-                            str = str.Replace("$arg" + (i + 1) + "userrankpoints", userData.RankPoints.ToString());
-                            str = str.Replace("$arg" + (i + 1) + "userrank", userData.RankNameAndPoints);
+                            for (int c = 0; c < ChannelSession.Settings.Currencies.Count; c++)
+                            {
+                                UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.ElementAt(i);
+                                UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
+
+                                str = str.Replace("$arg" + (i + 1) + currency.SpecialIdentifierName, currency.Name);
+                                UserRankViewModel rank = currencyData.GetRank();
+                                if (rank != null)
+                                {
+                                    str = str.Replace("$arg" + (i + 1) + currency.SpecialIdentifierRank, rank.Name);
+                                }
+                                str = str.Replace("$arg" + (i + 1) + currency.SpecialIdentifier, currencyData.Amount.ToString());
+                            }
                             str = str.Replace("$arg" + (i + 1) + "usertime", userData.ViewingTimeString);
                         }
 

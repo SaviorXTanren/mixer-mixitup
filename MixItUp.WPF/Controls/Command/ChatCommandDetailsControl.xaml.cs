@@ -30,19 +30,16 @@ namespace MixItUp.WPF.Controls.Command
             this.LowestRoleAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
             this.LowestRoleAllowedComboBox.SelectedIndex = 0;
 
-            this.CurrencyCostTextBox.IsEnabled = ChannelSession.Settings.CurrencyAcquisition.Enabled;
-
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
                 this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Permissions);
-                this.CurrencyCostTextBox.Text = this.command.CurrencyCost.ToString();
-                this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.CooldownTextBox.Text = this.command.Cooldown.ToString();
+                this.ChatCommandTextBox.Text = this.command.CommandsString;
+                this.CurrencySelector.SetCurrencyRequirement(this.command.CurrencyRequirement);
             }
             else
             {
-                this.CurrencyCostTextBox.Text = "0";
                 this.CooldownTextBox.Text = "0";
             }
 
@@ -63,14 +60,9 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            if (!string.IsNullOrEmpty(this.CurrencyCostTextBox.Text))
+            if (!await this.CurrencySelector.Validate())
             {
-                int cost = 0;
-                if (!int.TryParse(this.CurrencyCostTextBox.Text, out cost) || cost < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("Currency cost must be 0 or greater");
-                    return false;
-                }
+                return false;
             }
 
             if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
@@ -141,15 +133,11 @@ namespace MixItUp.WPF.Controls.Command
                     cooldown = int.Parse(this.CooldownTextBox.Text);
                 }
 
-                int cost = 0;
-                if (!string.IsNullOrEmpty(this.CurrencyCostTextBox.Text))
-                {
-                    cost = int.Parse(this.CurrencyCostTextBox.Text);
-                }
+                UserCurrencyRequirementViewModel currencyRequirement = this.CurrencySelector.GetCurrencyRequirement();
 
                 if (this.command == null)
                 {
-                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown, cost);
+                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown, currencyRequirement);
                     ChannelSession.Settings.ChatCommands.Add(this.command);
                 }
                 else
@@ -157,7 +145,7 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.Name = this.NameTextBox.Text;
                     this.command.Commands = commands.ToList();
                     this.command.Permissions = lowestRole;
-                    this.command.CurrencyCost = cost;
+                    this.command.CurrencyRequirement = currencyRequirement;
                     this.command.Cooldown = cooldown;
                 }
                 return this.command;

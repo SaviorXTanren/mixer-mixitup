@@ -99,7 +99,7 @@
             <TextBlock Grid.Column="2" Text="{Binding Sparks}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="Coin" Height="18" Width="18" Grid.Column="4" />
-            <TextBlock Grid.Column="6" Text="{Binding Data.CurrencyAmount}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="6" Text="{Binding Data.PrimaryCurrency}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="Wunderlist" Height="18" Width="18" Grid.Column="8" />
             <TextBlock Grid.Column="10" Text="{Binding Data.RankNameAndPoints}" VerticalAlignment="Center" />

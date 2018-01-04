@@ -18,8 +18,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected virtual Task InitializeInternal() { return Task.FromResult(0); }
 
-        protected virtual Task VisibilityChanged() { return Task.FromResult(0); }
+        protected virtual Task OnVisibilityChanged() { return Task.FromResult(0); }
 
-        private async void MainControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e) { await this.VisibilityChanged(); }
+        private async void MainControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e) { await this.OnVisibilityChanged(); }
     }
 }

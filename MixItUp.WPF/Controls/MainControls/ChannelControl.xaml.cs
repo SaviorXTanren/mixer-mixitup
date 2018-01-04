@@ -69,6 +69,11 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
+        protected override async Task OnVisibilityChanged()
+        {
+            await this.InitializeInternal();
+        }
+
         private async void GameNameComboBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(this.GameNameComboBox.Text) && this.GameNameComboBox.SelectedIndex < 0)

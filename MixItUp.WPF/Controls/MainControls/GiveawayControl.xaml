@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CurrencyControls="clr-namespace:MixItUp.WPF.Controls.Currency"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
 
@@ -24,6 +25,8 @@
 
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
@@ -59,26 +62,23 @@
 
                 <ComboBox Grid.Column="0" x:Name="GiveawayTypeComboBox" MaterialDesign:HintAssist.Hint="Permissions" Width="120" />
 
-                <ComboBox Grid.Column="2" x:Name="GiveawayRankComboBox" MaterialDesign:HintAssist.Hint="Minimum Rank" Width="120" />
+                <TextBox Grid.Column="2" x:Name="GiveawayTimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
             <Grid Grid.Row="4" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                
-                <TextBox Grid.Column="0" x:Name="GiveawayCurrencyCostTextBox" MaterialDesign:HintAssist.Hint="Currency Cost (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                
-                <TextBox Grid.Column="2" x:Name="GiveawayTimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                
+                <CurrencyControls:CurrencySelectorControl x:Name="CurrencySelector" />
             </Grid>
 
-            <Button Grid.Row="6" x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
-            <Button Grid.Row="6" x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Cancel Giveaway</Button>
+            <Grid Grid.Row="6" HorizontalAlignment="Center">
+                <CurrencyControls:RankSelectorControl x:Name="RankSelector" />
+            </Grid>
 
             <Grid Grid.Row="8" HorizontalAlignment="Center">
+                <Button x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
+                <Button x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Cancel Giveaway</Button>
+            </Grid>
+
+            <Grid Grid.Row="10" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
@@ -90,7 +90,7 @@
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" x:Name="TimeLeftTextBlock" />
             </Grid>
 
-            <Grid Grid.Row="10" HorizontalAlignment="Center">
+            <Grid Grid.Row="12" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />

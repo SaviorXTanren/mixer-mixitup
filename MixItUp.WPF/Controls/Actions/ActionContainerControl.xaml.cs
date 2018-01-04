@@ -78,9 +78,6 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.TextToSpeech:
                     this.actionControl = (this.action != null) ? new TextToSpeechActionControl(this, (TextToSpeechAction)this.action) : new TextToSpeechActionControl(this);
                     break;
-                case ActionTypeEnum.Rank:
-                    this.actionControl = (this.action != null) ? new RankActionControl(this, (RankAction)this.action) : new RankActionControl(this);
-                    break;
             }
 
             if (this.actionControl != null)
