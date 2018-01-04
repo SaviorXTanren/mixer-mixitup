@@ -136,15 +136,13 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string ViewingTimeString
-        {
-            get
-            {
-                int hours = this.ViewingMinutes / 60;
-                int minutes = this.ViewingMinutes % 60;
-                return string.Format("{0} Hours & {1} Mins", hours, minutes);
-            }
-        }
+        public string ViewingHoursString { get { return (this.ViewingMinutes / 60).ToString(); } }
+
+        [JsonIgnore]
+        public string ViewingMinutesString { get { return (this.ViewingMinutes % 60).ToString(); } }
+
+        [JsonIgnore]
+        public string ViewingTimeString { get { return string.Format("{0} Hours & {1} Mins", this.ViewingHoursString, this.ViewingMinutesString); } }
 
         [JsonIgnore]
         public int PrimaryCurrency

@@ -100,6 +100,8 @@ namespace MixItUp.Base.Actions
                     str = str.Replace("$" + currency.SpecialIdentifier, currencyData.Amount.ToString());
                 }
                 str = str.Replace("$usertime", user.Data.ViewingTimeString);
+                str = str.Replace("$userhours", user.Data.ViewingHoursString);
+                str = str.Replace("$usermins", user.Data.ViewingMinutesString);
 
                 str = str.Replace("$useravatar", user.AvatarLink);
                 str = str.Replace("$userurl", "https://www.mixer.com/" + user.UserName);
