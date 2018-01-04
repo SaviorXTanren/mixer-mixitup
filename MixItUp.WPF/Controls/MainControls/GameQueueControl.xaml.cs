@@ -46,14 +46,14 @@ namespace MixItUp.WPF.Controls.MainControls
             this.MustFollowToggleButton.IsChecked = ChannelSession.Settings.GameQueueMustFollow;
             this.SubPriorityToggleButton.IsChecked = ChannelSession.Settings.GameQueueSubPriority;
 
-            if (ChannelSession.Settings.GameQueueMinimumRank != null && ChannelSession.Settings.GameQueueMinimumRank.GetCurrency() != null && ChannelSession.Settings.GameQueueMinimumRank.GetCurrency().Enabled)
+            if (ChannelSession.Settings.GameQueueRankRequirement != null && ChannelSession.Settings.GameQueueRankRequirement.GetCurrency() != null && ChannelSession.Settings.GameQueueRankRequirement.GetCurrency().Enabled)
             {
-                this.RankSelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueMinimumRank);
+                this.RankSelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueRankRequirement);
             }
 
-            if (ChannelSession.Settings.GameQueueCurrencyCost != null && ChannelSession.Settings.GameQueueCurrencyCost.GetCurrency() != null && ChannelSession.Settings.GameQueueCurrencyCost.GetCurrency().Enabled)
+            if (ChannelSession.Settings.GameQueueCurrencyRequirement != null && ChannelSession.Settings.GameQueueCurrencyRequirement.GetCurrency() != null && ChannelSession.Settings.GameQueueCurrencyRequirement.GetCurrency().Enabled)
             {
-                this.CurrencySelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueCurrencyCost);
+                this.CurrencySelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueCurrencyRequirement);
             }
 
             GlobalEvents.OnGameQueueUpdated += ChannelSession_OnGameQueueUpdated;
@@ -85,8 +85,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
-            ChannelSession.Settings.GameQueueMinimumRank = this.RankSelector.GetCurrencyRequirement();
-            ChannelSession.Settings.GameQueueCurrencyCost = this.CurrencySelector.GetCurrencyRequirement();
+            ChannelSession.Settings.GameQueueRankRequirement = this.RankSelector.GetCurrencyRequirement();
+            ChannelSession.Settings.GameQueueCurrencyRequirement = this.CurrencySelector.GetCurrencyRequirement();
 
             ChannelSession.GameQueueEnabled = true;
             this.MustFollowToggleButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.RankSelector.IsEnabled =

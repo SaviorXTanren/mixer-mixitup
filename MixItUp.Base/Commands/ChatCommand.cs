@@ -25,7 +25,11 @@ namespace MixItUp.Base.Commands
         public int Cooldown { get; set; }
 
         [DataMember]
-        public UserCurrencyRequirementViewModel CurrencyCost { get; set; }
+        public UserCurrencyRequirementViewModel CurrencyRequirement { get; set; }
+
+        [Obsolete]
+        [DataMember]
+        public int CurrencyCost { get; set; }
 
         [JsonIgnore]
         private DateTimeOffset lastRun = DateTimeOffset.MinValue;
@@ -41,7 +45,7 @@ namespace MixItUp.Base.Commands
         {
             this.Permissions = lowestAllowedRole;
             this.Cooldown = cooldown;
-            this.CurrencyCost = currencyCost;
+            this.CurrencyRequirement = currencyCost;
         }
 
         public ChatCommand(ScorpBotCommand command)
@@ -65,18 +69,18 @@ namespace MixItUp.Base.Commands
                 return;
             }
 
-            if (this.CurrencyCost != null && this.CurrencyCost.GetCurrency() != null && this.CurrencyCost.GetCurrency().Enabled)
+            if (this.CurrencyRequirement != null && this.CurrencyRequirement.GetCurrency() != null && this.CurrencyRequirement.GetCurrency().Enabled)
             {
-                if (!this.CurrencyCost.DoesUserMeetRequirement(user.Data))
+                if (!this.CurrencyRequirement.DoesUserMeetRequirement(user.Data))
                 {
                     if (ChannelSession.Chat != null)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to run this command.",
-                            this.CurrencyCost.RequiredAmount, this.CurrencyCost.CurrencyName));
+                            this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.CurrencyName));
                     }
                     return;
                 }
-                user.Data.SubtractCurrencyAmount(this.CurrencyCost.GetCurrency(), this.CurrencyCost.RequiredAmount);
+                user.Data.SubtractCurrencyAmount(this.CurrencyRequirement.GetCurrency(), this.CurrencyRequirement.RequiredAmount);
             }
 
             this.lastRun = DateTimeOffset.Now;

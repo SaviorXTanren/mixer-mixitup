@@ -41,9 +41,14 @@ namespace MixItUp.WPF.Controls.Currency
             if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyName))
             {
                 this.RankTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
-                this.RankMustEqualComboBox.SelectedIndex = (currencyRequirement.MustEqual) ? 1 : 0;
                 this.RankTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyName];
-                this.RankTypeComboBox.SelectedItem = currencyRequirement.RequiredRank;
+
+                this.RankMustEqualComboBox.IsEnabled = true;
+                this.RankMustEqualComboBox.SelectedIndex = (currencyRequirement.MustEqual) ? 1 : 0;
+
+                this.RankMinimumComboBox.IsEnabled = true;
+                this.RankMinimumComboBox.ItemsSource = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyName].Ranks;
+                this.RankMinimumComboBox.SelectedItem = currencyRequirement.RequiredRank;
             }
         }
 
@@ -59,24 +64,14 @@ namespace MixItUp.WPF.Controls.Currency
 
         protected override Task OnLoaded()
         {
-            if (ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank).Count() > 0)
-            {
-                this.IsEnabled = true;
+            UserCurrencyRequirementViewModel requirement = this.GetCurrencyRequirement();
 
-                UserCurrencyViewModel rankType = (UserCurrencyViewModel)this.RankTypeComboBox.SelectedItem;
-                UserRankViewModel rankMinimum = (UserRankViewModel)this.RankMinimumComboBox.SelectedItem;
+            IEnumerable<UserCurrencyViewModel> ranks = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
+            this.IsEnabled = (ranks.Count() > 0);
+            this.RankTypeComboBox.ItemsSource = ranks;
 
-                this.RankTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
-                this.RankMustEqualComboBox.IsEnabled = false;
-                this.RankMinimumComboBox.IsEnabled = false;
+            this.SetCurrencyRequirement(requirement);
 
-                this.RankTypeComboBox.SelectedItem = rankType;
-                this.RankMinimumComboBox.SelectedItem = rankMinimum;
-            }
-            else
-            {
-                this.IsEnabled = false;
-            }
             return Task.FromResult(0);
         }
 
@@ -88,7 +83,9 @@ namespace MixItUp.WPF.Controls.Currency
         private void RankTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UserCurrencyViewModel rankType = (UserCurrencyViewModel)this.RankTypeComboBox.SelectedItem;
+
             this.RankMustEqualComboBox.IsEnabled = true;
+
             this.RankMinimumComboBox.IsEnabled = true;
             this.RankMinimumComboBox.ItemsSource = rankType.Ranks;
         }

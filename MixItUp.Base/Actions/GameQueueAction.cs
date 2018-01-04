@@ -64,25 +64,25 @@ namespace MixItUp.Base.Actions
                 }
 
                 UserCurrencyDataViewModel rankData = null;
-                if (ChannelSession.Settings.GameQueueMinimumRank != null)
+                if (ChannelSession.Settings.GameQueueRankRequirement != null)
                 {
-                    rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueMinimumRank.CurrencyName);
-                    if (!ChannelSession.Settings.GameQueueMinimumRank.DoesUserMeetRequirement(user.Data))
+                    rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueRankRequirement.CurrencyName);
+                    if (!ChannelSession.Settings.GameQueueRankRequirement.DoesUserMeetRequirement(user.Data))
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to enter the game queue",
-                            ChannelSession.Settings.GameQueueMinimumRank.RequiredRank.Name, ChannelSession.Settings.GameQueueMinimumRank.RequiredRank.MinimumPoints, rankData.Currency.Name));
+                            ChannelSession.Settings.GameQueueRankRequirement.RequiredRank.Name, ChannelSession.Settings.GameQueueRankRequirement.RequiredRank.MinimumPoints, rankData.Currency.Name));
                         return;
                     }
                 }
 
                 UserCurrencyDataViewModel currencyData = null;
-                if (ChannelSession.Settings.GameQueueCurrencyCost != null)
+                if (ChannelSession.Settings.GameQueueCurrencyRequirement != null)
                 {
-                    currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyCost.CurrencyName);
-                    if (!ChannelSession.Settings.GameQueueCurrencyCost.DoesUserMeetRequirement(user.Data))
+                    currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyRequirement.CurrencyName);
+                    if (!ChannelSession.Settings.GameQueueCurrencyRequirement.DoesUserMeetRequirement(user.Data))
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to enter the game queue",
-                            ChannelSession.Settings.GameQueueCurrencyCost.RequiredAmount, currencyData.Currency.Name));
+                            ChannelSession.Settings.GameQueueCurrencyRequirement.RequiredAmount, currencyData.Currency.Name));
                         return;
                     }
                 }
@@ -94,7 +94,7 @@ namespace MixItUp.Base.Actions
                     {
                         if (currencyData != null)
                         {
-                            currencyData.Amount -= ChannelSession.Settings.GameQueueCurrencyCost.RequiredAmount;
+                            currencyData.Amount -= ChannelSession.Settings.GameQueueCurrencyRequirement.RequiredAmount;
                         }
 
                         if (ChannelSession.Settings.GameQueueSubPriority && user.Roles.Contains(UserRole.Subscriber))

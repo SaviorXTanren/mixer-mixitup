@@ -157,7 +157,6 @@ namespace MixItUp.Desktop.Services
                     LegacyUserDataViewModel userData = new LegacyUserDataViewModel(dataReader);
                     legacyUsers.Add(userData);
                 });
-
                 File.Copy(DesktopSettingsService.SettingsTemplateDatabaseFileName, dbPath, overwrite: true);
 
                 await ChannelSession.Services.Settings.Initialize(legacySettings);
@@ -177,7 +176,9 @@ namespace MixItUp.Desktop.Services
                 if (!string.IsNullOrEmpty(legacySettings.RankAcquisition.Name))
                 {
                     rank = legacySettings.RankAcquisition;
-                    currency.SpecialIdentifier = "userrank";
+                    rank.SpecialIdentifier = "userrank";
+                    rank.Ranks = legacySettings.Ranks;
+                    rank.RankChangedCommand = legacySettings.RankChangedCommand;
                     settings.Currencies.Add(legacySettings.RankAcquisition.Name, legacySettings.RankAcquisition);
                 }
 
@@ -186,6 +187,24 @@ namespace MixItUp.Desktop.Services
                     settings.UserData[user.ID] = user;
                     if (rank != null) { settings.UserData[user.ID].SetCurrencyAmount(rank, user.RankPoints); }
                     if (currency != null) { settings.UserData[user.ID].SetCurrencyAmount(currency, user.CurrencyAmount); }
+                }
+
+                if (legacySettings.GiveawayCurrencyCost > 0)
+                {
+                    settings.GiveawayCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GiveawayCurrencyCost);
+                }
+                if (legacySettings.GiveawayUserRank != null)
+                {
+                    settings.GiveawayRankRequirement = new UserCurrencyRequirementViewModel(rank, legacySettings.GiveawayUserRank);
+                }
+
+                if (legacySettings.GameQueueCurrencyCost > 0)
+                {
+                    settings.GameQueueCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GameQueueCurrencyCost);
+                }
+                if (legacySettings.GameQueueMinimumRank != null)
+                {
+                    settings.GameQueueRankRequirement = new UserCurrencyRequirementViewModel(rank, legacySettings.GameQueueMinimumRank);
                 }
 
                 List<CommandBase> commands = new List<CommandBase>();
@@ -230,6 +249,16 @@ namespace MixItUp.Desktop.Services
                             nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SourceText);
                         }
                     }
+                }
+
+                foreach (ChatCommand command in settings.ChatCommands)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (command.CurrencyCost > 0)
+                    {
+                        command.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, command.CurrencyCost);
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);

@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using System.Threading.Tasks;
 using MixItUp.Base;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MixItUp.WPF.Controls.Currency
 {
@@ -39,6 +41,8 @@ namespace MixItUp.WPF.Controls.Currency
             {
                 this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
                 this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyName];
+
+                this.CurrencyCostTextBox.IsEnabled = true;
                 this.CurrencyCostTextBox.Text = currencyRequirement.RequiredAmount.ToString();
             }
         }
@@ -50,22 +54,14 @@ namespace MixItUp.WPF.Controls.Currency
 
         protected override Task OnLoaded()
         {
-            if (ChannelSession.Settings.Currencies.Count > 0)
-            {
-                this.IsEnabled = true;
+            UserCurrencyRequirementViewModel requirement = this.GetCurrencyRequirement();
 
-                UserCurrencyViewModel currencyType = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
-                int currencyAmount = 0;
-                int.TryParse(this.CurrencyCostTextBox.Text, out currencyAmount);
+            IEnumerable<UserCurrencyViewModel> ranks = ChannelSession.Settings.Currencies.Values;
+            this.IsEnabled = (ranks.Count() > 0);
+            this.CurrencyTypeComboBox.ItemsSource = ranks;
 
-                this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
-                this.CurrencyTypeComboBox.SelectedItem = currencyType;
-                this.CurrencyCostTextBox.Text = currencyAmount.ToString();
-            }
-            else
-            {
-                this.IsEnabled = false;
-            }
+            this.SetCurrencyRequirement(requirement);
+
             return Task.FromResult(0);
         }
 

@@ -46,9 +46,9 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
-        public UserCurrencyRequirementViewModel GameQueueMinimumRank { get; set; }
+        public UserCurrencyRequirementViewModel GameQueueRankRequirement { get; set; }
         [JsonProperty]
-        public UserCurrencyRequirementViewModel GameQueueCurrencyCost { get; set; }
+        public UserCurrencyRequirementViewModel GameQueueCurrencyRequirement { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
@@ -65,9 +65,9 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int GiveawayTimer { get; set; }
         [JsonProperty]
-        public UserCurrencyRequirementViewModel GiveawayUserRank { get; set; }
+        public UserCurrencyRequirementViewModel GiveawayRankRequirement { get; set; }
         [JsonProperty]
-        public UserCurrencyRequirementViewModel GiveawayCurrencyCost { get; set; }
+        public UserCurrencyRequirementViewModel GiveawayCurrencyRequirement { get; set; }
 
         [JsonProperty]
         public bool ModerationUseCommunityBannedWords { get; set; }
@@ -302,6 +302,16 @@ namespace MixItUp.Desktop
         public List<UserRankViewModel> Ranks { get; set; }
         [JsonProperty]
         public CustomCommand RankChangedCommand { get; set; }
+
+        [JsonProperty]
+        public UserRankViewModel GameQueueMinimumRank { get; set; }
+        [JsonProperty]
+        public int GameQueueCurrencyCost { get; set; }
+
+        [JsonProperty]
+        public int GiveawayCurrencyCost { get; set; }
+        [JsonProperty]
+        public UserRankViewModel GiveawayUserRank { get; set; }
 
         [JsonProperty]
         public List<UserDataViewModel> userDataInternal { get; set; }

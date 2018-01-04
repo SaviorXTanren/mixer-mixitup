@@ -23,8 +23,8 @@ namespace MixItUp.Base
 
         bool GameQueueMustFollow { get; set; }
         bool GameQueueSubPriority { get; set; }
-        UserCurrencyRequirementViewModel GameQueueMinimumRank { get; set; }
-        UserCurrencyRequirementViewModel GameQueueCurrencyCost { get; set; }
+        UserCurrencyRequirementViewModel GameQueueRankRequirement { get; set; }
+        UserCurrencyRequirementViewModel GameQueueCurrencyRequirement { get; set; }
 
         bool QuotesEnabled { get; set; }
         
@@ -34,8 +34,8 @@ namespace MixItUp.Base
         UserRole GiveawayUserRole { get; set; }
         string GiveawayCommand { get; set; }
         int GiveawayTimer { get; set; }
-        UserCurrencyRequirementViewModel GiveawayCurrencyCost { get; set; }
-        UserCurrencyRequirementViewModel GiveawayUserRank { get; set; }
+        UserCurrencyRequirementViewModel GiveawayCurrencyRequirement { get; set; }
+        UserCurrencyRequirementViewModel GiveawayRankRequirement { get; set; }
 
         bool ModerationUseCommunityBannedWords { get; set; }
         int ModerationCapsBlockCount { get; set; }

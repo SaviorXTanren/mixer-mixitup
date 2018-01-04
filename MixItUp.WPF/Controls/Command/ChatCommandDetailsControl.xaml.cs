@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Permissions);
                 this.CooldownTextBox.Text = this.command.Cooldown.ToString();
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
-                this.CurrencySelector.SetCurrencyRequirement(this.command.CurrencyCost);
+                this.CurrencySelector.SetCurrencyRequirement(this.command.CurrencyRequirement);
             }
             else
             {
@@ -133,11 +133,11 @@ namespace MixItUp.WPF.Controls.Command
                     cooldown = int.Parse(this.CooldownTextBox.Text);
                 }
 
-                UserCurrencyRequirementViewModel currencyCost = this.CurrencySelector.GetCurrencyRequirement();
+                UserCurrencyRequirementViewModel currencyRequirement = this.CurrencySelector.GetCurrencyRequirement();
 
                 if (this.command == null)
                 {
-                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown, currencyCost);
+                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown, currencyRequirement);
                     ChannelSession.Settings.ChatCommands.Add(this.command);
                 }
                 else
@@ -145,7 +145,7 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.Name = this.NameTextBox.Text;
                     this.command.Commands = commands.ToList();
                     this.command.Permissions = lowestRole;
-                    this.command.CurrencyCost = currencyCost;
+                    this.command.CurrencyRequirement = currencyRequirement;
                     this.command.Cooldown = cooldown;
                 }
                 return this.command;
