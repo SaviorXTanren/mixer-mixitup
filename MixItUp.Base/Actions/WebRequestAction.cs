@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -71,16 +72,14 @@ namespace MixItUp.Base.Actions
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        string resultString = await response.Content.ReadAsStringAsync();
-                        if (!string.IsNullOrEmpty(resultString))
+                        string webRequestResult = await response.Content.ReadAsStringAsync();
+                        if (!string.IsNullOrEmpty(webRequestResult))
                         {
                             if (this.ResponseAction == WebRequestResponseActionTypeEnum.Chat)
                             {
                                 if (ChannelSession.Chat != null)
                                 {
-                                    string chatText = await this.ReplaceStringWithSpecialModifiers(this.ResponseChatText, user, arguments);
-                                    chatText = chatText.Replace(ResponseSpecialIdentifier, resultString);
-                                    await ChannelSession.Chat.SendMessage(chatText);
+                                    await ChannelSession.Chat.SendMessage(await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, webRequestResult));
                                 }
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)
@@ -89,13 +88,23 @@ namespace MixItUp.Base.Actions
                                 if (command != null)
                                 {
                                     string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
-                                    await command.Perform(user, argumentsText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                                    SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(argumentsText);
+                                    siString.ReplaceSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, webRequestResult);
+                                    await command.Perform(user, siString.ToString().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+
+        private async Task<string> ReplaceSpecialIdentifiers(string text, UserViewModel user, IEnumerable<string> arguments, string webRequestResult)
+        {
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(this.ResponseChatText);
+            await siString.ReplaceCommonSpecialModifiers(user, arguments);
+            siString.ReplaceSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, webRequestResult);
+            return siString.ToString();
         }
     }
 }
