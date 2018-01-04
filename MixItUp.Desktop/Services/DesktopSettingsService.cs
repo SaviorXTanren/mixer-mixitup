@@ -189,22 +189,28 @@ namespace MixItUp.Desktop.Services
                     if (currency != null) { settings.UserData[user.ID].SetCurrencyAmount(currency, user.CurrencyAmount); }
                 }
 
-                if (legacySettings.GiveawayCurrencyCost > 0)
+                if (currency != null)
                 {
-                    settings.GiveawayCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GiveawayCurrencyCost);
-                }
-                if (legacySettings.GiveawayUserRank != null)
-                {
-                    settings.GiveawayRankRequirement = new UserCurrencyRequirementViewModel(rank, legacySettings.GiveawayUserRank);
+                    if (legacySettings.GiveawayCurrencyCost > 0)
+                    {
+                        settings.GiveawayCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GiveawayCurrencyCost);
+                    }
+                    if (legacySettings.GameQueueCurrencyCost > 0)
+                    {
+                        settings.GameQueueCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GameQueueCurrencyCost);
+                    }
                 }
 
-                if (legacySettings.GameQueueCurrencyCost > 0)
+                if (rank != null)
                 {
-                    settings.GameQueueCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GameQueueCurrencyCost);
-                }
-                if (legacySettings.GameQueueMinimumRank != null)
-                {
-                    settings.GameQueueRankRequirement = new UserCurrencyRequirementViewModel(rank, legacySettings.GameQueueMinimumRank);
+                    if (legacySettings.GiveawayUserRank != null && rank.Ranks.Any(r => r.Name.Equals(legacySettings.GiveawayUserRank)))
+                    {
+                        settings.GiveawayRankRequirement = new UserCurrencyRequirementViewModel(rank, rank.Ranks.FirstOrDefault(r => r.Name.Equals(legacySettings.GiveawayUserRank)));
+                    }
+                    if (legacySettings.GameQueueMinimumRank != null)
+                    {
+                        settings.GameQueueRankRequirement = new UserCurrencyRequirementViewModel(rank, legacySettings.GameQueueMinimumRank);
+                    }
                 }
 
                 List<CommandBase> commands = new List<CommandBase>();

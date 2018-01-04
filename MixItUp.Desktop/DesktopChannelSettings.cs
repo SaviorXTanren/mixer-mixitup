@@ -311,7 +311,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int GiveawayCurrencyCost { get; set; }
         [JsonProperty]
-        public UserRankViewModel GiveawayUserRank { get; set; }
+        public string GiveawayUserRank { get; set; }
 
         [JsonProperty]
         public List<UserDataViewModel> userDataInternal { get; set; }
