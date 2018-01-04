@@ -82,6 +82,9 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.WebRequest:
                     this.actionControl = (this.action != null) ? new WebRequestActionControl(this, (WebRequestAction)this.action) : new WebRequestActionControl(this);
                     break;
+                case ActionTypeEnum.ActionGroup:
+                    this.actionControl = (this.action != null) ? new ActionGroupActionControl(this, (ActionGroupAction)this.action) : new ActionGroupActionControl(this);
+                    break;
             }
 
             if (this.actionControl != null)

@@ -1,8 +1,6 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
-using System;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
@@ -50,14 +48,18 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Interactive", new InteractiveControl());
                 await this.MainMenu.AddMenuItem("Events", new EventsControl());
                 await this.MainMenu.AddMenuItem("Timers", new TimerControl());
-                await this.MainMenu.AddMenuItem("Game Queue", new GameQueueControl());
+                await this.MainMenu.AddMenuItem("Action Groups", new ActionGroupControl());
                 await this.MainMenu.AddMenuItem("Currency & Rank", new CurrencyAndRankControl());
-                await this.MainMenu.AddMenuItem("Quotes", new QuoteControl());
                 await this.MainMenu.AddMenuItem("Giveaway", new GiveawayControl());
-                await this.MainMenu.AddMenuItem("Services", new ServicesControl());
+                await this.MainMenu.AddMenuItem("Game Queue", new GameQueueControl());
+                await this.MainMenu.AddMenuItem("Quotes", new QuoteControl());
             }
             this.MainMenu.AddMenuItem("Statistics", "http://mixdash.cc");
             await this.MainMenu.AddMenuItem("Moderation", new ModerationControl());
+            if (ChannelSession.Settings.IsStreamer)
+            {
+                await this.MainMenu.AddMenuItem("Services", new ServicesControl());
+            }
             await this.MainMenu.AddMenuItem("About", new AboutControl());
         }
 

@@ -170,6 +170,9 @@
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\ActionControlBase.cs" />
+    <Compile Include="Controls\Actions\ActionGroupActionControl.xaml.cs">
+      <DependentUpon>ActionGroupActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
       <DependentUpon>ChatActionControl.xaml</DependentUpon>
     </Compile>
@@ -212,6 +215,9 @@
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
+      <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -224,6 +230,9 @@
     <Compile Include="Controls\LoadingControlBase.cs" />
     <Compile Include="Controls\MainControls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\ActionGroupControl.xaml.cs">
+      <DependentUpon>ActionGroupControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
       <DependentUpon>ChannelControl.xaml</DependentUpon>
@@ -332,6 +341,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\ActionGroupActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\ChatActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -388,6 +401,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Command\ActionGroupCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Command\CustomCommandDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -401,6 +418,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\AboutControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\ActionGroupControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

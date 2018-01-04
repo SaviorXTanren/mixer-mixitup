@@ -34,6 +34,8 @@ namespace MixItUp.Base.Actions
         Rank,
         [Name("Web Request")]
         WebRequest,
+        [Name("Action Group")]
+        ActionGroup,
 
         Custom = 99,
     }

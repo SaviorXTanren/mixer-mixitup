@@ -65,6 +65,7 @@ namespace MixItUp.Base
         LockedList<EventCommand> EventCommands { get; }
         LockedList<InteractiveCommand> InteractiveCommands { get; }
         LockedList<TimerCommand> TimerCommands { get; }
+        LockedList<ActionGroupCommand> ActionGroupCommands { get; }
 
         LockedList<string> Quotes { get; }
         LockedList<string> BannedWords { get; }
