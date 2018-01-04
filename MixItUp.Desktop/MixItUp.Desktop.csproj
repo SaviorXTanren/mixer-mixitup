@@ -44,9 +44,6 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="obs-websocket-dotnet, Version=4.2.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\obs-websocket-dotnet.4.2.0-beta3\lib\net40\obs-websocket-dotnet.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -172,6 +169,10 @@
     <ProjectReference Include="..\MixItUp.Base\MixItUp.Base.csproj">
       <Project>{0e494acc-c46a-4ded-922b-ff378556be8a}</Project>
       <Name>MixItUp.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\obs-websocket-dotnet\obs-websocket-dotnet.csproj">
+      <Project>{C8668815-F21E-49C0-8F1A-58BC698153AF}</Project>
+      <Name>obs-websocket-dotnet</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
