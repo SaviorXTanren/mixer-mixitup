@@ -73,11 +73,7 @@ namespace MixItUp.Base.Commands
             {
                 if (!this.CurrencyRequirement.DoesUserMeetRequirement(user.Data))
                 {
-                    if (ChannelSession.Chat != null)
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to run this command.",
-                            this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.CurrencyName));
-                    }
+                    await this.CurrencyRequirement.SendCurrencyNotMetWhisper(user);
                     return;
                 }
                 user.Data.SubtractCurrencyAmount(this.CurrencyRequirement.GetCurrency(), this.CurrencyRequirement.RequiredAmount);

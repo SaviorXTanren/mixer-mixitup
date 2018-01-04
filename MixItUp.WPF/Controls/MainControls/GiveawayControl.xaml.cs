@@ -243,8 +243,7 @@ namespace MixItUp.WPF.Controls.MainControls
                             UserCurrencyDataViewModel currencyData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency());
                             if (!ChannelSession.Settings.GiveawayCurrencyRequirement.DoesUserMeetRequirement(e.User.Data))
                             {
-                                await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You do not have the required {0} {1} to participate in this giveaway!",
-                                    ChannelSession.Settings.GiveawayCurrencyRequirement.RequiredAmount, currencyData.Currency.Name));
+                                await ChannelSession.Settings.GiveawayCurrencyRequirement.SendCurrencyNotMetWhisper(e.User);
                                 return;
                             }
                             currencyData.Amount -= ChannelSession.Settings.GiveawayCurrencyRequirement.RequiredAmount;
@@ -255,9 +254,7 @@ namespace MixItUp.WPF.Controls.MainControls
                             UserCurrencyDataViewModel rankData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayRankRequirement.GetCurrency());
                             if (!ChannelSession.Settings.GiveawayRankRequirement.DoesUserMeetRequirement(e.User.Data))
                             {
-                                await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You must be rank {0} ({1} {2}) to participate in this giveaway!",
-                                    ChannelSession.Settings.GiveawayRankRequirement.RequiredRank.Name, ChannelSession.Settings.GiveawayRankRequirement.RequiredRank.MinimumPoints,
-                                    ChannelSession.Settings.GiveawayRankRequirement.GetCurrency().Name));
+                                await ChannelSession.Settings.GiveawayRankRequirement.SendRankNotMetWhisper(e.User);
                                 return;
                             }
                         }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -87,6 +88,23 @@ namespace MixItUp.Base.ViewModel.User
             }
 
             return true;
+        }
+
+        public async Task SendCurrencyNotMetWhisper(UserViewModel user)
+        {
+            if (ChannelSession.Chat != null)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", this.RequiredAmount, this.CurrencyName));
+            }
+        }
+
+        public async Task SendRankNotMetWhisper(UserViewModel user)
+        {
+            if (ChannelSession.Chat != null)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to do this",
+                    this.RequiredRank.Name, this.RequiredRank.MinimumPoints, this.CurrencyName));
+            }
         }
     }
 }
