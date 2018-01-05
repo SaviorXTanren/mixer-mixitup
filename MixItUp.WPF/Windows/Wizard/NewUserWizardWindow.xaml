@@ -168,7 +168,7 @@
                         <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Viewer Data (Currency, Rank, &amp; Time)</TextBlock>
 
-                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory or can you skip this by doing nothing and clicking Next:</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory (the folder where ScorpBot.exe is located) or can you skip this by doing nothing and clicking Next:</TextBlock>
                     </StackPanel>
 
                     <Grid Grid.Row="2">
@@ -248,7 +248,7 @@
                         </StackPanel>
 
                         <StackPanel Grid.Row="4" Orientation="Horizontal">
-                            <TextBlock>Questions/Support: <Hyperlink NavigateUri="support@mixitup.com" RequestNavigate="Hyperlink_RequestNavigate">support@mixitup.com</Hyperlink></TextBlock>
+                            <TextBlock>Questions/Support: <Hyperlink NavigateUri="mailto:support@mixitup.com" RequestNavigate="Hyperlink_RequestNavigate">support@mixitup.com</Hyperlink></TextBlock>
                         </StackPanel>
                     </Grid>
 

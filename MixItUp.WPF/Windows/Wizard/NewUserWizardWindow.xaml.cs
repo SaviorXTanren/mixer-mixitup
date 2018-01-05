@@ -475,8 +475,12 @@ namespace MixItUp.WPF.Windows.Wizard
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
-            e.Handled = true;
+            try
+            {
+                Process.Start(e.Uri.AbsoluteUri);
+                e.Handled = true;
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }
