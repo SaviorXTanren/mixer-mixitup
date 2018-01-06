@@ -103,7 +103,7 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            foreach (ChatCommand command in ChannelSession.AllChatCommands)
+            foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
             {
                 if (command.IsEnabled && this.GetExistingCommand() != command)
                 {

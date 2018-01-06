@@ -1,0 +1,101 @@
+﻿using Mixer.Base.Util;
+using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
+namespace MixItUp.Base.Commands
+{
+    [DataContract]
+    public abstract class PermissionsCommandBase : CommandBase
+    {
+        public static IEnumerable<string> PermissionsAllowedValues { get { return EnumHelper.GetEnumNames(UserViewModel.SelectableUserRoles()); } }
+
+        [DataMember]
+        public UserRole Permissions { get; set; }
+
+        [DataMember]
+        public int Cooldown { get; set; }
+
+        [DataMember]
+        public UserCurrencyRequirementViewModel CurrencyRequirement { get; set; }
+
+        [DataMember]
+        public UserCurrencyRequirementViewModel RankRequirement { get; set; }
+
+        [JsonIgnore]
+        protected DateTimeOffset lastRun = DateTimeOffset.MinValue;
+
+        public PermissionsCommandBase() { }
+
+        public PermissionsCommandBase(string name, CommandTypeEnum type, string command, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement, UserCurrencyRequirementViewModel rankRequirement)
+            : this(name, type, new List<string>() { command }, lowestAllowedRole, cooldown, currencyRequirement, rankRequirement)
+        { }
+
+        public PermissionsCommandBase(string name, CommandTypeEnum type, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement, UserCurrencyRequirementViewModel rankRequirement)
+            : base(name, type, commands)
+        {
+            this.Permissions = lowestAllowedRole;
+            this.Cooldown = cooldown;
+            this.CurrencyRequirement = currencyRequirement;
+            this.RankRequirement = rankRequirement;
+        }
+
+        [JsonIgnore]
+        public string PermissionsString { get { return EnumHelper.GetEnumName(this.Permissions); } }
+
+        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            await this.CheckRankRequirement(user);
+
+            await this.CheckCurrencyRequirement(user);
+
+            this.lastRun = DateTimeOffset.Now;
+
+            await base.PerformInternal(user, arguments);
+        }
+
+        public async Task<bool> CheckRankRequirement(UserViewModel user)
+        {
+            if (this.RankRequirement != null && this.RankRequirement.GetCurrency() != null && this.RankRequirement.GetCurrency().Enabled)
+            {
+                if (!this.RankRequirement.DoesUserMeetRequirement(user.Data))
+                {
+                    await this.RankRequirement.SendRankNotMetWhisper(user);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public async Task<bool> CheckCurrencyRequirement(UserViewModel user)
+        {
+            if (this.CurrencyRequirement != null && this.CurrencyRequirement.GetCurrency() != null && this.CurrencyRequirement.GetCurrency().Enabled)
+            {
+                if (!this.CurrencyRequirement.DoesUserMeetRequirement(user.Data))
+                {
+                    await this.CurrencyRequirement.SendCurrencyNotMetWhisper(user);
+                    return false;
+                }
+                user.Data.SubtractCurrencyAmount(this.CurrencyRequirement.GetCurrency(), this.CurrencyRequirement.RequiredAmount);
+            }
+            return true;
+        }
+
+        public async Task<bool> CheckLastRun(UserViewModel user)
+        {
+            if (this.lastRun.AddSeconds(this.Cooldown) > DateTimeOffset.Now)
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    TimeSpan timeLeft = this.lastRun.AddSeconds(this.Cooldown) - DateTimeOffset.Now;
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("This command is currently on cooldown, please wait another {0} second(s).", (int)timeLeft.TotalSeconds));
+                }
+                return false;
+            }
+            return true;
+        }
+    }
+}

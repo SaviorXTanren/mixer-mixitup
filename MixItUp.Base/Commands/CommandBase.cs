@@ -19,6 +19,7 @@ namespace MixItUp.Base.Commands
         Timer,
         Custom,
         ActionGroup,
+        Game,
     }
 
     [DataContract]
@@ -72,44 +73,50 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(IEnumerable<string> arguments) { await this.Perform(ChannelSession.GetCurrentUser(), arguments); }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null) { await this.PerformInternal(user, arguments); }
+        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            if (this.IsEnabled)
+            {
+                await this.PerformInternal(user, arguments);
+            }
+        }
 
         public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null)
         {
             await this.Perform(user, arguments);
-            await this.currentTaskRun;
+            if (this.currentTaskRun != null && !this.currentTaskRun.IsCompleted)
+            {
+                await this.currentTaskRun;
+            }
         }
 
         public virtual Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (this.IsEnabled)
+            if (arguments == null)
             {
-                if (arguments == null)
-                {
-                    arguments = new List<string>();
-                }
-
-                this.currentCancellationTokenSource = new CancellationTokenSource();
-                this.currentTaskRun = Task.Run(async () =>
-                {
-                    CancellationToken token = this.currentCancellationTokenSource.Token;
-                    try
-                    {
-                        await this.AsyncSemaphore.WaitAsync();
-
-                        GlobalEvents.CommandExecuted(this);
-
-                        foreach (ActionBase action in this.Actions)
-                        {
-                            token.ThrowIfCancellationRequested();
-                            await action.Perform(user, arguments);
-                        }
-                    } 
-                    catch (TaskCanceledException) { }
-                    catch (Exception ex) { Logger.Log(ex); }
-                    finally { this.AsyncSemaphore.Release(); }
-                }, this.currentCancellationTokenSource.Token);
+                arguments = new List<string>();
             }
+
+            this.currentCancellationTokenSource = new CancellationTokenSource();
+            this.currentTaskRun = Task.Run(async () =>
+            {
+                CancellationToken token = this.currentCancellationTokenSource.Token;
+                try
+                {
+                    await this.AsyncSemaphore.WaitAsync();
+
+                    GlobalEvents.CommandExecuted(this);
+
+                    foreach (ActionBase action in this.Actions)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        await action.Perform(user, arguments);
+                    }
+                }
+                catch (TaskCanceledException) { }
+                catch (Exception ex) { Logger.Log(ex); }
+                finally { this.AsyncSemaphore.Release(); }
+            }, this.currentCancellationTokenSource.Token);
             return Task.FromResult(0);
         }
 
@@ -118,6 +125,14 @@ namespace MixItUp.Base.Commands
             if (this.currentCancellationTokenSource != null)
             {
                 this.currentCancellationTokenSource.Cancel();
+            }
+        }
+
+        public void AddSpecialIdentifier(string specialIdentifier, string replacement)
+        {
+            foreach (ActionBase action in this.Actions)
+            {
+                action.AddSpecialIdentifier(specialIdentifier, replacement);
             }
         }
 

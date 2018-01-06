@@ -113,6 +113,8 @@ namespace MixItUp.Desktop
         protected List<TimerCommand> timerCommandsInternal { get; set; }
         [JsonProperty]
         protected List<ActionGroupCommand> actionGroupCommandsInternal { get; set; }
+        [JsonProperty]
+        protected List<GameCommand> gameCommandsInternal { get; set; }
 
         [JsonProperty]
         protected List<string> quotesInternal { get; set; }
@@ -134,6 +136,7 @@ namespace MixItUp.Desktop
             this.interactiveCommandsInternal = new List<InteractiveCommand>();
             this.timerCommandsInternal = new List<TimerCommand>();
             this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
+            this.gameCommandsInternal = new List<GameCommand>();
             this.quotesInternal = new List<string>();
             this.bannedWordsInternal = new List<string>();
             this.interactiveUserGroupsInternal = new Dictionary<uint, List<InteractiveUserGroupViewModel>>();
@@ -164,6 +167,8 @@ namespace MixItUp.Desktop
         public LockedList<TimerCommand> TimerCommands { get; set; }
         [JsonIgnore]
         public LockedList<ActionGroupCommand> ActionGroupCommands { get; set; }
+        [JsonIgnore]
+        public LockedList<GameCommand> GameCommands { get; set; }
 
         [JsonIgnore]
         public LockedList<string> Quotes { get; set; }
@@ -211,6 +216,7 @@ namespace MixItUp.Desktop
             this.InteractiveCommands = new LockedList<InteractiveCommand>();
             this.TimerCommands = new LockedList<TimerCommand>();
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
+            this.gameCommandsInternal = new List<GameCommand>();
             this.Quotes = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
             this.CommunityBannedWords = new LockedList<string>();
@@ -227,6 +233,7 @@ namespace MixItUp.Desktop
             this.InteractiveCommands = new LockedList<InteractiveCommand>(this.interactiveCommandsInternal);
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
+            this.GameCommands = new LockedList<GameCommand>(this.gameCommandsInternal);
             this.Quotes = new LockedList<string>(this.quotesInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(this.interactiveUserGroupsInternal);
@@ -265,6 +272,7 @@ namespace MixItUp.Desktop
             this.interactiveCommandsInternal = this.InteractiveCommands.ToList();
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.actionGroupCommandsInternal = this.ActionGroupCommands.ToList();
+            this.gameCommandsInternal = this.GameCommands.ToList();
             this.quotesInternal = this.Quotes.ToList();
             this.bannedWordsInternal = this.BannedWords.ToList();
             this.interactiveUserGroupsInternal = this.InteractiveUserGroups.ToDictionary();

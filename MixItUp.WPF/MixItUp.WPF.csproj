@@ -227,6 +227,12 @@
     <Compile Include="Controls\Currency\CurrencySelectorControl.xaml.cs">
       <DependentUpon>CurrencySelectorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\GamesProbabilityControl.xaml.cs">
+      <DependentUpon>GamesProbabilityControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Games\GameStepCommandControl.xaml.cs">
+      <DependentUpon>GameStepCommandControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LoadingControlBase.cs" />
     <Compile Include="Controls\MainControls\AboutControl.xaml.cs">
       <DependentUpon>AboutControl.xaml</DependentUpon>
@@ -239,6 +245,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\CurrencyAndRankControl.xaml.cs">
       <DependentUpon>CurrencyAndRankControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\GamesControl.xaml.cs">
+      <DependentUpon>GamesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\MainCommandControlBase.cs" />
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
@@ -330,6 +339,9 @@
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
       <DependentUpon>CommandWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Command\GameCommandWindow.xaml.cs">
+      <DependentUpon>GameCommandWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml.cs">
       <DependentUpon>InteractiveBoardDesignerWindow.xaml</DependentUpon>
     </Compile>
@@ -417,6 +429,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Games\GamesProbabilityControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\GameStepCommandControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\AboutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -430,6 +450,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\CurrencyAndRankControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\GamesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -575,6 +599,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Command\CommandWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Command\GameCommandWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

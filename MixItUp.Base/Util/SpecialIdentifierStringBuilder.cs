@@ -13,7 +13,7 @@ namespace MixItUp.Base.Util
 
         public SpecialIdentifierStringBuilder(string text) { this.text = text; }
 
-        public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments)
+        public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments = null)
         {
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
@@ -97,9 +97,9 @@ namespace MixItUp.Base.Util
 
                     this.ReplaceSpecialIdentifier("arg" + (i + 1) + "string", arguments.ElementAt(i));
                 }
-            }
 
-            this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
+                this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
+            }
 
             foreach (string counter in ChannelSession.Counters.Keys)
             {

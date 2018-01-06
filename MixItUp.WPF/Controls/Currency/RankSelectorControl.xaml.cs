@@ -66,9 +66,12 @@ namespace MixItUp.WPF.Controls.Currency
         {
             UserCurrencyRequirementViewModel requirement = this.GetCurrencyRequirement();
 
-            IEnumerable<UserCurrencyViewModel> ranks = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
-            this.IsEnabled = (ranks.Count() > 0);
-            this.RankTypeComboBox.ItemsSource = ranks;
+            if (ChannelSession.Settings != null)
+            {
+                IEnumerable<UserCurrencyViewModel> ranks = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
+                this.IsEnabled = (ranks.Count() > 0);
+                this.RankTypeComboBox.ItemsSource = ranks;
+            }
 
             this.SetCurrencyRequirement(requirement);
 

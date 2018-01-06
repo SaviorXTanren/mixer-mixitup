@@ -12,6 +12,8 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public int RequiredAmount { get; set; }
+        [DataMember]
+        public int MaximumAmount { get; set; }
 
         [DataMember]
         public string RankName { get; set; }
@@ -20,10 +22,11 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserCurrencyRequirementViewModel() { }
 
-        public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, int amount)
+        public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, int amount, int maximumAmount = 0)
         {
             this.CurrencyName = currency.Name;
             this.RequiredAmount = amount;
+            this.MaximumAmount = maximumAmount;
         }
 
         public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, UserRankViewModel rank, bool mustEqual = false)
@@ -69,6 +72,11 @@ namespace MixItUp.Base.ViewModel.User
 
             UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
             if (userCurrencyData.Amount < this.RequiredAmount)
+            {
+                return false;
+            }
+
+            if (this.MaximumAmount > 0 && userCurrencyData.Amount > this.MaximumAmount)
             {
                 return false;
             }

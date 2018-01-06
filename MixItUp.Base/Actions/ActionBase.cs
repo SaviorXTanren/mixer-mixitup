@@ -2,6 +2,7 @@
 using Mixer.Base.Util;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public ActionTypeEnum Type { get; set; }
 
+        [JsonIgnore]
+        private Dictionary<string, string> AdditiveSpecialIdentifiers = new Dictionary<string, string>();
+
         public ActionBase() { }
 
         public ActionBase(ActionTypeEnum type)
@@ -65,12 +69,21 @@ namespace MixItUp.Base.Actions
             finally { this.AsyncSemaphore.Release(); }
         }
 
+        public void AddSpecialIdentifier(string specialIdentifier, string replacement)
+        {
+            this.AdditiveSpecialIdentifiers[specialIdentifier] = replacement;
+        }
+
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
         {
             SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str);
             await siString.ReplaceCommonSpecialModifiers(user, arguments);
+            foreach (var kvp in this.AdditiveSpecialIdentifiers)
+            {
+                siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
+            }
             return siString.ToString();
         }
 

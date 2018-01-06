@@ -50,6 +50,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Timers", new TimerControl());
                 await this.MainMenu.AddMenuItem("Action Groups", new ActionGroupControl());
                 await this.MainMenu.AddMenuItem("Currency & Rank", new CurrencyAndRankControl());
+                await this.MainMenu.AddMenuItem("Games", new GamesControl());
                 await this.MainMenu.AddMenuItem("Giveaway", new GiveawayControl());
                 await this.MainMenu.AddMenuItem("Game Queue", new GameQueueControl());
                 await this.MainMenu.AddMenuItem("Quotes", new QuoteControl());

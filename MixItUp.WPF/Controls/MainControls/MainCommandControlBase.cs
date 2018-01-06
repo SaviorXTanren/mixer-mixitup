@@ -11,9 +11,9 @@ namespace MixItUp.WPF.Controls.MainControls
         public async Task HandleCommandPlay(object sender)
         {
             CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CommandBase command = (CommandBase)commandButtonsControl.DataContext;
-            if (command != null)
+            if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is CommandBase)
             {
+                CommandBase command = (CommandBase)commandButtonsControl.DataContext;
                 await command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
                 commandButtonsControl.SwitchToPlay();
             }
@@ -22,9 +22,9 @@ namespace MixItUp.WPF.Controls.MainControls
         public void HandleCommandStop(object sender)
         {
             CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CommandBase command = (CommandBase)commandButtonsControl.DataContext;
-            if (command != null)
+            if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is CommandBase)
             {
+                CommandBase command = (CommandBase)commandButtonsControl.DataContext;
                 command.StopCurrentRun();
                 commandButtonsControl.SwitchToPlay();
             }
@@ -33,9 +33,9 @@ namespace MixItUp.WPF.Controls.MainControls
         public void HandleCommandEnableDisable(object sender)
         {
             CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CommandBase command = (CommandBase)commandButtonsControl.DataContext;
-            if (command != null)
+            if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is CommandBase)
             {
+                CommandBase command = (CommandBase)commandButtonsControl.DataContext;
                 command.IsEnabled = commandButtonsControl.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
             }
         }
@@ -43,7 +43,11 @@ namespace MixItUp.WPF.Controls.MainControls
         public T GetCommandFromCommandButtons<T>(object sender) where T : CommandBase
         {
             CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            return (T)commandButtonsControl.DataContext;
+            if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is CommandBase)
+            {
+                return (T)commandButtonsControl.DataContext;
+            }
+            return null;
         }
     }
 }

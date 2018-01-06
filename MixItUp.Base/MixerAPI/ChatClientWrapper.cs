@@ -101,7 +101,7 @@ namespace MixItUp.Base.MixerAPI
             Dictionary<uint, UserViewModel> refreshUsers = new Dictionary<uint, UserViewModel>();
 
             await ChannelSession.RefreshChannel();
-            foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, ChannelSession.Channel.viewersCurrent))
+            foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
             {
                 UserViewModel user = new UserViewModel(chatUser);
                 if (user.ID > 0)

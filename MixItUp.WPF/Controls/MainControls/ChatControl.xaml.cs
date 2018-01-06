@@ -122,7 +122,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     List<UserCurrencyViewModel> currenciesToUpdate = new List<UserCurrencyViewModel>();
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
-                        if (currency.Enabled && currency.AcquireInterval > 0 && (totalMinutes % currency.AcquireInterval) == 0)
+                        if (currency.Enabled && currency.AcquireInterval > 0)
                         {
                             currenciesToUpdate.Add(currency);
                         }
@@ -133,7 +133,10 @@ namespace MixItUp.WPF.Controls.MainControls
                         user.Data.ViewingMinutes++;
                         foreach (UserCurrencyViewModel currency in currenciesToUpdate)
                         {
-                            user.Data.AddCurrencyAmount(currency, currency.AcquireAmount);
+                            if ((user.Data.ViewingMinutes % currency.AcquireInterval) == 0)
+                            {
+                                user.Data.AddCurrencyAmount(currency, currency.AcquireAmount);
+                            }
                         }
                         return Task.FromResult(0);
                     });
@@ -342,7 +345,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     GlobalEvents.ChatCommandMessageReceived(messageCommand);
 
-                    ChatCommand command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
+                    PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
                     if (command != null)
                     {
                         if (message.User.Roles.Any(r => r >= command.Permissions))

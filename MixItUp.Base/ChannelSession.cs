@@ -113,13 +113,14 @@ namespace MixItUp.Base
 
         public static LockedDictionary<string, int> Counters { get; private set; }
 
-        public static IEnumerable<ChatCommand> AllChatCommands
+        public static IEnumerable<PermissionsCommandBase> AllChatCommands
         {
             get
             {
-                List<ChatCommand> commands = new List<ChatCommand>();
+                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
                 commands.AddRange(ChannelSession.PreMadeChatCommands);
                 commands.AddRange(ChannelSession.Settings.ChatCommands);
+                commands.AddRange(ChannelSession.Settings.GameCommands);
                 return commands;
             }
         }
