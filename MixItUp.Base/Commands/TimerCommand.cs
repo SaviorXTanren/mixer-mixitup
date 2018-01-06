@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.ViewModel.Import;
+using System.Threading;
 
 namespace MixItUp.Base.Commands
 {
@@ -11,6 +13,13 @@ namespace MixItUp.Base.Commands
         public TimerCommand(string name)
             : base(name, CommandTypeEnum.Timer, name)
         { }
+
+        public TimerCommand(ScorpBotTimer timer)
+            : this(timer.Name)
+        {
+            this.Actions.Add(new ChatAction(timer.Text, isWhisper: false, sendAsStreamer: false));
+            this.IsEnabled = timer.Enabled;
+        }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return TimerCommand.timerCommandPerformSemaphore; } }
     }

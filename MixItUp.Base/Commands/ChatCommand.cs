@@ -32,6 +32,7 @@ namespace MixItUp.Base.Commands
             : this(command.Command, command.Command, command.Permission, command.Cooldown, null)
         {
             this.Actions.Add(new ChatAction(command.Text, isWhisper: false, sendAsStreamer: false));
+            this.IsEnabled = command.Enabled;
         }
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)

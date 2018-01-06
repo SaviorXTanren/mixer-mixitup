@@ -301,6 +301,13 @@ namespace MixItUp.WPF.Windows.Wizard
                             }
                         });
 
+                        databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "Timers2DB.sqlite");
+                        await databaseWrapper.RunReadCommand("SELECT * FROM TimeCommand",
+                        (reader) =>
+                        {
+                            scorpBotData.Timers.Add(new ScorpBotTimer(reader));
+                        });
+
                         databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "FilteredWordsDB.sqlite");
                         await databaseWrapper.RunReadCommand("SELECT * FROM Word",
                         (reader) =>
@@ -404,6 +411,11 @@ namespace MixItUp.WPF.Windows.Wizard
                 foreach (ScorpBotCommand command in this.scorpBotData.Commands)
                 {
                     ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
+                }
+
+                foreach (ScorpBotTimer timer in this.scorpBotData.Timers)
+                {
+                    ChannelSession.Settings.TimerCommands.Add(new TimerCommand(timer));
                 }
 
                 foreach (string quote in this.scorpBotData.Quotes)

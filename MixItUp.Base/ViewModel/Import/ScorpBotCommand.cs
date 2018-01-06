@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System.Data.Common;
 using System.Runtime.Serialization;
 
@@ -47,14 +48,7 @@ namespace MixItUp.Base.ViewModel.Import
             }
 
             this.Text = (string)reader["Response"];
-            this.Text = this.Text.Replace("$user", "$username");
-            this.Text = this.Text.Replace("$target", "$arg1username");
-            for (int i = 1; i < 10; i++)
-            {
-                this.Text = this.Text.Replace("$target" + i, "$arg" + i + "username");
-            }
-            this.Text = this.Text.Replace("$msg", "$allargs");
-            this.Text = this.Text.Replace("$hours", "$usertime");
+            this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(this.Text);
 
             this.Cooldown = (int)reader["Cooldown"];
             this.Enabled = ((string)reader["Enabled"]).Equals("True");
