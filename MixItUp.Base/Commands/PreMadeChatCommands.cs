@@ -265,11 +265,38 @@ namespace MixItUp.Base.Commands
                     {
                         if (ChannelSession.Settings.Quotes.Count > 0)
                         {
-                            Random random = new Random();
-                            int index = random.Next(ChannelSession.Settings.Quotes.Count);
-                            string quote = ChannelSession.Settings.Quotes[index];
+                            int quoteIndex = 0;
+                            if (arguments.Count() == 1)
+                            {
+                                if (!int.TryParse(arguments.ElementAt(0), out quoteIndex))
+                                {
+                                    await ChannelSession.Chat.Whisper(user.UserName, "Quote # must be greater than 0");
+                                    return;
+                                }
 
-                            await ChannelSession.Chat.SendMessage("Quote #" + (index + 1) + ": \"" + quote + "\"");
+                                quoteIndex -= 1;
+
+                                if (quoteIndex < 0)
+                                {
+                                    await ChannelSession.Chat.Whisper(user.UserName, "Quote # must be greater than 0");
+                                    return;
+                                }
+
+                                if (quoteIndex >= ChannelSession.Settings.Quotes.Count)
+                                {
+                                    await ChannelSession.Chat.Whisper(user.UserName, "There is no quote with a number that high");
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                Random random = new Random();
+                                quoteIndex = random.Next(ChannelSession.Settings.Quotes.Count);
+                            }
+
+                            string quote = ChannelSession.Settings.Quotes[quoteIndex];
+
+                            await ChannelSession.Chat.SendMessage("Quote #" + (quoteIndex + 1) + ": \"" + quote + "\"");
                         }
                         else
                         {
