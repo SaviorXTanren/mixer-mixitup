@@ -270,7 +270,7 @@ namespace MixItUp.Base.Commands
                             {
                                 if (!int.TryParse(arguments.ElementAt(0), out quoteIndex))
                                 {
-                                    await ChannelSession.Chat.Whisper(user.UserName, "Quote # must be greater than 0");
+                                    await ChannelSession.Chat.Whisper(user.UserName, "USAGE: !quote [QUOTE NUMBER]");
                                     return;
                                 }
 
