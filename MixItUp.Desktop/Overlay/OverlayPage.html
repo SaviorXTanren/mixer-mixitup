@@ -5,56 +5,13 @@
     </head>
     <body style="background-color:transparent">
         <div id="mainOverlay" />
-		
-        <div id="roluetteWheelDiv" width="421" height="564" class="the_wheel" align="center" valign="center" style="visibility:hidden">
-            <canvas id="canvas" width="420" height="420">
-                <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
-            </canvas>
-        </div>
 
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-		<script type="text/javascript" src="wheel/Winwheel.min.js"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
-		
+
         <script src="webSocketWrapper.js"></script>
 
 		<script>
-			// Create new wheel object specifying the parameters at creation time.
-            var theWheel = new Winwheel({
-                'numSegments'       : 8,                 // Specify number of segments.
-                'outerRadius'       : 200,               // Set outer radius so wheel fits inside the background.
-                'drawText'          : false,              // Code drawn text can be used with segment images.
-                'textFontSize'      : 16,
-                'textOrientation'   : 'curved',
-                'textAlignment'     : 'inner',
-                'textMargin'        : 90,
-                'textFontFamily'    : 'monospace',
-                'textStrokeStyle'   : 'black',
-                'textLineWidth'     : 3,
-                'textFillStyle'     : 'white',
-                'drawMode'          : 'segmentImage',    // Must be segmentImage to draw wheel using one image per segemnt.
-                'segments'          :                    // Define segments including image and text.
-                [
-                   {'image' : 'wheel/lose.png',  'text' : 'Lose'},
-                   {'image' : 'wheel/win.png',  'text' : 'Win'},
-                   {'image' : 'wheel/lose.png',  'text' : 'Lose'},
-                   {'image' : 'wheel/win.png',  'text' : 'Win'},
-                   {'image' : 'wheel/lose.png',  'text' : 'Lose'},
-                   {'image' : 'wheel/win.png',  'text' : 'Win'},
-                   {'image' : 'wheel/lose.png',  'text' : 'Lose'},
-                   {'image' : 'wheel/bonus.png',  'text' : 'Bonus'},
-                ],
-                'animation' :           // Specify the animation to use.
-                {
-                    'type'     : 'spinToStop',
-                    'duration' : 5,     // Duration in seconds.
-                    'spins'    : 8,     // Number of complete spins.
-                    'callbackFinished': 'rouletteWheelResult()'
-                }
-            });
-		
             var mainOverlayDiv = document.getElementById('mainOverlay');
-            var roluetteWheelDiv = document.getElementById('roluetteWheelDiv');
 
             function connectionOpened() { }
 
@@ -81,10 +38,6 @@
                         else if (packet.type === "htmlText")
                         {
                             htmlTextPacket(packet.data);
-                        }
-						else if (packet.type === "rouletteWheel")
-                        {
-                            rouletteWheelPacket(packet.data);
                         }
                     }
                 }
@@ -159,16 +112,6 @@
 
                 addWaitRemoveElement(data, addedElement);
             }
-			
-			function rouletteWheelPacket(data)
-            {
-                if (roluetteWheelDiv != null)
-                {
-                    roluetteWheelDiv.style.visibility = 'visible';
-                    theWheel.animation.spins = 8;
-                    theWheel.startAnimation();
-                }
-			}
 
 			function addWaitRemoveElement(data, addedElement)
             {
@@ -190,27 +133,6 @@
                         }, data.duration * 1000);
                     });
 				}
-            }
-
-			function rouletteWheelResult()
-            {
-                setTimeout(function () {
-
-                    if (roluetteWheelDiv != null) {
-                        roluetteWheelDiv.style.visibility = 'hidden';
-
-                        var winningSegment = theWheel.getIndicatedSegment();
-
-                        theWheel.stopAnimation(false);
-                        theWheel.rotationAngle = 0;
-                        theWheel.draw();
-
-                        if (winningSegment != null && winningSegment.text != null) {
-                            sendPacket('rouletteWheelResult', winningSegment.text);
-                        }
-                    }
-
-                }, 3000);
             }
 
             function logException(err)

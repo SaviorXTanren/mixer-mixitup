@@ -71,8 +71,6 @@ namespace MixItUp.Base.Services
 
         Task SetHTMLText(OverlayHTML htmlText);
 
-        Task SetRouletteWheel(OverlayRouletteWheel rouletteWheel);
-
         Task Disconnect();
     }
 }
