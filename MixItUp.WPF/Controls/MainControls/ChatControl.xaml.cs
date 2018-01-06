@@ -136,6 +136,10 @@ namespace MixItUp.WPF.Controls.MainControls
                             if ((user.Data.ViewingMinutes % currency.AcquireInterval) == 0)
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.AcquireAmount);
+                                if (user.Roles.Contains(UserRole.Subscriber))
+                                {
+                                    user.Data.AddCurrencyAmount(currency, currency.SubscriberBonus);
+                                }
                             }
                         }
                         return Task.FromResult(0);

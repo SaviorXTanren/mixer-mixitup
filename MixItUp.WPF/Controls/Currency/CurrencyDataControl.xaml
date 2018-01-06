@@ -121,17 +121,21 @@
                 <Grid Grid.Row="4" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" x:Name="CurrencyFollowBonusTextBox" MaterialDesign:HintAssist.Hint="Follow Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" x:Name="CurrencyOnFollowBonusTextBox" MaterialDesign:HintAssist.Hint="On Follow Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="2" x:Name="CurrencyHostBonusTextBox" MaterialDesign:HintAssist.Hint="Host Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="2" x:Name="CurrencyOnHostBonusTextBox" MaterialDesign:HintAssist.Hint="On Host Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <TextBox Grid.Column="4" x:Name="CurrencySubscribeBonusTextBox" MaterialDesign:HintAssist.Hint="Subscribe Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="4" x:Name="CurrencyOnSubscribeBonusTextBox" MaterialDesign:HintAssist.Hint="On Subscribe Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                    <TextBox Grid.Column="6" x:Name="CurrencySubscriberBonusTextBox" MaterialDesign:HintAssist.Hint="Subscriber Bonus" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 </Grid>
 

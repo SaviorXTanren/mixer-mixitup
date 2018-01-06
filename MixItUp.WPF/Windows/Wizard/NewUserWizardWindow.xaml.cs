@@ -362,14 +362,18 @@ namespace MixItUp.WPF.Windows.Wizard
                 string rankName = this.scorpBotData.GetSettingsValue("currency", "name", "Rank");
                 int rankInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onlinepayinterval", "0"));
                 int rankAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency", "activeuserbonus", "0"));
-                int rankFollowBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onfollowbonus", "0"));
-                int rankSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onsubbonus", "0"));
+                int rankOnFollowBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onfollowbonus", "0"));
+                int rankOnSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onsubbonus", "0"));
+                int rankSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "subbonus", "0"));
 
                 UserCurrencyViewModel rankCurrency = null;
                 if (!string.IsNullOrEmpty(rankName) && rankInterval >= 0 && rankAmount >= 0)
                 {
-                    rankCurrency = new UserCurrencyViewModel() { Name = rankName, SpecialIdentifier = "rank", AcquireInterval = rankInterval, AcquireAmount = rankAmount,
-                        FollowBonus = rankFollowBonus, SubscribeBonus = rankSubBonus };
+                    rankCurrency = new UserCurrencyViewModel()
+                    {
+                        Name = rankName, SpecialIdentifier = "rank", AcquireInterval = rankInterval, AcquireAmount = rankAmount, OnFollowBonus = rankOnFollowBonus,
+                        OnSubscribeBonus = rankOnSubBonus, SubscriberBonus = rankSubBonus
+                    };
                     rankCurrency.Enabled = true;
                     ChannelSession.Settings.Currencies.Add(rankName, rankCurrency);
                 }
@@ -377,13 +381,17 @@ namespace MixItUp.WPF.Windows.Wizard
                 string currencyName = this.scorpBotData.GetSettingsValue("currency2", "name", "Currency");
                 int currencyInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onlinepayinterval", "0"));
                 int currencyAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "activeuserbonus", "0"));
-                int currencyFollowBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onfollowbonus", "0"));
-                int currencySubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onsubbonus", "0"));
+                int currencyOnFollowBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onfollowbonus", "0"));
+                int currencyOnSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onsubbonus", "0"));
+                int currencySubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "subbonus", "0"));
 
                 if (!string.IsNullOrEmpty(currencyName) && currencyInterval >= 0 && currencyAmount >= 0)
                 {
-                    UserCurrencyViewModel currency = new UserCurrencyViewModel() { Name = currencyName, SpecialIdentifier = "currency", AcquireInterval = currencyInterval,
-                        AcquireAmount = currencyAmount, FollowBonus = currencyFollowBonus, SubscribeBonus = currencySubBonus };
+                    UserCurrencyViewModel currency = new UserCurrencyViewModel()
+                    {
+                        Name = currencyName, SpecialIdentifier = "currency", AcquireInterval = currencyInterval, AcquireAmount = currencyAmount, OnFollowBonus = currencyOnFollowBonus,
+                        OnSubscribeBonus = currencyOnSubBonus, SubscriberBonus = currencySubBonus
+                    };
                     currency.Enabled = true;
                     ChannelSession.Settings.Currencies.Add(currency.Name, currency);
                 }

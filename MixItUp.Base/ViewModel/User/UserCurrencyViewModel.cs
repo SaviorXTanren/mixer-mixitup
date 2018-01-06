@@ -32,11 +32,14 @@ namespace MixItUp.Base.ViewModel.User
         public string SpecialIdentifier { get; set; }
 
         [DataMember]
-        public int FollowBonus { get; set; }
+        public int SubscriberBonus { get; set; }
+
         [DataMember]
-        public int HostBonus { get; set; }
+        public int OnFollowBonus { get; set; }
         [DataMember]
-        public int SubscribeBonus { get; set; }
+        public int OnHostBonus { get; set; }
+        [DataMember]
+        public int OnSubscribeBonus { get; set; }
 
         [DataMember]
         public string ResetInterval { get; set; }

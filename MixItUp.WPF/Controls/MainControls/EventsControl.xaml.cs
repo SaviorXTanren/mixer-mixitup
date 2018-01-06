@@ -74,7 +74,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (currency.Enabled)
                         {
-                            userData.SetCurrencyAmount(currency, currency.FollowBonus);
+                            userData.SetCurrencyAmount(currency, currency.OnFollowBonus);
                         }
                     }
                 }
@@ -84,7 +84,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (currency.Enabled)
                         {
-                            userData.SetCurrencyAmount(currency, currency.HostBonus);
+                            userData.SetCurrencyAmount(currency, currency.OnHostBonus);
                         }
                     }
                 }
@@ -95,7 +95,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (currency.Enabled)
                         {
-                            userData.SetCurrencyAmount(currency, currency.SubscribeBonus);
+                            userData.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
                         }
                     }
                 }

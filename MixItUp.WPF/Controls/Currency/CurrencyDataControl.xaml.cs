@@ -56,9 +56,10 @@ namespace MixItUp.WPF.Controls.Currency
                 this.CurrencyAmountTextBox.Text = this.currency.AcquireAmount.ToString();
                 this.CurrencyTimeTextBox.Text = this.currency.AcquireInterval.ToString();
                 this.CurrencySpecialIdentifierTextBox.Text = this.currency.SpecialIdentifier;
-                this.CurrencyFollowBonusTextBox.Text = this.currency.FollowBonus.ToString();
-                this.CurrencyHostBonusTextBox.Text = this.currency.HostBonus.ToString();
-                this.CurrencySubscribeBonusTextBox.Text = this.currency.SubscribeBonus.ToString();
+                this.CurrencyOnFollowBonusTextBox.Text = this.currency.OnFollowBonus.ToString();
+                this.CurrencyOnHostBonusTextBox.Text = this.currency.OnHostBonus.ToString();
+                this.CurrencyOnSubscribeBonusTextBox.Text = this.currency.OnSubscribeBonus.ToString();
+                this.CurrencySubscriberBonusTextBox.Text = this.currency.SubscriberBonus.ToString();
                 this.ResetCurrencyComboBox.SelectedItem = this.currency.ResetInterval;
                 this.CurrencyGrid.IsEnabled = !this.currency.Enabled;
 
@@ -138,26 +139,34 @@ namespace MixItUp.WPF.Controls.Currency
                     return;
                 }
 
-                int followBonus = 0;
-                if (string.IsNullOrEmpty(this.CurrencyFollowBonusTextBox.Text) || !int.TryParse(this.CurrencyFollowBonusTextBox.Text, out followBonus) || followBonus < 0)
+                int onFollowBonus = 0;
+                if (string.IsNullOrEmpty(this.CurrencyOnFollowBonusTextBox.Text) || !int.TryParse(this.CurrencyOnFollowBonusTextBox.Text, out onFollowBonus) || onFollowBonus < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The Follow bonus must be 0 or greater");
+                    await MessageBoxHelper.ShowMessageDialog("The On Follow bonus must be 0 or greater");
                     this.CurrencyToggleSwitch.IsChecked = false;
                     return;
                 }
 
-                int hostBonus = 0;
-                if (string.IsNullOrEmpty(this.CurrencyHostBonusTextBox.Text) || !int.TryParse(this.CurrencyHostBonusTextBox.Text, out hostBonus) || hostBonus < 0)
+                int onHostBonus = 0;
+                if (string.IsNullOrEmpty(this.CurrencyOnHostBonusTextBox.Text) || !int.TryParse(this.CurrencyOnHostBonusTextBox.Text, out onHostBonus) || onHostBonus < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The Host bonus must be 0 or greater");
+                    await MessageBoxHelper.ShowMessageDialog("The On Host bonus must be 0 or greater");
                     this.CurrencyToggleSwitch.IsChecked = false;
                     return;
                 }
 
-                int subscribeBonus = 0;
-                if (string.IsNullOrEmpty(this.CurrencySubscribeBonusTextBox.Text) || !int.TryParse(this.CurrencyHostBonusTextBox.Text, out subscribeBonus) || subscribeBonus < 0)
+                int onSubscribeBonus = 0;
+                if (string.IsNullOrEmpty(this.CurrencyOnSubscribeBonusTextBox.Text) || !int.TryParse(this.CurrencyOnSubscribeBonusTextBox.Text, out onSubscribeBonus) || onSubscribeBonus < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The Subscribe bonus must be 0 or greater");
+                    await MessageBoxHelper.ShowMessageDialog("The On Subscribe bonus must be 0 or greater");
+                    this.CurrencyToggleSwitch.IsChecked = false;
+                    return;
+                }
+
+                int subscriberBonus = 0;
+                if (string.IsNullOrEmpty(this.CurrencySubscriberBonusTextBox.Text) || !int.TryParse(this.CurrencySubscriberBonusTextBox.Text, out subscriberBonus) || subscriberBonus < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The Subscriber bonus must be 0 or greater");
                     this.CurrencyToggleSwitch.IsChecked = false;
                     return;
                 }
@@ -173,9 +182,10 @@ namespace MixItUp.WPF.Controls.Currency
                 this.currency.AcquireAmount = currencyAmount;
                 this.currency.AcquireInterval = currencyTime;
                 this.currency.SpecialIdentifier = specialIdentifier.ToLower();
-                this.currency.FollowBonus = followBonus;
-                this.currency.HostBonus = hostBonus;
-                this.currency.SubscribeBonus = subscribeBonus;
+                this.currency.OnFollowBonus = onFollowBonus;
+                this.currency.OnHostBonus = onHostBonus;
+                this.currency.OnSubscribeBonus = onSubscribeBonus;
+                this.currency.SubscriberBonus = subscriberBonus;
                 this.currency.ResetInterval = (string)this.ResetCurrencyComboBox.SelectedItem;
                 this.currency.Enabled = true;
 
