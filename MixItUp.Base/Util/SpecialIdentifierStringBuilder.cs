@@ -95,7 +95,7 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier("arg" + (i + 1) + "username", argUser.username);
                     }
 
-                    this.ReplaceSpecialIdentifier("arg" + (i + 1) + "string", arguments.ElementAt(i));
+                    this.ReplaceSpecialIdentifier("arg" + (i + 1) + "text", arguments.ElementAt(i));
                 }
 
                 this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));

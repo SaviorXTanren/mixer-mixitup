@@ -288,7 +288,11 @@ namespace MixItUp.Desktop.Services
             {
                 text = Regex.Replace(text, "$userrank", "$userrankname - $userrank");
                 text = Regex.Replace(text, "$userrankpoints", "$userrank");
-                text = Regex.Replace(text, "$arg1usercurrency", "$arg1usercurrency");
+                for (int i = 0; i < 10; i++)
+                {
+                    text = Regex.Replace(text, "$arg" + i + "usercurrency", "$arg" + i + "usercurrency");
+                    text = Regex.Replace(text, "$arg" + i + "string", "$arg" + i + "text");
+                }
             }
             return text;
         }
