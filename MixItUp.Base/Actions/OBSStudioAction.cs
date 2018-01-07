@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -34,6 +35,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string SourceURL { get; set; }
 
+        [DataMember]
+        public OBSSourceDimensions SourceDimensions { get; set; }
+
         [JsonIgnore]
         private string currentTextToWrite { get; set; }
 
@@ -53,6 +57,14 @@ namespace MixItUp.Base.Actions
             this.SourceVisible = sourceVisible;
             this.SourceText = sourceText;
             this.SourceURL = sourceUrl;
+        }
+
+        public OBSStudioAction(string sourceName, bool sourceVisible, OBSSourceDimensions sourceDimensions)
+            : this(sourceName, sourceVisible)
+        {
+            this.SourceName = sourceName;
+            this.SourceVisible = sourceVisible;
+            this.SourceDimensions = sourceDimensions;
         }
 
         private OBSStudioAction(string sourceName, bool sourceVisible)
@@ -114,6 +126,10 @@ namespace MixItUp.Base.Actions
                         {
                             string url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
                             ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(this.SourceName, url);
+                        }
+                        else if (this.SourceDimensions != null)
+                        {
+                            ChannelSession.Services.OBSWebsocket.SetSourceDimensions(this.SourceName, this.SourceDimensions);
                         }
                         ChannelSession.Services.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
                     }

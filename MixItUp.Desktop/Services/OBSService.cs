@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,6 +46,23 @@ namespace MixItUp.OBS
             return false;
         }
 
+        public OBSSourceDimensions GetSourceDimensions(string source)
+        {
+            try
+            {
+                OBSScene scene = this.OBSWebsocket.GetCurrentScene();
+                foreach (SceneItem item in scene.Items)
+                {
+                    if (item.SourceName.Equals(source))
+                    {
+                        return new OBSSourceDimensions() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) };
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return null;
+        }
+
         public void SetCurrentSceneCollection(string sceneCollection)
         {
             try
@@ -82,6 +100,16 @@ namespace MixItUp.OBS
                 properties.IsLocalFile = false;
                 properties.URL = url;
                 this.OBSWebsocket.SetBrowserSourceProperties(source, properties);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        public void SetSourceDimensions(string source, OBSSourceDimensions dimensions)
+        {
+            try
+            {
+                this.OBSWebsocket.SetSceneItemPosition(source, dimensions.X, dimensions.Y);
+                this.OBSWebsocket.SetSceneItemTransform(source, dimensions.Rotation, dimensions.XScale, dimensions.YScale);
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
