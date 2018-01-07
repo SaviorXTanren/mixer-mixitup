@@ -89,6 +89,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task UserJoined(UserViewModel user, IEnumerable<string> arguments = null)
         {
+            this.GameStarterUser = user;
             this.lastRun = DateTimeOffset.Now;
             await this.RunRandomProbabilityOnUser(user);
             this.EnteredUsers.Clear();
@@ -116,8 +117,6 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public CustomCommand UserJoinedCommand { get; set; }
 
-        [JsonIgnore]
-        public UserViewModel GameStarterUser { get; private set; }
         [JsonIgnore]
         public DateTimeOffset GameEndTime { get; private set; }
 
@@ -247,10 +246,14 @@ namespace MixItUp.Base.Commands
         public const string GameTotalUsersSpecialIdentifier = "gametotalusers";
         public const string GamePayoutSpecialIdentifier = "gamepayout";
         public const string GameCurrencyNameSpecialIdentifier = "gamecurrencyname";
+        public const string GameStarterNameSpecialIdentifier = "gamestarterusername";
 
         private static GameResultProbability FailureResultProbability = new GameResultProbability(100.0, null, null);
 
         private static SemaphoreSlim gameCommandPerformSemaphore = new SemaphoreSlim(1);
+
+        [DataMember]
+        public UserViewModel GameStarterUser { get; protected set; }
 
         [DataMember]
         public List<GameResultProbability> ResultProbabilities { get; set; }
@@ -356,6 +359,10 @@ namespace MixItUp.Base.Commands
             command.AddSpecialIdentifier(GameCommandBase.GameTotalUsersSpecialIdentifier, this.EnteredUsers.Count.ToString());
             command.AddSpecialIdentifier(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
             command.AddSpecialIdentifier(GameCommandBase.GameCurrencyNameSpecialIdentifier, this.CurrencyRequirement.CurrencyName);
+            if (this.GameStarterUser != null)
+            {
+                command.AddSpecialIdentifier(GameCommandBase.GameStarterNameSpecialIdentifier, this.GameStarterUser.UserName);
+            }
             if (user != null)
             {
                 if (this.EnteredUsers.ContainsKey(user))

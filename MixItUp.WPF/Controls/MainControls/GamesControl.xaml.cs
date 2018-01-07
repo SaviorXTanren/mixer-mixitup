@@ -33,7 +33,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.GamesGrid.Visibility = Visibility.Visible;
 
                 this.GameCommandsListView.ItemsSource = this.gameCommands;
-                this.PreMadeGamesComboBox.ItemsSource = new List<string>() { "Heist", "Roulette", "Russian Roulette" };
+                this.PreMadeGamesComboBox.ItemsSource = new List<string>() { "Charity", "Heist", "Roulette", "Russian Roulette" };
 
                 this.RefreshList();
             }
@@ -114,6 +114,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     GameCommandBase game = null;
                     switch (gameName)
                     {
+                        case "Charity": game = new CharityGameCommand(currency); break;
                         case "Heist": game = new HeistGameCommand(currency); break;
                         case "Roulette": game = new RouletteGameCommand(currency); break;
                         case "Russian Roulette": game = new RussianRouletteGameCommand(currency); break;

@@ -76,4 +76,24 @@ namespace MixItUp.Base.Commands
             this.ResultProbabilities.Add(new GameResultProbability(50, null, PreMadeGameCommandHelper.CreateCustomChatCommand("Tough luck, you walked away empty-handed!", isWhisper: true)));
         }
     }
+
+    public class CharityGameCommand : MultiPlayerGameCommand
+    {
+        public CharityGameCommand(UserCurrencyViewModel currency)
+        {
+            this.Name = "Charity";
+            this.Commands = new List<string>() { "charity" };
+            this.Permissions = UserRole.User;
+            this.Cooldown = 15;
+            this.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, 10);
+
+            this.GameLength = 0;
+            this.MinimumParticipants = 1;
+            this.ResultType = GameResultType.SelectRandomChatUser;
+
+            this.GameEndedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$gamestarterusername just gave $gametotalbets $gamecurrencyname to @$username, what a generous soul!");
+
+            this.ResultProbabilities.Add(new GameResultProbability(100, "$gametotalbets", null));
+        }
+    }
 }
