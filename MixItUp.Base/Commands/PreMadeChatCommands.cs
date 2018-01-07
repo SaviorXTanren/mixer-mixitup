@@ -255,7 +255,7 @@ namespace MixItUp.Base.Commands
     public class QuoteChatCommand : PreMadeChatCommand
     {
         public QuoteChatCommand()
-            : base("Quote", "quote", UserRole.User, 5)
+            : base("Quote", new List<string>() { "quote", "quotes" }, UserRole.User, 5)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -331,7 +331,7 @@ namespace MixItUp.Base.Commands
                     quote = quote.Trim(new char[] { ' ', '\'', '\"' });
 
                     ChannelSession.Settings.Quotes.Add(quote);
-                    GlobalEvents.QuoteAdded(quote);
+                    await ChannelSession.SaveSettings();
 
                     if (ChannelSession.Chat != null)
                     {

@@ -1,8 +1,9 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Util;
-using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -11,17 +12,20 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class QuoteControl : MainControlBase
     {
+        private ObservableCollection<string> quotes = new ObservableCollection<string>();
+
         public QuoteControl()
         {
             InitializeComponent();
 
-            GlobalEvents.OnQuoteAdded += GlobalEvent_OnQuoteAdded;
+            this.QuotesDataGrid.ItemsSource = quotes;
         }
 
         protected override Task InitializeInternal()
         {
             this.EnableQuotesToggleButton.IsChecked = ChannelSession.Settings.QuotesEnabled;
-            this.QuotesTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.Quotes);
+
+            this.RefreshList();
 
             return base.InitializeInternal();
         }
@@ -31,38 +35,47 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.InitializeInternal();
         }
 
-        private async void EnableQuotesToggleButton_Checked(object sender, RoutedEventArgs e)
+        private void EnableQuotesToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                ChannelSession.Settings.QuotesEnabled = this.EnableQuotesToggleButton.IsChecked.GetValueOrDefault();
-                await ChannelSession.SaveSettings();
-            });
+            ChannelSession.Settings.QuotesEnabled = this.EnableQuotesToggleButton.IsChecked.GetValueOrDefault();
         }
 
-        private async void QuotesTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private async void AddQuoteButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.Window.RunAsyncOperation(async () =>
+            if (!string.IsNullOrEmpty(this.AddQuoteTextBox.Text))
             {
-                string quotes = this.QuotesTextBox.Text;
-                if (string.IsNullOrEmpty(this.QuotesTextBox.Text))
+                await this.Window.RunAsyncOperation(async () =>
                 {
-                    quotes = "";
-                }
-
-                ChannelSession.Settings.Quotes.Clear();
-                foreach (string split in quotes.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    ChannelSession.Settings.Quotes.Add(split);
-                }
-
-                await ChannelSession.SaveSettings();
-            });
+                    ChannelSession.Settings.Quotes.Add(this.AddQuoteTextBox.Text);
+                    this.AddQuoteTextBox.Clear();
+                    await ChannelSession.SaveSettings();
+                    this.RefreshList();
+                });
+            }
         }
 
-        private void GlobalEvent_OnQuoteAdded(object sender, string e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            this.QuotesTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.Quotes);
+            Button button = (Button)sender;
+            if (button.DataContext != null)
+            {
+                string quote = (string)button.DataContext;
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    ChannelSession.Settings.Quotes.Remove(quote);
+                    await ChannelSession.SaveSettings();
+                    this.RefreshList();
+                });
+            }
+        }
+
+        private void RefreshList()
+        {
+            this.quotes.Clear();
+            foreach (string quote in ChannelSession.Settings.Quotes.OrderBy(q => q))
+            {
+                this.quotes.Add(quote);
+            }
         }
     }
 }
