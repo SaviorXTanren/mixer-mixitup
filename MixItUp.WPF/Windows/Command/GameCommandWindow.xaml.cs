@@ -22,13 +22,13 @@ namespace MixItUp.WPF.Windows.Command
     /// </summary>
     public partial class GameCommandWindow : LoadingWindowBase
     {
-        private GameCommand command;
+        private GameCommandBase command;
 
         private ObservableCollection<GamesProbabilityControl> probabilityControls = new ObservableCollection<GamesProbabilityControl>();
 
         public GameCommandWindow() : this(null) { }
 
-        public GameCommandWindow(GameCommand command)
+        public GameCommandWindow(GameCommandBase command)
         {
             this.command = command;
 
@@ -37,7 +37,7 @@ namespace MixItUp.WPF.Windows.Command
             this.Initialize(this.StatusBar);
         }
 
-        public GameCommand GetExistingCommand() { return this.command; }
+        public GameCommandBase GetExistingCommand() { return this.command; }
 
         protected override async Task OnLoaded()
         {
@@ -50,6 +50,11 @@ namespace MixItUp.WPF.Windows.Command
 
             this.ResultsProbabilityListView.ItemsSource = this.probabilityControls;
 
+            await this.GameStartedCommandControl.Initialize(this, null);
+            await this.GameEndedCommandControl.Initialize(this, null);
+            await this.UserJoinedCommandControl.Initialize(this, null);
+            await this.NotEnoughUsersCommandControl.Initialize(this, null);
+
             if (this.command != null)
             {
                 this.GameNameTextBox.Text = this.command.Name;
@@ -59,16 +64,21 @@ namespace MixItUp.WPF.Windows.Command
                 this.RankSelector.SetCurrencyRequirement(this.command.RankRequirement);
                 this.CurrencySelector.SetCurrencyRequirement(this.command.CurrencyRequirement);
 
-                this.GameLengthTextBox.Text = this.command.GameLength.ToString();
-                this.GameMinimumParticipantsTextBox.Text = this.command.MinimumParticipants.ToString();
-                this.GameResultTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.ResultType);
+                if (this.command is MultiPlayerGameCommand)
+                {
+                    MultiPlayerGameCommand multiplayerCommand = (MultiPlayerGameCommand)this.command;
 
-                await this.GameStartedCommandControl.Initialize(this, "Game Started Command", this.command.GameStartedCommand);
-                await this.GameEndedCommandControl.Initialize(this, "Game Ended Command", this.command.GameEndedCommand);
-                await this.UserJoinedCommandControl.Initialize(this, "User Joined Command", this.command.UserJoinedCommand);
-                await this.NotEnoughUsersCommandControl.Initialize(this, "Not Enough Users Command", this.command.NotEnoughUsersCommand);
+                    this.GameLengthTextBox.Text = multiplayerCommand.GameLength.ToString();
+                    this.GameMinimumParticipantsTextBox.Text = multiplayerCommand.MinimumParticipants.ToString();
+                    this.GameResultTypeComboBox.SelectedItem = EnumHelper.GetEnumName(multiplayerCommand.ResultType);
 
-                this.IsMultiplayerToggleSwitch.IsChecked = (this.command.GameLength > 0);
+                    await this.GameStartedCommandControl.Initialize(this, multiplayerCommand.GameStartedCommand);
+                    await this.GameEndedCommandControl.Initialize(this, multiplayerCommand.GameEndedCommand);
+                    await this.UserJoinedCommandControl.Initialize(this, multiplayerCommand.UserJoinedCommand);
+                    await this.NotEnoughUsersCommandControl.Initialize(this, multiplayerCommand.NotEnoughUsersCommand);
+
+                    this.IsMultiplayerToggleSwitch.IsChecked = true;
+                }
 
                 foreach (GameResultProbability probability in this.command.ResultProbabilities)
                 {
@@ -78,11 +88,6 @@ namespace MixItUp.WPF.Windows.Command
             else
             {
                 this.GameCooldownTextBox.Text = "0";
-
-                await this.GameStartedCommandControl.Initialize(this, "Game Started Command", null);
-                await this.GameEndedCommandControl.Initialize(this, "Game Ended Command", null);
-                await this.UserJoinedCommandControl.Initialize(this, "User Joined Command", null);
-                await this.NotEnoughUsersCommandControl.Initialize(this, "Not Enough Users Command", null);
             }
         }
 
@@ -240,45 +245,31 @@ namespace MixItUp.WPF.Windows.Command
                 }
 
                 UserRole permissionsRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.GameLowestRoleAllowedComboBox.SelectedItem);
-                if (this.command == null)
-                {
-                    if (this.IsMultiplayerToggleSwitch.IsChecked.GetValueOrDefault())
-                    {
-                        this.command = new GameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, this.CurrencySelector.GetCurrencyRequirement(),
-                            this.RankSelector.GetCurrencyRequirement(), probabilityResults, gameLength, minParticipants, EnumHelper.GetEnumValueFromString<GameResultType>((string)this.GameResultTypeComboBox.SelectedItem));
-                    }
-                    else
-                    {
-                        this.command = new GameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, this.CurrencySelector.GetCurrencyRequirement(),
-                            this.RankSelector.GetCurrencyRequirement(), probabilityResults);
-                    }
 
-                    ChannelSession.Settings.GameCommands.Add(this.command);
-                }
-                else
+                if (this.command != null)
                 {
-                    this.command.Name = this.GameNameTextBox.Text;
-                    this.command.Commands = this.GetCommandStrings().ToList();
-                    this.command.Permissions = permissionsRole;
-                    this.command.Cooldown = cooldown;
-                    this.command.CurrencyRequirement = this.CurrencySelector.GetCurrencyRequirement();
-                    this.command.RankRequirement = this.RankSelector.GetCurrencyRequirement();
-                    this.command.ResultProbabilities = probabilityResults;
-                    if (this.IsMultiplayerToggleSwitch.IsChecked.GetValueOrDefault())
-                    {
-                        this.command.GameLength = gameLength;
-                        this.command.MinimumParticipants = minParticipants;
-                        this.command.ResultType = EnumHelper.GetEnumValueFromString<GameResultType>((string)this.GameResultTypeComboBox.SelectedItem);
-                    }
+                    ChannelSession.Settings.GameCommands.Remove(this.command);
                 }
 
                 if (this.IsMultiplayerToggleSwitch.IsChecked.GetValueOrDefault())
                 {
-                    this.command.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
-                    this.command.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
-                    this.command.UserJoinedCommand = this.UserJoinedCommandControl.GetCommand();
-                    this.command.NotEnoughUsersCommand = this.NotEnoughUsersCommandControl.GetCommand();
+                    this.command = new MultiPlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, this.CurrencySelector.GetCurrencyRequirement(),
+                        this.RankSelector.GetCurrencyRequirement(), probabilityResults, gameLength, minParticipants,
+                        EnumHelper.GetEnumValueFromString<GameResultType>((string)this.GameResultTypeComboBox.SelectedItem));
+
+                    MultiPlayerGameCommand multiplayerCommand = (MultiPlayerGameCommand)this.command;
+                    multiplayerCommand.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
+                    multiplayerCommand.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
+                    multiplayerCommand.UserJoinedCommand = this.UserJoinedCommandControl.GetCommand();
+                    multiplayerCommand.NotEnoughUsersCommand = this.NotEnoughUsersCommandControl.GetCommand();
                 }
+                else
+                {
+                    this.command = new SinglePlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, this.CurrencySelector.GetCurrencyRequirement(),
+                        this.RankSelector.GetCurrencyRequirement(), probabilityResults);
+                }
+
+                ChannelSession.Settings.GameCommands.Add(this.command);
 
                 await ChannelSession.SaveSettings();
 

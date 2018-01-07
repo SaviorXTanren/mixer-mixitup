@@ -4,6 +4,7 @@ using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -37,7 +38,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.TimerCommandsListView.SelectedIndex = -1;
 
             this.timerCommands.Clear();
-            foreach (TimerCommand command in ChannelSession.Settings.TimerCommands)
+            foreach (TimerCommand command in ChannelSession.Settings.TimerCommands.OrderBy(c => c.Name))
             {
                 this.timerCommands.Add(command);
             }

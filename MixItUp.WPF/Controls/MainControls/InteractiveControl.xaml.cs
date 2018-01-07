@@ -173,12 +173,12 @@ namespace MixItUp.WPF.Controls.MainControls
         private void RefreshSelectedScene()
         {
             this.currentSceneControlItems.Clear();
-            foreach (InteractiveButtonControlModel button in this.selectedScene.buttons)
+            foreach (InteractiveButtonControlModel button in this.selectedScene.buttons.OrderBy(b => b.controlID))
             {
                 this.currentSceneControlItems.Add(this.CreateControlItem(this.selectedScene.sceneID, button));
             }
 
-            foreach (InteractiveJoystickControlModel joystick in this.selectedScene.joysticks)
+            foreach (InteractiveJoystickControlModel joystick in this.selectedScene.joysticks.OrderBy(j => j.controlID))
             {
                 this.currentSceneControlItems.Add(this.CreateControlItem(this.selectedScene.sceneID, joystick));
             }

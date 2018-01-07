@@ -3,6 +3,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -48,6 +49,13 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
+            if (!await this.CheckLastRun(user))
+            {
+                return;
+            }
+
+            await this.CheckPermissions(user);
+
             await this.CheckRankRequirement(user);
 
             await this.CheckCurrencyRequirement(user);
@@ -55,6 +63,19 @@ namespace MixItUp.Base.Commands
             this.lastRun = DateTimeOffset.Now;
 
             await base.PerformInternal(user, arguments);
+        }
+
+        public async Task<bool> CheckPermissions(UserViewModel user)
+        {
+            if (!user.Roles.Any(r => r >= this.Permissions))
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "You do not permission to run this command");
+                }
+                return false;
+            }
+            return true;
         }
 
         public async Task<bool> CheckRankRequirement(UserViewModel user)

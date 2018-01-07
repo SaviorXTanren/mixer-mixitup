@@ -62,7 +62,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CustomCommandsListView.SelectedIndex = -1;
 
             this.customChatCommands.Clear();
-            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands)
+            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.OrderBy(c => c.Name))
             {
                 this.customChatCommands.Add(command);
             }

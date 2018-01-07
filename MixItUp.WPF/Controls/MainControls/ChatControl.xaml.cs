@@ -352,14 +352,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
                     if (command != null)
                     {
-                        if (message.User.Roles.Any(r => r >= command.Permissions))
-                        {
-                            await command.Perform(message.User, messageCommand.CommandArguments);
-                        }
-                        else
-                        {
-                            await ChannelSession.Chat.Whisper(message.User.UserName, "You do not permission to run this command");
-                        }
+                        await command.Perform(message.User, messageCommand.CommandArguments);
                     }
                 }
             }

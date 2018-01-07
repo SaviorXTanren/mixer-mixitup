@@ -55,7 +55,7 @@ namespace MixItUp.WPF.Controls.Games
 
         protected override async Task OnLoaded()
         {
-            await this.ProbabilityCommandControl.Initialize(this.window, "Command", (this.resultProbability != null) ? this.resultProbability.ResultCommand : null);
+            await this.ProbabilityCommandControl.Initialize(this.window, (this.resultProbability != null) ? this.resultProbability.ResultCommand : null);
         }
 
         private async Task<List<ActionBase>> GetActions(IEnumerable<ActionContainerControl> containerControls)

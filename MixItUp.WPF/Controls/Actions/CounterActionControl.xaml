@@ -23,7 +23,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name (No $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Grid.Column="2" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

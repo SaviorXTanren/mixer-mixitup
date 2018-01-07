@@ -91,9 +91,22 @@
 
                 </Grid>
 
-                <TextBlock Grid.Row="6" HorizontalAlignment="Center">
-                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
-                </TextBlock>
+                <Grid Grid.Row="6" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0">
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Grid.Column="2">
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Games" RequestNavigate="Hyperlink_RequestNavigate">Games Reference</Hyperlink>
+                    </TextBlock>
+
+                </Grid>
 
                 <Grid x:Name="MultiplayerGrid" Grid.Row="8" HorizontalAlignment="Center" Visibility="Collapsed">
                     <Grid.RowDefinitions>

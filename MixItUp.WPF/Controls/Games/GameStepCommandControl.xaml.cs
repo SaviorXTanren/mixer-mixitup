@@ -13,15 +13,13 @@ namespace MixItUp.WPF.Controls.Games
     public partial class GameStepCommandControl : MainCommandControlBase
     {
         private GameCommandWindow window;
-        private string name;
         private CustomCommand command;
 
         public GameStepCommandControl() { InitializeComponent(); }
 
-        public async Task Initialize(GameCommandWindow window, string name, CustomCommand command)
+        public async Task Initialize(GameCommandWindow window, CustomCommand command)
         {
             this.window = window;
-            this.name = name;
             this.command = command;
 
             await base.Initialize(window);
@@ -33,7 +31,7 @@ namespace MixItUp.WPF.Controls.Games
 
         private void NewCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(this.name)));
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand("Custom Game Command")));
             window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
             window.Show();
         }

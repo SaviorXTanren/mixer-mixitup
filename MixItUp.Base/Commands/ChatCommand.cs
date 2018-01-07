@@ -35,16 +35,6 @@ namespace MixItUp.Base.Commands
             this.IsEnabled = command.Enabled;
         }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
-        {
-            if (!await this.CheckLastRun(user))
-            {
-                return;
-            }
-
-            await base.PerformInternal(user, arguments);
-        }
-
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }
     }
 }

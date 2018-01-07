@@ -17,29 +17,50 @@
 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-        </Grid.RowDefinitions>
-
-        <DataGrid x:Name="GameCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                <DataGridTemplateColumn Header="Actions" Width="240">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" PlayClicked="CommandButtons_PlayClicked" StopClicked="CommandButtons_StopClicked" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtons_EnableDisableToggled" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Game</Button>
+        <Grid x:Name="NoCurrenciesGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+            <TextBlock Style="{StaticResource HeaderTextBlock}">At least 1 currency must be created before Games can be used</TextBlock>
         </Grid>
 
+        <Grid x:Name="GamesGrid" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+            </Grid.RowDefinitions>
+
+            <DataGrid x:Name="GameCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTemplateColumn Header="Actions" Width="240">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" PlayClicked="CommandButtons_PlayClicked" StopClicked="CommandButtons_StopClicked" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtons_EnableDisableToggled" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Pre-Made Games:</TextBlock>
+                <ComboBox Grid.Column="2" x:Name="PreMadeGamesComboBox" Width="180" VerticalAlignment="Center" />
+
+                <Button x:Name="AddPreMadeGameButton" Grid.Column="4" Click="AddPreMadeGameButton_Click">Add Pre-Made Game</Button>
+
+                <Button x:Name="AddCommandButton" Grid.Column="6" Click="AddCommandButton_Click">New Custom Game</Button>
+            </Grid>
+
+        </Grid>
     </Grid>
 </local:MainCommandControlBase>
