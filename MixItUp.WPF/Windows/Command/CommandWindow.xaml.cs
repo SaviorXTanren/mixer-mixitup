@@ -115,29 +115,9 @@ namespace MixItUp.WPF.Windows.Command
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!await this.commandDetailsControl.Validate())
-            {
-                return;
-            }
-
-            if (this.actionControls.Count == 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("At least one action must be created");
-                return;
-            }
-
-            List<ActionBase> actions = await this.GetActions();
-            if (actions.Count == 0)
-            {
-                return;
-            }
-
-            this.newCommand = await this.RunAsyncOperation(async () => { return await this.commandDetailsControl.GetNewCommand(); });
+            this.newCommand = await this.GetNewCommand();
             if (this.newCommand != null)
             {
-                this.newCommand.Actions.Clear();
-                this.newCommand.Actions = actions;
-
                 if (this.CommandSaveSuccessfully != null)
                 {
                     this.CommandSaveSuccessfully(this, this.newCommand);
@@ -163,6 +143,75 @@ namespace MixItUp.WPF.Windows.Command
                 actions.Add(action);
             }
             return actions;
+        }
+
+        private async void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandBase command = await this.GetNewCommand();
+            if (command != null)
+            {
+                await this.RunAsyncOperation(async () =>
+                {
+                    string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(command.Name + ".mixitupc");
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        await SerializerHelper.SerializeToFile(fileName, command);
+                    }
+                });
+            }
+        }
+
+        private async void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog("Mix It Up Command (*.mixitupc)|*.mixitupc|All files (*.*)|*.*");
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    try
+                    {
+                        CustomCommand command = await SerializerHelper.DeserializeFromFile<CustomCommand>(fileName);
+                        if (command != null && command.Actions != null)
+                        {
+                            foreach (ActionBase action in command.Actions)
+                            {
+                                ActionContainerControl actionControl = new ActionContainerControl(this, action);
+                                actionControl.Minimize();
+                                this.actionControls.Add(actionControl);
+                            }
+                        }
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+                }
+            });
+        }
+
+        private async Task<CommandBase> GetNewCommand()
+        {
+            if (!await this.commandDetailsControl.Validate())
+            {
+                return null;
+            }
+
+            if (this.actionControls.Count == 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("At least one action must be created");
+                return null;
+            }
+
+            List<ActionBase> actions = await this.GetActions();
+            if (actions.Count == 0)
+            {
+                return null;
+            }
+
+            this.newCommand = await this.RunAsyncOperation(async () => { return await this.commandDetailsControl.GetNewCommand(); });
+            if (this.newCommand != null)
+            {
+                this.newCommand.Actions.Clear();
+                this.newCommand.Actions = actions;
+            }
+            return this.newCommand;
         }
     }
 }
