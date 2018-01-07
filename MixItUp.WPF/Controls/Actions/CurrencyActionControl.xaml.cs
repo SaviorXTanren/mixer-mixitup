@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base;
+using MixItUp.Base.Actions;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +31,14 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
+            this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
             if (this.action != null)
             {
+                if (ChannelSession.Settings.Currencies.ContainsKey(this.action.CurrencyName))
+                {
+                    this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.action.CurrencyName];
+                    this.CurrencyAmountTextBox.IsEnabled = true;
+                }
                 this.CurrencyAmountTextBox.Text = this.action.Amount.ToString();
                 this.CurrencyMessageTextBox.Text = this.action.ChatText;
                 this.CurrencyWhisperToggleButton.IsChecked = this.action.IsWhisper;
@@ -41,11 +49,20 @@ namespace MixItUp.WPF.Controls.Actions
         public override ActionBase GetAction()
         {
             int currencyAmount;
-            if (!string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount))
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount))
             {
-                return new CurrencyAction(currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
+                UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
+                return new CurrencyAction(currency, currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
             }
             return null;
+        }
+
+        private void CurrencyTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0)
+            {
+                this.CurrencyAmountTextBox.IsEnabled = true;
+            }
         }
     }
 }

@@ -27,9 +27,10 @@ namespace MixItUp.Base.Actions
 
         public CurrencyAction() : base(ActionTypeEnum.Currency) { }
 
-        public CurrencyAction(int amount, string chatText, bool isWhisper)
+        public CurrencyAction(UserCurrencyViewModel currency, int amount, string chatText, bool isWhisper)
             : this()
         {
+            this.CurrencyName = currency.Name;
             this.Amount = amount;
             this.ChatText = chatText;
             this.IsWhisper = isWhisper;
