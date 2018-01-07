@@ -33,6 +33,7 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.XSplitTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<XSplitTypeEnum>();
+            this.XSplitSourceVisibleCheckBox.IsChecked = true;
             if (this.action != null)
             {
                 if (!string.IsNullOrEmpty(this.action.SceneName))

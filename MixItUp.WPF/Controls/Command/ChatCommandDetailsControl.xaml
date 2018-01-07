@@ -46,7 +46,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Commands (letters &amp; numbers only, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Commands in Chat (letters &amp; numbers only, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <CurrencyControls:CurrencySelectorControl x:Name="CurrencySelector" Grid.Column="2" />
         </Grid>

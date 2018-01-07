@@ -168,6 +168,7 @@
                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
 
                         <TextBlock Margin="20,0,0,0">- Chat Commands</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Timers</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Banned Words</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Viewer Data (Currency, Rank, &amp; Time)</TextBlock>
