@@ -158,6 +158,8 @@ namespace MixItUp.Base.Commands
 
     public class UptimeChatCommand : PreMadeChatCommand
     {
+        private StreamSessionsAnalyticModel latestSession;
+
         public UptimeChatCommand()
             : base("Uptime", "uptime", UserRole.User, 5)
         {
@@ -165,13 +167,10 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.Connection.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(1)));
-                    sessions = sessions.OrderBy(s => s.dateTime);
-                    if (sessions.Count() > 0 && sessions.Last().duration == null)
+                    if (this.latestSession == null)
                     {
-                        StreamSessionsAnalyticModel session = sessions.Last();
-                        TimeSpan duration = DateTimeOffset.Now.Subtract(session.dateTime);
-                        await ChannelSession.Chat.SendMessage("Start Time: " + session.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                        TimeSpan duration = DateTimeOffset.Now.Subtract(this.latestSession.dateTime);
+                        await ChannelSession.Chat.SendMessage("Start Time: " + this.latestSession.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
                     }
                     else
                     {
@@ -179,6 +178,27 @@ namespace MixItUp.Base.Commands
                     }
                 }
             }));
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await this.GetLatestStreamSession();
+                    await Task.Delay(60000);
+                }
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        private async Task GetLatestStreamSession()
+        {
+            IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.Connection.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(1)));
+            sessions = sessions.OrderBy(s => s.dateTime);
+            if (sessions.Count() > 0 && sessions.Last().duration == null)
+            {
+                this.latestSession = sessions.Last();
+            }
         }
     }
 
