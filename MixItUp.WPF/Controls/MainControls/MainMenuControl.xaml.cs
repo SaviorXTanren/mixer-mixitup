@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Desktop;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Wizard;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -153,6 +154,16 @@ namespace MixItUp.WPF.Controls.MainControls
                     ((MainWindow)this.Window).RestoredSettingsFilePath = filePath;
                     this.Window.Close();
                 }
+            }
+        }
+
+        private async void ReRunWizardSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will re-run the New User Wizard and allow you to re-import your data, which could duplicate and overwrite your Commands & User data. Are you sure you wish to do this?"))
+            {
+                NewUserWizardWindow window = new NewUserWizardWindow();
+                window.Show();
+                this.Window.Close();
             }
         }
 

@@ -382,7 +382,12 @@ namespace MixItUp.WPF.Windows.Wizard
                         OnSubscribeBonus = rankOnSubBonus, SubscriberBonus = rankSubBonus
                     };
                     rankCurrency.Enabled = true;
-                    ChannelSession.Settings.Currencies.Add(rankName, rankCurrency);
+                    ChannelSession.Settings.Currencies[rankName] = rankCurrency;
+
+                    foreach (ScorpBotRank rank in this.scorpBotData.Ranks)
+                    {
+                        rankCurrency.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
+                    }
                 }
 
                 string currencyName = this.scorpBotData.GetSettingsValue("currency2", "name", "Currency");
@@ -400,7 +405,7 @@ namespace MixItUp.WPF.Windows.Wizard
                         OnSubscribeBonus = currencyOnSubBonus, SubscriberBonus = currencySubBonus
                     };
                     currency.Enabled = true;
-                    ChannelSession.Settings.Currencies.Add(currency.Name, currency);
+                    ChannelSession.Settings.Currencies[currency.Name] = currency;
                 }
 
                 foreach (ScorpBotViewer viewer in this.scorpBotData.Viewers)
@@ -431,14 +436,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 foreach (string bannedWord in this.scorpBotData.BannedWords)
                 {
                     ChannelSession.Settings.BannedWords.Add(bannedWord);
-                }
-
-                if (rankCurrency != null)
-                {
-                    foreach (ScorpBotRank rank in this.scorpBotData.Ranks)
-                    {
-                        rankCurrency.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
-                    }
                 }
             }
 
