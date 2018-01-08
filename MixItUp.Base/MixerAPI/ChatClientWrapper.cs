@@ -6,6 +6,7 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
@@ -52,13 +53,28 @@ namespace MixItUp.Base.MixerAPI
 
         public ChatClient GetBotClient(bool sendAsStreamer = false) { return (this.BotClient != null && !sendAsStreamer) ? this.BotClient : this.StreamerClient; }
 
-        public async Task<bool> ConnectAndAuthenticate() { return await this.RunAsync(this.StreamerClient.Connect()) && await this.RunAsync(this.StreamerClient.Authenticate()); }
+        public async Task<bool> ConnectAndAuthenticate()
+        {
+            Task<bool> t = Task.Run(async() => { return await this.RunAsync(this.StreamerClient.Connect()) && await this.RunAsync(this.StreamerClient.Authenticate()); });
+            await Task.Delay(2000);
+            if (t.IsCompleted)
+            {
+                return t.Result;
+            }
+            return false;
+        }
         public async Task<bool> ConnectAndAuthenticateBot(ChatClient botClient)
         {
             this.BotClient = botClient;
             if (this.BotClient != null)
             {
-                return await this.RunAsync(this.BotClient.Connect()) && await this.RunAsync(this.BotClient.Authenticate());
+                Task<bool> t = Task.Run(async () => { return await this.RunAsync(this.BotClient.Connect()) && await this.RunAsync(this.BotClient.Authenticate()); });
+                await Task.Delay(2000);
+                if (t.IsCompleted)
+                {
+                    return t.Result;
+                }
+                return false;
             }
             return false;
         }
