@@ -84,7 +84,7 @@ namespace MixItUp.Desktop.Services
         {
             if (this.OverlayServer == null)
             {
-                this.OverlayServer = new OverlayWebServer("http://localhost:8111/ws/");
+                this.OverlayServer = new OverlayWebServer();
                 if (await this.OverlayServer.Initialize())
                 {
                     return true;
