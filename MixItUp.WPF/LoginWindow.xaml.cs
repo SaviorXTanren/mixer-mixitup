@@ -55,6 +55,11 @@ namespace MixItUp.WPF
                 if (settings.Count() == 2)
                 {
                     this.ExistingStreamerComboBox.SelectedIndex = 0;
+                    if (settings.FirstOrDefault().DarkTheme)
+                    {
+                        App app = (App)Application.Current;
+                        app.SwitchTheme(isDark: true);
+                    }
                 }
             }
 

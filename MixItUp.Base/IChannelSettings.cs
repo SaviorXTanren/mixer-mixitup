@@ -12,6 +12,8 @@ namespace MixItUp.Base
     {
         int Version { get; set; }
 
+        bool DarkTheme { get; set; }
+
         bool DiagnosticLogging { get; set; }
 
         bool IsStreamer { get; set; }

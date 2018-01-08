@@ -41,6 +41,9 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class MainMenuControl : MainControlBase
     {
+        private const string SwitchToLightThemeText = "Switch to Light Theme";
+        private const string SwitchToDarkThemeText = "Switch to Dark Theme";
+
         private ObservableCollection<MainMenuItem> menuItems = new ObservableCollection<MainMenuItem>();
 
         public MainMenuControl()
@@ -74,6 +77,13 @@ namespace MixItUp.WPF.Controls.MainControls
             else
             {
                 this.EnableDiagnosticLogsButton.Visibility = Visibility.Visible;
+            }
+
+            if (ChannelSession.Settings.DarkTheme)
+            {
+                this.SwitchThemeButton.Content = MainMenuControl.SwitchToLightThemeText;
+                App app = (App)Application.Current;
+                app.SwitchTheme(ChannelSession.Settings.DarkTheme);
             }
 
             return base.InitializeInternal();
@@ -144,6 +154,23 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
+        private void SwitchThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.DarkTheme = !ChannelSession.Settings.DarkTheme;
+
+            App app = (App)Application.Current;
+            app.SwitchTheme(ChannelSession.Settings.DarkTheme);
+
+            if (ChannelSession.Settings.DarkTheme)
+            {
+                this.SwitchThemeButton.Content = MainMenuControl.SwitchToLightThemeText;
+            }
+            else
+            {
+                this.SwitchThemeButton.Content = MainMenuControl.SwitchToDarkThemeText;
+            }
+        }
+
         private async void RestoreSettingsButton_Click(object sender, RoutedEventArgs e)
         {
             if (await MessageBoxHelper.ShowConfirmationDialog("This will overwrite your current settings and close Mix It Up. Are you sure you wish to do this?"))
@@ -171,8 +198,6 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             Process.Start(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
         }
-
-        private void SubmitABugButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/issues/new"); }
 
         private void DocumentationButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); }
 

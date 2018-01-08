@@ -13,12 +13,14 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Indigo.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListView.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <SolidColorBrush x:Key="PrimaryColor">#3F51B5</SolidColorBrush>
             <SolidColorBrush x:Key="WhiteColor">White</SolidColorBrush>
-            
-            <Style x:Key="StandardDataGrid" TargetType="DataGrid">
+
+            <Style x:Key="StandardDataGrid" TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
                 <Setter Property="SelectionMode" Value="Single" />
                 <Setter Property="CanUserSortColumns" Value="True" />
                 <Setter Property="CanUserAddRows" Value="False" />
@@ -26,7 +28,7 @@
                 <Setter Property="AutoGenerateColumns" Value="False" />
             </Style>
 
-            <Style x:Key="BorderedListViewItem" TargetType="ListViewItem">
+            <Style x:Key="BorderedListViewItem" TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignGridViewItem}">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListViewItem">
@@ -38,7 +40,7 @@
                 </Setter>
             </Style>
 
-            <Style x:Key="HeaderTextBlock" TargetType="TextBlock">
+            <Style x:Key="HeaderTextBlock" TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignBody1TextBlock}">
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
 

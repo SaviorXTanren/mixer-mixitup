@@ -45,6 +45,7 @@
 
                         <MaterialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
                             <StackPanel>
+                                <Button x:Name="SwitchThemeButton" Content="Switch to Dark Theme" Click="SwitchThemeButton_Click" />
                                 <Button x:Name="BackupSettingsButton" Content="Backup Settings" Click="BackupSettingsButton_Click" />
                                 <Button x:Name="RestoreSettingsButton" Content="Restore Settings" Click="RestoreSettingsButton_Click" />
                                 <Button x:Name="ReRunWizardSettingsButton" Content="Re-Run New User Wizard" Click="ReRunWizardSettingsButton_Click" />
@@ -52,7 +53,6 @@
                                 <Button x:Name="InstallationDirectoryButton" Content="Installation Folder" Click="InstallationDirectoryButton_Click" />
                                 <Button x:Name="DocumentationButton" Content="Documentation" Click="DocumentationButton_Click" />
                                 <Separator />
-                                <Button x:Name="SubmitABugButton" Content="Submit a Bug" Click="SubmitABugButton_Click" />
                                 <Button x:Name="EnableDiagnosticLogsButton" Content="Enable Diagnostics" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
                                 <Button x:Name="DisableDiagnosticLogsButton" Content="Disable Diagnostics" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
                             </StackPanel>
