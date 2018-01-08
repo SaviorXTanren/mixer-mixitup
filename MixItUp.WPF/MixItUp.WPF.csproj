@@ -313,6 +313,22 @@
     <Compile Include="Controls\Currency\RankSelectorControl.xaml.cs">
       <DependentUpon>RankSelectorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
+      <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\OBSStudioServiceControl.xaml.cs">
+      <DependentUpon>OBSStudioServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\OverlayServiceControl.xaml.cs">
+      <DependentUpon>OverlayServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\ServicesControlBase.cs" />
+    <Compile Include="Controls\Services\ServicesGroupBoxControl.xaml.cs">
+      <DependentUpon>ServicesGroupBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\XSplitServiceControl.xaml.cs">
+      <DependentUpon>XSplitServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SliderWithHeaderControl.xaml.cs">
       <DependentUpon>SliderWithHeaderControl.xaml</DependentUpon>
     </Compile>
@@ -546,6 +562,26 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Currency\RankSelectorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\MixerBotAccountServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\OBSStudioServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\OverlayServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\ServicesGroupBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\XSplitServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

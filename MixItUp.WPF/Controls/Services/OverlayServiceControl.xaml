@@ -1,0 +1,25 @@
+﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.OverlayServiceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" Width="200">Add a webpage in your streaming software with the following URL:         <Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">http://localhost:8111/overlay/</Hyperlink></TextBlock>
+
+        <Button x:Name="EnableOverlayButton" Grid.Column="2" Click="EnableOverlayButton_Click" Width="140">Enable Overlay</Button>
+        <Button x:Name="DisableOverlayButton" Grid.Column="2" Click="DisableOverlayButton_Click" Width="140" Visibility="Collapsed">Disable Overlay</Button>
+
+        <Button x:Name="TestOverlayButton" Grid.Column="4" Click="TestOverlayButton_Click" Width="140" IsEnabled="False">Test Connection</Button>
+    </Grid>
+</local:ServicesControlBase>

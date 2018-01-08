@@ -1,0 +1,41 @@
+﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.MixerBotAccountServiceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid x:Name="ExistingBotGrid" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <UsersControls:UserProfileAvatarControl Grid.Column="0" x:Name="BotProfileAvatar" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2" x:Name="BotLoggedInNameTextBlock" VerticalAlignment="Center" />
+
+            <Button x:Name="LogOutBotButton" Grid.Column="4" Click="LogOutBotButton_Click" Width="90">Log Out</Button>
+        </Grid>
+
+        <Grid x:Name="NewBotLoginGrid" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center">Short Code:</TextBlock>
+            <TextBox Grid.Column="2"  VerticalAlignment="Center" x:Name="BotShortCodeTextBox" IsReadOnly="True" Width="60" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <Button x:Name="LogInBotButton" Grid.Column="4" Click="LogInBotButton_Click" Width="90">Log In</Button>
+        </Grid>
+    </Grid>
+</local:ServicesControlBase>
