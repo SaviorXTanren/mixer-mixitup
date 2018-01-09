@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Controls.Currency
 
         public UserCurrencyRequirementViewModel GetCurrencyRequirement()
         {
-            if (this.GetRankType() != null && this.GetRankMinimum() != null)
+            if (this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault() && this.GetRankType() != null && this.GetRankMinimum() != null)
             {
                 return new UserCurrencyRequirementViewModel(this.GetRankType(), this.GetRankMinimum(), this.GetRankMustEqual());
             }
@@ -40,6 +40,8 @@ namespace MixItUp.WPF.Controls.Currency
         {
             if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyName))
             {
+                this.EnableDisableToggleSwitch.IsChecked = true;
+
                 this.RankTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
                 this.RankTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyName];
 
@@ -81,6 +83,11 @@ namespace MixItUp.WPF.Controls.Currency
         protected override async Task OnVisibilityChanged()
         {
             await this.OnLoaded();
+        }
+
+        private void EnableDisableToggleSwitch_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.RankDataGrid.IsEnabled = this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
         }
 
         private void RankTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

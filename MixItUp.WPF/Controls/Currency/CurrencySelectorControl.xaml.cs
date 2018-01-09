@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Controls.Currency
 
         public UserCurrencyRequirementViewModel GetCurrencyRequirement()
         {
-            if (this.GetCurrencyType() != null && this.GetCurrencyAmount() >= 0)
+            if (this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault() && this.GetCurrencyType() != null && this.GetCurrencyAmount() >= 0)
             {
                 return new UserCurrencyRequirementViewModel(this.GetCurrencyType(), this.GetCurrencyAmount(), this.GetCurrencyMaximumAmount());
             }
@@ -53,6 +53,8 @@ namespace MixItUp.WPF.Controls.Currency
         {
             if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyName))
             {
+                this.EnableDisableToggleSwitch.IsChecked = true;
+
                 this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
                 this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyName];
 
@@ -79,9 +81,9 @@ namespace MixItUp.WPF.Controls.Currency
 
             if (ChannelSession.Settings != null)
             {
-                IEnumerable<UserCurrencyViewModel> ranks = ChannelSession.Settings.Currencies.Values;
-                this.IsEnabled = (ranks.Count() > 0);
-                this.CurrencyTypeComboBox.ItemsSource = ranks;
+                IEnumerable<UserCurrencyViewModel> currencies = ChannelSession.Settings.Currencies.Values;
+                this.IsEnabled = (currencies.Count() > 0);
+                this.CurrencyTypeComboBox.ItemsSource = currencies;
             }
 
             this.SetCurrencyRequirement(requirement);
@@ -92,6 +94,11 @@ namespace MixItUp.WPF.Controls.Currency
         protected override async Task OnVisibilityChanged()
         {
             await this.OnLoaded();
+        }
+
+        private void EnableDisableToggleSwitch_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.CurrencyDataGrid.IsEnabled = this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
         }
 
         private void CurrencyTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
