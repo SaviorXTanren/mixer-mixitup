@@ -87,11 +87,11 @@ namespace MixItUp.WPF.Controls.Command
                 }
             }
 
-            foreach (ChatCommand command in ChannelSession.AllChatCommands)
+            foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
             {
                 if (this.GetExistingCommand() != command && this.NameTextBox.Text.Equals(command.Name))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("There already exists a chat command with the same name");
+                    await MessageBoxHelper.ShowMessageDialog("There already exists a command with the same name");
                     return false;
                 }
             }

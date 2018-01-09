@@ -16,6 +16,8 @@ namespace MixItUp.Base.Commands
 
     public class RouletteGameCommand : SinglePlayerGameCommand
     {
+        public RouletteGameCommand() { }
+
         public RouletteGameCommand(UserCurrencyViewModel currency)
         {
             this.Name = "Roulette";
@@ -31,6 +33,8 @@ namespace MixItUp.Base.Commands
 
     public class RussianRouletteGameCommand : MultiPlayerGameCommand
     {
+        public RussianRouletteGameCommand() { }
+
         public RussianRouletteGameCommand(UserCurrencyViewModel currency)
         {
             this.Name = "Russian Roulette";
@@ -54,13 +58,15 @@ namespace MixItUp.Base.Commands
 
     public class HeistGameCommand : MultiPlayerGameCommand
     {
+        public HeistGameCommand() { }
+
         public HeistGameCommand(UserCurrencyViewModel currency)
         {
             this.Name = "Heist";
             this.Commands = new List<string>() { "heist" };
             this.Permissions = UserRole.User;
             this.Cooldown = 30;
-            this.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, 10, 1000);
+            this.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, 10);
 
             this.GameLength = 30;
             this.MinimumParticipants = 2;
@@ -79,6 +85,8 @@ namespace MixItUp.Base.Commands
 
     public class CharityGameCommand : MultiPlayerGameCommand
     {
+        public CharityGameCommand() { }
+
         public CharityGameCommand(UserCurrencyViewModel currency)
         {
             this.Name = "Charity";
