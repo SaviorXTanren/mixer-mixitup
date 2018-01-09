@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="180">The OBS WebSocket must be installed from the OBS folder in the Mix It Up install folder</TextBlock>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="180">The OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder</TextBlock>
             
             <Grid Grid.Column="2">
                 <Grid.ColumnDefinitions>

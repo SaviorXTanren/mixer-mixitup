@@ -15,7 +15,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" Width="200">Add a webpage in your streaming software with the following URL:         <Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">http://localhost:8111/overlay/</Hyperlink></TextBlock>
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" Width="200">Add a webpage in your streaming software with the following URL: <Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">http://localhost:8111/overlay/</Hyperlink></TextBlock>
 
         <Button x:Name="EnableOverlayButton" Grid.Column="2" Click="EnableOverlayButton_Click" Width="140">Enable Overlay</Button>
         <Button x:Name="DisableOverlayButton" Grid.Column="2" Click="DisableOverlayButton_Click" Width="140" Visibility="Collapsed">Disable Overlay</Button>
