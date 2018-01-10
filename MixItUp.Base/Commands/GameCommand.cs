@@ -146,8 +146,8 @@ namespace MixItUp.Base.Commands
 
         private async Task StartGame(UserViewModel user)
         {
-            this.GameStarterUser = user;
             this.GameEndTime = DateTimeOffset.Now.AddMinutes(this.GameLength);
+            this.GameStarterUser = user;
 
             await this.RunCommand(this.GameStartedCommand, this.GameStarterUser);
 
@@ -172,7 +172,7 @@ namespace MixItUp.Base.Commands
             this.GameEndTime = DateTimeOffset.MinValue;
             this.lastRun = DateTimeOffset.Now;
 
-            if (this.EnteredUsers.Count > 0 && this.EnteredUsers.Count >= this.MinimumParticipants)
+            if (this.EnteredUsers.Count >= this.MinimumParticipants)
             {
                 if (this.ResultType == GameResultType.IndividualUserProbability)
                 {
@@ -280,6 +280,11 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
+            if (arguments != null)
+            {
+                arguments = new List<string>();
+            }
+
             if (!await this.CheckLastRun(user))
             {
                 return;
@@ -303,46 +308,38 @@ namespace MixItUp.Base.Commands
                 }
 
                 int amount = 0;
-                if (this.CurrencyRequirement.RequiredAmount == this.CurrencyRequirement.MaximumAmount)
+                if (this.CurrencyRequirement.IsSameAmountSpecific && arguments.Count() > 0)
                 {
-                    if (arguments != null && arguments.Count() > 0)
-                    {
-                        await this.WhisperUser(user, string.Format("USAGE: !{0}", this.Commands.First()));
-                        return;
-                    }
-                    amount = this.CurrencyRequirement.RequiredAmount;
+                    await this.WhisperUser(user, string.Format("USAGE: !{0}", this.Commands.First()));
+                    return;
                 }
-                else if (arguments != null && arguments.Count() == 1)
-                {
-                    if (!int.TryParse(arguments.First(), out amount) || amount < this.CurrencyRequirement.RequiredAmount ||
-                        (this.CurrencyRequirement.MaximumAmount > 0 && amount > this.CurrencyRequirement.MaximumAmount))
-                    {
-                        string requiredBet = "You must enter a valid bet";
-                        if (this.CurrencyRequirement.MaximumAmount > 0)
-                        {
-                            requiredBet += string.Format(" between {0} - {1} {2}", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.MaximumAmount, this.CurrencyRequirement.CurrencyName);
-                        }
-                        else
-                        {
-                            requiredBet += string.Format(" of {0} or more {1}", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.CurrencyName);
-                        }
-                        await this.WhisperUser(user, requiredBet);
-                        return;
-                    }
-                }
-                else
+                else if (arguments.Count() > 1 || !int.TryParse(arguments.First(), out amount) || amount > 0)
                 {
                     await this.WhisperUser(user, string.Format("USAGE: !{0} <BET>", this.Commands.First()));
                     return;
                 }
 
-                if (user.Data.GetCurrencyAmount(this.CurrencyRequirement.GetCurrency()) < this.CurrencyRequirement.RequiredAmount)
+                if (!this.CurrencyRequirement.DoesMeetCurrencyRequirement(amount))
+                {
+                    string requiredBet = "You must enter a valid bet";
+                    if (this.CurrencyRequirement.MaximumAmount > 0)
+                    {
+                        requiredBet += string.Format(" between {0} - {1} {2}", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.MaximumAmount, this.CurrencyRequirement.CurrencyName);
+                    }
+                    else
+                    {
+                        requiredBet += string.Format(" of {0} or more {1}", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.CurrencyName);
+                    }
+                    await this.WhisperUser(user, requiredBet);
+                    return;
+                }
+
+                if (!this.CurrencyRequirement.TrySubtractAmount(user.Data, amount))
                 {
                     await this.WhisperUser(user, string.Format("You do not have the minimum {0} {1} to participate", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.CurrencyName));
                     return;
                 }
 
-                user.Data.SubtractCurrencyAmount(this.CurrencyRequirement.GetCurrency(), amount);
                 this.EnteredUsers.Add(user, amount);
 
                 await this.UserJoined(user, arguments);

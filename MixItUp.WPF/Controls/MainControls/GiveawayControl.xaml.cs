@@ -238,23 +238,22 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     if (isUserValid)
                     {
-                        if (ChannelSession.Settings.GiveawayCurrencyRequirement != null && ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency() != null && ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency().Enabled)
-                        {
-                            UserCurrencyDataViewModel currencyData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency());
-                            if (!ChannelSession.Settings.GiveawayCurrencyRequirement.DoesUserMeetRequirement(e.User.Data))
-                            {
-                                await ChannelSession.Settings.GiveawayCurrencyRequirement.SendCurrencyNotMetWhisper(e.User);
-                                return;
-                            }
-                            currencyData.Amount -= ChannelSession.Settings.GiveawayCurrencyRequirement.RequiredAmount;
-                        }
-
                         if (ChannelSession.Settings.GiveawayRankRequirement != null && ChannelSession.Settings.GiveawayRankRequirement.GetCurrency() != null && ChannelSession.Settings.GiveawayRankRequirement.GetCurrency().Enabled)
                         {
                             UserCurrencyDataViewModel rankData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayRankRequirement.GetCurrency());
-                            if (!ChannelSession.Settings.GiveawayRankRequirement.DoesUserMeetRequirement(e.User.Data))
+                            if (!ChannelSession.Settings.GiveawayRankRequirement.DoesMeetRankRequirement(e.User.Data))
                             {
                                 await ChannelSession.Settings.GiveawayRankRequirement.SendRankNotMetWhisper(e.User);
+                                return;
+                            }
+                        }
+
+                        if (ChannelSession.Settings.GiveawayCurrencyRequirement != null && ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency() != null && ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency().Enabled)
+                        {
+                            UserCurrencyDataViewModel currencyData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency());
+                            if (!ChannelSession.Settings.GiveawayCurrencyRequirement.TrySubtractAmount(e.User.Data))
+                            {
+                                await ChannelSession.Settings.GiveawayCurrencyRequirement.SendCurrencyNotMetWhisper(e.User);
                                 return;
                             }
                         }

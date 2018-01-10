@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Newtonsoft.Json;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -36,6 +37,10 @@ namespace MixItUp.Base.ViewModel.User
             this.MustEqual = mustEqual;
         }
 
+        [JsonIgnore]
+        public bool IsSameAmountSpecific { get { return this.RequiredAmount == this.MaximumAmount; } }
+        
+        [JsonIgnore]
         public UserRankViewModel RequiredRank
         {
             get
@@ -62,7 +67,46 @@ namespace MixItUp.Base.ViewModel.User
             return null;
         }
 
-        public bool DoesUserMeetRequirement(UserDataViewModel userData)
+        public bool TrySubtractAmount(UserDataViewModel userData) { return this.TrySubtractAmount(userData, this.RequiredAmount); }
+
+        public bool TrySubtractAmount(UserDataViewModel userData, int amount)
+        {
+            if (this.DoesMeetCurrencyRequirement(amount))
+            {
+                UserCurrencyViewModel currency = this.GetCurrency();
+                if (currency == null)
+                {
+                    return false;
+                }
+
+                UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
+                if (userCurrencyData.Amount < amount)
+                {
+                    return false;
+                }
+
+                userCurrencyData.Amount -= amount;
+                return true;
+            }
+            return false;
+        }
+
+        public bool DoesMeetCurrencyRequirement(int amount)
+        {
+            if (amount < this.RequiredAmount)
+            {
+                return false;
+            }
+
+            if (this.MaximumAmount > 0 && amount > this.MaximumAmount)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool DoesMeetRankRequirement(UserDataViewModel userData)
         {
             UserCurrencyViewModel currency = this.GetCurrency();
             if (currency == null)
@@ -70,29 +114,21 @@ namespace MixItUp.Base.ViewModel.User
                 return false;
             }
 
-            UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
-            if (userCurrencyData.Amount < this.RequiredAmount)
-            {
-                return false;
-            }
-
-            if (this.MaximumAmount > 0 && userCurrencyData.Amount > this.MaximumAmount)
-            {
-                return false;
-            }
-
             UserRankViewModel rank = this.RequiredRank;
-            if (rank != null)
+            if (rank == null)
             {
-                if (userCurrencyData.Amount < rank.MinimumPoints)
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                if (this.MustEqual && userCurrencyData.GetRank() != rank)
-                {
-                    return false;
-                }
+            UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
+            if (userCurrencyData.Amount < rank.MinimumPoints)
+            {
+                return false;
+            }
+
+            if (this.MustEqual && userCurrencyData.GetRank() != rank)
+            {
+                return false;
             }
 
             return true;

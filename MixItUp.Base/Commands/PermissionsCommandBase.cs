@@ -82,7 +82,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.RankRequirement != null && this.RankRequirement.GetCurrency() != null && this.RankRequirement.GetCurrency().Enabled)
             {
-                if (!this.RankRequirement.DoesUserMeetRequirement(user.Data))
+                if (!this.RankRequirement.DoesMeetRankRequirement(user.Data))
                 {
                     await this.RankRequirement.SendRankNotMetWhisper(user);
                     return false;
@@ -95,12 +95,11 @@ namespace MixItUp.Base.Commands
         {
             if (this.CurrencyRequirement != null && this.CurrencyRequirement.GetCurrency() != null && this.CurrencyRequirement.GetCurrency().Enabled)
             {
-                if (!this.CurrencyRequirement.DoesUserMeetRequirement(user.Data))
+                if (!this.CurrencyRequirement.TrySubtractAmount(user.Data, this.CurrencyRequirement.RequiredAmount))
                 {
                     await this.CurrencyRequirement.SendCurrencyNotMetWhisper(user);
                     return false;
                 }
-                user.Data.SubtractCurrencyAmount(this.CurrencyRequirement.GetCurrency(), this.CurrencyRequirement.RequiredAmount);
             }
             return true;
         }

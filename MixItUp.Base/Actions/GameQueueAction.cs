@@ -52,47 +52,42 @@ namespace MixItUp.Base.Actions
                     return;
                 }
 
-                if (!user.IsFollower)
-                {
-                    await user.SetDetails(true);
-                }
-
-                if (ChannelSession.Settings.GameQueueMustFollow && !user.IsFollower)
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "You must be a follower of the channel to use the game queue");
-                    return;
-                }
-
-                UserCurrencyDataViewModel rankData = null;
-                if (ChannelSession.Settings.GameQueueRankRequirement != null)
-                {
-                    rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueRankRequirement.CurrencyName);
-                    if (!ChannelSession.Settings.GameQueueRankRequirement.DoesUserMeetRequirement(user.Data))
-                    {
-                        await ChannelSession.Settings.GameQueueRankRequirement.SendRankNotMetWhisper(user);
-                        return;
-                    }
-                }
-
-                UserCurrencyDataViewModel currencyData = null;
-                if (ChannelSession.Settings.GameQueueCurrencyRequirement != null)
-                {
-                    currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyRequirement.CurrencyName);
-                    if (!ChannelSession.Settings.GameQueueCurrencyRequirement.DoesUserMeetRequirement(user.Data))
-                    {
-                        await ChannelSession.Settings.GameQueueCurrencyRequirement.SendCurrencyNotMetWhisper(user);
-                        return;
-                    }
-                }
-
                 if (this.GameQueueType == GameQueueActionType.JoinQueue)
                 {
                     int position = ChannelSession.GameQueue.IndexOf(user);
                     if (position == -1)
                     {
-                        if (currencyData != null)
+                        if (!user.IsFollower)
                         {
-                            currencyData.Amount -= ChannelSession.Settings.GameQueueCurrencyRequirement.RequiredAmount;
+                            await user.SetDetails(true);
+                        }
+
+                        if (ChannelSession.Settings.GameQueueMustFollow && !user.IsFollower)
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "You must be a follower of the channel to use the game queue");
+                            return;
+                        }
+
+                        UserCurrencyDataViewModel rankData = null;
+                        if (ChannelSession.Settings.GameQueueRankRequirement != null)
+                        {
+                            rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueRankRequirement.CurrencyName);
+                            if (!ChannelSession.Settings.GameQueueRankRequirement.DoesMeetRankRequirement(user.Data))
+                            {
+                                await ChannelSession.Settings.GameQueueRankRequirement.SendRankNotMetWhisper(user);
+                                return;
+                            }
+                        }
+
+                        UserCurrencyDataViewModel currencyData = null;
+                        if (ChannelSession.Settings.GameQueueCurrencyRequirement != null)
+                        {
+                            currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyRequirement.CurrencyName);
+                            if (!ChannelSession.Settings.GameQueueCurrencyRequirement.TrySubtractAmount(user.Data))
+                            {
+                                await ChannelSession.Settings.GameQueueCurrencyRequirement.SendCurrencyNotMetWhisper(user);
+                                return;
+                            }
                         }
 
                         if (ChannelSession.Settings.GameQueueSubPriority && user.Roles.Contains(UserRole.Subscriber))
