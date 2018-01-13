@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="RankTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Rank Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="RankTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="RankTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Rank Requirement" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="140" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="RankTypeComboBox_SelectionChanged" />
 
             <ComboBox x:Name="RankMustEqualComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Must" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="50" VerticalAlignment="Center" IsEnabled="False" />
 

@@ -33,7 +33,9 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.GamesGrid.Visibility = Visibility.Visible;
 
                 this.GameCommandsListView.ItemsSource = this.gameCommands;
-                this.PreMadeGamesComboBox.ItemsSource = new List<string>() { "Charity", "Heist", "Roulette", "Russian Roulette" };
+
+                List<string> preMadeGameNames = new List<string>() { "Spin Wheel", "Heist", "Russian Roulette", "Charity", "Give" };
+                this.PreMadeGamesComboBox.ItemsSource = preMadeGameNames.OrderBy(s => s);
 
                 this.RefreshList();
             }
@@ -114,14 +116,17 @@ namespace MixItUp.WPF.Controls.MainControls
                     GameCommandBase game = null;
                     switch (gameName)
                     {
-                        case "Charity": game = new CharityGameCommand(currency); break;
+                        case "Spin Wheel": game = new SpinWheelGameCommand(currency); break;
                         case "Heist": game = new HeistGameCommand(currency); break;
-                        case "Roulette": game = new RouletteGameCommand(currency); break;
                         case "Russian Roulette": game = new RussianRouletteGameCommand(currency); break;
+                        case "Charity": game = new CharityGameCommand(currency); break;
+                        case "Give": game = new GiveGameCommand(currency); break;
                     }
 
                     ChannelSession.Settings.GameCommands.Add(game);
                     await ChannelSession.SaveSettings();
+
+                    this.PreMadeGamesComboBox.SelectedIndex = -1;
 
                     this.RefreshList();
                 });

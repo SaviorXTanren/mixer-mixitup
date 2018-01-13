@@ -1,9 +1,8 @@
-﻿using Mixer.Base.Util;
+﻿using MaterialDesignThemes.Wpf;
+using Mixer.Base.Util;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Controls.Games;
 using MixItUp.WPF.Util;
 using System;
@@ -17,6 +16,18 @@ using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Windows.Command
 {
+    public enum GameTypeEnum
+    {
+        [Name("Single Player")]
+        SinglePlayer,
+        [Name("Individual Probability")]
+        IndividualProbabilty,
+        [Name("Only One Winner")]
+        OnlyOneWinner,
+        [Name("User Charity")]
+        UserCharity,
+    }
+
     /// <summary>
     /// Interaction logic for GameCommandWindow.xaml
     /// </summary>
@@ -24,7 +35,8 @@ namespace MixItUp.WPF.Windows.Command
     {
         private GameCommandBase command;
 
-        private ObservableCollection<GamesProbabilityControl> probabilityControls = new ObservableCollection<GamesProbabilityControl>();
+        private ObservableCollection<GameOutcomeCommandControl> outcomeCommandControls = new ObservableCollection<GameOutcomeCommandControl>();
+        private ObservableCollection<GameOutcomeGroupControl> outcomeGroupControls = new ObservableCollection<GameOutcomeGroupControl>();
 
         public GameCommandWindow() : this(null) { }
 
@@ -44,45 +56,100 @@ namespace MixItUp.WPF.Windows.Command
             this.GameLowestRoleAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
             this.GameLowestRoleAllowedComboBox.SelectedIndex = 0;
 
-            this.GameResultTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<GameResultType>();
+            this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
+            this.CurrencyRequirementTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyRequirementTypeEnum>();
 
-            this.CurrencySelector.ShowMaximumAmountOption();
+            this.GameTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<GameTypeEnum>();
 
-            this.ResultsProbabilityListView.ItemsSource = this.probabilityControls;
+            this.AddOutcomeRankGroupButton.IsEnabled = (ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank).Count() > 0);
+
+            this.OutcomeCommandsItemsControl.ItemsSource = this.outcomeCommandControls;
+            this.OutcomeGroupsItemsControl.ItemsSource = this.outcomeGroupControls;
 
             await this.GameStartedCommandControl.Initialize(this, null);
             await this.GameEndedCommandControl.Initialize(this, null);
             await this.UserJoinedCommandControl.Initialize(this, null);
             await this.NotEnoughUsersCommandControl.Initialize(this, null);
 
+            await this.UserParticipatedCommandControl.Initialize(this, null);
+
+            await this.LoseLeftoverProbabilityCommandControl.Initialize(this, null);
+
             if (this.command != null)
             {
                 this.GameNameTextBox.Text = this.command.Name;
                 this.GameChatCommandTextBox.Text = this.command.CommandsString;
+
                 this.GameCooldownTextBox.Text = this.command.Cooldown.ToString();
                 this.GameLowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Permissions);
-                this.RankSelector.SetCurrencyRequirement(this.command.RankRequirement);
-                this.CurrencySelector.SetCurrencyRequirement(this.command.CurrencyRequirement);
 
-                if (this.command is MultiPlayerGameCommand)
+                if (this.command is SinglePlayerGameCommand)
                 {
-                    MultiPlayerGameCommand multiplayerCommand = (MultiPlayerGameCommand)this.command;
+                    this.GameTypeComboBox.SelectedItem = EnumHelper.GetEnumName(GameTypeEnum.SinglePlayer);
+                }
+                else if (this.command is IndividualProbabilityGameCommand)
+                {
+                    this.GameTypeComboBox.SelectedItem = EnumHelper.GetEnumName(GameTypeEnum.IndividualProbabilty);
 
-                    this.GameLengthTextBox.Text = multiplayerCommand.GameLength.ToString();
-                    this.GameMinimumParticipantsTextBox.Text = multiplayerCommand.MinimumParticipants.ToString();
-                    this.GameResultTypeComboBox.SelectedItem = EnumHelper.GetEnumName(multiplayerCommand.ResultType);
+                    IndividualProbabilityGameCommand ipCommand = (IndividualProbabilityGameCommand)this.command;
 
-                    await this.GameStartedCommandControl.Initialize(this, multiplayerCommand.GameStartedCommand);
-                    await this.GameEndedCommandControl.Initialize(this, multiplayerCommand.GameEndedCommand);
-                    await this.UserJoinedCommandControl.Initialize(this, multiplayerCommand.UserJoinedCommand);
-                    await this.NotEnoughUsersCommandControl.Initialize(this, multiplayerCommand.NotEnoughUsersCommand);
+                    this.GameLengthTextBox.Text = ipCommand.GameLength.ToString();
+                    this.GameMinimumParticipantsTextBox.Text = ipCommand.MinimumParticipants.ToString();
 
-                    this.IsMultiplayerToggleSwitch.IsChecked = true;
+                    await this.GameStartedCommandControl.Initialize(this, ipCommand.GameStartedCommand);
+                    await this.GameEndedCommandControl.Initialize(this, ipCommand.GameEndedCommand);
+                    await this.UserJoinedCommandControl.Initialize(this, ipCommand.UserJoinedCommand);
+                    await this.NotEnoughUsersCommandControl.Initialize(this, ipCommand.NotEnoughUsersCommand);
+                }
+                else if (this.command is OnlyOneWinnerGameCommand)
+                {
+                    this.GameTypeComboBox.SelectedItem = EnumHelper.GetEnumName(GameTypeEnum.OnlyOneWinner);
+
+                    OnlyOneWinnerGameCommand oowCommand = (OnlyOneWinnerGameCommand)this.command;
+
+                    this.GameLengthTextBox.Text = oowCommand.GameLength.ToString();
+                    this.GameMinimumParticipantsTextBox.Text = oowCommand.MinimumParticipants.ToString();
+
+                    await this.GameStartedCommandControl.Initialize(this, oowCommand.GameStartedCommand);
+                    await this.GameEndedCommandControl.Initialize(this, oowCommand.GameEndedCommand);
+                    await this.UserJoinedCommandControl.Initialize(this, oowCommand.UserJoinedCommand);
+                    await this.NotEnoughUsersCommandControl.Initialize(this, oowCommand.NotEnoughUsersCommand);
+                }
+                else if (this.command is UserCharityGameCommand)
+                {
+                    this.GameTypeComboBox.SelectedItem = EnumHelper.GetEnumName(GameTypeEnum.UserCharity);
+
+                    UserCharityGameCommand rucComand = (UserCharityGameCommand)this.command;
+
+                    this.GiveToRandomUserCharityToggleButton.IsChecked = rucComand.GiveToRandomUser;
+
+                    await this.UserParticipatedCommandControl.Initialize(this, rucComand.UserParticipatedCommand);
                 }
 
-                foreach (GameResultProbability probability in this.command.ResultProbabilities)
+                this.CurrencyTypeComboBox.SelectedItem = this.command.CurrencyRequirement.GetCurrency();
+                this.CurrencyRequirementTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.CurrencyRequirementType);
+                this.CurrencyMinimumCostTextBox.Text = this.command.CurrencyRequirement.RequiredAmount.ToString();
+                this.CurrencyMaximumCostTextBox.Text = this.command.CurrencyRequirement.MaximumAmount.ToString();
+
+                if (this.command is OutcomeGameCommandBase)
                 {
-                    this.probabilityControls.Add(new GamesProbabilityControl(this, probability));
+                    OutcomeGameCommandBase oCommand = (OutcomeGameCommandBase)this.command;
+
+                    await this.LoseLeftoverProbabilityCommandControl.Initialize(this, oCommand.LoseLeftoverCommand);
+
+                    this.outcomeCommandControls.Clear();
+                    foreach (GameOutcome outcome in oCommand.Outcomes)
+                    {
+                        GameOutcomeCommandControl outcomeControl = new GameOutcomeCommandControl( outcome);
+                        await outcomeControl.Initialize(this);
+                        this.outcomeCommandControls.Add(outcomeControl);
+                    }
+
+                    this.outcomeGroupControls.Clear();
+                    foreach (GameOutcomeGroup group in oCommand.Groups)
+                    {
+                        this.outcomeGroupControls.Add(new GameOutcomeGroupControl(group));
+                    }
                 }
             }
             else
@@ -91,27 +158,12 @@ namespace MixItUp.WPF.Windows.Command
             }
         }
 
-        public void DeleteProbability(GamesProbabilityControl probabilityControl)
-        {
-            this.probabilityControls.Remove(probabilityControl);
-        }
-
         private IEnumerable<string> GetCommandStrings() { return new List<string>(this.GameChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)); }
-
-        private void IsMultiplayerToggleSwitch_Checked(object sender, RoutedEventArgs e)
-        {
-            this.MultiplayerGrid.Visibility = this.IsMultiplayerToggleSwitch.IsChecked.GetValueOrDefault() ? Visibility.Visible : Visibility.Collapsed;
-        }
 
         protected void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             Process.Start(e.Uri.AbsoluteUri);
             e.Handled = true;
-        }
-
-        private void AddProbabilityButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.probabilityControls.Add(new GamesProbabilityControl(this));
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -124,17 +176,6 @@ namespace MixItUp.WPF.Windows.Command
                     return;
                 }
 
-                if (this.GameLowestRoleAllowedComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A permission level must be selected");
-                    return;
-                }
-
-                if (!await this.CurrencySelector.Validate())
-                {
-                    return;
-                }
-
                 if (string.IsNullOrEmpty(this.GameChatCommandTextBox.Text))
                 {
                     await MessageBoxHelper.ShowMessageDialog("Commands is missing");
@@ -144,13 +185,6 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.GameChatCommandTextBox.Text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c)))
                 {
                     await MessageBoxHelper.ShowMessageDialog("Commands can only contain letters and numbers");
-                    return;
-                }
-
-                int cooldown = 0;
-                if (!int.TryParse(this.GameCooldownTextBox.Text, out cooldown) || cooldown < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
                     return;
                 }
 
@@ -182,26 +216,51 @@ namespace MixItUp.WPF.Windows.Command
                     }
                 }
 
-                if (!await this.RankSelector.Validate())
+                int cooldown = 0;
+                if (!int.TryParse(this.GameCooldownTextBox.Text, out cooldown) || cooldown < 0)
                 {
+                    await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
                     return;
                 }
 
-                if (!await this.CurrencySelector.Validate())
+                if (this.GameLowestRoleAllowedComboBox.SelectedIndex < 0)
                 {
+                    await MessageBoxHelper.ShowMessageDialog("A permission level must be selected");
                     return;
                 }
 
-                if (this.CurrencySelector.GetCurrencyRequirement() == null)
+                if (this.GameTypeComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A currency must be provided");
+                    await MessageBoxHelper.ShowMessageDialog("A game type must be selected");
+                    return;
+                }
+                GameTypeEnum gameType = EnumHelper.GetEnumValueFromString<GameTypeEnum>((string)this.GameTypeComboBox.SelectedItem);
+
+                if (this.CurrencyTypeComboBox.SelectedIndex < 0 || this.CurrencyRequirementTypeComboBox.SelectedIndex < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A currency type and requirement must be selected");
+                    return;
+                }
+
+                int minimum = 0;
+                int maximum = 0;
+
+                CurrencyRequirementTypeEnum currencyRequirementType = EnumHelper.GetEnumValueFromString<CurrencyRequirementTypeEnum>((string)this.CurrencyRequirementTypeComboBox.SelectedItem);
+                if (currencyRequirementType != CurrencyRequirementTypeEnum.NoCurrencyCost && (!int.TryParse(this.CurrencyMinimumCostTextBox.Text, out minimum) || minimum < 0))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The currency minimum must be 0 or greater");
+                    return;
+                }
+
+                if (currencyRequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum && (!int.TryParse(this.CurrencyMaximumCostTextBox.Text, out maximum) || maximum <= minimum))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The currency maximum must be greater than the minimum");
                     return;
                 }
 
                 int gameLength = 0;
                 int minParticipants = 0;
-
-                if (this.IsMultiplayerToggleSwitch.IsChecked.GetValueOrDefault())
+                if (this.MultiplayerGameDetailsGrid.Visibility == Visibility.Visible)
                 {
                     if (!int.TryParse(this.GameLengthTextBox.Text, out gameLength) || gameLength < 0)
                     {
@@ -214,34 +273,41 @@ namespace MixItUp.WPF.Windows.Command
                         await MessageBoxHelper.ShowMessageDialog("Minimum participants must be 1 or greater");
                         return;
                     }
+                }
 
-                    if (this.GameResultTypeComboBox.SelectedIndex < 0)
+                List<GameOutcome> outcomes = new List<GameOutcome>();
+                List<GameOutcomeGroup> outcomeGroups = new List<GameOutcomeGroup>();
+                if (gameType == GameTypeEnum.SinglePlayer || gameType == GameTypeEnum.IndividualProbabilty)
+                {
+                    foreach (GameOutcomeCommandControl commandControl in this.outcomeCommandControls)
                     {
-                        await MessageBoxHelper.ShowMessageDialog("A result type must be selected");
+                        GameOutcome outcome = await commandControl.GetOutcome();
+                        if (outcome == null)
+                        {
+                            return;
+                        }
+                        outcomes.Add(outcome);
+                    }
+
+                    if (outcomes.Select(o => o.Name).GroupBy(n => n).Where(g => g.Count() > 1).Count() > 0)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("Each outcome must have a unique name");
                         return;
                     }
-                }
 
-                if (this.probabilityControls.Count == 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("At least one probability result must be specified");
-                    return;
-                }
-
-                List<GameResultProbability> probabilityResults = new List<GameResultProbability>();
-                foreach (GamesProbabilityControl probabilityControl in this.probabilityControls)
-                {
-                    if (!await probabilityControl.Validate())
+                    foreach (GameOutcomeGroupControl groupControl in this.outcomeGroupControls)
                     {
-                        return;
+                        GameOutcomeGroup group = await groupControl.GetOutcomeGroup();
+                        if (group == null)
+                        {
+                            return;
+                        }
+                        outcomeGroups.Add(group);
+                        for (int i = 0; i < outcomes.Count; i++)
+                        {
+                            group.Probabilities[i].OutcomeName = outcomes[i].Name;
+                        }
                     }
-                    probabilityResults.Add(probabilityControl.GetResultProbability());
-                }
-
-                if (probabilityResults.Select(p => p.Probability).Sum() != 100.0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("All probability results must add up to a total of 100%");
-                    return;
                 }
 
                 UserRole permissionsRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.GameLowestRoleAllowedComboBox.SelectedItem);
@@ -251,22 +317,38 @@ namespace MixItUp.WPF.Windows.Command
                     ChannelSession.Settings.GameCommands.Remove(this.command);
                 }
 
-                if (this.IsMultiplayerToggleSwitch.IsChecked.GetValueOrDefault())
+                UserCurrencyRequirementViewModel currencyRequirement = new UserCurrencyRequirementViewModel((UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem, minimum, maximum);
+                if (gameType == GameTypeEnum.SinglePlayer)
                 {
-                    this.command = new MultiPlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, this.CurrencySelector.GetCurrencyRequirement(),
-                        this.RankSelector.GetCurrencyRequirement(), probabilityResults, gameLength, minParticipants,
-                        EnumHelper.GetEnumValueFromString<GameResultType>((string)this.GameResultTypeComboBox.SelectedItem));
-
-                    MultiPlayerGameCommand multiplayerCommand = (MultiPlayerGameCommand)this.command;
-                    multiplayerCommand.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
-                    multiplayerCommand.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
-                    multiplayerCommand.UserJoinedCommand = this.UserJoinedCommandControl.GetCommand();
-                    multiplayerCommand.NotEnoughUsersCommand = this.NotEnoughUsersCommandControl.GetCommand();
+                    this.command = new SinglePlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, currencyRequirement, currencyRequirementType, outcomes,
+                        outcomeGroups, this.LoseLeftoverProbabilityCommandControl.GetCommand());
                 }
-                else
+                else if (gameType == GameTypeEnum.IndividualProbabilty)
                 {
-                    this.command = new SinglePlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, this.CurrencySelector.GetCurrencyRequirement(),
-                        this.RankSelector.GetCurrencyRequirement(), probabilityResults);
+                    IndividualProbabilityGameCommand ipCommand = new IndividualProbabilityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown,
+                        currencyRequirement, currencyRequirementType, outcomes, outcomeGroups, this.LoseLeftoverProbabilityCommandControl.GetCommand(), gameLength, minParticipants);
+                    ipCommand.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
+                    ipCommand.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
+                    ipCommand.UserJoinedCommand = this.UserJoinedCommandControl.GetCommand();
+                    ipCommand.NotEnoughUsersCommand = this.NotEnoughUsersCommandControl.GetCommand();
+                    this.command = ipCommand;
+                }
+                else if (gameType == GameTypeEnum.OnlyOneWinner)
+                {
+                    OnlyOneWinnerGameCommand oowCommand = new OnlyOneWinnerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, currencyRequirement,
+                        gameLength, minParticipants);
+                    oowCommand.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
+                    oowCommand.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
+                    oowCommand.UserJoinedCommand = this.UserJoinedCommandControl.GetCommand();
+                    oowCommand.NotEnoughUsersCommand = this.NotEnoughUsersCommandControl.GetCommand();
+                    this.command = oowCommand;
+                }
+                else if (gameType == GameTypeEnum.UserCharity)
+                {
+                    UserCharityGameCommand ucCommand = new UserCharityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, currencyRequirement,
+                        currencyRequirementType, this.GiveToRandomUserCharityToggleButton.IsChecked.GetValueOrDefault());
+                    ucCommand.UserParticipatedCommand = this.UserParticipatedCommandControl.GetCommand();
+                    this.command = ucCommand;
                 }
 
                 ChannelSession.Settings.GameCommands.Add(this.command);
@@ -275,6 +357,131 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.Close();
             });
+        }
+
+        private async void GameTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                if (this.GameTypeComboBox.SelectedIndex >= 0)
+                {
+                    this.CurrencyGrid.IsEnabled = true;
+
+                    this.MultiplayerGameDetailsGrid.Visibility = Visibility.Collapsed;
+                    this.OutcomesDetailsGrid.Visibility = Visibility.Collapsed;
+
+                    GameTypeEnum gameType = EnumHelper.GetEnumValueFromString<GameTypeEnum>((string)this.GameTypeComboBox.SelectedItem);
+
+                    if (gameType == GameTypeEnum.OnlyOneWinner)
+                    {
+                        this.CurrencyRequirementTypeComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyRequirementTypeEnum.RequiredAmount);
+                        this.CurrencyRequirementTypeComboBox.IsEnabled = false;
+                    }
+                    else
+                    {
+                        this.CurrencyRequirementTypeComboBox.SelectedIndex = -1;
+                        this.CurrencyRequirementTypeComboBox.IsEnabled = true;
+                    }
+
+                    if (gameType == GameTypeEnum.IndividualProbabilty || gameType == GameTypeEnum.OnlyOneWinner)
+                    {
+                        this.MultiplayerGameDetailsGrid.Visibility = Visibility.Visible;
+                    }
+
+                    if (gameType == GameTypeEnum.SinglePlayer || gameType == GameTypeEnum.IndividualProbabilty)
+                    {
+                        this.OutcomesDetailsGrid.Visibility = Visibility.Visible;
+
+                        this.outcomeCommandControls.Clear();
+
+                        GameOutcomeCommandControl outcomeControl = new GameOutcomeCommandControl(new GameOutcome("Win"));
+                        await outcomeControl.Initialize(this);
+                        this.outcomeCommandControls.Add(outcomeControl);
+
+                        this.outcomeGroupControls.Clear();
+
+                        GameOutcomeGroup userGroup = new GameOutcomeGroup(UserRole.User);
+                        userGroup.Probabilities.Add(new GameOutcomeProbability(50, 25));
+                        this.outcomeGroupControls.Add(new GameOutcomeGroupControl(userGroup));
+
+                        GameOutcomeGroup subscriberGroup = new GameOutcomeGroup(UserRole.Subscriber);
+                        subscriberGroup.Probabilities.Add(new GameOutcomeProbability(50, 25));
+                        this.outcomeGroupControls.Add(new GameOutcomeGroupControl(subscriberGroup));
+
+                        GameOutcomeGroup modGroup = new GameOutcomeGroup(UserRole.Mod);
+                        modGroup.Probabilities.Add(new GameOutcomeProbability(50, 25));
+                        this.outcomeGroupControls.Add(new GameOutcomeGroupControl(modGroup));
+                    }
+                }
+            });
+        }
+
+        private void AddProbabilitiesForOutcome()
+        {
+            foreach (GameOutcomeGroupControl outcomeGroupControl in this.outcomeGroupControls)
+            {
+                outcomeGroupControl.AddProbability(new GameOutcomeProbabilityControl());
+            }
+        }
+
+        private void CurrencyTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0)
+            {
+                this.CurrencyRequirementTypeComboBox.IsEnabled = true;
+            }
+        }
+
+        private void CurrencyRequirementTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.CurrencyRequirementTypeComboBox.SelectedIndex >= 0)
+            {
+                CurrencyRequirementTypeEnum requirementType = EnumHelper.GetEnumValueFromString<CurrencyRequirementTypeEnum>((string)this.CurrencyRequirementTypeComboBox.SelectedItem);
+                if (requirementType == CurrencyRequirementTypeEnum.NoCurrencyCost)
+                {
+                    this.CurrencyCostsGrid.IsEnabled = false;
+                }
+                else
+                {
+                    this.CurrencyCostsGrid.IsEnabled = true;
+                    this.CurrencyMaximumCostTextBox.IsEnabled = (requirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum);
+
+                    if (requirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+                    {
+                        HintAssist.SetHint(this.CurrencyMinimumCostTextBox, "Required Amount");
+                    }
+                    else
+                    {
+                        HintAssist.SetHint(this.CurrencyMinimumCostTextBox, "Minimum Amount");
+                    }
+                }
+            }
+        }
+
+        private void AddOutcomeRankGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            GameOutcomeGroupControl groupControl = new GameOutcomeGroupControl();
+            this.outcomeGroupControls.Add(groupControl);
+            foreach (GameOutcomeCommandControl commandControl in this.outcomeCommandControls)
+            {
+                groupControl.AddProbability(new GameOutcomeProbabilityControl());
+            }
+        }
+
+        private async void AddOutcomeProbabilityButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                GameOutcomeCommandControl outcomeControl = new GameOutcomeCommandControl();
+                await outcomeControl.Initialize(this);
+                this.outcomeCommandControls.Add(outcomeControl);
+                this.AddProbabilitiesForOutcome();
+            });
+        }
+
+        private void RandomUserCharityToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -14,94 +14,100 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    public class RouletteGameCommand : SinglePlayerGameCommand
+    public class SpinWheelGameCommand : SinglePlayerGameCommand
     {
-        public RouletteGameCommand() { }
+        public SpinWheelGameCommand() { }
 
-        public RouletteGameCommand(UserCurrencyViewModel currency)
+        public SpinWheelGameCommand(UserCurrencyViewModel currency)
+            : base("Spin Wheel", new List<string>() { "spin" }, UserRole.User, 15, new UserCurrencyRequirementViewModel(currency, 1, 100),
+                  CurrencyRequirementTypeEnum.MinimumAndMaximum, new List<GameOutcome>(), new List<GameOutcomeGroup>(), null)
         {
-            this.Name = "Roulette";
-            this.Commands = new List<string>() { "spin", "roulette" };
-            this.Permissions = UserRole.User;
-            this.Cooldown = 15;
-            this.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, 1, 100);
-            this.ResultProbabilities.Add(new GameResultProbability(37.5, "$gamebet * 2", PreMadeGameCommandHelper.CreateCustomChatCommand("Congrats @$username, you won the spin and got $gamepayout $gamecurrencyname!")));
-            this.ResultProbabilities.Add(new GameResultProbability(12.5, "$gamebet * 3", PreMadeGameCommandHelper.CreateCustomChatCommand("Congrats @$username, you won the BONUS spin and got $gamepayout $gamecurrencyname!")));
-            this.ResultProbabilities.Add(new GameResultProbability(50, null, PreMadeGameCommandHelper.CreateCustomChatCommand("Sorry @$username, you lost the spin!")));
+            this.Outcomes.Add(new GameOutcome("Win", PreMadeGameCommandHelper.CreateCustomChatCommand("@$username won $gamepayout $gamecurrencyname!")));
+            
+            GameOutcomeGroup userGroup = new GameOutcomeGroup(UserRole.User);
+            userGroup.Probabilities.Add(new GameOutcomeProbability(50, 25, "Win"));
+            this.Groups.Add(userGroup);
+
+            GameOutcomeGroup subscriberGroup = new GameOutcomeGroup(UserRole.Subscriber);
+            subscriberGroup.Probabilities.Add(new GameOutcomeProbability(50, 25, "Win"));
+            this.Groups.Add(subscriberGroup);
+
+            GameOutcomeGroup modGroup = new GameOutcomeGroup(UserRole.Mod);
+            modGroup.Probabilities.Add(new GameOutcomeProbability(50, 25, "Win"));
+            this.Groups.Add(modGroup);
+
+            this.LoseLeftoverCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Sorry @$username, you lost the spin!");
         }
     }
 
-    public class RussianRouletteGameCommand : MultiPlayerGameCommand
-    {
-        public RussianRouletteGameCommand() { }
-
-        public RussianRouletteGameCommand(UserCurrencyViewModel currency)
-        {
-            this.Name = "Russian Roulette";
-            this.Commands = new List<string>() { "rr", "russian" };
-            this.Permissions = UserRole.User;
-            this.Cooldown = 30;
-            this.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, 10);
-
-            this.GameLength = 30;
-            this.MinimumParticipants = 2;
-            this.ResultType = GameResultType.SelectRandomEnteredUser;
-
-            this.GameStartedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username starting a game of Russian Roulette! Type \"!rr <BET>\" in chat to join in and win the whole pot!");
-            this.GameEndedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Russian Roulette has ended...and @$username emerged victorious with $gamepayout $gamecurrencyname!");
-            this.UserJoinedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("You've taken your seat at the circle, let's wait and see what happens!", isWhisper: true);
-            this.NotEnoughUsersCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Apparently not enough people wanted to join @$username...");
-
-            this.ResultProbabilities.Add(new GameResultProbability(100, "$gametotalbets * 2", null));
-        }
-    }
-
-    public class HeistGameCommand : MultiPlayerGameCommand
+    public class HeistGameCommand : IndividualProbabilityGameCommand
     {
         public HeistGameCommand() { }
 
         public HeistGameCommand(UserCurrencyViewModel currency)
+            : base("Heist", new List<string>() { "heist" }, UserRole.User, 60, new UserCurrencyRequirementViewModel(currency, 10),
+                  CurrencyRequirementTypeEnum.MinimumOnly, new List<GameOutcome>(), new List<GameOutcomeGroup>(), null, gameLength: 30, minimumParticipants: 2)
         {
-            this.Name = "Heist";
-            this.Commands = new List<string>() { "heist" };
-            this.Permissions = UserRole.User;
-            this.Cooldown = 30;
-            this.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, 10);
-
-            this.GameLength = 30;
-            this.MinimumParticipants = 2;
-            this.ResultType = GameResultType.IndividualUserProbability;
-
             this.GameStartedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username is starting a heist! Type \"!heist <BET>\" in chat to join in!");
             this.GameEndedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("The cops have shown up! Everyone from the heist scatters with whatever they were able to get...");
             this.UserJoinedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("You've hopped into the heist van! Let's see if you can pull it off...", isWhisper: true);
             this.NotEnoughUsersCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Apparently not enough people wanted to join @$username...");
 
-            this.ResultProbabilities.Add(new GameResultProbability(10, "$gamebet * 3", PreMadeGameCommandHelper.CreateCustomChatCommand("You made it out like a SUPER BANDIT with $gamepayout!", isWhisper: true)));
-            this.ResultProbabilities.Add(new GameResultProbability(40, "$gamebet * 2", PreMadeGameCommandHelper.CreateCustomChatCommand("You made it out successfully with $gamepayout!", isWhisper: true)));
-            this.ResultProbabilities.Add(new GameResultProbability(50, null, PreMadeGameCommandHelper.CreateCustomChatCommand("Tough luck, you walked away empty-handed!", isWhisper: true)));
+            this.Outcomes.Add(new GameOutcome("Win", PreMadeGameCommandHelper.CreateCustomChatCommand("You made out successfully with $gamepayout!", isWhisper: true)));
+            this.Outcomes.Add(new GameOutcome("Super Win", PreMadeGameCommandHelper.CreateCustomChatCommand("You made out like a SUPER BANDIT with $gamepayout!", isWhisper: true)));
+
+            GameOutcomeGroup userGroup = new GameOutcomeGroup(UserRole.User);
+            userGroup.Probabilities.Add(new GameOutcomeProbability(40, 25, "Win"));
+            userGroup.Probabilities.Add(new GameOutcomeProbability(10, 75, "Super Win"));
+            this.Groups.Add(userGroup);
+
+            GameOutcomeGroup subscriberGroup = new GameOutcomeGroup(UserRole.Subscriber);
+            subscriberGroup.Probabilities.Add(new GameOutcomeProbability(40, 25, "Win"));
+            subscriberGroup.Probabilities.Add(new GameOutcomeProbability(10, 75, "Super Win"));
+            this.Groups.Add(subscriberGroup);
+
+            GameOutcomeGroup modGroup = new GameOutcomeGroup(UserRole.Mod);
+            modGroup.Probabilities.Add(new GameOutcomeProbability(40, 25, "Win"));
+            modGroup.Probabilities.Add(new GameOutcomeProbability(10, 75, "Super Win"));
+            this.Groups.Add(modGroup);
+
+            this.LoseLeftoverCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Tough luck, the cops caught you before you could get anything good!", isWhisper: true);
         }
     }
 
-    public class CharityGameCommand : MultiPlayerGameCommand
+    public class RussianRouletteGameCommand : OnlyOneWinnerGameCommand
+    {
+        public RussianRouletteGameCommand() { }
+
+        public RussianRouletteGameCommand(UserCurrencyViewModel currency)
+            : base("Russian Roulette", new List<string>() { "rr", "russian" }, UserRole.User, 60, new UserCurrencyRequirementViewModel(currency, 10), gameLength: 30, minimumParticipants: 2)
+        {
+            this.GameStartedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username is starting a game of Russian Roulette! Type \"!rr\" in chat to join in and win the whole pot!");
+            this.GameEndedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Russian Roulette has ended...and @$username emerged victorious with $gamepayout $gamecurrencyname!");
+            this.UserJoinedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("You've taken your seat at the circle, let's wait and see what happens!", isWhisper: true);
+            this.NotEnoughUsersCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Apparently not enough people wanted to join @$username...");
+        }
+    }
+
+    public class CharityGameCommand : UserCharityGameCommand
     {
         public CharityGameCommand() { }
 
         public CharityGameCommand(UserCurrencyViewModel currency)
+            : base("Charity", new List<string>() { "charity" }, UserRole.User, 15, new UserCurrencyRequirementViewModel(currency, 1), CurrencyRequirementTypeEnum.MinimumOnly, giveToRandomUser: true)
         {
-            this.Name = "Charity";
-            this.Commands = new List<string>() { "charity" };
-            this.Permissions = UserRole.User;
-            this.Cooldown = 15;
-            this.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, 10);
+            this.UserParticipatedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username just received $gamepayout $gamecurrencyname randomly from @$gamestarterusername!");
+        }
+    }
 
-            this.GameLength = 0;
-            this.MinimumParticipants = 1;
-            this.ResultType = GameResultType.SelectRandomChatUser;
+    public class GiveGameCommand : UserCharityGameCommand
+    {
+        public GiveGameCommand() { }
 
-            this.GameEndedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$gamestarterusername just gave $gametotalbets $gamecurrencyname to @$username, what a generous soul!");
-
-            this.ResultProbabilities.Add(new GameResultProbability(100, "$gametotalbets", null));
+        public GiveGameCommand(UserCurrencyViewModel currency)
+            : base("Give", new List<string>() { "give" }, UserRole.User, 15, new UserCurrencyRequirementViewModel(currency, 1), CurrencyRequirementTypeEnum.MinimumOnly, giveToRandomUser: false)
+        {
+            this.UserParticipatedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$gamestarterusername just gave $gamepayout $gamecurrencyname to @$username!");
         }
     }
 }

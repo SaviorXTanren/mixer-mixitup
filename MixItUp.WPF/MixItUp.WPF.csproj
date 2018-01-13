@@ -227,8 +227,14 @@
     <Compile Include="Controls\Currency\CurrencySelectorControl.xaml.cs">
       <DependentUpon>CurrencySelectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Games\GamesProbabilityControl.xaml.cs">
-      <DependentUpon>GamesProbabilityControl.xaml</DependentUpon>
+    <Compile Include="Controls\Games\GameOutcomeCommandControl.xaml.cs">
+      <DependentUpon>GameOutcomeCommandControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Games\GameOutcomeGroupControl.xaml.cs">
+      <DependentUpon>GameOutcomeGroupControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Games\GameOutcomeProbabilityControl.xaml.cs">
+      <DependentUpon>GameOutcomeProbabilityControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\GameStepCommandControl.xaml.cs">
       <DependentUpon>GameStepCommandControl.xaml</DependentUpon>
@@ -445,7 +451,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Games\GamesProbabilityControl.xaml">
+    <Page Include="Controls\Games\GameOutcomeCommandControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\GameOutcomeGroupControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\GameOutcomeProbabilityControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

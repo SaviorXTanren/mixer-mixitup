@@ -21,14 +21,11 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency Requirement" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="140" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
 
-            <TextBox x:Name="CurrencyCostTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Currency Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" VerticalAlignment="Center" IsEnabled="False" TextChanged="CurrencyCostTextBox_TextChanged" />
-
-            <TextBox x:Name="CurrencyMaximumAmountTextBox" Grid.Column="3" Visibility="Collapsed" Margin="10,0,0,0" MaterialDesign:HintAssist.Hint="Maximum Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" IsEnabled="False" TextChanged="CurrencyMaximumAmountTextBox_TextChanged" />
+            <TextBox x:Name="CurrencyCostTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Currency Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" VerticalAlignment="Center" IsEnabled="False" />
         </Grid>
     </Grid>
 </local:LoadingControlBase>

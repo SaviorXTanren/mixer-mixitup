@@ -31,7 +31,13 @@
 
             <DataGrid x:Name="GameCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTemplateColumn Header="Name" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Margin="5,0,0,0" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Actions" Width="240">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

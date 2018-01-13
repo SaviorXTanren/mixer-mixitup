@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MixItUp.Base.Util
@@ -43,6 +45,11 @@ namespace MixItUp.Base.Util
         public bool ContainsValue(V value) { lock (objLock) { return this.items.ContainsValue(value); } }
 
         public IEnumerator<KeyValuePair<K, V>> GetEnumerator() { lock (objLock) { return this.ToDictionary().GetEnumerator(); } }
+
+        public IEnumerable Where()
+        {
+            throw new NotImplementedException();
+        }
 
         public virtual bool Remove(K key) { lock (objLock) { return this.items.Remove(key); } }
 

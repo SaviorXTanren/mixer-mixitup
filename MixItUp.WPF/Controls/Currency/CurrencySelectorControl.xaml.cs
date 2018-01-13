@@ -23,28 +23,18 @@ namespace MixItUp.WPF.Controls.Currency
         public int GetCurrencyAmount()
         {
             int currencyCost = 0;
-            int.TryParse(this.CurrencyCostTextBox.Text, out currencyCost);
+            if (!string.IsNullOrEmpty(this.CurrencyCostTextBox.Text) && !int.TryParse(this.CurrencyCostTextBox.Text, out currencyCost))
+            {
+                currencyCost = -1;
+            }
             return currencyCost;
-        }
-
-        public int GetCurrencyMaximumAmount()
-        {
-            int currencyCost = 0;
-            int.TryParse(this.CurrencyMaximumAmountTextBox.Text, out currencyCost);
-            return currencyCost;
-        }
-
-        public void ShowMaximumAmountOption()
-        {
-            this.CurrencyMaximumAmountTextBox.Visibility = System.Windows.Visibility.Visible;
-            HintAssist.SetHint(this.CurrencyCostTextBox, "Minimum Amount");
         }
 
         public UserCurrencyRequirementViewModel GetCurrencyRequirement()
         {
             if (this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault() && this.GetCurrencyType() != null && this.GetCurrencyAmount() >= 0)
             {
-                return new UserCurrencyRequirementViewModel(this.GetCurrencyType(), this.GetCurrencyAmount(), this.GetCurrencyMaximumAmount());
+                return new UserCurrencyRequirementViewModel(this.GetCurrencyType(), this.GetCurrencyAmount());
             }
             return null;
         }
@@ -60,13 +50,6 @@ namespace MixItUp.WPF.Controls.Currency
 
                 this.CurrencyCostTextBox.IsEnabled = true;
                 this.CurrencyCostTextBox.Text = currencyRequirement.RequiredAmount.ToString();
-
-                this.CurrencyMaximumAmountTextBox.IsEnabled = true;
-                this.CurrencyMaximumAmountTextBox.Text = (currencyRequirement.MaximumAmount > 0) ? currencyRequirement.MaximumAmount.ToString() : string.Empty;
-                if (currencyRequirement.MaximumAmount > 0)
-                {
-                    this.ShowMaximumAmountOption();
-                }
             }
         }
 
@@ -104,25 +87,6 @@ namespace MixItUp.WPF.Controls.Currency
         private void CurrencyTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.CurrencyCostTextBox.IsEnabled = (this.CurrencyTypeComboBox.SelectedIndex >= 0);
-            this.CurrencyMaximumAmountTextBox.IsEnabled = (this.CurrencyTypeComboBox.SelectedIndex >= 0);
-        }
-
-        private void CurrencyCostTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int currencyCost = 0;
-            if (!int.TryParse(this.CurrencyCostTextBox.Text, out currencyCost) || currencyCost < 0)
-            {
-                this.CurrencyCostTextBox.Text = "0";
-            }
-        }
-
-        private void CurrencyMaximumAmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int currencyCost = 0;
-            if (!int.TryParse(this.CurrencyMaximumAmountTextBox.Text, out currencyCost) || currencyCost < 0)
-            {
-                this.CurrencyMaximumAmountTextBox.Text = "0";
-            }
         }
     }
 }

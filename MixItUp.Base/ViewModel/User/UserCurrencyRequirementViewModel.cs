@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -37,9 +38,6 @@ namespace MixItUp.Base.ViewModel.User
             this.MustEqual = mustEqual;
         }
 
-        [JsonIgnore]
-        public bool IsSameAmountSpecific { get { return this.RequiredAmount == this.MaximumAmount; } }
-        
         [JsonIgnore]
         public UserRankViewModel RequiredRank
         {
