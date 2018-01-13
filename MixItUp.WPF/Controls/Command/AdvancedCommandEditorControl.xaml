@@ -1,0 +1,68 @@
+﻿<local:CommandEditorControlBase x:Class="MixItUp.WPF.Controls.Command.AdvancedCommandEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+                                        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+             d:DesignHeight="500" d:DesignWidth="700">
+    <local:CommandEditorControlBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </local:CommandEditorControlBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" x:Name="CommandDetailsGrid" Margin="0,0,0,10" />
+
+        <ListView x:Name="ActionsListView" Grid.Row="1" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" HorizontalContentAlignment="Stretch" />
+
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center">Action:</TextBlock>
+            <ComboBox Grid.Column="2" x:Name="TypeComboBox" Width="180" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <Button x:Name="AddActionButton" Content="{MaterialDesign:PackIcon Plus}" Click="AddActionButton_Click" Grid.Column="4" ToolTip="Add Action" />
+
+            <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Column="6" ToolTip="Save">Save</Button>
+
+            <Button x:Name="ExportButton" Click="ExportButton_Click" Grid.Column="8" ToolTip="Export Actions To File">Export Actions</Button>
+
+            <Button x:Name="ImportButton" Click="ImportButton_Click" Grid.Column="10" ToolTip="Import Actions From File">Import Actions</Button>
+
+        </Grid>
+    </Grid>
+</local:CommandEditorControlBase>

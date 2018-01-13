@@ -3,12 +3,33 @@ using MixItUp.Base.ViewModel.Import;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
+    [DataContract]
+    public class BasicChatCommand : ChatCommand
+    {
+        public BasicChatCommand() { }
+
+        public BasicChatCommand(string command, UserRole lowestAllowedRole, int cooldown)
+            : this(new List<string>() { command }, lowestAllowedRole, cooldown)
+        { }
+
+        public BasicChatCommand(IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown)
+            : base(commands.First(), commands, lowestAllowedRole, cooldown, null)
+        { }
+
+        public BasicChatCommand(ScorpBotCommand command)
+            : this(command.Command, command.Permission, command.Cooldown)
+        {
+            this.Actions.Add(new ChatAction(command.Text, isWhisper: false, sendAsStreamer: false));
+            this.IsEnabled = command.Enabled;
+        }
+    }
+
     [DataContract]
     public class ChatCommand : PermissionsCommandBase
     {

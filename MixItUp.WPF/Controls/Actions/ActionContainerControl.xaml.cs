@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System;
 using System.Threading.Tasks;
@@ -16,15 +17,17 @@ namespace MixItUp.WPF.Controls.Actions
         private const int MinimizedGroupBoxHeight = 34;
 
         public CommandWindow Window { get; private set; }
+        public CommandEditorControlBase EditorControl { get; private set; }
 
         private ActionControlBase actionControl;
 
         private ActionBase action;
         private ActionTypeEnum type;
 
-        public ActionContainerControl(CommandWindow window, ActionTypeEnum type)
+        public ActionContainerControl(CommandWindow window, CommandEditorControlBase editorControl, ActionTypeEnum type)
         {
             this.Window = window;
+            this.EditorControl = editorControl;
             this.type = type;
 
             InitializeComponent();
@@ -32,7 +35,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.Loaded += ActionContainerControl_Loaded;
         }
 
-        public ActionContainerControl(CommandWindow window, ActionBase action) : this(window, action.Type) { this.action = action; }
+        public ActionContainerControl(CommandWindow window, CommandEditorControlBase editorControl, ActionBase action) : this(window, editorControl, action.Type) { this.action = action; }
 
         private void ActionContainerControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -106,11 +109,11 @@ namespace MixItUp.WPF.Controls.Actions
 
         public void Minimize() { this.GroupBox.Height = MinimizedGroupBoxHeight; }
 
-        private void MoveUpActionButton_Click(object sender, RoutedEventArgs e) { this.Window.MoveActionUp(this); }
+        private void MoveUpActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.MoveActionUp(this); }
 
-        private void MoveDownActionButton_Click(object sender, RoutedEventArgs e) { this.Window.MoveActionDown(this); }
+        private void MoveDownActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.MoveActionDown(this); }
 
-        private void DeleteActionButton_Click(object sender, RoutedEventArgs e) { this.Window.DeleteAction(this); }
+        private void DeleteActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.DeleteAction(this); }
 
         public void GroupBoxHeader_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {

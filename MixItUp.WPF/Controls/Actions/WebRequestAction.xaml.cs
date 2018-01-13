@@ -25,7 +25,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.ResponseActionComboBox.ItemsSource = EnumHelper.GetEnumNames<WebRequestResponseActionTypeEnum>();
             
             List<string> commandNames = ChannelSession.Settings.ChatCommands.Select(c => c.Name).ToList();
-            CommandBase command = this.containerControl.Window.GetExistingCommand();
+            CommandBase command = this.containerControl.EditorControl.GetExistingCommand();
             if (command != null && command is ChatCommand)
             {
                 commandNames.Remove(command.Name);

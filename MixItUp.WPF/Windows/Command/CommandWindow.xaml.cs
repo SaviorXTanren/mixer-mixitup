@@ -1,15 +1,6 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
-using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
-using MixItUp.WPF.Controls.Actions;
+﻿using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Util;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,198 +11,61 @@ namespace MixItUp.WPF.Windows.Command
     /// </summary>
     public partial class CommandWindow : LoadingWindowBase
     {
-        public event EventHandler<CommandBase> CommandSaveSuccessfully;
+        public event EventHandler<CommandBase> CommandSaveSuccessfully { add { this.commandEditorControl.OnCommandSaveSuccessfully += value; } remove { this.commandEditorControl.OnCommandSaveSuccessfully -= value; } }
+
+        private CommandEditorControlBase commandEditorControl;
 
         private CommandDetailsControlBase commandDetailsControl;
+        private BasicChatCommand basicChatCommand;
 
-        private ObservableCollection<ActionContainerControl> actionControls;
-
-        private CommandBase newCommand = null;
-
-        public CommandWindow(CommandDetailsControlBase commandDetailsControl) 
+        public CommandWindow(CommandDetailsControlBase commandDetailsControl)
+            : this()
         {
             this.commandDetailsControl = commandDetailsControl;
+        }
 
+        public CommandWindow(BasicChatCommand basicChatCommand)
+            : this()
+        {
+            this.basicChatCommand = basicChatCommand;
+        }
+
+        private CommandWindow()
+        {
             InitializeComponent();
-
-            CommandBase command = this.commandDetailsControl.GetExistingCommand();
-            if (command != null)
-            {
-                this.Title = this.Title + " - " + command.Name;
-            }
-
-            this.actionControls = new ObservableCollection<ActionContainerControl>();
 
             this.Initialize(this.StatusBar);
         }
 
-        public CommandBase GetExistingCommand() { return this.commandDetailsControl.GetExistingCommand(); }
-
-        public void MoveActionUp(ActionContainerControl control)
-        {
-            int index = this.actionControls.IndexOf(control);
-            index = MathHelper.Clamp((index - 1), 0, this.actionControls.Count() - 1);
-
-            this.actionControls.Remove(control);
-            this.actionControls.Insert(index, control);
-        }
-
-        public void MoveActionDown(ActionContainerControl control)
-        {
-            int index = this.actionControls.IndexOf(control);
-            index = MathHelper.Clamp((index + 1), 0, this.actionControls.Count() - 1);
-
-            this.actionControls.Remove(control);
-            this.actionControls.Insert(index, control);
-        }
-
-        public void DeleteAction(ActionContainerControl control)
-        {
-            this.actionControls.Remove(control);
-        }
-
         protected override async Task OnLoaded()
         {
-            List<string> actionTypes = EnumHelper.GetEnumNames<ActionTypeEnum>().ToList();
-            actionTypes.Remove(EnumHelper.GetEnumName(ActionTypeEnum.Custom));
-            this.TypeComboBox.ItemsSource = actionTypes.OrderBy(s => s);
-
-            this.ActionsListView.ItemsSource = this.actionControls;
-
-            this.CommandDetailsGrid.Visibility = Visibility.Visible;
-            this.CommandDetailsGrid.Children.Add(this.commandDetailsControl);
-            await this.commandDetailsControl.Initialize();
-
-            CommandBase command = this.commandDetailsControl.GetExistingCommand();
-            if (command != null)
+            if (this.commandDetailsControl != null && this.commandDetailsControl.GetExistingCommand() != null)
             {
-                foreach (ActionBase action in command.Actions)
-                {
-                    ActionContainerControl actionControl = new ActionContainerControl(this, action);
-                    actionControl.Minimize();
-                    this.actionControls.Add(actionControl);
-                }
+                this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
+            }
+            else if (this.basicChatCommand is BasicChatCommand)
+            {
+                this.ShowCommandEditor(new BasicChatCommandEditorControl(this, this.basicChatCommand));
             }
 
             await base.OnLoaded();
         }
 
-        private void AddActionButton_Click(object sender, RoutedEventArgs e)
+        private void BasicChatCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.TypeComboBox.SelectedIndex >= 0)
-            {
-                foreach (ActionContainerControl control in this.actionControls)
-                {
-                    control.Minimize();
-                }
-
-                ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                ActionContainerControl actionControl = new ActionContainerControl(this, type);
-                this.actionControls.Add(actionControl);
-
-                this.TypeComboBox.SelectedIndex = -1;
-            }
+            this.ShowCommandEditor(new BasicChatCommandEditorControl(this));
         }
 
-        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void AdvancedCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.newCommand = await this.GetNewCommand();
-            if (this.newCommand != null)
-            {
-                if (this.CommandSaveSuccessfully != null)
-                {
-                    this.CommandSaveSuccessfully(this, this.newCommand);
-                }
-
-                await this.RunAsyncOperation(async () => { await ChannelSession.SaveSettings(); });
-
-                this.Close();
-            }
+            this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
         }
 
-        private async Task<List<ActionBase>> GetActions()
+        private void ShowCommandEditor(CommandEditorControlBase editor)
         {
-            List<ActionBase> actions = new List<ActionBase>();
-            foreach (ActionContainerControl control in this.actionControls)
-            {
-                ActionBase action = control.GetAction();
-                if (action == null)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("Required action information is missing");
-                    return new List<ActionBase>();
-                }
-                actions.Add(action);
-            }
-            return actions;
-        }
-
-        private async void ExportButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandBase command = await this.GetNewCommand();
-            if (command != null)
-            {
-                await this.RunAsyncOperation(async () =>
-                {
-                    string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(command.Name + ".mixitupc");
-                    if (!string.IsNullOrEmpty(fileName))
-                    {
-                        await SerializerHelper.SerializeToFile(fileName, command);
-                    }
-                });
-            }
-        }
-
-        private async void ImportButton_Click(object sender, RoutedEventArgs e)
-        {
-            await this.RunAsyncOperation(async () =>
-            {
-                string fileName = ChannelSession.Services.FileService.ShowOpenFileDialog("Mix It Up Command (*.mixitupc)|*.mixitupc|All files (*.*)|*.*");
-                if (!string.IsNullOrEmpty(fileName))
-                {
-                    try
-                    {
-                        CustomCommand command = await SerializerHelper.DeserializeFromFile<CustomCommand>(fileName);
-                        if (command != null && command.Actions != null)
-                        {
-                            foreach (ActionBase action in command.Actions)
-                            {
-                                ActionContainerControl actionControl = new ActionContainerControl(this, action);
-                                actionControl.Minimize();
-                                this.actionControls.Add(actionControl);
-                            }
-                        }
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
-                }
-            });
-        }
-
-        private async Task<CommandBase> GetNewCommand()
-        {
-            if (!await this.commandDetailsControl.Validate())
-            {
-                return null;
-            }
-
-            if (this.actionControls.Count == 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("At least one action must be created");
-                return null;
-            }
-
-            List<ActionBase> actions = await this.GetActions();
-            if (actions.Count == 0)
-            {
-                return null;
-            }
-
-            this.newCommand = await this.RunAsyncOperation(async () => { return await this.commandDetailsControl.GetNewCommand(); });
-            if (this.newCommand != null)
-            {
-                this.newCommand.Actions.Clear();
-                this.newCommand.Actions = actions;
-            }
-            return this.newCommand;
+            this.CommandSelectionGrid.Visibility = Visibility.Collapsed;
+            this.MainContentControl.Visibility = Visibility.Visible;
+            this.MainContentControl.Content = this.commandEditorControl = editor;
         }
     }
 }

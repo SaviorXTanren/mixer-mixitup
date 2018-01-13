@@ -218,6 +218,13 @@
     <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\AdvancedCommandEditorControl.xaml.cs">
+      <DependentUpon>AdvancedCommandEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Command\BasicChatCommandEditorControl.xaml.cs">
+      <DependentUpon>BasicChatCommandEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Command\CommandEditorControlBase.cs" />
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -436,6 +443,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\ActionGroupCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\AdvancedCommandEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\BasicChatCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
