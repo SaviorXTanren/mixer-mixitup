@@ -71,7 +71,10 @@ namespace MixItUp.WPF.Controls.Services
                     }
                     else
                     {
-                        await MessageBoxHelper.ShowMessageDialog("Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software.");
+                        string message = "Overlay connection test failed, please ensure you have the Mix It Up Overlay page visible and running in your streaming software.";
+                        message += Environment.NewLine + Environment.NewLine;
+                        message += "If you launched your streaming software before Mix It Up, try refreshing the webpage source in your streaming software.";
+                        await MessageBoxHelper.ShowMessageDialog(message);
                     }
                 });
             }
