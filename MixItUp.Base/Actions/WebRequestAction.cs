@@ -22,7 +22,7 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class WebRequestAction : ActionBase
     {
-        private const string ResponseSpecialIdentifier = "$webrequestresult";
+        private const string ResponseSpecialIdentifier = "webrequestresult";
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
