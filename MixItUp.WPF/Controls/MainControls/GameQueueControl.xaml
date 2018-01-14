@@ -58,13 +58,13 @@
         <Grid Grid.Row="2" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <CurrencyControls:RankSelectorControl Grid.Column="0" x:Name="RankSelector" />
+            <CurrencyControls:CurrencySelectorControl Grid.Column="0" x:Name="CurrencySelector" />
 
-            <CurrencyControls:CurrencySelectorControl Grid.Column="2" x:Name="CurrencySelector" />
+            <CurrencyControls:RankSelectorControl Grid.Column="2" x:Name="RankSelector" />
 
         </Grid>
 

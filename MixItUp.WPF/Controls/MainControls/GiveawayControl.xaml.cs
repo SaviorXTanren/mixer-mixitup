@@ -50,11 +50,6 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
-        protected override async Task OnVisibilityChanged()
-        {
-            await this.InitializeInternal();
-        }
-
         private async void EnableGiveawayButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(this.GiveawayItemTextBox.Text))

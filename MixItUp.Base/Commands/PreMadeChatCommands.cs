@@ -353,6 +353,8 @@ namespace MixItUp.Base.Commands
                     ChannelSession.Settings.Quotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
+                    GlobalEvents.QuoteAdded(quote);
+
                     if (ChannelSession.Chat != null)
                     {
                         await ChannelSession.Chat.SendMessage("Added Quote: \"" + quote + "\"");

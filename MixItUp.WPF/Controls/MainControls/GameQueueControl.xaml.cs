@@ -61,6 +61,21 @@ namespace MixItUp.WPF.Controls.MainControls
             return Task.FromResult(0);
         }
 
+        protected override Task OnVisibilityChanged()
+        {
+            this.RefreshQueueList();
+            return Task.FromResult(0);
+        }
+
+        private void RefreshQueueList()
+        {
+            this.gameQueueUsers.Clear();
+            for (int i = 0; i < ChannelSession.GameQueue.Count; i++)
+            {
+                this.gameQueueUsers.Add(new QueueUser(ChannelSession.GameQueue[i], (i + 1)));
+            }
+        }
+
         private void MustFollowToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.Settings.GameQueueMustFollow = this.MustFollowToggleButton.IsChecked.GetValueOrDefault();
@@ -147,11 +162,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                this.gameQueueUsers.Clear();
-                for (int i = 0; i < ChannelSession.GameQueue.Count; i++)
-                {
-                    this.gameQueueUsers.Add(new QueueUser(ChannelSession.GameQueue[i], (i + 1)));
-                }
+                this.RefreshQueueList();
             }));
         }
     }

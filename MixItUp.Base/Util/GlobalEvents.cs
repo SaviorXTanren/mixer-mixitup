@@ -71,5 +71,14 @@ namespace MixItUp.Base.Util
                 GlobalEvents.OnRankChanged(null, currency);
             }
         }
+
+        public static event EventHandler<string> OnQuoteAdded;
+        public static void QuoteAdded(string quote)
+        {
+            if (GlobalEvents.OnQuoteAdded != null)
+            {
+                GlobalEvents.OnQuoteAdded(null, quote);
+            }
+        }
     }
 }

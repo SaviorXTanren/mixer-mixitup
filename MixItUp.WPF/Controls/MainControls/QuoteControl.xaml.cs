@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +21,8 @@ namespace MixItUp.WPF.Controls.MainControls
             InitializeComponent();
 
             this.QuotesDataGrid.ItemsSource = quotes;
+
+            GlobalEvents.OnQuoteAdded += GlobalEvents_OnQuoteAdded;
         }
 
         protected override Task InitializeInternal()
@@ -76,6 +80,14 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.quotes.Add(quote);
             }
+        }
+
+        private void GlobalEvents_OnQuoteAdded(object sender, string quote)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                this.quotes.Add(quote);
+            }));
         }
     }
 }
