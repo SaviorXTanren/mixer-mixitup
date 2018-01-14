@@ -51,13 +51,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (await ChannelSession.ConnectChat())
             {
-                this.SendChatAsComboBox.ItemsSource = new List<string>() { "Streamer", "Bot" };
-                this.SendChatAsComboBox.SelectedIndex = 0;
-                if (ChannelSession.Chat.BotClient != null && ChannelSession.Chat.BotClient.Authenticated)
-                {
-                    this.SendChatAsComboBox.SelectedIndex = 1;
-                }
-
                 this.ChatList.ItemsSource = this.MessageControls;
                 this.UserList.ItemsSource = this.UserControls;
 
@@ -102,6 +95,21 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                 }
             }
+        }
+
+        protected override Task OnVisibilityChanged()
+        {
+            if (ChannelSession.Chat.BotClient != null && ChannelSession.Chat.BotClient.Authenticated)
+            {
+                this.SendChatAsComboBox.ItemsSource = new List<string>() { "Streamer", "Bot" };
+                this.SendChatAsComboBox.SelectedIndex = 1;
+            }
+            else
+            {
+                this.SendChatAsComboBox.ItemsSource = new List<string>() { "Streamer" };
+                this.SendChatAsComboBox.SelectedIndex = 0;
+            }
+            return Task.FromResult(0);
         }
 
         private async Task ChannelRefreshBackground()
