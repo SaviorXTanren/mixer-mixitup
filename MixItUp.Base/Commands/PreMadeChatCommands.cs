@@ -167,7 +167,7 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    if (this.latestSession == null)
+                    if (this.latestSession != null)
                     {
                         TimeSpan duration = DateTimeOffset.Now.Subtract(this.latestSession.dateTime);
                         await ChannelSession.Chat.SendMessage("Start Time: " + this.latestSession.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
