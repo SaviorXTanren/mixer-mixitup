@@ -369,6 +369,7 @@ namespace MixItUp.WPF.Windows.Command
 
                     this.MultiplayerGameDetailsGrid.Visibility = Visibility.Collapsed;
                     this.OutcomesDetailsGrid.Visibility = Visibility.Collapsed;
+                    this.UserCharityGameGrid.Visibility = Visibility.Collapsed;
 
                     GameTypeEnum gameType = EnumHelper.GetEnumValueFromString<GameTypeEnum>((string)this.GameTypeComboBox.SelectedItem);
 
@@ -411,6 +412,11 @@ namespace MixItUp.WPF.Windows.Command
                         GameOutcomeGroup modGroup = new GameOutcomeGroup(UserRole.Mod);
                         modGroup.Probabilities.Add(new GameOutcomeProbability(50, 25));
                         this.outcomeGroupControls.Add(new GameOutcomeGroupControl(modGroup));
+                    }
+
+                    if (gameType == GameTypeEnum.UserCharity)
+                    {
+                        this.UserCharityGameGrid.Visibility = Visibility.Visible;
                     }
                 }
             });
