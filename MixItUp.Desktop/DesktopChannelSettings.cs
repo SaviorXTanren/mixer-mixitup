@@ -190,6 +190,9 @@ namespace MixItUp.Desktop
         [JsonIgnore]
         private SQLiteDatabaseWrapper databaseWrapper;
 
+        [JsonIgnore]
+        internal bool InitializeDB = true;
+
         public DesktopChannelSettings(ExpandedChannelModel channel, bool isStreamer = true)
             : this()
         {
@@ -248,11 +251,14 @@ namespace MixItUp.Desktop
             }
 
             this.databaseWrapper = new SQLiteDatabaseWrapper(this.DatabasePath);
-            await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+            if (this.InitializeDB)
             {
-                UserDataViewModel userData = new UserDataViewModel(dataReader);
-                this.UserData.Add(userData.ID, userData);
-            });
+                await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+                {
+                    UserDataViewModel userData = new UserDataViewModel(dataReader);
+                    this.UserData.Add(userData.ID, userData);
+                });
+            }
         }
 
         public async Task CopyLatestValues()

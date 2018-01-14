@@ -45,6 +45,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version4Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+            settings.InitializeDB = false;
             await ChannelSession.Services.Settings.Initialize(settings);
             settings.Version = DesktopChannelSettings.LatestVersion;
 
@@ -121,6 +122,7 @@ namespace MixItUp.Desktop.Services
             if (version < 3)
             {
                 LegacyDesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                settings.InitializeDB = false;
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 IEnumerable<EventCommand> commands = settings.EventCommands.Where(c => c.Actions.Count == 0);
@@ -148,6 +150,7 @@ namespace MixItUp.Desktop.Services
                 File.WriteAllText(filePath, data);
 
                 LegacyDesktopChannelSettings legacySettings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                legacySettings.InitializeDB = false;
 
                 string dbPath = ((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(legacySettings);
                 List<LegacyUserDataViewModel> legacyUsers = new List<LegacyUserDataViewModel>();
@@ -162,6 +165,7 @@ namespace MixItUp.Desktop.Services
                 await ChannelSession.Services.Settings.Initialize(legacySettings);
 
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                settings.InitializeDB = false;
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 UserCurrencyViewModel currency = null;
