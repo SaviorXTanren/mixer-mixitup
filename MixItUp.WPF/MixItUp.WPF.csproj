@@ -224,6 +224,9 @@
     <Compile Include="Controls\Command\BasicChatCommandEditorControl.xaml.cs">
       <DependentUpon>BasicChatCommandEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\BasicEventCommandEditorControl.xaml.cs">
+      <DependentUpon>BasicEventCommandEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Command\BasicInteractiveCommandEditorControl.xaml.cs">
       <DependentUpon>BasicInteractiveCommandEditorControl.xaml</DependentUpon>
     </Compile>
@@ -454,6 +457,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\BasicChatCommandEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\BasicEventCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

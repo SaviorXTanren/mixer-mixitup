@@ -24,7 +24,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <GroupBox x:Name="GroupBox">
+    <GroupBox x:Name="GroupBox" Width="250">
         <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
             <Button x:Name="NewInteractiveCommandButton" HorizontalAlignment="Center" Click="NewInteractiveCommandButton_Click">Add Command</Button>
 

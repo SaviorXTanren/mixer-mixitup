@@ -48,6 +48,10 @@ namespace MixItUp.WPF.Windows.Command
                         {
                             this.ShowCommandEditor(new BasicInteractiveCommandEditorControl(this, (InteractiveCommand)command));
                         }
+                        else if (command is EventCommand)
+                        {
+                            this.ShowCommandEditor(new BasicEventCommandEditorControl(this, (EventCommand)command));
+                        }
                     }
                     else
                     {
@@ -75,6 +79,11 @@ namespace MixItUp.WPF.Windows.Command
                 this.ShowCommandEditor(new BasicInteractiveCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, interactiveCommandDetails.Scene,
                     (InteractiveButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Chat));
             }
+            else if (this.commandDetailsControl is EventCommandDetailsControl)
+            {
+                EventCommandDetailsControl eventCommandDetails = (EventCommandDetailsControl)this.commandDetailsControl;
+                this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.EventType, BasicCommandTypeEnum.Chat));
+            }
         }
 
         private void BasicSoundCommandButton_Click(object sender, RoutedEventArgs e)
@@ -88,6 +97,11 @@ namespace MixItUp.WPF.Windows.Command
                 InteractiveCommandDetailsControl interactiveCommandDetails = (InteractiveCommandDetailsControl)this.commandDetailsControl;
                 this.ShowCommandEditor(new BasicInteractiveCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, interactiveCommandDetails.Scene,
                     (InteractiveButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Sound));
+            }
+            else if (this.commandDetailsControl is EventCommandDetailsControl)
+            {
+                EventCommandDetailsControl eventCommandDetails = (EventCommandDetailsControl)this.commandDetailsControl;
+                this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.EventType, BasicCommandTypeEnum.Sound));
             }
         }
 
