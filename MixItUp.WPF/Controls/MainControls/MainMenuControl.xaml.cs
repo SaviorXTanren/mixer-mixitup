@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Desktop;
+using MixItUp.WPF.Properties;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Wizard;
 using System.Collections.ObjectModel;
@@ -79,11 +80,9 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.EnableDiagnosticLogsButton.Visibility = Visibility.Visible;
             }
 
-            if (ChannelSession.Settings.DarkTheme)
+            if (Settings.Default.DarkTheme)
             {
                 this.SwitchThemeButton.Content = MainMenuControl.SwitchToLightThemeText;
-                App app = (App)Application.Current;
-                app.SwitchTheme(ChannelSession.Settings.DarkTheme);
             }
 
             return base.InitializeInternal();
@@ -154,20 +153,13 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private void SwitchThemeButton_Click(object sender, RoutedEventArgs e)
+        private async void SwitchThemeButton_Click(object sender, RoutedEventArgs e)
         {
-            ChannelSession.Settings.DarkTheme = !ChannelSession.Settings.DarkTheme;
-
-            App app = (App)Application.Current;
-            app.SwitchTheme(ChannelSession.Settings.DarkTheme);
-
-            if (ChannelSession.Settings.DarkTheme)
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will switch themes and restart Mix It Up. Are you sure you wish to do this?"))
             {
-                this.SwitchThemeButton.Content = MainMenuControl.SwitchToLightThemeText;
-            }
-            else
-            {
-                this.SwitchThemeButton.Content = MainMenuControl.SwitchToDarkThemeText;
+                Settings.Default.DarkTheme = !Settings.Default.DarkTheme;
+                Settings.Default.Save();
+                ((MainWindow)this.Window).Restart();
             }
         }
 
@@ -179,7 +171,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (!string.IsNullOrEmpty(filePath))
                 {
                     ((MainWindow)this.Window).RestoredSettingsFilePath = filePath;
-                    this.Window.Close();
+                    ((MainWindow)this.Window).Restart();
                 }
             }
         }
@@ -203,19 +195,19 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void EnableDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will enable diagnostic logging for assisting with diagnosing bugs. Mix It Up will close if this is done. Are you sure you wish to do this?"))
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will enable diagnostic logging and restart Mix It Up. This should only be done with advised by a Mix It Up developer. Are you sure you wish to do this?"))
             {
                 ChannelSession.Settings.DiagnosticLogging = true;
-                this.Window.Close();
+                ((MainWindow)this.Window).Restart();
             }
         }
 
         private async void DisableDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will disable diagnostic logging and close Mix It Up. Are you sure you wish to do this?"))
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will disable diagnostic logging and restart Mix It Up. Are you sure you wish to do this?"))
             {
                 ChannelSession.Settings.DiagnosticLogging = false;
-                this.Window.Close();
+                ((MainWindow)this.Window).Restart();
             }
         }
     }

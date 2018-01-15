@@ -23,9 +23,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TextToSpeechVolumeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Speech Volume" Width="130" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="TextToSpeechVolumeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Speech Volume" Width="130" Style="{StaticResource BackgroundComboBox}" />
 
-            <ComboBox x:Name="TextToSpeechRateComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Speech Rate" Width="130" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="TextToSpeechRateComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Speech Rate" Width="130" Style="{StaticResource BackgroundComboBox}" />
 
             <TextBlock Grid.Column="4">
                 <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>

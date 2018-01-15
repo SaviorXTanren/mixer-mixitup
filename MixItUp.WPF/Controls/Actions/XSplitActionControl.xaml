@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="XSplitTypeComboBox" Grid.Column="0" SelectionChanged="XSplitTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="XSplitTypeComboBox" Grid.Column="0" SelectionChanged="XSplitTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" />
 
             <TextBlock x:Name="XSplitNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable XSplit connection in the Services Section!</TextBlock>
         </Grid>

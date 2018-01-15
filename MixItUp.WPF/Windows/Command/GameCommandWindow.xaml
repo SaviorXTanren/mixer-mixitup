@@ -70,9 +70,9 @@
 
                             <TextBox x:Name="GameCooldownTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <ComboBox x:Name="GameLowestRoleAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                            <ComboBox x:Name="GameLowestRoleAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource BackgroundComboBox}" />
 
-                            <ComboBox x:Name="GameTypeComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
+                            <ComboBox x:Name="GameTypeComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource BackgroundComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
 
                         </Grid>
 
@@ -85,9 +85,9 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
+                            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency" Style="{StaticResource BackgroundComboBox}" Width="120" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
 
-                            <ComboBox x:Name="CurrencyRequirementTypeComboBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Currency Requirement" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="CurrencyRequirementTypeComboBox_SelectionChanged" />
+                            <ComboBox x:Name="CurrencyRequirementTypeComboBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Currency Requirement" Style="{StaticResource BackgroundComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="CurrencyRequirementTypeComboBox_SelectionChanged" />
 
                             <Grid x:Name="CurrencyCostsGrid" Grid.Column="4" IsEnabled="False">
                                 <Grid.ColumnDefinitions>

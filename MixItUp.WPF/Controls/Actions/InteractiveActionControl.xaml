@@ -23,7 +23,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="InteractiveTypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="InteractiveTypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="InteractiveGroupNameGrid" Visibility="Hidden">

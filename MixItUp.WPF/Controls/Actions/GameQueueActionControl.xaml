@@ -8,6 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ComboBox x:Name="GameQueueActionTypeComboBox" MaterialDesign:HintAssist.Hint="Game Queue Action" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+        <ComboBox x:Name="GameQueueActionTypeComboBox" MaterialDesign:HintAssist.Hint="Game Queue Action" Style="{StaticResource BackgroundComboBox}" />
     </Grid>
 </local:ActionControlBase>

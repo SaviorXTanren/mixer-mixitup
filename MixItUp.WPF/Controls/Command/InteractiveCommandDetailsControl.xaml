@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Trigger" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Trigger" Style="{StaticResource BackgroundComboBox}" />
 
             <TextBox x:Name="SparkCostTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
@@ -42,9 +42,9 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Type" SelectionChanged="CooldownTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Type" SelectionChanged="CooldownTypeComboBox_SelectionChanged" Style="{StaticResource BackgroundComboBox}" />
 
-            <ComboBox x:Name="CooldownGroupsComboBox" Grid.Column="2" IsEditable="True" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Group" SelectionChanged="CooldownGroupsComboBox_SelectionChanged" Visibility="Collapsed" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="CooldownGroupsComboBox" Grid.Column="2" IsEditable="True" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Group" SelectionChanged="CooldownGroupsComboBox_SelectionChanged" Visibility="Collapsed" Style="{StaticResource BackgroundComboBox}" />
 
             <TextBox x:Name="CooldownTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

@@ -53,9 +53,9 @@
                 </Grid>
             </Button>
 
-            <ComboBox Grid.Column="2" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Game" />
+            <ComboBox Grid.Column="2" x:Name="InteractiveGamesComboBox" Width="200" SelectionChanged="InteractiveGamesComboBox_SelectionChanged" DisplayMemberPath="name" Style="{StaticResource BackgroundComboBox}" MaterialDesign:HintAssist.Hint="Game" />
 
-            <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Scene" />
+            <ComboBox Grid.Column="4" x:Name="InteractiveScenesComboBox" Width="200" SelectionChanged="InteractiveScenesComboBox_SelectionChanged" DisplayMemberPath="sceneID" Style="{StaticResource BackgroundComboBox}" MaterialDesign:HintAssist.Hint="Scene" />
 
             <Button Grid.Column="6" x:Name="GroupsButton" Click="GroupsButton_Click" IsEnabled="False">Groups</Button>
 

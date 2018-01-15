@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Windows;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
@@ -16,6 +17,8 @@ namespace MixItUp.WPF
     {
         public string RestoredSettingsFilePath = null;
 
+        private bool RestartApplication = false;
+
         private bool shutdownStarted = false;
         private bool shutdownComplete = false;
 
@@ -24,6 +27,12 @@ namespace MixItUp.WPF
             InitializeComponent();
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
+        }
+
+        public void Restart()
+        {
+            this.RestartApplication = true;
+            this.Close();
         }
 
         protected override async Task OnLoaded()
@@ -114,7 +123,12 @@ namespace MixItUp.WPF
             await Task.Delay(2000);
 
             this.shutdownComplete = true;
+
             this.Close();
+            if (this.RestartApplication)
+            {
+                Process.Start(Application.ResourceAssembly.Location);
+            }
         }
     }
 }

@@ -37,9 +37,9 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ComboBox x:Name="RankTypeComboBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Rank Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="RankTypeComboBox_SelectionChanged" />
+                    <ComboBox x:Name="RankTypeComboBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Rank Type" Style="{StaticResource BackgroundComboBox}" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="RankTypeComboBox_SelectionChanged" />
 
-                    <ComboBox x:Name="RankMinimumComboBox" Grid.Row="1" MaterialDesign:HintAssist.Hint="Rank Minimum" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" DisplayMemberPath="Name" IsEnabled="False" />
+                    <ComboBox x:Name="RankMinimumComboBox" Grid.Row="1" MaterialDesign:HintAssist.Hint="Rank Minimum" Style="{StaticResource BackgroundComboBox}" Width="120" HorizontalAlignment="Center" VerticalAlignment="Center" DisplayMemberPath="Name" IsEnabled="False" />
                 </Grid>
             </Grid>
         </Border>

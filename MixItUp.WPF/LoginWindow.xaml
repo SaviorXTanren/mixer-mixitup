@@ -52,7 +52,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Streamer Account" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Visibility="Collapsed" />
+                    <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Streamer Account" Style="{StaticResource BackgroundComboBox}" Visibility="Collapsed" />
 
                     <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Login</Button>
                 </Grid>

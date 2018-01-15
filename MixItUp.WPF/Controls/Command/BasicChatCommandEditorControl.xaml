@@ -50,7 +50,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,5" VerticalAlignment="Bottom">Who should be allowed to run this command?:</TextBlock>
-            <ComboBox x:Name="LowestRoleAllowedComboBox" Grid.Column="2" Grid.Row="0" MaterialDesign:HintAssist.Hint="Permissions (EX: User)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="LowestRoleAllowedComboBox" Grid.Column="2" Grid.Row="0" MaterialDesign:HintAssist.Hint="Permissions (EX: User)" Style="{StaticResource BackgroundComboBox}" />
 
             <TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,5" VerticalAlignment="Bottom">How long before this command can be run again (In Seconds)?:</TextBlock>
             <TextBox x:Name="CooldownTextBox" Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="Cooldown (EX: 10)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />

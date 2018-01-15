@@ -8,6 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ComboBox x:Name="ActionGroupNameComboBox" MaterialDesign:HintAssist.Hint="Action Group" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
+        <ComboBox x:Name="ActionGroupNameComboBox" MaterialDesign:HintAssist.Hint="Action Group" Style="{StaticResource BackgroundComboBox}" DisplayMemberPath="Name" />
     </Grid>
 </local:ActionControlBase>
