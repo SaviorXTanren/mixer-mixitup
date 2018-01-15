@@ -63,16 +63,6 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        public async Task<ConstellationClientWrapper> CreateConstellationClient()
-        {
-            ConstellationClient client = await this.RunAsync(ConstellationClient.Create(this.Connection));
-            if (client != null)
-            {
-                return new ConstellationClientWrapper(client);
-            }
-            return null;
-        }
-
         public async Task<InteractiveClientWrapper> CreateInteractiveClient(ChannelModel channel, InteractiveGameListingModel game)
         {
             InteractiveClient client = await this.RunAsync(InteractiveClient.CreateFromChannel(this.Connection, channel, game));

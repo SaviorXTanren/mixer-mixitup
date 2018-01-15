@@ -140,7 +140,9 @@ namespace MixItUp.Base
         public static void Initialize(ServicesHandlerBase serviceHandler)
         {
             ChannelSession.Services = serviceHandler;
+
             ChannelSession.Chat = new ChatClientWrapper();
+            ChannelSession.Constellation = new ConstellationClientWrapper();
         }
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
@@ -219,41 +221,6 @@ namespace MixItUp.Base
             await ChannelSession.Chat.DisconnectBot();
         }
 
-        public static async Task<bool> ConnectConstellation()
-        {
-            ChannelSession.Constellation = await ChannelSession.Connection.CreateConstellationClient();
-            if (await ChannelSession.Constellation.Connect())
-            {
-                ChannelSession.Constellation.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    ChannelSession.Constellation.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                    ChannelSession.Constellation.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                    ChannelSession.Constellation.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                }
-                return true;
-            }
-
-            ChannelSession.Constellation = null;
-            return false;
-        }
-
-        public static async Task DisconnectConstellation()
-        {
-            if (ChannelSession.Constellation != null)
-            {
-                ChannelSession.Constellation.Client.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    ChannelSession.Constellation.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                    ChannelSession.Constellation.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                    ChannelSession.Constellation.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
-                }
-                await ChannelSession.Constellation.Disconnect();
-                ChannelSession.Constellation = null;
-            }
-        }
-
         public static async Task<bool> ConnectInteractive(InteractiveGameListingModel game)
         {
             ChannelSession.Interactive = await ChannelSession.Connection.CreateInteractiveClient(ChannelSession.Channel, game);
@@ -295,6 +262,11 @@ namespace MixItUp.Base
         public static async Task Close()
         {
             await ChannelSession.Services.Close();
+
+            await ChannelSession.Chat.Disconnect();
+            await ChannelSession.DisconnectBot();
+
+            await ChannelSession.Constellation.Disconnect();
         }
 
         public static async Task SaveSettings()
@@ -358,6 +330,7 @@ namespace MixItUp.Base
                     ChannelSession.Connection.Initialize();
 
                     await ChannelSession.Chat.Connect();
+                    await ChannelSession.Constellation.Connect();
 
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
@@ -388,20 +361,6 @@ namespace MixItUp.Base
                 return true;
             }
             return false;
-        }
-
-        private static async void ConstellationClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
-        {
-            ChannelSession.DisconnectionOccurred();
-
-            do
-            {
-                await ChannelSession.DisconnectConstellation();
-
-                await Task.Delay(2000);
-            } while (!await ChannelSession.ConnectConstellation());
-
-            ChannelSession.ReconnectionOccurred();
         }
 
         private static async void InteractiveClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)

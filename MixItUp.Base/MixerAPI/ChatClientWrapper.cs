@@ -8,6 +8,7 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -463,7 +464,7 @@ namespace MixItUp.Base.MixerAPI
             this.OnUserUpdateOccurred(sender, user);
         }
 
-        private async void StreamerClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred();
 
@@ -477,7 +478,7 @@ namespace MixItUp.Base.MixerAPI
             ChannelSession.ReconnectionOccurred();
         }
 
-        private async void BotClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        private async void BotClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred();
 
