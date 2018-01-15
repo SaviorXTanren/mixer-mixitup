@@ -143,6 +143,7 @@ namespace MixItUp.Base
 
             ChannelSession.Chat = new ChatClientWrapper();
             ChannelSession.Constellation = new ConstellationClientWrapper();
+            ChannelSession.Interactive = new InteractiveClientWrapper();
         }
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
@@ -219,44 +220,6 @@ namespace MixItUp.Base
         {
             ChannelSession.BotConnection = null;
             await ChannelSession.Chat.DisconnectBot();
-        }
-
-        public static async Task<bool> ConnectInteractive(InteractiveGameListingModel game)
-        {
-            ChannelSession.Interactive = await ChannelSession.Connection.CreateInteractiveClient(ChannelSession.Channel, game);
-            if (await ChannelSession.Interactive.ConnectAndReady())
-            {
-                ChannelSession.Interactive.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    ChannelSession.Interactive.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                    ChannelSession.Interactive.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                    ChannelSession.Interactive.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                }
-                return true;
-            }
-
-            ChannelSession.Interactive = null;
-            return false;
-        }
-
-        public static async Task<bool> DisconnectInteractive()
-        {
-            if (ChannelSession.Interactive != null)
-            {
-                ChannelSession.Interactive.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    ChannelSession.Interactive.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                    ChannelSession.Interactive.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                    ChannelSession.Interactive.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
-                }
-                await ChannelSession.Interactive.Disconnect();
-
-                ChannelSession.Interactive = null;
-            }
-
-            return true;
         }
 
         public static async Task Close()
@@ -363,23 +326,6 @@ namespace MixItUp.Base
             return false;
         }
 
-        private static async void InteractiveClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
-        {
-            ChannelSession.DisconnectionOccurred();
-
-            InteractiveGameListingModel game = ChannelSession.Interactive.Client.InteractiveGame;
-            do
-            {
-                await ChannelSession.DisconnectInteractive();
-
-                await Task.Delay(2000);
-            } while (!await ChannelSession.ConnectInteractive(game));
-
-            ChannelSession.ReconnectionOccurred();
-        }
-
-
-
         private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)
         {
             if (currency.Currency.RankChangedCommand != null && ChannelSession.Chat.ChatUsers.ContainsKey(currency.User.ID) == true)
@@ -387,21 +333,6 @@ namespace MixItUp.Base
                 var user = ChannelSession.Chat.ChatUsers[currency.User.ID];
                 await currency.Currency.RankChangedCommand.Perform(user);
             }
-        }
-
-        private static void WebSocketClient_OnMethodOccurred(object sender, MethodPacket e)
-        {
-            Logger.Log(string.Format(Environment.NewLine + "WebSocket Method: {0} - {1} - {2} - {3} - {4}" + Environment.NewLine, e.id, e.type, e.method, e.arguments, e.parameters));
-        }
-
-        private static void WebSocketClient_OnReplyOccurred(object sender, ReplyPacket e)
-        {
-            Logger.Log(string.Format(Environment.NewLine + "WebSocket Reply: {0} - {1} - {2} - {3} - {4}" + Environment.NewLine, e.id, e.type, e.result, e.error, e.data));
-        }
-
-        private static void WebSocketClient_OnEventOccurred(object sender, EventPacket e)
-        {
-            Logger.Log(string.Format(Environment.NewLine + "WebSocket Event: {0} - {1} - {2} - {3}" + Environment.NewLine, e.id, e.type, e.eventName, e.data));
         }
     }
 }

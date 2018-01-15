@@ -1,5 +1,4 @@
 ﻿using Mixer.Base;
-using Mixer.Base.Clients;
 using Mixer.Base.Interactive;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Game;
@@ -61,16 +60,6 @@ namespace MixItUp.Base.MixerAPI
                 this.Connection.Users.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.Users.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
             }
-        }
-
-        public async Task<InteractiveClientWrapper> CreateInteractiveClient(ChannelModel channel, InteractiveGameListingModel game)
-        {
-            InteractiveClient client = await this.RunAsync(InteractiveClient.CreateFromChannel(this.Connection, channel, game));
-            if (client != null)
-            {
-                return new InteractiveClientWrapper(client);
-            }
-            return null;
         }
 
         public async Task<UserModel> GetUser(string username) { return await this.RunAsync(this.Connection.Users.GetUser(username)); }

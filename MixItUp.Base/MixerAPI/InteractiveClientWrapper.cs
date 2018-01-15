@@ -7,6 +7,8 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
@@ -61,35 +63,90 @@ namespace MixItUp.Base.MixerAPI
 
         public InteractiveClient Client { get; private set; }
 
-        public LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
         public List<InteractiveConnectedSceneGroupModel> SceneGroups { get; private set; }
         public Dictionary<string, InteractiveConnectedControlCommand> Controls { get; private set; }
+        public LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
-        public InteractiveClientWrapper(InteractiveClient client)
+        private SemaphoreSlim interactiveUserLock = new SemaphoreSlim(1);
+
+        public InteractiveClientWrapper()
         {
-            this.Client = client;
-
-            this.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
             this.SceneGroups = new List<InteractiveConnectedSceneGroupModel>();
             this.Controls = new Dictionary<string, InteractiveConnectedControlCommand>();
-
-            this.Client.OnGiveInput += Client_OnGiveInput;
-            this.Client.OnControlDelete += Client_OnControlDelete;
-            this.Client.OnControlCreate += Client_OnControlCreate;
-            this.Client.OnControlUpdate += Client_OnControlUpdate;
-            this.Client.OnSceneUpdate += Client_OnSceneUpdate;
-            this.Client.OnSceneDelete += Client_OnSceneDelete;
-            this.Client.OnSceneCreate += Client_OnSceneCreate;
-            this.Client.OnGroupUpdate += Client_OnGroupUpdate;
-            this.Client.OnGroupDelete += Client_OnGroupDelete;
-            this.Client.OnGroupCreate += Client_OnGroupCreate;
-            this.Client.OnParticipantUpdate += Client_OnParticipantUpdate;
-            this.Client.OnParticipantJoin += Client_OnParticipantJoin;
-            this.Client.OnParticipantLeave += Client_OnParticipantLeave;
-            this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
+            this.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
         }
 
-        public async Task<bool> ConnectAndReady() { return await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()); }
+        public async Task<bool> Connect(InteractiveGameListingModel game)
+        {
+            this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, game));
+            if (this.Client != null)
+            {
+                if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
+                {
+                    this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                    }
+
+                    ChannelSession.Chat.OnUserJoinOccurred += Chat_OnUserJoinOccurred;
+
+                    this.Client.OnGiveInput += Client_OnGiveInput;
+                    this.Client.OnControlDelete += Client_OnControlDelete;
+                    this.Client.OnControlCreate += Client_OnControlCreate;
+                    this.Client.OnControlUpdate += Client_OnControlUpdate;
+                    this.Client.OnSceneUpdate += Client_OnSceneUpdate;
+                    this.Client.OnSceneDelete += Client_OnSceneDelete;
+                    this.Client.OnSceneCreate += Client_OnSceneCreate;
+                    this.Client.OnGroupUpdate += Client_OnGroupUpdate;
+                    this.Client.OnGroupDelete += Client_OnGroupDelete;
+                    this.Client.OnGroupCreate += Client_OnGroupCreate;
+                    this.Client.OnParticipantUpdate += Client_OnParticipantUpdate;
+                    this.Client.OnParticipantJoin += Client_OnParticipantJoin;
+                    this.Client.OnParticipantLeave += Client_OnParticipantLeave;
+                    this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
+
+                    return await this.Initialize();
+                }
+            }
+            return false;
+        }
+
+        public async Task Disconnect()
+        {
+            if (this.Client != null)
+            {
+                this.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                    this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                    this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                }
+
+                ChannelSession.Chat.OnUserJoinOccurred -= Chat_OnUserJoinOccurred;
+
+                this.Client.OnGiveInput -= Client_OnGiveInput;
+                this.Client.OnControlDelete -= Client_OnControlDelete;
+                this.Client.OnControlCreate -= Client_OnControlCreate;
+                this.Client.OnControlUpdate -= Client_OnControlUpdate;
+                this.Client.OnSceneUpdate -= Client_OnSceneUpdate;
+                this.Client.OnSceneDelete -= Client_OnSceneDelete;
+                this.Client.OnSceneCreate -= Client_OnSceneCreate;
+                this.Client.OnGroupUpdate -= Client_OnGroupUpdate;
+                this.Client.OnGroupDelete -= Client_OnGroupDelete;
+                this.Client.OnGroupCreate -= Client_OnGroupCreate;
+                this.Client.OnParticipantUpdate -= Client_OnParticipantUpdate;
+                this.Client.OnParticipantJoin -= Client_OnParticipantJoin;
+                this.Client.OnParticipantLeave -= Client_OnParticipantLeave;
+                this.Client.OnIssueMemoryWarning -= Client_OnIssueMemoryWarning;
+
+                await this.RunAsync(this.Client.Disconnect());
+            }
+            this.Client = null;
+        }
 
         public async Task<bool> CreateGroups(IEnumerable<InteractiveGroupModel> groups) { return await this.RunAsync(this.Client.CreateGroupsWithResponse(groups)); }
         public async Task<InteractiveGroupCollectionModel> GetGroups() { return await this.RunAsync(this.Client.GetGroups()); }
@@ -105,11 +162,23 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task CaptureSparkTransaction(string transactionID) { await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
 
-        public async Task Disconnect() { await this.RunAsync(this.Client.Disconnect()); }
+        public async Task DisableAllControlsWithoutCommands(InteractiveGameVersionModel version)
+        {
+            // Disable all controls that do not have an associated Interactive Command or the Interactive Command is disabled
+            foreach (InteractiveSceneModel scene in version.controls.scenes)
+            {
+                foreach (InteractiveControlModel control in scene.allControls)
+                {
+                    InteractiveCommand command = this.GetInteractiveCommandForControl(version.gameId, control);
+                    control.disabled = (command == null || !command.IsEnabled);
+                }
+            }
+            await ChannelSession.Connection.UpdateInteractiveGameVersion(version);
+        }
 
         #region Interactive Update Methods
 
-        public async Task<bool> Initialize()
+        private async Task<bool> Initialize()
         {
             // Initialize Scenes
             InteractiveConnectedSceneGroupCollectionModel scenes = await ChannelSession.Interactive.GetScenes();
@@ -185,9 +254,7 @@ namespace MixItUp.Base.MixerAPI
 
         private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)
         {
-            InteractiveCommand command = ChannelSession.Settings.InteractiveCommands.FirstOrDefault(c =>
-                c.GameID.Equals(this.Client.InteractiveGame.id) && c.Control.controlID.Equals(control.controlID));
-
+            InteractiveCommand command = this.GetInteractiveCommandForControl(this.Client.InteractiveGame.id, control);
             if (command != null)
             {
                 command.UpdateWithLatestControl(control);
@@ -219,6 +286,11 @@ namespace MixItUp.Base.MixerAPI
             {
                 await ChannelSession.Interactive.UpdateParticipants(participants);
             }
+        }
+
+        private InteractiveCommand GetInteractiveCommandForControl(uint gameID, InteractiveControlModel control)
+        {
+            return ChannelSession.Settings.InteractiveCommands.FirstOrDefault(c => c.GameID.Equals(gameID) && c.Control.controlID.Equals(control.controlID));
         }
 
         #endregion Interactive Update Methods
@@ -346,18 +418,30 @@ namespace MixItUp.Base.MixerAPI
             this.OnGiveInput(this, e);
         }
 
-        #endregion Interactive Event Handlers
-
-        private async void GlobalEvents_OnChatUserJoined(object sender, UserViewModel e)
+        private async void Chat_OnUserJoinOccurred(object sender, UserViewModel user)
         {
-            if (ChannelSession.Interactive != null && ChannelSession.Interactive.Client.Authenticated)
+            InteractiveParticipantModel participant = this.InteractiveUsers.Values.ToList().FirstOrDefault(u => u.userID.Equals(user.ID));
+            if (participant != null)
             {
-                InteractiveParticipantModel participant = this.InteractiveUsers.Values.FirstOrDefault(u => u.userID.Equals(e.ID));
-                if (participant != null)
-                {
-                    await this.AddParticipants(new List<InteractiveParticipantModel>() { participant });
-                }
+                await this.AddParticipants(new List<InteractiveParticipantModel>() { participant });
             }
         }
+
+        private async void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        {
+            ChannelSession.DisconnectionOccurred();
+
+            InteractiveGameListingModel game = ChannelSession.Interactive.Client.InteractiveGame;
+            do
+            {
+                await this.Disconnect();
+
+                await Task.Delay(2000);
+            } while (!await this.Connect(game));
+
+            ChannelSession.ReconnectionOccurred();
+        }
+
+        #endregion Interactive Event Handlers
     }
 }

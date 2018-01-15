@@ -14,13 +14,13 @@ namespace MixItUp.Base.MixerAPI
 {
     public class ConstellationClientWrapper : MixerRequestWrapperBase
     {
-        public static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
+        public static ConstellationEventType ResubscribeSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
+
+        private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
             ConstellationEventTypeEnum.channel__id__followed, ConstellationEventTypeEnum.channel__id__hosted, ConstellationEventTypeEnum.channel__id__subscribed,
             ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared
         };
-
-        public static ConstellationEventType ResubscribeSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
 
         public ConstellationClient Client { get; private set; }
 

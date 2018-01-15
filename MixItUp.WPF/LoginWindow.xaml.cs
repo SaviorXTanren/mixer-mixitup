@@ -93,7 +93,7 @@ namespace MixItUp.WPF
                             {
                                 if (!await ChannelSession.ConnectBot(setting))
                                 {
-                                    await MessageBoxHelper.ShowMessageDialog("Bot Account failed to authenticate. Please re-add it from the Services section.");
+                                    await MessageBoxHelper.ShowMessageDialog("Bot Account failed to authenticate, please re-connect it from the Services section.");
                                 }
 
                                 MainWindow window = new MainWindow();

@@ -90,9 +90,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private ObservableCollection<InteractiveControlCommandItem> currentSceneControlItems = new ObservableCollection<InteractiveControlCommandItem>();
 
-        private List<InteractiveConnectedSceneGroupModel> connectedSceneGroups = new List<InteractiveConnectedSceneGroupModel>();
-        private Dictionary<string, List<InteractiveControlCommandItem>> connectedSceneControls = new Dictionary<string, List<InteractiveControlCommandItem>>();
-
         public InteractiveControl()
         {
             InitializeComponent();
@@ -237,7 +234,7 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void InteractiveGamesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private async void InteractiveGamesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
@@ -246,7 +243,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void InteractiveScenesComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void InteractiveScenesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.InteractiveScenesComboBox.SelectedIndex >= 0)
             {
@@ -321,23 +318,9 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 bool result = await this.Window.RunAsyncOperation(async () =>
                 {
-                    // Disable all controls that do not have an associated Interactive Command or the Interactive Command is disabled
-                    foreach (InteractiveSceneModel scene in this.interactiveScenes)
-                    {
-                        List<InteractiveControlModel> controlsToUpdate = new List<InteractiveControlModel>();
-                        foreach (InteractiveControlModel control in scene.allControls)
-                        {
-                            InteractiveControlCommandItem controlCommand = this.CreateControlItem(scene.sceneID, control);
-                            control.disabled = (controlCommand.Command == null || !controlCommand.Command.IsEnabled);
-                        }
-                    }
-                    await ChannelSession.Connection.UpdateInteractiveGameVersion(this.selectedGameVersion);
+                    await ChannelSession.Interactive.DisableAllControlsWithoutCommands(this.selectedGameVersion);
 
-                    if (await ChannelSession.ConnectInteractive(this.selectedGame))
-                    {
-                        return await ChannelSession.Interactive.Initialize();
-                    }
-                    return false;
+                    return await ChannelSession.Interactive.Connect(this.selectedGame);
                 });
 
                 if (result)
@@ -352,7 +335,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     await this.Window.RunAsyncOperation(async () =>
                     {
-                        await ChannelSession.DisconnectInteractive();
+                        await ChannelSession.Interactive.Disconnect();
                     });
                 }
             }
@@ -368,11 +351,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.DisconnectInteractive();
+                await ChannelSession.Interactive.Disconnect();
             });
-
-            this.connectedSceneGroups.Clear();
-            this.connectedSceneControls.Clear();
 
             this.GameSelectionGrid.IsEnabled = true;
             this.ChangeButtonsEnableState(true);
