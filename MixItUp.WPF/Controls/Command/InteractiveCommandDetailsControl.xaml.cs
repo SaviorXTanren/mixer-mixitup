@@ -15,27 +15,27 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class InteractiveCommandDetailsControl : CommandDetailsControlBase
     {
-        private InteractiveGameListingModel game;
-        private InteractiveGameVersionModel version;
-        private InteractiveSceneModel scene;
-        private InteractiveControlModel control;
+        public InteractiveGameListingModel Game { get; private set; }
+        public InteractiveGameVersionModel Version { get; private set; }
+        public InteractiveSceneModel Scene { get; private set; }
+        public InteractiveControlModel Control { get; private set; }
 
         private InteractiveCommand command;
 
         public InteractiveCommandDetailsControl(InteractiveCommand command)
         {
             this.command = command;
-            this.control = command.Control;
+            this.Control = command.Control;
 
             InitializeComponent();
         }
 
         public InteractiveCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveControlModel control)
         {
-            this.game = game;
-            this.version = version;
-            this.scene = scene;
-            this.control = control;
+            this.Game = game;
+            this.Version = version;
+            this.Scene = scene;
+            this.Control = control;
 
             InitializeComponent();
         }
@@ -46,12 +46,12 @@ namespace MixItUp.WPF.Controls.Command
             this.CooldownTypeComboBox.ItemsSource = new List<string>() { "Individual", "Group" };
             this.CooldownGroupsComboBox.ItemsSource = ChannelSession.Settings.InteractiveCooldownGroups.Keys;
 
-            if (this.control != null && this.control is InteractiveButtonControlModel)
+            if (this.Control != null && this.Control is InteractiveButtonControlModel)
             {
                 this.ButtonTriggerComboBox.IsEnabled = true;
                 this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveButtonCommandTriggerType.MouseDown);
                 this.SparkCostTextBox.IsEnabled = true;
-                this.SparkCostTextBox.Text = ((InteractiveButtonControlModel)this.control).cost.ToString();
+                this.SparkCostTextBox.Text = ((InteractiveButtonControlModel)this.Control).cost.ToString();
                 this.CooldownGroupsComboBox.IsEnabled = true;
                 this.CooldownTypeComboBox.IsEnabled = true;
                 this.CooldownTextBox.IsEnabled = true;
@@ -76,12 +76,12 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                this.game = games.FirstOrDefault(g => g.name.Equals(this.command.GameID));
-                if (this.game != null)
+                this.Game = games.FirstOrDefault(g => g.name.Equals(this.command.GameID));
+                if (this.Game != null)
                 {
-                    this.version = this.game.versions.First();
-                    this.version = await ChannelSession.Connection.GetInteractiveGameVersion(this.version);
-                    this.scene = this.version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
+                    this.Version = this.Game.versions.First();
+                    this.Version = await ChannelSession.Connection.GetInteractiveGameVersion(this.Version);
+                    this.Scene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
                 }
             }
         }
@@ -91,7 +91,7 @@ namespace MixItUp.WPF.Controls.Command
             int sparkCost = 0;
             int cooldown = 0;
 
-            if (this.control is InteractiveButtonControlModel)
+            if (this.Control is InteractiveButtonControlModel)
             {
                 if (this.ButtonTriggerComboBox.SelectedIndex < 0)
                 {
@@ -139,18 +139,18 @@ namespace MixItUp.WPF.Controls.Command
                 InteractiveButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
                 if (this.command == null)
                 {
-                    if (this.control is InteractiveButtonControlModel)
+                    if (this.Control is InteractiveButtonControlModel)
                     {                
-                        this.command = new InteractiveCommand(this.game, this.scene, (InteractiveButtonControlModel)this.control, trigger);
+                        this.command = new InteractiveCommand(this.Game, this.Scene, (InteractiveButtonControlModel)this.Control, trigger);
                     }
                     else
                     {
-                        this.command = new InteractiveCommand(this.game, this.scene, (InteractiveJoystickControlModel)this.control);
+                        this.command = new InteractiveCommand(this.Game, this.Scene, (InteractiveJoystickControlModel)this.Control);
                     }
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
 
-                if (this.control is InteractiveButtonControlModel)
+                if (this.Control is InteractiveButtonControlModel)
                 {
                     this.command.Trigger = trigger;
                     this.command.Button.cost = int.Parse(this.SparkCostTextBox.Text);
@@ -170,7 +170,7 @@ namespace MixItUp.WPF.Controls.Command
                         this.command.IndividualCooldown = cooldown;
                     }
 
-                    await ChannelSession.Connection.UpdateInteractiveGameVersion(this.version);
+                    await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
                 }
                 return this.command;
             }

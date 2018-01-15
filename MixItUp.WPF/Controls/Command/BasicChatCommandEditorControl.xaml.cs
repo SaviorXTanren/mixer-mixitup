@@ -21,19 +21,21 @@ namespace MixItUp.WPF.Controls.Command
     {
         private CommandWindow window;
 
-        private ChatActionControl chatActionControl;
+        private BasicCommandTypeEnum commandType;
+        private ChatCommand command;
 
-        private BasicChatCommand command = null;
+        private ActionControlBase actionControl;
 
-        public BasicChatCommandEditorControl(CommandWindow window, BasicChatCommand command)
-            : this(window)
+        public BasicChatCommandEditorControl(CommandWindow window, ChatCommand command)
+            : this(window, BasicCommandTypeEnum.None)
         {
             this.command = command;
         }
 
-        public BasicChatCommandEditorControl(CommandWindow window)
+        public BasicChatCommandEditorControl(CommandWindow window, BasicCommandTypeEnum commandType)
         {
             this.window = window;
+            this.commandType = commandType;
 
             InitializeComponent();
         }
@@ -49,16 +51,30 @@ namespace MixItUp.WPF.Controls.Command
                 this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(command.Permissions);
                 this.CooldownTextBox.Text = command.Cooldown.ToString();
                 this.ChatCommandTextBox.Text = command.CommandsString;
-                this.chatActionControl = new ChatActionControl(null, (ChatAction)this.command.Actions.First());
+                if (this.command.Actions.First() is ChatAction)
+                {
+                    this.actionControl = new ChatActionControl(null, (ChatAction)this.command.Actions.First());
+                }
+                else if (this.command.Actions.First() is SoundAction)
+                {
+                    this.actionControl = new SoundActionControl(null, (SoundAction)this.command.Actions.First());
+                }
             }
             else
             {
                 this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(UserRole.User);
                 this.CooldownTextBox.Text = "0";
-                this.chatActionControl = new ChatActionControl(null);
+                if (this.commandType == BasicCommandTypeEnum.Chat)
+                {
+                    this.actionControl = new ChatActionControl(null);
+                }
+                else if (this.commandType == BasicCommandTypeEnum.Sound)
+                {
+                    this.actionControl = new SoundActionControl(null);
+                }
             }
 
-            this.ChatActionControlControl.Content = this.chatActionControl;
+            this.ActionControlControl.Content = this.actionControl;
 
             await base.OnLoaded();
         }
@@ -81,13 +97,6 @@ namespace MixItUp.WPF.Controls.Command
                         await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
                         return;
                     }
-                }
-
-                ActionBase action = this.chatActionControl.GetAction();
-                if (action == null)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("The chat message must not be empty");
-                    return;
                 }
 
                 if (string.IsNullOrEmpty(this.ChatCommandTextBox.Text))
@@ -121,15 +130,23 @@ namespace MixItUp.WPF.Controls.Command
                     }
                 }
 
-                ActionBase chatAction = this.chatActionControl.GetAction();
-                if (chatAction == null)
+                ActionBase action = this.actionControl.GetAction();
+                if (action == null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The chat message can not be empty");
+                    if (this.actionControl is ChatActionControl)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The chat message must not be empty");
+                    }
+                    else if (this.actionControl is SoundActionControl)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The sound file path must not be empty");
+                    }
                     return;
                 }
 
-                BasicChatCommand newCommand = new BasicChatCommand(commandStrings, EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem), cooldown);
-                newCommand.Actions.Add(chatAction);
+                ChatCommand newCommand = new ChatCommand(commandStrings.First(), commandStrings, EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem), cooldown, null);
+                newCommand.IsBasic = true;
+                newCommand.Actions.Add(action);
 
                 if (this.command != null)
                 {

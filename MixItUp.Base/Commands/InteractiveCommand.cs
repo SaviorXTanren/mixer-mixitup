@@ -3,9 +3,6 @@ using Mixer.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Threading;
-using MixItUp.Base.ViewModel.User;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
@@ -23,6 +20,8 @@ namespace MixItUp.Base.Commands
 
     public class InteractiveCommand : CommandBase
     {
+        public const string BasicCommandCooldownGroup = "All Buttons";
+
         private static SemaphoreSlim interactiveCommandPerformSemaphore = new SemaphoreSlim(1);
 
         [JsonProperty]

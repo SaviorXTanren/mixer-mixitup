@@ -99,16 +99,7 @@ namespace MixItUp.WPF.Controls.MainControls
             ChatCommand command = this.GetCommandFromCommandButtons<ChatCommand>(sender);
             if (command != null)
             {
-                CommandWindow window = null;
-                if (command is BasicChatCommand)
-                {
-                    window = new CommandWindow((BasicChatCommand)command);
-
-                }
-                else
-                {
-                    window = new CommandWindow(new ChatCommandDetailsControl(command));
-                }
+                CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command));
                 window.Closed += Window_Closed;
                 window.Show();
             }

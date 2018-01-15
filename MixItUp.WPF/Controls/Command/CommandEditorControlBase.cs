@@ -4,6 +4,13 @@ using System;
 
 namespace MixItUp.WPF.Controls.Command
 {
+    public enum BasicCommandTypeEnum
+    {
+        None,
+        Chat,
+        Sound,
+    }
+
     public abstract class CommandEditorControlBase : LoadingControlBase
     {
         public event EventHandler<CommandBase> OnCommandSaveSuccessfully;

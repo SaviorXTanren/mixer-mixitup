@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Commands;
+﻿using Mixer.Base.Model.Interactive;
+using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
 using System;
 using System.Threading.Tasks;
@@ -16,18 +17,11 @@ namespace MixItUp.WPF.Windows.Command
         private CommandEditorControlBase commandEditorControl;
 
         private CommandDetailsControlBase commandDetailsControl;
-        private BasicChatCommand basicChatCommand;
 
         public CommandWindow(CommandDetailsControlBase commandDetailsControl)
             : this()
         {
             this.commandDetailsControl = commandDetailsControl;
-        }
-
-        public CommandWindow(BasicChatCommand basicChatCommand)
-            : this()
-        {
-            this.basicChatCommand = basicChatCommand;
         }
 
         private CommandWindow()
@@ -39,13 +33,31 @@ namespace MixItUp.WPF.Windows.Command
 
         protected override async Task OnLoaded()
         {
-            if (this.commandDetailsControl != null && (this.commandDetailsControl.GetExistingCommand() != null || !(this.commandDetailsControl is ChatCommandDetailsControl)))
+            if (this.commandDetailsControl != null)
             {
-                this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
-            }
-            else if (this.basicChatCommand is BasicChatCommand)
-            {
-                this.ShowCommandEditor(new BasicChatCommandEditorControl(this, this.basicChatCommand));
+                if (this.commandDetailsControl.GetExistingCommand() != null)
+                {
+                    CommandBase command = this.commandDetailsControl.GetExistingCommand();
+                    if (command.IsBasic)
+                    {
+                        if (command is ChatCommand)
+                        {
+                            this.ShowCommandEditor(new BasicChatCommandEditorControl(this, (ChatCommand)command));
+                        }
+                        else if (command is InteractiveCommand)
+                        {
+                            this.ShowCommandEditor(new BasicInteractiveCommandEditorControl(this, (InteractiveCommand)command));
+                        }
+                    }
+                    else
+                    {
+                        this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
+                    }
+                }
+                else if (this.commandDetailsControl is CustomCommandDetailsControl)
+                {
+                    this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
+                }
             }
 
             await base.OnLoaded();
@@ -53,7 +65,30 @@ namespace MixItUp.WPF.Windows.Command
 
         private void BasicChatCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.ShowCommandEditor(new BasicChatCommandEditorControl(this));
+            if (this.commandDetailsControl is ChatCommandDetailsControl)
+            {
+                this.ShowCommandEditor(new BasicChatCommandEditorControl(this, BasicCommandTypeEnum.Chat));
+            }
+            else if (this.commandDetailsControl is InteractiveCommandDetailsControl)
+            {
+                InteractiveCommandDetailsControl interactiveCommandDetails = (InteractiveCommandDetailsControl)this.commandDetailsControl;
+                this.ShowCommandEditor(new BasicInteractiveCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, interactiveCommandDetails.Scene,
+                    (InteractiveButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Chat));
+            }
+        }
+
+        private void BasicSoundCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.commandDetailsControl is ChatCommandDetailsControl)
+            {
+                this.ShowCommandEditor(new BasicChatCommandEditorControl(this, BasicCommandTypeEnum.Sound));
+            }
+            if (this.commandDetailsControl is InteractiveCommandDetailsControl)
+            {
+                InteractiveCommandDetailsControl interactiveCommandDetails = (InteractiveCommandDetailsControl)this.commandDetailsControl;
+                this.ShowCommandEditor(new BasicInteractiveCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, interactiveCommandDetails.Scene,
+                    (InteractiveButtonControlModel)interactiveCommandDetails.Control, BasicCommandTypeEnum.Sound));
+            }
         }
 
         private void AdvancedCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)

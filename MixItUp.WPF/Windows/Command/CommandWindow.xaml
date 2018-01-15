@@ -40,13 +40,17 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="200" TextAlignment="Center">Select the type of command you would like to build:</TextBlock>
 
             <Button x:Name="BasicChatCommandButton" Grid.Row="2" Click="BasicChatCommandButton_Click">Basic Chat Command</Button>
 
-            <Button x:Name="AdvancedCommandButton" Grid.Row="4" Click="AdvancedCommandButton_Click">Advanced Command</Button>
+            <Button x:Name="BasicSoundCommandButton" Grid.Row="4" Click="BasicSoundCommandButton_Click">Basic Sound Command</Button>
+
+            <Button x:Name="AdvancedCommandButton" Grid.Row="6" Click="AdvancedCommandButton_Click">Advanced Command</Button>
 
         </Grid>
         

@@ -40,6 +40,9 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public bool IsEnabled { get; set; }
 
+        [DataMember]
+        public bool IsBasic { get; set; }
+
         [XmlIgnore]
         public string TypeName { get { return EnumHelper.GetEnumName(this.Type); } }
 
