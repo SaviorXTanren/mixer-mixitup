@@ -8,7 +8,6 @@
              mc:Ignorable="d"
                                  
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             Background="{DynamicResource MaterialDesignPaper}"
              TextElement.FontWeight="Medium"
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto" 
