@@ -21,20 +21,16 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.SoundFilePathTextBox.Text = this.action.FilePath;
-                this.SoundVolumeTextBox.Text = this.action.VolumeScale.ToString();
+                this.SoundVolumeSlider.Value = this.action.VolumeScale;
             }
             return Task.FromResult(0);
         }
 
         public override ActionBase GetAction()
         {
-            if (!string.IsNullOrEmpty(this.SoundFilePathTextBox.Text) && !string.IsNullOrEmpty(this.SoundVolumeTextBox.Text))
+            if (!string.IsNullOrEmpty(this.SoundFilePathTextBox.Text))
             {
-                int volumeLevel;
-                if (int.TryParse(this.SoundVolumeTextBox.Text, out volumeLevel) && volumeLevel >= 0 && volumeLevel <= 100)
-                {
-                    return new SoundAction(this.SoundFilePathTextBox.Text, volumeLevel);
-                }
+                return new SoundAction(this.SoundFilePathTextBox.Text, (int)this.SoundVolumeSlider.Value);
             }
             return null;
         }
