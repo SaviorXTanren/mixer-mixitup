@@ -87,8 +87,6 @@ namespace MixItUp.Base.MixerAPI
             this.Client.OnParticipantJoin += Client_OnParticipantJoin;
             this.Client.OnParticipantLeave += Client_OnParticipantLeave;
             this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
-
-            GlobalEvents.OnChatUserJoined += GlobalEvents_OnChatUserJoined;
         }
 
         public async Task<bool> ConnectAndReady() { return await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()); }

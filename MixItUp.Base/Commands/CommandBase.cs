@@ -105,8 +105,6 @@ namespace MixItUp.Base.Commands
                 {
                     await this.AsyncSemaphore.WaitAsync();
 
-                    GlobalEvents.CommandExecuted(this);
-
                     foreach (ActionBase action in this.Actions)
                     {
                         token.ThrowIfCancellationRequested();

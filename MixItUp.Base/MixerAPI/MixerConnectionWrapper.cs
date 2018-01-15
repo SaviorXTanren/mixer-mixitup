@@ -32,38 +32,35 @@ namespace MixItUp.Base.MixerAPI
                 this.Connection.Channels.OnRequestSent += RestAPIService_OnRequestSent;
                 this.Connection.Channels.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.Channels.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+
                 this.Connection.Chats.OnRequestSent += RestAPIService_OnRequestSent;
                 this.Connection.Chats.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.Chats.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+
                 this.Connection.Costream.OnRequestSent += RestAPIService_OnRequestSent;
                 this.Connection.Costream.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.Costream.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+
                 this.Connection.GameTypes.OnRequestSent += RestAPIService_OnRequestSent;
                 this.Connection.GameTypes.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.GameTypes.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+
                 this.Connection.Interactive.OnRequestSent += RestAPIService_OnRequestSent;
                 this.Connection.Interactive.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.Interactive.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+
                 this.Connection.OAuth.OnRequestSent += RestAPIService_OnRequestSent;
                 this.Connection.OAuth.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.OAuth.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+
                 this.Connection.Teams.OnRequestSent += RestAPIService_OnRequestSent;
                 this.Connection.Teams.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.Teams.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
+
                 this.Connection.Users.OnRequestSent += RestAPIService_OnRequestSent;
                 this.Connection.Users.OnSuccessResponseReceived += RestAPIService_OnSuccessResponseReceived;
                 this.Connection.Users.OnFailureResponseReceived += RestAPIServices_OnFailureResponseReceived;
             }
-        }
-
-        public async Task<ChatClientWrapper> CreateChatClient(ChannelModel channel)
-        {
-            ChatClient client = await this.RunAsync(ChatClient.CreateFromChannel(this.Connection, channel));
-            if (client != null)
-            {
-                return new ChatClientWrapper(client);
-            }
-            return null;
         }
 
         public async Task<ConstellationClientWrapper> CreateConstellationClient()

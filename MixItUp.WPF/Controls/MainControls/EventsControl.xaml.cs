@@ -117,8 +117,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (foundCommand != null)
                 {
-                    GlobalEvents.EventOccurred(command.GetEventType());
-
                     if (user != null)
                     {
                         await command.Perform(user);

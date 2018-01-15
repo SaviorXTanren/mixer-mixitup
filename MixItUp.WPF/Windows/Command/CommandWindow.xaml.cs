@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Windows.Command
 
         protected override async Task OnLoaded()
         {
-            if (this.commandDetailsControl != null && this.commandDetailsControl.GetExistingCommand() != null)
+            if (this.commandDetailsControl != null && (this.commandDetailsControl.GetExistingCommand() != null || !(this.commandDetailsControl is ChatCommandDetailsControl)))
             {
                 this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
             }

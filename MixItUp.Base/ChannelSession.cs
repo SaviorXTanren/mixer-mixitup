@@ -125,9 +125,22 @@ namespace MixItUp.Base
             }
         }
 
+        public static bool IsStreamer
+        {
+            get
+            {
+                if (ChannelSession.User != null && ChannelSession.Channel != null)
+                {
+                    return ChannelSession.User.id == ChannelSession.Channel.user.id;
+                }
+                return false;
+            }
+        }
+
         public static void Initialize(ServicesHandlerBase serviceHandler)
         {
             ChannelSession.Services = serviceHandler;
+            ChannelSession.Chat = new ChatClientWrapper();
         }
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
@@ -170,14 +183,7 @@ namespace MixItUp.Base
             if (connection != null)
             {
                 ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
-                if (await ChannelSession.InitializeBotInternal())
-                {
-                    if (ChannelSession.Chat != null)
-                    {
-                        return await ChannelSession.ConnectBotChat();
-                    }
-                    return true;
-                }
+                return await ChannelSession.InitializeBotInternal();
             }
             return false;
         }
@@ -210,106 +216,11 @@ namespace MixItUp.Base
         public static async Task DisconnectBot()
         {
             ChannelSession.BotConnection = null;
-            await ChannelSession.DisconnectBotChat();
-        }
-
-        public static async Task<bool> ConnectChat()
-        {
-            ChannelSession.CheckMixerConnection();
-
-            if (ChannelSession.Chat != null)
-            {
-                ChannelSession.Chat.StreamerClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    ChannelSession.Chat.StreamerClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                    ChannelSession.Chat.StreamerClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                    ChannelSession.Chat.StreamerClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
-                }
-                await ChannelSession.Chat.Disconnect();
-            }
-
-            ChannelSession.Chat = await ChannelSession.Connection.CreateChatClient(ChannelSession.Channel);
-            if (ChannelSession.Chat != null && await ChannelSession.Chat.ConnectAndAuthenticate())
-            {
-                ChannelSession.Chat.StreamerClient.OnDisconnectOccurred += ChatClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    ChannelSession.Chat.StreamerClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                    ChannelSession.Chat.StreamerClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                    ChannelSession.Chat.StreamerClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                }
-
-                if (ChannelSession.BotConnection != null)
-                {
-                    return await ChannelSession.ConnectBotChat();
-                }
-                return true;
-            }
-
-            ChannelSession.Chat = null;
-            return false;
-        }
-
-        public static async Task DisconnectChat()
-        {
-            if (ChannelSession.Chat != null)
-            {
-                ChannelSession.Chat.StreamerClient.OnDisconnectOccurred -= ChatClient_OnDisconnectOccurred;
-                await ChannelSession.Chat.Disconnect();
-                ChannelSession.Chat = null;
-            }
-        }
-
-        public static async Task<bool> ConnectBotChat()
-        {
-            if (ChannelSession.Chat.BotClient != null)
-            {
-                ChannelSession.Chat.BotClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
-                {
-                    ChannelSession.Chat.BotClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                    ChannelSession.Chat.BotClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                    ChannelSession.Chat.BotClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
-                }
-                await ChannelSession.Chat.DisconnectBot();
-            }
-
-            if (ChannelSession.Chat != null)
-            {
-                ChatClientWrapper botChat = await ChannelSession.BotConnection.CreateChatClient(ChannelSession.Channel);
-                if (botChat != null)
-                {
-                    if (await ChannelSession.Chat.ConnectAndAuthenticateBot(botChat.StreamerClient))
-                    {
-                        ChannelSession.Chat.BotClient.OnDisconnectOccurred += BotChatClient_OnDisconnectOccurred;
-                        if (ChannelSession.Settings.DiagnosticLogging)
-                        {
-                            ChannelSession.Chat.BotClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                            ChannelSession.Chat.BotClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                            ChannelSession.Chat.BotClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                        }
-                        return true;
-                    }
-                }
-                await ChannelSession.Chat.DisconnectBot();
-            }
-            return false;
-        }
-
-        public static async Task DisconnectBotChat()
-        {
-            if (ChannelSession.Chat != null && ChannelSession.Chat.BotClient != null)
-            {
-                ChannelSession.Chat.BotClient.OnDisconnectOccurred -= BotChatClient_OnDisconnectOccurred;
-                await ChannelSession.Chat.DisconnectBot();
-            }
+            await ChannelSession.Chat.DisconnectBot();
         }
 
         public static async Task<bool> ConnectConstellation()
         {
-            ChannelSession.CheckMixerConnection();
-
             ChannelSession.Constellation = await ChannelSession.Connection.CreateConstellationClient();
             if (await ChannelSession.Constellation.Connect())
             {
@@ -345,8 +256,6 @@ namespace MixItUp.Base
 
         public static async Task<bool> ConnectInteractive(InteractiveGameListingModel game)
         {
-            ChannelSession.CheckMixerConnection();
-
             ChannelSession.Interactive = await ChannelSession.Connection.CreateInteractiveClient(ChannelSession.Channel, game);
             if (await ChannelSession.Interactive.ConnectAndReady())
             {
@@ -414,6 +323,16 @@ namespace MixItUp.Base
             return new UserViewModel(User);
         }
 
+        public static void DisconnectionOccurred()
+        {
+            Logger.Log("Service disconnection occurred, attempting to reconnect now...");
+        }
+
+        public static void ReconnectionOccurred()
+        {
+            Logger.Log("Service reconnection successful");
+        }
+
         private static async Task<bool> InitializeInternal(string channelName = null)
         {
             PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
@@ -438,6 +357,8 @@ namespace MixItUp.Base
 
                     ChannelSession.Connection.Initialize();
 
+                    await ChannelSession.Chat.Connect();
+
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
                     await ChannelSession.SaveSettings();
@@ -460,47 +381,13 @@ namespace MixItUp.Base
 
                 ChannelSession.BotConnection.Initialize();
 
+                await ChannelSession.Chat.ConnectBot();
+
                 await ChannelSession.SaveSettings();
 
                 return true;
             }
             return false;
-        }
-
-        private static void CheckMixerConnection()
-        {
-            if (ChannelSession.Connection == null)
-            {
-                throw new InvalidOperationException("Mixer client has not been initialized");
-            }
-        }
-
-        private static async void ChatClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
-        {
-            ChannelSession.DisconnectionOccurred();
-
-            do
-            {
-                await ChannelSession.DisconnectChat();
-
-                await Task.Delay(2000);
-            } while (!await ChannelSession.ConnectChat());
-
-            ChannelSession.ReconnectionOccurred();
-        }
-
-        private static async void BotChatClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
-        {
-            ChannelSession.DisconnectionOccurred();
-
-            do
-            {
-                await ChannelSession.DisconnectBotChat();
-
-                await Task.Delay(2000);
-            } while (!await ChannelSession.ConnectBotChat());
-
-            ChannelSession.ReconnectionOccurred();
         }
 
         private static async void ConstellationClient_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
@@ -532,15 +419,7 @@ namespace MixItUp.Base
             ChannelSession.ReconnectionOccurred();
         }
 
-        private static void DisconnectionOccurred()
-        {
-            Logger.Log("Service disconnection occurred, attempting to reconnect now...");
-        }
 
-        private static void ReconnectionOccurred()
-        {
-            Logger.Log("Service reconnection successful");
-        }
 
         private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)
         {

@@ -40,7 +40,7 @@ namespace MixItUp.WPF
 
             await this.MainMenu.Initialize(this);
 
-            await this.MainMenu.AddMenuItem("Chat", new ChatControl() { EnableCommands = true });
+            await this.MainMenu.AddMenuItem("Chat", new ChatControl());
             if (ChannelSession.Settings.IsStreamer)
             {
                 await this.MainMenu.AddMenuItem("Channel", new ChannelControl());
