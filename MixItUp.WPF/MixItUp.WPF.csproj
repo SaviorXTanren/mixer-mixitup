@@ -230,6 +230,9 @@
     <Compile Include="Controls\Command\BasicInteractiveCommandEditorControl.xaml.cs">
       <DependentUpon>BasicInteractiveCommandEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\BasicTimerCommandEditorControl.xaml.cs">
+      <DependentUpon>BasicTimerCommandEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Command\CommandEditorControlBase.cs" />
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
@@ -465,6 +468,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\BasicInteractiveCommandEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\BasicTimerCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

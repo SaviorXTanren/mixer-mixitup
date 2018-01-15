@@ -52,13 +52,17 @@ namespace MixItUp.WPF.Windows.Command
                         {
                             this.ShowCommandEditor(new BasicEventCommandEditorControl(this, (EventCommand)command));
                         }
+                        else if (command is TimerCommand)
+                        {
+                            this.ShowCommandEditor(new BasicTimerCommandEditorControl(this, (TimerCommand)command));
+                        }
                     }
                     else
                     {
                         this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
                     }
                 }
-                else if (this.commandDetailsControl is CustomCommandDetailsControl)
+                else if (this.commandDetailsControl is CustomCommandDetailsControl || this.commandDetailsControl is ActionGroupCommandDetailsControl)
                 {
                     this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl));
                 }
@@ -84,6 +88,10 @@ namespace MixItUp.WPF.Windows.Command
                 EventCommandDetailsControl eventCommandDetails = (EventCommandDetailsControl)this.commandDetailsControl;
                 this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.EventType, BasicCommandTypeEnum.Chat));
             }
+            else if (this.commandDetailsControl is TimerCommandDetailsControl)
+            {
+                this.ShowCommandEditor(new BasicTimerCommandEditorControl(this, BasicCommandTypeEnum.Chat));
+            }
         }
 
         private void BasicSoundCommandButton_Click(object sender, RoutedEventArgs e)
@@ -102,6 +110,10 @@ namespace MixItUp.WPF.Windows.Command
             {
                 EventCommandDetailsControl eventCommandDetails = (EventCommandDetailsControl)this.commandDetailsControl;
                 this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.EventType, BasicCommandTypeEnum.Sound));
+            }
+            else if (this.commandDetailsControl is TimerCommandDetailsControl)
+            {
+                this.ShowCommandEditor(new BasicTimerCommandEditorControl(this, BasicCommandTypeEnum.Sound));
             }
         }
 
