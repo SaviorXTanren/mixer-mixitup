@@ -180,6 +180,10 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task<bool> Initialize()
         {
+            this.SceneGroups.Clear();
+            this.Controls.Clear();
+            this.InteractiveUsers.Clear();
+
             // Initialize Scenes
             InteractiveConnectedSceneGroupCollectionModel scenes = await ChannelSession.Interactive.GetScenes();
             if (scenes == null)
