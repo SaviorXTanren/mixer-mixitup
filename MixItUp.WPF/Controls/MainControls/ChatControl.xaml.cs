@@ -42,7 +42,7 @@ namespace MixItUp.WPF.Controls.MainControls
             InitializeComponent();
         }
 
-        protected override async Task InitializeInternal()
+        protected override Task InitializeInternal()
         {
             this.Window.Closing += Window_Closing;
 
@@ -68,6 +68,8 @@ namespace MixItUp.WPF.Controls.MainControls
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () => { await this.ChatRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            return Task.FromResult(0);
         }
 
         protected override Task OnVisibilityChanged()
