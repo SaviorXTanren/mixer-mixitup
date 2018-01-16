@@ -50,12 +50,28 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        
-                        <Button x:Name="ChatClearMessagesButton" Grid.Column="0" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="ChatClearMessagesButton_Click">Clear Chat</Button>
 
-                        <Button x:Name="DisableChatButton" Grid.Column="2" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DisableChatButton_Click">Disable Chat</Button>
-                        <Button x:Name="EnableChatButton" Grid.Column="2" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="EnableChatButton_Click" Visibility="Collapsed">Enable Chat</Button>
+                        <Button x:Name="PopOutChatButton" Grid.Row="0" Visibility="Visible" HorizontalAlignment="Center" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="PopOutChatButton_Click">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center">Pop Out</TextBlock>
+
+                                <MaterialDesign:PackIcon Grid.Column="2" Kind="Launch" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource PrimaryColor}" />
+                            </Grid>
+                        </Button>
+
+                        <Button x:Name="ChatClearMessagesButton" Grid.Column="2" Width="100" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="ChatClearMessagesButton_Click">Clear Chat</Button>
+
+                        <Button x:Name="DisableChatButton" Grid.Column="4" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DisableChatButton_Click">Disable Chat</Button>
+                        <Button x:Name="EnableChatButton" Grid.Column="4" Width="110" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="EnableChatButton_Click" Visibility="Collapsed">Enable Chat</Button>
                         
                     </Grid>
                 </GroupBox.Header>

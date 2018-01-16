@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.PopOut;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,9 +38,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private int totalMessages = 0;
 
-        public ChatControl()
+        public ChatControl(bool isPopOut = false)
         {
             InitializeComponent();
+
+            if (isPopOut)
+            {
+                this.PopOutChatButton.Visibility = Visibility.Collapsed;
+            }
         }
 
         protected override Task InitializeInternal()
@@ -179,6 +185,12 @@ namespace MixItUp.WPF.Controls.MainControls
         #endregion Chat Update Methods
 
         #region UI Events
+
+        private void PopOutChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            PopOutWindow window = new PopOutWindow(new ChatControl(isPopOut: true));
+            window.Show();
+        }
 
         private async void ChatClearMessagesButton_Click(object sender, RoutedEventArgs e)
         {

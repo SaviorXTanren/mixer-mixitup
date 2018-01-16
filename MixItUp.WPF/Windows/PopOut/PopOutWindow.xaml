@@ -1,9 +1,9 @@
-﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Command.CommandWindow"
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.PopOut.PopOutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Command"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.PopOut"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -16,7 +16,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                   
         Icon="./../../Logo.ico"
-        Title="Customize Command" Height="600" Width="800">
+        Title="Mix It Up - Pop Out" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -35,29 +35,8 @@
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
-        <Grid x:Name="CommandSelectionGrid" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <ContentControl x:Name="MainContentControl" Grid.Row="0" />
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="200" TextAlignment="Center">Select the type of command you would like to build:</TextBlock>
-
-            <Button x:Name="BasicChatCommandButton" Grid.Row="2" Click="BasicChatCommandButton_Click">Basic Chat Command</Button>
-
-            <Button x:Name="BasicSoundCommandButton" Grid.Row="4" Click="BasicSoundCommandButton_Click">Basic Sound Command</Button>
-
-            <Button x:Name="AdvancedCommandButton" Grid.Row="6" Click="AdvancedCommandButton_Click">Advanced Command</Button>
-
-        </Grid>
-        
-        <ContentControl Margin="10" x:Name="MainContentControl" Visibility="Collapsed" Grid.Row="0" />
-        
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>
 </Windows:LoadingWindowBase>
