@@ -3,8 +3,10 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
@@ -78,6 +80,12 @@ namespace MixItUp.Base.MixerAPI
             if (e.payload.TryGetValue("user", out userToken))
             {
                 user = new UserViewModel(userToken.ToObject<UserModel>());
+
+                JToken subscribeStartToken;
+                if (e.payload.TryGetValue("since", out subscribeStartToken))
+                {
+                    user.SubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
+                }
             }
             else if (e.payload.TryGetValue("hoster", out userToken))
             {
@@ -120,6 +128,11 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
                 }
+
+                if (e.channel.Equals(UserCurrencyViewModel.ChannelSubscribedEvent.ToString()))
+                {
+                    user.SubscribeDate = DateTimeOffset.Now;
+                }
             }
 
             foreach (EventCommand command in ChannelSession.Settings.EventCommands)
@@ -140,11 +153,11 @@ namespace MixItUp.Base.MixerAPI
                 {
                     if (user != null)
                     {
-                        await command.Perform(user);
+                        await foundCommand.Perform(user);
                     }
                     else
                     {
-                        await command.Perform();
+                        await foundCommand.Perform();
                     }
 
                     return;

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text;
+using System.Collections.Generic;
 
 namespace MixItUp.Base.Util
 {
@@ -18,32 +18,21 @@ namespace MixItUp.Base.Util
             int months = days / 30;
             days = days - (months * 30);
 
-            StringBuilder mixerAgeString = new StringBuilder();
+            List<string> dateSegments = new List<string>();
             if (years > 0)
             {
-                mixerAgeString.Append(years + " Year");
-                if (years > 1)
-                {
-                    mixerAgeString.Append("s");
-                }
-                mixerAgeString.Append(", ");
+                dateSegments.Add(years + " Year(s)");
             }
             if (months > 0)
             {
-                mixerAgeString.Append(months + " Month");
-                if (months > 1)
-                {
-                    mixerAgeString.Append("s");
-                }
-                mixerAgeString.Append(", ");
+                dateSegments.Add(months + " Month(s)");
             }
-            mixerAgeString.Append(days + " Day");
-            if (days > 1)
+            if (days > 0)
             {
-                mixerAgeString.Append("s");
+                dateSegments.Add(days + " Day(s)");
             }
 
-            return mixerAgeString.ToString();
+            return string.Join(", ", dateSegments);
         }
     }
 }

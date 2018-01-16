@@ -82,6 +82,11 @@ namespace MixItUp.Base.Commands
         {
             return user.username + "'s Follow Age: " + followDate.GetAge();
         }
+
+        public string GetSubscribeAge(UserModel user, DateTimeOffset subscribeDate)
+        {
+            return user.username + "'s Subscribe Age: " + subscribeDate.GetAge();
+        }
     }
 
     public class MixItUpChatCommand : PreMadeChatCommand
@@ -235,6 +240,33 @@ namespace MixItUp.Base.Commands
                     else
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "You are not currently following this channel");
+                    }
+                }
+            }));
+        }
+    }
+
+    public class SubscribeAgeChatCommand : PreMadeChatCommand
+    {
+        public SubscribeAgeChatCommand()
+            : base("Subscribe Age", new List<string>() { "subage", "subscribeage" }, UserRole.Subscriber, 5)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    if (user.SubscribeDate == null)
+                    {
+
+                    }
+
+                    if (user.SubscribeDate != null)
+                    {
+                        await ChannelSession.Chat.SendMessage(this.GetSubscribeAge(user.GetModel(), user.SubscribeDate.GetValueOrDefault()));
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You are not currently subscribed to this channel");
                     }
                 }
             }));

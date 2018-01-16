@@ -62,6 +62,10 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier("userhours", user.Data.ViewingHoursString);
                 this.ReplaceSpecialIdentifier("usermins", user.Data.ViewingMinutesString);
 
+                this.ReplaceSpecialIdentifier("userfollowage", user.FollowAgeString);
+                this.ReplaceSpecialIdentifier("usersubage", user.SubscribeAgeString);
+                this.ReplaceSpecialIdentifier("usersubmonths", user.SubscribeMonths.ToString());
+
                 this.ReplaceSpecialIdentifier("useravatar", user.AvatarLink);
                 this.ReplaceSpecialIdentifier("userurl", "https://www.mixer.com/" + user.UserName);
 
@@ -75,12 +79,15 @@ namespace MixItUp.Base.Util
                     string username = arguments.ElementAt(i);
                     username = username.Replace("@", "");
 
-                    UserModel argUser = await ChannelSession.Connection.GetUser(username);
-                    if (argUser != null)
+                    UserModel argUserModel = await ChannelSession.Connection.GetUser(username);
+                    if (argUserModel != null)
                     {
-                        if (ChannelSession.Settings.UserData.ContainsKey(argUser.id))
+                        UserViewModel argUser = new UserViewModel(argUserModel);
+                        await argUser.SetDetails();
+
+                        if (ChannelSession.Settings.UserData.ContainsKey(argUser.ID))
                         {
-                            UserDataViewModel userData = ChannelSession.Settings.UserData[argUser.id];
+                            UserDataViewModel userData = ChannelSession.Settings.UserData[argUser.ID];
 
                             for (int c = 0; c < ChannelSession.Settings.Currencies.Count; c++)
                             {
@@ -98,14 +105,13 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usertime", userData.ViewingTimeString);
                         }
 
-                        if (string.IsNullOrEmpty(argUser.avatarUrl))
-                        {
-                            argUser.avatarUrl = UserViewModel.DefaultAvatarLink;
-                        }
+                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userfollowage", argUser.FollowAgeString);
+                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usersubage", argUser.SubscribeAgeString);
+                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usersubmonths", argUser.SubscribeMonths.ToString());
 
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "useravatar", argUser.avatarUrl);
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.username);
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "username", argUser.username);
+                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "useravatar", argUser.AvatarLink);
+                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.UserName);
+                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "username", argUser.UserName);
                     }
 
                     this.ReplaceSpecialIdentifier("arg" + (i + 1) + "text", arguments.ElementAt(i));

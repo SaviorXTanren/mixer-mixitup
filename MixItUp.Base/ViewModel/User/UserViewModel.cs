@@ -50,6 +50,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public DateTimeOffset? FollowDate { get; set; }
 
+        public DateTimeOffset? SubscribeDate { get; set; }
+
         public HashSet<UserRole> Roles { get; set; }
 
         public int ChatOffenses { get; set; }
@@ -153,6 +155,31 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsSubscriber { get { return this.Roles.Contains(UserRole.Subscriber); } }
 
         [JsonIgnore]
+        public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
+
+        [JsonIgnore]
+        public int SubscribeMonths
+        {
+            get
+            {
+                int subMonths = 0;
+                if (this.SubscribeDate != null)
+                {
+                    TimeSpan span = DateTimeOffset.Now.Date - this.SubscribeDate.GetValueOrDefault().Date;
+                    double totalMonths = ((double)span.Days) / 30.0;
+
+                    subMonths = (int)totalMonths;
+                    totalMonths = totalMonths - subMonths;
+                    if (totalMonths > 0.0)
+                    {
+                        subMonths++;
+                    }
+                }
+                return subMonths;
+            }
+        }
+
+        [JsonIgnore]
         public string PrimaryRoleColor
         {
             get
@@ -200,6 +227,11 @@ namespace MixItUp.Base.ViewModel.User
             {
                 DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
                 this.SetFollowDate(followDate);
+
+                if (this.Roles.Contains(UserRole.Subscriber))
+                {
+                    // Add call to get subscriber date...
+                }
             }
         }
 
