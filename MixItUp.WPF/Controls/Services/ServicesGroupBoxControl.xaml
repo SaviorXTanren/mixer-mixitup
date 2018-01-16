@@ -29,8 +29,9 @@
 
                 <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
                 <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryColor}" />
-                
-                
+
+                <MaterialDesign:PackIcon Grid.Column="2" x:Name="GroupBoxHeaderCompletedIcon" Kind="CheckboxMarkedCircle" Foreground="White" Visibility="Collapsed" />
+
             </Grid>
         </GroupBox.Header>
 

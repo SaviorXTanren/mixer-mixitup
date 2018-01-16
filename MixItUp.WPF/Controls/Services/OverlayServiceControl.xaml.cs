@@ -31,6 +31,8 @@ namespace MixItUp.WPF.Controls.Services
                 this.EnableOverlayButton.Visibility = Visibility.Collapsed;
                 this.DisableOverlayButton.Visibility = Visibility.Visible;
                 this.TestOverlayButton.IsEnabled = true;
+
+                this.SetCompletedIcon(visible: true);
             }
 
             await base.OnLoaded();
@@ -104,6 +106,8 @@ namespace MixItUp.WPF.Controls.Services
             this.EnableOverlayButton.Visibility = Visibility.Collapsed;
             this.DisableOverlayButton.Visibility = Visibility.Visible;
             this.TestOverlayButton.IsEnabled = true;
+
+            this.SetCompletedIcon(visible: true);
         }
 
         private async Task DisconnectOverlayService()
@@ -116,6 +120,8 @@ namespace MixItUp.WPF.Controls.Services
             await ChannelSession.Services.DisconnectOverlayServer();
 
             ChannelSession.Settings.EnableOverlay = false;
+
+            this.SetCompletedIcon(visible: false);
         }
 
         private void OverlaySourceRefreshTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)

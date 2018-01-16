@@ -1,6 +1,7 @@
 ﻿using MixItUp.WPF.Windows;
 using System;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Services
 {
@@ -26,6 +27,8 @@ namespace MixItUp.WPF.Controls.Services
         }
 
         public void SetHeaderText(string text) { this.GroupBoxHeaderTextBox.Text = text; }
+
+        public void SetCompletedIcon(bool visible) { this.GroupBoxHeaderCompletedIcon.Visibility = (visible) ? Visibility.Visible : Visibility.Collapsed; }
 
         public void Minimize() { this.GroupBox.Height = MinimizedGroupBoxHeight; }
 

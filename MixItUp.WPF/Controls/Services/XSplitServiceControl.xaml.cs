@@ -31,6 +31,8 @@ namespace MixItUp.WPF.Controls.Services
                 ChannelSession.Services.XSplitServer.Disconnected += XSplitServer_Disconnected;
 
                 this.TestXSplitConnectionButton.IsEnabled = true;
+
+                this.SetCompletedIcon(visible: true);
             }
 
             await base.OnLoaded();
@@ -96,6 +98,8 @@ namespace MixItUp.WPF.Controls.Services
             ChannelSession.Services.XSplitServer.Disconnected += XSplitServer_Disconnected;
 
             this.TestXSplitConnectionButton.IsEnabled = true;
+
+            this.SetCompletedIcon(visible: true);
         }
 
         private async Task DisconnectXSplitService()
@@ -108,6 +112,8 @@ namespace MixItUp.WPF.Controls.Services
             await ChannelSession.Services.DisconnectXSplitServer();
 
             ChannelSession.Settings.EnableXSplitConnection = false;
+
+            this.SetCompletedIcon(visible: false);
         }
     }
 }

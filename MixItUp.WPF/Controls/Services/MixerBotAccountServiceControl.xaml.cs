@@ -30,6 +30,8 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
                 }
+
+                this.SetCompletedIcon(visible: true);
             }
             else
             {
@@ -66,6 +68,8 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
                 }
+
+                this.SetCompletedIcon(visible: true);
             }
         }
 
@@ -79,6 +83,8 @@ namespace MixItUp.WPF.Controls.Services
 
             this.ExistingBotGrid.Visibility = Visibility.Collapsed;
             this.NewBotLoginGrid.Visibility = Visibility.Visible;
+
+            this.SetCompletedIcon(visible: false);
         }
     }
 }

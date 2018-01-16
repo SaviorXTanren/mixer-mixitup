@@ -18,6 +18,8 @@ namespace MixItUp.WPF.Controls.Services
 
         protected void SetHeaderText(string text) { this.groupBoxControl.SetHeaderText(text); }
 
+        protected void SetCompletedIcon(bool visible) { this.groupBoxControl.SetCompletedIcon(visible); }
+
         private async void ServicesControlBase_Loaded(object sender, System.Windows.RoutedEventArgs e) { await this.OnLoaded(); }
     }
 }

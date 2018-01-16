@@ -30,6 +30,8 @@ namespace MixItUp.WPF.Controls.Services
 
                 this.OBSStudioEnableConnectionButton.Visibility = Visibility.Collapsed;
                 this.OBSStudioDisableConnectionButton.Visibility = Visibility.Visible;
+
+                this.SetCompletedIcon(visible: true);
             }
             else
             {
@@ -55,6 +57,8 @@ namespace MixItUp.WPF.Controls.Services
                 {
                     this.OBSStudioEnableConnectionButton.Visibility = Visibility.Collapsed;
                     this.OBSStudioDisableConnectionButton.Visibility = Visibility.Visible;
+
+                    this.SetCompletedIcon(visible: true);
                 }
                 else
                 {
@@ -75,6 +79,8 @@ namespace MixItUp.WPF.Controls.Services
 
             this.OBSStudioEnableConnectionButton.Visibility = Visibility.Visible;
             this.OBSStudioDisableConnectionButton.Visibility = Visibility.Collapsed;
+
+            this.SetCompletedIcon(visible: false);
         }
     }
 }
