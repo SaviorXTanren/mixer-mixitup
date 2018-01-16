@@ -237,9 +237,6 @@
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Currency\CurrencyDataControl.xaml.cs">
-      <DependentUpon>CurrencyDataControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Currency\CurrencySelectorControl.xaml.cs">
       <DependentUpon>CurrencySelectorControl.xaml</DependentUpon>
     </Compile>
@@ -271,7 +268,6 @@
     <Compile Include="Controls\MainControls\GamesControl.xaml.cs">
       <DependentUpon>GamesControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\MainCommandControlBase.cs" />
     <Compile Include="Controls\MainControls\ModerationControl.xaml.cs">
       <DependentUpon>ModerationControl.xaml</DependentUpon>
     </Compile>
@@ -380,6 +376,9 @@
     <Compile Include="Windows\Command\GameCommandWindow.xaml.cs">
       <DependentUpon>GameCommandWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Currency\CurrencyWindow.xaml.cs">
+      <DependentUpon>CurrencyWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Interactive\InteractiveBoardDesignerWindow.xaml.cs">
       <DependentUpon>InteractiveBoardDesignerWindow.xaml</DependentUpon>
     </Compile>
@@ -481,10 +480,6 @@
     <Page Include="Controls\Command\CustomCommandDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Currency\CurrencyDataControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Currency\CurrencySelectorControl.xaml">
       <SubType>Designer</SubType>
@@ -704,6 +699,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Command\GameCommandWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Currency\CurrencyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

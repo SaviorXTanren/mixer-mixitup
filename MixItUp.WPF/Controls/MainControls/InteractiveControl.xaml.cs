@@ -79,7 +79,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for InteractiveControl.xaml
     /// </summary>
-    public partial class InteractiveControl : MainCommandControlBase
+    public partial class InteractiveControl : MainControlBase
     {
         private ObservableCollection<InteractiveGameListingModel> interactiveGames = new ObservableCollection<InteractiveGameListingModel>();
         private InteractiveGameListingModel selectedGame = null;
@@ -267,19 +267,10 @@ namespace MixItUp.WPF.Controls.MainControls
             window.Show();
         }
 
-        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
-        {
-            await this.HandleCommandPlay(sender);
-        }
-
-        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandStop(sender);
-        }
-
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            InteractiveCommand command = this.GetCommandFromCommandButtons<InteractiveCommand>(sender);
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            InteractiveCommand command = commandButtonsControl.GetCommandFromCommandButtons<InteractiveCommand>(sender);
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new InteractiveCommandDetailsControl(command));
@@ -292,7 +283,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                InteractiveCommand command = this.GetCommandFromCommandButtons<InteractiveCommand>(sender);
+                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+                InteractiveCommand command = commandButtonsControl.GetCommandFromCommandButtons<InteractiveCommand>(sender);
                 if (command != null)
                 {
                     ChannelSession.Settings.InteractiveCommands.Remove(command);
@@ -300,11 +292,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.RefreshSelectedScene();
                 }
             });
-        }
-
-        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandEnableDisable(sender);
         }
 
         private void Window_Closed(object sender, EventArgs e)

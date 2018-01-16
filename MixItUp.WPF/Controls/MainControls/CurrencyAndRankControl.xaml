@@ -1,4 +1,4 @@
-﻿<local:MainCommandControlBase x:Class="MixItUp.WPF.Controls.MainControls.CurrencyAndRankControl"
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.CurrencyAndRankControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -16,21 +16,131 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
                           
              d:DesignHeight="700" d:DesignWidth="600">
-    <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" HorizontalAlignment="Center">
-                    <Button x:Name="AddNewCurrencyButton" Click="AddNewCurrencyButton_Click" ToolTip="Add Currency">Add Currency</Button>
-                </Grid>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-                <ListView x:Name="CurrenciesListView" Grid.Row="2" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" HorizontalContentAlignment="Stretch" />
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Currencies</TextBlock>
+
+            <Border BorderBrush="{StaticResource PrimaryColor}" Grid.Row="2" BorderThickness="1">
+                <DataGrid x:Name="CurrenciesDataGrid" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                        <DataGridTemplateColumn Header="Amount Special Identifier" IsReadOnly="True" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>$</TextBlock>
+                                        <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button x:Name="CurrencyEditButton" Grid.Column="0" Click="CurrencyEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Command">
+                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+
+                                        <Button x:Name="CurrencyDeleteButton" Grid.Column="2" Click="CurrencyDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+            
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Button x:Name="AddNewCurrencyButton" Click="AddNewCurrencyButton_Click" ToolTip="Add Currency">Add Currency</Button>
             </Grid>
-        </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Rank Systems</TextBlock>
+
+            <Border BorderBrush="{StaticResource PrimaryColor}" Grid.Row="2" BorderThickness="1">
+                <DataGrid x:Name="RanksDataGrid" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                        <DataGridTemplateColumn Header="Amount Special Identifier" IsReadOnly="True" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>$</TextBlock>
+                                        <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Rank Name Special Identifier" IsReadOnly="True" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock>$</TextBlock>
+                                        <TextBlock Text="{Binding UserRankNameSpecialIdentifier}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button x:Name="RankEditButton" Grid.Column="0" Click="RankEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Command">
+                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+
+                                        <Button x:Name="RankyDeleteButton" Grid.Column="2" Click="RankDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Button x:Name="AddNewRankButton" Click="AddNewRankButton_Click" ToolTip="Add Rank System">Add Rank System</Button>
+            </Grid>
+        </Grid>
     </Grid>
-</local:MainCommandControlBase>
+</local:MainControlBase>

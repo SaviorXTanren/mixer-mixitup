@@ -1,66 +1,111 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Controls.Currency;
+using MixItUp.WPF.Windows.Currency;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
     /// <summary>
     /// Interaction logic for CurrencyControl.xaml
     /// </summary>
-    public partial class CurrencyAndRankControl : MainCommandControlBase
+    public partial class CurrencyAndRankControl : MainControlBase
     {
-        private ObservableCollection<CurrencyDataControl> currencyControls = new ObservableCollection<CurrencyDataControl>();
+        private ObservableCollection<UserCurrencyViewModel> currencies = new ObservableCollection<UserCurrencyViewModel>();
+        private ObservableCollection<UserCurrencyViewModel> ranks = new ObservableCollection<UserCurrencyViewModel>();
 
         public CurrencyAndRankControl()
         {
             InitializeComponent();
 
-            this.CurrenciesListView.ItemsSource = this.currencyControls;
+            this.CurrenciesDataGrid.ItemsSource = this.currencies;
+            this.RanksDataGrid.ItemsSource = this.ranks;
         }
 
-        public async Task RefreshList()
+        public void RefreshList()
         {
-            this.currencyControls.Clear();
-            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.OrderBy(c => c.Name))
+            this.currencies.Clear();
+            this.ranks.Clear();
+            foreach (var kvp in ChannelSession.Settings.Currencies.ToDictionary())
             {
-                CurrencyDataControl control = await this.AddCurrency(currency);
-                control.Minimize();
+                if (kvp.Value.IsRank)
+                {
+                    this.ranks.Add(kvp.Value);
+                }
+                else
+                {
+                    this.currencies.Add(kvp.Value);
+                }
             }
         }
 
-        public async Task DeleteCurrency(UserCurrencyViewModel currency)
+        public void DeleteCurrency(UserCurrencyViewModel currency)
         {
             if (!string.IsNullOrEmpty(currency.Name))
             {
                 ChannelSession.Settings.Currencies.Remove(currency.Name);
-                foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.ToList())
-                {
-                    userData.ResetCurrency(currency);
-                }
+                currency.Reset();
             }
-            await this.RefreshList();
+            this.RefreshList();
         }
 
         protected override async Task InitializeInternal()
         {
-            await this.RefreshList();
+            this.RefreshList();
             await base.InitializeInternal();
         }
 
-        private async void AddNewCurrencyButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void CurrencyEditButton_Click(object sender, RoutedEventArgs e)
         {
-            await this.AddCurrency(new UserCurrencyViewModel());
+            Button button = (Button)sender;
+            UserCurrencyViewModel currency = (UserCurrencyViewModel)button.DataContext;
+            CurrencyWindow window = new CurrencyWindow(currency);
+            window.Closed += Window_Closed;
+            window.Show();
         }
 
-        private async Task<CurrencyDataControl> AddCurrency(UserCurrencyViewModel currency)
+        private void CurrencyDeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            CurrencyDataControl control = new CurrencyDataControl(this, currency);
-            await control.Initialize(this.Window);
-            this.currencyControls.Add(control);
-            return control;
+            Button button = (Button)sender;
+            UserCurrencyViewModel currency = (UserCurrencyViewModel)button.DataContext;
+            this.DeleteCurrency(currency);
+        }
+
+        private void AddNewCurrencyButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CurrencyWindow window = new CurrencyWindow(isRank: false);
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private void RankEditButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            UserCurrencyViewModel currency = (UserCurrencyViewModel)button.DataContext;
+            CurrencyWindow window = new CurrencyWindow(currency);
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private void RankDeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            UserCurrencyViewModel currency = (UserCurrencyViewModel)button.DataContext;
+            this.DeleteCurrency(currency);
+        }
+
+        private void AddNewRankButton_Click(object sender, RoutedEventArgs e)
+        {
+            CurrencyWindow window = new CurrencyWindow(isRank: true);
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.RefreshList();
         }
     }
 }

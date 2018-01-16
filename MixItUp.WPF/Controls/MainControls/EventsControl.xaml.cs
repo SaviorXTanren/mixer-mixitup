@@ -6,7 +6,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for EventsControl.xaml
     /// </summary>
-    public partial class EventsControl : MainCommandControlBase
+    public partial class EventsControl : MainControlBase
     {
         public EventsControl()
         {

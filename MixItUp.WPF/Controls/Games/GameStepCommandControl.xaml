@@ -1,4 +1,4 @@
-﻿<MainControls:MainCommandControlBase x:Class="MixItUp.WPF.Controls.Games.GameStepCommandControl"
+﻿<MainControls:MainControlBase x:Class="MixItUp.WPF.Controls.Games.GameStepCommandControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -15,7 +15,7 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                           
              d:DesignHeight="300" d:DesignWidth="300">
-    <MainControls:MainCommandControlBase.Resources>
+    <MainControls:MainControlBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
@@ -23,12 +23,12 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </MainControls:MainCommandControlBase.Resources>
+    </MainControls:MainControlBase.Resources>
 
     <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
         <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
 
-        <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" PlayClicked="CommandButtons_PlayClicked" StopClicked="CommandButtons_StopClicked" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtons_EnableDisableToggled" />
+        <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
     </Grid>
 
-</MainControls:MainCommandControlBase>
+</MainControls:MainControlBase>

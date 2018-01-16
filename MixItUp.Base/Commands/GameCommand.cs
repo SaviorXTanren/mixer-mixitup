@@ -611,11 +611,6 @@ namespace MixItUp.Base.Commands
                 return false;
             }
 
-            if (!this.CurrencyRequirement.GetCurrency().Enabled)
-            {
-                return false;
-            }
-
             int betAmount = this.GetBetAmount(arguments);
             if (betAmount < 0)
             {

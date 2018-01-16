@@ -11,7 +11,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for ActionGroupControl.xaml
     /// </summary>
-    public partial class ActionGroupControl : MainCommandControlBase
+    public partial class ActionGroupControl : MainControlBase
     {
         private ObservableCollection<ActionGroupCommand> actionGroupCommands = new ObservableCollection<ActionGroupCommand>();
 
@@ -40,19 +40,10 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
-        {
-            await this.HandleCommandPlay(sender);
-        }
-
-        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandStop(sender);
-        }
-
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            ActionGroupCommand command = this.GetCommandFromCommandButtons<ActionGroupCommand>(sender);
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            ActionGroupCommand command = commandButtonsControl.GetCommandFromCommandButtons<ActionGroupCommand>(sender);
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new ActionGroupCommandDetailsControl(command));
@@ -65,7 +56,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                ActionGroupCommand command = this.GetCommandFromCommandButtons<ActionGroupCommand>(sender);
+                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+                ActionGroupCommand command = commandButtonsControl.GetCommandFromCommandButtons<ActionGroupCommand>(sender);
                 if (command != null)
                 {
                     ChannelSession.Settings.ActionGroupCommands.Remove(command);
@@ -73,11 +65,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.RefreshList();
                 }
             });
-        }
-
-        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandEnableDisable(sender);
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)

@@ -381,7 +381,6 @@ namespace MixItUp.WPF.Windows.Wizard
                         Name = rankName, SpecialIdentifier = "rank", AcquireInterval = rankInterval, AcquireAmount = rankAmount, OnFollowBonus = rankOnFollowBonus,
                         OnSubscribeBonus = rankOnSubBonus, SubscriberBonus = rankSubBonus
                     };
-                    rankCurrency.Enabled = true;
                     ChannelSession.Settings.Currencies[rankName] = rankCurrency;
 
                     foreach (ScorpBotRank rank in this.scorpBotData.Ranks)
@@ -404,7 +403,6 @@ namespace MixItUp.WPF.Windows.Wizard
                         Name = currencyName, SpecialIdentifier = "currency", AcquireInterval = currencyInterval, AcquireAmount = currencyAmount, OnFollowBonus = currencyOnFollowBonus,
                         OnSubscribeBonus = currencyOnSubBonus, SubscriberBonus = currencySubBonus
                     };
-                    currency.Enabled = true;
                     ChannelSession.Settings.Currencies[currency.Name] = currency;
                 }
 

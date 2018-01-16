@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using MixItUp.Base;
+using MixItUp.Base.Commands;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Command
@@ -25,6 +28,16 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
+        public T GetCommandFromCommandButtons<T>(object sender) where T : CommandBase
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is CommandBase)
+            {
+                return (T)commandButtonsControl.DataContext;
+            }
+            return null;
+        }
+
         public void SwitchToPlay()
         {
             this.PlayButton.Visibility = Visibility.Visible;
@@ -35,7 +48,7 @@ namespace MixItUp.WPF.Controls.Command
             this.EnableDisableToggleSwitch.IsEnabled = true;
         }
 
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
             this.PlayButton.Visibility = Visibility.Collapsed;
             this.StopButton.Visibility = Visibility.Visible;
@@ -44,12 +57,25 @@ namespace MixItUp.WPF.Controls.Command
             this.DeleteButton.IsEnabled = false;
             this.EnableDisableToggleSwitch.IsEnabled = false;
 
+            if (this.DataContext != null && this.DataContext is CommandBase)
+            {
+                CommandBase command = (CommandBase)this.DataContext;
+                await command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
+                this.SwitchToPlay();
+            }
+
             this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.PlayClickedEvent, this));
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             this.SwitchToPlay();
+
+            if (this.DataContext != null && this.DataContext is CommandBase)
+            {
+                CommandBase command = (CommandBase)this.DataContext;
+                command.StopCurrentRun();
+            }
 
             this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.StopClickedEvent, this));
         }
@@ -66,6 +92,12 @@ namespace MixItUp.WPF.Controls.Command
 
         private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
         {
+            if (this.DataContext != null && this.DataContext is CommandBase)
+            {
+                CommandBase command = (CommandBase)this.DataContext;
+                command.IsEnabled = this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault();
+            }
+
             this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.EnableDisableToggledEvent, this));
         }
     }

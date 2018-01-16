@@ -326,7 +326,7 @@ namespace MixItUp.Base.MixerAPI
                 List<UserCurrencyViewModel> currenciesToUpdate = new List<UserCurrencyViewModel>();
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    if (currency.Enabled && currency.AcquireInterval > 0)
+                    if (currency.IsActive)
                     {
                         currenciesToUpdate.Add(currency);
                     }

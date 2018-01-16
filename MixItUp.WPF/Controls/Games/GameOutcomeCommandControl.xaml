@@ -1,4 +1,4 @@
-﻿<MainControls:MainCommandControlBase x:Class="MixItUp.WPF.Controls.Games.GameOutcomeCommandControl"
+﻿<MainControls:MainControlBase x:Class="MixItUp.WPF.Controls.Games.GameOutcomeCommandControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -15,7 +15,7 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                           
              d:DesignHeight="300" d:DesignWidth="300">
-    <MainControls:MainCommandControlBase.Resources>
+    <MainControls:MainControlBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
@@ -23,7 +23,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </MainControls:MainCommandControlBase.Resources>
+    </MainControls:MainControlBase.Resources>
 
     <Border BorderBrush="{StaticResource PrimaryColor}" BorderThickness="1">
         <Grid Margin="10" HorizontalAlignment="Center" Width="230">
@@ -37,8 +37,8 @@
 
             <Button x:Name="NewCommandButton" Grid.Row="2" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
 
-            <CommandControls:CommandButtonsControl x:Name="CommandButtons" Grid.Row="2" HorizontalAlignment="Center" PlayClicked="CommandButtons_PlayClicked" StopClicked="CommandButtons_StopClicked" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" EnableDisableToggled="CommandButtons_EnableDisableToggled" Visibility="Collapsed" />
+            <CommandControls:CommandButtonsControl x:Name="CommandButtons" Grid.Row="2" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" Visibility="Collapsed" />
         </Grid>
     </Border>
 
-</MainControls:MainCommandControlBase>
+</MainControls:MainControlBase>

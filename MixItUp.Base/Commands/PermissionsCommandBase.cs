@@ -80,7 +80,7 @@ namespace MixItUp.Base.Commands
 
         public async Task<bool> CheckRankRequirement(UserViewModel user)
         {
-            if (this.RankRequirement != null && this.RankRequirement.GetCurrency() != null && this.RankRequirement.GetCurrency().Enabled)
+            if (this.RankRequirement != null && this.RankRequirement.GetCurrency() != null)
             {
                 if (!this.RankRequirement.DoesMeetRankRequirement(user.Data))
                 {
@@ -93,7 +93,7 @@ namespace MixItUp.Base.Commands
 
         public async Task<bool> CheckCurrencyRequirement(UserViewModel user)
         {
-            if (this.CurrencyRequirement != null && this.CurrencyRequirement.GetCurrency() != null && this.CurrencyRequirement.GetCurrency().Enabled)
+            if (this.CurrencyRequirement != null && this.CurrencyRequirement.GetCurrency() != null)
             {
                 if (!this.CurrencyRequirement.TrySubtractAmount(user.Data, this.CurrencyRequirement.RequiredAmount))
                 {

@@ -29,14 +29,14 @@ namespace MixItUp.WPF.Controls.Events
     /// </summary>
     public partial class EventCommandControl : UserControl
     {
-        private MainCommandControlBase mainControl;
+        private MainControlBase mainControl;
         private ConstellationEventTypeEnum eventType;
 
         private EventCommandItem commandItem;
 
         public EventCommandControl() { InitializeComponent(); }
 
-        public void Initialize(MainCommandControlBase control, ConstellationEventTypeEnum eventType)
+        public void Initialize(MainControlBase control, ConstellationEventTypeEnum eventType)
         {
             this.mainControl = control;
             this.eventType = eventType;
@@ -50,19 +50,10 @@ namespace MixItUp.WPF.Controls.Events
             window.Show();
         }
 
-        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
-        {
-            await this.mainControl.HandleCommandPlay(sender);
-        }
-
-        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
-        {
-            this.mainControl.HandleCommandStop(sender);
-        }
-
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            EventCommand command = this.mainControl.GetCommandFromCommandButtons<EventCommand>(sender);
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            EventCommand command = commandButtonsControl.GetCommandFromCommandButtons<EventCommand>(sender);
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new EventCommandDetailsControl(command));
@@ -75,7 +66,8 @@ namespace MixItUp.WPF.Controls.Events
         {
             await this.mainControl.Window.RunAsyncOperation(async () =>
             {
-                EventCommand command = this.mainControl.GetCommandFromCommandButtons<EventCommand>(sender);
+                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+                EventCommand command = commandButtonsControl.GetCommandFromCommandButtons<EventCommand>(sender);
                 if (command != null)
                 {
                     ChannelSession.Settings.EventCommands.Remove(command);
@@ -83,11 +75,6 @@ namespace MixItUp.WPF.Controls.Events
                     this.RefreshControl();
                 }
             });
-        }
-
-        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
-        {
-            this.mainControl.HandleCommandEnableDisable(sender);
         }
 
         private void Window_Closed(object sender, System.EventArgs e)

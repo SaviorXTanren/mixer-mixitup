@@ -13,7 +13,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for TimerControl.xaml
     /// </summary>
-    public partial class TimerControl : MainCommandControlBase
+    public partial class TimerControl : MainControlBase
     {
         private ObservableCollection<TimerCommand> timerCommands = new ObservableCollection<TimerCommand>();
 
@@ -44,19 +44,10 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
-        {
-            await this.HandleCommandPlay(sender);
-        }
-
-        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandStop(sender);
-        }
-
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            TimerCommand command = this.GetCommandFromCommandButtons<TimerCommand>(sender);
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            TimerCommand command = commandButtonsControl.GetCommandFromCommandButtons<TimerCommand>(sender);
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new TimerCommandDetailsControl(command));
@@ -69,7 +60,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                TimerCommand command = this.GetCommandFromCommandButtons<TimerCommand>(sender);
+                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+                TimerCommand command = commandButtonsControl.GetCommandFromCommandButtons<TimerCommand>(sender);
                 if (command != null)
                 {
                     ChannelSession.Settings.TimerCommands.Remove(command);
@@ -77,11 +69,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.RefreshList();
                 }
             });
-        }
-
-        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandEnableDisable(sender);
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)

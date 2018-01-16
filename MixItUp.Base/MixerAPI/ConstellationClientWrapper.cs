@@ -101,20 +101,14 @@ namespace MixItUp.Base.MixerAPI
                 {
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
-                        if (currency.Enabled)
-                        {
-                            userData.SetCurrencyAmount(currency, currency.OnFollowBonus);
-                        }
+                        userData.SetCurrencyAmount(currency, currency.OnFollowBonus);
                     }
                 }
                 else if (e.channel.Equals(UserCurrencyViewModel.ChannelHostedEvent.ToString()))
                 {
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
-                        if (currency.Enabled)
-                        {
-                            userData.SetCurrencyAmount(currency, currency.OnHostBonus);
-                        }
+                        userData.SetCurrencyAmount(currency, currency.OnHostBonus);
                     }
                 }
                 else if (e.channel.Equals(UserCurrencyViewModel.ChannelSubscribedEvent.ToString()) || e.channel.Equals(UserCurrencyViewModel.ChannelResubscribedEvent.ToString()) ||
@@ -122,10 +116,7 @@ namespace MixItUp.Base.MixerAPI
                 {
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
-                        if (currency.Enabled)
-                        {
-                            userData.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
-                        }
+                        userData.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
                     }
                 }
 

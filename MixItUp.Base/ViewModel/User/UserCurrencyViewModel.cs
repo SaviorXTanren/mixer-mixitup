@@ -8,6 +8,15 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.User
 {
+    public enum CurrencyResetRateEnum
+    {
+        Never,
+        Yearly,
+        Monthly,
+        Weekly,
+        Daily,
+    }
+
     [DataContract]
     public class UserCurrencyViewModel : IEquatable<UserCurrencyViewModel>
     {
@@ -42,7 +51,7 @@ namespace MixItUp.Base.ViewModel.User
         public int OnSubscribeBonus { get; set; }
 
         [DataMember]
-        public string ResetInterval { get; set; }
+        public CurrencyResetRateEnum ResetInterval { get; set; }
         [DataMember]
         public DateTimeOffset LastReset { get; set; }
 
@@ -51,44 +60,37 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public CustomCommand RankChangedCommand { get; set; }
 
-        [DataMember]
-        public bool Enabled { get; set; }
-
         [JsonIgnore]
         public bool IsRank { get { return this.Ranks.Count > 0; } }
 
         public UserCurrencyViewModel()
         {
             this.SpecialIdentifier = string.Empty;
-            this.ResetInterval = "Never";
+            this.ResetInterval = CurrencyResetRateEnum.Never;
             this.LastReset = DateTimeOffset.MinValue;
             this.Ranks = new List<UserRankViewModel>();
         }
 
-        public string SpecialIdentifierName { get { return string.Format("{0}name", this.SpecialIdentifier); } }
+        [JsonIgnore]
+        public bool IsActive { get { return this.AcquireAmount != 0 && this.AcquireInterval != 0; } }
 
-        public string SpecialIdentifierRank { get { return string.Format("{0}rank", this.SpecialIdentifier); } }
+        [JsonIgnore]
+        public string UserAmountSpecialIdentifier { get { return string.Format("user{0}", this.SpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string UserRankNameSpecialIdentifier { get { return string.Format("user{0}rank", this.SpecialIdentifier); } }
 
         public bool ShouldBeReset()
         {
-            if (this.Enabled && !this.ResetInterval.Equals("Never"))
+            if (!this.ResetInterval.Equals("Never"))
             {
                 DateTimeOffset newResetDate = DateTimeOffset.MinValue;
-                switch (this.ResetInterval)
-                {
-                    case "Daily":
-                        newResetDate = this.LastReset.AddDays(1);
-                        break;
-                    case "Weekly":
-                        newResetDate = this.LastReset.AddDays(7);
-                        break;
-                    case "Monthly":
-                        newResetDate = this.LastReset.AddMonths(1);
-                        break;
-                    case "Yearly":
-                        newResetDate = this.LastReset.AddYears(1);
-                        break;
-                }
+
+                if (this.ResetInterval == CurrencyResetRateEnum.Daily) { newResetDate = this.LastReset.AddDays(1); }
+                else if (this.ResetInterval == CurrencyResetRateEnum.Weekly) { newResetDate = this.LastReset.AddDays(7); }
+                else if (this.ResetInterval == CurrencyResetRateEnum.Monthly) { newResetDate = this.LastReset.AddMonths(1); }
+                else if (this.ResetInterval == CurrencyResetRateEnum.Yearly) { newResetDate = this.LastReset.AddYears(1); }
+
                 return (newResetDate < DateTimeOffset.Now);
             }
             return false;
@@ -102,6 +104,15 @@ namespace MixItUp.Base.ViewModel.User
                 rank = this.Ranks.Where(r => r.MinimumPoints <= points).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
             }
             return rank;
+        }
+
+        public void Reset()
+        {
+            foreach (var kvp in ChannelSession.Settings.UserData.ToDictionary())
+            {
+                kvp.Value.ResetCurrency(this);
+            }
+            this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);
         }
 
         public override bool Equals(object obj)

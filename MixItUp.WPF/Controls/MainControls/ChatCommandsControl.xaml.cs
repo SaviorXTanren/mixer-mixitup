@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for ChatCommandsControl.xaml
     /// </summary>
-    public partial class ChatCommandsControl : MainCommandControlBase
+    public partial class ChatCommandsControl : MainControlBase
     {
         private ObservableCollection<ChatCommand> customChatCommands = new ObservableCollection<ChatCommand>();
 
@@ -84,19 +84,10 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CustomCommandsGrid.Visibility = Visibility.Visible;
         }
 
-        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
-        {
-            await this.HandleCommandPlay(sender);
-        }
-
-        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandStop(sender);
-        }
-
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            ChatCommand command = this.GetCommandFromCommandButtons<ChatCommand>(sender);
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command));
@@ -109,7 +100,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                ChatCommand command = this.GetCommandFromCommandButtons<ChatCommand>(sender);
+                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+                ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
                 if (command != null)
                 {
                     ChannelSession.Settings.ChatCommands.Remove(command);
@@ -117,11 +109,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.RefreshList();
                 }
             });
-        }
-
-        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandEnableDisable(sender);
         }
 
         private void AddCommandButton_Click(object sender, RoutedEventArgs e)

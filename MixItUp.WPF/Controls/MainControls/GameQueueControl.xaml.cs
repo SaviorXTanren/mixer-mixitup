@@ -46,12 +46,12 @@ namespace MixItUp.WPF.Controls.MainControls
             this.MustFollowToggleButton.IsChecked = ChannelSession.Settings.GameQueueMustFollow;
             this.SubPriorityToggleButton.IsChecked = ChannelSession.Settings.GameQueueSubPriority;
 
-            if (ChannelSession.Settings.GameQueueRankRequirement != null && ChannelSession.Settings.GameQueueRankRequirement.GetCurrency() != null && ChannelSession.Settings.GameQueueRankRequirement.GetCurrency().Enabled)
+            if (ChannelSession.Settings.GameQueueRankRequirement != null && ChannelSession.Settings.GameQueueRankRequirement.GetCurrency() != null)
             {
                 this.RankSelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueRankRequirement);
             }
 
-            if (ChannelSession.Settings.GameQueueCurrencyRequirement != null && ChannelSession.Settings.GameQueueCurrencyRequirement.GetCurrency() != null && ChannelSession.Settings.GameQueueCurrencyRequirement.GetCurrency().Enabled)
+            if (ChannelSession.Settings.GameQueueCurrencyRequirement != null && ChannelSession.Settings.GameQueueCurrencyRequirement.GetCurrency() != null)
             {
                 this.CurrencySelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueCurrencyRequirement);
             }

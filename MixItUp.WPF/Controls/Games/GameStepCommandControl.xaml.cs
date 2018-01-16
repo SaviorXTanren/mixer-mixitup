@@ -10,7 +10,7 @@ namespace MixItUp.WPF.Controls.Games
     /// <summary>
     /// Interaction logic for GameStepCommandControl.xaml
     /// </summary>
-    public partial class GameStepCommandControl : MainCommandControlBase
+    public partial class GameStepCommandControl : MainControlBase
     {
         private GameCommandWindow window;
         private CustomCommand command;
@@ -36,19 +36,10 @@ namespace MixItUp.WPF.Controls.Games
             window.Show();
         }
 
-        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
-        {
-            await this.HandleCommandPlay(sender);
-        }
-
-        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandStop(sender);
-        }
-
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            CustomCommand command = this.GetCommandFromCommandButtons<CustomCommand>(sender);
+            CommandButtonsControl commandButtonControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonControl.GetCommandFromCommandButtons<CustomCommand>(sender);
             if (command != null)
             {
                 CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
@@ -61,11 +52,6 @@ namespace MixItUp.WPF.Controls.Games
         {
             this.command = null;
             this.RefreshControl();
-        }
-
-        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandEnableDisable(sender);
         }
 
         private void Window_CommandSaveSuccessfully(object sender, CommandBase e)

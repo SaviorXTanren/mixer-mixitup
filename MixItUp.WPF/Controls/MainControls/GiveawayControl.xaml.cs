@@ -233,7 +233,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     if (isUserValid)
                     {
-                        if (ChannelSession.Settings.GiveawayRankRequirement != null && ChannelSession.Settings.GiveawayRankRequirement.GetCurrency() != null && ChannelSession.Settings.GiveawayRankRequirement.GetCurrency().Enabled)
+                        if (ChannelSession.Settings.GiveawayRankRequirement != null && ChannelSession.Settings.GiveawayRankRequirement.GetCurrency() != null)
                         {
                             UserCurrencyDataViewModel rankData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayRankRequirement.GetCurrency());
                             if (!ChannelSession.Settings.GiveawayRankRequirement.DoesMeetRankRequirement(e.User.Data))
@@ -243,7 +243,7 @@ namespace MixItUp.WPF.Controls.MainControls
                             }
                         }
 
-                        if (ChannelSession.Settings.GiveawayCurrencyRequirement != null && ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency() != null && ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency().Enabled)
+                        if (ChannelSession.Settings.GiveawayCurrencyRequirement != null && ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency() != null)
                         {
                             UserCurrencyDataViewModel currencyData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency());
                             if (!ChannelSession.Settings.GiveawayCurrencyRequirement.TrySubtractAmount(e.User.Data))

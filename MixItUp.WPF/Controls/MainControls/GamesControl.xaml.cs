@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for GamesControl.xaml
     /// </summary>
-    public partial class GamesControl : MainCommandControlBase
+    public partial class GamesControl : MainControlBase
     {
         private ObservableCollection<GameCommandBase> gameCommands = new ObservableCollection<GameCommandBase>();
 
@@ -59,19 +60,10 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
-        {
-            await this.HandleCommandPlay(sender);
-        }
-
-        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandStop(sender);
-        }
-
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
-            GameCommandBase command = this.GetCommandFromCommandButtons<GameCommandBase>(sender);
+            CommandButtonsControl commandButtonControl = (CommandButtonsControl)sender;
+            GameCommandBase command = commandButtonControl.GetCommandFromCommandButtons<GameCommandBase>(sender);
             if (command != null)
             {
                 GameCommandWindow window = new GameCommandWindow(command);
@@ -84,7 +76,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                GameCommandBase command = this.GetCommandFromCommandButtons<GameCommandBase>(sender);
+                CommandButtonsControl commandButtonControl = (CommandButtonsControl)sender;
+                GameCommandBase command = commandButtonControl.GetCommandFromCommandButtons<GameCommandBase>(sender);
                 if (command != null)
                 {
                     ChannelSession.Settings.GameCommands.Remove(command);
@@ -92,11 +85,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.RefreshList();
                 }
             });
-        }
-
-        private void CommandButtons_EnableDisableToggled(object sender, RoutedEventArgs e)
-        {
-            this.HandleCommandEnableDisable(sender);
         }
 
         private async void AddPreMadeGameButton_Click(object sender, RoutedEventArgs e)

@@ -50,13 +50,12 @@ namespace MixItUp.Base.Util
                     UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.ElementAt(i);
                     UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(currency);
 
-                    this.ReplaceSpecialIdentifier(currency.SpecialIdentifierName, currency.Name);
                     UserRankViewModel rank = currencyData.GetRank();
                     if (rank != null)
                     {
-                        this.ReplaceSpecialIdentifier(currency.SpecialIdentifierRank, rank.Name);
+                        this.ReplaceSpecialIdentifier(currency.UserRankNameSpecialIdentifier, rank.Name);
                     }
-                    this.ReplaceSpecialIdentifier(currency.SpecialIdentifier, currencyData.Amount.ToString());
+                    this.ReplaceSpecialIdentifier(currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                 }
                 this.ReplaceSpecialIdentifier("usertime", user.Data.ViewingTimeString);
                 this.ReplaceSpecialIdentifier("userhours", user.Data.ViewingHoursString);
@@ -94,13 +93,12 @@ namespace MixItUp.Base.Util
                                 UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.ElementAt(i);
                                 UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
 
-                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.SpecialIdentifierName, currency.Name);
                                 UserRankViewModel rank = currencyData.GetRank();
                                 if (rank != null)
                                 {
-                                    this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.SpecialIdentifierRank, rank.Name);
+                                    this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, rank.Name);
                                 }
-                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.SpecialIdentifier, currencyData.Amount.ToString());
+                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                             }
                             this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usertime", userData.ViewingTimeString);
                         }
