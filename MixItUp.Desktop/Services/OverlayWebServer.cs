@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Client;
 using Mixer.Base.Web;
+using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -43,7 +44,23 @@ namespace MixItUp.Overlay
         public async Task<bool> Initialize()
         {
             this.httpListenerServer.Start();
-            return await this.webSocketServer.Initialize();
+            if (await this.webSocketServer.Initialize())
+            {
+                if (!string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
+                {
+                    if (ChannelSession.Services.OBSWebsocket != null)
+                    {
+                        ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
+                    }
+
+                    if (ChannelSession.Services.XSplitServer != null)
+                    {
+                        await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = ChannelSession.Settings.OverlaySourceName, webBrowserUrl = OverlayHttpListenerServerAddress, sourceVisible = true });
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         public async Task Disconnect()

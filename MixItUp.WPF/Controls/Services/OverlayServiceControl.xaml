@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -11,24 +12,30 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="50" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" VerticalAlignment="Center" Width="400">
+        <Grid Grid.Column="0" VerticalAlignment="Center" Width="250">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap">Add a webpage in your streaming software with the following URL: <Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">http://localhost:8111/overlay/</Hyperlink></TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap">Add a webpage in your streaming software with the following URL:</TextBlock>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap">To use the Mix It Up Overlay, please ensure Mix It Up is running first before you launch your streaming software or refresh the webpage source in your streaming software after you launch Mix It Up.</TextBlock>
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" Margin="30,0"><Hyperlink NavigateUri="http://localhost:8111/overlay/" RequestNavigate="Hyperlink_RequestNavigate">http://localhost:8111/overlay/</Hyperlink></TextBlock>
+
+            <TextBlock Grid.Row="4" TextWrapping="Wrap">To use the Mix It Up Overlay, please ensure Mix It Up is running first before you launch your streaming software or refresh the webpage source in your streaming software after you launch Mix It Up.</TextBlock>
         </Grid>
 
         <Grid Grid.Column="2" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="10" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
@@ -36,6 +43,19 @@
             <Button x:Name="DisableOverlayButton" Grid.Row="0" Click="DisableOverlayButton_Click" Width="140" Visibility="Collapsed">Disable Overlay</Button>
 
             <Button x:Name="TestOverlayButton" Grid.Row="2" Click="TestOverlayButton_Click" Width="140" IsEnabled="False">Test Connection</Button>
+        </Grid>
+
+        <Grid Grid.Column="4" VerticalAlignment="Center" Width="200">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" TextWrapping="Wrap">If you have OBS Studio or XSplit connectivity setup, we can auto-refresh the web browser source that contains the Mix It Up Overlay. Simply type the name of the source below:</TextBlock>
+
+            <TextBox Grid.Row="2" x:Name="OverlaySourceRefreshTextBox" MaterialDesign:HintAssist.Hint="OBS Studio/XSplit Overlay Source" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="OverlaySourceRefreshTextBox_TextChanged" />
+
         </Grid>
     </Grid>
 </local:ServicesControlBase>

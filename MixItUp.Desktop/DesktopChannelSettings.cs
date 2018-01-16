@@ -89,9 +89,13 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool EnableOverlay { get; set; }
         [JsonProperty]
+        public string OverlaySourceName { get; set; }
+
+        [JsonProperty]
         public string OBSStudioServerIP { get; set; }
         [JsonProperty]
         public string OBSStudioServerPassword { get; set; }
+
         [JsonProperty]
         public bool EnableXSplitConnection { get; set; }
 

@@ -25,8 +25,6 @@ namespace MixItUp.WPF.Controls.Services
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
             {
-                await ChannelSession.Services.InitializeOBSWebsocket();
-
                 this.OBSStudioIPAddressTextBox.Text = ChannelSession.Settings.OBSStudioServerIP;
                 this.OBSStudioPasswordTextBox.Password = ChannelSession.Settings.OBSStudioServerPassword;
 

@@ -257,7 +257,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (user.SubscribeDate == null)
                     {
-
+                        // Add call to get subscriber date...
                     }
 
                     if (user.SubscribeDate != null)

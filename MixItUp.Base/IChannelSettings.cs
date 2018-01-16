@@ -47,8 +47,11 @@ namespace MixItUp.Base
         int ModerationTimeout5MinuteOffenseCount { get; set; }
 
         bool EnableOverlay { get; set; }
+        string OverlaySourceName { get; set; }
+
         string OBSStudioServerIP { get; set; }
         string OBSStudioServerPassword { get; set; }
+
         bool EnableXSplitConnection { get; set; }
 
         int MaxMessagesInChat { get; set; }

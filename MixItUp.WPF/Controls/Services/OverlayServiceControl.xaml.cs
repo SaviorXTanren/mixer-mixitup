@@ -23,9 +23,14 @@ namespace MixItUp.WPF.Controls.Services
         {
             this.SetHeaderText("Mix It Up Overlay");
 
+            this.OverlaySourceRefreshTextBox.Text = ChannelSession.Settings.OverlaySourceName;
+
             if (ChannelSession.Settings.EnableOverlay)
             {
-                await this.ConnectOverlayService();
+                ChannelSession.Services.OverlayServer.Disconnected += OverlayServer_Disconnected;
+                this.EnableOverlayButton.Visibility = Visibility.Collapsed;
+                this.DisableOverlayButton.Visibility = Visibility.Visible;
+                this.TestOverlayButton.IsEnabled = true;
             }
 
             await base.OnLoaded();
@@ -111,6 +116,11 @@ namespace MixItUp.WPF.Controls.Services
             await ChannelSession.Services.DisconnectOverlayServer();
 
             ChannelSession.Settings.EnableOverlay = false;
+        }
+
+        private void OverlaySourceRefreshTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            ChannelSession.Settings.OverlaySourceName = this.OverlaySourceRefreshTextBox.Text;
         }
     }
 }

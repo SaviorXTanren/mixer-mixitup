@@ -295,6 +295,21 @@ namespace MixItUp.Base
                     await ChannelSession.Chat.Connect();
                     await ChannelSession.Constellation.Connect();
 
+                    if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
+                    {
+                        await ChannelSession.Services.InitializeOBSWebsocket();
+                    }
+
+                    if (ChannelSession.Settings.EnableXSplitConnection)
+                    {
+                        await ChannelSession.Services.InitializeXSplitServer();
+                    }
+
+                    if (ChannelSession.Settings.EnableOverlay)
+                    {
+                        await ChannelSession.Services.InitializeOverlayServer();
+                    }
+
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
                     await ChannelSession.SaveSettings();
