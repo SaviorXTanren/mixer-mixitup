@@ -23,6 +23,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <ContextMenu x:Key="ChatListContextMenu">
+                <MenuItem x:Name="MessageCopyMenuItem" Header="Copy Message" Click="MessageCopyMenuItem_Click" />
                 <MenuItem x:Name="MessageDeleteMenuItem" Header="Delete Message" Click="MessageDeleteMenuItem_Click" />
                 <MenuItem x:Name="MessageUserInformationMenuItem" Header="User Info" Click="MessageUserInformationMenuItem_Click" />
             </ContextMenu>

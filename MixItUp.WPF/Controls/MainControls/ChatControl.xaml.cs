@@ -262,6 +262,15 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private void MessageCopyMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null)
+            {
+                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
+                Clipboard.SetText(control.Message.Message);
+            }
+        }
+
         private async void MessageDeleteMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             if (this.ChatList.SelectedItem != null)
