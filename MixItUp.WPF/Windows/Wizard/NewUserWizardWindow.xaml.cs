@@ -372,20 +372,45 @@ namespace MixItUp.WPF.Windows.Wizard
                 int rankOnFollowBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onfollowbonus", "0"));
                 int rankOnSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onsubbonus", "0"));
                 int rankSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "subbonus", "0"));
+                string rankCommand = this.scorpBotData.GetSettingsValue("currency", "command", "");
+                string rankCommandResponse = this.scorpBotData.GetSettingsValue("currency", "response", "");
+                string rankUpCommand = this.scorpBotData.GetSettingsValue("currency", "Currency1RankUpMsg", "");
 
                 UserCurrencyViewModel rankCurrency = null;
                 if (!string.IsNullOrEmpty(rankName) && rankInterval >= 0 && rankAmount >= 0)
                 {
                     rankCurrency = new UserCurrencyViewModel()
                     {
-                        Name = rankName, SpecialIdentifier = "rank", AcquireInterval = rankInterval, AcquireAmount = rankAmount, OnFollowBonus = rankOnFollowBonus,
-                        OnSubscribeBonus = rankOnSubBonus, SubscriberBonus = rankSubBonus
+                        Name = rankName, SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(rankName), AcquireInterval = rankInterval,
+                        AcquireAmount = rankAmount, OnFollowBonus = rankOnFollowBonus, OnSubscribeBonus = rankOnSubBonus, SubscriberBonus = rankSubBonus
                     };
                     ChannelSession.Settings.Currencies[rankName] = rankCurrency;
 
                     foreach (ScorpBotRank rank in this.scorpBotData.Ranks)
                     {
                         rankCurrency.Ranks.Add(new UserRankViewModel(rank.Name, rank.Amount));
+                    }
+
+                    if (!string.IsNullOrEmpty(rankCommand) && !string.IsNullOrEmpty(rankCommandResponse))
+                    {
+                        rankCommandResponse = rankCommandResponse.Replace(" / Raids: $raids", "");
+                        rankCommandResponse = rankCommandResponse.Replace("$rank", "$" + rankCurrency.UserRankNameSpecialIdentifier);
+                        rankCommandResponse = rankCommandResponse.Replace("$points", "$" + rankCurrency.UserAmountSpecialIdentifier);
+                        rankCommandResponse = rankCommandResponse.Replace("$currencyname", rankCurrency.Name);
+                        this.scorpBotData.Commands.Add(new ScorpBotCommand(rankCommand, rankCommandResponse));
+                    }
+
+                    if (!string.IsNullOrEmpty(rankUpCommand))
+                    {
+                        rankUpCommand = rankUpCommand.Replace("$rank", "$" + rankCurrency.UserRankNameSpecialIdentifier);
+                        rankUpCommand = rankUpCommand.Replace("$points", "$" + rankCurrency.UserAmountSpecialIdentifier);
+                        rankUpCommand = rankUpCommand.Replace("$currencyname", rankCurrency.Name);
+
+                        ScorpBotCommand scorpCommand = new ScorpBotCommand("rankup", rankUpCommand);
+                        ChatCommand chatCommand = new ChatCommand(scorpCommand);
+
+                        rankCurrency.RankChangedCommand = new CustomCommand("User Rank Changed");
+                        rankCurrency.RankChangedCommand.Actions.AddRange(chatCommand.Actions);
                     }
                 }
 
@@ -395,15 +420,24 @@ namespace MixItUp.WPF.Windows.Wizard
                 int currencyOnFollowBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onfollowbonus", "0"));
                 int currencyOnSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onsubbonus", "0"));
                 int currencySubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "subbonus", "0"));
+                string currencyCommand = this.scorpBotData.GetSettingsValue("currency2", "command", "");
+                string currencyCommandResponse = this.scorpBotData.GetSettingsValue("currency2", "response", "");
 
                 if (!string.IsNullOrEmpty(currencyName) && currencyInterval >= 0 && currencyAmount >= 0)
                 {
                     UserCurrencyViewModel currency = new UserCurrencyViewModel()
                     {
-                        Name = currencyName, SpecialIdentifier = "currency", AcquireInterval = currencyInterval, AcquireAmount = currencyAmount, OnFollowBonus = currencyOnFollowBonus,
-                        OnSubscribeBonus = currencyOnSubBonus, SubscriberBonus = currencySubBonus
+                        Name = currencyName, SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName), AcquireInterval = currencyInterval,
+                        AcquireAmount = currencyAmount, OnFollowBonus = currencyOnFollowBonus, OnSubscribeBonus = currencyOnSubBonus, SubscriberBonus = currencySubBonus
                     };
                     ChannelSession.Settings.Currencies[currency.Name] = currency;
+
+                    if (!string.IsNullOrEmpty(currencyCommand) && !string.IsNullOrEmpty(currencyCommandResponse))
+                    {
+                        currencyCommandResponse = currencyCommandResponse.Replace("$points2", "$" + currency.UserAmountSpecialIdentifier);
+                        currencyCommandResponse = currencyCommandResponse.Replace("$currencyname2", currency.Name);
+                        this.scorpBotData.Commands.Add(new ScorpBotCommand(currencyCommand, currencyCommandResponse));
+                    }
                 }
 
                 foreach (ScorpBotViewer viewer in this.scorpBotData.Viewers)

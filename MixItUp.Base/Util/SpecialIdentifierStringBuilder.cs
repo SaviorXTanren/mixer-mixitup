@@ -3,6 +3,7 @@ using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
@@ -11,7 +12,7 @@ namespace MixItUp.Base.Util
     {
         public static string ConvertScorpBotText(string text)
         {
-            text = text.Replace("$user", "$username");
+            text = text.Replace("$user ", "$username ");
             text = text.Replace("$target", "$arg1username");
             for (int i = 1; i < 10; i++)
             {
@@ -19,7 +20,21 @@ namespace MixItUp.Base.Util
             }
             text = text.Replace("$msg", "$allargs");
             text = text.Replace("$hours", "$userhours");
+            text = text.Replace("$raids", "");
             return text;
+        }
+
+        public static string ConvertToSpecialIdentifier(string text)
+        {
+            StringBuilder specialIdentifier = new StringBuilder();
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (char.IsLetterOrDigit(text[i]))
+                {
+                    specialIdentifier.Append(text[i]);
+                }
+            }
+            return specialIdentifier.ToString().ToLower();
         }
 
         private string text;

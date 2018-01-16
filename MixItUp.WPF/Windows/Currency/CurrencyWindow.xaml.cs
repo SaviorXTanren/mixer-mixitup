@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Currency;
@@ -88,17 +89,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             if (!string.IsNullOrEmpty(this.CurrencyNameTextBox.Text))
             {
-                StringBuilder specialIdentifier = new StringBuilder();
-                string text = this.CurrencyNameTextBox.Text;
-                for (int i = 0; i < text.Length; i++)
-                {
-                    if (char.IsLetterOrDigit(text[i]))
-                    {
-                        specialIdentifier.Append(text[i]);
-                    }
-                }
-
-                this.specialIdentifier = specialIdentifier.ToString().ToLower();
+                this.specialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.CurrencyNameTextBox.Text);
                 this.UserAmountSpecialIdentifierTextBlock.Text = string.Format("$user{0}", this.specialIdentifier);
                 this.UserRankSpecialIdentifierTextBlock.Text = string.Format("$user{0}rank", this.specialIdentifier);
             }

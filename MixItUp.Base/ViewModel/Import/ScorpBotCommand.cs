@@ -27,14 +27,23 @@ namespace MixItUp.Base.ViewModel.Import
 
         public ScorpBotCommand() { }
 
-        public ScorpBotCommand(DbDataReader reader)
+        public ScorpBotCommand(string command, string text)
         {
-            this.Command = (string)reader["Command"];
+            this.Command = command;
             this.Command = this.Command.ToLower();
             this.Command = this.Command.Replace("!", "");
 
+            this.Text = text;
+            this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(this.Text);
+
             this.Permission = UserRole.User;
 
+            this.Enabled = true;
+        }
+
+        public ScorpBotCommand(DbDataReader reader)
+            : this((string)reader["Command"], (string)reader["Response"])
+        {
             string permInfo = (string)reader["PermInfo"];
             if (permInfo.Contains("followed.php"))
             {
@@ -46,9 +55,6 @@ namespace MixItUp.Base.ViewModel.Import
             {
                 this.Permission = UserRole.Mod;
             }
-
-            this.Text = (string)reader["Response"];
-            this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(this.Text);
 
             this.Cooldown = (int)reader["Cooldown"];
             this.Enabled = ((string)reader["Enabled"]).Equals("True");
