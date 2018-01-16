@@ -152,15 +152,18 @@ namespace MixItUp.Desktop.Services
                 LegacyDesktopChannelSettings legacySettings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
                 legacySettings.InitializeDB = false;
 
-                string dbPath = ((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(legacySettings);
                 List<LegacyUserDataViewModel> legacyUsers = new List<LegacyUserDataViewModel>();
-                SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(dbPath);
-                await databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+                if (legacySettings.IsStreamer)
                 {
-                    LegacyUserDataViewModel userData = new LegacyUserDataViewModel(dataReader);
-                    legacyUsers.Add(userData);
-                });
-                File.Copy(DesktopSettingsService.SettingsTemplateDatabaseFileName, dbPath, overwrite: true);
+                    string dbPath = ((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(legacySettings);
+                    SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(dbPath);
+                    await databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+                    {
+                        LegacyUserDataViewModel userData = new LegacyUserDataViewModel(dataReader);
+                        legacyUsers.Add(userData);
+                    });
+                    File.Copy(DesktopSettingsService.SettingsTemplateDatabaseFileName, dbPath, overwrite: true);
+                }
 
                 await ChannelSession.Services.Settings.Initialize(legacySettings);
 
@@ -169,51 +172,54 @@ namespace MixItUp.Desktop.Services
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 UserCurrencyViewModel currency = null;
-                if (!string.IsNullOrEmpty(legacySettings.CurrencyAcquisition.Name))
-                {
-                    currency = legacySettings.CurrencyAcquisition;
-                    currency.SpecialIdentifier = "usercurrency";
-                    settings.Currencies.Add(legacySettings.CurrencyAcquisition.Name, legacySettings.CurrencyAcquisition);
-                }
-
                 UserCurrencyViewModel rank = null;
-                if (!string.IsNullOrEmpty(legacySettings.RankAcquisition.Name))
+                if (settings.IsStreamer)
                 {
-                    rank = legacySettings.RankAcquisition;
-                    rank.SpecialIdentifier = "userrank";
-                    rank.Ranks = legacySettings.Ranks;
-                    rank.RankChangedCommand = legacySettings.RankChangedCommand;
-                    settings.Currencies.Add(legacySettings.RankAcquisition.Name, legacySettings.RankAcquisition);
-                }
-
-                foreach (LegacyUserDataViewModel user in legacyUsers)
-                {
-                    settings.UserData[user.ID] = user;
-                    if (rank != null) { settings.UserData[user.ID].SetCurrencyAmount(rank, user.RankPoints); }
-                    if (currency != null) { settings.UserData[user.ID].SetCurrencyAmount(currency, user.CurrencyAmount); }
-                }
-
-                if (currency != null)
-                {
-                    if (legacySettings.GiveawayCurrencyCost > 0)
+                    if (!string.IsNullOrEmpty(legacySettings.CurrencyAcquisition.Name))
                     {
-                        settings.GiveawayCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GiveawayCurrencyCost);
+                        currency = legacySettings.CurrencyAcquisition;
+                        currency.SpecialIdentifier = "usercurrency";
+                        settings.Currencies.Add(legacySettings.CurrencyAcquisition.Name, legacySettings.CurrencyAcquisition);
                     }
-                    if (legacySettings.GameQueueCurrencyCost > 0)
-                    {
-                        settings.GameQueueCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GameQueueCurrencyCost);
-                    }
-                }
 
-                if (rank != null)
-                {
-                    if (legacySettings.GiveawayUserRank != null && rank.Ranks.Any(r => r.Name.Equals(legacySettings.GiveawayUserRank)))
+                    if (!string.IsNullOrEmpty(legacySettings.RankAcquisition.Name))
                     {
-                        settings.GiveawayRankRequirement = new UserCurrencyRequirementViewModel(rank, rank.Ranks.FirstOrDefault(r => r.Name.Equals(legacySettings.GiveawayUserRank)));
+                        rank = legacySettings.RankAcquisition;
+                        rank.SpecialIdentifier = "userrank";
+                        rank.Ranks = legacySettings.Ranks;
+                        rank.RankChangedCommand = legacySettings.RankChangedCommand;
+                        settings.Currencies.Add(legacySettings.RankAcquisition.Name, legacySettings.RankAcquisition);
                     }
-                    if (legacySettings.GameQueueMinimumRank != null)
+
+                    foreach (LegacyUserDataViewModel user in legacyUsers)
                     {
-                        settings.GameQueueRankRequirement = new UserCurrencyRequirementViewModel(rank, legacySettings.GameQueueMinimumRank);
+                        settings.UserData[user.ID] = user;
+                        if (rank != null) { settings.UserData[user.ID].SetCurrencyAmount(rank, user.RankPoints); }
+                        if (currency != null) { settings.UserData[user.ID].SetCurrencyAmount(currency, user.CurrencyAmount); }
+                    }
+
+                    if (currency != null)
+                    {
+                        if (legacySettings.GiveawayCurrencyCost > 0)
+                        {
+                            settings.GiveawayCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GiveawayCurrencyCost);
+                        }
+                        if (legacySettings.GameQueueCurrencyCost > 0)
+                        {
+                            settings.GameQueueCurrencyRequirement = new UserCurrencyRequirementViewModel(currency, legacySettings.GameQueueCurrencyCost);
+                        }
+                    }
+
+                    if (rank != null)
+                    {
+                        if (legacySettings.GiveawayUserRank != null && rank.Ranks.Any(r => r.Name.Equals(legacySettings.GiveawayUserRank)))
+                        {
+                            settings.GiveawayRankRequirement = new UserCurrencyRequirementViewModel(rank, rank.Ranks.FirstOrDefault(r => r.Name.Equals(legacySettings.GiveawayUserRank)));
+                        }
+                        if (legacySettings.GameQueueMinimumRank != null)
+                        {
+                            settings.GameQueueRankRequirement = new UserCurrencyRequirementViewModel(rank, legacySettings.GameQueueMinimumRank);
+                        }
                     }
                 }
 
@@ -261,14 +267,17 @@ namespace MixItUp.Desktop.Services
                     }
                 }
 
-                foreach (ChatCommand command in settings.ChatCommands)
+                if (settings.IsStreamer)
                 {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    if (command.CurrencyCost > 0)
+                    foreach (ChatCommand command in settings.ChatCommands)
                     {
-                        command.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, command.CurrencyCost);
-                    }
+#pragma warning disable CS0612 // Type or member is obsolete
+                        if (command.CurrencyCost > 0)
+                        {
+                            command.CurrencyRequirement = new UserCurrencyRequirementViewModel(currency, command.CurrencyCost);
+                        }
 #pragma warning restore CS0612 // Type or member is obsolete
+                    }
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);

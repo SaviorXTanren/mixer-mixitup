@@ -65,9 +65,9 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Quotes", new QuoteControl());
             }
             this.MainMenu.AddMenuItem("Statistics", "http://mixdash.cc");
-            await this.MainMenu.AddMenuItem("Moderation", new ModerationControl());
             if (ChannelSession.Settings.IsStreamer)
             {
+                await this.MainMenu.AddMenuItem("Moderation", new ModerationControl());
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl());
             }
             await this.MainMenu.AddMenuItem("About", new AboutControl());

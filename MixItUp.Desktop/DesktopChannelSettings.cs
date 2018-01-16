@@ -251,14 +251,17 @@ namespace MixItUp.Desktop
                 this.CommunityBannedWords = new LockedList<string>(File.ReadAllLines(DesktopChannelSettings.CommunityBannedWordsFilePath));
             }
 
-            this.databaseWrapper = new SQLiteDatabaseWrapper(this.DatabasePath);
-            if (this.InitializeDB)
+            if (this.IsStreamer)
             {
-                await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+                this.databaseWrapper = new SQLiteDatabaseWrapper(this.DatabasePath);
+                if (this.InitializeDB)
                 {
-                    UserDataViewModel userData = new UserDataViewModel(dataReader);
-                    this.UserData.Add(userData.ID, userData);
-                });
+                    await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+                    {
+                        UserDataViewModel userData = new UserDataViewModel(dataReader);
+                        this.UserData.Add(userData.ID, userData);
+                    });
+                }
             }
         }
 
@@ -288,18 +291,21 @@ namespace MixItUp.Desktop
             this.interactiveUserGroupsInternal = this.InteractiveUserGroups.ToDictionary();
             this.interactiveCooldownGroupsInternal = this.InteractiveCooldownGroups.ToDictionary();
 
-            IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
-            await this.databaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts) VALUES(?,?,?,?)",
-                addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
+            if (this.IsStreamer)
+            {
+                IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
+                await this.databaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts) VALUES(?,?,?,?)",
+                    addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
                     new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()) }));
 
-            IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
-            await this.databaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts WHERE ID = @ID",
-                changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
+                IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
+                await this.databaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts WHERE ID = @ID",
+                    changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
                     new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
 
-            IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
-            await this.databaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
+                IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
+                await this.databaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
+            }
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }

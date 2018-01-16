@@ -46,6 +46,11 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.PopOutChatButton.Visibility = Visibility.Collapsed;
             }
+
+            if (!ChannelSession.Settings.IsStreamer)
+            {
+                this.DisableChatButton.Visibility = Visibility.Collapsed;
+            }
         }
 
         protected override Task InitializeInternal()
