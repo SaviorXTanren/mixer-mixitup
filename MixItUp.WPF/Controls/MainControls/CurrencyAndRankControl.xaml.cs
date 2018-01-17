@@ -43,11 +43,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         public void DeleteCurrency(UserCurrencyViewModel currency)
         {
-            if (!string.IsNullOrEmpty(currency.Name))
-            {
-                ChannelSession.Settings.Currencies.Remove(currency.Name);
-                currency.Reset();
-            }
+            ChannelSession.Settings.Currencies.Remove(currency.ID);
+            currency.Reset();
             this.RefreshList();
         }
 

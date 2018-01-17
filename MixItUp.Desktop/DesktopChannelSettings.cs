@@ -103,7 +103,7 @@ namespace MixItUp.Desktop
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]
-        protected Dictionary<string, UserCurrencyViewModel> currenciesInternal { get; set; }
+        protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
 
         [JsonProperty]
         protected List<PreMadeChatCommandSettings> preMadeChatCommandSettingsInternal { get; set; }
@@ -133,7 +133,7 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
-            this.currenciesInternal = new Dictionary<string, UserCurrencyViewModel>();
+            this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();
             this.eventCommandsInternal = new List<EventCommand>();
@@ -157,7 +157,7 @@ namespace MixItUp.Desktop
         public DatabaseDictionary<uint, UserDataViewModel> UserData { get; set; }
 
         [JsonIgnore]
-        public LockedDictionary<string, UserCurrencyViewModel> Currencies { get; set; }
+        public LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; set; }
 
         [JsonIgnore]
         public LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; set; }
@@ -216,7 +216,7 @@ namespace MixItUp.Desktop
             this.MaxMessagesInChat = 100;
 
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
-            this.Currencies = new LockedDictionary<string, UserCurrencyViewModel>();
+            this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
             this.EventCommands = new LockedList<EventCommand>();
@@ -233,7 +233,7 @@ namespace MixItUp.Desktop
 
         public async Task Initialize()
         {
-            this.Currencies = new LockedDictionary<string, UserCurrencyViewModel>(this.currenciesInternal);
+            this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>(this.currenciesInternal);
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
             this.EventCommands = new LockedList<EventCommand>(this.eventCommandsInternal);

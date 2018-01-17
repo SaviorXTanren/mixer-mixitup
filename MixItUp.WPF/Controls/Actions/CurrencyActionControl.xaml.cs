@@ -34,9 +34,9 @@ namespace MixItUp.WPF.Controls.Actions
             this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
             if (this.action != null)
             {
-                if (ChannelSession.Settings.Currencies.ContainsKey(this.action.CurrencyName))
+                if (ChannelSession.Settings.Currencies.ContainsKey(this.action.CurrencyID))
                 {
-                    this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.action.CurrencyName];
+                    this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.action.CurrencyID];
                     this.CurrencyAmountTextBox.IsEnabled = true;
                 }
                 this.CurrencyAmountTextBox.Text = this.action.Amount.ToString();

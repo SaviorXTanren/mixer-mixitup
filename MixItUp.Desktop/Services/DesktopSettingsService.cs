@@ -179,7 +179,7 @@ namespace MixItUp.Desktop.Services
                     {
                         currency = legacySettings.CurrencyAcquisition;
                         currency.SpecialIdentifier = "usercurrency";
-                        settings.Currencies.Add(legacySettings.CurrencyAcquisition.Name, legacySettings.CurrencyAcquisition);
+                        settings.Currencies.Add(legacySettings.CurrencyAcquisition.ID, legacySettings.CurrencyAcquisition);
                     }
 
                     if (!string.IsNullOrEmpty(legacySettings.RankAcquisition.Name))
@@ -188,7 +188,7 @@ namespace MixItUp.Desktop.Services
                         rank.SpecialIdentifier = "userrank";
                         rank.Ranks = legacySettings.Ranks;
                         rank.RankChangedCommand = legacySettings.RankChangedCommand;
-                        settings.Currencies.Add(legacySettings.RankAcquisition.Name, legacySettings.RankAcquisition);
+                        settings.Currencies.Add(legacySettings.RankAcquisition.ID, legacySettings.RankAcquisition);
                     }
 
                     foreach (LegacyUserDataViewModel user in legacyUsers)

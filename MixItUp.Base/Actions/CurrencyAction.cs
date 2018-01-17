@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace MixItUp.Base.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return CurrencyAction.asyncSemaphore; } }
 
         [DataMember]
-        public string CurrencyName { get; set; }
+        public Guid CurrencyID { get; set; }
 
         [DataMember]
         public int Amount { get; set; }
@@ -30,7 +31,7 @@ namespace MixItUp.Base.Actions
         public CurrencyAction(UserCurrencyViewModel currency, int amount, string chatText, bool isWhisper)
             : this()
         {
-            this.CurrencyName = currency.Name;
+            this.CurrencyID = currency.ID;
             this.Amount = amount;
             this.ChatText = chatText;
             this.IsWhisper = isWhisper;
@@ -40,7 +41,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
-                UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(this.CurrencyName);
+                UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(this.CurrencyID);
                 if (currencyData != null)
                 {
                     currencyData.Amount += this.Amount;

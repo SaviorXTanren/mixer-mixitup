@@ -72,7 +72,7 @@ namespace MixItUp.WPF.Controls.Games
             else if (this.RankTypeComboBox.SelectedIndex >= 0 && this.RankMinimumComboBox.SelectedIndex >= 0)
             {
                 UserCurrencyRequirementViewModel rankRequirement = new UserCurrencyRequirementViewModel((UserCurrencyViewModel)this.RankTypeComboBox.SelectedItem, (UserRankViewModel)this.RankMinimumComboBox.SelectedItem);
-                groupName = rankRequirement.CurrencyName + " - " + rankRequirement.RankName;
+                groupName = rankRequirement.GetCurrency().Name + " - " + rankRequirement.RankName;
                 group = new GameOutcomeGroup(rankRequirement);
             }
             else

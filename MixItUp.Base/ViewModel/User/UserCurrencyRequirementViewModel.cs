@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.User
     public class UserCurrencyRequirementViewModel
     {
         [DataMember]
-        public string CurrencyName { get; set; }
+        public Guid CurrencyID { get; set; }
 
         [DataMember]
         public int RequiredAmount { get; set; }
@@ -26,14 +26,14 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, int amount, int maximumAmount = 0)
         {
-            this.CurrencyName = currency.Name;
+            this.CurrencyID = currency.ID;
             this.RequiredAmount = amount;
             this.MaximumAmount = maximumAmount;
         }
 
         public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, UserRankViewModel rank, bool mustEqual = false)
         {
-            this.CurrencyName = currency.Name;
+            this.CurrencyID = currency.ID;
             this.RankName = rank.Name;
             this.MustEqual = mustEqual;
         }
@@ -58,9 +58,9 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserCurrencyViewModel GetCurrency()
         {
-            if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyName))
+            if (ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
             {
-                return ChannelSession.Settings.Currencies[this.CurrencyName];
+                return ChannelSession.Settings.Currencies[this.CurrencyID];
             }
             return null;
         }
@@ -134,18 +134,19 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task SendCurrencyNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", this.RequiredAmount, this.CurrencyName));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this",
+                    this.RequiredAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
             }
         }
 
         public async Task SendRankNotMetWhisper(UserViewModel user)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
             {
                 await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required rank of {0} ({1} {2}) to do this",
-                    this.RequiredRank.Name, this.RequiredRank.MinimumPoints, this.CurrencyName));
+                    this.RequiredRank.Name, this.RequiredRank.MinimumPoints, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
             }
         }
     }

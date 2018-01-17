@@ -4,6 +4,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 
 namespace MixItUp.Base
@@ -61,7 +62,7 @@ namespace MixItUp.Base
     {
         DatabaseDictionary<uint, UserDataViewModel> UserData { get; }
 
-        LockedDictionary<string, UserCurrencyViewModel> Currencies { get; }
+        LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; }
 
         LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; }
         LockedList<ChatCommand> ChatCommands { get; }

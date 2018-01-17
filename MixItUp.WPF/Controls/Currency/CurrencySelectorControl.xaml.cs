@@ -41,12 +41,12 @@ namespace MixItUp.WPF.Controls.Currency
 
         public void SetCurrencyRequirement(UserCurrencyRequirementViewModel currencyRequirement)
         {
-            if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyName))
+            if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyID))
             {
                 this.EnableDisableToggleSwitch.IsChecked = true;
 
                 this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
-                this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyName];
+                this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyID];
 
                 this.CurrencyCostTextBox.IsEnabled = true;
                 this.CurrencyCostTextBox.Text = currencyRequirement.RequiredAmount.ToString();

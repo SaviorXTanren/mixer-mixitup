@@ -27,6 +27,9 @@ namespace MixItUp.Base.ViewModel.User
         public static ConstellationEventType ChannelResubscribedSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
 
         [DataMember]
+        public Guid ID { get; set; }
+
+        [DataMember]
         public string Name { get; set; }
         [DataMember]
         public int AcquireAmount { get; set; }
@@ -60,6 +63,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserCurrencyViewModel()
         {
+            this.ID = Guid.NewGuid();
             this.SpecialIdentifier = string.Empty;
             this.ResetInterval = CurrencyResetRateEnum.Never;
             this.LastReset = DateTimeOffset.MinValue;

@@ -549,7 +549,6 @@ namespace MixItUp.Base.Commands
         public const string GameTotalBetsSpecialIdentifier = "gametotalbets";
         public const string GameTotalUsersSpecialIdentifier = "gametotalusers";
         public const string GamePayoutSpecialIdentifier = "gamepayout";
-        public const string GameCurrencyNameSpecialIdentifier = "gamecurrencyname";
 
         private static SemaphoreSlim gameCommandPerformSemaphore = new SemaphoreSlim(1);
 
@@ -593,7 +592,6 @@ namespace MixItUp.Base.Commands
             command.AddSpecialIdentifier(GameCommandBase.GameTotalBetsSpecialIdentifier, this.TotalBets.ToString());
             command.AddSpecialIdentifier(GameCommandBase.GameTotalUsersSpecialIdentifier, this.TotalUsers.ToString());
             command.AddSpecialIdentifier(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
-            command.AddSpecialIdentifier(GameCommandBase.GameCurrencyNameSpecialIdentifier, this.CurrencyRequirement.CurrencyName);
             if (user != null)
             {
                 command.AddSpecialIdentifier(GameCommandBase.GameBetSpecialIdentifier, this.GetUserBet(user).ToString());
@@ -626,16 +624,22 @@ namespace MixItUp.Base.Commands
                 }
             }
 
+            UserCurrencyViewModel currency = this.CurrencyRequirement.GetCurrency();
+            if (currency == null)
+            {
+                return false;
+            }
+
             if (!this.CurrencyRequirement.DoesMeetCurrencyRequirement(betAmount))
             {
                 string requiredBet = "You must enter a valid bet";
                 if (this.CurrencyRequirement.MaximumAmount > 0)
                 {
-                    requiredBet += string.Format(" between {0} - {1} {2}", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.MaximumAmount, this.CurrencyRequirement.CurrencyName);
+                    requiredBet += string.Format(" between {0} - {1} {2}", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.MaximumAmount, currency.Name);
                 }
                 else
                 {
-                    requiredBet += string.Format(" of {0} or more {1}", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.CurrencyName);
+                    requiredBet += string.Format(" of {0} or more {1}", this.CurrencyRequirement.RequiredAmount, currency.Name);
                 }
                 await this.WhisperUser(user, requiredBet);
                 return false;
@@ -643,7 +647,7 @@ namespace MixItUp.Base.Commands
 
             if (!this.CurrencyRequirement.TrySubtractAmount(user.Data, betAmount))
             {
-                await this.WhisperUser(user, string.Format("You do not have the minimum {0} {1} to participate", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.CurrencyName));
+                await this.WhisperUser(user, string.Format("You do not have the minimum {0} {1} to participate", this.CurrencyRequirement.RequiredAmount, currency.Name));
                 return false;
             }
             return true;

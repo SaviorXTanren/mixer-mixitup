@@ -256,9 +256,9 @@ namespace MixItUp.WPF.Windows.Currency
                     this.currency.Ranks = ranks.ToList();
                 }
 
-                if (!ChannelSession.Settings.Currencies.ContainsKey(this.currency.Name))
+                if (!ChannelSession.Settings.Currencies.ContainsKey(this.currency.ID))
                 {
-                    ChannelSession.Settings.Currencies[this.currency.Name] = this.currency;
+                    ChannelSession.Settings.Currencies[this.currency.ID] = this.currency;
                 }
 
                 await ChannelSession.SaveSettings();

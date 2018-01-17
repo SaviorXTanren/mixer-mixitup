@@ -38,18 +38,18 @@ namespace MixItUp.WPF.Controls.Currency
 
         public void SetCurrencyRequirement(UserCurrencyRequirementViewModel currencyRequirement)
         {
-            if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyName))
+            if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyID))
             {
                 this.EnableDisableToggleSwitch.IsChecked = true;
 
                 this.RankTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values.Where(c => c.IsRank);
-                this.RankTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyName];
+                this.RankTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyID];
 
                 this.RankMustEqualComboBox.IsEnabled = true;
                 this.RankMustEqualComboBox.SelectedIndex = (currencyRequirement.MustEqual) ? 1 : 0;
 
                 this.RankMinimumComboBox.IsEnabled = true;
-                this.RankMinimumComboBox.ItemsSource = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyName].Ranks;
+                this.RankMinimumComboBox.ItemsSource = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyID].Ranks;
                 this.RankMinimumComboBox.SelectedItem = currencyRequirement.RequiredRank;
             }
         }

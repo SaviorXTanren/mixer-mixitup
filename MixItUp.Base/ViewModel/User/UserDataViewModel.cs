@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
 
-            Dictionary<string, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<string, int>>(dataReader["CurrencyAmounts"].ToString());
+            Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(dataReader["CurrencyAmounts"].ToString());
             foreach (var kvp in currencyAmounts)
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(kvp.Key))
@@ -206,11 +206,11 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public UserCurrencyDataViewModel GetCurrency(string currencyName)
+        public UserCurrencyDataViewModel GetCurrency(Guid currencyID)
         {
-            if (ChannelSession.Settings.Currencies.ContainsKey(currencyName))
+            if (ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {
-                return this.GetCurrency(ChannelSession.Settings.Currencies[currencyName]);
+                return this.GetCurrency(ChannelSession.Settings.Currencies[currencyID]);
             }
             return null;
         }
@@ -275,10 +275,10 @@ namespace MixItUp.Base.ViewModel.User
 
         internal string GetCurrencyAmountsString()
         {
-            Dictionary<string, int> amounts = new Dictionary<string, int>();
+            Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
             foreach (UserCurrencyDataViewModel currencyData in this.CurrencyAmounts.Values.ToList())
             {
-                amounts.Add(currencyData.Currency.Name, currencyData.Amount);
+                amounts.Add(currencyData.Currency.ID, currencyData.Amount);
             }
             return JsonConvert.SerializeObject(amounts);
         }

@@ -71,7 +71,7 @@ namespace MixItUp.Base.Actions
                         UserCurrencyDataViewModel rankData = null;
                         if (ChannelSession.Settings.GameQueueRankRequirement != null)
                         {
-                            rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueRankRequirement.CurrencyName);
+                            rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueRankRequirement.CurrencyID);
                             if (!ChannelSession.Settings.GameQueueRankRequirement.DoesMeetRankRequirement(user.Data))
                             {
                                 await ChannelSession.Settings.GameQueueRankRequirement.SendRankNotMetWhisper(user);
@@ -82,7 +82,7 @@ namespace MixItUp.Base.Actions
                         UserCurrencyDataViewModel currencyData = null;
                         if (ChannelSession.Settings.GameQueueCurrencyRequirement != null)
                         {
-                            currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyRequirement.CurrencyName);
+                            currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyRequirement.CurrencyID);
                             if (!ChannelSession.Settings.GameQueueCurrencyRequirement.TrySubtractAmount(user.Data))
                             {
                                 await ChannelSession.Settings.GameQueueCurrencyRequirement.SendCurrencyNotMetWhisper(user);
