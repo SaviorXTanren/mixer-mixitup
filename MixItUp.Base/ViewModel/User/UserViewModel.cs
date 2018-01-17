@@ -230,7 +230,7 @@ namespace MixItUp.Base.ViewModel.User
 
                 if (this.Roles.Contains(UserRole.Subscriber))
                 {
-                    // Add call to get subscriber date...
+                    await this.SetSubscribeDate();
                 }
             }
         }
@@ -245,6 +245,19 @@ namespace MixItUp.Base.ViewModel.User
             else
             {
                 this.Roles.Remove(UserRole.Follower);
+            }
+        }
+
+        public async Task SetSubscribeDate()
+        {
+            UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
+            if (userGroups != null && userGroups.groups != null)
+            {
+                UserGroupModel subscriberGroup = userGroups.groups.FirstOrDefault(g => g.name.Equals("Subscriber") && g.deletedAt == null);
+                if (subscriberGroup != null)
+                {
+                    this.SubscribeDate = subscriberGroup.createdAt;
+                }
             }
         }
 
