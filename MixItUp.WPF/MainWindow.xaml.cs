@@ -49,26 +49,26 @@ namespace MixItUp.WPF
 
             await this.MainMenu.Initialize(this);
 
-            await this.MainMenu.AddMenuItem("Chat", new ChatControl());
+            await this.MainMenu.AddMenuItem("Chat", new ChatControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Chat");
             if (ChannelSession.Settings.IsStreamer)
             {
-                await this.MainMenu.AddMenuItem("Channel", new ChannelControl());
-                await this.MainMenu.AddMenuItem("Commands", new ChatCommandsControl());
-                await this.MainMenu.AddMenuItem("Interactive", new InteractiveControl());
-                await this.MainMenu.AddMenuItem("Events", new EventsControl());
-                await this.MainMenu.AddMenuItem("Timers", new TimerControl());
+                await this.MainMenu.AddMenuItem("Channel", new ChannelControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Channel");
+                await this.MainMenu.AddMenuItem("Commands", new ChatCommandsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Commands");
+                await this.MainMenu.AddMenuItem("Interactive", new InteractiveControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Interactive");
+                await this.MainMenu.AddMenuItem("Events", new EventsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Events");
+                await this.MainMenu.AddMenuItem("Timers", new TimerControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Timers");
                 await this.MainMenu.AddMenuItem("Action Groups", new ActionGroupControl());
-                await this.MainMenu.AddMenuItem("Currency & Rank", new CurrencyAndRankControl());
-                await this.MainMenu.AddMenuItem("Games", new GamesControl());
-                await this.MainMenu.AddMenuItem("Giveaway", new GiveawayControl());
-                await this.MainMenu.AddMenuItem("Game Queue", new GameQueueControl());
-                await this.MainMenu.AddMenuItem("Quotes", new QuoteControl());
+                await this.MainMenu.AddMenuItem("Currency & Rank", new CurrencyAndRankControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
+                await this.MainMenu.AddMenuItem("Games", new GamesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Games");
+                await this.MainMenu.AddMenuItem("Giveaway", new GiveawayControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Giveaways");
+                await this.MainMenu.AddMenuItem("Game Queue", new GameQueueControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Game-Queue");
+                await this.MainMenu.AddMenuItem("Quotes", new QuoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Quotes");
             }
             this.MainMenu.AddMenuItem("Statistics", "http://mixdash.cc");
             if (ChannelSession.Settings.IsStreamer)
             {
-                await this.MainMenu.AddMenuItem("Moderation", new ModerationControl());
-                await this.MainMenu.AddMenuItem("Services", new ServicesControl());
+                await this.MainMenu.AddMenuItem("Moderation", new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
+                await this.MainMenu.AddMenuItem("Services", new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
             }
             await this.MainMenu.AddMenuItem("About", new AboutControl());
         }

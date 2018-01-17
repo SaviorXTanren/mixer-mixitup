@@ -20,14 +20,19 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         public string Name { get; private set; }
         public MainControlBase Control { get; private set; }
+        public string HelpLink { get; private set; }
+
         public string Link { get; private set; }
 
         public Visibility LinkIconVisibility { get { return (!string.IsNullOrEmpty(this.Link)) ? Visibility.Visible : Visibility.Collapsed; } }
 
-        public MainMenuItem(string name, MainControlBase control)
+        public Visibility HelpLinkVisibility { get { return (!string.IsNullOrEmpty(this.HelpLink)) ? Visibility.Visible : Visibility.Collapsed; } }
+
+        public MainMenuItem(string name, MainControlBase control, string helpLink = null)
         {
             this.Name = name;
             this.Control = control;
+            this.HelpLink = helpLink;
         }
 
         public MainMenuItem(string name, string link)
@@ -52,10 +57,10 @@ namespace MixItUp.WPF.Controls.MainControls
             InitializeComponent();
         }
 
-        public async Task AddMenuItem(string name, MainControlBase control)
+        public async Task AddMenuItem(string name, MainControlBase control, string helpLink = null)
         {
             await control.Initialize(this.Window);
-            this.menuItems.Add(new MainMenuItem(name, control));
+            this.menuItems.Add(new MainMenuItem(name, control, helpLink));
             if (this.menuItems.Count == 1)
             {
                 this.MenuItemSelected(this.menuItems.First());
@@ -110,6 +115,18 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 MainMenuItem item = (MainMenuItem)this.MenuItemsListBox.SelectedItem;
                 this.MenuItemSelected(item);
+            }
+        }
+
+        private void SectionHelpButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext != null && this.DataContext is MainMenuItem)
+            {
+                MainMenuItem menuItem = (MainMenuItem)this.DataContext;
+                if (!string.IsNullOrEmpty(menuItem.HelpLink))
+                {
+                    Process.Start(menuItem.HelpLink);
+                }
             }
         }
 

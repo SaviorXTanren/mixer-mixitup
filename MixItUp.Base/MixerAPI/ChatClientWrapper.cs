@@ -76,10 +76,13 @@ namespace MixItUp.Base.MixerAPI
                         this.ChatUsers[user.ID] = user;
                     }
 
-                    Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.ChatUsers.Values.Select(u => u.GetModel()));
-                    foreach (var kvp in chatFollowers)
+                    if (this.ChatUsers.Count > 0)
                     {
-                        this.ChatUsers[kvp.Key.id].SetFollowDate(kvp.Value);
+                        Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.ChatUsers.Values.Select(u => u.GetModel()));
+                        foreach (var kvp in chatFollowers)
+                        {
+                            this.ChatUsers[kvp.Key.id].SetFollowDate(kvp.Value);
+                        }
                     }
 
                     if (ChannelSession.IsStreamer)

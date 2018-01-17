@@ -43,20 +43,33 @@
                     <DockPanel>
                         <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" />
 
-                        <MaterialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
-                            <StackPanel>
-                                <Button x:Name="SwitchThemeButton" Content="Switch to Dark Theme" Click="SwitchThemeButton_Click" />
-                                <Button x:Name="BackupSettingsButton" Content="Backup Settings" Click="BackupSettingsButton_Click" />
-                                <Button x:Name="RestoreSettingsButton" Content="Restore Settings" Click="RestoreSettingsButton_Click" />
-                                <Button x:Name="ReRunWizardSettingsButton" Content="Re-Run New User Wizard" Click="ReRunWizardSettingsButton_Click" />
-                                <Separator />
-                                <Button x:Name="InstallationDirectoryButton" Content="Installation Folder" Click="InstallationDirectoryButton_Click" />
-                                <Button x:Name="DocumentationButton" Content="Documentation" Click="DocumentationButton_Click" />
-                                <Separator />
-                                <Button x:Name="EnableDiagnosticLogsButton" Content="Enable Diagnostics" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
-                                <Button x:Name="DisableDiagnosticLogsButton" Content="Disable Diagnostics" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
-                            </StackPanel>
-                        </MaterialDesign:PopupBox>
+                        <Grid DockPanel.Dock="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button x:Name="SectionHelpButton" Grid.Column="0" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help">
+                                <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                            </Button>
+
+                            <MaterialDesign:PopupBox Grid.Column="2" DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                                <StackPanel>
+                                    <Button x:Name="SwitchThemeButton" Content="Switch to Dark Theme" Click="SwitchThemeButton_Click" />
+                                    <Button x:Name="BackupSettingsButton" Content="Backup Settings" Click="BackupSettingsButton_Click" />
+                                    <Button x:Name="RestoreSettingsButton" Content="Restore Settings" Click="RestoreSettingsButton_Click" />
+                                    <Button x:Name="ReRunWizardSettingsButton" Content="Re-Run New User Wizard" Click="ReRunWizardSettingsButton_Click" />
+                                    <Separator />
+                                    <Button x:Name="InstallationDirectoryButton" Content="Installation Folder" Click="InstallationDirectoryButton_Click" />
+                                    <Button x:Name="DocumentationButton" Content="Documentation" Click="DocumentationButton_Click" />
+                                    <Separator />
+                                    <Button x:Name="EnableDiagnosticLogsButton" Content="Enable Diagnostics" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
+                                    <Button x:Name="DisableDiagnosticLogsButton" Content="Disable Diagnostics" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
+                                </StackPanel>
+                            </MaterialDesign:PopupBox>
+
+                        </Grid>
 
                         <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
                     </DockPanel>
