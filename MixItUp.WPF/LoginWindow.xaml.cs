@@ -108,6 +108,11 @@ namespace MixItUp.WPF
                     result = await this.NewStreamerLogin();
                 }
             });
+
+            if (!result)
+            {
+                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
+            }
         }
 
         private void ModeratorChannelTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -148,7 +153,7 @@ namespace MixItUp.WPF
             }
             else
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to initialize session, please try again");
+                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
             }
         }
 
