@@ -49,16 +49,10 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckLastRun(user))
+            if (!await this.CheckLastRun(user) || !await this.CheckPermissions(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
             {
                 return;
             }
-
-            await this.CheckPermissions(user);
-
-            await this.CheckRankRequirement(user);
-
-            await this.CheckCurrencyRequirement(user);
 
             this.lastRun = DateTimeOffset.Now;
 
