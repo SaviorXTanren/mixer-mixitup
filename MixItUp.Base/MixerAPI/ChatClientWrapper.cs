@@ -361,15 +361,18 @@ namespace MixItUp.Base.MixerAPI
         private async Task ChatUserRefreshBackground()
         {
             Dictionary<uint, UserViewModel> users = this.ChatUsers.ToDictionary();
-            foreach (UserViewModel user in users.Values)
+            if (users.Count > 0)
             {
-                await user.SetDetails(checkForFollow: false);
-            }
+                foreach (UserViewModel user in users.Values)
+                {
+                    await user.SetDetails(checkForFollow: false);
+                }
 
-            Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, users.Values.Select(u => u.GetModel()));
-            foreach (var kvp in chatFollowers)
-            {
-                users[kvp.Key.id].SetFollowDate(kvp.Value);
+                Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, users.Values.Select(u => u.GetModel()));
+                foreach (var kvp in chatFollowers)
+                {
+                    users[kvp.Key.id].SetFollowDate(kvp.Value);
+                }
             }
         }
 

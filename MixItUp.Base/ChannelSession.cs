@@ -292,8 +292,10 @@ namespace MixItUp.Base
 
                     ChannelSession.Connection.Initialize();
 
-                    await ChannelSession.Chat.Connect();
-                    await ChannelSession.Constellation.Connect();
+                    if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect())
+                    {
+                        return false;
+                    }
 
                     if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP))
                     {
