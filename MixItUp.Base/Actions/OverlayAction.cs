@@ -88,7 +88,7 @@ namespace MixItUp.Base.Actions
                     string imageFilePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, arguments);
                     try
                     {
-                        if (Uri.IsWellFormedUriString(imageFilePath, UriKind.RelativeOrAbsolute))
+                        if (!string.IsNullOrEmpty(imageFilePath) && Uri.IsWellFormedUriString(imageFilePath, UriKind.RelativeOrAbsolute))
                         {
                             string tempFilePath = Path.GetTempFileName();
                             using (WebClient client = new WebClient())

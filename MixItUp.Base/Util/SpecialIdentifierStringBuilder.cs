@@ -57,7 +57,10 @@ namespace MixItUp.Base.Util
                 if (user.AvatarLink.Equals(UserViewModel.DefaultAvatarLink))
                 {
                     UserModel avatarUser = await ChannelSession.Connection.GetUser(user.UserName);
-                    user.AvatarLink = avatarUser.avatarUrl;
+                    if (!string.IsNullOrEmpty(user.AvatarLink))
+                    {
+                        user.AvatarLink = avatarUser.avatarUrl;
+                    }
                 }
 
                 for (int i = 0; i < ChannelSession.Settings.Currencies.Count; i++)
