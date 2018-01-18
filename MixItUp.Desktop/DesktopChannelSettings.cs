@@ -259,7 +259,7 @@ namespace MixItUp.Desktop
                     await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
                     {
                         UserDataViewModel userData = new UserDataViewModel(dataReader);
-                        this.UserData.Add(userData.ID, userData);
+                        this.UserData[userData.ID] = userData;
                     });
                 }
             }
