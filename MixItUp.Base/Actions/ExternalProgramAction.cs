@@ -23,14 +23,18 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public bool ShowWindow { get; set; }
 
+        [DataMember]
+        public bool WaitForFinish { get; set; }
+
         public ExternalProgramAction() : base(ActionTypeEnum.ExternalProgram) { }
 
-        public ExternalProgramAction(string filePath, string arguments, bool showWindow)
+        public ExternalProgramAction(string filePath, string arguments, bool showWindow, bool waitForFinish)
             : this()
         {
             this.FilePath = filePath;
             this.Arguments = arguments;
             this.ShowWindow = showWindow;
+            this.WaitForFinish = waitForFinish;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -41,9 +45,12 @@ namespace MixItUp.Base.Actions
             process.StartInfo.CreateNoWindow = !this.ShowWindow;
 
             process.Start();
-            while (!process.HasExited)
+            if (this.WaitForFinish)
             {
-                await Task.Delay(500);
+                while (!process.HasExited)
+                {
+                    await Task.Delay(500);
+                }
             }
         }
     }

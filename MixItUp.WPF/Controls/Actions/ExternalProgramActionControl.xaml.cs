@@ -23,6 +23,8 @@ namespace MixItUp.WPF.Controls.Actions
                 ExternalProgramAction externalAction = (ExternalProgramAction)this.action;
                 this.ProgramFilePathTextBox.Text = externalAction.FilePath;
                 this.ProgramArgumentsTextBox.Text = externalAction.Arguments;
+                this.ShowWindowCheckBox.IsChecked = externalAction.ShowWindow;
+                this.WaitForFinishCheckBox.IsChecked = externalAction.WaitForFinish;
             }
             return Task.FromResult(0);
         }
@@ -31,7 +33,8 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (!string.IsNullOrEmpty(this.ProgramFilePathTextBox.Text))
             {
-                return new ExternalProgramAction(this.ProgramFilePathTextBox.Text, this.ProgramArgumentsTextBox.Text, showWindow: true);
+                return new ExternalProgramAction(this.ProgramFilePathTextBox.Text, this.ProgramArgumentsTextBox.Text, this.ShowWindowCheckBox.IsChecked.GetValueOrDefault(),
+                    this.WaitForFinishCheckBox.IsChecked.GetValueOrDefault());
             }
             return null;
         }

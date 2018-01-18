@@ -8,20 +8,43 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBox Grid.Column="0" Grid.Row="0" x:Name="ProgramFilePathTextBox" MaterialDesign:HintAssist.Hint="Program File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        <Button Grid.Column="2" Grid.Row="0" x:Name="ProgramFileBrowseButton" Click="ProgramFileBrowseButton_Click">Browse</Button>
+        <Grid>
+            <Grid.ColumnDefinitions Grid.Row="0">
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" Grid.Row="2" x:Name="ProgramArgumentsTextBox" MaterialDesign:HintAssist.Hint="Program Arguments" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" x:Name="ProgramFilePathTextBox" MaterialDesign:HintAssist.Hint="Program File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Button Grid.Column="2" x:Name="ProgramFileBrowseButton" Click="ProgramFileBrowseButton_Click">Browse</Button>
+        </Grid>
+
+        <TextBox Grid.Row="2" x:Name="ProgramArgumentsTextBox" MaterialDesign:HintAssist.Hint="Program Arguments" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center">Show Window:</TextBlock>
+            <CheckBox Grid.Column="2" x:Name="ShowWindowCheckBox" VerticalAlignment="Bottom" />
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center">Wait For Finish:</TextBlock>
+            <CheckBox Grid.Column="6" x:Name="WaitForFinishCheckBox" VerticalAlignment="Bottom" />
+        </Grid>
     </Grid>
 </local:ActionControlBase>
