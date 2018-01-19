@@ -1,4 +1,5 @@
 ﻿using MixItUp.WPF.Controls;
+using MixItUp.WPF.Util;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,6 +16,7 @@ namespace MixItUp.WPF.Windows
         {
             this.Loaded += LoadingWindowBase_Loaded;
             this.Closing += LoadingWindowBase_Closing;
+            this.Activated += LoadingWindowBase_Activated;
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
@@ -61,6 +63,11 @@ namespace MixItUp.WPF.Windows
             {
                 await this.OnClosing();
             });
+        }
+
+        private void LoadingWindowBase_Activated(object sender, EventArgs e)
+        {
+            MessageBoxHelper.SetLastActiveWindow(this);
         }
 
         private void StartAsyncOperation()

@@ -30,9 +30,11 @@ namespace MixItUp.WPF.Util
         private static UserDialogResult lastUserResult = UserDialogResult.Close;
         private static string lastCustomResult = null;
 
+        private static LoadingWindowBase lastActiveWindow;
+
         public static async Task ShowMessageDialog(string message)
         {
-            DialogHost dialogHost = MessageBoxHelper.GetDialogHost();
+            DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();
             if (dialogHost != null && !isDialogShown)
             {
                 MessageBoxHelper.isDialogShown = true;
@@ -43,7 +45,7 @@ namespace MixItUp.WPF.Util
 
         public static async Task<bool> ShowConfirmationDialog(string message)
         {
-            DialogHost dialogHost = MessageBoxHelper.GetDialogHost();
+            DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();
             if (dialogHost != null && !isDialogShown)
             {
                 MessageBoxHelper.isDialogShown = true;
@@ -58,7 +60,7 @@ namespace MixItUp.WPF.Util
 
         public static async Task<UserDialogResult> ShowUserDialog(UserViewModel user)
         {
-            DialogHost dialogHost = MessageBoxHelper.GetDialogHost();
+            DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();
             if (dialogHost != null && !isDialogShown)
             {
                 MessageBoxHelper.isDialogShown = true;
@@ -73,7 +75,7 @@ namespace MixItUp.WPF.Util
 
         public static async Task<string> ShowCustomDialog(UserControl control)
         {
-            DialogHost dialogHost = MessageBoxHelper.GetDialogHost();
+            DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();
             if (!isDialogShown)
             {
                 MessageBoxHelper.isDialogShown = true;
@@ -88,26 +90,46 @@ namespace MixItUp.WPF.Util
 
         public static void CloseDialog()
         {
-            DialogHost dialogHost = MessageBoxHelper.GetDialogHost();
+            DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();
             if (dialogHost != null)
             {
                 dialogHost.IsOpen = false;
             }
         }
 
-        private static DialogHost GetDialogHost()
+        public static void SetLastActiveWindow(LoadingWindowBase window)
         {
+            MessageBoxHelper.lastActiveWindow = window;
+        }
+
+        private static DialogHost GetActiveWindowDialogHost()
+        {
+            if (MessageBoxHelper.lastActiveWindow != null)
+            {
+                DialogHost dialog = MessageBoxHelper.GetDialogHost(MessageBoxHelper.lastActiveWindow);
+                if (dialog != null)
+                {
+                    return dialog;
+                }
+            }
+
             IEnumerable<LoadingWindowBase> windows = Application.Current.Windows.OfType<LoadingWindowBase>();
             if (windows.Count() > 0)
             {
-                LoadingWindowBase window = windows.FirstOrDefault(x => x.IsActive);
-                if (window != null)
+                return MessageBoxHelper.GetDialogHost(windows.FirstOrDefault(x => x.IsActive));
+            }
+
+            return null;
+        }
+
+        private static DialogHost GetDialogHost(LoadingWindowBase window)
+        {
+            if (window != null)
+            {
+                object obj = window.FindName("MDDialogHost");
+                if (obj != null)
                 {
-                    object obj = window.FindName("MDDialogHost");
-                    if (obj != null)
-                    {
-                        return (DialogHost)obj;
-                    }
+                    return (DialogHost)obj;
                 }
             }
             return null;

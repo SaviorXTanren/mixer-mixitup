@@ -178,7 +178,7 @@ namespace MixItUp.WPF
 
             if (!result)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer. Please ensure you approved access for the application in a timely manner.");
+                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
             }
             return result;
         }
