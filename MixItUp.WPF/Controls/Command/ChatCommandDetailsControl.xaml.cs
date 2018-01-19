@@ -71,7 +71,7 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            if (this.ChatCommandTextBox.Text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c)))
+            if (this.ChatCommandTextBox.Text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c) && c != '!'))
             {
                 await MessageBoxHelper.ShowMessageDialog("Commands can only contain letters and numbers");
                 return false;
@@ -153,6 +153,6 @@ namespace MixItUp.WPF.Controls.Command
             return null;
         }
 
-        private IEnumerable<string> GetCommandStrings() { return new List<string>(this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)); }
+        private IEnumerable<string> GetCommandStrings() { return new List<string>(this.ChatCommandTextBox.Text.Replace("!", "").Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)); }
     }
 }

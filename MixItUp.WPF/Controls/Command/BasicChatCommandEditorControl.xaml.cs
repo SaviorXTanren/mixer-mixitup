@@ -105,13 +105,13 @@ namespace MixItUp.WPF.Controls.Command
                     return;
                 }
 
-                if (this.ChatCommandTextBox.Text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c)))
+                if (this.ChatCommandTextBox.Text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c) && c != '!'))
                 {
                     await MessageBoxHelper.ShowMessageDialog("Commands can only contain letters and numbers");
                     return;
                 }
 
-                IEnumerable<string> commandStrings = new List<string>(this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                IEnumerable<string> commandStrings = new List<string>(this.ChatCommandTextBox.Text.Replace("!", "").Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                 if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
                 {
                     await MessageBoxHelper.ShowMessageDialog("Each command string must be unique");
