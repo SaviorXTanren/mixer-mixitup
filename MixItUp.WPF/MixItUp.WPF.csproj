@@ -331,6 +331,9 @@
     <Compile Include="Controls\Currency\RankSelectorControl.xaml.cs">
       <DependentUpon>RankSelectorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\DeveloperAPIServiceControl.xaml.cs">
+      <DependentUpon>DeveloperAPIServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
       <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
     </Compile>
@@ -610,6 +613,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Currency\RankSelectorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\DeveloperAPIServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

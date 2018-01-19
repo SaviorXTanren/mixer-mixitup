@@ -1,7 +1,5 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Client;
-using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
@@ -311,6 +309,11 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.EnableOverlay)
                     {
                         await ChannelSession.Services.InitializeOverlayServer();
+                    }
+
+                    if (ChannelSession.Settings.EnableDeveloperAPI)
+                    {
+                        await ChannelSession.Services.InitializeDeveloperAPI();
                     }
 
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;

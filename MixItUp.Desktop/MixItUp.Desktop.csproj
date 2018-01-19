@@ -118,6 +118,7 @@
     <Compile Include="Services\OBSService.cs" />
     <Compile Include="Services\OverlayWebServer.cs" />
     <Compile Include="Services\WindowsAudioService.cs" />
+    <Compile Include="Services\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsFileService.cs" />
     <Compile Include="Services\WindowsInputService.cs" />
     <Compile Include="Services\DesktopSettingsService.cs" />

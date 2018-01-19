@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
 using MixItUp.Input;
@@ -145,6 +146,31 @@ namespace MixItUp.Desktop.Services
                 await this.XSplitServer.Disconnect();
                 this.XSplitServer = null;
             }
+        }
+
+        public override async Task<bool> InitializeDeveloperAPI()
+        {
+            return await Task.Run(() =>
+            {
+                if (this.XSplitServer == null)
+                {
+                    this.DeveloperAPI = new WindowsDeveloperAPIService();
+                    this.DeveloperAPI.Start();
+                }
+                return true;
+            });
+        }
+
+        public override async Task DisconnectDeveloperAPI()
+        {
+            await Task.Run(() =>
+            {
+                if (this.XSplitServer != null)
+                {
+                    this.DeveloperAPI.End();
+                    this.DeveloperAPI = null;
+                }
+            });
         }
 
         private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)

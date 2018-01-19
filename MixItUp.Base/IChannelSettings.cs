@@ -55,6 +55,8 @@ namespace MixItUp.Base
 
         bool EnableXSplitConnection { get; set; }
 
+        bool EnableDeveloperAPI { get; set; }
+
         int MaxMessagesInChat { get; set; }
     }
 

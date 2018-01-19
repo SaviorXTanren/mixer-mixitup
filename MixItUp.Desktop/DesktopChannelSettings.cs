@@ -100,6 +100,9 @@ namespace MixItUp.Desktop
         public bool EnableXSplitConnection { get; set; }
 
         [JsonProperty]
+        public bool EnableDeveloperAPI { get; set; }
+
+        [JsonProperty]
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]

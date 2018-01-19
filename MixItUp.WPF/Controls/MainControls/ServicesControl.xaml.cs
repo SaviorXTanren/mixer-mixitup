@@ -26,6 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.services.Add(new ServicesGroupBoxControl(this.Window, new OverlayServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new OBSStudioServiceControl()));
             this.services.Add(new ServicesGroupBoxControl(this.Window, new XSplitServiceControl()));
+            this.services.Add(new ServicesGroupBoxControl(this.Window, new DeveloperAPIServiceControl()));
 
             await base.InitializeInternal();
         }
