@@ -109,7 +109,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (commandStrings.Any(c => command.Commands.Contains(c)))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("There already exists a chat command that uses one of the command strings you have specified");
+                        await MessageBoxHelper.ShowMessageDialog("There already exists an enabled, chat command that uses one of the command strings you have specified");
                         return false;
                     }
                 }

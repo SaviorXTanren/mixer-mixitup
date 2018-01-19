@@ -14,7 +14,7 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                    
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -45,7 +45,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Commands in Chat (letters &amp; numbers only, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Trigger(s) in Chat (EX: &quot;!follow&quot;) (No &quot;!&quot; needed, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <CurrencyControls:CurrencySelectorControl x:Name="CurrencySelector" Grid.Column="2" />
         </Grid>

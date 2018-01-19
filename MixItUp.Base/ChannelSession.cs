@@ -12,6 +12,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -121,7 +122,7 @@ namespace MixItUp.Base
                 commands.AddRange(ChannelSession.PreMadeChatCommands);
                 commands.AddRange(ChannelSession.Settings.ChatCommands);
                 commands.AddRange(ChannelSession.Settings.GameCommands);
-                return commands;
+                return commands.Where(c => c.IsEnabled);
             }
         }
 
