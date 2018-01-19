@@ -1,12 +1,14 @@
-﻿using Mixer.Base.Util;
+﻿using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Controls.Currency;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
@@ -28,12 +30,16 @@ namespace MixItUp.WPF.Windows.Currency
 
         private string specialIdentifier = null;
 
+        private Dictionary<uint, int> userImportData = new Dictionary<uint, int>();
+
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
         public CurrencyWindow(bool isRank)
             : this(new UserCurrencyViewModel())
         {
             this.isRank = isRank;
+
+            this.ExportUserCurrencyToFileButton.IsEnabled = false;
         }
 
         public CurrencyWindow(UserCurrencyViewModel currency)
@@ -159,6 +165,187 @@ namespace MixItUp.WPF.Windows.Currency
             this.RankAmountTextBox.Clear();
         }
 
+        private void NewCommandButton_Click(object sender, RoutedEventArgs e)
+        {
+            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(CurrencyWindow.RankChangedCommandName)));
+            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
+        }
+
+        private async void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+                CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+                if (command != null)
+                {
+                    this.currency = null;
+                    await ChannelSession.SaveSettings();
+                    this.UpdateRankChangedCommand();
+                }
+            });
+        }
+
+        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        {
+            this.currency.RankChangedCommand = (CustomCommand)e;
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.UpdateRankChangedCommand();
+        }
+
+        private void UpdateRankChangedCommand()
+        {
+            if (this.currency.RankChangedCommand != null)
+            {
+                this.NewCommandButton.Visibility = Visibility.Collapsed;
+                this.CommandButtons.Visibility = Visibility.Visible;
+                this.CommandButtons.DataContext = this.currency.RankChangedCommand;
+            }
+            else
+            {
+                this.NewCommandButton.Visibility = Visibility.Visible;
+                this.CommandButtons.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private async void ImportUserCurrencyFromFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                this.userImportData.Clear();
+
+                string message = "This will allow you to import the total amounts that each user had and assign them to this ";
+                message += (this.isRank) ? "rank" : "currency";
+                message += " and will overwrite any amounts that each user has.";
+                message += Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?";
+
+                if (await MessageBoxHelper.ShowConfirmationDialog(message))
+                {
+                    try
+                    {
+                        string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+                        if (!string.IsNullOrEmpty(filePath))
+                        {
+                            string fileContents = await ChannelSession.Services.FileService.OpenFile(filePath);
+                            string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                            if (lines.Count() > 0)
+                            {
+                                Dictionary<uint, UserDataViewModel> userData = ChannelSession.Settings.UserData.ToDictionary();
+                                foreach (string line in lines)
+                                {
+                                    string[] segments = line.Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                    if (segments.Count() == 2)
+                                    {
+                                        int amount = 0;
+                                        if (!int.TryParse(segments[1], out amount))
+                                        {
+                                            throw new InvalidOperationException("File is not in the correct format");
+                                        }
+
+                                        UserModel user = null;
+                                        if (uint.TryParse(segments[0], out uint id))
+                                        {
+                                            if (userData.ContainsKey(id))
+                                            {
+                                                this.userImportData[id] = amount;
+                                            }
+                                            else
+                                            {
+                                                user = await ChannelSession.Connection.GetUser(id);
+                                                if (user != null)
+                                                {
+                                                    UserViewModel userViewModel = new UserViewModel(user);
+                                                    UserDataViewModel data = new UserDataViewModel(userViewModel);
+                                                    ChannelSession.Settings.UserData[data.ID] = data;
+                                                    this.userImportData[data.ID] = amount;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            UserDataViewModel data = userData.Values.FirstOrDefault(u => u.UserName.Equals(segments[0]));
+                                            if (data != null)
+                                            {
+                                                this.userImportData[data.ID] = amount;
+                                            }
+                                            else
+                                            {
+                                                user = await ChannelSession.Connection.GetUser(segments[0]);
+                                                if (user != null)
+                                                {
+                                                    UserViewModel userViewModel = new UserViewModel(user);
+                                                    data = new UserDataViewModel(userViewModel);
+                                                    ChannelSession.Settings.UserData[data.ID] = data;
+                                                    this.userImportData[data.ID] = amount;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (segments.Count() == 3)
+                                    {
+                                        uint id = 0;
+                                        if (!uint.TryParse(segments[0], out id))
+                                        {
+                                            throw new InvalidOperationException("File is not in the correct format");
+                                        }
+
+                                        int amount = 0;
+                                        if (!int.TryParse(segments[2], out amount))
+                                        {
+                                            throw new InvalidOperationException("File is not in the correct format");
+                                        }
+
+                                        if (userData.ContainsKey(id))
+                                        {
+                                            this.userImportData[id] = amount;
+                                        }
+                                        else
+                                        {
+                                            UserDataViewModel data = new UserDataViewModel(id, segments[1]);
+                                            ChannelSession.Settings.UserData[data.ID] = data;
+                                            this.userImportData[data.ID] = amount;
+                                        }
+                                    }
+
+                                    this.ImportUserCurrencyFromFileButton.Content = string.Format("{0} Imported...", this.userImportData.Count());
+                                }
+                                this.ImportUserCurrencyFromFileButton.Content = "Import From File";
+                                return;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+
+                    await MessageBoxHelper.ShowMessageDialog("We were unable to import the data. Please ensure your file is in one of the following formats:" +
+                        Environment.NewLine + Environment.NewLine + "<USERNAME> <AMOUNT>" +
+                        Environment.NewLine + Environment.NewLine + "<USER ID> <AMOUNT>" +
+                        Environment.NewLine + Environment.NewLine + "<USER ID> <USERNAME> <AMOUNT>");
+
+                    this.ImportUserCurrencyFromFileButton.Content = "Import From File";
+                }
+            });
+        }
+
         private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
@@ -261,70 +448,36 @@ namespace MixItUp.WPF.Windows.Currency
                     ChannelSession.Settings.Currencies[this.currency.ID] = this.currency;
                 }
 
+                foreach (var kvp in this.userImportData)
+                {
+                    if (ChannelSession.Settings.UserData.ContainsKey(kvp.Key))
+                    {
+                        ChannelSession.Settings.UserData[kvp.Key].SetCurrencyAmount(this.currency, kvp.Value);
+                    }
+                }
+
                 await ChannelSession.SaveSettings();
 
                 this.Close();
             });
         }
 
-        private void NewCommandButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(CurrencyWindow.RankChangedCommandName)));
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
-            window.Closed += Window_Closed;
-            window.Show();
-        }
-
-        private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
-        {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-            if (command != null)
-            {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Closed += Window_Closed;
-                window.Show();
-            }
-        }
-
-        private async void CommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        private async void ExportUserCurrencyToFileButton_Click(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {
-                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-                if (command != null)
+                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(this.currency.Name + " Data.txt");
+                if (!string.IsNullOrEmpty(filePath))
                 {
-                    this.currency = null;
-                    await ChannelSession.SaveSettings();
-                    this.UpdateRankChangedCommand();
+                    StringBuilder fileContents = new StringBuilder();
+                    foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.ToList())
+                    {
+                        fileContents.AppendLine(string.Format("{0} {1} {2}", userData.ID, userData.UserName, userData.GetCurrencyAmount(this.currency)));
+                    }
+
+                    await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString(), create: true);
                 }
             });
-        }
-
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
-        {
-            this.currency.RankChangedCommand = (CustomCommand)e;
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.UpdateRankChangedCommand();
-        }
-
-        private void UpdateRankChangedCommand()
-        {
-            if (this.currency.RankChangedCommand != null)
-            {
-                this.NewCommandButton.Visibility = Visibility.Collapsed;
-                this.CommandButtons.Visibility = Visibility.Visible;
-                this.CommandButtons.DataContext = this.currency.RankChangedCommand;
-            }
-            else
-            {
-                this.NewCommandButton.Visibility = Visibility.Visible;
-                this.CommandButtons.Visibility = Visibility.Collapsed;
-            }
         }
     }
 }

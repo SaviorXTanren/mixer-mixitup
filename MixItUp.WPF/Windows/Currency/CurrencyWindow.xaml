@@ -198,7 +198,19 @@
                 </Grid>
 
                 <Grid Grid.Row="2" Margin="0,20,0,0" HorizontalAlignment="Center">
-                    <Button x:Name="SaveButton" Width="80" Click="SaveButton_Click">Save</Button>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="ImportUserCurrencyFromFileButton" Grid.Column="0" Click="ImportUserCurrencyFromFileButton_Click">Import From File</Button>
+                    
+                    <Button x:Name="SaveButton" Grid.Column="2" Width="80" Click="SaveButton_Click">Save</Button>
+
+                    <Button x:Name="ExportUserCurrencyToFileButton" Grid.Column="4" Click="ExportUserCurrencyToFileButton_Click">Export From File</Button>
                 </Grid>
             </Grid>
         </ScrollViewer>
