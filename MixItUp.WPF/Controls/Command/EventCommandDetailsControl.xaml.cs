@@ -112,7 +112,7 @@ namespace MixItUp.WPF.Controls.Command
                         this.command = new EventCommand(eventType);
                     }
 
-                    if (ChannelSession.Settings.EventCommands.Any(se => se.ContainsCommand(this.command.CommandsString)))
+                    if (ChannelSession.Settings.EventCommands.Any(se => se.UniqueEventID.Equals(this.command.UniqueEventID)))
                     {
                         await MessageBoxHelper.ShowMessageDialog("This event already exists");
                         return null;
