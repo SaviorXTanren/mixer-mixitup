@@ -85,8 +85,8 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier("useravatar", user.AvatarLink);
                 this.ReplaceSpecialIdentifier("userurl", "https://www.mixer.com/" + user.UserName);
-
                 this.ReplaceSpecialIdentifier("username", user.UserName);
+                this.ReplaceSpecialIdentifier("userid", user.ID.ToString());
             }
 
             if (arguments != null)
@@ -128,6 +128,7 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier("arg" + (i + 1) + "useravatar", argUser.AvatarLink);
                         this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.UserName);
                         this.ReplaceSpecialIdentifier("arg" + (i + 1) + "username", argUser.UserName);
+                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userid", argUser.ID.ToString());
                     }
 
                     this.ReplaceSpecialIdentifier("arg" + (i + 1) + "text", arguments.ElementAt(i));
