@@ -2,15 +2,16 @@
 using MixItUp.Base.Commands;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
     /// Interaction logic for CommandButtonsControl.xaml
     /// </summary>
-    public partial class CommandButtonsControl : UserControl
+    public partial class CommandButtonsControl : NotifyPropertyChangedUserControl
     {
+        public static readonly DependencyProperty EditingButtonsEnabledProperty = DependencyProperty.Register("EditingButtonsEnabled", typeof(bool), typeof(CommandButtonsControl), new PropertyMetadata(true));
+
         public static readonly RoutedEvent PlayClickedEvent = EventManager.RegisterRoutedEvent("PlayClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(CommandButtonsControl));
         public static readonly RoutedEvent StopClickedEvent = EventManager.RegisterRoutedEvent("StopClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(CommandButtonsControl));
         public static readonly RoutedEvent EditClickedEvent = EventManager.RegisterRoutedEvent("EditClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(CommandButtonsControl));

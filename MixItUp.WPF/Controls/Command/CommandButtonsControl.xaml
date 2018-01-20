@@ -1,9 +1,10 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Command.CommandButtonsControl"
+﻿<Controls:NotifyPropertyChangedUserControl x:Class="MixItUp.WPF.Controls.Command.CommandButtonsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -43,4 +44,4 @@
         <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" IsChecked="{Binding IsEnabled}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
 
     </Grid>
-</UserControl>
+</Controls:NotifyPropertyChangedUserControl>
