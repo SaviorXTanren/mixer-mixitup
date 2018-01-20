@@ -187,17 +187,53 @@ namespace MixItUp.Base.MixerAPI
             this.BotClient = null;
         }
 
-        public async Task SendMessage(string message, bool sendAsStreamer = false) { await this.RunAsync(this.GetBotClient(sendAsStreamer).SendMessage(message)); }
+        public async Task SendMessage(string message, bool sendAsStreamer = false)
+        {
+            if (this.GetBotClient(sendAsStreamer) != null)
+            {
+                await this.RunAsync(this.GetBotClient(sendAsStreamer).SendMessage(message));
+            }
+        }
 
-        public async Task Whisper(string username, string message, bool sendAsStreamer = false) { await this.RunAsync(this.GetBotClient(sendAsStreamer).Whisper(username, message)); }
+        public async Task Whisper(string username, string message, bool sendAsStreamer = false)
+        {
+            if (this.GetBotClient(sendAsStreamer) != null)
+            {
+                await this.RunAsync(this.GetBotClient(sendAsStreamer).Whisper(username, message));
+            }
+        }
 
-        public async Task DeleteMessage(Guid id) { await this.RunAsync(this.Client.DeleteMessage(id)); }
+        public async Task DeleteMessage(Guid id)
+        {
+            if (this.Client != null)
+            {
+                await this.RunAsync(this.Client.DeleteMessage(id));
+            }
+        }
 
-        public async Task ClearMessages() { await this.RunAsync(this.Client.ClearMessages()); }
+        public async Task ClearMessages()
+        {
+            if (this.Client != null)
+            {
+                await this.RunAsync(this.Client.ClearMessages());
+            }
+        }
 
-        public async Task PurgeUser(string username) { await this.RunAsync(this.Client.PurgeUser(username)); }
+        public async Task PurgeUser(string username)
+        {
+            if (this.Client != null)
+            {
+                await this.RunAsync(this.Client.PurgeUser(username));
+            }
+        }
 
-        public async Task TimeoutUser(string username, uint durationInSeconds) { await this.RunAsync(this.Client.TimeoutUser(username, durationInSeconds)); }
+        public async Task TimeoutUser(string username, uint durationInSeconds)
+        {
+            if (this.Client != null)
+            {
+                await this.RunAsync(this.Client.TimeoutUser(username, durationInSeconds));
+            }
+        }
 
         public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction)
         {
@@ -216,6 +252,10 @@ namespace MixItUp.Base.MixerAPI
                 if (await this.RunAsync(client.Connect()) && await this.RunAsync(client.Authenticate()))
                 {
                     return client;
+                }
+                else
+                {
+                    Logger.Log("Failed to connect & authenticate Chat client");
                 }
             }
             return null;
