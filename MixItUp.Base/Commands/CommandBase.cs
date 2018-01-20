@@ -26,6 +26,9 @@ namespace MixItUp.Base.Commands
     public abstract class CommandBase
     {
         [DataMember]
+        public Guid ID { get; set; }
+
+        [DataMember]
         public string Name { get; set; }
 
         [DataMember]
@@ -53,6 +56,7 @@ namespace MixItUp.Base.Commands
 
         public CommandBase()
         {
+            this.ID = Guid.NewGuid();
             this.Commands = new List<string>();
             this.Actions = new List<ActionBase>();
             this.IsEnabled = true;

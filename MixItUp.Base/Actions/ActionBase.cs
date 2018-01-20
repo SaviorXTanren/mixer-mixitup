@@ -45,14 +45,21 @@ namespace MixItUp.Base.Actions
     public abstract class ActionBase
     {
         [DataMember]
+        public Guid ID { get; set; }
+
+        [DataMember]
         public ActionTypeEnum Type { get; set; }
 
         [JsonIgnore]
         private Dictionary<string, string> AdditiveSpecialIdentifiers = new Dictionary<string, string>();
 
-        public ActionBase() { }
+        public ActionBase()
+        {
+            this.ID = Guid.NewGuid();
+        }
 
         public ActionBase(ActionTypeEnum type)
+            : this()
         {
             this.Type = type;
         }
