@@ -123,8 +123,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.OBSWebsocket != null)
             {
-                await this.OBSWebsocket.Close();
                 this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
+                await this.OBSWebsocket.Close();
                 this.OBSWebsocket = null;
             }
         }
