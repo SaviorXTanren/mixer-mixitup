@@ -12,7 +12,7 @@ namespace MixItUp.WPF.Windows.Command
     /// </summary>
     public partial class CommandWindow : LoadingWindowBase
     {
-        public event EventHandler<CommandBase> CommandSaveSuccessfully { add { this.commandEditorControl.OnCommandSaveSuccessfully += value; } remove { this.commandEditorControl.OnCommandSaveSuccessfully -= value; } }
+        public event EventHandler<CommandBase> CommandSaveSuccessfully;
 
         private CommandEditorControlBase commandEditorControl;
 
@@ -127,6 +127,16 @@ namespace MixItUp.WPF.Windows.Command
             this.CommandSelectionGrid.Visibility = Visibility.Collapsed;
             this.MainContentControl.Visibility = Visibility.Visible;
             this.MainContentControl.Content = this.commandEditorControl = editor;
+
+            this.commandEditorControl.OnCommandSaveSuccessfully += CommandEditorControl_OnCommandSaveSuccessfully;
+        }
+
+        private void CommandEditorControl_OnCommandSaveSuccessfully(object sender, CommandBase e)
+        {
+            if (this.CommandSaveSuccessfully != null)
+            {
+                this.CommandSaveSuccessfully(this, e);
+            }
         }
     }
 }
