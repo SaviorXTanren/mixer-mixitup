@@ -299,7 +299,7 @@ namespace MixItUp.Desktop.Services
         {
             if (!string.IsNullOrEmpty(text))
             {
-                text = text.Replace("$userrank", "$userrankname - $userrankpoints");
+                text = text.Replace("$userrank ", "$userrankname - $userrankpoints ");
 
                 if (currency != null)
                 {
@@ -308,8 +308,8 @@ namespace MixItUp.Desktop.Services
 
                 if (rank != null)
                 {
-                    text = text.Replace("$userrankpoints", "$" + currency.UserAmountSpecialIdentifier);
-                    text = text.Replace("$userrankname", "$" + currency.UserRankNameSpecialIdentifier);
+                    text = text.Replace("$userrankpoints", "$" + rank.UserAmountSpecialIdentifier);
+                    text = text.Replace("$userrankname", "$" + rank.UserRankNameSpecialIdentifier);
                 }
 
                 for (int i = 0; i < 10; i++)
@@ -325,8 +325,8 @@ namespace MixItUp.Desktop.Services
 
                     if (rank != null)
                     {
-                        text = text.Replace("$arg" + i + "userrankpoints", "$arg" + i + currency.UserAmountSpecialIdentifier);
-                        text = text.Replace("$arg" + i + "userrankname", "$arg" + i + currency.UserRankNameSpecialIdentifier);
+                        text = text.Replace("$arg" + i + "userrankpoints", "$arg" + i + rank.UserAmountSpecialIdentifier);
+                        text = text.Replace("$arg" + i + "userrankname", "$arg" + i + rank.UserRankNameSpecialIdentifier);
                     }
                 }
             }
