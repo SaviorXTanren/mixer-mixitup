@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Actions;
 using System;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
 {
@@ -22,6 +23,8 @@ namespace MixItUp.WPF.Controls.Command
                 this.OnCommandSaveSuccessfully(this, command);
             }
         }
+
+        public virtual void OnWindowSizeChanged(Size size) { }
 
         public abstract CommandBase GetExistingCommand();
 

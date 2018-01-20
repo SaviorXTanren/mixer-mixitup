@@ -41,7 +41,9 @@
             </Grid>
         </GroupBox.Header>
 
-        <ContentControl x:Name="ActionControlContentControl" Margin="10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+            <ContentControl x:Name="ActionControlContentControl" Margin="10" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+        </ScrollViewer>
 
     </GroupBox>
 </UserControl>

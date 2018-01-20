@@ -37,6 +37,14 @@ namespace MixItUp.WPF.Controls.Command
             this.actionControls = new ObservableCollection<ActionContainerControl>();
         }
 
+        public override void OnWindowSizeChanged(Size size)
+        {
+            foreach (ActionContainerControl controlContainer in this.actionControls)
+            {
+                controlContainer.OnWindowSizeChanged(size);
+            }
+        }
+
         public override CommandBase GetExistingCommand() { return this.commandDetailsControl.GetExistingCommand(); }
 
         public override void MoveActionUp(ActionContainerControl control)
@@ -82,6 +90,7 @@ namespace MixItUp.WPF.Controls.Command
                     ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);
                     actionControl.Minimize();
                     this.actionControls.Add(actionControl);
+                    actionControl.OnWindowSizeChanged(this.window.RenderSize);
                 }
             }
 
@@ -100,6 +109,7 @@ namespace MixItUp.WPF.Controls.Command
                 ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
                 ActionContainerControl actionControl = new ActionContainerControl(this.window, this, type);
                 this.actionControls.Add(actionControl);
+                actionControl.OnWindowSizeChanged(this.window.RenderSize);
 
                 this.TypeComboBox.SelectedIndex = -1;
             }

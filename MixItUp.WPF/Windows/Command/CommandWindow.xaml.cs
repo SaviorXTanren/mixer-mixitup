@@ -71,6 +71,14 @@ namespace MixItUp.WPF.Windows.Command
             await base.OnLoaded();
         }
 
+        private void LoadingWindowBase_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.commandEditorControl != null)
+            {
+                this.commandEditorControl.OnWindowSizeChanged(e.NewSize);
+            }
+        }
+
         private void BasicChatCommandButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             if (this.commandDetailsControl is ChatCommandDetailsControl)
@@ -127,7 +135,6 @@ namespace MixItUp.WPF.Windows.Command
             this.CommandSelectionGrid.Visibility = Visibility.Collapsed;
             this.MainContentControl.Visibility = Visibility.Visible;
             this.MainContentControl.Content = this.commandEditorControl = editor;
-
             this.commandEditorControl.OnCommandSaveSuccessfully += CommandEditorControl_OnCommandSaveSuccessfully;
         }
 

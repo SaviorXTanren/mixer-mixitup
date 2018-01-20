@@ -109,6 +109,11 @@ namespace MixItUp.WPF.Controls.Actions
 
         public void Minimize() { this.GroupBox.Height = MinimizedGroupBoxHeight; }
 
+        public void OnWindowSizeChanged(Size size)
+        {
+            this.GroupBox.MaxWidth = size.Width - 38;
+        }
+
         private void MoveUpActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.MoveActionUp(this); }
 
         private void MoveDownActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.MoveActionDown(this); }
