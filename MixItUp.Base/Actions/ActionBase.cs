@@ -1,11 +1,9 @@
-﻿using Mixer.Base.Model.User;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Util;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +13,7 @@ namespace MixItUp.Base.Actions
     public enum ActionTypeEnum
     {
         Chat,
+        [Name("Currency/Rank")]
         Currency,
         [Name("External Program")]
         ExternalProgram,

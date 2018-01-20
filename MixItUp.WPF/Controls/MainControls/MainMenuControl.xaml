@@ -71,7 +71,7 @@
 
                         </Grid>
 
-                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
+                        <TextBlock Text="{Binding Name}" Margin="40,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
                     </DockPanel>
                 </MaterialDesign:ColorZone>
 
