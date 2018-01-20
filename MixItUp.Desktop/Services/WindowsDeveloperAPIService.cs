@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Web;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -181,13 +182,52 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (urlSegments[0].Equals("commands"))
                 {
+                    List<CommandBase> allCommands = new List<CommandBase>();
+                    allCommands.AddRange(ChannelSession.AllChatCommands);
+                    allCommands.AddRange(ChannelSession.Settings.InteractiveCommands);
+                    allCommands.AddRange(ChannelSession.Settings.EventCommands);
+                    allCommands.AddRange(ChannelSession.Settings.TimerCommands);
+                    allCommands.AddRange(ChannelSession.Settings.ActionGroupCommands);
+
                     if (request.HttpMethod.Equals("GET"))
                     {
-
+                        if (urlSegments.Count() == 1)
+                        {
+                            result = SerializerHelper.SerializeToString(allCommands);
+                            return HttpStatusCode.OK;
+                        }
+                        else if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
+                        {
+                            CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
+                            if (command != null)
+                            {
+                                result = SerializerHelper.SerializeToString(command);
+                                return HttpStatusCode.OK;
+                            }
+                            else
+                            {
+                                result = "Could not find the command specified";
+                                return HttpStatusCode.NotFound;
+                            }
+                        }
                     }
-                    else if (request.HttpMethod.Equals("POST"))
+                    else if (request.HttpMethod.Equals("POST") && urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
                     {
+                        CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
+                        if (command != null)
+                        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                            command.Perform();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+                            result = "";
+                            return HttpStatusCode.OK;
+                        }
+                        else
+                        {
+                            result = "Could not find the command specified";
+                            return HttpStatusCode.NotFound;
+                        }
                     }
                 }
 
