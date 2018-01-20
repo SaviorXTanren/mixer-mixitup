@@ -76,7 +76,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                this.Game = games.FirstOrDefault(g => g.name.Equals(this.command.GameID));
+                this.Game = games.FirstOrDefault(g => g.id.Equals(this.command.GameID));
                 if (this.Game != null)
                 {
                     this.Version = this.Game.versions.First();
