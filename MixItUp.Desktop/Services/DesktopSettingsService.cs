@@ -178,14 +178,14 @@ namespace MixItUp.Desktop.Services
                     if (!string.IsNullOrEmpty(legacySettings.CurrencyAcquisition.Name))
                     {
                         currency = legacySettings.CurrencyAcquisition;
-                        currency.SpecialIdentifier = "usercurrency";
+                        currency.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currency.Name);
                         settings.Currencies.Add(legacySettings.CurrencyAcquisition.ID, legacySettings.CurrencyAcquisition);
                     }
 
                     if (!string.IsNullOrEmpty(legacySettings.RankAcquisition.Name))
                     {
                         rank = legacySettings.RankAcquisition;
-                        rank.SpecialIdentifier = "userrank";
+                        rank.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(rank.Name);
                         rank.Ranks = legacySettings.Ranks;
                         rank.RankChangedCommand = legacySettings.RankChangedCommand;
                         settings.Currencies.Add(legacySettings.RankAcquisition.ID, legacySettings.RankAcquisition);
@@ -236,33 +236,33 @@ namespace MixItUp.Desktop.Services
                         if (action is ChatAction)
                         {
                             ChatAction nAction = (ChatAction)action;
-                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ChatText);
+                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ChatText, currency, rank);
                         }
                         else if (action is CurrencyAction)
                         {
                             CurrencyAction nAction = (CurrencyAction)action;
-                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ChatText);
+                            nAction.ChatText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ChatText, currency, rank);
                         }
                         else if (action is OBSStudioAction)
                         {
                             OBSStudioAction nAction = (OBSStudioAction)action;
-                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SourceText);
+                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SourceText, currency, rank);
                         }
                         else if (action is OverlayAction)
                         {
                             OverlayAction nAction = (OverlayAction)action;
-                            nAction.ImagePath = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ImagePath);
-                            nAction.Text = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.Text);
+                            nAction.ImagePath = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.ImagePath, currency, rank);
+                            nAction.Text = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.Text, currency, rank);
                         }
                         else if (action is TextToSpeechAction)
                         {
                             TextToSpeechAction nAction = (TextToSpeechAction)action;
-                            nAction.SpeechText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SpeechText);
+                            nAction.SpeechText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SpeechText, currency, rank);
                         }
                         else if (action is XSplitAction)
                         {
                             XSplitAction nAction = (XSplitAction)action;
-                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SourceText);
+                            nAction.SourceText = DesktopSettingsUpgrader.ReplaceSpecialIdentifiersVersion4(nAction.SourceText, currency, rank);
                         }
                     }
                 }
@@ -295,16 +295,39 @@ namespace MixItUp.Desktop.Services
             return text;
         }
 
-        private static string ReplaceSpecialIdentifiersVersion4(string text)
+        private static string ReplaceSpecialIdentifiersVersion4(string text, UserCurrencyViewModel currency, UserCurrencyViewModel rank)
         {
             if (!string.IsNullOrEmpty(text))
             {
-                text = Regex.Replace(text, "$userrank", "$userrankname - $userrank");
-                text = Regex.Replace(text, "$userrankpoints", "$userrank");
+                text = text.Replace("$userrank", "$userrankname - $userrankpoints");
+
+                if (currency != null)
+                {
+                    text = text.Replace("$usercurrency", "$" + currency.UserAmountSpecialIdentifier);
+                }
+
+                if (rank != null)
+                {
+                    text = text.Replace("$userrankpoints", "$" + currency.UserAmountSpecialIdentifier);
+                    text = text.Replace("$userrankname", "$" + currency.UserRankNameSpecialIdentifier);
+                }
+
                 for (int i = 0; i < 10; i++)
                 {
-                    text = Regex.Replace(text, "$arg" + i + "usercurrency", "$arg" + i + "usercurrency");
-                    text = Regex.Replace(text, "$arg" + i + "string", "$arg" + i + "text");
+                    text = text.Replace("$arg" + i + "string", "$arg" + i + "text");
+
+                    text = text.Replace("$arg" + i + "userrank", "$arg" + i + "userrankname - " + "$arg" + i + "userrankpoints");
+
+                    if (currency != null)
+                    {
+                        text = text.Replace("$arg" + i + "usercurrency", "$arg" + i + currency.UserAmountSpecialIdentifier);
+                    }
+
+                    if (rank != null)
+                    {
+                        text = text.Replace("$arg" + i + "userrankpoints", "$arg" + i + currency.UserAmountSpecialIdentifier);
+                        text = text.Replace("$arg" + i + "userrankname", "$arg" + i + currency.UserRankNameSpecialIdentifier);
+                    }
                 }
             }
             return text;
