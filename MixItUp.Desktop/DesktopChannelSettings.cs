@@ -259,11 +259,13 @@ namespace MixItUp.Desktop
                 this.databaseWrapper = new SQLiteDatabaseWrapper(this.DatabasePath);
                 if (this.InitializeDB)
                 {
+                    Dictionary<uint, UserDataViewModel> initialUsers = new Dictionary<uint, UserDataViewModel>();
                     await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
                     {
                         UserDataViewModel userData = new UserDataViewModel(dataReader);
-                        this.UserData[userData.ID] = userData;
+                        initialUsers[userData.ID] = userData;
                     });
+                    this.UserData = new DatabaseDictionary<uint, UserDataViewModel>(initialUsers);
                 }
             }
         }
