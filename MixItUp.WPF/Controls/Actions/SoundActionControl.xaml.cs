@@ -18,6 +18,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
+            this.SoundVolumeSlider.Value = 100;
             if (this.action != null)
             {
                 this.SoundFilePathTextBox.Text = this.action.FilePath;
