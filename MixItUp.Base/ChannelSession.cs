@@ -254,7 +254,16 @@ namespace MixItUp.Base
 
         public static UserViewModel GetCurrentUser()
         {
-            return new UserViewModel(User);
+            UserViewModel user = new UserViewModel(ChannelSession.User);
+            if (ChannelSession.Channel.user.id.Equals(user.ID))
+            {
+                user.Roles.Add(UserRole.Streamer);
+            }
+            else
+            {
+                user.Roles.Add(UserRole.Mod);
+            }
+            return user;
         }
 
         public static void DisconnectionOccurred()
