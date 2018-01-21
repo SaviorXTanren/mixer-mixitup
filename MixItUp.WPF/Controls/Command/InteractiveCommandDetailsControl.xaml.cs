@@ -159,6 +159,8 @@ namespace MixItUp.WPF.Controls.Command
                         string cooldownGroup = this.CooldownGroupsComboBox.Text;
                         this.command.CooldownGroup = cooldownGroup;
                         ChannelSession.Settings.InteractiveCooldownGroups[cooldownGroup] = int.Parse(this.CooldownTextBox.Text);
+
+                        this.command.IndividualCooldown = 0;
                     }
                     else
                     {
@@ -168,6 +170,8 @@ namespace MixItUp.WPF.Controls.Command
                             cooldown = int.Parse(this.CooldownTextBox.Text);
                         }
                         this.command.IndividualCooldown = cooldown;
+
+                        this.command.CooldownGroup = null;
                     }
 
                     await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
