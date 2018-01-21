@@ -131,12 +131,7 @@ namespace MixItUp.WPF
                 return;
             }
 
-            bool result = await this.RunAsyncOperation(async () =>
-            {
-                return await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelTextBox.Text);
-            });
-
-            if (result)
+            if (await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelTextBox.Text))
             {
                 IEnumerable<UserWithGroupsModel> users = await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, UserRole.Mod);
                 if (users.Any(uwg => uwg.id.Equals(ChannelSession.User.id)))
@@ -171,16 +166,10 @@ namespace MixItUp.WPF
 
         private async Task<bool> EstablishConnection(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
-            bool result = await this.RunAsyncOperation(async () =>
+            return await this.RunAsyncOperation(async () =>
             {
                 return await ChannelSession.ConnectUser(scopes, channelName);
             });
-
-            if (!result)
-            {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
-            }
-            return result;
         }
 
         private void AutoUpdater_CheckForUpdateEvent(UpdateInfoEventArgs args)
