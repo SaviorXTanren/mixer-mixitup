@@ -73,6 +73,10 @@ namespace MixItUp.Base.Util
                     {
                         this.ReplaceSpecialIdentifier(currency.UserRankNameSpecialIdentifier, rank.Name);
                     }
+                    else
+                    {
+                        this.ReplaceSpecialIdentifier(currency.UserRankNameSpecialIdentifier, "No Rank");
+                    }
                     this.ReplaceSpecialIdentifier(currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                 }
                 this.ReplaceSpecialIdentifier("usertime", user.Data.ViewingTimeString);
@@ -115,6 +119,10 @@ namespace MixItUp.Base.Util
                                 if (rank != null)
                                 {
                                     this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, rank.Name);
+                                }
+                                else
+                                {
+                                    this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, "No Rank");
                                 }
                                 this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                             }
