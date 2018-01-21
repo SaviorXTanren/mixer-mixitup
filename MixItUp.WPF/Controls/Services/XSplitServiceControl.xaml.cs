@@ -83,8 +83,12 @@ namespace MixItUp.WPF.Controls.Services
         {
             await this.Dispatcher.Invoke<Task>(async () =>
             {
+                ChannelSession.DisconnectionOccurred();
+
                 await this.DisconnectXSplitService();
                 await this.ConnectXSplitService();
+
+                ChannelSession.ReconnectionOccurred();
             });
         }
 

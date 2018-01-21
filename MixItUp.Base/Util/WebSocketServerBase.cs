@@ -37,8 +37,7 @@ namespace MixItUp.Base.Util
             {
                 await BackgroundTaskWrapper.RunBackgroundTask(this.webSocketTokenSource, async (tokenSource) =>
                 {
-                    await this.ListenForConnection();
-                    if (this.webSocket != null)
+                    if (await this.ListenForConnection())
                     {
                         if (ChannelSession.Settings.DiagnosticLogging)
                         {
@@ -47,6 +46,11 @@ namespace MixItUp.Base.Util
 
                         await this.ReceiveInternal();
                         await this.ShutdownWebsocket();
+                    }
+                    else
+                    {
+                        this.OnDisconnected();
+                        this.webSocketTokenSource.Cancel();
                     }
                 });
             }, this.webSocketTokenSource.Token);
@@ -104,7 +108,7 @@ namespace MixItUp.Base.Util
             return Task.FromResult(0);
         }
 
-        private async Task ListenForConnection()
+        private async Task<bool> ListenForConnection()
         {
             this.webSocket = null;
             try
@@ -118,19 +122,22 @@ namespace MixItUp.Base.Util
                 {
                     var wsc = await hc.AcceptWebSocketAsync(null);
                     this.webSocket = wsc.WebSocket;
-                    return;
+                    return true;
                 }
                 else
                 {
                     hc.Response.StatusCode = 400;
                     hc.Response.Close();
+                    this.httpListener = null;
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
+
             this.ShutdownListener();
+            return false;
         }
 
         private async Task ReceiveInternal()

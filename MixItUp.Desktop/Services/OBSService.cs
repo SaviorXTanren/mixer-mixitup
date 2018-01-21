@@ -2,7 +2,6 @@
 using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

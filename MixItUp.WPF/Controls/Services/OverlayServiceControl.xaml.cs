@@ -91,8 +91,12 @@ namespace MixItUp.WPF.Controls.Services
         {
             await this.Dispatcher.Invoke<Task>(async () =>
             {
+                ChannelSession.DisconnectionOccurred();
+
                 await this.DisconnectOverlayService();
                 await this.ConnectOverlayService();
+
+                ChannelSession.ReconnectionOccurred();
             });
         }
 
