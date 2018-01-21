@@ -139,9 +139,12 @@ namespace MixItUp.WPF.Controls.MainControls
             });
 
             this.interactiveScenes.Clear();
-            foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
+            if (this.selectedGameVersion != null)
             {
-                this.interactiveScenes.Add(scene);
+                foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
+                {
+                    this.interactiveScenes.Add(scene);
+                }
             }
 
             if (this.selectedScene != null && this.interactiveScenes.Any(s => s.sceneID.Equals(this.selectedScene.sceneID)))
