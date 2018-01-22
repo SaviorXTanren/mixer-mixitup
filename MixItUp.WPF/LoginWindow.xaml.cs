@@ -60,9 +60,9 @@ namespace MixItUp.WPF
 
             await base.OnLoaded();
 
-            AutoUpdater.ReportErrors = true;
-            AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
-            AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater.xml");
+            AutoUpdater.AppTitle = "Mix It Up";
+            AutoUpdater.ShowSkipButton = false;
+            AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater-Test.xml");
         }
 
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
@@ -170,28 +170,6 @@ namespace MixItUp.WPF
             {
                 return await ChannelSession.ConnectUser(scopes, channelName);
             });
-        }
-
-        private void AutoUpdater_CheckForUpdateEvent(UpdateInfoEventArgs args)
-        {
-            if (args != null && args.IsUpdateAvailable)
-            {
-                if (args.Mandatory)
-                {
-                    MessageBox.Show("There is a new version of Mix It Up is available and it is a required update. Press OK to download and install the update.",
-                        "Mix It Up - Newer Version", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else if (MessageBox.Show("A new version of Mix It Up is available, would you like to download it?", "Mix It Up - Newer Version",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
-                {
-                    return;
-                }
-
-                if (AutoUpdater.DownloadUpdate())
-                {
-                    this.Close();
-                }
-            }
         }
     }
 }
