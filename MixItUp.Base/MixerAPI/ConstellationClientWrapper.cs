@@ -158,7 +158,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred();
+            ChannelSession.DisconnectionOccurred("Constellation");
 
             do
             {
@@ -167,7 +167,7 @@ namespace MixItUp.Base.MixerAPI
                 await Task.Delay(2000);
             } while (!await this.Connect());
 
-            ChannelSession.ReconnectionOccurred();
+            ChannelSession.ReconnectionOccurred("Constellation");
         }
     }
 }

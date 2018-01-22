@@ -512,7 +512,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred();
+            ChannelSession.DisconnectionOccurred("Streamer Chat");
 
             do
             {
@@ -521,12 +521,12 @@ namespace MixItUp.Base.MixerAPI
                 await Task.Delay(2000);
             } while (!await this.Connect());
 
-            ChannelSession.ReconnectionOccurred();
+            ChannelSession.ReconnectionOccurred("Streamer Chat");
         }
 
         private async void BotClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred();
+            ChannelSession.DisconnectionOccurred("Bot Chat");
 
             do
             {
@@ -535,7 +535,7 @@ namespace MixItUp.Base.MixerAPI
                 await Task.Delay(2000);
             } while (!await this.ConnectBot());
 
-            ChannelSession.ReconnectionOccurred();
+            ChannelSession.ReconnectionOccurred("Bot Chat");
         }
 
         #endregion Chat Event Handlers

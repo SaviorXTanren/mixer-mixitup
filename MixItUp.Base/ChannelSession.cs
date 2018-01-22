@@ -266,14 +266,14 @@ namespace MixItUp.Base
             return user;
         }
 
-        public static void DisconnectionOccurred()
+        public static void DisconnectionOccurred(string service)
         {
-            Logger.Log("Service disconnection occurred, attempting to reconnect now...");
+            Logger.Log(service + " Service disconnection occurred, attempting to reconnect now...");
         }
 
-        public static void ReconnectionOccurred()
+        public static void ReconnectionOccurred(string service)
         {
-            Logger.Log("Service reconnection successful");
+            Logger.Log(service + " Service reconnection successful");
         }
 
         private static async Task<bool> InitializeInternal(string channelName = null)

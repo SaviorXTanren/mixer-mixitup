@@ -433,7 +433,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            ChannelSession.DisconnectionOccurred();
+            ChannelSession.DisconnectionOccurred("Interactive");
 
             InteractiveGameListingModel game = ChannelSession.Interactive.Client.InteractiveGame;
             do
@@ -443,7 +443,7 @@ namespace MixItUp.Base.MixerAPI
                 await Task.Delay(2000);
             } while (!await this.Connect(game));
 
-            ChannelSession.ReconnectionOccurred();
+            ChannelSession.ReconnectionOccurred("Interactive");
         }
 
         #endregion Interactive Event Handlers
