@@ -42,6 +42,15 @@ namespace MixItUp.WPF.Controls.Command
 
         public override async Task Initialize()
         {
+            foreach (var cooldownGroup in ChannelSession.Settings.InteractiveCooldownGroups.Keys.ToList())
+            {
+                if (!ChannelSession.Settings.InteractiveCommands.Any(c => cooldownGroup.Equals(c.CooldownGroup)))
+                {
+                    ChannelSession.Settings.InteractiveCooldownGroups.Remove(cooldownGroup);
+                    continue;
+                }
+            }
+
             this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandTriggerType>();
             this.CooldownTypeComboBox.ItemsSource = new List<string>() { "Individual", "Group" };
             this.CooldownGroupsComboBox.ItemsSource = ChannelSession.Settings.InteractiveCooldownGroups.Keys;
