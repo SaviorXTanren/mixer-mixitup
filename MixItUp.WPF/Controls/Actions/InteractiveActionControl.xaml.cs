@@ -13,7 +13,7 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private enum InteractiveTypeEnum
         {
-            [Name("Add User To Group")]
+            [Name("Move User To Group")]
             AddUserToGroup,
             [Name("Move Group To Scene")]
             MoveGroupToScene,
