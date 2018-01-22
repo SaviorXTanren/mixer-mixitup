@@ -98,7 +98,6 @@ namespace MixItUp.WPF.Controls.MainControls
         private async Task RefreshAllInteractiveGames()
         {
             this.GroupsButton.IsEnabled = false;
-            this.RefreshButton.IsEnabled = false;
             this.ConnectButton.IsEnabled = false;
 
             IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
@@ -157,7 +156,6 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             this.GroupsButton.IsEnabled = true;
-            this.RefreshButton.IsEnabled = true;
             this.ConnectButton.IsEnabled = true;
         }
 
