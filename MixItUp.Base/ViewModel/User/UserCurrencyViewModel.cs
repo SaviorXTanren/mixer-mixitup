@@ -36,6 +36,8 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public int AcquireInterval { get; set; }
         [DataMember]
+        public int MaxAmount { get; set; }
+        [DataMember]
         public string SpecialIdentifier { get; set; }
 
         [DataMember]
@@ -64,6 +66,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserCurrencyViewModel()
         {
             this.ID = Guid.NewGuid();
+            this.MaxAmount = int.MaxValue;
             this.SpecialIdentifier = string.Empty;
             this.ResetInterval = CurrencyResetRateEnum.Never;
             this.LastReset = DateTimeOffset.MinValue;

@@ -80,7 +80,7 @@
                         <TextBlock Grid.Column="6" VerticalAlignment="Bottom">/</TextBlock>
                         <TextBox Grid.Column="8" x:Name="CurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="10" x:Name="CurrencySubscriberBonusTextBox" MaterialDesign:HintAssist.Hint="Subscriber Bonus" Width="120" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="10" x:Name="CurrencyMaxAmountTextBox" MaterialDesign:HintAssist.Hint="Max Amount" Width="120" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     </Grid>
 
@@ -91,13 +91,17 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Column="0" x:Name="CurrencyOnFollowBonusTextBox" MaterialDesign:HintAssist.Hint="On Follow Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="0" x:Name="CurrencySubscriberBonusTextBox" MaterialDesign:HintAssist.Hint="Subscriber Bonus" Width="120" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="2" x:Name="CurrencyOnHostBonusTextBox" MaterialDesign:HintAssist.Hint="On Host Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="2" x:Name="CurrencyOnFollowBonusTextBox" MaterialDesign:HintAssist.Hint="On Follow Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                        <TextBox Grid.Column="4" x:Name="CurrencyOnSubscribeBonusTextBox" MaterialDesign:HintAssist.Hint="On Subscribe Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox Grid.Column="4" x:Name="CurrencyOnHostBonusTextBox" MaterialDesign:HintAssist.Hint="On Host Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <TextBox Grid.Column="6" x:Name="CurrencyOnSubscribeBonusTextBox" MaterialDesign:HintAssist.Hint="On Subscribe Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     </Grid>
 

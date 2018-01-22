@@ -227,7 +227,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SetCurrencyAmount(UserCurrencyViewModel currency, int amount)
         {
-            this.GetCurrency(currency).Amount = amount;
+            this.GetCurrency(currency).Amount = Math.Min(amount, this.GetCurrency(currency).Currency.MaxAmount);
         }
 
         public void AddCurrencyAmount(UserCurrencyViewModel currency, int amount)

@@ -79,8 +79,12 @@ namespace MixItUp.WPF.Windows.Currency
                 this.CurrencyNameTextBox.Text = this.currency.Name;
                 this.CurrencyAmountTextBox.Text = this.currency.AcquireAmount.ToString();
                 this.CurrencyTimeTextBox.Text = this.currency.AcquireInterval.ToString();
-                this.CurrencySubscriberBonusTextBox.Text = this.currency.SubscriberBonus.ToString();
+                if (this.currency.MaxAmount != int.MaxValue)
+                {
+                    this.CurrencyMaxAmountTextBox.Text = this.currency.MaxAmount.ToString();
+                }
 
+                this.CurrencySubscriberBonusTextBox.Text = this.currency.SubscriberBonus.ToString();
                 this.CurrencyOnFollowBonusTextBox.Text = this.currency.OnFollowBonus.ToString();
                 this.CurrencyOnHostBonusTextBox.Text = this.currency.OnHostBonus.ToString();
                 this.CurrencyOnSubscribeBonusTextBox.Text = this.currency.OnSubscribeBonus.ToString();
@@ -376,6 +380,13 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                int maxAmount = int.MaxValue;
+                if (!string.IsNullOrEmpty(this.CurrencyMaxAmountTextBox.Text) && (!int.TryParse(this.CurrencyMaxAmountTextBox.Text, out maxAmount) || maxAmount <= 0))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The max amount must be greater than 0 or can be left empty for no max amount");
+                    return;
+                }
+
                 int subscriberBonus = 0;
                 if (string.IsNullOrEmpty(this.CurrencySubscriberBonusTextBox.Text) || !int.TryParse(this.CurrencySubscriberBonusTextBox.Text, out subscriberBonus) || subscriberBonus < 0)
                 {
@@ -428,8 +439,9 @@ namespace MixItUp.WPF.Windows.Currency
                 this.currency.Name = this.CurrencyNameTextBox.Text;
                 this.currency.AcquireAmount = currencyAmount;
                 this.currency.AcquireInterval = currencyTime;
-                this.currency.SubscriberBonus = subscriberBonus;
+                this.currency.MaxAmount = maxAmount;
 
+                this.currency.SubscriberBonus = subscriberBonus;
                 this.currency.OnFollowBonus = onFollowBonus;
                 this.currency.OnHostBonus = onHostBonus;
                 this.currency.OnSubscribeBonus = onSubscribeBonus;
