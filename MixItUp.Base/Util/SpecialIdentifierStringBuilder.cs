@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Model.User;
+﻿using Mixer.Base.Model.Game;
+using Mixer.Base.Model.User;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -87,6 +88,12 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier("usersubage", user.SubscribeAgeString);
                 this.ReplaceSpecialIdentifier("usersubmonths", user.SubscribeMonths.ToString());
 
+                if (this.ContainsSpecialIdentifier("usergame"))
+                {
+                    GameTypeModel game = await ChannelSession.Connection.GetGameType(user.GameTypeID);
+                    this.ReplaceSpecialIdentifier("usergame", game.name.ToString());
+                }
+
                 this.ReplaceSpecialIdentifier("useravatar", user.AvatarLink);
                 this.ReplaceSpecialIdentifier("userurl", "https://www.mixer.com/" + user.UserName);
                 this.ReplaceSpecialIdentifier("username", user.UserName);
@@ -127,6 +134,14 @@ namespace MixItUp.Base.Util
                                 this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                             }
                             this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usertime", userData.ViewingTimeString);
+                            this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userhours", userData.ViewingHoursString);
+                            this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usermins", userData.ViewingMinutesString);
+                        }
+
+                        if (this.ContainsSpecialIdentifier("arg" + (i + 1) + "usergame"))
+                        {
+                            GameTypeModel game = await ChannelSession.Connection.GetGameType(argUser.GameTypeID);
+                            this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usergame", game.name.ToString());
                         }
 
                         this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userfollowage", argUser.FollowAgeString);
@@ -154,6 +169,11 @@ namespace MixItUp.Base.Util
         public void ReplaceSpecialIdentifier(string identifier, string replacement)
         {
             this.text = this.text.Replace("$" + identifier, replacement);
+        }
+
+        public bool ContainsSpecialIdentifier(string identifier)
+        {
+            return this.text.Contains("$" + identifier);
         }
 
         public override string ToString() { return this.text; }

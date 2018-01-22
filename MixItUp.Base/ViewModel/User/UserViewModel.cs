@@ -46,6 +46,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public string AvatarLink { get; set; }
 
+        public uint GameTypeID { get; set; }
+
         public DateTimeOffset? MixerAccountDate { get; set; }
 
         public DateTimeOffset? FollowDate { get; set; }
@@ -220,6 +222,7 @@ namespace MixItUp.Base.ViewModel.User
                     }
                     this.MixerAccountDate = userWithChannel.createdAt;
                     this.Sparks = (int)userWithChannel.sparks;
+                    this.GameTypeID = userWithChannel.channel.typeId.GetValueOrDefault();
                 }
             }
 
