@@ -11,40 +11,58 @@
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="180">The OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder</TextBlock>
-            
-            <Grid Grid.Column="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Width="270">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <MaterialDesign:PackIcon Kind="AccessPoint" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
-                <TextBox x:Name="OBSStudioIPAddressTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
+                <TextBlock Grid.Row="0" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">Requires OBS 20.0 or higher</TextBlock>
+                <TextBlock Grid.Row="1" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">(OBS-FTL &amp; StreamLabs OBS NOT supported)</TextBlock>
+
+                <TextBlock Grid.Row="3" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">The OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder</TextBlock>
             </Grid>
 
-            <Grid Grid.Column="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="2" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <MaterialDesign:PackIcon Kind="KeyVariant" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
-                <PasswordBox x:Name="OBSStudioPasswordTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <MaterialDesign:PackIcon Kind="AccessPoint" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
+                    <TextBox x:Name="OBSStudioIPAddressTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <MaterialDesign:PackIcon Kind="KeyVariant" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
+                    <PasswordBox x:Name="OBSStudioPasswordTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
+                </Grid>
             </Grid>
 
-            <Button x:Name="OBSStudioEnableConnectionButton" Grid.Column="6" Click="OBSStudioEnableConnectionButton_Click" Width="140">Enable OBS</Button>
-            <Button x:Name="OBSStudioDisableConnectionButton" Grid.Column="6" Click="OBSStudioDisableConnectionButton_Click" Width="140" Visibility="Collapsed">Disable OBS</Button>
+            <Button x:Name="OBSStudioEnableConnectionButton" Grid.Column="4" Click="OBSStudioEnableConnectionButton_Click" Width="140">Enable OBS</Button>
+            <Button x:Name="OBSStudioDisableConnectionButton" Grid.Column="4" Click="OBSStudioDisableConnectionButton_Click" Width="140" Visibility="Collapsed">Disable OBS</Button>
 
         </Grid>
     </Grid>
