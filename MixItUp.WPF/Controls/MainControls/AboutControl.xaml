@@ -27,7 +27,7 @@
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             
             <GroupBox Grid.Row="0" Header="Application Info">
@@ -130,32 +130,77 @@
 
         <Grid Grid.Column="2">
             <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             
-            <GroupBox Header="License">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+            <GroupBox Header="License" Grid.Row="0">
+                <ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" TextWrapping="Wrap">Copyright (c) 2017 Matthew Olivo. All rights reserved.</TextBlock>
+                        <TextBlock Grid.Row="0" TextWrapping="Wrap">Copyright (c) 2017 Matthew Olivo. All rights reserved.</TextBlock>
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap">MIT License</TextBlock>
+                        <TextBlock Grid.Row="2" TextWrapping="Wrap">MIT License</TextBlock>
 
-                    <TextBlock Grid.Row="4" TextWrapping="Wrap">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</TextBlock>
+                        <TextBlock Grid.Row="4" TextWrapping="Wrap">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</TextBlock>
 
-                    <TextBlock Grid.Row="6" TextWrapping="Wrap">The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</TextBlock>
+                        <TextBlock Grid.Row="6" TextWrapping="Wrap">The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</TextBlock>
 
-                    <TextBlock Grid.Row="8" TextWrapping="Wrap">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</TextBlock>
+                        <TextBlock Grid.Row="8" TextWrapping="Wrap">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</TextBlock>
+                    </Grid>
+                </ScrollViewer>
+            </GroupBox>
+
+            <GroupBox Header="Meet The Team" Grid.Row="2">
+                <Grid Height="100" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="SaviorXTanrenMixerButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SaviorXTanrenMixerButton_Click" Height="100">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Image Source="https://mixer.com/api/v1/users/7207866/avatar?w=64&amp;h=64" Grid.Row="0" HorizontalAlignment="Center" />
+
+                            <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">SaviorXTanren</TextBlock>
+
+                        </Grid>
+                    </Button>
+
+                    <Button Grid.Column="3" x:Name="VerbatimTMixerButton" Style="{StaticResource MaterialDesignFlatButton}" Click="VerbatimTMixerButton_Click" Height="100">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Image Source="https://mixer.com/api/v1/users/7834677/avatar?w=64&amp;h=64" Grid.Row="0" HorizontalAlignment="Center" />
+
+                            <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">VerbatimT</TextBlock>
+
+                        </Grid>
+                    </Button>
+
                 </Grid>
             </GroupBox>
         </Grid>
