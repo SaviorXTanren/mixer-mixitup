@@ -62,7 +62,7 @@ namespace MixItUp.WPF
 
             AutoUpdater.AppTitle = "Mix It Up";
             AutoUpdater.ShowSkipButton = false;
-            AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater-Test.xml");
+            AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater.xml");
         }
 
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
