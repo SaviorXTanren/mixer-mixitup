@@ -1,5 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,10 +30,14 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveTypeEnum>();
+            this.PermissionsAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
+
             if (this.action != null)
             {
                 this.InteractiveGroupNameGrid.Visibility = Visibility.Visible;
                 this.InteractiveGroupNameTextBox.Text = this.action.GroupName;
+
+                this.PermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
 
                 if (!string.IsNullOrEmpty(this.action.MoveGroupToScene))
                 {
@@ -54,13 +60,15 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 InteractiveTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
 
-                if (interactiveType == InteractiveTypeEnum.AddUserToGroup && !string.IsNullOrEmpty(this.InteractiveGroupNameTextBox.Text))
+                if (interactiveType == InteractiveTypeEnum.AddUserToGroup && !string.IsNullOrEmpty(this.InteractiveGroupNameTextBox.Text) && this.PermissionsAllowedComboBox.SelectedIndex >= 0)
                 {
-                    return new InteractiveAction(this.InteractiveGroupNameTextBox.Text);
+                    return new InteractiveAction(this.InteractiveGroupNameTextBox.Text, EnumHelper.GetEnumValueFromString<UserRole>((string)this.PermissionsAllowedComboBox.SelectedItem));
                 }
-                else if (interactiveType == InteractiveTypeEnum.MoveGroupToScene && !string.IsNullOrEmpty(this.InteractiveGroupNameTextBox.Text) && !string.IsNullOrEmpty(this.InteractiveMoveToSceneTextBox.Text))
+                else if (interactiveType == InteractiveTypeEnum.MoveGroupToScene && !string.IsNullOrEmpty(this.InteractiveGroupNameTextBox.Text) &&
+                    this.PermissionsAllowedComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.InteractiveMoveToSceneTextBox.Text))
                 {
-                    return new InteractiveAction(this.InteractiveGroupNameTextBox.Text, this.InteractiveMoveToSceneTextBox.Text);
+                    return new InteractiveAction(this.InteractiveGroupNameTextBox.Text, this.InteractiveMoveToSceneTextBox.Text,
+                        EnumHelper.GetEnumValueFromString<UserRole>((string)this.PermissionsAllowedComboBox.SelectedItem));
                 }
             }
             return null;

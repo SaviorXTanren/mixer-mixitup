@@ -63,8 +63,6 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
         public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
-
-        private bool buttonsEnabled = true;
     }
 
     /// <summary>

@@ -27,7 +27,15 @@
         </Grid>
 
         <Grid Grid.Row="2" x:Name="InteractiveGroupNameGrid" Visibility="Hidden">
-            <TextBox x:Name="InteractiveGroupNameTextBox" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="120" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBox x:Name="InteractiveGroupNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <ComboBox x:Name="PermissionsAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource BackgroundComboBox}" />
         </Grid>
 
         <Grid Grid.Row="4" x:Name="InteractiveMoveToSceneGrid" Visibility="Hidden">
