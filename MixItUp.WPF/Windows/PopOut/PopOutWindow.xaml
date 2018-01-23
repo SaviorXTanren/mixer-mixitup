@@ -29,14 +29,21 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
-        <ContentControl x:Name="MainContentControl" Grid.Row="0" />
+        <MaterialDesign:ColorZone Padding="16,8,16,8" MaterialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid" DockPanel.Dock="Top" Height="53">
+            <DockPanel>
+                <TextBlock x:Name="HeaderTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
+            </DockPanel>
+        </MaterialDesign:ColorZone>
 
-        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+        <ContentControl x:Name="MainContentControl" Grid.Row="1" />
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
     </Grid>
 </Windows:LoadingWindowBase>

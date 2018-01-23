@@ -10,11 +10,13 @@ namespace MixItUp.WPF.Windows.PopOut
     {
         private MainControlBase mainControl;
 
-        public PopOutWindow(MainControlBase mainControl)
+        public PopOutWindow(string name, MainControlBase mainControl)
         {
             this.mainControl = mainControl;
 
             InitializeComponent();
+
+            this.HeaderTextBlock.Text = name;
 
             this.MainContentControl.Content = this.mainControl;
 

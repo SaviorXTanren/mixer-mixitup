@@ -85,7 +85,7 @@
                 </ListView>
             </GroupBox>
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="Auto" />

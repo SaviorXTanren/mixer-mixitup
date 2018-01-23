@@ -373,6 +373,7 @@
     </Compile>
     <Compile Include="Util\MessageBoxHelper.cs" />
     <Compile Include="Util\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Util\VisualTreeHelpers.cs" />
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
       <DependentUpon>CommandWindow.xaml</DependentUpon>
     </Compile>

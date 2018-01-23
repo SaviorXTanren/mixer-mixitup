@@ -16,7 +16,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -37,6 +39,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private SemaphoreSlim messageUpdateLock = new SemaphoreSlim(1);
 
         private int totalMessages = 0;
+        private bool updateScrollingToLatest = false;
 
         public ChatControl(bool isPopOut = false)
         {
@@ -59,6 +62,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ChatList.ItemsSource = this.MessageControls;
             this.UserList.ItemsSource = this.UserControls;
+
+            this.ChatList.LayoutUpdated += ChatList_LayoutUpdated;
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -96,12 +101,20 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.SendChatAsComboBox.SelectedIndex = 0;
             }
 
-            if (this.MessageControls.Count > 0)
-            {
-                this.ChatList.ScrollIntoView(this.MessageControls.Last());
-            }
+            this.updateScrollingToLatest = true;
 
             return Task.FromResult(0);
+        }
+
+        private void ChatList_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (this.updateScrollingToLatest && this.MessageControls.Count > 0)
+            {
+                ScrollViewer scrollViewer = VisualTreeHelpers.GetVisualChild<ScrollViewer>(this.ChatList);
+                scrollViewer.ScrollToEnd();
+
+                this.updateScrollingToLatest = false;
+            }
         }
 
         private async Task ChatRefreshBackground()
@@ -193,7 +206,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void PopOutChatButton_Click(object sender, RoutedEventArgs e)
         {
-            PopOutWindow window = new PopOutWindow(new ChatControl(isPopOut: true));
+            PopOutWindow window = new PopOutWindow("Chat", new ChatControl(isPopOut: true));
             window.Show();
         }
 
