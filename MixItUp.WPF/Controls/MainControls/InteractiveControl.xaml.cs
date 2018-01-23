@@ -103,6 +103,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 return await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
             });
 
+            gameListings = gameListings.Where(g => !g.name.Equals("Soundwave Interactive Soundboard"));
+
             this.interactiveGames.Clear();
             foreach (InteractiveGameListingModel game in gameListings)
             {
