@@ -110,6 +110,11 @@
 
             <GroupBox Grid.Row="4" Header="Helpful Links">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
@@ -120,20 +125,24 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0">
-                        • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues" RequestNavigate="Hyperlink_RequestNavigate">Known Issues</Hyperlink>
+                    <TextBlock Grid.Row="0" Grid.Column="0">
+                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues" RequestNavigate="Hyperlink_RequestNavigate">Known Issues</Hyperlink>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="2">
-                        • <Hyperlink NavigateUri="https://forums.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Forums</Hyperlink>
+                    <TextBlock Grid.Row="0" Grid.Column="2">
+                        <Hyperlink NavigateUri="https://status.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Status</Hyperlink>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="4">
-                        • <Hyperlink NavigateUri="https://obsproject.com/" RequestNavigate="Hyperlink_RequestNavigate">OBS Studio</Hyperlink>
+                    <TextBlock Grid.Row="2" Grid.Column="0">
+                        <Hyperlink NavigateUri="https://obsproject.com/" RequestNavigate="Hyperlink_RequestNavigate">OBS Studio</Hyperlink>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="6">
-                        • <Hyperlink NavigateUri="https://www.xsplit.com/" RequestNavigate="Hyperlink_RequestNavigate">XSplit</Hyperlink>
+                    <TextBlock Grid.Row="2" Grid.Column="2">
+                        <Hyperlink NavigateUri="https://www.xsplit.com/" RequestNavigate="Hyperlink_RequestNavigate">XSplit</Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0">
+                        <Hyperlink NavigateUri="https://forums.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Forums</Hyperlink>
                     </TextBlock>
                 </Grid>
             </GroupBox>
