@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.WPF.Controls.MainControls;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using System.Diagnostics;
 using System.IO;
@@ -73,15 +74,18 @@ namespace MixItUp.WPF
             await this.MainMenu.AddMenuItem("About", new AboutControl());
         }
 
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!this.shutdownStarted)
             {
                 e.Cancel = true;
-                this.shutdownStarted = true;
+                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to exit Mix It Up?"))
+                {
+                    this.shutdownStarted = true;
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                this.StartShutdownProcess();
+                    this.StartShutdownProcess();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
             }
             else if (!this.shutdownComplete)
             {
