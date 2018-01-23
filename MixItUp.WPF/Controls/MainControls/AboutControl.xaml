@@ -36,8 +36,6 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="15" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="15" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -51,17 +49,25 @@
                         <TextBlock Grid.Column="2" x:Name="VersionTextBlock" />
                     </Grid>
 
-                    <TextBlock Grid.Row="2" HorizontalAlignment="Center">
-                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/releases" RequestNavigate="Hyperlink_RequestNavigate">Latest Release</Hyperlink>
-                    </TextBlock>
+                    <Grid Grid.Row="2" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="15" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="4" HorizontalAlignment="Center">
-                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues/new" RequestNavigate="Hyperlink_RequestNavigate">Submit a Bug</Hyperlink>
-                    </TextBlock>
+                        <TextBlock Grid.Column="0" HorizontalAlignment="Center">
+                            <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/releases" RequestNavigate="Hyperlink_RequestNavigate">Latest Release</Hyperlink>
+                        </TextBlock>
+
+                        <TextBlock Grid.Column="2" HorizontalAlignment="Center">
+                            <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues/new" RequestNavigate="Hyperlink_RequestNavigate">Submit a Bug</Hyperlink>
+                        </TextBlock>
+                    </Grid>
                 </Grid>
             </GroupBox>
 
-            <GroupBox Grid.Row="2" Header="Contact">
+            <GroupBox Grid.Row="2" Header="Contact &amp; Info">
                 <Grid HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -70,16 +76,33 @@
                         <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                    <Button Grid.Column="0" x:Name="MixerButton" Height="50" Click="MixerButton_Click" Background="Transparent">
-                        <Image Source="/Assets/Images/Mixer.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Button>
-
-                    <Button Grid.Column="2" x:Name="TwitterButton" Height="50" Click="TwitterButton_Click" Background="Transparent">
+                    <Button Grid.Column="0" Grid.Row="0" x:Name="TwitterButton" Height="50" Click="TwitterButton_Click" Background="Transparent">
                         <Image Source="/Assets/Images/Twitter.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
 
-                    <Button Grid.Column="4" x:Name="GithubButton" Height="50" Click="GithubButton_Click" Background="Transparent">
+                    <Button Grid.Column="2" Grid.Row="0" x:Name="DiscordButton" Height="50" Click="DiscordButton_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/Discord.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+
+                    <Button Grid.Column="4" Grid.Row="0" x:Name="YouTubeButton" Height="50" Click="YouTubeButton_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/YouTube.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+
+                    <Button Grid.Column="0" Grid.Row="2" x:Name="MixerButton" Height="50" Click="MixerButton_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/Mixer.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+
+                    <Button Grid.Column="2" Grid.Row="2" x:Name="WikiButton" Height="50" Click="WikiButton_Click" Background="Transparent">
+                        <Image Source="/Assets/Images/Wiki.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
+
+                    <Button Grid.Column="4" Grid.Row="2" x:Name="GithubButton" Height="50" Click="GithubButton_Click" Background="Transparent">
                         <Image Source="/Assets/Images/Github.png" Width="40" Height="40" Margin="-10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Button>
                 </Grid>
@@ -95,33 +118,21 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0">
-                        • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki" RequestNavigate="Hyperlink_RequestNavigate">Wiki &amp; Tutorials</Hyperlink>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="2">
-                        • <Hyperlink NavigateUri="https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA" RequestNavigate="Hyperlink_RequestNavigate">YouTube Tutorials</Hyperlink>
-                    </TextBlock>
-
-                    <TextBlock Grid.Row="4">
                         • <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues" RequestNavigate="Hyperlink_RequestNavigate">Known Issues</Hyperlink>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="6">
+                    <TextBlock Grid.Row="2">
                         • <Hyperlink NavigateUri="https://forums.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Forums</Hyperlink>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="8">
+                    <TextBlock Grid.Row="4">
                         • <Hyperlink NavigateUri="https://obsproject.com/" RequestNavigate="Hyperlink_RequestNavigate">OBS Studio</Hyperlink>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="10">
+                    <TextBlock Grid.Row="6">
                         • <Hyperlink NavigateUri="https://www.xsplit.com/" RequestNavigate="Hyperlink_RequestNavigate">XSplit</Hyperlink>
                     </TextBlock>
                 </Grid>

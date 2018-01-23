@@ -798,6 +798,9 @@
     <Resource Include="AutoUpdater.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\Images\Discord.png" />
+    <Resource Include="Assets\Images\Youtube.png" />
+    <Resource Include="Assets\Images\Wiki.png" />
     <Content Include="Changelog.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

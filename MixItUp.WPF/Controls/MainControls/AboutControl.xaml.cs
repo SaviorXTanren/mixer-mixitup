@@ -29,9 +29,15 @@ namespace MixItUp.WPF.Controls.MainControls
             e.Handled = true;
         }
 
+        private void TwitterButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://twitter.com/MixItUpApp"); }
+
+        private void DiscordButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://discord.gg/taj4Gj4"); }
+
+        private void YouTubeButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://www.youtube.com/channel/UCcY0vKI9yqcMTgh8OzSnRSA"); }
+
         private void MixerButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://mixer.com/team/MixItUp"); }
 
-        private void TwitterButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://twitter.com/MixItUpApp"); }
+        private void WikiButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki"); }
 
         private void GithubButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup"); }
 
