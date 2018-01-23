@@ -107,13 +107,41 @@ namespace MixItUp.Base.Commands
     public class CommandsChatCommand : PreMadeChatCommand
     {
         public CommandsChatCommand()
-            : base("Commands", "commands", UserRole.User, 5)
+            : base("Commands", "commands", UserRole.User, 0)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.Chat != null)
                 {
-                    await ChannelSession.Chat.SendMessage("All common chat commands can be found here: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Pre-Made-Chat-Commands. For commands specific to this stream, ask your streamer/moderator.");
+                    IEnumerable<PermissionsCommandBase> commands = ChannelSession.AllChatCommands;
+                    commands = commands.Where(c => user.PrimaryRole >= c.Permissions);
+                    if (commands.Count() > 0)
+                    {
+                        IEnumerable<string> commandTriggers = commands.SelectMany(c => c.Commands);
+                        commandTriggers = commandTriggers.OrderBy(c => c);
+
+                        string text = "Available Commands: !" + string.Join(", !", commandTriggers);
+                        await ChannelSession.Chat.Whisper(user.UserName, text);
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "There are no commands available for you to use.");
+                    }
+                }
+            }));
+        }
+    }
+
+    public class MixItUpCommandsChatCommand : PreMadeChatCommand
+    {
+        public MixItUpCommandsChatCommand()
+            : base("Mix It Up Commands", "mixitupcommands", UserRole.User, 5)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    await ChannelSession.Chat.SendMessage("All common, Mix It Up chat commands can be found here: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Pre-Made-Chat-Commands. For commands specific to this stream, ask your streamer/moderator.");
                 }
             }));
         }
