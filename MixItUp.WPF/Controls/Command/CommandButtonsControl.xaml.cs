@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -86,9 +87,12 @@ namespace MixItUp.WPF.Controls.Command
             this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.EditClickedEvent, this));
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.DeleteClickedEvent, this));
+            if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you want to delete this command?"))
+            {
+                this.RaiseEvent(new RoutedEventArgs(CommandButtonsControl.DeleteClickedEvent, this));
+            }
         }
 
         private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
