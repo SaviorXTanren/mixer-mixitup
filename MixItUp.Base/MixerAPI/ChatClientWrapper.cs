@@ -235,12 +235,24 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction)
+        public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction, bool includeBots = false)
         {
-            foreach (UserViewModel chatUser in this.ChatUsers.Values.ToList())
+            IEnumerable<UserViewModel> users = this.ChatUsers.Values.ToList();
+
+            if (!includeBots)
             {
-                await userUpdateFunction(chatUser);
+                users = users.Where(u => !u.UserName.Equals("HypeBot"));
+                if (ChannelSession.BotUser != null)
+                {
+                    users = users.Where(u => !u.UserName.Equals(ChannelSession.BotUser.username));
+                }
             }
+
+            foreach (UserViewModel user in users)
+            {
+                await userUpdateFunction(user);
+            }
+
             await ChannelSession.SaveSettings();
         }
 
