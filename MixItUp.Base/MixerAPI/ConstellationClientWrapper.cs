@@ -75,8 +75,10 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
         {
-            JToken userToken;
+            ChannelModel channel = null;
             UserViewModel user = null;
+
+            JToken userToken;
             if (e.payload.TryGetValue("user", out userToken))
             {
                 user = new UserViewModel(userToken.ToObject<UserModel>());
@@ -89,7 +91,7 @@ namespace MixItUp.Base.MixerAPI
             }
             else if (e.payload.TryGetValue("hoster", out userToken))
             {
-                ChannelModel channel = userToken.ToObject<ChannelModel>();
+                channel = userToken.ToObject<ChannelModel>();
                 user = new UserViewModel(channel.id, channel.token);
             }
 
@@ -142,6 +144,11 @@ namespace MixItUp.Base.MixerAPI
 
                 if (foundCommand != null)
                 {
+                    if (command.EventType == ConstellationEventTypeEnum.channel__id__hosted && channel != null)
+                    {
+                        foundCommand.AddSpecialIdentifier("hostviewercount", channel.viewersCurrent.ToString());
+                    }
+
                     if (user != null)
                     {
                         await foundCommand.Perform(user);
