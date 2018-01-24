@@ -65,6 +65,10 @@ namespace MixItUp.Base.Services
 
         Task<bool> TestConnection();
 
+        void StartBatching();
+
+        Task EndBatching();
+
         Task SetImage(OverlayImage image);
 
         Task SetText(OverlayText text);

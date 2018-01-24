@@ -112,10 +112,24 @@ namespace MixItUp.Base.Commands
                 {
                     await this.AsyncSemaphore.WaitAsync();
 
-                    foreach (ActionBase action in this.Actions)
+                    for (int i = 0; i < this.Actions.Count; i++)
                     {
                         token.ThrowIfCancellationRequested();
-                        await action.Perform(user, arguments);
+
+                        if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                        {
+                            ChannelSession.Services.OverlayServer.StartBatching();
+                        }
+
+                        await this.Actions[i].Perform(user, arguments);
+
+                        if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                        {
+                            if (i == (this.Actions.Count - 1) || !(this.Actions[i + 1] is OverlayAction))
+                            {
+                                await ChannelSession.Services.OverlayServer.EndBatching();
+                            }
+                        }
                     }
                 }
                 catch (TaskCanceledException) { }

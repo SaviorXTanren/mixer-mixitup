@@ -1,11 +1,11 @@
 ﻿using Mixer.Base.Model.Client;
 using Mixer.Base.Web;
 using MixItUp.Base;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -15,6 +15,7 @@ namespace MixItUp.Overlay
     public class OverlayPacket : WebSocketPacket
     {
         public JObject data;
+        public JArray array;
 
         public OverlayPacket() { }
 
@@ -22,6 +23,12 @@ namespace MixItUp.Overlay
         {
             this.type = type;
             this.data = data;
+        }
+
+        public OverlayPacket(string type, JArray array)
+        {
+            this.type = type;
+            this.array = array;
         }
     }
 
@@ -34,6 +41,9 @@ namespace MixItUp.Overlay
 
         private OverlayHttpListenerServer httpListenerServer;
         private OverlayWebSocketServer webSocketServer;
+
+        private List<OverlayPacket> batchPackets = new List<OverlayPacket>();
+        private bool isBatching = false;
 
         public OverlayWebServer()
         {
@@ -72,13 +82,39 @@ namespace MixItUp.Overlay
             await this.webSocketServer.Disconnect();
         }
 
+        public void StartBatching()
+        {
+            this.isBatching = true;
+        }
+
+        public async Task EndBatching()
+        {
+            this.isBatching = false;
+
+            await this.webSocketServer.Send(new OverlayPacket("batch", JArray.FromObject(this.batchPackets)));
+
+            this.batchPackets.Clear();
+        }
+
         public async Task<bool> TestConnection() { return await this.webSocketServer.TestConnection(); }
 
-        public async Task SetImage(OverlayImage image) { await this.webSocketServer.Send(new OverlayPacket("image", JObject.FromObject(image))); }
+        public async Task SetImage(OverlayImage image) { await this.SendPacket(new OverlayPacket("image", JObject.FromObject(image))); }
 
-        public async Task SetText(OverlayText text) { await this.webSocketServer.Send(new OverlayPacket("text", JObject.FromObject(text))); }
+        public async Task SetText(OverlayText text) { await this.SendPacket(new OverlayPacket("text", JObject.FromObject(text))); }
 
-        public async Task SetHTMLText(OverlayHTML htmlText) { await this.webSocketServer.Send(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
+        public async Task SetHTMLText(OverlayHTML htmlText) { await this.SendPacket(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
+
+        private async Task SendPacket(OverlayPacket packet)
+        {
+            if (this.isBatching)
+            {
+                this.batchPackets.Add(packet);
+            }
+            else
+            {
+                await this.webSocketServer.Send(packet);
+            }
+        }
     }
 
     public class OverlayHttpListenerServer : HttpListenerServerBase

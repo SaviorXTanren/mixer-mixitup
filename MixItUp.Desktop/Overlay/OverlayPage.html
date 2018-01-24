@@ -39,6 +39,13 @@
                         {
                             htmlTextPacket(packet.data);
                         }
+                        else if (packet.type == "batch")
+                        {
+                            for (var i = 0; i < packet.array.length; i++)
+                            {
+                                packetReceived(packet.array[i]);
+                            }
+                        }
                     }
                 }
                 catch (err) { logException(err); }
