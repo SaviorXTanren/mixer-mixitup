@@ -203,6 +203,9 @@
     <Compile Include="Controls\Actions\SoundActionControl.xaml.cs">
       <DependentUpon>SoundActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\SpecialIdentifierActionControl.xaml.cs">
+      <DependentUpon>SpecialIdentifierActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
       <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
     </Compile>
@@ -438,6 +441,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\SoundActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SpecialIdentifierActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

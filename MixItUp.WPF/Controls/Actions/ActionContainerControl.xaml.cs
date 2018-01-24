@@ -88,6 +88,9 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.ActionGroup:
                     this.actionControl = (this.action != null) ? new ActionGroupActionControl(this, (ActionGroupAction)this.action) : new ActionGroupActionControl(this);
                     break;
+                case ActionTypeEnum.SpecialIdentifier:
+                    this.actionControl = (this.action != null) ? new SpecialIdentifierActionControl(this, (SpecialIdentifierAction)this.action) : new SpecialIdentifierActionControl(this);
+                    break;
             }
 
             if (this.actionControl != null)
