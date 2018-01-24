@@ -74,7 +74,8 @@ namespace MixItUp.Base
         LockedList<ActionGroupCommand> ActionGroupCommands { get; }
         LockedList<GameCommandBase> GameCommands { get; }
 
-        LockedList<string> Quotes { get; }
+        LockedList<UserQuoteViewModel> UserQuotes { get; }
+
         LockedList<string> BannedWords { get; }
         LockedList<string> CommunityBannedWords { get; }
 

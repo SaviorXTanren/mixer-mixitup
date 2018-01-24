@@ -43,6 +43,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version2Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version3Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version4Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version5Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -278,6 +279,23 @@ namespace MixItUp.Desktop.Services
                         }
 #pragma warning restore CS0612 // Type or member is obsolete
                     }
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version5Upgrade(int version, string filePath)
+        {
+            if (version < 5)
+            {
+                LegacyDesktopChannelSettings legacySettings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+                foreach (string quote in legacySettings.quotesInternal)
+                {
+                    settings.UserQuotes.Add(new UserQuoteViewModel(quote));
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);
