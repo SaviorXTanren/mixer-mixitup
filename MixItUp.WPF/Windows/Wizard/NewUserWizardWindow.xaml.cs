@@ -277,7 +277,10 @@ namespace MixItUp.WPF.Windows.Wizard
                         if (line.Contains("="))
                         {
                             string[] splits = line.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
-                            scorpBotData.Settings[currentGroup].Add(splits[0], splits[1]);
+                            if (splits.Count() == 2)
+                            {
+                                scorpBotData.Settings[currentGroup].Add(splits[0], splits[1]);
+                            }
                         }
                         else
                         {
