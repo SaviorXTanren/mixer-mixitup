@@ -1,4 +1,6 @@
 ﻿using MixItUp.Base.Actions;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Actions
@@ -26,7 +28,8 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            if (!string.IsNullOrEmpty(this.SpecialIdentifierNameTextBox.Text) && !string.IsNullOrEmpty(this.SpecialIdentifierReplacementTextBox.Text))
+            if (!string.IsNullOrEmpty(this.SpecialIdentifierNameTextBox.Text) && this.SpecialIdentifierNameTextBox.Text.All(c => Char.IsLetterOrDigit(c)) &&
+                !string.IsNullOrEmpty(this.SpecialIdentifierReplacementTextBox.Text))
             {
                 return new SpecialIdentifierAction(this.SpecialIdentifierNameTextBox.Text, this.SpecialIdentifierReplacementTextBox.Text);
             }
