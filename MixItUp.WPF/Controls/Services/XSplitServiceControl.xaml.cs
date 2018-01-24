@@ -47,7 +47,10 @@ namespace MixItUp.WPF.Controls.Services
         {
             await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
-                await this.ConnectXSplitService();
+                if (!await this.ConnectXSplitService())
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Failed to start XSplit Connection, this sometimes means our connection got wonky. If this continues to happen, please try restarting Mix It Up.");
+                }
                 await ChannelSession.SaveSettings();
             });
         }
@@ -85,25 +88,35 @@ namespace MixItUp.WPF.Controls.Services
             {
                 ChannelSession.DisconnectionOccurred("XSplit");
 
-                await this.DisconnectXSplitService();
-                await this.ConnectXSplitService();
+                do
+                {
+                    await this.DisconnectXSplitService();
+
+                    await Task.Delay(2000);
+                } while (!await this.ConnectXSplitService());
 
                 ChannelSession.ReconnectionOccurred("XSplit");
             });
         }
 
-        public async Task ConnectXSplitService()
+        public async Task<bool> ConnectXSplitService()
         {
+            if (!await ChannelSession.Services.InitializeXSplitServer())
+            {
+                return false;
+            }
+
             ChannelSession.Settings.EnableXSplitConnection = true;
             this.EnableXSplitConnectionButton.Visibility = Visibility.Collapsed;
             this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
 
-            await ChannelSession.Services.InitializeXSplitServer();
             ChannelSession.Services.XSplitServer.Disconnected += XSplitServer_Disconnected;
 
             this.TestXSplitConnectionButton.IsEnabled = true;
 
             this.SetCompletedIcon(visible: true);
+
+            return true;
         }
 
         private async Task DisconnectXSplitService()

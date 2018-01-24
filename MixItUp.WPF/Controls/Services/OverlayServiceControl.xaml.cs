@@ -52,7 +52,10 @@ namespace MixItUp.WPF.Controls.Services
         {
             await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
-                await this.ConnectOverlayService();
+                if (!await this.ConnectOverlayService())
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Failed to start Overlay Connection, this sometimes means our connection got wonky. If this continues to happen, please try restarting Mix It Up.");
+                }
                 await ChannelSession.SaveSettings();
             });
         }
@@ -93,16 +96,24 @@ namespace MixItUp.WPF.Controls.Services
             {
                 ChannelSession.DisconnectionOccurred("Overlay");
 
-                await this.DisconnectOverlayService();
-                await this.ConnectOverlayService();
+                do
+                {
+                    await this.DisconnectOverlayService();
+
+                    await Task.Delay(2000);
+                } while (!await this.ConnectOverlayService());
 
                 ChannelSession.ReconnectionOccurred("Overlay");
             });
         }
 
-        private async Task ConnectOverlayService()
+        private async Task<bool> ConnectOverlayService()
         {
-            await ChannelSession.Services.InitializeOverlayServer();
+            if (!await ChannelSession.Services.InitializeOverlayServer())
+            {
+                return false;
+            }
+
             ChannelSession.Services.OverlayServer.Disconnected += OverlayServer_Disconnected;
 
             ChannelSession.Settings.EnableOverlay = true;
@@ -112,6 +123,8 @@ namespace MixItUp.WPF.Controls.Services
             this.TestOverlayButton.IsEnabled = true;
 
             this.SetCompletedIcon(visible: true);
+
+            return true;
         }
 
         private async Task DisconnectOverlayService()
