@@ -30,7 +30,7 @@ namespace MixItUp.Base.Commands
         public ChatCommand(ScorpBotCommand command)
             : this(command.Command, command.Command, command.Permission, command.Cooldown, null)
         {
-            this.Actions.Add(new ChatAction(command.Text, isWhisper: false, sendAsStreamer: false));
+            this.Actions.Add(new ChatAction(command.Text));
             this.IsEnabled = command.Enabled;
         }
 

@@ -17,7 +17,7 @@ namespace MixItUp.Base.Commands
         public TimerCommand(ScorpBotTimer timer)
             : this(timer.Name)
         {
-            this.Actions.Add(new ChatAction(timer.Text, isWhisper: false, sendAsStreamer: false));
+            this.Actions.Add(new ChatAction(timer.Text));
             this.IsEnabled = timer.Enabled;
         }
 

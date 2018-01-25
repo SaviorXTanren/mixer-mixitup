@@ -19,8 +19,9 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.ChatMessageTextBox.Text = this.action.ChatText;
-                this.ChatWhisperToggleButton.IsChecked = this.action.IsWhisper;
                 this.ChatSendAsStreamerToggleButton.IsChecked = this.action.SendAsStreamer;
+                this.ChatWhisperToggleButton.IsChecked = this.action.IsWhisper;
+                this.ChatWhisperUserNameTextBox.Text = this.action.WhisperUserName;
             }
             return Task.FromResult(0);
         }
@@ -29,9 +30,22 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
             {
-                return new ChatAction(this.ChatMessageTextBox.Text, this.ChatWhisperToggleButton.IsChecked.GetValueOrDefault(), this.ChatSendAsStreamerToggleButton.IsChecked.GetValueOrDefault());
+                if (this.ChatWhisperToggleButton.IsChecked.GetValueOrDefault())
+                {
+                    return new ChatAction(this.ChatMessageTextBox.Text, this.ChatSendAsStreamerToggleButton.IsChecked.GetValueOrDefault(),
+                        isWhisper: true, whisperUserName: this.ChatWhisperUserNameTextBox.Text);
+                }
+                else
+                {
+                    return new ChatAction(this.ChatMessageTextBox.Text, this.ChatSendAsStreamerToggleButton.IsChecked.GetValueOrDefault());
+                }
             }
             return null;
+        }
+
+        private void ChatWhisperToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.ChatWhisperUserNameTextBox.IsEnabled = this.ChatWhisperToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }

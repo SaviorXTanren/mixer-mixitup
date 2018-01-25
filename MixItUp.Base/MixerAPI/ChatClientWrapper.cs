@@ -16,6 +16,8 @@ namespace MixItUp.Base.MixerAPI
 {
     public class ChatClientWrapper : MixerRequestWrapperBase
     {
+        private const string HypeBotUserName = "HypeBot";
+
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
         public event EventHandler<uint> OnPurgeMessageOccurred = delegate { };
@@ -237,14 +239,14 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction, bool includeBots = false)
         {
-            IEnumerable<UserViewModel> users = this.ChatUsers.Values.ToList();
+            List<UserViewModel> users = this.ChatUsers.Values.ToList();
 
             if (!includeBots)
             {
-                users = users.Where(u => !u.UserName.Equals("HypeBot"));
+                users.RemoveAll(u => HypeBotUserName.Equals(u.UserName));
                 if (ChannelSession.BotUser != null)
                 {
-                    users = users.Where(u => !u.UserName.Equals(ChannelSession.BotUser.username));
+                    users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
                 }
             }
 
