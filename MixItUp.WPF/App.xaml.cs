@@ -5,6 +5,7 @@ using MixItUp.WPF.Properties;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Threading;
@@ -70,6 +71,8 @@ namespace MixItUp.WPF
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             ChannelSession.Initialize(desktopServicesHandler);
+
+            Logger.Log("Application Version: " + Assembly.GetEntryAssembly().GetName().Version.ToString());
 
             base.OnStartup(e);
         }
