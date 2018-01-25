@@ -101,7 +101,11 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.SendChatAsComboBox.SelectedIndex = 0;
             }
 
-            this.updateScrollingToLatest = true;
+            ScrollViewer scrollViewer = VisualTreeHelpers.GetVisualChild<ScrollViewer>(this.ChatList);
+            if (scrollViewer != null && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            {
+                this.updateScrollingToLatest = true;
+            }
 
             return Task.FromResult(0);
         }
@@ -157,6 +161,12 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await messageUpdateLock.WaitAsync();
 
+            ScrollViewer scrollViewer = VisualTreeHelpers.GetVisualChild<ScrollViewer>(this.ChatList);
+            if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            {
+                this.updateScrollingToLatest = true;
+            }
+
             ChatMessageControl messageControl = new ChatMessageControl(message);
 
             this.totalMessages++;
@@ -165,8 +175,6 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.MessageControls.RemoveAt(0);
             }
-
-            this.ChatList.ScrollIntoView(messageControl);
 
             messageUpdateLock.Release();
         }
