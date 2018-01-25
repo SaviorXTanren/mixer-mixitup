@@ -9,7 +9,7 @@ namespace MixItUp.Base.Commands
         public static CustomCommand CreateCustomChatCommand(string text, bool isWhisper = false)
         {
             CustomCommand command = new CustomCommand("Game Custom Command");
-            command.Actions.Add(new ChatAction(text, isWhisper, false));
+            command.Actions.Add(new ChatAction(text, isWhisper));
             return command;
         }
     }
