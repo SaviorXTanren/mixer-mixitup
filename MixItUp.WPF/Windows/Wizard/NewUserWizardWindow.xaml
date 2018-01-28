@@ -241,6 +241,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="40" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock TextWrapping="Wrap" Grid.Row="0" HorizontalAlignment="Center">Congratulations, you're all set to start using Mix It Up! </TextBlock>
@@ -269,7 +271,21 @@
                         </StackPanel>
                     </Grid>
 
-                    <TextBlock TextWrapping="Wrap" Grid.Row="6" HorizontalAlignment="Center">Thanks for giving Mix It Up a try and we hope it meets all your needs!</TextBlock>
+                    <Grid Grid.Row="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" TextWrapping="Wrap" Width="450">Don't know how a feature works or want more info? Simply click on the Help icon on the top bar of the main window to find out more!</TextBlock>
+
+                        <Button Grid.Column="2" Width="40" HorizontalAlignment="Center" ToolTip="Help">
+                            <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                        </Button>
+                    </Grid>
+
+                    <TextBlock TextWrapping="Wrap" Grid.Row="8" HorizontalAlignment="Center">Thanks for giving Mix It Up a try and we hope it meets all your needs!</TextBlock>
                     
                 </Grid>
             </Grid>
