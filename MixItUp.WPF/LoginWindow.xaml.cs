@@ -60,8 +60,7 @@ namespace MixItUp.WPF
 
             await base.OnLoaded();
 
-            AutoUpdater.AppTitle = "Mix It Up";
-            AutoUpdater.ShowSkipButton = false;
+            AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
             AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater.xml");
         }
 
@@ -170,6 +169,15 @@ namespace MixItUp.WPF
             {
                 return await ChannelSession.ConnectUser(scopes, channelName);
             });
+        }
+
+        private void AutoUpdater_CheckForUpdateEvent(UpdateInfoEventArgs args)
+        {
+            if (args != null && args.IsUpdateAvailable)
+            {
+                UpdateWindow window = new UpdateWindow(args);
+                window.Show();
+            }
         }
     }
 }
