@@ -298,6 +298,34 @@ namespace MixItUp.Desktop.Services
                     settings.UserQuotes.Add(new UserQuoteViewModel(quote));
                 }
 
+                List<CommandBase> commands = new List<CommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.InteractiveCommands);
+                commands.AddRange(settings.EventCommands);
+                commands.AddRange(settings.TimerCommands);
+
+                foreach (CommandBase command in commands)
+                {
+                    foreach (ActionBase action in command.Actions)
+                    {
+                        if (action is InteractiveAction)
+                        {
+                            InteractiveAction nAction = (InteractiveAction)action;
+#pragma warning disable CS0612 // Type or member is obsolete
+                            if (nAction.AddUserToGroup)
+                            {
+                                nAction.InteractiveType = InteractiveActionTypeEnum.MoveUserToGroup;
+                            }
+                            else
+                            {
+                                nAction.InteractiveType = InteractiveActionTypeEnum.MoveGroupToScene;
+                            }
+                            nAction.SceneID = nAction.MoveGroupToScene;
+#pragma warning restore CS0612 // Type or member is obsolete
+                        }
+                    }
+                }
+
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }
