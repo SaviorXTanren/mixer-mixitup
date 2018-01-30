@@ -17,6 +17,7 @@ namespace MixItUp.Base.MixerAPI
     public class ChatClientWrapper : MixerRequestWrapperBase
     {
         private const string HypeBotUserName = "HypeBot";
+        private const string BoomTVUserName = "boomtvmod";
 
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
@@ -244,6 +245,7 @@ namespace MixItUp.Base.MixerAPI
             if (!includeBots)
             {
                 users.RemoveAll(u => HypeBotUserName.Equals(u.UserName));
+                users.RemoveAll(u => BoomTVUserName.Equals(u.UserName));
                 if (ChannelSession.BotUser != null)
                 {
                     users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
