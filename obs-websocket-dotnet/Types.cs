@@ -28,8 +28,18 @@ using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class JsonParser
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="props"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static bool TryGetValue(JObject props, string name, out bool value)
         {
             value = false;
@@ -41,6 +51,13 @@ namespace OBSWebsocketDotNet
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="props"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static bool TryGetValue(JObject props, string name, out int value)
         {
             value = 0;
@@ -52,6 +69,13 @@ namespace OBSWebsocketDotNet
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="props"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static bool TryGetValue(JObject props, string name, out string value)
         {
             value = string.Empty;
