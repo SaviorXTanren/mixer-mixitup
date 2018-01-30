@@ -28,6 +28,42 @@ using System.Collections.Generic;
 
 namespace OBSWebsocketDotNet
 {
+    public static class JsonParser
+    {
+        public static bool TryGetValue(JObject props, string name, out bool value)
+        {
+            value = false;
+            if (props.TryGetValue(name, out JToken token) && token != null)
+            {
+                value = (bool)token;
+                return true;
+            }
+            return false;
+        }
+
+        public static bool TryGetValue(JObject props, string name, out int value)
+        {
+            value = 0;
+            if (props.TryGetValue(name, out JToken token) && token != null)
+            {
+                value = (int)token;
+                return true;
+            }
+            return false;
+        }
+
+        public static bool TryGetValue(JObject props, string name, out string value)
+        {
+            value = string.Empty;
+            if (props.TryGetValue(name, out JToken token) && token != null)
+            {
+                value = (string)token;
+                return true;
+            }
+            return false;
+        }
+    }
+
     /// <summary>
     /// Describes the state of an output (streaming or recording)
     /// </summary>
@@ -617,18 +653,14 @@ namespace OBSWebsocketDotNet
         /// <param name="props"></param>
         public BrowserSourceProperties(JObject props)
         {
-            URL = (string)props["url"];
-            IsLocalFile = (bool)props["is_local_file"];
-            CustomCSS = (string)props["css"];
-            Width = (int)props["width"];
-            Height = (int)props["height"];
-
-            JToken fpsToken;
-            props.TryGetValue("fps", out fpsToken);
-            FPS = (fpsToken != null) ? (int)fpsToken : 0;
-
-            ShutdownWhenNotVisible = (bool)props["shutdown"];
-            Visible = (bool)props["render"];
+            JsonParser.TryGetValue(props, "url", out URL);
+            JsonParser.TryGetValue(props, "is_local_file", out IsLocalFile);
+            JsonParser.TryGetValue(props, "css", out CustomCSS);
+            JsonParser.TryGetValue(props, "width", out Width);
+            JsonParser.TryGetValue(props, "height", out Height);
+            JsonParser.TryGetValue(props, "fps", out FPS);
+            JsonParser.TryGetValue(props, "shutdown", out ShutdownWhenNotVisible);
+            JsonParser.TryGetValue(props, "render", out Visible);
         }
 
         /// <summary>
