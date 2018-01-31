@@ -25,7 +25,7 @@ namespace MixItUp.Base.Util
         {
             try
             {
-                Logger.fileService.AppendFile(Logger.CurrentLogFileName, DateTimeOffset.Now.ToString() + " - " + message + Environment.NewLine + Environment.NewLine);
+                Logger.fileService.AppendFile(DateTimeOffset.Now.ToString() + " - " + Logger.CurrentLogFileName, DateTimeOffset.Now.ToString() + " - " + message + Environment.NewLine + Environment.NewLine);
             }
             catch (Exception) { }
         }
