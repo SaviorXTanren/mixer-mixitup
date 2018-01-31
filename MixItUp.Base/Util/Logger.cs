@@ -28,7 +28,7 @@ namespace MixItUp.Base.Util
         {
             try
             {
-                Logger.fileService.SaveFile(Logger.CurrentLogFileName, message + Environment.NewLine + Environment.NewLine, create: false);
+                Logger.fileService.SaveFile(Logger.CurrentLogFileName, DateTimeOffset.Now.ToString() + " - " + message + Environment.NewLine + Environment.NewLine, create: false);
             }
             catch (Exception) { }
         }
