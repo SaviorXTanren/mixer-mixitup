@@ -52,7 +52,7 @@ namespace MixItUp.Base.ViewModel.User
                         return rank;
                     }
                 }
-                return new UserRankViewModel("No Rank", 0);
+                return UserCurrencyViewModel.NoRank;
             }
         }
 

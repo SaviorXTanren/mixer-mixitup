@@ -20,6 +20,8 @@ namespace MixItUp.Base.ViewModel.User
     [DataContract]
     public class UserCurrencyViewModel : IEquatable<UserCurrencyViewModel>
     {
+        public static UserRankViewModel NoRank = new UserRankViewModel("No Rank", 0);
+
         public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelHostedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__hosted, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelSubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel.id); } }
@@ -106,7 +108,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserRankViewModel GetRankForPoints(int points)
         {
-            UserRankViewModel rank = null;
+            UserRankViewModel rank = UserCurrencyViewModel.NoRank;
             if (this.Ranks.Count > 0)
             {
                 rank = this.Ranks.Where(r => r.MinimumPoints <= points).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();

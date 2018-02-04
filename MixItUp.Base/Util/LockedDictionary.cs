@@ -46,10 +46,7 @@ namespace MixItUp.Base.Util
 
         public IEnumerator<KeyValuePair<K, V>> GetEnumerator() { lock (objLock) { return this.ToDictionary().GetEnumerator(); } }
 
-        public IEnumerable Where()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable Where() { throw new NotImplementedException(); }
 
         public virtual bool Remove(K key) { lock (objLock) { return this.items.Remove(key); } }
 

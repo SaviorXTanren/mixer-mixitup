@@ -39,4 +39,9 @@
         <Setter Property="Background" Value="{StaticResource MaterialDesignPaper}" />
     </Style>
 
+    <Style x:Key="DefaultBorder" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
 </ResourceDictionary>

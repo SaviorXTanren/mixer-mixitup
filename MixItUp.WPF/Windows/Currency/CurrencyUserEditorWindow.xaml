@@ -1,0 +1,66 @@
+﻿<Window x:Class="MixItUp.WPF.Windows.Currency.CurrencyUserEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+                                        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+                  
+        Icon="./../../Logo.ico"
+        Title="Currency/Rank - User Editing" Height="600" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Username:" />
+
+                <TextBox Grid.Column="2" x:Name="UsernameFilterTextBox" Width="150" TextChanged="UsernameFilterTextBox_TextChanged" />
+
+            </Grid>
+
+            <Grid Grid.Row="2" Margin="10,0">
+                <Border Style="{StaticResource DefaultBorder}">
+                    <DataGrid x:Name="UserCurrencyDataDataGrid" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding User.UserName}" IsReadOnly="True" Width="2*" />
+                            <DataGridTemplateColumn Header="Amount" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Width="150" Text="{Binding Amount}" HorizontalAlignment="Left" TextChanged="TextBox_TextChanged" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

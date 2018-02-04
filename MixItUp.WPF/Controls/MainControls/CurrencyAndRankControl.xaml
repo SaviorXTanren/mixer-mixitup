@@ -48,7 +48,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="140">
+                        <DataGridTemplateColumn Width="190">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -56,13 +56,19 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="20" />
                                             <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Button x:Name="CurrencyEditButton" Grid.Column="0" Click="CurrencyEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Command">
+                                        <Button x:Name="CurrencyEditButton" Grid.Column="0" Click="CurrencyEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Currency">
                                             <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                        <Button x:Name="CurrencyDeleteButton" Grid.Column="2" Click="CurrencyDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                                        <Button x:Name="CurrencyUserEditButton" Grid.Column="2" Click="CurrencyUserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit User Amounts">
+                                            <MaterialDesign:PackIcon Kind="AccountSearch" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+
+                                        <Button x:Name="CurrencyDeleteButton" Grid.Column="4" Click="CurrencyDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Currency">
                                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
                                     </Grid>
@@ -113,7 +119,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="140">
+                        <DataGridTemplateColumn Width="190">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -121,13 +127,19 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="20" />
                                             <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Button x:Name="RankEditButton" Grid.Column="0" Click="RankEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Command">
+                                        <Button x:Name="RankEditButton" Grid.Column="0" Click="RankEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit Rank">
                                             <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                        <Button x:Name="RankyDeleteButton" Grid.Column="2" Click="RankDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Command">
+                                        <Button x:Name="RankUserEditButton" Grid.Column="2" Click="RankUserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit User Amounts">
+                                            <MaterialDesign:PackIcon Kind="AccountSearch" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+
+                                        <Button x:Name="RankyDeleteButton" Grid.Column="4" Click="RankDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Rank">
                                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
                                     </Grid>

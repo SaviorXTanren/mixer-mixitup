@@ -121,6 +121,15 @@ namespace MixItUp.WPF.Windows.Currency
                     this.UpdateRankChangedCommand();
                 }
             }
+            else
+            {
+                this.CurrencySubscriberBonusTextBox.Text = "0";
+                this.CurrencyOnFollowBonusTextBox.Text = "0";
+                this.CurrencyOnHostBonusTextBox.Text = "0";
+                this.CurrencyOnSubscribeBonusTextBox.Text = "0";
+
+                this.ResetCurrencyComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
+            }
 
             await base.OnLoaded();
         }
@@ -159,7 +168,6 @@ namespace MixItUp.WPF.Windows.Currency
         {
             Button button = (Button)sender;
             UserRankViewModel rank = (UserRankViewModel)button.DataContext;
-            this.currency.Ranks.Remove(rank);
             this.ranks.Remove(rank);
         }
 
@@ -185,15 +193,15 @@ namespace MixItUp.WPF.Windows.Currency
             }
 
             UserRankViewModel newRank = new UserRankViewModel(this.RankNameTextBox.Text, rankAmount);
-            this.currency.Ranks.Add(newRank);
+            this.ranks.Add(newRank);
+
+            var tempRanks = this.ranks.ToList();
 
             this.ranks.Clear();
-            foreach (UserRankViewModel rank in this.currency.Ranks.OrderBy(r => r.MinimumPoints))
+            foreach (UserRankViewModel rank in tempRanks.OrderBy(r => r.MinimumPoints))
             {
                 this.ranks.Add(rank);
             }
-
-            this.currency.Ranks = this.ranks.ToList();
 
             this.RankNameTextBox.Clear();
             this.RankAmountTextBox.Clear();
@@ -387,6 +395,13 @@ namespace MixItUp.WPF.Windows.Currency
                 if (string.IsNullOrEmpty(this.CurrencyNameTextBox.Text))
                 {
                     await MessageBoxHelper.ShowMessageDialog("A currency name must be specified");
+                    return;
+                }
+
+                UserCurrencyViewModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.CurrencyNameTextBox.Text));
+                if (dupeCurrency != null && (this.currency == null || !this.currency.ID.Equals(dupeCurrency.ID)))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("There already exists a currency or rank system with this name");
                     return;
                 }
 
