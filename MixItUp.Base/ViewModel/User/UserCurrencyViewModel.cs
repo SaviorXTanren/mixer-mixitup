@@ -77,6 +77,12 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsActive { get { return this.AcquireAmount != 0 && this.AcquireInterval != 0; } }
 
         [JsonIgnore]
+        public bool IsMinutesInterval { get { return this.AcquireAmount == 1 && this.AcquireInterval == 1; } }
+
+        [JsonIgnore]
+        public bool IsHoursInterval { get { return this.AcquireAmount == 1 && this.AcquireInterval == 60; } }
+
+        [JsonIgnore]
         public string UserAmountSpecialIdentifier { get { return string.Format("user{0}", this.SpecialIdentifier); } }
 
         [JsonIgnore]

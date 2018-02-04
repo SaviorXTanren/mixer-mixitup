@@ -18,6 +18,13 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Windows.Currency
 {
+    public enum CurrencyAcquireRateTypeEnum
+    {
+        Minutes,
+        Hours,
+        Custom,
+    }
+
     /// <summary>
     /// Interaction logic for CurrencyWindow.xaml
     /// </summary>
@@ -35,9 +42,12 @@ namespace MixItUp.WPF.Windows.Currency
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
         public CurrencyWindow(bool isRank)
-            : this(new UserCurrencyViewModel())
         {
             this.isRank = isRank;
+
+            InitializeComponent();
+
+            this.Initialize(this.StatusBar);
 
             this.ExportUserCurrencyToFileButton.IsEnabled = false;
         }
@@ -61,24 +71,35 @@ namespace MixItUp.WPF.Windows.Currency
                 this.RankGrid.Visibility = Visibility.Visible;
 
                 this.RanksListView.ItemsSource = this.ranks;
-                foreach (UserRankViewModel rank in this.currency.Ranks.OrderBy(r => r.MinimumPoints))
-                {
-                    this.ranks.Add(rank);
-                }
-                this.UpdateRankChangedCommand();
             }
             else
             {
                 this.Title += "Currency";
             }
 
+            this.CurrencyAcquireRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>();
+
             this.ResetCurrencyComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
 
             if (this.currency != null)
             {
                 this.CurrencyNameTextBox.Text = this.currency.Name;
+
+                if (this.currency.IsMinutesInterval)
+                {
+                    this.CurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
+                }
+                else if (this.currency.IsHoursInterval)
+                {
+                    this.CurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Hours);
+                }
+                else
+                {
+                    this.CurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
+                }
                 this.CurrencyAmountTextBox.Text = this.currency.AcquireAmount.ToString();
                 this.CurrencyTimeTextBox.Text = this.currency.AcquireInterval.ToString();
+
                 if (this.currency.MaxAmount != int.MaxValue)
                 {
                     this.CurrencyMaxAmountTextBox.Text = this.currency.MaxAmount.ToString();
@@ -90,6 +111,15 @@ namespace MixItUp.WPF.Windows.Currency
                 this.CurrencyOnSubscribeBonusTextBox.Text = this.currency.OnSubscribeBonus.ToString();
 
                 this.ResetCurrencyComboBox.SelectedItem = EnumHelper.GetEnumName(this.currency.ResetInterval);
+
+                if (this.currency.IsRank)
+                {
+                    foreach (UserRankViewModel rank in this.currency.Ranks.OrderBy(r => r.MinimumPoints))
+                    {
+                        this.ranks.Add(rank);
+                    }
+                    this.UpdateRankChangedCommand();
+                }
             }
 
             await base.OnLoaded();
@@ -360,24 +390,38 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
-                int currencyAmount = 0;
-                if (string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) || !int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) || currencyAmount < 0)
+                if (this.CurrencyAcquireRateComboBox.SelectedIndex < 0)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The currency rate must be 0 or greater");
+                    await MessageBoxHelper.ShowMessageDialog("The currency rate must be selected");
                     return;
                 }
+                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.CurrencyAcquireRateComboBox.SelectedItem);
 
-                int currencyTime = 0;
-                if (string.IsNullOrEmpty(this.CurrencyTimeTextBox.Text) || !int.TryParse(this.CurrencyTimeTextBox.Text, out currencyTime) || currencyTime < 0)
+                int currencyAmount = 1;
+                int currencyTime = 1;
+                if (acquireRate == CurrencyAcquireRateTypeEnum.Hours)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The currency interval must be 0 or greater");
-                    return;
+                    currencyTime = 60;
                 }
-
-                if ((currencyAmount == 0 && currencyTime != 0) || (currencyAmount != 0 && currencyTime == 0))
+                else if (acquireRate == CurrencyAcquireRateTypeEnum.Custom)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The currency rate and interval must be both greater than 0 or both equal to 0");
-                    return;
+                    if (string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) || !int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) || currencyAmount < 0)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The currency rate must be 0 or greater");
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(this.CurrencyTimeTextBox.Text) || !int.TryParse(this.CurrencyTimeTextBox.Text, out currencyTime) || currencyTime < 0)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The currency interval must be 0 or greater");
+                        return;
+                    }
+
+                    if ((currencyAmount == 0 && currencyTime != 0) || (currencyAmount != 0 && currencyTime == 0))
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The currency rate and interval must be both greater than 0 or both equal to 0");
+                        return;
+                    }
                 }
 
                 int maxAmount = int.MaxValue;
@@ -436,6 +480,11 @@ namespace MixItUp.WPF.Windows.Currency
                     }
                 }
 
+                if (this.currency == null)
+                {
+                    this.currency = new UserCurrencyViewModel();
+                }
+
                 this.currency.Name = this.CurrencyNameTextBox.Text;
                 this.currency.AcquireAmount = currencyAmount;
                 this.currency.AcquireInterval = currencyTime;
@@ -490,6 +539,15 @@ namespace MixItUp.WPF.Windows.Currency
                     await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString(), create: true);
                 }
             });
+        }
+
+        private void CurrencyAcquireRateComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.CurrencyAcquireRateComboBox.SelectedIndex >= 0)
+            {
+                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.CurrencyAcquireRateComboBox.SelectedItem);
+                this.CustomRateGrid.Visibility = (acquireRate == CurrencyAcquireRateTypeEnum.Custom) ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
     }
 }

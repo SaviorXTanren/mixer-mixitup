@@ -62,11 +62,6 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="30" />
                             <ColumnDefinition Width="Auto" />
@@ -74,13 +69,24 @@
 
                         <TextBox Grid.Column="0" x:Name="CurrencyNameTextBox" MaterialDesign:HintAssist.Hint="Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="CurrencyNameTextBox_TextChanged" />
 
-                        <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Bottom" Margin="0,0,0,5">Rate:</TextBlock>
+                        <ComboBox Grid.Column="2" x:Name="CurrencyAcquireRateComboBox" Width="150" Style="{StaticResource BackgroundComboBox}" MaterialDesign:HintAssist.Hint="Acquire Rate" SelectionChanged="CurrencyAcquireRateComboBox_SelectionChanged" />
 
-                        <TextBox Grid.Column="4" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                        <TextBlock Grid.Column="6" VerticalAlignment="Bottom">/</TextBlock>
-                        <TextBox Grid.Column="8" x:Name="CurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <Grid x:Name="CustomRateGrid" Grid.Column="3" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <TextBox Grid.Column="10" x:Name="CurrencyMaxAmountTextBox" MaterialDesign:HintAssist.Hint="Max Amount" Width="120" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox Grid.Column="1" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBlock Grid.Column="3" VerticalAlignment="Bottom">/</TextBlock>
+                            <TextBox Grid.Column="5" x:Name="CurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+
+                        <TextBox Grid.Column="5" x:Name="CurrencyMaxAmountTextBox" MaterialDesign:HintAssist.Hint="Max Amount" Width="120" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     </Grid>
 
@@ -108,16 +114,13 @@
                     <Grid Grid.Row="4" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Reset Frequency:</TextBlock>
-                        <ComboBox Grid.Column="2" x:Name="ResetCurrencyComboBox" Width="150" Style="{StaticResource BackgroundComboBox}" />
+                        <ComboBox Grid.Column="0" x:Name="ResetCurrencyComboBox" Width="150" Style="{StaticResource BackgroundComboBox}" MaterialDesign:HintAssist.Hint="Reset Frequency" />
 
-                        <Button Grid.Column="4" x:Name="ResetCurrencyManuallyButton" Click="ResetCurrencyManuallyButton_Click">Manual Reset</Button>
+                        <Button Grid.Column="2" x:Name="ResetCurrencyManuallyButton" Click="ResetCurrencyManuallyButton_Click">Manual Reset</Button>
                     </Grid>
 
                     <Grid Grid.Row="6" HorizontalAlignment="Center">
@@ -194,7 +197,7 @@
                                 <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
                                     <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
 
-                                    <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                    <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" Visibility="Collapsed" />
                                 </Grid>
                             </GroupBox>
                         </Grid>
