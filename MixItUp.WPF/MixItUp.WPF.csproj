@@ -386,6 +386,9 @@
     <Compile Include="Windows\Command\GameCommandWindow.xaml.cs">
       <DependentUpon>GameCommandWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Currency\CurrencyUserEditorWindow.xaml.cs">
+      <DependentUpon>CurrencyUserEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Currency\CurrencyWindow.xaml.cs">
       <DependentUpon>CurrencyWindow.xaml</DependentUpon>
     </Compile>
@@ -721,6 +724,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Command\GameCommandWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Currency\CurrencyUserEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

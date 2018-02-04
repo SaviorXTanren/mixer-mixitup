@@ -87,14 +87,7 @@ namespace MixItUp.Base.Util
                     UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(currency);
 
                     UserRankViewModel rank = currencyData.GetRank();
-                    if (rank != null)
-                    {
-                        this.ReplaceSpecialIdentifier(currency.UserRankNameSpecialIdentifier, rank.Name);
-                    }
-                    else
-                    {
-                        this.ReplaceSpecialIdentifier(currency.UserRankNameSpecialIdentifier, "No Rank");
-                    }
+                    this.ReplaceSpecialIdentifier(currency.UserRankNameSpecialIdentifier, rank.Name);
                     this.ReplaceSpecialIdentifier(currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                 }
                 this.ReplaceSpecialIdentifier("usertime", user.Data.ViewingTimeString);
@@ -140,14 +133,7 @@ namespace MixItUp.Base.Util
                                 UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
 
                                 UserRankViewModel rank = currencyData.GetRank();
-                                if (rank != null)
-                                {
-                                    this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, rank.Name);
-                                }
-                                else
-                                {
-                                    this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, "No Rank");
-                                }
+                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, rank.Name);
                                 this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                             }
                             this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usertime", userData.ViewingTimeString);
