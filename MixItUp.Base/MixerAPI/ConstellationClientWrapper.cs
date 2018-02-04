@@ -16,12 +16,14 @@ namespace MixItUp.Base.MixerAPI
 {
     public class ConstellationClientWrapper : MixerRequestWrapperBase
     {
+        public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.Channel.id); } }
+
         public static ConstellationEventType ResubscribeSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
 
         private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
             ConstellationEventTypeEnum.channel__id__followed, ConstellationEventTypeEnum.channel__id__hosted, ConstellationEventTypeEnum.channel__id__subscribed,
-            ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared
+            ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared, ConstellationEventTypeEnum.channel__id__update
         };
 
         public ConstellationClient Client { get; private set; }
@@ -128,37 +130,48 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
 
-            foreach (EventCommand command in ChannelSession.Settings.EventCommands)
+            if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
             {
-                EventCommand foundCommand = null;
-
-                if (command.MatchesEvent(e))
+                IDictionary<string, JToken> payloadValues = e.payload;
+                if (payloadValues.ContainsKey("online") && (bool)payloadValues["online"])
                 {
-                    foundCommand = command;
+                    UptimeChatCommand.SetUptime(DateTimeOffset.Now);
                 }
-
-                if (command.EventType == ConstellationEventTypeEnum.channel__id__subscribed && e.channel.Equals(ConstellationClientWrapper.ResubscribeSharedEvent.ToString()))
+            }
+            else
+            {
+                foreach (EventCommand command in ChannelSession.Settings.EventCommands)
                 {
-                    foundCommand = command;
-                }
+                    EventCommand foundCommand = null;
 
-                if (foundCommand != null)
-                {
-                    if (command.EventType == ConstellationEventTypeEnum.channel__id__hosted && channel != null)
+                    if (command.MatchesEvent(e))
                     {
-                        foundCommand.AddSpecialIdentifier("hostviewercount", channel.viewersCurrent.ToString());
+                        foundCommand = command;
                     }
 
-                    if (user != null)
+                    if (command.EventType == ConstellationEventTypeEnum.channel__id__subscribed && e.channel.Equals(ConstellationClientWrapper.ResubscribeSharedEvent.ToString()))
                     {
-                        await foundCommand.Perform(user);
-                    }
-                    else
-                    {
-                        await foundCommand.Perform();
+                        foundCommand = command;
                     }
 
-                    return;
+                    if (foundCommand != null)
+                    {
+                        if (command.EventType == ConstellationEventTypeEnum.channel__id__hosted && channel != null)
+                        {
+                            foundCommand.AddSpecialIdentifier("hostviewercount", channel.viewersCurrent.ToString());
+                        }
+
+                        if (user != null)
+                        {
+                            await foundCommand.Perform(user);
+                        }
+                        else
+                        {
+                            await foundCommand.Perform();
+                        }
+
+                        return;
+                    }
                 }
             }
         }

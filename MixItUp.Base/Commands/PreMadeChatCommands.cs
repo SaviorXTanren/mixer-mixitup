@@ -191,7 +191,13 @@ namespace MixItUp.Base.Commands
 
     public class UptimeChatCommand : PreMadeChatCommand
     {
-        private StreamSessionsAnalyticModel latestSession;
+        private static StreamSessionsAnalyticModel latestSession;
+        private static DateTimeOffset streamStartDateTime = DateTimeOffset.MinValue;
+
+        public static void SetUptime(DateTimeOffset dateTime)
+        {
+            UptimeChatCommand.streamStartDateTime = dateTime;
+        }
 
         public UptimeChatCommand()
             : base("Uptime", "uptime", UserRole.User, 5)
@@ -200,10 +206,10 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    if (this.latestSession != null)
+                    if (UptimeChatCommand.streamStartDateTime > DateTimeOffset.MinValue)
                     {
-                        TimeSpan duration = DateTimeOffset.Now.Subtract(this.latestSession.dateTime);
-                        await ChannelSession.Chat.SendMessage("Start Time: " + this.latestSession.dateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                        TimeSpan duration = DateTimeOffset.Now.Subtract(UptimeChatCommand.streamStartDateTime);
+                        await ChannelSession.Chat.SendMessage("Start Time: " + UptimeChatCommand.streamStartDateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
                     }
                     else
                     {
@@ -230,7 +236,8 @@ namespace MixItUp.Base.Commands
             sessions = sessions.OrderBy(s => s.dateTime);
             if (sessions.Count() > 0 && sessions.Last().duration == null)
             {
-                this.latestSession = sessions.Last();
+                StreamSessionsAnalyticModel latestSession = sessions.Last();
+                UptimeChatCommand.SetUptime(latestSession.dateTime);
             }
         }
     }
