@@ -1,10 +1,7 @@
-﻿using Mixer.Base.Web;
-using MixItUp.Base.Services;
+﻿using MixItUp.Base.Services;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
@@ -28,7 +25,7 @@ namespace MixItUp.Base.Util
         {
             try
             {
-                Logger.fileService.SaveFile(Logger.CurrentLogFileName, message + Environment.NewLine + Environment.NewLine, create: false);
+                Logger.fileService.AppendFile(Logger.CurrentLogFileName, DateTimeOffset.Now.ToString() + " - " + message + Environment.NewLine + Environment.NewLine);
             }
             catch (Exception) { }
         }

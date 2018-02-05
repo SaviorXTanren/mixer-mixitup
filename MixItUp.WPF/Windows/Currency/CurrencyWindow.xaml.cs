@@ -487,7 +487,7 @@ namespace MixItUp.WPF.Windows.Currency
                         fileContents.AppendLine(string.Format("{0} {1} {2}", userData.ID, userData.UserName, userData.GetCurrencyAmount(this.currency)));
                     }
 
-                    await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString(), create: true);
+                    await ChannelSession.Services.FileService.CreateFile(filePath, fileContents.ToString());
                 }
             });
         }

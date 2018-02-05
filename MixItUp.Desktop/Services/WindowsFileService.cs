@@ -31,11 +31,23 @@ namespace MixItUp.Desktop.Files
             return null;
         }
 
-        public async Task SaveFile(string filePath, string data, bool create = true)
+        public async Task CreateFile(string filePath, string data)
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter(File.Open(filePath, create ? FileMode.Create : FileMode.Append)))
+                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
+                {
+                    await writer.WriteAsync(data);
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        public async Task AppendFile(string filePath, string data)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
                 {
                     await writer.WriteAsync(data);
                 }

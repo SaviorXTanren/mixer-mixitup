@@ -16,7 +16,7 @@ namespace MixItUp.Base.Util
 
         public static async Task SerializeToFile<T>(string filePath, T data)
         {
-            await SerializerHelper.fileService.SaveFile(filePath, SerializerHelper.SerializeToString(data));
+            await SerializerHelper.fileService.AppendFile(filePath, SerializerHelper.SerializeToString(data));
         }
 
         public static string SerializeToString<T>(T data)
