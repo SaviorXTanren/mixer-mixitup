@@ -106,18 +106,6 @@ namespace MixItUp.Base.ViewModel.User
             : this(viewer.ID, viewer.UserName)
         {
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
-
-            UserCurrencyViewModel rank = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.IsRank);
-            if (rank != null)
-            {
-                this.SetCurrencyAmount(rank, (int)viewer.RankPoints);
-            }
-
-            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => !c.IsRank);
-            if (currency != null)
-            {
-                this.SetCurrencyAmount(currency, (int)viewer.Currency);
-            }
         }
 
         public UserDataViewModel(DbDataReader dataReader)

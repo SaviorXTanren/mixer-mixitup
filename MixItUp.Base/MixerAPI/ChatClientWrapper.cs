@@ -312,6 +312,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task AddMessage(ChatMessageViewModel message)
         {
+            this.Messages.Add(message);
+
             if (!this.ChatUsers.ContainsKey(message.User.ID))
             {
                 await this.AddUser(message.User);
@@ -490,8 +492,6 @@ namespace MixItUp.Base.MixerAPI
 
         private void ChatClient_OnClearMessagesOccurred(object sender, ChatClearMessagesEventModel e)
         {
-            this.Messages.Clear();
-
             this.OnClearMessagesOccurred(sender, new EventArgs());
         }
 

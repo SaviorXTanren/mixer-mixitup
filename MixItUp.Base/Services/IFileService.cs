@@ -8,7 +8,8 @@ namespace MixItUp.Base.Services
 
         Task<string> OpenFile(string filePath);
 
-        Task SaveFile(string filePath, string data, bool create = true);
+        Task CreateFile(string filePath, string data);
+        Task AppendFile(string filePath, string data);
 
         string ShowOpenFolderDialog();
 

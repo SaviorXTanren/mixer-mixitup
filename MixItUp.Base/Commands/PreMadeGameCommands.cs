@@ -6,10 +6,17 @@ namespace MixItUp.Base.Commands
 {
     internal static class PreMadeGameCommandHelper
     {
-        public static CustomCommand CreateCustomChatCommand(string text, bool isWhisper = false)
+        public static CustomCommand CreateCustomChatCommand(string text)
         {
             CustomCommand command = new CustomCommand("Game Custom Command");
-            command.Actions.Add(new ChatAction(text, isWhisper));
+            command.Actions.Add(new ChatAction(text));
+            return command;
+        }
+
+        public static CustomCommand CreateCustomWhisperChatCommand(string text)
+        {
+            CustomCommand command = new CustomCommand("Game Custom Command");
+            command.Actions.Add(new ChatAction(text, isWhisper: true));
             return command;
         }
     }
@@ -50,11 +57,11 @@ namespace MixItUp.Base.Commands
         {
             this.GameStartedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username is starting a heist! Type \"!heist <BET>\" in chat to join in!");
             this.GameEndedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("The cops have shown up! Everyone from the heist scatters with whatever they were able to get...");
-            this.UserJoinedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("You've hopped into the heist van! Let's see if you can pull it off...", isWhisper: true);
+            this.UserJoinedCommand = PreMadeGameCommandHelper.CreateCustomWhisperChatCommand("You've hopped into the heist van! Let's see if you can pull it off...");
             this.NotEnoughUsersCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Apparently not enough people wanted to join @$username...");
 
-            this.Outcomes.Add(new GameOutcome("Win", PreMadeGameCommandHelper.CreateCustomChatCommand("You made out successfully with $gamepayout!", isWhisper: true)));
-            this.Outcomes.Add(new GameOutcome("Super Win", PreMadeGameCommandHelper.CreateCustomChatCommand("You made out like a SUPER BANDIT with $gamepayout!", isWhisper: true)));
+            this.Outcomes.Add(new GameOutcome("Win", PreMadeGameCommandHelper.CreateCustomWhisperChatCommand("You made out successfully with $gamepayout!")));
+            this.Outcomes.Add(new GameOutcome("Super Win", PreMadeGameCommandHelper.CreateCustomWhisperChatCommand("You made out like a SUPER BANDIT with $gamepayout!")));
 
             GameOutcomeGroup userGroup = new GameOutcomeGroup(UserRole.User);
             userGroup.Probabilities.Add(new GameOutcomeProbability(40, 25, "Win"));
@@ -71,7 +78,7 @@ namespace MixItUp.Base.Commands
             modGroup.Probabilities.Add(new GameOutcomeProbability(10, 75, "Super Win"));
             this.Groups.Add(modGroup);
 
-            this.LoseLeftoverCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Tough luck, the cops caught you before you could get anything good!", isWhisper: true);
+            this.LoseLeftoverCommand = PreMadeGameCommandHelper.CreateCustomWhisperChatCommand("Tough luck, the cops caught you before you could get anything good!");
         }
     }
 
@@ -84,7 +91,7 @@ namespace MixItUp.Base.Commands
         {
             this.GameStartedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username is starting a game of Russian Roulette! Type \"!rr\" in chat to join in and win the whole pot!");
             this.GameEndedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Russian Roulette has ended...and @$username emerged victorious with $gamepayout $gamecurrencyname!");
-            this.UserJoinedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("You've taken your seat at the circle, let's wait and see what happens!", isWhisper: true);
+            this.UserJoinedCommand = PreMadeGameCommandHelper.CreateCustomWhisperChatCommand("You've taken your seat at the circle, let's wait and see what happens!");
             this.NotEnoughUsersCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Apparently not enough people wanted to join @$username...");
         }
     }

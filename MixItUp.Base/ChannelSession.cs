@@ -147,11 +147,18 @@ namespace MixItUp.Base
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)
         {
-            MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, "LoginRedirectPage.html");
-            if (connection != null)
+            try
             {
-                ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                return await ChannelSession.InitializeInternal(channelName);
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, "LoginRedirectPage.html");
+                if (connection != null)
+                {
+                    ChannelSession.Connection = new MixerConnectionWrapper(connection);
+                    return await ChannelSession.InitializeInternal(channelName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
             return false;
         }
@@ -171,9 +178,14 @@ namespace MixItUp.Base
                     result = await ChannelSession.InitializeInternal();
                 }
             }
-            catch (RestServiceRequestException)
+            catch (RestServiceRequestException ex)
             {
+                Logger.Log(ex);
                 result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, null);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
 
             return result;
