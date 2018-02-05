@@ -3,12 +3,16 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Files
 {
     public class WindowsFileService : IFileService
     {
+        private static SemaphoreSlim createLock = new SemaphoreSlim(1);
+        private static SemaphoreSlim appendLock = new SemaphoreSlim(1);
+
         public Task CreateDirectory(string path)
         {
             if (!Directory.Exists(path))
@@ -35,24 +39,36 @@ namespace MixItUp.Desktop.Files
         {
             try
             {
+                await WindowsFileService.createLock.WaitAsync();
                 using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
                 {
                     await writer.WriteAsync(data);
                 }
+                WindowsFileService.createLock.Release();
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex)
+            {
+                WindowsFileService.createLock.Release();
+                Logger.Log(ex);
+            }
         }
 
         public async Task AppendFile(string filePath, string data)
         {
             try
             {
+                await WindowsFileService.appendLock.WaitAsync();
                 using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
                 {
                     await writer.WriteAsync(data);
                 }
+                WindowsFileService.appendLock.Release();
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex)
+            {
+                WindowsFileService.appendLock.Release();
+                Logger.Log(ex);
+            }
         }
 
         public string ShowOpenFolderDialog()
