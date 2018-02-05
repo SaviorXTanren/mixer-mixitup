@@ -172,14 +172,15 @@
 
                     <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">ScorpBot Settings</TextBlock>
                     
-                    <StackPanel Grid.Row="2" Width="550">
+                    <StackPanel Grid.Row="2" Width="675">
                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
 
                         <TextBlock Margin="20,10,0,0">- Chat Commands</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Timers</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Banned Words</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Viewer Data (Currency, Rank, &amp; Time)</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Viewer Data (Currency, Rank, &amp; Hours)</TextBlock>
+                        <TextBlock Margin="40,0,0,0" TextWrapping="Wrap">- (NOTE: If your Ranks ("points1") are based on Hours, we will create an additional Currency based on the points used in "points1")</TextBlock>
 
                         <TextBlock TextWrapping="Wrap" Margin="0,30,0,0">To get started, use the File Dialog below to select your ScorpBot installation directory (the folder where ScorpBot.exe is located) or can you skip this by doing nothing and clicking Next:</TextBlock>
                     </StackPanel>
