@@ -191,7 +191,6 @@ namespace MixItUp.Base.Commands
 
     public class UptimeChatCommand : PreMadeChatCommand
     {
-        private static StreamSessionsAnalyticModel latestSession;
         private static DateTimeOffset streamStartDateTime = DateTimeOffset.MinValue;
 
         public static void SetUptime(DateTimeOffset dateTime)

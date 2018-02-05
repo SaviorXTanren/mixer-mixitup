@@ -1,7 +1,10 @@
-﻿using MixItUp.Base.Services;
+﻿using Mixer.Base.Web;
+using MixItUp.Base.Services;
 using System;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
@@ -37,19 +40,24 @@ namespace MixItUp.Base.Util
             #if DEBUG
                 await Task.FromResult(0);
             #else
-                try
-                {
-                    using (HttpClientWrapper client = new HttpClientWrapper())
-                    {
-                        client.BaseAddress = new Uri("https://api.mixitupapp.com/analytics/");
-                        HttpResponseMessage response = await client.GetAsync(string.Format("log?username={0}&eventName={1}&eventDetails={2}&appVersion={3}",
-                            ChannelSession.User.username, eventName, eventDetails, Assembly.GetEntryAssembly().GetName().Version.ToString()));
-                    }
-                }
-                catch (Exception ex) { Logger.Log(ex); }
+                await Logger.LogAnalyticsUsageInternal(eventName, eventDetails);        
             #endif
         }
 
         public static async Task LogAnalyticsException(Exception ex) { await Logger.LogAnalyticsUsage("Exception", ex.ToString()); }
+
+        private static async Task LogAnalyticsUsageInternal(string eventName, string eventDetails)
+        {
+            try
+            {
+                using (HttpClientWrapper client = new HttpClientWrapper())
+                {
+                    client.BaseAddress = new Uri("https://api.mixitupapp.com/analytics/");
+                    HttpResponseMessage response = await client.GetAsync(string.Format("log?username={0}&eventName={1}&eventDetails={2}&appVersion={3}",
+                        ChannelSession.User.username, eventName, eventDetails, Assembly.GetEntryAssembly().GetName().Version.ToString()));
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
     }
 }
