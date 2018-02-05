@@ -289,6 +289,9 @@
     <Compile Include="Controls\MainControls\MainMenuControl.xaml.cs">
       <DependentUpon>MainMenuControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\StatisticsControl.xaml.cs">
+      <DependentUpon>StatisticsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NotifyPropertyChangedUserControl.cs" />
     <Compile Include="Controls\MainControls\ServicesControl.xaml.cs">
       <DependentUpon>ServicesControl.xaml</DependentUpon>
@@ -358,6 +361,9 @@
     </Compile>
     <Compile Include="Controls\MainControls\TimerControl.xaml.cs">
       <DependentUpon>TimerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Statistics\StatisticsOverviewControl.xaml.cs">
+      <DependentUpon>StatisticsOverviewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Users\UserProfileAvatarControl.xaml.cs">
       <DependentUpon>UserProfileAvatarControl.xaml</DependentUpon>
@@ -630,6 +636,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MainControls\StatisticsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Services\DeveloperAPIServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -659,6 +669,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\TimerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Statistics\StatisticsOverviewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -828,6 +842,7 @@
     </Content>
     <Resource Include="LICENSE.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>rmdir /Q /S $(TargetDir)Settings\

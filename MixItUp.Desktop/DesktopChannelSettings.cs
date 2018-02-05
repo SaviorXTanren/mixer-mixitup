@@ -106,6 +106,9 @@ namespace MixItUp.Desktop
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]
+        public bool AutoExportStatistics { get; set; }
+
+        [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
 
         [JsonProperty]

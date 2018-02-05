@@ -58,6 +58,8 @@ namespace MixItUp.Base
         bool EnableDeveloperAPI { get; set; }
 
         int MaxMessagesInChat { get; set; }
+
+        bool AutoExportStatistics { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings

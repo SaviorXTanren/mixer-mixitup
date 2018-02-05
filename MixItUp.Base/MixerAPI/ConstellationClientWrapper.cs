@@ -3,7 +3,6 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
@@ -18,13 +17,20 @@ namespace MixItUp.Base.MixerAPI
     {
         public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.Channel.id); } }
 
-        public static ConstellationEventType ResubscribeSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelHostedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__hosted, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelSubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelResubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelResubscribedSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelResubscribeSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
 
         private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
             ConstellationEventTypeEnum.channel__id__followed, ConstellationEventTypeEnum.channel__id__hosted, ConstellationEventTypeEnum.channel__id__subscribed,
             ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared, ConstellationEventTypeEnum.channel__id__update
         };
+
+        public event EventHandler<ConstellationLiveEventModel> OnEventOccurred;
 
         public ConstellationClient Client { get; private set; }
 
@@ -101,22 +107,22 @@ namespace MixItUp.Base.MixerAPI
             {
                 UserDataViewModel userData = ChannelSession.Settings.UserData.GetValueIfExists(user.ID, new UserDataViewModel(user));
 
-                if (e.channel.Equals(UserCurrencyViewModel.ChannelFollowEvent.ToString()))
+                if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()))
                 {
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
                         userData.SetCurrencyAmount(currency, currency.OnFollowBonus);
                     }
                 }
-                else if (e.channel.Equals(UserCurrencyViewModel.ChannelHostedEvent.ToString()))
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()))
                 {
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
                         userData.SetCurrencyAmount(currency, currency.OnHostBonus);
                     }
                 }
-                else if (e.channel.Equals(UserCurrencyViewModel.ChannelSubscribedEvent.ToString()) || e.channel.Equals(UserCurrencyViewModel.ChannelResubscribedEvent.ToString()) ||
-                    e.channel.Equals(UserCurrencyViewModel.ChannelResubscribedSharedEvent.ToString()))
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) ||
+                    e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
                 {
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
@@ -124,7 +130,7 @@ namespace MixItUp.Base.MixerAPI
                     }
                 }
 
-                if (e.channel.Equals(UserCurrencyViewModel.ChannelSubscribedEvent.ToString()))
+                if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
                 {
                     user.SubscribeDate = DateTimeOffset.Now;
                 }
@@ -149,7 +155,7 @@ namespace MixItUp.Base.MixerAPI
                         foundCommand = command;
                     }
 
-                    if (command.EventType == ConstellationEventTypeEnum.channel__id__subscribed && e.channel.Equals(ConstellationClientWrapper.ResubscribeSharedEvent.ToString()))
+                    if (command.EventType == ConstellationEventTypeEnum.channel__id__subscribed && e.channel.Equals(ConstellationClientWrapper.ChannelResubscribeSharedEvent.ToString()))
                     {
                         foundCommand = command;
                     }
@@ -173,6 +179,11 @@ namespace MixItUp.Base.MixerAPI
                         return;
                     }
                 }
+            }
+
+            if (this.OnEventOccurred != null)
+            {
+                this.OnEventOccurred(this, e);
             }
         }
 

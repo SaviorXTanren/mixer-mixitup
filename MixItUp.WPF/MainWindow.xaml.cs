@@ -65,7 +65,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Game Queue", new GameQueueControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Game-Queue");
                 await this.MainMenu.AddMenuItem("Quotes", new QuoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Quotes");
             }
-            this.MainMenu.AddMenuItem("Statistics", "http://mixdash.cc");
+            await this.MainMenu.AddMenuItem("Statistics", new StatisticsControl());
             if (ChannelSession.Settings.IsStreamer)
             {
                 await this.MainMenu.AddMenuItem("Moderation", new ModerationControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Moderation");
