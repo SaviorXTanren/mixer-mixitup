@@ -534,10 +534,10 @@ namespace MixItUp.WPF.Windows.Wizard
 
                 foreach (string quote in this.scorpBotData.Quotes)
                 {
-                    ChannelSession.Settings.Quotes.Add(quote);
+                    ChannelSession.Settings.UserQuotes.Add(new UserQuoteViewModel(quote));
                 }
 
-                if (ChannelSession.Settings.Quotes.Count > 0)
+                if (ChannelSession.Settings.UserQuotes.Count > 0)
                 {
                     ChannelSession.Settings.QuotesEnabled = true;
                 }

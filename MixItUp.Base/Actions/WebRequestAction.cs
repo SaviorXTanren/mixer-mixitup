@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Commands;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -17,6 +18,8 @@ namespace MixItUp.Base.Actions
         None,
         Chat,
         Command,
+        [Name("Special Identifier")]
+        SpecialIdentifier
     }
 
     [DataContract]
@@ -41,6 +44,9 @@ namespace MixItUp.Base.Actions
         public string ResponseCommandName { get; set; }
         [DataMember]
         public string ResponseCommandArgumentsText { get; set; }
+
+        [DataMember]
+        public string SpecialIdentifierName { get; set; }
 
         public WebRequestAction() : base(ActionTypeEnum.WebRequest) { }
 
@@ -92,6 +98,11 @@ namespace MixItUp.Base.Actions
                                     siString.ReplaceSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, webRequestResult);
                                     await command.Perform(user, siString.ToString().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                                 }
+                            }
+                            else if (this.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
+                            {
+                                string replacementText = await this.ReplaceStringWithSpecialModifiers(webRequestResult, user, arguments);
+                                SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
                             }
                         }
                     }

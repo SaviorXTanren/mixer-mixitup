@@ -22,7 +22,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 4;
+        public const int LatestVersion = 5;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -106,6 +106,9 @@ namespace MixItUp.Desktop
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]
+        public bool AutoExportStatistics { get; set; }
+
+        [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
 
         [JsonProperty]
@@ -124,7 +127,7 @@ namespace MixItUp.Desktop
         protected List<GameCommandBase> gameCommandsInternal { get; set; }
 
         [JsonProperty]
-        protected List<string> quotesInternal { get; set; }
+        protected List<UserQuoteViewModel> userQuotesInternal { get; set; }
         [JsonProperty]
         protected List<string> bannedWordsInternal { get; set; }
 
@@ -144,7 +147,7 @@ namespace MixItUp.Desktop
             this.timerCommandsInternal = new List<TimerCommand>();
             this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
-            this.quotesInternal = new List<string>();
+            this.userQuotesInternal = new List<UserQuoteViewModel>();
             this.bannedWordsInternal = new List<string>();
             this.interactiveUserGroupsInternal = new Dictionary<uint, List<InteractiveUserGroupViewModel>>();
             this.interactiveCooldownGroupsInternal = new Dictionary<string, int>();
@@ -178,7 +181,7 @@ namespace MixItUp.Desktop
         public LockedList<GameCommandBase> GameCommands { get; set; }
 
         [JsonIgnore]
-        public LockedList<string> Quotes { get; set; }
+        public LockedList<UserQuoteViewModel> UserQuotes { get; set; }
         [JsonIgnore]
         public LockedList<string> BannedWords { get; set; }
         [JsonIgnore]
@@ -227,7 +230,7 @@ namespace MixItUp.Desktop
             this.TimerCommands = new LockedList<TimerCommand>();
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
-            this.Quotes = new LockedList<string>();
+            this.UserQuotes = new LockedList<UserQuoteViewModel>();
             this.BannedWords = new LockedList<string>();
             this.CommunityBannedWords = new LockedList<string>();
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>();
@@ -244,7 +247,7 @@ namespace MixItUp.Desktop
             this.TimerCommands = new LockedList<TimerCommand>(this.timerCommandsInternal);
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
             this.GameCommands = new LockedList<GameCommandBase>(this.gameCommandsInternal);
-            this.Quotes = new LockedList<string>(this.quotesInternal);
+            this.UserQuotes = new LockedList<UserQuoteViewModel>(this.userQuotesInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(this.interactiveUserGroupsInternal);
             this.InteractiveCooldownGroups = new LockedDictionary<string, int>(this.interactiveCooldownGroupsInternal);
@@ -291,7 +294,7 @@ namespace MixItUp.Desktop
             this.timerCommandsInternal = this.TimerCommands.ToList();
             this.actionGroupCommandsInternal = this.ActionGroupCommands.ToList();
             this.gameCommandsInternal = this.GameCommands.ToList();
-            this.quotesInternal = this.Quotes.ToList();
+            this.userQuotesInternal = this.UserQuotes.ToList();
             this.bannedWordsInternal = this.BannedWords.ToList();
             this.interactiveUserGroupsInternal = this.InteractiveUserGroups.ToDictionary();
             this.interactiveCooldownGroupsInternal = this.InteractiveCooldownGroups.ToDictionary();
@@ -352,6 +355,9 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public List<UserDataViewModel> userDataInternal { get; set; }
+
+        [JsonProperty]
+        public List<string> quotesInternal { get; set; }
 
         [JsonProperty]
         public new Dictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }

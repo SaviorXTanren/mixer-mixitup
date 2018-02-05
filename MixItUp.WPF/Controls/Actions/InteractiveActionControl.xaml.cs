@@ -13,14 +13,6 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class InteractiveActionControl : ActionControlBase
     {
-        private enum InteractiveTypeEnum
-        {
-            [Name("Move User To Group")]
-            AddUserToGroup,
-            [Name("Move Group To Scene")]
-            MoveGroupToScene,
-        }
-
         private InteractiveAction action;
 
         public InteractiveActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
@@ -29,26 +21,27 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveTypeEnum>();
-            this.PermissionsAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
+            this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionTypeEnum>();
+            this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
+            this.InteractiveMoveUserToScenePermissionsAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
 
             if (this.action != null)
             {
-                this.InteractiveGroupNameGrid.Visibility = Visibility.Visible;
-                this.InteractiveGroupNameTextBox.Text = this.action.GroupName;
-
-                this.PermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
-
-                if (!string.IsNullOrEmpty(this.action.MoveGroupToScene))
+                this.InteractiveTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.InteractiveType);
+                if (this.action.InteractiveType == InteractiveActionTypeEnum.MoveUserToGroup)
                 {
-                    this.InteractiveTypeComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveTypeEnum.MoveGroupToScene);
-
-                    this.InteractiveMoveToSceneGrid.Visibility = Visibility.Visible;
-                    this.InteractiveMoveToSceneTextBox.Text = this.action.MoveGroupToScene;
+                    this.InteractiveMoveUserToGroupGroupNameTextBox.Text = this.action.GroupName;
+                    this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
                 }
-                else
+                else if (this.action.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene)
                 {
-                    this.InteractiveTypeComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveTypeEnum.AddUserToGroup);
+                    this.InteractiveMoveGroupToSceneGroupNameTextBox.Text = this.action.GroupName;
+                    this.InteractiveMoveGroupToSceneSceneIDTextBox.Text = this.action.SceneID;
+                }
+                else if (this.action.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
+                {
+                    this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
+                    this.InteractiveMoveUserToSceneSceneIDTextBox.Text = this.action.SceneID;
                 }
             }
             return Task.FromResult(0);
@@ -58,17 +51,24 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.InteractiveTypeComboBox.SelectedIndex >= 0)
             {
-                InteractiveTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
+                InteractiveActionTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveActionTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
 
-                if (interactiveType == InteractiveTypeEnum.AddUserToGroup && !string.IsNullOrEmpty(this.InteractiveGroupNameTextBox.Text) && this.PermissionsAllowedComboBox.SelectedIndex >= 0)
+                if (interactiveType == InteractiveActionTypeEnum.MoveUserToGroup && !string.IsNullOrEmpty(this.InteractiveMoveUserToGroupGroupNameTextBox.Text) &&
+                    this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedIndex >= 0)
                 {
-                    return new InteractiveAction(this.InteractiveGroupNameTextBox.Text, EnumHelper.GetEnumValueFromString<UserRole>((string)this.PermissionsAllowedComboBox.SelectedItem));
+                    return new InteractiveAction(interactiveType, this.InteractiveMoveUserToGroupGroupNameTextBox.Text, null,
+                        EnumHelper.GetEnumValueFromString<UserRole>((string)this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedItem));
                 }
-                else if (interactiveType == InteractiveTypeEnum.MoveGroupToScene && !string.IsNullOrEmpty(this.InteractiveGroupNameTextBox.Text) &&
-                    this.PermissionsAllowedComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.InteractiveMoveToSceneTextBox.Text))
+                else if (interactiveType == InteractiveActionTypeEnum.MoveGroupToScene && !string.IsNullOrEmpty(this.InteractiveMoveGroupToSceneGroupNameTextBox.Text) &&
+                    !string.IsNullOrEmpty(this.InteractiveMoveGroupToSceneSceneIDTextBox.Text))
                 {
-                    return new InteractiveAction(this.InteractiveGroupNameTextBox.Text, this.InteractiveMoveToSceneTextBox.Text,
-                        EnumHelper.GetEnumValueFromString<UserRole>((string)this.PermissionsAllowedComboBox.SelectedItem));
+                    return new InteractiveAction(interactiveType, this.InteractiveMoveGroupToSceneGroupNameTextBox.Text, this.InteractiveMoveGroupToSceneSceneIDTextBox.Text);
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.MoveUserToScene && this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedIndex >= 0 &&
+                    !string.IsNullOrEmpty(this.InteractiveMoveUserToSceneSceneIDTextBox.Text))
+                {
+                    return new InteractiveAction(interactiveType, this.InteractiveMoveUserToSceneSceneIDTextBox.Text, this.InteractiveMoveUserToSceneSceneIDTextBox.Text,
+                        EnumHelper.GetEnumValueFromString<UserRole>((string)this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedItem));
                 }
             }
             return null;
@@ -76,19 +76,23 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void InteractiveTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.InteractiveGroupNameGrid.Visibility = Visibility.Hidden;
-            this.InteractiveMoveToSceneGrid.Visibility = Visibility.Hidden;
+            this.InteractiveMoveUserToGroupGrid.Visibility = Visibility.Hidden;
+            this.InteractiveMoveGroupToSceneGrid.Visibility = Visibility.Hidden;
+            this.InteractiveMoveUserToSceneGrid.Visibility = Visibility.Hidden;
             if (this.InteractiveTypeComboBox.SelectedIndex >= 0)
             {
-                InteractiveTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
-                if (interactiveType == InteractiveTypeEnum.AddUserToGroup)
+                InteractiveActionTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveActionTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
+                if (interactiveType == InteractiveActionTypeEnum.MoveUserToGroup)
                 {
-                    this.InteractiveGroupNameGrid.Visibility = Visibility.Visible;
+                    this.InteractiveMoveUserToGroupGrid.Visibility = Visibility.Visible;
                 }
-                else if (interactiveType == InteractiveTypeEnum.MoveGroupToScene)
+                else if (interactiveType == InteractiveActionTypeEnum.MoveGroupToScene)
                 {
-                    this.InteractiveGroupNameGrid.Visibility = Visibility.Visible;
-                    this.InteractiveMoveToSceneGrid.Visibility = Visibility.Visible;
+                    this.InteractiveMoveGroupToSceneGrid.Visibility = Visibility.Visible;
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.MoveUserToScene)
+                {
+                    this.InteractiveMoveUserToSceneGrid.Visibility = Visibility.Visible;
                 }
             }
         }

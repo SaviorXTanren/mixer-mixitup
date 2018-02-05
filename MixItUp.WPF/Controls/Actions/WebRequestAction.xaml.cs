@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,6 +46,10 @@ namespace MixItUp.WPF.Controls.Actions
                     this.CommandResponseComboBox.SelectedItem = this.action.ResponseCommandName;
                     this.CommandResponseArgumentsTextBox.Text = this.action.ResponseCommandArgumentsText;
                 }
+                else if (this.action.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
+                {
+                    this.SpecialIdentifierResponseTextBox.Text = this.action.SpecialIdentifierName;
+                }
             }
             return Task.FromResult(0);
         }
@@ -68,6 +73,13 @@ namespace MixItUp.WPF.Controls.Actions
                         return new WebRequestAction(this.WebRequestURLTextBox.Text, (string)this.CommandResponseComboBox.SelectedItem, this.CommandResponseArgumentsTextBox.Text);
                     }
                 }
+                else if (responseType == WebRequestResponseActionTypeEnum.SpecialIdentifier)
+                {
+                    if (!string.IsNullOrEmpty(this.SpecialIdentifierResponseTextBox.Text) && this.SpecialIdentifierResponseTextBox.Text.All(c => Char.IsLetterOrDigit(c)))
+                    {
+                        return new WebRequestAction(this.WebRequestURLTextBox.Text, WebRequestResponseActionTypeEnum.SpecialIdentifier) { SpecialIdentifierName = this.SpecialIdentifierResponseTextBox.Text };
+                    }
+                }
                 else
                 {
                     return new WebRequestAction(this.WebRequestURLTextBox.Text);
@@ -84,6 +96,7 @@ namespace MixItUp.WPF.Controls.Actions
 
                 this.ChatResponseActionGrid.Visibility = (responseType == WebRequestResponseActionTypeEnum.Chat) ? Visibility.Visible : Visibility.Collapsed;
                 this.CommandResponseActionGrid.Visibility = (responseType == WebRequestResponseActionTypeEnum.Command) ? Visibility.Visible : Visibility.Collapsed;
+                this.SpecialIdentifierResponseActionGrid.Visibility = (responseType == WebRequestResponseActionTypeEnum.SpecialIdentifier) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
     }

@@ -11,6 +11,13 @@ namespace MixItUp.Base.Util
 {
     public class SpecialIdentifierStringBuilder
     {
+        private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
+
+        public static void AddCustomSpecialIdentifier(string specialIdentifier, string replacement)
+        {
+            SpecialIdentifierStringBuilder.CustomSpecialIdentifiers[specialIdentifier] = replacement;
+        }
+
         public static string ConvertScorpBotText(string text)
         {
             text = text.Replace("$user ", "@$username ");
@@ -44,6 +51,16 @@ namespace MixItUp.Base.Util
 
         public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments = null)
         {
+            foreach (string counter in ChannelSession.Counters.Keys)
+            {
+                this.ReplaceSpecialIdentifier(counter, ChannelSession.Counters[counter].ToString());
+            }
+
+            foreach (var kvp in SpecialIdentifierStringBuilder.CustomSpecialIdentifiers)
+            {
+                this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
+            }
+
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
@@ -144,11 +161,6 @@ namespace MixItUp.Base.Util
                 }
 
                 this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
-            }
-
-            foreach (string counter in ChannelSession.Counters.Keys)
-            {
-                this.ReplaceSpecialIdentifier(counter, ChannelSession.Counters[counter].ToString());
             }
         }
 

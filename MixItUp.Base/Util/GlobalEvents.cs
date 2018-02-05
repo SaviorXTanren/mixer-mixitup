@@ -33,8 +33,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<string> OnQuoteAdded;
-        public static void QuoteAdded(string quote)
+        public static event EventHandler<UserQuoteViewModel> OnQuoteAdded;
+        public static void QuoteAdded(UserQuoteViewModel quote)
         {
             if (GlobalEvents.OnQuoteAdded != null)
             {

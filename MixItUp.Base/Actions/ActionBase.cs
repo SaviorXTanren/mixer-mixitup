@@ -36,6 +36,8 @@ namespace MixItUp.Base.Actions
         WebRequest,
         [Name("Action Group")]
         ActionGroup,
+        [Name("Special Identifier")]
+        SpecialIdentifier,
 
         Custom = 99,
     }

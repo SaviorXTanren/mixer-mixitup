@@ -52,5 +52,9 @@
             <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Arguments ($webrequestresult = Result Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
+        <Grid x:Name="SpecialIdentifierResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
+            <TextBox x:Name="SpecialIdentifierResponseTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
     </Grid>
 </local:ActionControlBase>

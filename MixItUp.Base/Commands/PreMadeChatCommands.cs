@@ -349,7 +349,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (ChannelSession.Settings.QuotesEnabled)
                     {
-                        if (ChannelSession.Settings.Quotes.Count > 0)
+                        if (ChannelSession.Settings.UserQuotes.Count > 0)
                         {
                             int quoteIndex = 0;
                             if (arguments.Count() == 1)
@@ -368,7 +368,7 @@ namespace MixItUp.Base.Commands
                                     return;
                                 }
 
-                                if (quoteIndex >= ChannelSession.Settings.Quotes.Count)
+                                if (quoteIndex >= ChannelSession.Settings.UserQuotes.Count)
                                 {
                                     await ChannelSession.Chat.Whisper(user.UserName, "There is no quote with a number that high");
                                     return;
@@ -377,12 +377,11 @@ namespace MixItUp.Base.Commands
                             else
                             {
                                 Random random = new Random();
-                                quoteIndex = random.Next(ChannelSession.Settings.Quotes.Count);
+                                quoteIndex = random.Next(ChannelSession.Settings.UserQuotes.Count);
                             }
 
-                            string quote = ChannelSession.Settings.Quotes[quoteIndex];
-
-                            await ChannelSession.Chat.SendMessage("Quote #" + (quoteIndex + 1) + ": \"" + quote + "\"");
+                            UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes[quoteIndex];
+                            await ChannelSession.Chat.SendMessage("Quote #" + (quoteIndex + 1) + ": " + quote.ToString());
                         }
                         else
                         {
@@ -413,17 +412,18 @@ namespace MixItUp.Base.Commands
                         quoteBuilder.Append(arg + " ");
                     }
 
-                    string quote = quoteBuilder.ToString();
-                    quote = quote.Trim(new char[] { ' ', '\'', '\"' });
+                    string quoteText = quoteBuilder.ToString();
+                    quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    ChannelSession.Settings.Quotes.Add(quote);
+                    UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.Channel.type);
+                    ChannelSession.Settings.UserQuotes.Add(quote);
                     await ChannelSession.SaveSettings();
 
                     GlobalEvents.QuoteAdded(quote);
 
                     if (ChannelSession.Chat != null)
                     {
-                        await ChannelSession.Chat.SendMessage("Added Quote: \"" + quote + "\"");
+                        await ChannelSession.Chat.SendMessage("Added Quote: \"" + quote.ToString() + "\"");
                     }
                 }
                 else

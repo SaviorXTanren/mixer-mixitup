@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -50,7 +51,8 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    ChannelSession.Settings.Quotes.Add(this.AddQuoteTextBox.Text);
+                    UserQuoteViewModel newQuote = new UserQuoteViewModel(this.AddQuoteTextBox.Text, DateTimeOffset.Now, ChannelSession.Channel.type);
+                    ChannelSession.Settings.UserQuotes.Add(newQuote);
                     this.AddQuoteTextBox.Clear();
                     await ChannelSession.SaveSettings();
                     this.RefreshList();
@@ -63,10 +65,10 @@ namespace MixItUp.WPF.Controls.MainControls
             Button button = (Button)sender;
             if (button.DataContext != null)
             {
-                string quote = (string)button.DataContext;
+                UserQuoteViewModel quote = (UserQuoteViewModel)button.DataContext;
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    ChannelSession.Settings.Quotes.Remove(quote);
+                    ChannelSession.Settings.UserQuotes.Remove(quote);
                     await ChannelSession.SaveSettings();
                     this.RefreshList();
                 });
@@ -76,17 +78,17 @@ namespace MixItUp.WPF.Controls.MainControls
         private void RefreshList()
         {
             this.quotes.Clear();
-            foreach (string quote in ChannelSession.Settings.Quotes.OrderBy(q => q))
+            foreach (UserQuoteViewModel quote in ChannelSession.Settings.UserQuotes)
             {
-                this.quotes.Add(quote);
+                this.quotes.Add(quote.ToString());
             }
         }
 
-        private void GlobalEvents_OnQuoteAdded(object sender, string quote)
+        private void GlobalEvents_OnQuoteAdded(object sender, UserQuoteViewModel quote)
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                this.quotes.Add(quote);
+                this.quotes.Add(quote.ToString());
             }));
         }
     }
