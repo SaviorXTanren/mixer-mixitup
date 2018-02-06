@@ -366,6 +366,25 @@ namespace MixItUp.Desktop.Services
                     }
                 }
 
+                foreach (GameCommandBase game in settings.GameCommands)
+                {
+                    if (game is IndividualProbabilityGameCommand)
+                    {
+                        IndividualProbabilityGameCommand individualGame = (IndividualProbabilityGameCommand)game;
+                        DesktopSettingsUpgrader.SetAllGameChatActionsToWhispers(individualGame.UserJoinedCommand);
+                        DesktopSettingsUpgrader.SetAllGameChatActionsToWhispers(individualGame.LoseLeftoverCommand);
+                        foreach (GameOutcome outcome in individualGame.Outcomes)
+                        {
+                            DesktopSettingsUpgrader.SetAllGameChatActionsToWhispers(outcome.ResultCommand);
+                        }
+                    }
+                    else if (game is OnlyOneWinnerGameCommand)
+                    {
+                        OnlyOneWinnerGameCommand oneWinnerGame = (OnlyOneWinnerGameCommand)game;
+                        DesktopSettingsUpgrader.SetAllGameChatActionsToWhispers(oneWinnerGame.UserJoinedCommand);
+                    }
+                }
+
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }
@@ -417,6 +436,22 @@ namespace MixItUp.Desktop.Services
                 }
             }
             return text;
+        }
+
+        private static void SetAllGameChatActionsToWhispers(CustomCommand command)
+        {
+            if (command != null)
+            {
+                foreach (ActionBase action in command.Actions)
+                {
+                    if (action is ChatAction)
+                    {
+                        ChatAction cAction = (ChatAction)action;
+                        cAction.IsWhisper = true;
+                        cAction.SendAsStreamer = false;
+                    }
+                }
+            }
         }
     }
 
