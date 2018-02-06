@@ -312,7 +312,7 @@ namespace MixItUp.Base
 
                     ChannelSession.Connection.Initialize();
 
-                    if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect())
+                    if (!await ChannelSession.Chat.Connect(connectionAttempts: 5) || !await ChannelSession.Constellation.Connect())
                     {
                         return false;
                     }

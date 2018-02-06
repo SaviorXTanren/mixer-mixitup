@@ -47,79 +47,83 @@ namespace MixItUp.Base.MixerAPI
             this.Messages = new List<ChatMessageViewModel>();
         }
 
-        public async Task<bool> Connect()
+        public async Task<bool> Connect(int connectionAttempts = 1)
         {
-            if (ChannelSession.Connection != null)
+            for (int i = 0; i < connectionAttempts; i++)
             {
-                this.Client = await this.ConnectAndAuthenticateChatClient(ChannelSession.Connection);
-                if (this.Client != null)
+                if (ChannelSession.Connection != null)
                 {
-                    this.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-                    this.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-                    this.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                    this.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                    this.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-                    this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-                    this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-                    this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                    this.Client.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
-                    this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
-                    this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    this.Client = await this.ConnectAndAuthenticateChatClient(ChannelSession.Connection);
+                    if (this.Client != null)
                     {
-                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                    }
-
-                    foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
-                    {
-                        UserViewModel user = new UserViewModel(chatUser);
-                        await user.SetDetails(checkForFollow: false);
-                        this.ChatUsers[user.ID] = user;
-                    }
-
-                    if (this.ChatUsers.Count > 0)
-                    {
-                        Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.ChatUsers.Values.Select(u => u.GetModel()));
-                        foreach (var kvp in chatFollowers)
+                        this.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                        this.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                        this.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                        this.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                        this.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                        this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                        this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                        this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                        this.Client.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
+                        this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                        this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
                         {
-                            this.ChatUsers[kvp.Key.id].SetFollowDate(kvp.Value);
-                        }
-                    }
-
-                    if (ChannelSession.IsStreamer)
-                    {
-                        ChannelSession.PreMadeChatCommands.Clear();
-                        foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
-                        {
-                            ChannelSession.PreMadeChatCommands.Add(command);
+                            this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
                         }
 
-                        foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
+                        foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
                         {
-                            PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
-                            if (command != null)
+                            UserViewModel user = new UserViewModel(chatUser);
+                            await user.SetDetails(checkForFollow: false);
+                            this.ChatUsers[user.ID] = user;
+                        }
+
+                        if (this.ChatUsers.Count > 0)
+                        {
+                            Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.ChatUsers.Values.Select(u => u.GetModel()));
+                            foreach (var kvp in chatFollowers)
                             {
-                                command.UpdateFromSettings(commandSetting);
+                                this.ChatUsers[kvp.Key.id].SetFollowDate(kvp.Value);
                             }
                         }
+
+                        if (ChannelSession.IsStreamer)
+                        {
+                            ChannelSession.PreMadeChatCommands.Clear();
+                            foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
+                            {
+                                ChannelSession.PreMadeChatCommands.Add(command);
+                            }
+
+                            foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
+                            {
+                                PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
+                                if (command != null)
+                                {
+                                    command.UpdateFromSettings(commandSetting);
+                                }
+                            }
+                        }
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await this.ChatUserRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                        return true;
                     }
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.ChatUserRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-                    return true;
                 }
+                await Task.Delay(1000);
             }
             return false;
         }
