@@ -304,6 +304,12 @@ namespace MixItUp.Desktop.Services
                 commands.AddRange(settings.EventCommands);
                 commands.AddRange(settings.TimerCommands);
 
+                UserCurrencyViewModel currency = settings.Currencies.Values.FirstOrDefault(c => !c.IsRank);
+                if (currency == null)
+                {
+                    currency = settings.Currencies.Values.FirstOrDefault();
+                }
+
                 foreach (CommandBase command in commands)
                 {
                     foreach (ActionBase action in command.Actions)
@@ -322,6 +328,40 @@ namespace MixItUp.Desktop.Services
                             }
                             nAction.SceneID = nAction.MoveGroupToScene;
 #pragma warning restore CS0612 // Type or member is obsolete
+                        }
+
+                        if (currency != null)
+                        {
+                            if (action is ChatAction)
+                            {
+                                ChatAction nAction = (ChatAction)action;
+                                nAction.ChatText = nAction.ChatText.Replace("$usercurrencyname", currency.Name);
+                            }
+                            else if (action is CurrencyAction)
+                            {
+                                CurrencyAction nAction = (CurrencyAction)action;
+                                nAction.ChatText = nAction.ChatText.Replace("$usercurrencyname", currency.Name);
+                            }
+                            else if (action is OBSStudioAction)
+                            {
+                                OBSStudioAction nAction = (OBSStudioAction)action;
+                                nAction.SourceText = nAction.SourceText.Replace("$usercurrencyname", currency.Name);
+                            }
+                            else if (action is OverlayAction)
+                            {
+                                OverlayAction nAction = (OverlayAction)action;
+                                nAction.Text = nAction.Text.Replace("$usercurrencyname", currency.Name);
+                            }
+                            else if (action is TextToSpeechAction)
+                            {
+                                TextToSpeechAction nAction = (TextToSpeechAction)action;
+                                nAction.SpeechText = nAction.SpeechText.Replace("$usercurrencyname", currency.Name);
+                            }
+                            else if (action is XSplitAction)
+                            {
+                                XSplitAction nAction = (XSplitAction)action;
+                                nAction.SourceText = nAction.SourceText.Replace("$usercurrencyname", currency.Name);
+                            }
                         }
                     }
                 }
