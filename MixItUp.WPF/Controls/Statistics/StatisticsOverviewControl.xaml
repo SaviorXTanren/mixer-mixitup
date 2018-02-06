@@ -21,12 +21,12 @@
             <ColumnDefinition Width="30" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="30" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
         <MaterialDesign:PackIcon x:Name="StatisticIcon" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource PrimaryColor}" />
 
-        <TextBlock x:Name="StatisticNameTextBlock" Grid.Column="2" VerticalAlignment="Center" />
+        <TextBlock x:Name="StatisticNameTextBlock" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" />
 
         <TextBlock x:Name="StatisticOverviewDataTextBlock" Grid.Column="4" VerticalAlignment="Center" />
     </Grid>

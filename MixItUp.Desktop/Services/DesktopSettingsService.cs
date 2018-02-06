@@ -345,12 +345,18 @@ namespace MixItUp.Desktop.Services
                             else if (action is OBSStudioAction)
                             {
                                 OBSStudioAction nAction = (OBSStudioAction)action;
-                                nAction.SourceText = nAction.SourceText.Replace("$usercurrencyname", currency.Name);
+                                if (!string.IsNullOrEmpty(nAction.SourceText))
+                                {
+                                    nAction.SourceText = nAction.SourceText.Replace("$usercurrencyname", currency.Name);
+                                }
                             }
                             else if (action is OverlayAction)
                             {
                                 OverlayAction nAction = (OverlayAction)action;
-                                nAction.Text = nAction.Text.Replace("$usercurrencyname", currency.Name);
+                                if (!string.IsNullOrEmpty(nAction.Text))
+                                {
+                                    nAction.Text = nAction.Text.Replace("$usercurrencyname", currency.Name);
+                                }
                             }
                             else if (action is TextToSpeechAction)
                             {
@@ -360,7 +366,10 @@ namespace MixItUp.Desktop.Services
                             else if (action is XSplitAction)
                             {
                                 XSplitAction nAction = (XSplitAction)action;
-                                nAction.SourceText = nAction.SourceText.Replace("$usercurrencyname", currency.Name);
+                                if (!string.IsNullOrEmpty(nAction.SourceText))
+                                {
+                                    nAction.SourceText = nAction.SourceText.Replace("$usercurrencyname", currency.Name);
+                                }
                             }
                         }
                     }
