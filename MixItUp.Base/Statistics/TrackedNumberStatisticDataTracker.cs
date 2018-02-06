@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Statistics
 {
-    public class NumberStatisticDataTracker : StatisticDataTrackerBase
+    public class TrackedNumberStatisticDataTracker : StatisticDataTrackerBase
     {
         public List<int> allNumbers = new List<int>();
 
-        public NumberStatisticDataTracker(string name, Func<StatisticDataTrackerBase, Task> updateFunction)
+        public TrackedNumberStatisticDataTracker(string name, Func<StatisticDataTrackerBase, Task> updateFunction)
             : base(name, updateFunction)
         { }
 
@@ -19,6 +19,6 @@ namespace MixItUp.Base.Statistics
 
         public void AddValue(int value) { this.allNumbers.Add(value); }
 
-        public override string ToString() { return string.Format("Max: {0}, Average: {1}", this.Max, this.Average); }
+        public override string ToString() { return string.Format("Max: {0},    Average: {1}", this.Max, this.Average); }
     }
 }

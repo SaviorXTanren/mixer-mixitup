@@ -23,12 +23,6 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            Process.Start(e.Uri.AbsoluteUri);
-            e.Handled = true;
-        }
-
         private void TwitterButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://twitter.com/MixItUpApp"); }
 
         private void DiscordButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://discord.gg/taj4Gj4"); }

@@ -24,6 +24,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private EventStatisticsDataTracker followTracker = new EventStatisticsDataTracker("Follows");
 
+        private EventStatisticsDataTracker hostsTracker = new EventStatisticsDataTracker("Hosts", (EventStatisticsDataTracker dataTracker) =>
+        {
+            return string.Format("Total Hosts: {0},    Total Viewers From Hosts: {1},    Average Viewers From Hosts: {2}", dataTracker.MaxKeys, dataTracker.MaxValues, dataTracker.AverageValues);
+        });
+
         public StatisticsControl()
         {
             InitializeComponent();
@@ -35,21 +40,23 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.StatisticsOverviewListView.ItemsSource = this.statisticOverviewControls;
 
-            this.statisticOverviewControls.Add(new StatisticsOverviewControl(new NumberStatisticDataTracker("Viewers", (StatisticDataTrackerBase stats) =>
+            this.statisticOverviewControls.Add(new StatisticsOverviewControl(new TrackedNumberStatisticDataTracker("Viewers", (StatisticDataTrackerBase stats) =>
             {
-                NumberStatisticDataTracker numberStats = (NumberStatisticDataTracker)stats;
+                TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
                 numberStats.AddValue((int)ChannelSession.Channel.viewersCurrent);
                 return Task.FromResult(0);
             }), PackIconKind.Eye));
 
-            this.statisticOverviewControls.Add(new StatisticsOverviewControl(new NumberStatisticDataTracker("Chatters", (StatisticDataTrackerBase stats) =>
+            this.statisticOverviewControls.Add(new StatisticsOverviewControl(new TrackedNumberStatisticDataTracker("Chatters", (StatisticDataTrackerBase stats) =>
             {
-                NumberStatisticDataTracker numberStats = (NumberStatisticDataTracker)stats;
+                TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
                 numberStats.AddValue(ChannelSession.Chat.ChatUsers.Count);
                 return Task.FromResult(0);
             }), PackIconKind.MessageTextOutline));
 
             this.statisticOverviewControls.Add(new StatisticsOverviewControl(this.followTracker, PackIconKind.AccountPlus));
+
+            this.statisticOverviewControls.Add(new StatisticsOverviewControl(this.hostsTracker, PackIconKind.AccountMultiple));
 
             ChannelSession.Constellation.OnEventOccurred += Constellation_OnEventOccurred;
 
@@ -93,6 +100,10 @@ namespace MixItUp.WPF.Controls.MainControls
             if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()) && user != null)
             {
                 this.followTracker.OnStatisticEventOccurred(user.UserName);
+            }
+            else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()) && channel != null)
+            {
+                this.followTracker.OnStatisticEventOccurred(channel.token, (int)channel.viewersCurrent);
             }
         }
     }

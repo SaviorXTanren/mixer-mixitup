@@ -1,25 +1,32 @@
 ﻿using MixItUp.Base.Util;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Statistics
 {
     public class UniqueNumberStatisticDataTracker : StatisticDataTrackerBase
     {
-        protected LockedHashSet<string> UniqueData { get; private set; }
+        public LockedDictionary<string, int> UniqueData { get; private set; }
 
         public UniqueNumberStatisticDataTracker(string name, Func<StatisticDataTrackerBase, Task> updateFunction)
             : base(name, updateFunction)
         {
-            this.UniqueData = new LockedHashSet<string>();
+            this.UniqueData = new LockedDictionary<string, int>();
         }
 
-        public int Max { get { return this.UniqueData.Count; } }
+        public int MaxKeys { get { return this.UniqueData.Count; } }
 
-        public double Average { get { return ((double)this.Max) / ((double)this.TotalMinutes); } }
+        public double AverageKeys { get { return ((double)this.MaxKeys) / ((double)this.TotalMinutes); } }
 
-        public void AddValue(string data) { this.UniqueData.Add(data); }
+        public int MaxValues { get { return this.UniqueData.Values.Sum(); } }
 
-        public override string ToString() { return string.Format("Total: {0}, Average: {1}", this.Max, this.Average); }
+        public double AverageValues { get { return ((double)this.MaxValues) / ((double)this.TotalMinutes); } }
+
+        public void AddValue(string key) { this.AddValue(key, 0); }
+
+        public void AddValue(string key, int value) { this.UniqueData.Add(key, value); }
+
+        public override string ToString() { return string.Format("Total: {0},    Average: {1}", this.MaxKeys, this.AverageKeys); }
     }
 }

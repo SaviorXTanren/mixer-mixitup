@@ -46,9 +46,9 @@
                 <CheckBox Grid.Column="2" x:Name="AutoExportCheckBox" Checked="AutoExportCheckBox_Checked" Unchecked="AutoExportCheckBox_Checked" />
             </Grid>
 
-            <Button Grid.Column="2" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click">Export To File</Button>
+            <Button Grid.Column="2" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click" IsEnabled="False">Export To File</Button>
 
-            <TextBlock Grid.Column="4" VerticalAlignment="Center">Also check out <Hyperlink NavigateUri="http://mixdash.cc">http://mixdash.cc</Hyperlink></TextBlock>
+            <TextBlock Grid.Column="4" VerticalAlignment="Center">Also check out: <Hyperlink NavigateUri="http://mixdash.cc" RequestNavigate="Hyperlink_RequestNavigate">http://mixdash.cc</Hyperlink></TextBlock>
         </Grid>
     </Grid>
 </local:MainControlBase>
