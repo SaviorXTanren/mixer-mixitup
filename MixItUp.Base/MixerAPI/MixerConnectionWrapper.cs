@@ -108,7 +108,21 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task UpdateInteractiveGameVersion(InteractiveGameVersionModel version) { await this.RunAsync(this.Connection.Interactive.UpdateInteractiveGameVersion(version)); }
 
-        private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e) { Logger.Log(string.Format("Rest API Request: {0} - {1}", e.Item1, e.Item2)); }
+        private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
+        {
+            if (e.Item2 != null)
+            {
+                try
+                {
+                    Logger.Log(string.Format("Rest API Request: {0} - {1}", e.Item1, e.Item2.ReadAsStringAsync().Result));
+                }
+                catch (Exception) { }
+            }
+            else
+            {
+                Logger.Log(string.Format("Rest API Request: {0}", e.Item1));
+            }
+        }
 
         private void RestAPIService_OnSuccessResponseReceived(object sender, string e) { Logger.Log(string.Format("Rest API Success Response: {0}", e)); }
 
