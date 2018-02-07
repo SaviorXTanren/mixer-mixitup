@@ -18,7 +18,7 @@ namespace MixItUp.WPF
     {
         public string RestoredSettingsFilePath = null;
 
-        private bool RestartApplication = false;
+        private bool restartApplication = false;
 
         private bool shutdownStarted = false;
         private bool shutdownComplete = false;
@@ -32,8 +32,14 @@ namespace MixItUp.WPF
 
         public void Restart()
         {
-            this.RestartApplication = true;
+            this.restartApplication = true;
             this.Close();
+        }
+
+        public void ReRunWizard()
+        {
+            ChannelSession.Settings.ReRunWizard = true;
+            this.Restart();
         }
 
         protected override async Task OnLoaded()
@@ -126,12 +132,10 @@ namespace MixItUp.WPF
 
             await ChannelSession.Close();
 
-            await Task.Delay(2000);
-
             this.shutdownComplete = true;
 
             this.Close();
-            if (this.RestartApplication)
+            if (this.restartApplication)
             {
                 Process.Start(Application.ResourceAssembly.Location);
             }

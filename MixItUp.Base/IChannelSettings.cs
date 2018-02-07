@@ -13,6 +13,7 @@ namespace MixItUp.Base
     {
         int Version { get; set; }
 
+        bool ReRunWizard { get; set; }
         bool DiagnosticLogging { get; set; }
 
         bool IsStreamer { get; set; }

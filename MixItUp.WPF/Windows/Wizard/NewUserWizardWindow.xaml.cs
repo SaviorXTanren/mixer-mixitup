@@ -74,6 +74,8 @@ namespace MixItUp.WPF.Windows.Wizard
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            ChannelSession.Settings.ReRunWizard = false;
+
             MainWindow window = new MainWindow();
             window.Show();
 

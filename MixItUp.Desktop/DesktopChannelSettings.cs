@@ -28,6 +28,8 @@ namespace MixItUp.Desktop
         public int Version { get; set; }
 
         [JsonProperty]
+        public bool ReRunWizard { get; set; }
+        [JsonProperty]
         public bool DiagnosticLogging { get; set; }
 
         [JsonProperty]

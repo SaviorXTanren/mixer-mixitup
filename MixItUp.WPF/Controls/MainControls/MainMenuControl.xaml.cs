@@ -195,11 +195,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ReRunWizardSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (await MessageBoxHelper.ShowConfirmationDialog("This will re-run the New User Wizard and allow you to re-import your data, which could duplicate and overwrite your Commands & User data. Are you sure you wish to do this?"))
+            if (await MessageBoxHelper.ShowConfirmationDialog("Mix It Up will restart and the New User Wizard will be re-run when you log in. This will allow you to re-import your data, which could duplicate and overwrite your Commands & User data. Are you sure you wish to do this?"))
             {
-                NewUserWizardWindow window = new NewUserWizardWindow();
-                window.Show();
-                this.Window.Close();
+                MainWindow mainWindow = (MainWindow)this.Window;
+                mainWindow.ReRunWizard();
             }
         }
 
