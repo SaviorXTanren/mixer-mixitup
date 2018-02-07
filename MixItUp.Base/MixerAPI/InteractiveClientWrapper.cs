@@ -86,6 +86,7 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
+                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                         this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
                         this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
                         this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
@@ -121,6 +122,7 @@ namespace MixItUp.Base.MixerAPI
                 this.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
+                    this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                     this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
                     this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
                     this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;

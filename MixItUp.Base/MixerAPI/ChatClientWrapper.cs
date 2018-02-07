@@ -69,6 +69,7 @@ namespace MixItUp.Base.MixerAPI
                         this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
                         if (ChannelSession.Settings.DiagnosticLogging)
                         {
+                            this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                             this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
                             this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
                             this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
@@ -138,6 +139,7 @@ namespace MixItUp.Base.MixerAPI
                     this.BotClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
+                        this.BotClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
                         this.BotClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
                         this.BotClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
                         this.BotClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
@@ -165,6 +167,7 @@ namespace MixItUp.Base.MixerAPI
                 this.Client.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
+                    this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                     this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
                     this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
                     this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
@@ -184,6 +187,7 @@ namespace MixItUp.Base.MixerAPI
                 this.BotClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
+                    this.BotClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
                     this.BotClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
                     this.BotClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
                     this.BotClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
