@@ -149,7 +149,7 @@ namespace MixItUp.Base
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, "LoginRedirectPage.html");
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);

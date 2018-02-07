@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="mixer-client-csharp" Version="0.5.0.13-beta" />
+    <PackageReference Include="mixer-client-csharp" Version="0.5.0.14-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
