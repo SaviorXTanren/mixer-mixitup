@@ -25,7 +25,7 @@ namespace MixItUp.Base.Statistics
 
         public void AddValue(string key) { this.AddValue(key, 0); }
 
-        public void AddValue(string key, int value) { this.UniqueData.Add(key, value); }
+        public void AddValue(string key, int value) { this.UniqueData[key] = value; }
 
         public override string ToString() { return string.Format("Total: {0},    Average: {1}", this.MaxKeys, this.AverageKeys); }
     }
