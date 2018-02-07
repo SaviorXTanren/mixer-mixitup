@@ -138,6 +138,11 @@ namespace MixItUp.Base
 
         public static void Initialize(ServicesHandlerBase serviceHandler)
         {
+            ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
+            ChannelSession.GameQueue = new LockedList<UserViewModel>();
+
+            ChannelSession.Counters = new LockedDictionary<string, int>();
+
             ChannelSession.Services = serviceHandler;
 
             ChannelSession.Chat = new ChatClientWrapper();
@@ -299,18 +304,13 @@ namespace MixItUp.Base
                     ChannelSession.User = user;
                     ChannelSession.Channel = channel;
 
-                    ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
-                    ChannelSession.GameQueue = new LockedList<UserViewModel>();
-
-                    ChannelSession.Counters = new LockedDictionary<string, int>();
+                    ChannelSession.Connection.Initialize();
 
                     if (ChannelSession.Settings == null)
                     {
                         ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, (channelName == null));
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
-
-                    ChannelSession.Connection.Initialize();
 
                     if (!await ChannelSession.Chat.Connect(connectionAttempts: 5) || !await ChannelSession.Constellation.Connect())
                     {

@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -517,6 +518,8 @@ namespace MixItUp.Desktop.Services
             }
 
             await desktopSettings.Initialize();
+
+            await this.RemoveDuplicateUsers();
         }
 
         public async Task<bool> SaveAndValidate(IChannelSettings settings)
@@ -550,6 +553,34 @@ namespace MixItUp.Desktop.Services
         public string GetFilePath(IChannelSettings settings)
         {
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
+        }
+
+        public async Task RemoveDuplicateUsers()
+        {
+            var duplicateGroups = ChannelSession.Settings.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
+            foreach (var duplicateGroup in duplicateGroups)
+            {
+                UserModel realUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
+                if (realUser != null)
+                {
+                    UserDataViewModel correctUserData = duplicateGroup.FirstOrDefault(u => u.ID.Equals(realUser.id));
+                    if (correctUserData != null)
+                    {
+                        foreach (var possibleDupeUser in duplicateGroup)
+                        {
+                            if (realUser.id != possibleDupeUser.ID)
+                            {
+                                correctUserData.ViewingMinutes += possibleDupeUser.ViewingMinutes;
+                                foreach (var currencyData in possibleDupeUser.CurrencyAmounts)
+                                {
+                                    correctUserData.AddCurrencyAmount(currencyData.Key, currencyData.Value.Amount);
+                                }
+                                ChannelSession.Settings.UserData.Remove(possibleDupeUser.ID);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private async Task<IChannelSettings> LoadSettings(string filePath)
