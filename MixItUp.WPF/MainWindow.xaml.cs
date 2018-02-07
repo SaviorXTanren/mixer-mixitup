@@ -124,6 +124,8 @@ namespace MixItUp.WPF
                 }
             }
 
+            await ChannelSession.Close();
+
             await Task.Delay(2000);
 
             this.shutdownComplete = true;
