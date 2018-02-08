@@ -304,7 +304,10 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (result)
                 {
-                    this.GameSelectionGrid.IsEnabled = false;
+                    this.InteractiveGamesComboBox.IsEnabled = false;
+                    this.GroupsButton.IsEnabled = false;
+                    this.RefreshButton.IsEnabled = false;
+
                     this.ConnectButton.Visibility = Visibility.Collapsed;
                     this.DisconnectButton.Visibility = Visibility.Visible;
                     return;
@@ -332,7 +335,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 await ChannelSession.Interactive.Disconnect();
             });
 
-            this.GameSelectionGrid.IsEnabled = true;
+            this.InteractiveGamesComboBox.IsEnabled = true;
+            this.GroupsButton.IsEnabled = true;
+            this.RefreshButton.IsEnabled = true;
+
             this.ConnectButton.Visibility = Visibility.Visible;
             this.DisconnectButton.Visibility = Visibility.Collapsed;
         }
