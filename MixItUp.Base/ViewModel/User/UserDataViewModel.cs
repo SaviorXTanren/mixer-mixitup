@@ -108,7 +108,7 @@ namespace MixItUp.Base.ViewModel.User
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
 
-        public UserDataViewModel(DbDataReader dataReader)
+        public UserDataViewModel(DbDataReader dataReader, IChannelSettings settings)
             : this(uint.Parse(dataReader["ID"].ToString()), dataReader["UserName"].ToString())
         {
             this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
@@ -118,9 +118,9 @@ namespace MixItUp.Base.ViewModel.User
             {
                 foreach (var kvp in currencyAmounts)
                 {
-                    if (ChannelSession.Settings.Currencies.ContainsKey(kvp.Key))
+                    if (settings.Currencies.ContainsKey(kvp.Key))
                     {
-                        this.SetCurrencyAmount(ChannelSession.Settings.Currencies[kvp.Key], kvp.Value);
+                        this.SetCurrencyAmount(settings.Currencies[kvp.Key], kvp.Value);
                     }
                 }
             }

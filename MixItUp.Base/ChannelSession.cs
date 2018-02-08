@@ -337,12 +337,14 @@ namespace MixItUp.Base
                         await ChannelSession.Services.InitializeDeveloperAPI();
                     }
 
-                    GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
+                    await ChannelSession.Services.Settings.CleanUpData(ChannelSession.Settings);
 
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
                     await Logger.LogAnalyticsUsage("LogIn", "Desktop");
+
+                    GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
                     return true;
                 }

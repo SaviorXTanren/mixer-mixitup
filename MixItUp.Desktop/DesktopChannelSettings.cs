@@ -22,7 +22,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 6;
+        public const int LatestVersion = 5;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -267,7 +267,7 @@ namespace MixItUp.Desktop
                     Dictionary<uint, UserDataViewModel> initialUsers = new Dictionary<uint, UserDataViewModel>();
                     await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
                     {
-                        UserDataViewModel userData = new UserDataViewModel(dataReader);
+                        UserDataViewModel userData = new UserDataViewModel(dataReader, this);
                         initialUsers[userData.ID] = userData;
                     });
                     this.UserData = new DatabaseDictionary<uint, UserDataViewModel>(initialUsers);

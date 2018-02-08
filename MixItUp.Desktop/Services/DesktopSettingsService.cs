@@ -540,7 +540,7 @@ namespace MixItUp.Desktop.Services
 
             await desktopSettings.Initialize();
 
-            await this.RemoveDuplicateUsers(desktopSettings);
+            await this.CleanUpData(desktopSettings);
         }
 
         public async Task<bool> SaveAndValidate(IChannelSettings settings)
@@ -576,7 +576,7 @@ namespace MixItUp.Desktop.Services
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
         }
 
-        public async Task RemoveDuplicateUsers(DesktopChannelSettings settings)
+        public async Task CleanUpData(IChannelSettings settings)
         {
             var duplicateGroups = settings.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
             foreach (var duplicateGroup in duplicateGroups)
