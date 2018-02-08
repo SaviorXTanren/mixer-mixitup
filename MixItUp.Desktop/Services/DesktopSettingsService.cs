@@ -45,6 +45,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version3Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version4Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version5Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version6Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -399,6 +400,27 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        private static async Task Version6Upgrade(int version, string filePath)
+        {
+            if (version < 6)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                settings.InitializeDB = false;
+
+                List<LegacyUserDataViewModel> legacyUsers = new List<LegacyUserDataViewModel>();
+                if (settings.IsStreamer)
+                {
+                    string dbPath = ((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(settings);
+                    SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(dbPath);
+                    await databaseWrapper.RunWriteCommand("DELETE FROM Users WHERE UserName IS NULL");
+                }
+
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
         private static string ReplaceSpecialIdentifiersVersion2(string text)
         {
             if (!string.IsNullOrEmpty(text))
@@ -519,7 +541,7 @@ namespace MixItUp.Desktop.Services
 
             await desktopSettings.Initialize();
 
-            await this.RemoveDuplicateUsers();
+            await this.RemoveDuplicateUsers(desktopSettings);
         }
 
         public async Task<bool> SaveAndValidate(IChannelSettings settings)
@@ -555,9 +577,9 @@ namespace MixItUp.Desktop.Services
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
         }
 
-        public async Task RemoveDuplicateUsers()
+        public async Task RemoveDuplicateUsers(DesktopChannelSettings settings)
         {
-            var duplicateGroups = ChannelSession.Settings.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
+            var duplicateGroups = settings.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
             foreach (var duplicateGroup in duplicateGroups)
             {
                 UserModel realUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);

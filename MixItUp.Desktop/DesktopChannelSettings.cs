@@ -22,7 +22,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 5;
+        public const int LatestVersion = 6;
 
         [JsonProperty]
         public int Version { get; set; }

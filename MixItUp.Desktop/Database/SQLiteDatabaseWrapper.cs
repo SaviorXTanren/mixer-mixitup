@@ -56,6 +56,17 @@ namespace MixItUp.Desktop.Database
             });
         }
 
+        public async Task RunWriteCommand(string commandString)
+        {
+            await this.EstablishConnection(async (connection) =>
+            {
+                using (SQLiteCommand command = new SQLiteCommand(commandString, connection))
+                {
+                    await command.ExecuteNonQueryAsync();
+                }
+            });
+        }
+
         public async Task RunWriteCommand(string commandString, IEnumerable<object> parameters)
         {
             await this.EstablishConnection(async (connection) =>
