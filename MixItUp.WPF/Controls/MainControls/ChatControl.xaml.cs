@@ -39,7 +39,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private SemaphoreSlim messageUpdateLock = new SemaphoreSlim(1);
 
         private int totalMessages = 0;
-        private bool updateScrollingToLatest = false;
+        private ScrollViewer chatListScrollViewer;
+        private bool scrolledToEnd = true;
 
         public ChatControl(bool isPopOut = false)
         {
@@ -62,8 +63,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ChatList.ItemsSource = this.MessageControls;
             this.UserList.ItemsSource = this.UserControls;
-
-            this.ChatList.LayoutUpdated += ChatList_LayoutUpdated;
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -101,23 +100,27 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.SendChatAsComboBox.SelectedIndex = 0;
             }
 
-            ScrollViewer scrollViewer = VisualTreeHelpers.GetVisualChild<ScrollViewer>(this.ChatList);
-            if (scrollViewer != null && scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            if (this.scrolledToEnd && this.chatListScrollViewer != null)
             {
-                this.updateScrollingToLatest = true;
+                this.chatListScrollViewer.ScrollToEnd();
             }
 
             return Task.FromResult(0);
         }
 
-        private void ChatList_LayoutUpdated(object sender, EventArgs e)
+        private void ChatList_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (this.updateScrollingToLatest && this.MessageControls.Count > 0)
+            if (this.chatListScrollViewer == null)
             {
-                ScrollViewer scrollViewer = VisualTreeHelpers.GetVisualChild<ScrollViewer>(this.ChatList);
-                scrollViewer.ScrollToEnd();
+                this.chatListScrollViewer = (ScrollViewer)e.OriginalSource;
+            }
 
-                this.updateScrollingToLatest = false;
+            if (this.chatListScrollViewer != null)
+            {
+                if (this.MessageControls.Count > 0)
+                {
+                    this.scrolledToEnd = (this.chatListScrollViewer.VerticalOffset >= this.chatListScrollViewer.ScrollableHeight);
+                }
             }
         }
 
@@ -161,16 +164,15 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await messageUpdateLock.WaitAsync();
 
-            ScrollViewer scrollViewer = VisualTreeHelpers.GetVisualChild<ScrollViewer>(this.ChatList);
-            if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+            ChatMessageControl messageControl = new ChatMessageControl(message);
+            this.MessageControls.Add(messageControl);
+            this.totalMessages++;
+
+            if (this.scrolledToEnd && this.chatListScrollViewer != null)
             {
-                this.updateScrollingToLatest = true;
+                this.chatListScrollViewer.ScrollToEnd();
             }
 
-            ChatMessageControl messageControl = new ChatMessageControl(message);
-
-            this.totalMessages++;
-            this.MessageControls.Add(messageControl);
             while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
             {
                 this.MessageControls.RemoveAt(0);
