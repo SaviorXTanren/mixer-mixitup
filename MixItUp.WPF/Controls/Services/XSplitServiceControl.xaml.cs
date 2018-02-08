@@ -125,7 +125,10 @@ namespace MixItUp.WPF.Controls.Services
             this.DisableXSplitConnectionButton.Visibility = Visibility.Collapsed;
             this.TestXSplitConnectionButton.IsEnabled = false;
 
-            ChannelSession.Services.XSplitServer.Disconnected -= XSplitServer_Disconnected;
+            if (ChannelSession.Services.XSplitServer != null)
+            {
+                ChannelSession.Services.XSplitServer.Disconnected -= XSplitServer_Disconnected;
+            }
             await ChannelSession.Services.DisconnectXSplitServer();
 
             ChannelSession.Settings.EnableXSplitConnection = false;

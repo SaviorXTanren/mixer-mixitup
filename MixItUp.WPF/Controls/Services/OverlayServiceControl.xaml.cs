@@ -133,7 +133,10 @@ namespace MixItUp.WPF.Controls.Services
             this.DisableOverlayButton.Visibility = Visibility.Collapsed;
             this.TestOverlayButton.IsEnabled = false;
 
-            ChannelSession.Services.OverlayServer.Disconnected -= OverlayServer_Disconnected;
+            if (ChannelSession.Services.OverlayServer != null)
+            {
+                ChannelSession.Services.OverlayServer.Disconnected -= OverlayServer_Disconnected;
+            }
             await ChannelSession.Services.DisconnectOverlayServer();
 
             ChannelSession.Settings.EnableOverlay = false;
