@@ -31,7 +31,7 @@ namespace MixItUp.Base.MixerAPI
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         public LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
-        public List<ChatMessageViewModel> Messages { get; private set; }
+        public Dictionary<Guid, ChatMessageViewModel> Messages { get; private set; }
 
         public bool DisableChat { get; set; }
 
@@ -44,7 +44,7 @@ namespace MixItUp.Base.MixerAPI
         public ChatClientWrapper()
         {
             this.ChatUsers = new LockedDictionary<uint, UserViewModel>();
-            this.Messages = new List<ChatMessageViewModel>();
+            this.Messages = new Dictionary<Guid, ChatMessageViewModel>();
         }
 
         public async Task<bool> Connect()
@@ -319,9 +319,13 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private async Task AddMessage(ChatMessageViewModel message)
+        private async Task<bool> AddMessage(ChatMessageViewModel message)
         {
-            this.Messages.Add(message);
+            if (this.Messages.ContainsKey(message.ID))
+            {
+                return false;
+            }
+            this.Messages[message.ID] = message;
 
             if (!this.ChatUsers.ContainsKey(message.User.ID))
             {
@@ -331,7 +335,7 @@ namespace MixItUp.Base.MixerAPI
             if (this.DisableChat && !message.ID.Equals(Guid.Empty))
             {
                 await this.DeleteMessage(message.ID);
-                return;
+                return true;
             }
 
             string moderationReason;
@@ -356,7 +360,7 @@ namespace MixItUp.Base.MixerAPI
                 {
                     await this.Whisper(message.User.UserName, "Your message has been deleted" + whisperMessage);
                 }
-                return;
+                return true;
             }
 
             if (ChannelSession.IsStreamer && ChatMessageCommandViewModel.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
@@ -371,6 +375,8 @@ namespace MixItUp.Base.MixerAPI
                     await command.Perform(message.User, messageCommand.CommandArguments);
                 }
             }
+
+            return true;
         }
 
         #endregion Chat Update Methods
@@ -482,9 +488,10 @@ namespace MixItUp.Base.MixerAPI
         private async void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
             ChatMessageViewModel message = new ChatMessageViewModel(e);
-            await this.AddMessage(message);
-
-            this.OnMessageOccurred(sender, message);
+            if (await this.AddMessage(message))
+            {
+                this.OnMessageOccurred(sender, message);
+            }
         }
 
         private async void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
