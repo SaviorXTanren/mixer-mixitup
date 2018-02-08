@@ -405,7 +405,6 @@ namespace MixItUp.Desktop.Services
             if (version < 6)
             {
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
-                settings.InitializeDB = false;
 
                 List<LegacyUserDataViewModel> legacyUsers = new List<LegacyUserDataViewModel>();
                 if (settings.IsStreamer)
