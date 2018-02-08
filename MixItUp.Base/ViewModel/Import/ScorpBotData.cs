@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MixItUp.Base.ViewModel.User;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.Import
@@ -19,7 +20,7 @@ namespace MixItUp.Base.ViewModel.Import
         public List<ScorpBotTimer> Timers { get; set; }
 
         [DataMember]
-        public List<string> BannedWords { get; set; }
+        public List<string> FilteredWords { get; set; }
 
         [DataMember]
         public List<string> Quotes { get; set; }
@@ -34,7 +35,7 @@ namespace MixItUp.Base.ViewModel.Import
             this.Viewers = new List<ScorpBotViewer>();
             this.Commands = new List<ScorpBotCommand>();
             this.Timers = new List<ScorpBotTimer>();
-            this.BannedWords = new List<string>();
+            this.FilteredWords = new List<string>();
             this.Quotes = new List<string>();
             this.Ranks = new List<ScorpBotRank>();
         }
@@ -46,6 +47,30 @@ namespace MixItUp.Base.ViewModel.Import
                 return this.Settings[key][value];
             }
             return defaultValue;
+        }
+
+        public int GetIntSettingsValue(string key, string value)
+        {
+            return int.Parse(this.GetSettingsValue(key, value, "0"));
+        }
+
+        public bool GetBoolSettingsValue(string key, string value)
+        {
+            return (this.GetIntSettingsValue(key, value) == 1);
+        }
+
+        public UserRole GetUserRoleSettingsValue(string key, string value)
+        {
+            switch (this.GetIntSettingsValue(key, value))
+            {
+                case 0: return UserRole.User;
+                case 1: return UserRole.Subscriber;
+                case 2: return UserRole.Mod;
+                case 3:
+                case 4:
+                default:
+                    return UserRole.Streamer;
+            }
         }
     }
 }

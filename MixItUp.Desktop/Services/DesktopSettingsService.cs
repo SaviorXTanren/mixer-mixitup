@@ -46,6 +46,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version4Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version5Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version6Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version7Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -415,6 +416,31 @@ namespace MixItUp.Desktop.Services
                 }
 
                 await ChannelSession.Services.Settings.Initialize(settings);
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version7Upgrade(int version, string filePath)
+        {
+            if (version < 7)
+            {
+                LegacyDesktopChannelSettings legacySettings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.ModerationUseCommunityFilteredWords = legacySettings.ModerationUseCommunityBannedWords;
+
+                settings.ModerationFilteredWordsExcempt = legacySettings.ModerationIncludeModerators ? UserRole.Streamer : UserRole.Mod;
+                settings.ModerationChatTextExcempt = legacySettings.ModerationIncludeModerators ? UserRole.Streamer : UserRole.Mod;
+                settings.ModerationBlockLinksExcempt = legacySettings.ModerationIncludeModerators ? UserRole.Streamer : UserRole.Mod;
+
+                foreach (string filteredWord in settings.BannedWords)
+                {
+                    settings.FilteredWords.Add(filteredWord);
+                }
+                settings.BannedWords.Clear();
 
                 await ChannelSession.Services.Settings.Save(settings);
             }

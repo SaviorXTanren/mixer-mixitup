@@ -1,6 +1,12 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
+using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -9,6 +15,8 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class ModerationControl : MainControlBase
     {
+        private static readonly List<string> ChatTextModerationSliderTypes = new List<string>() { "%", "Min" };
+
         public ModerationControl()
         {
             InitializeComponent();
@@ -16,98 +24,79 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityBannedWords;
+            this.FilteredWordsExemptComboBox.ItemsSource = PermissionsCommandBase.PermissionsAllowedValues;
+
+            this.MaxCapsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
+            this.MaxPunctuationSymbolsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
+            this.MaxEmotesTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
+            this.ChatTextModerationExemptComboBox.ItemsSource = PermissionsCommandBase.PermissionsAllowedValues;
+
+            this.BlockLinksExemptComboBox.ItemsSource = PermissionsCommandBase.PermissionsAllowedValues;
+
+            this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
+
+            this.FilteredWordsTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.FilteredWords);
+            this.FilteredWordsExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationFilteredWordsExcempt);
             this.BannedWordsTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.BannedWords);
 
-            this.MaxCapsAllowedSlider.Value = ChannelSession.Settings.ModerationCapsBlockCount;
-            this.MaxPunctuationAllowedSlider.Value = ChannelSession.Settings.ModerationPunctuationBlockCount;
-            this.MaxEmoteAllowedSlider.Value = ChannelSession.Settings.ModerationEmoteBlockCount;
+            this.MaxCapsSlider.Value = ChannelSession.Settings.ModerationCapsBlockCount;
+            this.MaxCapsTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationCapsBlockIsPercentage ? 0 : 1;
+            this.MaxPunctuationSymbolsSlider.Value = ChannelSession.Settings.ModerationPunctuationBlockCount;
+            this.MaxPunctuationSymbolsTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationPunctuationBlockIsPercentage ? 0 : 1;
+            this.MaxEmotesSlider.Value = ChannelSession.Settings.ModerationEmoteBlockCount;
+            this.MaxEmotesTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationEmoteBlockIsPercentage ? 0 : 1;
+            this.ChatTextModerationExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationChatTextExcempt);
+
             this.BlockLinksToggleButton.IsChecked = ChannelSession.Settings.ModerationBlockLinks;
-            this.IncludeModeratorsToggleButton.IsChecked = ChannelSession.Settings.ModerationIncludeModerators;
-            this.Timeout1MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount;
-            this.Timeout5MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount;
+            this.BlockLinksExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationBlockLinksExcempt);
+
+            this.ModerationTimeout1MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount;
+            this.ModerationTimeout5MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount;
 
             return base.InitializeInternal();
         }
 
-        private async void CommunityBannedWordsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ChannelSession.Settings.ModerationUseCommunityBannedWords = this.CommunityBannedWordsToggleButton.IsChecked.GetValueOrDefault();
             await this.Window.RunAsyncOperation(async () =>
             {
+                ChannelSession.Settings.ModerationUseCommunityFilteredWords = this.CommunityBannedWordsToggleButton.IsChecked.GetValueOrDefault();
+
+                this.SetWordsFromTextBoxInList(this.FilteredWordsTextBox, ChannelSession.Settings.FilteredWords);
+                ChannelSession.Settings.ModerationFilteredWordsExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.FilteredWordsExemptComboBox.SelectedItem);
+                this.SetWordsFromTextBoxInList(this.BannedWordsTextBox, ChannelSession.Settings.BannedWords);
+
+                ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
+                ChannelSession.Settings.ModerationCapsBlockIsPercentage = (this.MaxCapsTypeComboBox.SelectedIndex == 0);
+                ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationSymbolsSlider.Value;
+                ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsTypeComboBox.SelectedIndex == 0);
+                ChannelSession.Settings.ModerationEmoteBlockCount = (int)this.MaxEmotesSlider.Value;
+                ChannelSession.Settings.ModerationEmoteBlockIsPercentage = (this.MaxEmotesTypeComboBox.SelectedIndex == 0);
+                ChannelSession.Settings.ModerationChatTextExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.ChatTextModerationExemptComboBox.SelectedItem);
+
+                ChannelSession.Settings.ModerationBlockLinks = this.BlockLinksToggleButton.IsChecked.GetValueOrDefault();
+                ChannelSession.Settings.ModerationBlockLinksExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.BlockLinksExemptComboBox.SelectedItem);
+
+                ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = (int)this.ModerationTimeout1MinAfterSlider.Value;
+                ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount = (int)this.ModerationTimeout5MinAfterSlider.Value;
+
                 await ChannelSession.SaveSettings();
             });
         }
 
-        private async void BannedWordsTextBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        private void SetWordsFromTextBoxInList(TextBox textBox, LockedList<string> list)
         {
-            string bannedWords = this.BannedWordsTextBox.Text;
-            if (string.IsNullOrEmpty(this.BannedWordsTextBox.Text))
+            string bannedWords = textBox.Text;
+            if (string.IsNullOrEmpty(bannedWords))
             {
                 bannedWords = "";
             }
 
-            ChannelSession.Settings.BannedWords.Clear();
+            list.Clear();
             foreach (string split in bannedWords.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
             {
-                ChannelSession.Settings.BannedWords.Add(split.ToLower());
+                list.Add(split.ToLower());
             }
-
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                await ChannelSession.SaveSettings();
-            });
-        }
-
-        private void MaxCapsAllowedSlider_ValueChanged(object sender, int e)
-        {
-            ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsAllowedSlider.Value;
-        }
-
-        private void MaxPunctuationAllowedSlider_ValueChanged(object sender, int e)
-        {
-            ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationAllowedSlider.Value;
-        }
-
-        private void MaxEmoteAllowedSlider_ValueChanged(object sender, int e)
-        {
-            ChannelSession.Settings.ModerationEmoteBlockCount = (int)this.MaxEmoteAllowedSlider.Value;
-        }
-
-        private async void BlockLinksToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ChannelSession.Settings.ModerationBlockLinks = BlockLinksToggleButton.IsChecked.GetValueOrDefault();
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                await ChannelSession.SaveSettings();
-            });
-        }
-
-        private async void IncludeModeratorsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ChannelSession.Settings.ModerationIncludeModerators = IncludeModeratorsToggleButton.IsChecked.GetValueOrDefault();
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                await ChannelSession.SaveSettings();
-            });
-        }
-
-        private void Timeout1MinAfterSlider_ValueChanged(object sender, int e)
-        {
-            ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = (int)this.Timeout1MinAfterSlider.Value;
-        }
-
-        private void Timeout5MinAfterSlider_ValueChanged(object sender, int e)
-        {
-            ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount = (int)this.Timeout5MinAfterSlider.Value;
-        }
-
-        private async void Slider_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        {
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                await ChannelSession.SaveSettings();
-            });
         }
     }
 }

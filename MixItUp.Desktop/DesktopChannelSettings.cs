@@ -22,7 +22,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 5;
+        public const int LatestVersion = 7;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -72,17 +72,39 @@ namespace MixItUp.Desktop
         public UserCurrencyRequirementViewModel GiveawayCurrencyRequirement { get; set; }
 
         [JsonProperty]
-        public bool ModerationUseCommunityBannedWords { get; set; }
+        public bool ModerationUseCommunityFilteredWords { get; set; }
+
+        [JsonProperty]
+        public int ModerationFilteredWordsTimeout1MinuteOffenseCount { get; set; }
+        [JsonProperty]
+        public int ModerationFilteredWordsTimeout5MinuteOffenseCount { get; set; }
+        [JsonProperty]
+        public UserRole ModerationFilteredWordsExcempt { get; set; }
+
         [JsonProperty]
         public int ModerationCapsBlockCount { get; set; }
         [JsonProperty]
+        public bool ModerationCapsBlockIsPercentage { get; set; }
+        [JsonProperty]
         public int ModerationPunctuationBlockCount { get; set; }
+        [JsonProperty]
+        public bool ModerationPunctuationBlockIsPercentage { get; set; }
         [JsonProperty]
         public int ModerationEmoteBlockCount { get; set; }
         [JsonProperty]
+        public bool ModerationEmoteBlockIsPercentage { get; set; }
+        [JsonProperty]
+        public int ModerationChatTextTimeout1MinuteOffenseCount { get; set; }
+        [JsonProperty]
+        public int ModerationChatTextTimeout5MinuteOffenseCount { get; set; }
+        [JsonProperty]
+        public UserRole ModerationChatTextExcempt { get; set; }
+
+        [JsonProperty]
         public bool ModerationBlockLinks { get; set; }
         [JsonProperty]
-        public bool ModerationIncludeModerators { get; set; }
+        public UserRole ModerationBlockLinksExcempt { get; set; }
+
         [JsonProperty]
         public int ModerationTimeout1MinuteOffenseCount { get; set; }
         [JsonProperty]
@@ -130,6 +152,9 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         protected List<UserQuoteViewModel> userQuotesInternal { get; set; }
+
+        [JsonProperty]
+        protected List<string> filteredWordsInternal { get; set; }
         [JsonProperty]
         protected List<string> bannedWordsInternal { get; set; }
 
@@ -150,6 +175,7 @@ namespace MixItUp.Desktop
             this.actionGroupCommandsInternal = new List<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
             this.userQuotesInternal = new List<UserQuoteViewModel>();
+            this.filteredWordsInternal = new List<string>();
             this.bannedWordsInternal = new List<string>();
             this.interactiveUserGroupsInternal = new Dictionary<uint, List<InteractiveUserGroupViewModel>>();
             this.interactiveCooldownGroupsInternal = new Dictionary<string, int>();
@@ -159,7 +185,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopChannelSettings : DesktopSavableChannelSettings, IChannelSettings
     {
-        private const string CommunityBannedWordsFilePath = "Assets\\CommunityBannedWords.txt";
+        private const string CommunityFilteredWordsFilePath = "Assets\\CommunityBannedWords.txt";
 
         [JsonIgnore]
         public DatabaseDictionary<uint, UserDataViewModel> UserData { get; set; }
@@ -184,10 +210,13 @@ namespace MixItUp.Desktop
 
         [JsonIgnore]
         public LockedList<UserQuoteViewModel> UserQuotes { get; set; }
+
+        [JsonIgnore]
+        public LockedList<string> FilteredWords { get; set; }
         [JsonIgnore]
         public LockedList<string> BannedWords { get; set; }
         [JsonIgnore]
-        public LockedList<string> CommunityBannedWords { get; set; }
+        public LockedList<string> CommunityFilteredWords { get; set; }
 
         [JsonIgnore]
         public LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }
@@ -223,6 +252,10 @@ namespace MixItUp.Desktop
 
             this.MaxMessagesInChat = 100;
 
+            this.ModerationFilteredWordsExcempt = UserRole.Mod;
+            this.ModerationChatTextExcempt = UserRole.Mod;
+            this.ModerationBlockLinksExcempt = UserRole.Mod;
+
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
@@ -233,8 +266,9 @@ namespace MixItUp.Desktop
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>();
             this.gameCommandsInternal = new List<GameCommandBase>();
             this.UserQuotes = new LockedList<UserQuoteViewModel>();
+            this.FilteredWords = new LockedList<string>();
             this.BannedWords = new LockedList<string>();
-            this.CommunityBannedWords = new LockedList<string>();
+            this.CommunityFilteredWords = new LockedList<string>();
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>();
             this.InteractiveCooldownGroups = new LockedDictionary<string, int>();
         }
@@ -250,13 +284,14 @@ namespace MixItUp.Desktop
             this.ActionGroupCommands = new LockedList<ActionGroupCommand>(this.actionGroupCommandsInternal);
             this.GameCommands = new LockedList<GameCommandBase>(this.gameCommandsInternal);
             this.UserQuotes = new LockedList<UserQuoteViewModel>(this.userQuotesInternal);
+            this.FilteredWords = new LockedList<string>(this.filteredWordsInternal);
             this.BannedWords = new LockedList<string>(this.bannedWordsInternal);
             this.InteractiveUserGroups = new LockedDictionary<uint, List<InteractiveUserGroupViewModel>>(this.interactiveUserGroupsInternal);
             this.InteractiveCooldownGroups = new LockedDictionary<string, int>(this.interactiveCooldownGroupsInternal);
 
-            if (File.Exists(DesktopChannelSettings.CommunityBannedWordsFilePath))
+            if (File.Exists(DesktopChannelSettings.CommunityFilteredWordsFilePath))
             {
-                this.CommunityBannedWords = new LockedList<string>(File.ReadAllLines(DesktopChannelSettings.CommunityBannedWordsFilePath));
+                this.CommunityFilteredWords = new LockedList<string>(File.ReadAllLines(DesktopChannelSettings.CommunityFilteredWordsFilePath));
             }
 
             if (this.IsStreamer)
@@ -297,6 +332,7 @@ namespace MixItUp.Desktop
             this.actionGroupCommandsInternal = this.ActionGroupCommands.ToList();
             this.gameCommandsInternal = this.GameCommands.ToList();
             this.userQuotesInternal = this.UserQuotes.ToList();
+            this.filteredWordsInternal = this.FilteredWords.ToList();
             this.bannedWordsInternal = this.BannedWords.ToList();
             this.interactiveUserGroupsInternal = this.InteractiveUserGroups.ToDictionary();
             this.interactiveCooldownGroupsInternal = this.InteractiveCooldownGroups.ToDictionary();
@@ -365,5 +401,10 @@ namespace MixItUp.Desktop
         public new Dictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }
         [JsonProperty]
         public new Dictionary<string, int> InteractiveCooldownGroups { get; set; }
+
+        [JsonProperty]
+        public bool ModerationUseCommunityBannedWords { get; set; }
+        [JsonProperty]
+        public bool ModerationIncludeModerators { get; set; }
     }
 }

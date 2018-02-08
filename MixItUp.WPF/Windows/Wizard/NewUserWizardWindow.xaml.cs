@@ -317,7 +317,7 @@ namespace MixItUp.WPF.Windows.Wizard
                         await databaseWrapper.RunReadCommand("SELECT * FROM Word",
                         (reader) =>
                         {
-                            scorpBotData.BannedWords.Add(((string)reader["word"]).ToLower());
+                            scorpBotData.FilteredWords.Add(((string)reader["word"]).ToLower());
                         });
 
                         databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "QuotesDB.sqlite");
@@ -372,22 +372,22 @@ namespace MixItUp.WPF.Windows.Wizard
             if (this.scorpBotData != null)
             {
                 // Import Ranks
-                int rankEnabled = int.Parse(this.scorpBotData.GetSettingsValue("currency", "enabled", "0"));
+                int rankEnabled = this.scorpBotData.GetIntSettingsValue("currency", "enabled");
                 string rankName = this.scorpBotData.GetSettingsValue("currency", "name", "Rank");
-                int rankInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onlinepayinterval", "0"));
-                int rankAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency", "activeuserbonus", "0"));
-                int rankMaxAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency", "maxlimit", "-1"));
+                int rankInterval = this.scorpBotData.GetIntSettingsValue("currency", "onlinepayinterval");
+                int rankAmount = this.scorpBotData.GetIntSettingsValue("currency", "activeuserbonus");
+                int rankMaxAmount = this.scorpBotData.GetIntSettingsValue("currency", "maxlimit");
                 if (rankMaxAmount <= 0)
                 {
                     rankMaxAmount = int.MaxValue;
                 }
-                int rankOnFollowBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onfollowbonus", "0"));
-                int rankOnSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "onsubbonus", "0"));
-                int rankSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency", "subbonus", "0"));
+                int rankOnFollowBonus = this.scorpBotData.GetIntSettingsValue("currency", "onfollowbonus");
+                int rankOnSubBonus = this.scorpBotData.GetIntSettingsValue("currency", "onsubbonus");
+                int rankSubBonus = this.scorpBotData.GetIntSettingsValue("currency", "subbonus");
                 string rankCommand = this.scorpBotData.GetSettingsValue("currency", "command", "");
                 string rankCommandResponse = this.scorpBotData.GetSettingsValue("currency", "response", "");
                 string rankUpCommand = this.scorpBotData.GetSettingsValue("currency", "Currency1RankUpMsg", "");
-                int rankAccumulationType = int.Parse(this.scorpBotData.GetSettingsValue("currency", "ranksrectype", "0"));
+                int rankAccumulationType = this.scorpBotData.GetIntSettingsValue("currency", "ranksrectype");
 
                 UserCurrencyViewModel rankCurrency = null;
                 UserCurrencyViewModel rankPointsCurrency = null;
@@ -438,18 +438,18 @@ namespace MixItUp.WPF.Windows.Wizard
                 }
 
                 // Import Currency
-                int currencyEnabled = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "enabled", "0"));
+                int currencyEnabled = this.scorpBotData.GetIntSettingsValue("currency2", "enabled");
                 string currencyName = this.scorpBotData.GetSettingsValue("currency2", "name", "Currency");
-                int currencyInterval = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onlinepayinterval", "0"));
-                int currencyAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "activeuserbonus", "0"));
-                int currencyMaxAmount = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "maxlimit", "-1"));
+                int currencyInterval = this.scorpBotData.GetIntSettingsValue("currency2", "onlinepayinterval");
+                int currencyAmount = this.scorpBotData.GetIntSettingsValue("currency2", "activeuserbonus");
+                int currencyMaxAmount = this.scorpBotData.GetIntSettingsValue("currency2", "maxlimit");
                 if (currencyMaxAmount <= 0)
                 {
                     currencyMaxAmount = int.MaxValue;
                 }
-                int currencyOnFollowBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onfollowbonus", "0"));
-                int currencyOnSubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "onsubbonus", "0"));
-                int currencySubBonus = int.Parse(this.scorpBotData.GetSettingsValue("currency2", "subbonus", "0"));
+                int currencyOnFollowBonus = this.scorpBotData.GetIntSettingsValue("currency2", "onfollowbonus");
+                int currencyOnSubBonus = this.scorpBotData.GetIntSettingsValue("currency2", "onsubbonus");
+                int currencySubBonus = this.scorpBotData.GetIntSettingsValue("currency2", "subbonus");
                 string currencyCommand = this.scorpBotData.GetSettingsValue("currency2", "command", "");
                 string currencyCommandResponse = this.scorpBotData.GetSettingsValue("currency2", "response", "");
 
@@ -544,10 +544,53 @@ namespace MixItUp.WPF.Windows.Wizard
                     ChannelSession.Settings.QuotesEnabled = true;
                 }
 
-                foreach (string bannedWord in this.scorpBotData.BannedWords)
+                if (this.scorpBotData.GetBoolSettingsValue("settings", "filtwordsen"))
                 {
-                    ChannelSession.Settings.BannedWords.Add(bannedWord);
+                    foreach (string filteredWord in this.scorpBotData.FilteredWords)
+                    {
+                        ChannelSession.Settings.FilteredWords.Add(filteredWord);
+                    }
+                    ChannelSession.Settings.ModerationFilteredWordsExcempt = this.scorpBotData.GetUserRoleSettingsValue("settings", "FilteredWordsPerm");
                 }
+
+                if (this.scorpBotData.GetBoolSettingsValue("settings", "chatcapschecknowarnregs"))
+                {
+                    ChannelSession.Settings.ModerationChatTextExcempt = UserRole.User;
+                }
+                else if (this.scorpBotData.GetBoolSettingsValue("settings", "chatcapschecknowarnsubs"))
+                {
+                    ChannelSession.Settings.ModerationChatTextExcempt = UserRole.Subscriber;
+                }
+                else if (this.scorpBotData.GetBoolSettingsValue("settings", "chatcapschecknowarnmods"))
+                {
+                    ChannelSession.Settings.ModerationChatTextExcempt = UserRole.Mod;
+                }
+                else
+                {
+                    ChannelSession.Settings.ModerationChatTextExcempt = UserRole.Streamer;
+                }
+
+                ChannelSession.Settings.ModerationCapsBlockIsPercentage = !this.scorpBotData.GetBoolSettingsValue("settings", "chatcapsfiltertype");
+                if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
+                {
+                    ChannelSession.Settings.ModerationCapsBlockCount = this.scorpBotData.GetIntSettingsValue("settings", "chatperccaps");
+                }
+                else
+                {
+                    ChannelSession.Settings.ModerationCapsBlockCount = this.scorpBotData.GetIntSettingsValue("settings", "chatmincaps");
+                }
+                ChannelSession.Settings.ModerationPunctuationBlockCount = ChannelSession.Settings.ModerationEmoteBlockCount = ChannelSession.Settings.ModerationCapsBlockCount;
+                ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = ChannelSession.Settings.ModerationEmoteBlockIsPercentage = ChannelSession.Settings.ModerationCapsBlockIsPercentage;
+
+                ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = Math.Max(this.scorpBotData.GetIntSettingsValue("settings", "filtwordspercautotimenum"),
+                    this.scorpBotData.GetIntSettingsValue("settings", "chatperccapsautotimenum"));
+                if (ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount > 0)
+                {
+                    ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount = ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount + 2;
+                }
+
+                ChannelSession.Settings.ModerationBlockLinks = this.scorpBotData.GetBoolSettingsValue("settings", "chatlinkalertsdel");
+                ChannelSession.Settings.ModerationBlockLinksExcempt = this.scorpBotData.GetUserRoleSettingsValue("settings", "chatlinkalertsdelperm");
             }
 
             if (this.soundwaveData != null && this.soundwaveProfiles != null && this.soundwaveProfiles.Count(p => p.AddProfile) > 0)
