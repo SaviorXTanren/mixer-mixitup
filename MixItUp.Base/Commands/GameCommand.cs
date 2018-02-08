@@ -549,6 +549,7 @@ namespace MixItUp.Base.Commands
         public const string GameTotalBetsSpecialIdentifier = "gametotalbets";
         public const string GameTotalUsersSpecialIdentifier = "gametotalusers";
         public const string GamePayoutSpecialIdentifier = "gamepayout";
+        public const string GameCurrencyNameSpecialIdentifier = "gamecurrencyname";
 
         private static SemaphoreSlim gameCommandPerformSemaphore = new SemaphoreSlim(1);
 
@@ -592,6 +593,7 @@ namespace MixItUp.Base.Commands
             command.AddSpecialIdentifier(GameCommandBase.GameTotalBetsSpecialIdentifier, this.TotalBets.ToString());
             command.AddSpecialIdentifier(GameCommandBase.GameTotalUsersSpecialIdentifier, this.TotalUsers.ToString());
             command.AddSpecialIdentifier(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
+            command.AddSpecialIdentifier(GameCommandBase.GameCurrencyNameSpecialIdentifier, this.CurrencyRequirement.GetCurrency().Name);
             if (user != null)
             {
                 command.AddSpecialIdentifier(GameCommandBase.GameBetSpecialIdentifier, this.GetUserBet(user).ToString());
