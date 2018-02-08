@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
-    public class ConstellationClientWrapper : MixerRequestWrapperBase
+    public class ConstellationClientWrapper : MixerWebSocketWrapper
     {
         public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.Channel.id); } }
 
@@ -38,27 +38,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<bool> Connect()
         {
-            this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.Connection.Connection));
-            if (this.Client != null)
-            {
-                if (await this.RunAsync(this.Client.Connect()))
-                {
-                    this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
-                    {
-                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                    }
-                    this.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
-
-                    await this.SubscribeToEvents(ConstellationClientWrapper.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.Channel.id)));
-
-                    return true;
-                }
-            }
-            return false;
+            return await this.AttemptConnect();
         }
 
         public async Task SubscribeToEvents(IEnumerable<ConstellationEventType> events) { await this.RunAsync(this.Client.SubscribeToEvents(events)); }
@@ -81,6 +61,31 @@ namespace MixItUp.Base.MixerAPI
 
                 await this.RunAsync(this.Client.Disconnect());
             }
+        }
+
+        protected override async Task<bool> ConnectInternal()
+        {
+            this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.Connection.Connection));
+            if (this.Client != null)
+            {
+                if (await this.RunAsync(this.Client.Connect()))
+                {
+                    this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                    }
+                    this.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
+
+                    await this.SubscribeToEvents(ConstellationClientWrapper.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.Channel.id)));
+
+                    return true;
+                }
+            }
+            return false;
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)

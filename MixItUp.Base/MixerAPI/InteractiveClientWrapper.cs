@@ -44,7 +44,7 @@ namespace MixItUp.Base.MixerAPI
         public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
     }
 
-    public class InteractiveClientWrapper : MixerRequestWrapperBase
+    public class InteractiveClientWrapper : MixerWebSocketWrapper
     {
         public event EventHandler<InteractiveGiveInputModel> OnGiveInput = delegate { };
         public event EventHandler<InteractiveConnectedSceneModel> OnControlDelete = delegate { };
@@ -61,6 +61,7 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<InteractiveParticipantCollectionModel> OnParticipantLeave = delegate { };
         public event EventHandler<InteractiveIssueMemoryWarningModel> OnIssueMemoryWarning = delegate { };
 
+        public InteractiveGameListingModel Game { get; private set; }
         public InteractiveClient Client { get; private set; }
 
         public List<InteractiveConnectedSceneGroupModel> SceneGroups { get; private set; }
@@ -78,41 +79,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<bool> Connect(InteractiveGameListingModel game)
         {
-            this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, game));
-            if (this.Client != null)
-            {
-                if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
-                {
-                    this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
-                    {
-                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                    }
-
-                    ChannelSession.Chat.OnUserJoinOccurred += Chat_OnUserJoinOccurred;
-
-                    this.Client.OnGiveInput += Client_OnGiveInput;
-                    this.Client.OnControlDelete += Client_OnControlDelete;
-                    this.Client.OnControlCreate += Client_OnControlCreate;
-                    this.Client.OnControlUpdate += Client_OnControlUpdate;
-                    this.Client.OnSceneUpdate += Client_OnSceneUpdate;
-                    this.Client.OnSceneDelete += Client_OnSceneDelete;
-                    this.Client.OnSceneCreate += Client_OnSceneCreate;
-                    this.Client.OnGroupUpdate += Client_OnGroupUpdate;
-                    this.Client.OnGroupDelete += Client_OnGroupDelete;
-                    this.Client.OnGroupCreate += Client_OnGroupCreate;
-                    this.Client.OnParticipantUpdate += Client_OnParticipantUpdate;
-                    this.Client.OnParticipantJoin += Client_OnParticipantJoin;
-                    this.Client.OnParticipantLeave += Client_OnParticipantLeave;
-                    this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
-
-                    return await this.Initialize();
-                }
-            }
-            return false;
+            this.Game = game;
+            return await this.AttemptConnect();
         }
 
         public async Task Disconnect()
@@ -176,6 +144,45 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
             await ChannelSession.Connection.UpdateInteractiveGameVersion(version);
+        }
+
+        protected override async Task<bool> ConnectInternal()
+        {
+            this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game));
+            if (this.Client != null)
+            {
+                if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
+                {
+                    this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                    }
+
+                    ChannelSession.Chat.OnUserJoinOccurred += Chat_OnUserJoinOccurred;
+
+                    this.Client.OnGiveInput += Client_OnGiveInput;
+                    this.Client.OnControlDelete += Client_OnControlDelete;
+                    this.Client.OnControlCreate += Client_OnControlCreate;
+                    this.Client.OnControlUpdate += Client_OnControlUpdate;
+                    this.Client.OnSceneUpdate += Client_OnSceneUpdate;
+                    this.Client.OnSceneDelete += Client_OnSceneDelete;
+                    this.Client.OnSceneCreate += Client_OnSceneCreate;
+                    this.Client.OnGroupUpdate += Client_OnGroupUpdate;
+                    this.Client.OnGroupDelete += Client_OnGroupDelete;
+                    this.Client.OnGroupCreate += Client_OnGroupCreate;
+                    this.Client.OnParticipantUpdate += Client_OnParticipantUpdate;
+                    this.Client.OnParticipantJoin += Client_OnParticipantJoin;
+                    this.Client.OnParticipantLeave += Client_OnParticipantLeave;
+                    this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
+
+                    return await this.Initialize();
+                }
+            }
+            return false;
         }
 
         #region Interactive Update Methods
@@ -264,7 +271,7 @@ namespace MixItUp.Base.MixerAPI
             if (command != null)
             {
                 command.UpdateWithLatestControl(control);
-                this.Controls.Add(control.controlID, new InteractiveConnectedControlCommand(scene, control, command));
+                this.Controls[control.controlID] = new InteractiveConnectedControlCommand(scene, control, command);
             }
         }
 

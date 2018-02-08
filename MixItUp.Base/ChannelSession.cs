@@ -304,15 +304,15 @@ namespace MixItUp.Base
                     ChannelSession.User = user;
                     ChannelSession.Channel = channel;
 
-                    ChannelSession.Connection.Initialize();
-
                     if (ChannelSession.Settings == null)
                     {
                         ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, (channelName == null));
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
-                    if (!await ChannelSession.Chat.Connect(connectionAttempts: 5) || !await ChannelSession.Constellation.Connect())
+                    ChannelSession.Connection.Initialize();
+
+                    if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect())
                     {
                         return false;
                     }
