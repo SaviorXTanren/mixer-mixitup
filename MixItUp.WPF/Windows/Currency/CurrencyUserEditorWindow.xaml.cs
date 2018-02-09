@@ -1,9 +1,9 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Currency;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace MixItUp.WPF.Windows.Currency
 {
@@ -15,7 +15,8 @@ namespace MixItUp.WPF.Windows.Currency
         private UserCurrencyViewModel currency;
 
         private List<UserCurrencyDataViewModel> allUserCurrencyData = new List<UserCurrencyDataViewModel>();
-        private ObservableCollection<UserCurrencyDataViewModel> userCurrencyData = new ObservableCollection<UserCurrencyDataViewModel>();
+
+        private ObservableCollection<UserCurrencyIndividualEditorControl> userCurrencyControls = new ObservableCollection<UserCurrencyIndividualEditorControl>();
 
         public CurrencyUserEditorWindow(UserCurrencyViewModel currency)
         {
@@ -33,7 +34,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.allUserCurrencyData.Add(kvp.Value.GetCurrency(this.currency));
             }
 
-            this.UserCurrencyDataDataGrid.ItemsSource = this.userCurrencyData;
+            this.UserCurrencyDataListView.ItemsSource = this.userCurrencyControls;
 
             this.RefreshData();
         }
@@ -46,12 +47,19 @@ namespace MixItUp.WPF.Windows.Currency
                 filter = filter.ToLower();
             }
 
-            this.userCurrencyData.Clear();
+            this.LimitingResultsMessage.Visibility = Visibility.Collapsed;
+            this.userCurrencyControls.Clear();
             foreach (UserCurrencyDataViewModel userCurrencyData in this.allUserCurrencyData)
             {
                 if (string.IsNullOrEmpty(filter) || userCurrencyData.User.UserName.ToLower().Contains(filter))
                 {
-                    this.userCurrencyData.Add(userCurrencyData);
+                    this.userCurrencyControls.Add(new UserCurrencyIndividualEditorControl(userCurrencyData));
+                }
+
+                if (this.userCurrencyControls.Count >= 200)
+                {
+                    this.LimitingResultsMessage.Visibility = Visibility.Visible;
+                    break;
                 }
             }
         }
@@ -59,16 +67,6 @@ namespace MixItUp.WPF.Windows.Currency
         private void UsernameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             this.RefreshData();
-        }
-
-        private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            UserCurrencyDataViewModel currencyData = (UserCurrencyDataViewModel)textBox.DataContext;
-            if (!string.IsNullOrEmpty(textBox.Text) && int.TryParse(textBox.Text, out int amount) && amount >= 0)
-            {
-                currencyData.Amount = amount;
-            }
         }
     }
 }

@@ -243,6 +243,9 @@
     <Compile Include="Controls\Currency\CurrencySelectorControl.xaml.cs">
       <DependentUpon>CurrencySelectorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
+      <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\GameOutcomeCommandControl.xaml.cs">
       <DependentUpon>GameOutcomeCommandControl.xaml</DependentUpon>
     </Compile>
@@ -505,6 +508,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Currency\CurrencySelectorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
