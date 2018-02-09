@@ -223,7 +223,7 @@ namespace MixItUp.Base.Commands
                 while (true)
                 {
                     await this.GetLatestStreamSession();
-                    await Task.Delay(60000);
+                    await Task.Delay(300000);
                 }
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
