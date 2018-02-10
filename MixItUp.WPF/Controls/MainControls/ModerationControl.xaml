@@ -26,63 +26,49 @@
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="2*" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                    <GroupBox Grid.Column="0" Header="Filtered/Banned Words">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="0" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="25" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="0" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                        <GroupBox Grid.Row="0" Header="Filtered Words">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="25" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="0" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                                <Grid Grid.Row="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0">Use Community List (VERY STRICT):</TextBlock>
 
-                                    <TextBlock Grid.Column="0">Use Community List (VERY STRICT):</TextBlock>
-
-                                    <ToggleButton x:Name="CommunityBannedWordsToggleButton" Grid.Column="2" />
-                                </Grid>
-
-                                <TextBlock Grid.Row="2">Custom Banned Words (One Per Line):</TextBlock>
-
-                                <TextBox x:Name="FilteredWordsTextBox" Grid.Row="4" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                                <ComboBox x:Name="FilteredWordsExemptComboBox" Grid.Row="6" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" />
+                                <ToggleButton x:Name="CommunityBannedWordsToggleButton" Grid.Column="2" />
                             </Grid>
-                        </GroupBox>
 
-                        <GroupBox Grid.Row="2" Header="Auto Channel Ban Words">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="0" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="2">Filtered Words (One Per Line):</TextBlock>
 
-                                <TextBlock Grid.Row="2">Auto Channel Ban Words (One Per Line):</TextBlock>
+                            <TextBox x:Name="FilteredWordsTextBox" Grid.Row="4" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                                <TextBox x:Name="BannedWordsTextBox" Grid.Row="4" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                            </Grid>
-                        </GroupBox>
-                    </Grid>
+                            <TextBlock Grid.Row="6">Channel Ban Words (One Per Line):</TextBlock>
+
+                            <TextBox x:Name="BannedWordsTextBox" Grid.Row="8" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <ComboBox x:Name="FilteredWordsExemptComboBox" Grid.Row="10" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" />
+                        </Grid>
+                    </GroupBox>
 
                     <Grid Grid.Column="2">
                         <Grid.RowDefinitions>

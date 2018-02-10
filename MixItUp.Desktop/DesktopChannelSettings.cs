@@ -256,6 +256,10 @@ namespace MixItUp.Desktop
             this.ModerationChatTextExcempt = UserRole.Mod;
             this.ModerationBlockLinksExcempt = UserRole.Mod;
 
+            this.ModerationCapsBlockIsPercentage = true;
+            this.ModerationPunctuationBlockIsPercentage = true;
+            this.ModerationEmoteBlockIsPercentage = true;
+
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
