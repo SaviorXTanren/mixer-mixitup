@@ -6,6 +6,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Services;
+using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -103,6 +104,8 @@ namespace MixItUp.Base
         public static InteractiveClientWrapper Interactive { get; private set; }
         public static ConstellationClientWrapper Constellation { get; private set; }
 
+        public static StatisticsTracker Statistics { get; private set; }
+
         public static ServicesHandlerBase Services { get; private set; }
 
         public static List<PreMadeChatCommand> PreMadeChatCommands { get; private set; }
@@ -148,6 +151,8 @@ namespace MixItUp.Base
             ChannelSession.Chat = new ChatClientWrapper();
             ChannelSession.Constellation = new ConstellationClientWrapper();
             ChannelSession.Interactive = new InteractiveClientWrapper();
+
+            ChannelSession.Statistics = new StatisticsTracker();
         }
 
         public static async Task<bool> ConnectUser(IEnumerable<OAuthClientScopeEnum> scopes, string channelName = null)

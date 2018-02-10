@@ -1,13 +1,6 @@
-﻿using MaterialDesignThemes.Wpf;
-using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.User;
-using MixItUp.Base;
-using MixItUp.Base.MixerAPI;
+﻿using MixItUp.Base;
 using MixItUp.Base.Statistics;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Statistics;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,13 +15,6 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         private ObservableCollection<StatisticsOverviewControl> statisticOverviewControls = new ObservableCollection<StatisticsOverviewControl>();
 
-        private EventStatisticsDataTracker followTracker = new EventStatisticsDataTracker("Follows");
-
-        private EventStatisticsDataTracker hostsTracker = new EventStatisticsDataTracker("Hosts", (EventStatisticsDataTracker dataTracker) =>
-        {
-            return string.Format("Total Hosts: {0},    Total Viewers From Hosts: {1},    Average Viewers From Hosts: {2}", dataTracker.MaxKeys, dataTracker.MaxValues, dataTracker.AverageValues);
-        });
-
         public StatisticsControl()
         {
             InitializeComponent();
@@ -39,26 +25,10 @@ namespace MixItUp.WPF.Controls.MainControls
             this.AutoExportCheckBox.IsChecked = ChannelSession.Settings.AutoExportStatistics;
 
             this.StatisticsOverviewListView.ItemsSource = this.statisticOverviewControls;
-
-            this.statisticOverviewControls.Add(new StatisticsOverviewControl(new TrackedNumberStatisticDataTracker("Viewers", (StatisticDataTrackerBase stats) =>
+            foreach (StatisticDataTrackerBase statistic in ChannelSession.Statistics.Statistics)
             {
-                TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
-                numberStats.AddValue((int)ChannelSession.Channel.viewersCurrent);
-                return Task.FromResult(0);
-            }), PackIconKind.Eye));
-
-            this.statisticOverviewControls.Add(new StatisticsOverviewControl(new TrackedNumberStatisticDataTracker("Chatters", (StatisticDataTrackerBase stats) =>
-            {
-                TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
-                numberStats.AddValue(ChannelSession.Chat.ChatUsers.Count);
-                return Task.FromResult(0);
-            }), PackIconKind.MessageTextOutline));
-
-            this.statisticOverviewControls.Add(new StatisticsOverviewControl(this.followTracker, PackIconKind.AccountPlus));
-
-            this.statisticOverviewControls.Add(new StatisticsOverviewControl(this.hostsTracker, PackIconKind.AccountMultiple));
-
-            ChannelSession.Constellation.OnEventOccurred += Constellation_OnEventOccurred;
+                this.statisticOverviewControls.Add(new StatisticsOverviewControl(statistic));
+            }
 
             return base.InitializeInternal();
         }
@@ -70,41 +40,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AutoExportCheckBox_Checked(object sender, RoutedEventArgs e) { ChannelSession.Settings.AutoExportStatistics = this.AutoExportCheckBox.IsChecked.GetValueOrDefault(); }
 
-        private void ExportStatsButton_Click(object sender, RoutedEventArgs e)
+        private async void ExportStatsButton_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void Constellation_OnEventOccurred(object sender, Mixer.Base.Model.Constellation.ConstellationLiveEventModel e)
-        {
-            ChannelModel channel = null;
-            UserViewModel user = null;
-
-            JToken userToken;
-            if (e.payload.TryGetValue("user", out userToken))
+            await this.Window.RunAsyncOperation(async () =>
             {
-                user = new UserViewModel(userToken.ToObject<UserModel>());
-
-                JToken subscribeStartToken;
-                if (e.payload.TryGetValue("since", out subscribeStartToken))
+                string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Statistics.GetDefaultFileName());
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    user.SubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
+                    await ChannelSession.Statistics.Export(fileName);
                 }
-            }
-            else if (e.payload.TryGetValue("hoster", out userToken))
-            {
-                channel = userToken.ToObject<ChannelModel>();
-                user = new UserViewModel(channel.id, channel.token);
-            }
-
-            if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()) && user != null)
-            {
-                this.followTracker.OnStatisticEventOccurred(user.UserName);
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()) && channel != null)
-            {
-                this.followTracker.OnStatisticEventOccurred(channel.token, (int)channel.viewersCurrent);
-            }
+            });
         }
     }
 }

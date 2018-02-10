@@ -6,14 +6,16 @@ namespace MixItUp.Base.Statistics
     public abstract class StatisticDataTrackerBase
     {
         public string Name { get; private set; }
+        public string IconName { get; private set; }
 
         public DateTimeOffset StartTime { get; private set; }
 
         private Func<StatisticDataTrackerBase, Task> updateFunction;
 
-        public StatisticDataTrackerBase(string name, Func<StatisticDataTrackerBase, Task> updateFunction)
+        public StatisticDataTrackerBase(string name, string iconName, Func<StatisticDataTrackerBase, Task> updateFunction)
         {
             this.Name = name;
+            this.IconName = iconName;
             this.updateFunction = updateFunction;
 
             this.StartTime = DateTimeOffset.Now;

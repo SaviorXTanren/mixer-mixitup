@@ -424,7 +424,6 @@ namespace MixItUp.Base.MixerAPI
                     }
 
                     await connectedControl.Command.Perform(user);
-                    return;
                 }
             }
 

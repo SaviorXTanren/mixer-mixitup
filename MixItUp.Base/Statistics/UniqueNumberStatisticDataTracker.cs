@@ -9,8 +9,8 @@ namespace MixItUp.Base.Statistics
     {
         public LockedDictionary<string, int> UniqueData { get; private set; }
 
-        public UniqueNumberStatisticDataTracker(string name, Func<StatisticDataTrackerBase, Task> updateFunction)
-            : base(name, updateFunction)
+        public UniqueNumberStatisticDataTracker(string name, string iconName, Func<StatisticDataTrackerBase, Task> updateFunction)
+            : base(name, iconName, updateFunction)
         {
             this.UniqueData = new LockedDictionary<string, int>();
         }
@@ -25,7 +25,14 @@ namespace MixItUp.Base.Statistics
 
         public void AddValue(string key) { this.AddValue(key, 0); }
 
-        public void AddValue(string key, int value) { this.UniqueData[key] = value; }
+        public void AddValue(string key, int value)
+        {
+            if (!this.UniqueData.ContainsKey(key))
+            {
+                this.UniqueData[key] = 0;
+            }
+            this.UniqueData[key] += value;
+        }
 
         public override string ToString() { return string.Format("Total: {0},    Average: {1}", this.MaxKeys, this.AverageKeys); }
     }

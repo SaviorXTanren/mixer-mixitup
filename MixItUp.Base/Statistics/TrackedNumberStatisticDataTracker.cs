@@ -9,11 +9,11 @@ namespace MixItUp.Base.Statistics
     {
         public List<int> allNumbers = new List<int>();
 
-        public TrackedNumberStatisticDataTracker(string name, Func<StatisticDataTrackerBase, Task> updateFunction)
-            : base(name, updateFunction)
+        public TrackedNumberStatisticDataTracker(string name, string iconName, Func<StatisticDataTrackerBase, Task> updateFunction)
+            : base(name, iconName, updateFunction)
         { }
 
-        public int Max { get { return this.allNumbers.Max(); } }
+        public int Max { get { return (this.allNumbers.Count > 0) ? this.allNumbers.Max() : 0; } }
 
         public double Average { get { return ((double)this.allNumbers.Sum()) / ((double)this.TotalMinutes); } }
 

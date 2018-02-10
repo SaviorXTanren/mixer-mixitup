@@ -3,15 +3,15 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Statistics
 {
-    public class EventStatisticsDataTracker : UniqueNumberStatisticDataTracker
+    public class EventStatisticDataTracker : UniqueNumberStatisticDataTracker
     {
         private event EventHandler<string> StatisticEventOccurred;
         private event EventHandler<Tuple<string, int>> StatisticEventWithValueOccurred;
 
-        private Func<EventStatisticsDataTracker, string> customToStringFunction;
+        private Func<EventStatisticDataTracker, string> customToStringFunction;
 
-        public EventStatisticsDataTracker(string name, Func<EventStatisticsDataTracker, string> customToStringFunction = null)
-            : base(name, (StatisticDataTrackerBase stats) => { return Task.FromResult(0); })
+        public EventStatisticDataTracker(string name, string iconName, Func<EventStatisticDataTracker, string> customToStringFunction = null)
+            : base(name, iconName, (StatisticDataTrackerBase stats) => { return Task.FromResult(0); })
         {
             this.customToStringFunction = customToStringFunction;
 

@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Mixer.Base.Util;
 using MixItUp.Base.Statistics;
 using System;
 using System.Threading.Tasks;
@@ -13,10 +14,10 @@ namespace MixItUp.WPF.Controls.Statistics
         private PackIconKind icon;
         private StatisticDataTrackerBase dataTracker;
 
-        public StatisticsOverviewControl(StatisticDataTrackerBase dataTracker, PackIconKind icon)
+        public StatisticsOverviewControl(StatisticDataTrackerBase dataTracker)
         {
             this.dataTracker = dataTracker;
-            this.icon = icon;
+            this.icon = EnumHelper.GetEnumValueFromString<PackIconKind>(this.dataTracker.IconName);
 
             InitializeComponent();
         }
