@@ -39,22 +39,7 @@ namespace MixItUp.Base.Commands
 
         public ConstellationEventType GetEventType() { return new ConstellationEventType(this.EventType, this.EventID); }
 
-        public bool MatchesEvent(ConstellationLiveEventModel liveEvent)
-        {
-            if (this.UniqueEventID.Equals(liveEvent.channel))
-            {
-                if (this.EventType == ConstellationEventTypeEnum.channel__id__followed)
-                {
-                    JToken following;
-                    if (!liveEvent.payload.TryGetValue("following", out following) || !(bool)following)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
+        public bool MatchesEvent(string eventID) { return this.UniqueEventID.Equals(eventID); }
 
         public override string ToString() { return this.CommandsString; }
 

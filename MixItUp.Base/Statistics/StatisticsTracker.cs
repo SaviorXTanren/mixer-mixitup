@@ -17,11 +17,13 @@ namespace MixItUp.Base.Statistics
         private DateTimeOffset startTime = DateTimeOffset.Now;
 
         private EventStatisticDataTracker followTracker = new EventStatisticDataTracker("Follows", "AccountPlus");
-
+        private EventStatisticDataTracker unfollowTracker = new EventStatisticDataTracker("Unfollows", "AccountMinus");
         private EventStatisticDataTracker hostsTracker = new EventStatisticDataTracker("Hosts", "AccountMultiple", (EventStatisticDataTracker dataTracker) =>
         {
             return string.Format("Total Hosts: {0},    Total Viewers From Hosts: {1},    Average Viewers From Hosts: {2}", dataTracker.MaxKeys, dataTracker.MaxValues, dataTracker.AverageValues);
         });
+        private EventStatisticDataTracker subscriberTracker = new EventStatisticDataTracker("Subscribes", "AccountStar");
+        private EventStatisticDataTracker resubscriberTracker = new EventStatisticDataTracker("Resubscribes", "AccountConvert");
 
         private EventStatisticDataTracker interactiveTracker = new EventStatisticDataTracker("Interactive", "GamepadVariant", (EventStatisticDataTracker dataTracker) =>
         {
@@ -30,7 +32,11 @@ namespace MixItUp.Base.Statistics
 
         public StatisticsTracker()
         {
-            ChannelSession.Constellation.OnEventOccurred += Constellation_OnEventOccurred;
+            ChannelSession.Constellation.OnFollowOccurred += Constellation_OnFollowOccurred;
+            ChannelSession.Constellation.OnUnfollowOccurred += Constellation_OnUnfollowOccurred;
+            ChannelSession.Constellation.OnHostedOccurred += Constellation_OnHostedOccurred;
+            ChannelSession.Constellation.OnSubscribedOccurred += Constellation_OnSubscribedOccurred;
+            ChannelSession.Constellation.OnResubscribedOccurred += Constellation_OnResubscribedOccurred;
             ChannelSession.Interactive.OnGiveInput += Interactive_OnGiveInput;
 
             this.Statistics = new List<StatisticDataTrackerBase>();
@@ -50,8 +56,10 @@ namespace MixItUp.Base.Statistics
             }));
 
             this.Statistics.Add(this.followTracker);
-
+            this.Statistics.Add(this.unfollowTracker);
             this.Statistics.Add(this.hostsTracker);
+            this.Statistics.Add(this.subscriberTracker);
+            this.Statistics.Add(this.resubscriberTracker);
 
             this.Statistics.Add(this.interactiveTracker);
         }
@@ -68,36 +76,29 @@ namespace MixItUp.Base.Statistics
             return Task.FromResult(0);
         }
 
-        private void Constellation_OnEventOccurred(object sender, Mixer.Base.Model.Constellation.ConstellationLiveEventModel e)
+        private void Constellation_OnFollowOccurred(object sender, UserViewModel e)
         {
-            ChannelModel channel = null;
-            UserViewModel user = null;
+            this.followTracker.OnStatisticEventOccurred(e.UserName);
+        }
 
-            JToken userToken;
-            if (e.payload.TryGetValue("user", out userToken))
-            {
-                user = new UserViewModel(userToken.ToObject<UserModel>());
+        private void Constellation_OnUnfollowOccurred(object sender, UserViewModel e)
+        {
+            this.unfollowTracker.OnStatisticEventOccurred(e.UserName);
+        }
 
-                JToken subscribeStartToken;
-                if (e.payload.TryGetValue("since", out subscribeStartToken))
-                {
-                    user.SubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
-                }
-            }
-            else if (e.payload.TryGetValue("hoster", out userToken))
-            {
-                channel = userToken.ToObject<ChannelModel>();
-                user = new UserViewModel(channel.id, channel.token);
-            }
+        private void Constellation_OnHostedOccurred(object sender, Tuple<UserViewModel, int> e)
+        {
+            this.hostsTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
+        }
 
-            if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()) && user != null)
-            {
-                this.followTracker.OnStatisticEventOccurred(user.UserName);
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()) && channel != null)
-            {
-                this.followTracker.OnStatisticEventOccurred(channel.token, (int)channel.viewersCurrent);
-            }
+        private void Constellation_OnSubscribedOccurred(object sender, UserViewModel e)
+        {
+            this.unfollowTracker.OnStatisticEventOccurred(e.UserName);
+        }
+
+        private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserViewModel, int> e)
+        {
+            this.unfollowTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
         }
 
         private void Interactive_OnGiveInput(object sender, InteractiveGiveInputModel e)

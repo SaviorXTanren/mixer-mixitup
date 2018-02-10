@@ -22,7 +22,6 @@ namespace MixItUp.Base.MixerAPI
         public static ConstellationEventType ChannelSubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelResubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelResubscribedSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
-        public static ConstellationEventType ChannelResubscribeSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
 
         private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
@@ -31,6 +30,12 @@ namespace MixItUp.Base.MixerAPI
         };
 
         public event EventHandler<ConstellationLiveEventModel> OnEventOccurred;
+
+        public event EventHandler<UserViewModel> OnFollowOccurred;
+        public event EventHandler<UserViewModel> OnUnfollowOccurred;
+        public event EventHandler<Tuple<UserViewModel, int>> OnHostedOccurred;
+        public event EventHandler<UserViewModel> OnSubscribedOccurred;
+        public event EventHandler<Tuple<UserViewModel, int>> OnResubscribedOccurred;
 
         public ConstellationClient Client { get; private set; }
 
@@ -90,8 +95,9 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
         {
-            ChannelModel channel = null;
             UserViewModel user = null;
+            bool? followed = null;
+            ChannelModel channel = null;
 
             JToken userToken;
             if (e.payload.TryGetValue("user", out userToken))
@@ -103,44 +109,16 @@ namespace MixItUp.Base.MixerAPI
                 {
                     user.SubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
                 }
+
+                if (e.payload.TryGetValue("following", out JToken followedToken))
+                {
+                    followed = (bool)followedToken;
+                }
             }
             else if (e.payload.TryGetValue("hoster", out userToken))
             {
                 channel = userToken.ToObject<ChannelModel>();
                 user = new UserViewModel(channel.id, channel.token);
-            }
-
-            if (user != null)
-            {
-                UserDataViewModel userData = ChannelSession.Settings.UserData.GetValueIfExists(user.ID, new UserDataViewModel(user));
-
-                if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()))
-                {
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                    {
-                        userData.SetCurrencyAmount(currency, currency.OnFollowBonus);
-                    }
-                }
-                else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()))
-                {
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                    {
-                        userData.SetCurrencyAmount(currency, currency.OnHostBonus);
-                    }
-                }
-                else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) ||
-                    e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
-                {
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                    {
-                        userData.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
-                    }
-                }
-
-                if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
-                {
-                    user.SubscribeDate = DateTimeOffset.Now;
-                }
             }
 
             if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
@@ -151,46 +129,121 @@ namespace MixItUp.Base.MixerAPI
                     UptimeChatCommand.SetUptime(DateTimeOffset.Now);
                 }
             }
-            else
+            else if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()))
             {
-                foreach (EventCommand command in ChannelSession.Settings.EventCommands)
+                if (followed.GetValueOrDefault())
                 {
-                    EventCommand foundCommand = null;
-
-                    if (command.MatchesEvent(e))
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
-                        foundCommand = command;
+                        user.Data.SetCurrencyAmount(currency, currency.OnFollowBonus);
                     }
 
-                    if (command.EventType == ConstellationEventTypeEnum.channel__id__subscribed && e.channel.Equals(ConstellationClientWrapper.ChannelResubscribeSharedEvent.ToString()))
+                    if (this.OnFollowOccurred != null)
                     {
-                        foundCommand = command;
+                        this.OnFollowOccurred(this, user);
                     }
 
-                    if (foundCommand != null)
+                    await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                }
+                else
+                {
+                    if (this.OnUnfollowOccurred != null)
                     {
-                        if (command.EventType == ConstellationEventTypeEnum.channel__id__hosted && channel != null)
-                        {
-                            foundCommand.AddSpecialIdentifier("hostviewercount", channel.viewersCurrent.ToString());
-                        }
-
-                        if (user != null)
-                        {
-                            await foundCommand.Perform(user);
-                        }
-                        else
-                        {
-                            await foundCommand.Perform();
-                        }
-
-                        return;
+                        this.OnUnfollowOccurred(this, user);
                     }
                 }
+            }
+            else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()))
+            {
+                int viewerCount = 0;
+                if (channel != null)
+                {
+                    viewerCount = (int)channel.viewersCurrent;
+                }
+
+                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                {
+                    user.Data.SetCurrencyAmount(currency, currency.OnHostBonus);
+                }
+
+                if (this.OnHostedOccurred != null)
+                {
+                    this.OnHostedOccurred(this, new Tuple<UserViewModel, int>(user, viewerCount));
+                }
+
+                EventCommand command = this.FindMatchingEventCommand(e.channel);
+                if (command != null)
+                {
+                    command.AddSpecialIdentifier("hostviewercount", viewerCount.ToString());
+                    await this.RunEventCommand(command, user);
+                }
+            }
+            else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
+            {
+                user.SubscribeDate = DateTimeOffset.Now;
+                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                {
+                    user.Data.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
+                }
+
+                if (this.OnSubscribedOccurred != null)
+                {
+                    this.OnSubscribedOccurred(this, user);
+                }
+
+                await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+            }
+            else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
+            {
+                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                {
+                    user.Data.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
+                }
+
+                int resubMonths = 0;
+                if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
+                {
+                    resubMonths = (int)resubMonthsToken;
+                }
+
+                if (this.OnResubscribedOccurred != null)
+                {
+                    this.OnResubscribedOccurred(this, new Tuple<UserViewModel, int>(user, resubMonths));
+                }
+
+                await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user);
             }
 
             if (this.OnEventOccurred != null)
             {
                 this.OnEventOccurred(this, e);
+            }
+        }
+
+        private EventCommand FindMatchingEventCommand(string eventDetails)
+        {
+            foreach (EventCommand command in ChannelSession.Settings.EventCommands)
+            {
+                if (command.MatchesEvent(eventDetails))
+                {
+                    return command;
+                }
+            }
+            return null;
+        }
+
+        private async Task RunEventCommand(EventCommand command, UserViewModel user)
+        {
+            if (command != null)
+            {
+                if (user != null)
+                {
+                    await command.Perform(user);
+                }
+                else
+                {
+                    await command.Perform();
+                }
             }
         }
 
