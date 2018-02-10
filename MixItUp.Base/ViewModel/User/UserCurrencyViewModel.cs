@@ -106,6 +106,10 @@ namespace MixItUp.Base.ViewModel.User
             if (this.Ranks.Count > 0)
             {
                 rank = this.Ranks.Where(r => r.MinimumPoints <= points).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
+                if (rank == null)
+                {
+                    rank = UserCurrencyViewModel.NoRank;
+                }
             }
             return rank;
         }
