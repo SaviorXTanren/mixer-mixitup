@@ -224,10 +224,18 @@ namespace MixItUp.WPF.Controls.MainControls
                     bool isUserValid = true;
                     if (ChannelSession.Settings.GiveawayUserRole == UserRole.Follower)
                     {
+                        if (!e.User.IsFollower)
+                        {
+                            await e.User.SetDetails(checkForFollow: true);
+                        }
                         isUserValid = e.User.IsFollower;
                     }
                     else if (ChannelSession.Settings.GiveawayUserRole == UserRole.Subscriber)
                     {
+                        if (!e.User.Roles.Contains(UserRole.Subscriber))
+                        {
+                            await e.User.SetSubscribeDate();
+                        }
                         isUserValid = e.User.Roles.Contains(UserRole.Subscriber);
                     }
 

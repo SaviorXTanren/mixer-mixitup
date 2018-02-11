@@ -260,6 +260,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (subscriberGroup != null)
                 {
                     this.SubscribeDate = subscriberGroup.createdAt;
+                    this.Roles.Add(UserRole.Subscriber);
                 }
             }
         }
