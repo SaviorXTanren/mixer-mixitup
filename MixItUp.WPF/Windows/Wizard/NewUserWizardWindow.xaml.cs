@@ -579,8 +579,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     ChannelSession.Settings.ModerationCapsBlockCount = this.scorpBotData.GetIntSettingsValue("settings", "chatmincaps");
                 }
-                ChannelSession.Settings.ModerationPunctuationBlockCount = ChannelSession.Settings.ModerationEmoteBlockCount = ChannelSession.Settings.ModerationCapsBlockCount;
-                ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = ChannelSession.Settings.ModerationEmoteBlockIsPercentage = ChannelSession.Settings.ModerationCapsBlockIsPercentage;
 
                 ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = Math.Max(this.scorpBotData.GetIntSettingsValue("settings", "filtwordspercautotimenum"),
                     this.scorpBotData.GetIntSettingsValue("settings", "chatperccapsautotimenum"));
