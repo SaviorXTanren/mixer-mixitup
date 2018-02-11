@@ -350,7 +350,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 await this.DeleteMessage(message.ID);
 
-                string whisperMessage = " due to chat moderation for the following reason: " + moderationReason + ". Please watch what you type in chat or further actions will be taken.";
+                string whisperMessage = " due to chat moderation for the following reason: " + moderationReason + ". Please watch what you type in chat or further actions may be taken.";
 
                 message.User.ChatOffenses++;
                 if (ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount > 0 && message.User.ChatOffenses >= ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount)

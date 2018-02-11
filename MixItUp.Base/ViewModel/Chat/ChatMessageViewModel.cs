@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         private static readonly string BannedWordRegexFormat = "(^|\\s){0}(\\s|$)";
 
-        private static readonly Regex EmoteRegex = new Regex(":\\w+");
+        private static readonly Regex EmoteRegex = new Regex(":\\w+ ");
         private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
 
         public Guid ID { get; private set; }
@@ -225,10 +225,25 @@ namespace MixItUp.Base.ViewModel.Chat
                     int count = matches.Count;
                     if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
                     {
-                        count = this.ConvertCountToPercentage(count);
+                        string leftOverText = lower.ToString();
+                        foreach (Match match in matches)
+                        {
+                            leftOverText = leftOverText.Replace(match.Value, "");
+                        }
+
+                        int messageLength = leftOverText.Count() + matches.Count;
+
+                        if (messageLength >= MinimumMessageLengthForPercentageModeration)
+                        {
+                            count = (int)(((double)count) / ((double)messageLength) * 100.0);
+                        }
+                        else
+                        {
+                            count = 0;
+                        }
                     }
 
-                    if (matches.Count >= ChannelSession.Settings.ModerationEmoteBlockCount)
+                    if (count >= ChannelSession.Settings.ModerationEmoteBlockCount)
                     {
                         reason = "Too Many Emotes";
                         return true;
