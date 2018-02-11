@@ -604,25 +604,31 @@ namespace MixItUp.Desktop.Services
 
         public async Task CleanUpData(IChannelSettings settings)
         {
-            var duplicateGroups = settings.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
-            foreach (var duplicateGroup in duplicateGroups)
+            if (ChannelSession.Connection != null)
             {
-                UserModel realUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
-                if (realUser != null)
+                var duplicateGroups = settings.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
+                foreach (var duplicateGroup in duplicateGroups)
                 {
-                    UserDataViewModel correctUserData = duplicateGroup.FirstOrDefault(u => u.ID.Equals(realUser.id));
-                    if (correctUserData != null)
+                    if (!string.IsNullOrEmpty(duplicateGroup.Key))
                     {
-                        foreach (var possibleDupeUser in duplicateGroup)
+                        UserModel realUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
+                        if (realUser != null)
                         {
-                            if (realUser.id != possibleDupeUser.ID)
+                            UserDataViewModel correctUserData = duplicateGroup.FirstOrDefault(u => u.ID.Equals(realUser.id));
+                            if (correctUserData != null)
                             {
-                                correctUserData.ViewingMinutes += possibleDupeUser.ViewingMinutes;
-                                foreach (var currencyData in possibleDupeUser.CurrencyAmounts)
+                                foreach (var possibleDupeUser in duplicateGroup)
                                 {
-                                    correctUserData.AddCurrencyAmount(currencyData.Key, currencyData.Value.Amount);
+                                    if (realUser.id != possibleDupeUser.ID)
+                                    {
+                                        correctUserData.ViewingMinutes += possibleDupeUser.ViewingMinutes;
+                                        foreach (var currencyData in possibleDupeUser.CurrencyAmounts)
+                                        {
+                                            correctUserData.AddCurrencyAmount(currencyData.Key, currencyData.Value.Amount);
+                                        }
+                                        ChannelSession.Settings.UserData.Remove(possibleDupeUser.ID);
+                                    }
                                 }
-                                ChannelSession.Settings.UserData.Remove(possibleDupeUser.ID);
                             }
                         }
                     }
