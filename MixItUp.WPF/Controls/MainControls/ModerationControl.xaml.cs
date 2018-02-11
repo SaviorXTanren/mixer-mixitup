@@ -16,6 +16,7 @@ namespace MixItUp.WPF.Controls.MainControls
     public partial class ModerationControl : MainControlBase
     {
         private static readonly List<string> ChatTextModerationSliderTypes = new List<string>() { "%", "Min" };
+        private bool isLoaded = false;
 
         public ModerationControl()
         {
@@ -24,6 +25,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
+            this.isLoaded = false;
+
             this.FilteredWordsExemptComboBox.ItemsSource = PermissionsCommandBase.PermissionsAllowedValues;
 
             this.MaxCapsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
@@ -36,8 +39,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
 
             this.FilteredWordsTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.FilteredWords);
-            this.FilteredWordsExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationFilteredWordsExcempt);
             this.BannedWordsTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.BannedWords);
+            this.FilteredWordsExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationFilteredWordsExcempt);
 
             this.MaxCapsSlider.Value = ChannelSession.Settings.ModerationCapsBlockCount;
             this.MaxCapsTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationCapsBlockIsPercentage ? 0 : 1;
@@ -53,35 +56,40 @@ namespace MixItUp.WPF.Controls.MainControls
             this.ModerationTimeout1MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount;
             this.ModerationTimeout5MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount;
 
+            this.isLoaded = true;
+
             return base.InitializeInternal();
         }
 
-        private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async Task SaveSettings()
         {
-            await this.Window.RunAsyncOperation(async () =>
+            if (this.isLoaded)
             {
-                ChannelSession.Settings.ModerationUseCommunityFilteredWords = this.CommunityBannedWordsToggleButton.IsChecked.GetValueOrDefault();
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    ChannelSession.Settings.ModerationUseCommunityFilteredWords = this.CommunityBannedWordsToggleButton.IsChecked.GetValueOrDefault();
 
-                this.SetWordsFromTextBoxInList(this.FilteredWordsTextBox, ChannelSession.Settings.FilteredWords);
-                ChannelSession.Settings.ModerationFilteredWordsExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.FilteredWordsExemptComboBox.SelectedItem);
-                this.SetWordsFromTextBoxInList(this.BannedWordsTextBox, ChannelSession.Settings.BannedWords);
+                    this.SetWordsFromTextBoxInList(this.FilteredWordsTextBox, ChannelSession.Settings.FilteredWords);
+                    this.SetWordsFromTextBoxInList(this.BannedWordsTextBox, ChannelSession.Settings.BannedWords);
+                    ChannelSession.Settings.ModerationFilteredWordsExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.FilteredWordsExemptComboBox.SelectedItem);
 
-                ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
-                ChannelSession.Settings.ModerationCapsBlockIsPercentage = (this.MaxCapsTypeComboBox.SelectedIndex == 0);
-                ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationSymbolsSlider.Value;
-                ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsTypeComboBox.SelectedIndex == 0);
-                ChannelSession.Settings.ModerationEmoteBlockCount = (int)this.MaxEmotesSlider.Value;
-                ChannelSession.Settings.ModerationEmoteBlockIsPercentage = (this.MaxEmotesTypeComboBox.SelectedIndex == 0);
-                ChannelSession.Settings.ModerationChatTextExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.ChatTextModerationExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
+                    ChannelSession.Settings.ModerationCapsBlockIsPercentage = (this.MaxCapsTypeComboBox.SelectedIndex == 0);
+                    ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationSymbolsSlider.Value;
+                    ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsTypeComboBox.SelectedIndex == 0);
+                    ChannelSession.Settings.ModerationEmoteBlockCount = (int)this.MaxEmotesSlider.Value;
+                    ChannelSession.Settings.ModerationEmoteBlockIsPercentage = (this.MaxEmotesTypeComboBox.SelectedIndex == 0);
+                    ChannelSession.Settings.ModerationChatTextExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.ChatTextModerationExemptComboBox.SelectedItem);
 
-                ChannelSession.Settings.ModerationBlockLinks = this.BlockLinksToggleButton.IsChecked.GetValueOrDefault();
-                ChannelSession.Settings.ModerationBlockLinksExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.BlockLinksExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationBlockLinks = this.BlockLinksToggleButton.IsChecked.GetValueOrDefault();
+                    ChannelSession.Settings.ModerationBlockLinksExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.BlockLinksExemptComboBox.SelectedItem);
 
-                ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = (int)this.ModerationTimeout1MinAfterSlider.Value;
-                ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount = (int)this.ModerationTimeout5MinAfterSlider.Value;
+                    ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = (int)this.ModerationTimeout1MinAfterSlider.Value;
+                    ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount = (int)this.ModerationTimeout5MinAfterSlider.Value;
 
-                await ChannelSession.SaveSettings();
-            });
+                    await ChannelSession.SaveSettings();
+                });
+            }
         }
 
         private void SetWordsFromTextBoxInList(TextBox textBox, LockedList<string> list)
@@ -97,6 +105,26 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 list.Add(split.ToLower());
             }
+        }
+
+        private async void TextBoxes_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.SaveSettings();
+        }
+
+        private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await this.SaveSettings();
+        }
+
+        private async void Slider_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.SaveSettings();
+        }
+
+        private async void ToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.SaveSettings();
         }
     }
 }

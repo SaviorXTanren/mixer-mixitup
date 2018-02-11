@@ -17,31 +17,163 @@
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Visible">
             <Grid Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="0" Header="Filtered/Banned Words">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="0" />
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="25" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="0" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                    <GroupBox Grid.Column="0" Header="Filtered/Banned Words">
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0">Use Community List (VERY STRICT):</TextBlock>
+
+                            <ToggleButton x:Name="CommunityBannedWordsToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
+                        </Grid>
+
+                        <TextBlock Grid.Row="2">Filtered Words (One Per Line):</TextBlock>
+
+                        <TextBox x:Name="FilteredWordsTextBox" Grid.Row="4" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" LostFocus="TextBoxes_LostFocus" />
+
+                        <TextBlock Grid.Row="6">Channel Ban Words (One Per Line):</TextBlock>
+
+                        <TextBox x:Name="BannedWordsTextBox" Grid.Row="8" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" LostFocus="TextBoxes_LostFocus" />
+
+                        <ComboBox x:Name="FilteredWordsExemptComboBox" Grid.Row="10" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" SelectionChanged="ComboBox_SelectionChanged" />
+                    </Grid>
+                </GroupBox>
+
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="350" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Row="0" Header="Chat Text Moderation">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="25" />
+                                <RowDefinition Height="10" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="0" />
-                                <RowDefinition Height="2*" />
-                                <RowDefinition Height="25" />
+                                <RowDefinition Height="10" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="0" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Max Caps:</TextBlock>
+
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Slider x:Name="MaxCapsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
+
+                                    <ComboBox x:Name="MaxCapsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" Width="50" SelectionChanged="ComboBox_SelectionChanged" />
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Max Punctuation/Symbol:</TextBlock>
+
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Slider x:Name="MaxPunctuationSymbolsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
+
+                                    <ComboBox x:Name="MaxPunctuationSymbolsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" Width="50" SelectionChanged="ComboBox_SelectionChanged" />
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="4">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Max Emotes:</TextBlock>
+
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Slider x:Name="MaxEmotesSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
+
+                                    <ComboBox x:Name="MaxEmotesTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" Width="50" LostFocus="Slider_LostFocus" />
+                                </Grid>
+                            </Grid>
+
+                            <ComboBox x:Name="ChatTextModerationExemptComboBox" Grid.Row="6" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" SelectionChanged="ComboBox_SelectionChanged" />
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="2" Header="Website Link Blocking">
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+                            <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
+
+                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" SelectionChanged="ComboBox_SelectionChanged" />
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="4" Header="Timeouts for Offenses">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="10" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
@@ -50,170 +182,28 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0">Use Community List (VERY STRICT):</TextBlock>
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">1 Min Timeout After:</TextBlock>
 
-                                <ToggleButton x:Name="CommunityBannedWordsToggleButton" Grid.Column="2" />
+                                <Slider x:Name="ModerationTimeout1MinAfterSlider" Grid.Column="2" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
                             </Grid>
 
-                            <TextBlock Grid.Row="2">Filtered Words (One Per Line):</TextBlock>
-
-                            <TextBox x:Name="FilteredWordsTextBox" Grid.Row="4" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                            <TextBlock Grid.Row="6">Channel Ban Words (One Per Line):</TextBlock>
-
-                            <TextBox x:Name="BannedWordsTextBox" Grid.Row="8" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                            <ComboBox x:Name="FilteredWordsExemptComboBox" Grid.Row="10" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" />
-                        </Grid>
-                    </GroupBox>
-
-                    <Grid Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="350" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <GroupBox Grid.Row="0" Header="Chat Text Moderation">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="20" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <Grid Grid.Row="0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Max Caps:</TextBlock>
-
-                                    <Grid Grid.Row="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="10" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Slider x:Name="MaxCapsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
-
-                                        <ComboBox x:Name="MaxCapsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" Width="50" />
-                                    </Grid>
-                                </Grid>
-
-                                <Grid Grid.Row="2">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Max Punctuation/Symbol:</TextBlock>
-
-                                    <Grid Grid.Row="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="10" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Slider x:Name="MaxPunctuationSymbolsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
-
-                                        <ComboBox x:Name="MaxPunctuationSymbolsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" Width="50" />
-                                    </Grid>
-                                </Grid>
-
-                                <Grid Grid.Row="4">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Max Emotes:</TextBlock>
-
-                                    <Grid Grid.Row="1">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="10" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Slider x:Name="MaxEmotesSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
-
-                                        <ComboBox x:Name="MaxEmotesTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" Width="50" />
-                                    </Grid>
-                                </Grid>
-
-                                <ComboBox x:Name="ChatTextModerationExemptComboBox" Grid.Row="6" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" />
-
-                            </Grid>
-                        </GroupBox>
-
-                        <GroupBox Grid.Row="2" Header="Website Link Blocking">
-                            <Grid HorizontalAlignment="Center">
+                            <Grid Grid.Row="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
-                                <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" />
+                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">5 Min Timeout After:</TextBlock>
 
-                                <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" />
-
+                                <Slider x:Name="ModerationTimeout5MinAfterSlider" Grid.Column="2" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
                             </Grid>
-                        </GroupBox>
-
-                        <GroupBox Grid.Row="4" Header="Timeouts for Offenses">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <Grid Grid.Row="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">1 Min Timeout After:</TextBlock>
-
-                                    <Slider x:Name="ModerationTimeout1MinAfterSlider" Grid.Column="2" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" />
-                                </Grid>
-
-                                <Grid Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">5 Min Timeout After:</TextBlock>
-
-                                    <Slider x:Name="ModerationTimeout5MinAfterSlider" Grid.Column="2" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" />
-                                </Grid>
-                            </Grid>
-                        </GroupBox>
-                    </Grid>
+                        </Grid>
+                    </GroupBox>
                 </Grid>
-
-                <Button x:Name="SaveButton" Grid.Row="2" Click="SaveButton_Click" Width="80">Save</Button>
             </Grid>
         </ScrollViewer>
     </Grid>
