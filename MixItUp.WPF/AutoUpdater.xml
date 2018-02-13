@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>0.3.10.5000</version>
-  <url>https://github.com/SaviorXTanren/mixer-mixitup/releases/download/0.3.10/MixItUp-PreReleaseDelta-v0.3.10.zip</url>
+  <version>0.3.11</version>
+  <url>https://github.com/SaviorXTanren/mixer-mixitup/releases/download/0.3.11/MixItUp-PreReleaseDelta-v0.3.11.zip</url>
   <changelog>https://updates.mixitupapp.com/Changelog.html</changelog>
   <mandatory>false</mandatory>
 </item>
