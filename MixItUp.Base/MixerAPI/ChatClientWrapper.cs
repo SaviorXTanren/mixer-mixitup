@@ -544,9 +544,15 @@ namespace MixItUp.Base.MixerAPI
         {
             UserViewModel user = new UserViewModel(e);
             this.RemoveUser(user);
-            await this.AddUser(user);
 
-            this.OnUserUpdateOccurred(sender, user);
+            ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, user.ID);
+            if (chatUser != null)
+            {
+                user = new UserViewModel(chatUser);
+                await this.AddUser(user);
+
+                this.OnUserUpdateOccurred(sender, user);
+            }
         }
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
