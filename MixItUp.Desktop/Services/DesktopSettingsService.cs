@@ -246,8 +246,8 @@ namespace MixItUp.Desktop.Services
                 settings.GiveawayRequirements.Rank = legacySettings.GiveawayRankRequirement;
 
                 List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
-                commands.AddRange(ChannelSession.Settings.ChatCommands);
-                commands.AddRange(ChannelSession.Settings.GameCommands);
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.GameCommands);
                 foreach (PermissionsCommandBase command in commands)
                 {
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -257,12 +257,14 @@ namespace MixItUp.Desktop.Services
 #pragma warning restore CS0612 // Type or member is obsolete
                 }
 
-                foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
+                foreach (GameCommandBase command in settings.GameCommands)
                 {
 #pragma warning disable CS0612 // Type or member is obsolete
                     command.Requirements.Currency.RequirementType = command.CurrencyRequirementType;
 #pragma warning restore CS0612 // Type or member is obsolete
                 }
+
+                await ChannelSession.Services.Settings.Save(settings);
             }
         }
 
