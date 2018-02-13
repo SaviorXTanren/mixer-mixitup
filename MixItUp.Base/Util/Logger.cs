@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Web;
 using MixItUp.Base.Services;
+using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.IO;
@@ -37,9 +38,10 @@ namespace MixItUp.Base.Util
         {
             Logger.Log(ex.ToString());
 
+            string exceptionJSON = JsonConvert.SerializeObject(ex.ToString());
             #if DEBUG
             #else
-                Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", JsonConvert.SerializeObject(ex.ToString())); });  
+                Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", exceptionJSON); });
             #endif
         }
 
