@@ -35,7 +35,7 @@ namespace MixItUp.Base.Util
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async() =>
             {
-                await BackgroundTaskWrapper.RunBackgroundTask(this.webSocketTokenSource, async (tokenSource) =>
+                try
                 {
                     if (await this.ListenForConnection())
                     {
@@ -47,12 +47,11 @@ namespace MixItUp.Base.Util
                         await this.ReceiveInternal();
                         await this.ShutdownWebsocket();
                     }
-                    else
-                    {
-                        this.OnDisconnected();
-                        this.webSocketTokenSource.Cancel();
-                    }
-                });
+                    this.OnDisconnected();
+                }
+                catch (ThreadAbortException) { return; }
+                catch (OperationCanceledException) { return; }
+                catch (Exception ex) { Logger.Log(ex); }
             }, this.webSocketTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             return Task.FromResult(true);
@@ -199,7 +198,6 @@ namespace MixItUp.Base.Util
 
         private async Task ShutdownWebsocket()
         {
-            this.OnDisconnected();
             try
             {
                 if (this.webSocket != null && this.webSocket.State == WebSocketState.Open && this.webSocket.CloseStatus != null)
