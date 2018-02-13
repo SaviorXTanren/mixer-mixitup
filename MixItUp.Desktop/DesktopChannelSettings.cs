@@ -339,11 +339,13 @@ namespace MixItUp.Desktop
             if (this.IsStreamer)
             {
                 IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
+                addedUsers = addedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
                 await this.databaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts) VALUES(?,?,?,?)",
                     addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
                     new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()) }));
 
                 IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
+                changedUsers = changedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
                 await this.databaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts WHERE ID = @ID",
                     changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
                     new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
