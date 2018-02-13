@@ -17,12 +17,12 @@ namespace MixItUp.WPF.Controls.Requirement
 
         public void HideCurrencyRequirement()
         {
-            this.CurrencyRequirement.Visibility = Visibility.Collapsed;
+            this.CurrencyPopup.Visibility = Visibility.Collapsed;
         }
 
         public async Task<bool> Validate()
         {
-            if (this.CurrencyRequirement.Visibility == Visibility.Visible)
+            if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
                 return await this.CurrencyRequirement.Validate() && await this.RankRequirement.Validate();
             }
@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             RequirementViewModel requirement = new RequirementViewModel();
             requirement.UserRole = this.UserRoleRequirement.GetUserRoleRequirement();
-            if (this.CurrencyRequirement.Visibility == Visibility.Visible)
+            if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
                 requirement.Currency = this.CurrencyRequirement.GetCurrencyRequirement();
             }
@@ -47,7 +47,7 @@ namespace MixItUp.WPF.Controls.Requirement
         public void SetRequirements(RequirementViewModel requirement)
         {
             this.UserRoleRequirement.SetUserRoleRequirement(requirement.UserRole);
-            if (this.CurrencyRequirement.Visibility == Visibility.Visible)
+            if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
                 this.CurrencyRequirement.SetCurrencyRequirement(requirement.Currency);
             }

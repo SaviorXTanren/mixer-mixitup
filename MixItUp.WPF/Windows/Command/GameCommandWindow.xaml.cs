@@ -223,7 +223,7 @@ namespace MixItUp.WPF.Windows.Command
                     return;
                 }
 
-                if (await this.Requirements.Validate())
+                if (!await this.Requirements.Validate())
                 {
                     return;
                 }
