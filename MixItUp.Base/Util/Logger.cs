@@ -33,20 +33,26 @@ namespace MixItUp.Base.Util
             catch (Exception) { }
         }
 
-        public static void Log(Exception ex) { Logger.Log(ex.ToString()); }
+        public static void Log(Exception ex)
+        {
+            Logger.Log(ex.ToString());
+
+            #if DEBUG
+            #else
+                Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", JsonConvert.SerializeObject(ex.ToString())); });  
+            #endif
+        }
 
         public static async Task LogAnalyticsUsage(string eventName, string eventDetails)
         {
             #if DEBUG
                 await Task.FromResult(0);
             #else
-                await Logger.LogAnalyticsUsageInternal(eventName, eventDetails);        
+                await Logger.LogAnalyticsInternal(eventName, eventDetails);               
             #endif
         }
 
-        public static async Task LogAnalyticsException(Exception ex) { await Logger.LogAnalyticsUsage("Exception", ex.ToString()); }
-
-        private static async Task LogAnalyticsUsageInternal(string eventName, string eventDetails)
+        private static async Task LogAnalyticsInternal(string eventName, string eventDetails)
         {
             try
             {
