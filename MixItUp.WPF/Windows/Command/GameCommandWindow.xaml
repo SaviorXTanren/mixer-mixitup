@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Command"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:CurrencyControls="clr-namespace:MixItUp.WPF.Controls.Currency"
+        xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
         xmlns:GameControls="clr-namespace:MixItUp.WPF.Controls.Games"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -62,18 +62,25 @@
                         <Grid Grid.Row="2" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="40" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="GameCooldownTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
 
-                            <ComboBox x:Name="GameLowestRoleAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource BackgroundComboBox}" />
+                                <TextBox x:Name="GameCooldownTextBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-                            <ComboBox x:Name="GameTypeComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource BackgroundComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
+                                <ComboBox x:Name="GameTypeComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource BackgroundComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
 
+                            </Grid>
+
+                            <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
+                            
                         </Grid>
 
                         <Grid x:Name="CurrencyGrid" Grid.Row="4" HorizontalAlignment="Center" IsEnabled="False">

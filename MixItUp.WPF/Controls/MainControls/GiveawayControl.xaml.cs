@@ -1,11 +1,9 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -35,15 +33,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.GiveawayTypeComboBox.ItemsSource = EnumHelper.GetEnumNames(new UserRole[] { UserRole.User, UserRole.Follower, UserRole.Subscriber });
             this.EnteredUsersListView.ItemsSource = this.enteredUsers;
-
-            this.GiveawayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.GiveawayUserRole);
 
             this.GiveawayCommandTextBox.Text = ChannelSession.Settings.GiveawayCommand;
             this.GiveawayTimerTextBox.Text = ChannelSession.Settings.GiveawayTimer.ToString();
-            this.CurrencySelector.SetCurrencyRequirement(ChannelSession.Settings.GiveawayCurrencyRequirement);
-            this.RankSelector.SetCurrencyRequirement(ChannelSession.Settings.GiveawayRankRequirement);
+            this.Requirements.SetRequirements(ChannelSession.Settings.GiveawayRequirements);
 
             GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
 
@@ -55,12 +49,6 @@ namespace MixItUp.WPF.Controls.MainControls
             if (string.IsNullOrEmpty(this.GiveawayItemTextBox.Text))
             {
                 await MessageBoxHelper.ShowMessageDialog("An item to give away must be specified");
-                return;
-            }
-
-            if (this.GiveawayTypeComboBox.SelectedIndex < 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("The allowed winners must be specified");
                 return;
             }
 
@@ -83,23 +71,16 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
-            if (!await this.CurrencySelector.Validate())
-            {
-                return;
-            }
-
-            if (!await this.RankSelector.Validate())
+            if (!await this.Requirements.Validate())
             {
                 return;
             }
 
             this.giveawayEnabled = true;
             this.giveawayItem = this.GiveawayItemTextBox.Text;
-            ChannelSession.Settings.GiveawayUserRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.GiveawayTypeComboBox.SelectedItem);
             ChannelSession.Settings.GiveawayCommand = this.GiveawayCommandTextBox.Text.ToLower();
             ChannelSession.Settings.GiveawayTimer = this.timeLeft;
-            ChannelSession.Settings.GiveawayCurrencyRequirement = this.CurrencySelector.GetCurrencyRequirement();
-            ChannelSession.Settings.GiveawayRankRequirement = this.RankSelector.GetCurrencyRequirement();
+            ChannelSession.Settings.GiveawayRequirements = this.Requirements.GetRequirements();
             this.TimeLeftTextBlock.Text = this.timeLeft.ToString();
 
             await ChannelSession.SaveSettings();
@@ -221,42 +202,22 @@ namespace MixItUp.WPF.Controls.MainControls
                         return;
                     }
 
-                    bool isUserValid = true;
-                    if (ChannelSession.Settings.GiveawayUserRole == UserRole.Follower)
+                    if (await ChannelSession.Settings.GiveawayRequirements.DoesMeetUserRoleRequirement(e.User))
                     {
-                        if (!e.User.IsFollower)
+                        if (ChannelSession.Settings.GiveawayRequirements.Rank != null && ChannelSession.Settings.GiveawayRequirements.Rank.GetCurrency() != null)
                         {
-                            await e.User.SetDetails(checkForFollow: true);
-                        }
-                        isUserValid = e.User.IsFollower;
-                    }
-                    else if (ChannelSession.Settings.GiveawayUserRole == UserRole.Subscriber)
-                    {
-                        if (!e.User.Roles.Contains(UserRole.Subscriber))
-                        {
-                            await e.User.SetSubscribeDate();
-                        }
-                        isUserValid = e.User.Roles.Contains(UserRole.Subscriber);
-                    }
-
-                    if (isUserValid)
-                    {
-                        if (ChannelSession.Settings.GiveawayRankRequirement != null && ChannelSession.Settings.GiveawayRankRequirement.GetCurrency() != null)
-                        {
-                            UserCurrencyDataViewModel rankData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayRankRequirement.GetCurrency());
-                            if (!ChannelSession.Settings.GiveawayRankRequirement.DoesMeetRankRequirement(e.User.Data))
+                            if (!ChannelSession.Settings.GiveawayRequirements.DoesMeetRankRequirement(e.User))
                             {
-                                await ChannelSession.Settings.GiveawayRankRequirement.SendRankNotMetWhisper(e.User);
+                                await ChannelSession.Settings.GiveawayRequirements.Rank.SendRankNotMetWhisper(e.User);
                                 return;
                             }
                         }
 
-                        if (ChannelSession.Settings.GiveawayCurrencyRequirement != null && ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency() != null)
+                        if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
                         {
-                            UserCurrencyDataViewModel currencyData = e.User.Data.GetCurrency(ChannelSession.Settings.GiveawayCurrencyRequirement.GetCurrency());
-                            if (!ChannelSession.Settings.GiveawayCurrencyRequirement.TrySubtractAmount(e.User.Data))
+                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(e.User))
                             {
-                                await ChannelSession.Settings.GiveawayCurrencyRequirement.SendCurrencyNotMetWhisper(e.User);
+                                await ChannelSession.Settings.GiveawayRequirements.Currency.SendCurrencyNotMetWhisper(e.User);
                                 return;
                             }
                         }
@@ -272,7 +233,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                     else
                     {
-                        await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}", ChannelSession.Settings.GiveawayUserRole));
+                        await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.UserRole));
                     }
                 }
                 else if (this.selectedWinner != null && e.CommandName.Equals("claim") && this.selectedWinner.Equals(e.User))

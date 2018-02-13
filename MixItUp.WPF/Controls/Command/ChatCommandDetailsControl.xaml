@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CurrencyControls="clr-namespace:MixItUp.WPF.Controls.Currency"
+             xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
                                  
@@ -16,39 +16,39 @@
                    
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="LowestRoleAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource BackgroundComboBox}" />
+                <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="CooldownTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox x:Name="CooldownTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Trigger(s) in Chat (EX: &quot;!follow&quot;) (No &quot;!&quot; needed, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Trigger(s) in Chat (EX: &quot;!follow&quot;) (No &quot;!&quot; needed, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            <CurrencyControls:CurrencySelectorControl x:Name="CurrencySelector" Grid.Column="2" />
+        <Grid Grid.Column="2">
+            <RequirementControls:RequirementControl x:Name="Requirements" />
         </Grid>
-        
+
     </Grid>
 </local:CommandDetailsControlBase>

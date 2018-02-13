@@ -101,6 +101,17 @@ namespace MixItUp.Base.ViewModel.User
                 if (userRoles.Any(r => r.Equals("Pro"))) { this.Roles.Add(UserRole.Pro); }
                 if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
             }
+
+            if (this.Roles.Contains(UserRole.Streamer))
+            {
+                this.Roles.Add(UserRole.Subscriber);
+                this.Roles.Add(UserRole.Mod);
+            }
+
+            if (this.Roles.Contains(UserRole.Subscriber) || this.Roles.Contains(UserRole.Streamer))
+            {
+                this.Roles.Add(UserRole.Follower);
+            }
         }
 
         public UserDataViewModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.ID, new UserDataViewModel(this)); } }

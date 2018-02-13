@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -12,44 +13,48 @@ namespace MixItUp.Base.Commands
     [DataContract]
     public abstract class PermissionsCommandBase : CommandBase
     {
-        public static IEnumerable<string> PermissionsAllowedValues { get { return EnumHelper.GetEnumNames(UserViewModel.SelectableUserRoles()); } }
-
-        [DataMember]
-        public UserRole Permissions { get; set; }
-
         [DataMember]
         public int Cooldown { get; set; }
 
         [DataMember]
-        public UserCurrencyRequirementViewModel CurrencyRequirement { get; set; }
+        public RequirementViewModel Requirements { get; set; }
 
         [DataMember]
-        public UserCurrencyRequirementViewModel RankRequirement { get; set; }
+        [Obsolete]
+        internal UserRole Permissions { get; set; }
+
+        [DataMember]
+        [Obsolete]
+        internal CurrencyRequirementViewModel CurrencyRequirement { get; set; }
+
+        [DataMember]
+        [Obsolete]
+        internal CurrencyRequirementViewModel RankRequirement { get; set; }
 
         [JsonIgnore]
         protected DateTimeOffset lastRun = DateTimeOffset.MinValue;
 
-        public PermissionsCommandBase() { }
+        public PermissionsCommandBase()
+        {
+            this.Requirements = new RequirementViewModel();
+        }
 
-        public PermissionsCommandBase(string name, CommandTypeEnum type, string command, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement, UserCurrencyRequirementViewModel rankRequirement)
-            : this(name, type, new List<string>() { command }, lowestAllowedRole, cooldown, currencyRequirement, rankRequirement)
+        public PermissionsCommandBase(string name, CommandTypeEnum type, string command, int cooldown, RequirementViewModel requirements)
+            : this(name, type, new List<string>() { command }, cooldown, requirements)
         { }
 
-        public PermissionsCommandBase(string name, CommandTypeEnum type, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement, UserCurrencyRequirementViewModel rankRequirement)
+        public PermissionsCommandBase(string name, CommandTypeEnum type, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements)
             : base(name, type, commands)
         {
-            this.Permissions = lowestAllowedRole;
-            this.Cooldown = cooldown;
-            this.CurrencyRequirement = currencyRequirement;
-            this.RankRequirement = rankRequirement;
+            this.Requirements = requirements;
         }
 
         [JsonIgnore]
-        public string PermissionsString { get { return EnumHelper.GetEnumName(this.Permissions); } }
+        public string UserRoleRequirementString { get { return EnumHelper.GetEnumName(this.Requirements.UserRole); } }
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckLastRun(user) || !await this.CheckPermissions(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
+            if (!await this.CheckLastRun(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
             {
                 return;
             }
@@ -59,9 +64,9 @@ namespace MixItUp.Base.Commands
             await base.PerformInternal(user, arguments);
         }
 
-        public async Task<bool> CheckPermissions(UserViewModel user)
+        public async Task<bool> CheckUserRoleRequirement(UserViewModel user)
         {
-            if (!user.Roles.Any(r => r >= this.Permissions))
+            if (!user.Roles.Any(r => r >= this.Requirements.UserRole))
             {
                 if (ChannelSession.Chat != null)
                 {
@@ -74,11 +79,11 @@ namespace MixItUp.Base.Commands
 
         public async Task<bool> CheckRankRequirement(UserViewModel user)
         {
-            if (this.RankRequirement != null && this.RankRequirement.GetCurrency() != null)
+            if (this.Requirements.Rank != null && this.Requirements.Rank.GetCurrency() != null)
             {
-                if (!this.RankRequirement.DoesMeetRankRequirement(user.Data))
+                if (!this.Requirements.Rank.DoesMeetRankRequirement(user.Data))
                 {
-                    await this.RankRequirement.SendRankNotMetWhisper(user);
+                    await this.Requirements.Rank.SendRankNotMetWhisper(user);
                     return false;
                 }
             }
@@ -87,11 +92,11 @@ namespace MixItUp.Base.Commands
 
         public async Task<bool> CheckCurrencyRequirement(UserViewModel user)
         {
-            if (this.CurrencyRequirement != null && this.CurrencyRequirement.GetCurrency() != null)
+            if (this.Requirements.Currency != null && this.Requirements.Currency.GetCurrency() != null)
             {
-                if (!this.CurrencyRequirement.TrySubtractAmount(user.Data, this.CurrencyRequirement.RequiredAmount))
+                if (!this.Requirements.Currency.TrySubtractAmount(user.Data, this.Requirements.Currency.RequiredAmount))
                 {
-                    await this.CurrencyRequirement.SendCurrencyNotMetWhisper(user);
+                    await this.Requirements.Currency.SendCurrencyNotMetWhisper(user);
                     return false;
                 }
             }

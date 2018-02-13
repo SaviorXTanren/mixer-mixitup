@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace MixItUp.WPF.Controls.Games
             }
             else if (this.RankTypeComboBox.SelectedIndex >= 0 && this.RankMinimumComboBox.SelectedIndex >= 0)
             {
-                UserCurrencyRequirementViewModel rankRequirement = new UserCurrencyRequirementViewModel((UserCurrencyViewModel)this.RankTypeComboBox.SelectedItem, (UserRankViewModel)this.RankMinimumComboBox.SelectedItem);
+                CurrencyRequirementViewModel rankRequirement = new CurrencyRequirementViewModel((UserCurrencyViewModel)this.RankTypeComboBox.SelectedItem, (UserRankViewModel)this.RankMinimumComboBox.SelectedItem);
                 groupName = rankRequirement.GetCurrency().Name + " - " + rankRequirement.RankName;
                 group = new GameOutcomeGroup(rankRequirement);
             }

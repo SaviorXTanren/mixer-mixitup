@@ -2,6 +2,7 @@
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Games;
 using MixItUp.WPF.Util;
@@ -53,9 +54,6 @@ namespace MixItUp.WPF.Windows.Command
 
         protected override async Task OnLoaded()
         {
-            this.GameLowestRoleAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
-            this.GameLowestRoleAllowedComboBox.SelectedIndex = 0;
-
             this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
             this.CurrencyRequirementTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyRequirementTypeEnum>();
 
@@ -81,7 +79,9 @@ namespace MixItUp.WPF.Windows.Command
                 this.GameChatCommandTextBox.Text = this.command.CommandsString;
 
                 this.GameCooldownTextBox.Text = this.command.Cooldown.ToString();
-                this.GameLowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Permissions);
+
+                this.Requirements.HideCurrencyRequirement();
+                this.Requirements.SetRequirements(this.command.Requirements);
 
                 if (this.command is SinglePlayerGameCommand)
                 {
@@ -126,10 +126,10 @@ namespace MixItUp.WPF.Windows.Command
                     await this.UserParticipatedCommandControl.Initialize(this, rucComand.UserParticipatedCommand);
                 }
 
-                this.CurrencyTypeComboBox.SelectedItem = this.command.CurrencyRequirement.GetCurrency();
-                this.CurrencyRequirementTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.CurrencyRequirementType);
-                this.CurrencyMinimumCostTextBox.Text = this.command.CurrencyRequirement.RequiredAmount.ToString();
-                this.CurrencyMaximumCostTextBox.Text = this.command.CurrencyRequirement.MaximumAmount.ToString();
+                this.CurrencyTypeComboBox.SelectedItem = this.command.Requirements.Currency.GetCurrency();
+                this.CurrencyRequirementTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Requirements.Currency.RequirementType);
+                this.CurrencyMinimumCostTextBox.Text = this.command.Requirements.Currency.RequiredAmount.ToString();
+                this.CurrencyMaximumCostTextBox.Text = this.command.Requirements.Currency.MaximumAmount.ToString();
 
                 if (this.command is OutcomeGameCommandBase)
                 {
@@ -223,11 +223,11 @@ namespace MixItUp.WPF.Windows.Command
                     return;
                 }
 
-                if (this.GameLowestRoleAllowedComboBox.SelectedIndex < 0)
+                if (await this.Requirements.Validate())
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A permission level must be selected");
                     return;
                 }
+                RequirementViewModel requirements = this.Requirements.GetRequirements();
 
                 if (this.GameTypeComboBox.SelectedIndex < 0)
                 {
@@ -256,6 +256,19 @@ namespace MixItUp.WPF.Windows.Command
                 {
                     await MessageBoxHelper.ShowMessageDialog("The currency maximum must be greater than the minimum");
                     return;
+                }
+
+                if (currencyRequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost)
+                {
+                    requirements.Currency = new CurrencyRequirementViewModel((UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem, 0);
+                }
+                else if (currencyRequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    requirements.Currency = new CurrencyRequirementViewModel((UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem, minimum, maximum);
+                }
+                else
+                {
+                    requirements.Currency = new CurrencyRequirementViewModel((UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem, currencyRequirementType, minimum);
                 }
 
                 int gameLength = 0;
@@ -310,23 +323,20 @@ namespace MixItUp.WPF.Windows.Command
                     }
                 }
 
-                UserRole permissionsRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.GameLowestRoleAllowedComboBox.SelectedItem);
-
                 if (this.command != null)
                 {
                     ChannelSession.Settings.GameCommands.Remove(this.command);
                 }
 
-                UserCurrencyRequirementViewModel currencyRequirement = new UserCurrencyRequirementViewModel((UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem, minimum, maximum);
                 if (gameType == GameTypeEnum.SinglePlayer)
                 {
-                    this.command = new SinglePlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, currencyRequirement, currencyRequirementType, outcomes,
+                    this.command = new SinglePlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), cooldown, requirements, outcomes,
                         outcomeGroups, this.LoseLeftoverProbabilityCommandControl.GetCommand());
                 }
                 else if (gameType == GameTypeEnum.IndividualProbabilty)
                 {
-                    IndividualProbabilityGameCommand ipCommand = new IndividualProbabilityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown,
-                        currencyRequirement, currencyRequirementType, outcomes, outcomeGroups, this.LoseLeftoverProbabilityCommandControl.GetCommand(), gameLength, minParticipants);
+                    IndividualProbabilityGameCommand ipCommand = new IndividualProbabilityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), cooldown,
+                        requirements, outcomes, outcomeGroups, this.LoseLeftoverProbabilityCommandControl.GetCommand(), gameLength, minParticipants);
                     ipCommand.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
                     ipCommand.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
                     ipCommand.UserJoinedCommand = this.UserJoinedCommandControl.GetCommand();
@@ -335,7 +345,7 @@ namespace MixItUp.WPF.Windows.Command
                 }
                 else if (gameType == GameTypeEnum.OnlyOneWinner)
                 {
-                    OnlyOneWinnerGameCommand oowCommand = new OnlyOneWinnerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, currencyRequirement,
+                    OnlyOneWinnerGameCommand oowCommand = new OnlyOneWinnerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), cooldown, requirements,
                         gameLength, minParticipants);
                     oowCommand.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
                     oowCommand.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
@@ -345,8 +355,8 @@ namespace MixItUp.WPF.Windows.Command
                 }
                 else if (gameType == GameTypeEnum.UserCharity)
                 {
-                    UserCharityGameCommand ucCommand = new UserCharityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), permissionsRole, cooldown, currencyRequirement,
-                        currencyRequirementType, this.GiveToRandomUserCharityToggleButton.IsChecked.GetValueOrDefault());
+                    UserCharityGameCommand ucCommand = new UserCharityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), cooldown, requirements,
+                        this.GiveToRandomUserCharityToggleButton.IsChecked.GetValueOrDefault());
                     ucCommand.UserParticipatedCommand = this.UserParticipatedCommandControl.GetCommand();
                     this.command = ucCommand;
                 }

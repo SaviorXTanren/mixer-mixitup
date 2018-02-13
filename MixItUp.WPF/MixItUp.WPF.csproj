@@ -240,8 +240,8 @@
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Currency\CurrencySelectorControl.xaml.cs">
-      <DependentUpon>CurrencySelectorControl.xaml</DependentUpon>
+    <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
+      <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
       <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
@@ -337,8 +337,14 @@
     <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
       <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Currency\RankSelectorControl.xaml.cs">
+    <Compile Include="Controls\Requirement\RankSelectorControl.xaml.cs">
       <DependentUpon>RankSelectorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirement\RequirementControl.xaml.cs">
+      <DependentUpon>RequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirement\UserRoleRequirementControl.xaml.cs">
+      <DependentUpon>UserRoleRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\DeveloperAPIServiceControl.xaml.cs">
       <DependentUpon>DeveloperAPIServiceControl.xaml</DependentUpon>
@@ -507,7 +513,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\Currency\CurrencySelectorControl.xaml">
+    <Page Include="Controls\Requirement\CurrencyRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -639,11 +645,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Currency\RankSelectorControl.xaml">
+    <Page Include="Controls\Requirement\RankSelectorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\StatisticsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirement\RequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirement\UserRoleRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

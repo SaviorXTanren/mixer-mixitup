@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,8 +23,8 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionTypeEnum>();
-            this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
-            this.InteractiveMoveUserToScenePermissionsAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
+            this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
+            this.InteractiveMoveUserToScenePermissionsAllowedComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
 
             if (this.action != null)
             {

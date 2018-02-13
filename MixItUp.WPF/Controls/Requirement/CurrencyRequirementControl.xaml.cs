@@ -1,19 +1,20 @@
-﻿using MixItUp.Base.ViewModel.User;
-using System.Windows.Controls;
-using System.Threading.Tasks;
-using MixItUp.Base;
+﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel.Requirement;
+using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Linq;
-using MaterialDesignThemes.Wpf;
+using System.Threading.Tasks;
+using System.Windows.Controls;
 
-namespace MixItUp.WPF.Controls.Currency
+namespace MixItUp.WPF.Controls.Requirement
 {
     /// <summary>
-    /// Interaction logic for CurrencySelectorControl.xaml
+    /// Interaction logic for CurrencyRequirementControl.xaml
     /// </summary>
-    public partial class CurrencySelectorControl : LoadingControlBase
+    public partial class CurrencyRequirementControl : LoadingControlBase
     {
-        public CurrencySelectorControl()
+        public CurrencyRequirementControl()
         {
             InitializeComponent();
         }
@@ -22,24 +23,24 @@ namespace MixItUp.WPF.Controls.Currency
 
         public int GetCurrencyAmount()
         {
-            int currencyCost = 0;
-            if (!string.IsNullOrEmpty(this.CurrencyCostTextBox.Text) && !int.TryParse(this.CurrencyCostTextBox.Text, out currencyCost))
+            int currencyCost = -1;
+            if (!string.IsNullOrEmpty(this.CurrencyCostTextBox.Text))
             {
-                currencyCost = -1;
+                int.TryParse(this.CurrencyCostTextBox.Text, out currencyCost);
             }
             return currencyCost;
         }
 
-        public UserCurrencyRequirementViewModel GetCurrencyRequirement()
+        public CurrencyRequirementViewModel GetCurrencyRequirement()
         {
             if (this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault() && this.GetCurrencyType() != null && this.GetCurrencyAmount() >= 0)
             {
-                return new UserCurrencyRequirementViewModel(this.GetCurrencyType(), this.GetCurrencyAmount());
+                return new CurrencyRequirementViewModel(this.GetCurrencyType(), this.GetCurrencyAmount());
             }
             return null;
         }
 
-        public void SetCurrencyRequirement(UserCurrencyRequirementViewModel currencyRequirement)
+        public void SetCurrencyRequirement(CurrencyRequirementViewModel currencyRequirement)
         {
             if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyID))
             {
@@ -49,18 +50,35 @@ namespace MixItUp.WPF.Controls.Currency
                 this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[currencyRequirement.CurrencyID];
 
                 this.CurrencyCostTextBox.IsEnabled = true;
-                this.CurrencyCostTextBox.Text = currencyRequirement.RequiredAmount.ToString();
+                if (currencyRequirement.RequiredAmount >= 0)
+                {
+                    this.CurrencyCostTextBox.Text = currencyRequirement.RequiredAmount.ToString();
+                }
             }
         }
 
-        public Task<bool> Validate()
+        public async Task<bool> Validate()
         {
-            return Task.FromResult(true);
+            if (this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault())
+            {
+                if (this.GetCurrencyRequirement() == null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A Currency must be specified when a Currency requirement is set");
+                    return false;
+                }
+
+                if (this.GetCurrencyAmount() <= 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A valid Currency Amount must be specified when a Currency requirement is set");
+                    return false;
+                }
+            }
+            return true;
         }
 
         protected override Task OnLoaded()
         {
-            UserCurrencyRequirementViewModel requirement = this.GetCurrencyRequirement();
+            CurrencyRequirementViewModel requirement = this.GetCurrencyRequirement();
 
             if (ChannelSession.Settings != null)
             {

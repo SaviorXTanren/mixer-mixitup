@@ -43,18 +43,9 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.GameQueueUsersListView.ItemsSource = this.gameQueueUsers;
 
-            this.MustFollowToggleButton.IsChecked = ChannelSession.Settings.GameQueueMustFollow;
             this.SubPriorityToggleButton.IsChecked = ChannelSession.Settings.GameQueueSubPriority;
 
-            if (ChannelSession.Settings.GameQueueRankRequirement != null && ChannelSession.Settings.GameQueueRankRequirement.GetCurrency() != null)
-            {
-                this.RankSelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueRankRequirement);
-            }
-
-            if (ChannelSession.Settings.GameQueueCurrencyRequirement != null && ChannelSession.Settings.GameQueueCurrencyRequirement.GetCurrency() != null)
-            {
-                this.CurrencySelector.SetCurrencyRequirement(ChannelSession.Settings.GameQueueCurrencyRequirement);
-            }
+            this.Requirement.SetRequirements(ChannelSession.Settings.GameQueueRequirements);
 
             GlobalEvents.OnGameQueueUpdated += ChannelSession_OnGameQueueUpdated;
 
@@ -76,11 +67,6 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void MustFollowToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            ChannelSession.Settings.GameQueueMustFollow = this.MustFollowToggleButton.IsChecked.GetValueOrDefault();
-        }
-
         private void SubPriorityToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.Settings.GameQueueSubPriority = this.SubPriorityToggleButton.IsChecked.GetValueOrDefault();
@@ -88,31 +74,22 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void EnableGameQueueToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (!await this.RankSelector.Validate())
+            if (!await this.Requirement.Validate())
             {
                 this.EnableGameQueueToggleButton.IsChecked = false;
                 return;
             }
 
-            if (!await this.CurrencySelector.Validate())
-            {
-                this.EnableGameQueueToggleButton.IsChecked = false;
-                return;
-            }
-
-            ChannelSession.Settings.GameQueueRankRequirement = this.RankSelector.GetCurrencyRequirement();
-            ChannelSession.Settings.GameQueueCurrencyRequirement = this.CurrencySelector.GetCurrencyRequirement();
+            ChannelSession.Settings.GameQueueRequirements = this.Requirement.GetRequirements();
 
             ChannelSession.GameQueueEnabled = true;
-            this.MustFollowToggleButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.RankSelector.IsEnabled =
-                this.CurrencySelector.IsEnabled = !ChannelSession.GameQueueEnabled;
+            this.ClearQueueButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.Requirement.IsEnabled = false;
         }
 
         private void EnableGameQueueToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.GameQueueEnabled = false;
-            this.MustFollowToggleButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.RankSelector.IsEnabled =
-                this.CurrencySelector.IsEnabled = !ChannelSession.GameQueueEnabled;
+            this.ClearQueueButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.Requirement.IsEnabled = true;
         }
 
         private void ClearQueueButton_Click(object sender, System.Windows.RoutedEventArgs e)

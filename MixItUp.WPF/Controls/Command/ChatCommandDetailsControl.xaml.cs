@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System;
@@ -27,16 +28,12 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
-            this.LowestRoleAllowedComboBox.ItemsSource = ChatCommand.PermissionsAllowedValues;
-            this.LowestRoleAllowedComboBox.SelectedIndex = 0;
-
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
-                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Permissions);
                 this.CooldownTextBox.Text = this.command.Cooldown.ToString();
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
-                this.CurrencySelector.SetCurrencyRequirement(this.command.CurrencyRequirement);
+                this.Requirements.SetRequirements(this.command.Requirements);
             }
             else
             {
@@ -54,13 +51,7 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            if (this.LowestRoleAllowedComboBox.SelectedIndex < 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("A permission level must be selected");
-                return false;
-            }
-
-            if (!await this.CurrencySelector.Validate())
+            if (!await this.Requirements.Validate())
             {
                 return false;
             }
@@ -125,28 +116,25 @@ namespace MixItUp.WPF.Controls.Command
             if (await this.Validate())
             {
                 IEnumerable<string> commands = this.GetCommandStrings();
-                UserRole lowestRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.LowestRoleAllowedComboBox.SelectedItem);
-
                 int cooldown = 0;
                 if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
                 {
                     cooldown = int.Parse(this.CooldownTextBox.Text);
                 }
 
-                UserCurrencyRequirementViewModel currencyRequirement = this.CurrencySelector.GetCurrencyRequirement();
+                RequirementViewModel requirements = this.Requirements.GetRequirements();
 
                 if (this.command == null)
                 {
-                    this.command = new ChatCommand(this.NameTextBox.Text, commands, lowestRole, cooldown, currencyRequirement);
+                    this.command = new ChatCommand(this.NameTextBox.Text, commands, cooldown, requirements);
                     ChannelSession.Settings.ChatCommands.Add(this.command);
                 }
                 else
                 {
                     this.command.Name = this.NameTextBox.Text;
                     this.command.Commands = commands.ToList();
-                    this.command.Permissions = lowestRole;
-                    this.command.CurrencyRequirement = currencyRequirement;
                     this.command.Cooldown = cooldown;
+                    this.command.Requirements = requirements;
                 }
                 return this.command;
             }

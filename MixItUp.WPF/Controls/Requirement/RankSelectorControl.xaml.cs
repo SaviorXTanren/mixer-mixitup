@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
@@ -6,14 +7,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace MixItUp.WPF.Controls.Currency
+namespace MixItUp.WPF.Controls.Requirement
 {
     /// <summary>
-    /// Interaction logic for RankSelectorControl.xaml
+    /// Interaction logic for RankRequirementControl.xaml
     /// </summary>
-    public partial class RankSelectorControl : LoadingControlBase
+    public partial class RankRequirementControl : LoadingControlBase
     {
-        public RankSelectorControl()
+        public RankRequirementControl()
         {
             InitializeComponent();
 
@@ -27,16 +28,16 @@ namespace MixItUp.WPF.Controls.Currency
 
         public UserRankViewModel GetRankMinimum() { return (UserRankViewModel)this.RankMinimumComboBox.SelectedItem; }
 
-        public UserCurrencyRequirementViewModel GetCurrencyRequirement()
+        public CurrencyRequirementViewModel GetCurrencyRequirement()
         {
             if (this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault() && this.GetRankType() != null && this.GetRankMinimum() != null)
             {
-                return new UserCurrencyRequirementViewModel(this.GetRankType(), this.GetRankMinimum(), this.GetRankMustEqual());
+                return new CurrencyRequirementViewModel(this.GetRankType(), this.GetRankMinimum(), this.GetRankMustEqual());
             }
             return null;
         }
 
-        public void SetCurrencyRequirement(UserCurrencyRequirementViewModel currencyRequirement)
+        public void SetCurrencyRequirement(CurrencyRequirementViewModel currencyRequirement)
         {
             if (currencyRequirement != null && ChannelSession.Settings.Currencies.ContainsKey(currencyRequirement.CurrencyID))
             {
@@ -56,17 +57,26 @@ namespace MixItUp.WPF.Controls.Currency
 
         public async Task<bool> Validate()
         {
-            if (this.GetRankType() != null && this.GetRankMinimum() == null)
+            if (this.EnableDisableToggleSwitch.IsChecked.GetValueOrDefault())
             {
-                await MessageBoxHelper.ShowMessageDialog("A rank minimum must be specified with a rank");
-                return false;
+                if (this.GetRankType() == null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A Rank must be specified when a Rank requirement is set");
+                    return false;
+                }
+
+                if (this.GetRankMinimum() == null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A Minimum Rank must be specified when a Rank Requirement is set");
+                    return false;
+                }
             }
             return true;
         }
 
         protected override Task OnLoaded()
         {
-            UserCurrencyRequirementViewModel requirement = this.GetCurrencyRequirement();
+            CurrencyRequirementViewModel requirement = this.GetCurrencyRequirement();
 
             if (ChannelSession.Settings != null)
             {

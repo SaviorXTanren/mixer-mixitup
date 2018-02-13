@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -27,14 +28,14 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.isLoaded = false;
 
-            this.FilteredWordsExemptComboBox.ItemsSource = PermissionsCommandBase.PermissionsAllowedValues;
+            this.FilteredWordsExemptComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
 
             this.MaxCapsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
             this.MaxPunctuationSymbolsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
             this.MaxEmotesTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
-            this.ChatTextModerationExemptComboBox.ItemsSource = PermissionsCommandBase.PermissionsAllowedValues;
+            this.ChatTextModerationExemptComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
 
-            this.BlockLinksExemptComboBox.ItemsSource = PermissionsCommandBase.PermissionsAllowedValues;
+            this.BlockLinksExemptComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
 
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
 

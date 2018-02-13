@@ -4,6 +4,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 7;
+        public const int LatestVersion = 8;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -44,13 +45,9 @@ namespace MixItUp.Desktop
         public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]
-        public bool GameQueueMustFollow { get; set; }
-        [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
-        public UserCurrencyRequirementViewModel GameQueueRankRequirement { get; set; }
-        [JsonProperty]
-        public UserCurrencyRequirementViewModel GameQueueCurrencyRequirement { get; set; }
+        public RequirementViewModel GameQueueRequirements { get; set; }
 
         [JsonProperty]
         public bool QuotesEnabled { get; set; }
@@ -61,15 +58,11 @@ namespace MixItUp.Desktop
         public int TimerCommandsMinimumMessages { get; set; }
 
         [JsonProperty]
-        public UserRole GiveawayUserRole { get; set; }
-        [JsonProperty]
         public string GiveawayCommand { get; set; }
         [JsonProperty]
         public int GiveawayTimer { get; set; }
         [JsonProperty]
-        public UserCurrencyRequirementViewModel GiveawayRankRequirement { get; set; }
-        [JsonProperty]
-        public UserCurrencyRequirementViewModel GiveawayCurrencyRequirement { get; set; }
+        public RequirementViewModel GiveawayRequirements { get; set; }
 
         [JsonProperty]
         public bool ModerationUseCommunityFilteredWords { get; set; }
@@ -246,9 +239,11 @@ namespace MixItUp.Desktop
             this.TimerCommandsInterval = 10;
             this.TimerCommandsMinimumMessages = 10;
 
+            this.GameQueueRequirements = new RequirementViewModel();
+
             this.GiveawayCommand = "giveaway";
-            this.GiveawayUserRole = UserRole.User;
             this.GiveawayTimer = 60;
+            this.GiveawayRequirements = new RequirementViewModel();
 
             this.MaxMessagesInChat = 100;
 
@@ -391,9 +386,23 @@ namespace MixItUp.Desktop
         public int GameQueueCurrencyCost { get; set; }
 
         [JsonProperty]
+        public bool GameQueueMustFollow { get; set; }
+        [JsonProperty]
+        public CurrencyRequirementViewModel GameQueueRankRequirement { get; set; }
+        [JsonProperty]
+        public CurrencyRequirementViewModel GameQueueCurrencyRequirement { get; set; }
+
+        [JsonProperty]
         public int GiveawayCurrencyCost { get; set; }
         [JsonProperty]
         public string GiveawayUserRank { get; set; }
+
+        [JsonProperty]
+        public UserRole GiveawayUserRole { get; set; }
+        [JsonProperty]
+        public CurrencyRequirementViewModel GiveawayCurrencyRequirement { get; set; }
+        [JsonProperty]
+        public CurrencyRequirementViewModel GiveawayRankRequirement { get; set; }
 
         [JsonProperty]
         public List<UserDataViewModel> userDataInternal { get; set; }

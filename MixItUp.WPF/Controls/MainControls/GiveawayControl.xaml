@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:CurrencyControls="clr-namespace:MixItUp.WPF.Controls.Currency"
+             xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
 
@@ -37,20 +37,11 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBox Grid.Column="0" x:Name="GiveawayItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                <TextBox Grid.Column="2" x:Name="GiveawayCommandTextBox" Width="150" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-            </Grid>
+            <TextBox Grid.Row="0" HorizontalAlignment="Center" x:Name="GiveawayItemTextBox" Width="250" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -59,25 +50,21 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0" x:Name="GiveawayTypeComboBox" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource BackgroundComboBox}" Width="120" />
+                <TextBox Grid.Column="0" x:Name="GiveawayCommandTextBox" Width="150" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <TextBox Grid.Column="2" x:Name="GiveawayTimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
-            <Grid Grid.Row="4" HorizontalAlignment="Center">
-                <CurrencyControls:CurrencySelectorControl x:Name="CurrencySelector" />
+            <Grid Grid.Row="4">
+                <RequirementControls:RequirementControl x:Name="Requirements" />
             </Grid>
 
             <Grid Grid.Row="6" HorizontalAlignment="Center">
-                <CurrencyControls:RankSelectorControl x:Name="RankSelector" />
-            </Grid>
-
-            <Grid Grid.Row="8" HorizontalAlignment="Center">
                 <Button x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
                 <Button x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Cancel Giveaway</Button>
             </Grid>
 
-            <Grid Grid.Row="10" HorizontalAlignment="Center">
+            <Grid Grid.Row="8" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
@@ -89,7 +76,7 @@
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" x:Name="TimeLeftTextBlock" />
             </Grid>
 
-            <Grid Grid.Row="12" HorizontalAlignment="Center">
+            <Grid Grid.Row="10" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />

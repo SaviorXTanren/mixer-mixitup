@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.Util;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -11,18 +11,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
-    public enum CurrencyRequirementTypeEnum
-    {
-        [Name("No Currency Cost")]
-        NoCurrencyCost,
-        [Name("Minimum Only")]
-        MinimumOnly,
-        [Name("Minimum & Maximum")]
-        MinimumAndMaximum,
-        [Name("Required Amount")]
-        RequiredAmount
-    }
-
     #region Game Outcome Classes
 
     [DataContract]
@@ -55,7 +43,7 @@ namespace MixItUp.Base.Commands
         public UserRole Role { get; set; }
 
         [DataMember]
-        public UserCurrencyRequirementViewModel RankRequirement { get; set; }
+        public CurrencyRequirementViewModel RankRequirement { get; set; }
 
         [DataMember]
         public List<GameOutcomeProbability> Probabilities { get; set; }
@@ -64,7 +52,7 @@ namespace MixItUp.Base.Commands
 
         public GameOutcomeGroup(UserRole role) : this() { this.Role = role; }
 
-        public GameOutcomeGroup(UserCurrencyRequirementViewModel rankRequirement) : this() { this.RankRequirement = rankRequirement; }
+        public GameOutcomeGroup(CurrencyRequirementViewModel rankRequirement) : this() { this.RankRequirement = rankRequirement; }
 
         public int GetEvaluatedTestPayout() { return this.Probabilities.Sum(p => p.GetEvaluatedTestPayout()); }
 
@@ -130,9 +118,8 @@ namespace MixItUp.Base.Commands
 
         public UserCharityGameCommand() { }
 
-        public UserCharityGameCommand(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement,
-            CurrencyRequirementTypeEnum currencyRequirementType, bool giveToRandomUser)
-            : base(name, commands, lowestAllowedRole, cooldown, currencyRequirement, currencyRequirementType)
+        public UserCharityGameCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements, bool giveToRandomUser)
+            : base(name, commands, cooldown, requirements)
         {
             this.GiveToRandomUser = giveToRandomUser;
         }
@@ -193,7 +180,7 @@ namespace MixItUp.Base.Commands
 
                 this.lastBet = this.GetBetAmount(arguments);
 
-                receiver.Data.AddCurrencyAmount(this.CurrencyRequirement.GetCurrency(), this.TotalBets);
+                receiver.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.TotalBets);
 
                 await this.RunCommand(this.UserParticipatedCommand, receiver, this.TotalBets);
             }
@@ -244,9 +231,8 @@ namespace MixItUp.Base.Commands
 
         public OnlyOneWinnerGameCommand() { }
 
-        public OnlyOneWinnerGameCommand(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement,
-            int gameLength, int minimumParticipants)
-            : base(name, commands, lowestAllowedRole, cooldown, currencyRequirement, CurrencyRequirementTypeEnum.RequiredAmount)
+        public OnlyOneWinnerGameCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements, int gameLength, int minimumParticipants)
+            : base(name, commands, cooldown, requirements)
         {
             this.GameLength = gameLength;
             this.MinimumParticipants = minimumParticipants;
@@ -299,7 +285,7 @@ namespace MixItUp.Base.Commands
                         int randomNumber = random.Next(this.UserBets.Count);
                         UserViewModel winner = this.UserBets.ElementAt(randomNumber).Key;
 
-                        winner.Data.AddCurrencyAmount(this.CurrencyRequirement.GetCurrency(), this.TotalBets);
+                        winner.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.TotalBets);
 
                         await this.RunCommand(this.GameEndedCommand, winner, this.TotalBets);
                     }
@@ -345,10 +331,10 @@ namespace MixItUp.Base.Commands
 
         public IndividualProbabilityGameCommand() { }
 
-        public IndividualProbabilityGameCommand(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement,
-            CurrencyRequirementTypeEnum currencyRequirementType, IEnumerable<GameOutcome> outcomes, IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand, int gameLength,
+        public IndividualProbabilityGameCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes,
+            IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand, int gameLength,
             int minimumParticipants)
-            : base(name, commands, lowestAllowedRole, cooldown, currencyRequirement, currencyRequirementType, outcomes, groups, loseLeftoverCommand)
+            : base(name, commands, cooldown, requirements, outcomes, groups, loseLeftoverCommand)
         {
             this.GameLength = gameLength;
             this.MinimumParticipants = minimumParticipants;
@@ -399,7 +385,7 @@ namespace MixItUp.Base.Commands
                     {
                         foreach (var kvp in this.UserBets)
                         {
-                            await this.RunRandomProbabilityForUser(this, kvp.Key, kvp.Value, this.CurrencyRequirement.GetCurrency());
+                            await this.RunRandomProbabilityForUser(this, kvp.Key, kvp.Value, this.Requirements.Currency.GetCurrency());
                         }
 
                         await this.RunCommand(this.GameEndedCommand, user, this.TotalBets);
@@ -429,9 +415,9 @@ namespace MixItUp.Base.Commands
 
         public SinglePlayerGameCommand() { }
 
-        public SinglePlayerGameCommand(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement,
-            CurrencyRequirementTypeEnum currencyRequirementType, IEnumerable<GameOutcome> outcomes, IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand)
-            : base(name, commands, lowestAllowedRole, cooldown, currencyRequirement, currencyRequirementType, outcomes, groups, loseLeftoverCommand)
+        public SinglePlayerGameCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes,
+            IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand)
+            : base(name, commands, cooldown, requirements, outcomes, groups, loseLeftoverCommand)
         { }
 
         public override int TotalBets { get { return this.lastBet; } }
@@ -453,7 +439,7 @@ namespace MixItUp.Base.Commands
 
                 int betAmount = this.GetBetAmount(arguments);
 
-                await this.RunRandomProbabilityForUser(this, user, betAmount, this.CurrencyRequirement.GetCurrency());
+                await this.RunRandomProbabilityForUser(this, user, betAmount, this.Requirements.Currency.GetCurrency());
             }
         }
 
@@ -485,9 +471,9 @@ namespace MixItUp.Base.Commands
             this.Groups = new List<GameOutcomeGroup>();
         }
 
-        public OutcomeGameCommandBase(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement,
-            CurrencyRequirementTypeEnum currencyRequirementType, IEnumerable<GameOutcome> outcomes, IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand)
-            : base(name, commands, lowestAllowedRole, cooldown, currencyRequirement, currencyRequirementType)
+        public OutcomeGameCommandBase(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirement, IEnumerable<GameOutcome> outcomes,
+            IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand)
+            : base(name, commands, cooldown, requirement)
         {
             this.Outcomes = outcomes.ToList();
             this.Groups = groups.ToList();
@@ -553,17 +539,14 @@ namespace MixItUp.Base.Commands
 
         private static SemaphoreSlim gameCommandPerformSemaphore = new SemaphoreSlim(1);
 
+        [Obsolete]
         [DataMember]
-        public CurrencyRequirementTypeEnum CurrencyRequirementType { get; set; }
-
+        internal CurrencyRequirementTypeEnum CurrencyRequirementType { get; set; }
         public GameCommandBase() { }
 
-        public GameCommandBase(string name, IEnumerable<string> commands, UserRole lowestAllowedRole, int cooldown, UserCurrencyRequirementViewModel currencyRequirement,
-            CurrencyRequirementTypeEnum currencyRequirementType)
-            : base(name, CommandTypeEnum.Game, commands, lowestAllowedRole, cooldown, currencyRequirement, null)
-        {
-            this.CurrencyRequirementType = currencyRequirementType;
-        }
+        public GameCommandBase(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirement)
+            : base(name, CommandTypeEnum.Game, commands, cooldown, requirement)
+        { }
 
         [JsonIgnore]
         public abstract int TotalBets { get; }
@@ -593,7 +576,7 @@ namespace MixItUp.Base.Commands
             command.AddSpecialIdentifier(GameCommandBase.GameTotalBetsSpecialIdentifier, this.TotalBets.ToString());
             command.AddSpecialIdentifier(GameCommandBase.GameTotalUsersSpecialIdentifier, this.TotalUsers.ToString());
             command.AddSpecialIdentifier(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
-            command.AddSpecialIdentifier(GameCommandBase.GameCurrencyNameSpecialIdentifier, this.CurrencyRequirement.GetCurrency().Name);
+            command.AddSpecialIdentifier(GameCommandBase.GameCurrencyNameSpecialIdentifier, this.Requirements.Currency.GetCurrency().Name);
             if (user != null)
             {
                 command.AddSpecialIdentifier(GameCommandBase.GameBetSpecialIdentifier, this.GetUserBet(user).ToString());
@@ -606,7 +589,7 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task<bool> PerformUserJoinChecks(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (!await this.CheckPermissions(user))
+            if (!await this.CheckUserRoleRequirement(user))
             {
                 return false;
             }
@@ -614,7 +597,7 @@ namespace MixItUp.Base.Commands
             int betAmount = this.GetBetAmount(arguments);
             if (betAmount < 0)
             {
-                if (this.CurrencyRequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.CurrencyRequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+                if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
                 {
                     await this.WhisperUser(user, string.Format("USAGE: !{0}", this.Commands.FirstOrDefault()));
                     return false;
@@ -626,30 +609,30 @@ namespace MixItUp.Base.Commands
                 }
             }
 
-            UserCurrencyViewModel currency = this.CurrencyRequirement.GetCurrency();
+            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
             if (currency == null)
             {
                 return false;
             }
 
-            if (!this.CurrencyRequirement.DoesMeetCurrencyRequirement(betAmount))
+            if (!this.Requirements.Currency.DoesMeetCurrencyRequirement(betAmount))
             {
                 string requiredBet = "You must enter a valid bet";
-                if (this.CurrencyRequirement.MaximumAmount > 0)
+                if (this.Requirements.Currency.MaximumAmount > 0)
                 {
-                    requiredBet += string.Format(" between {0} - {1} {2}", this.CurrencyRequirement.RequiredAmount, this.CurrencyRequirement.MaximumAmount, currency.Name);
+                    requiredBet += string.Format(" between {0} - {1} {2}", this.Requirements.Currency.RequiredAmount, this.Requirements.Currency.MaximumAmount, currency.Name);
                 }
                 else
                 {
-                    requiredBet += string.Format(" of {0} or more {1}", this.CurrencyRequirement.RequiredAmount, currency.Name);
+                    requiredBet += string.Format(" of {0} or more {1}", this.Requirements.Currency.RequiredAmount, currency.Name);
                 }
                 await this.WhisperUser(user, requiredBet);
                 return false;
             }
 
-            if (!this.CurrencyRequirement.TrySubtractAmount(user.Data, betAmount))
+            if (!this.Requirements.Currency.TrySubtractAmount(user.Data, betAmount))
             {
-                await this.WhisperUser(user, string.Format("You do not have the minimum {0} {1} to participate", this.CurrencyRequirement.RequiredAmount, currency.Name));
+                await this.WhisperUser(user, string.Format("You do not have the minimum {0} {1} to participate", this.Requirements.Currency.RequiredAmount, currency.Name));
                 return false;
             }
             return true;
@@ -658,11 +641,11 @@ namespace MixItUp.Base.Commands
         protected virtual int GetBetAmount(IEnumerable<string> arguments)
         {
             int amount = -1;
-            if (this.CurrencyRequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.CurrencyRequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
                 if (arguments == null || arguments.Count() == 0)
                 {
-                    amount = this.CurrencyRequirement.RequiredAmount;
+                    amount = this.Requirements.Currency.RequiredAmount;
                 }
             }
             else if (arguments != null && arguments.Count() == 1)

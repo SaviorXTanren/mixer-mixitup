@@ -57,48 +57,45 @@ namespace MixItUp.Base.Actions
                     int position = ChannelSession.GameQueue.IndexOf(user);
                     if (position == -1)
                     {
-                        if (!user.IsFollower)
+                        if (!await ChannelSession.Settings.GameQueueRequirements.DoesMeetUserRoleRequirement(user))
                         {
-                            await user.SetDetails(true);
-                        }
-
-                        if (ChannelSession.Settings.GameQueueMustFollow && !user.IsFollower)
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, "You must be a follower of the channel to use the game queue");
+                            await ChannelSession.Settings.GameQueueRequirements.SendUserRoleNotMetWhisper(user);
                             return;
                         }
 
-                        UserCurrencyDataViewModel rankData = null;
-                        if (ChannelSession.Settings.GameQueueRankRequirement != null)
+                        if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetRankRequirement(user))
                         {
-                            rankData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueRankRequirement.CurrencyID);
-                            if (!ChannelSession.Settings.GameQueueRankRequirement.DoesMeetRankRequirement(user.Data))
-                            {
-                                await ChannelSession.Settings.GameQueueRankRequirement.SendRankNotMetWhisper(user);
-                                return;
-                            }
+                            await ChannelSession.Settings.GameQueueRequirements.Rank.SendRankNotMetWhisper(user);
+                            return;
                         }
 
-                        UserCurrencyDataViewModel currencyData = null;
-                        if (ChannelSession.Settings.GameQueueCurrencyRequirement != null)
+                        if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetCurrencyRequirement(user) || !ChannelSession.Settings.GameQueueRequirements.TrySubtractCurrencyAmount(user))
                         {
-                            currencyData = user.Data.GetCurrency(ChannelSession.Settings.GameQueueCurrencyRequirement.CurrencyID);
-                            if (!ChannelSession.Settings.GameQueueCurrencyRequirement.TrySubtractAmount(user.Data))
-                            {
-                                await ChannelSession.Settings.GameQueueCurrencyRequirement.SendCurrencyNotMetWhisper(user);
-                                return;
-                            }
+                            await ChannelSession.Settings.GameQueueRequirements.Currency.SendCurrencyNotMetWhisper(user);
+                            return;
                         }
 
-                        if (ChannelSession.Settings.GameQueueSubPriority && user.Roles.Contains(UserRole.Subscriber))
+                        if (ChannelSession.Settings.GameQueueSubPriority)
                         {
-                            int totalSubs = ChannelSession.GameQueue.Count(u => u.Roles.Contains(UserRole.Subscriber));
-                            ChannelSession.GameQueue.Insert(totalSubs, user);
+                            if (!user.Roles.Contains(UserRole.Subscriber))
+                            {
+                                await user.SetSubscribeDate();
+                            }
+
+                            if (user.Roles.Contains(UserRole.Subscriber))
+                            {
+                                int totalSubs = ChannelSession.GameQueue.Count(u => u.Roles.Contains(UserRole.Subscriber));
+                                ChannelSession.GameQueue.Insert(totalSubs, user);
+                            }
+                            else
+                            {
+                                ChannelSession.GameQueue.Add(user);
+                            }
                         }
                         else
                         {
                             ChannelSession.GameQueue.Add(user);
-                        }
+                        } 
                     }
                     await this.PrintUserPosition(user);
                 }

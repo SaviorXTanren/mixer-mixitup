@@ -3,6 +3,7 @@ using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -23,21 +24,17 @@ namespace MixItUp.Base
 
         ExpandedChannelModel Channel { get; set; }
 
-        bool GameQueueMustFollow { get; set; }
         bool GameQueueSubPriority { get; set; }
-        UserCurrencyRequirementViewModel GameQueueRankRequirement { get; set; }
-        UserCurrencyRequirementViewModel GameQueueCurrencyRequirement { get; set; }
+        RequirementViewModel GameQueueRequirements { get; set; }
 
         bool QuotesEnabled { get; set; }
         
         int TimerCommandsInterval { get; set; }
         int TimerCommandsMinimumMessages { get; set; }
 
-        UserRole GiveawayUserRole { get; set; }
         string GiveawayCommand { get; set; }
         int GiveawayTimer { get; set; }
-        UserCurrencyRequirementViewModel GiveawayCurrencyRequirement { get; set; }
-        UserCurrencyRequirementViewModel GiveawayRankRequirement { get; set; }
+        RequirementViewModel GiveawayRequirements { get; set; }
 
         bool ModerationUseCommunityFilteredWords { get; set; }
         UserRole ModerationFilteredWordsExcempt { get; set; }

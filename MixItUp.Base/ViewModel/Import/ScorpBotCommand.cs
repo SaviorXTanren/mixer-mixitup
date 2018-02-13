@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System.Data.Common;
 using System.Runtime.Serialization;
@@ -14,20 +15,24 @@ namespace MixItUp.Base.ViewModel.Import
         public string Command { get; set; }
 
         [DataMember]
-        public UserRole Permission { get; set; }
-
-        [DataMember]
         public string Text { get; set; }
 
         [DataMember]
         public int Cooldown { get; set; }
 
         [DataMember]
+        public RequirementViewModel Requirements { get; set; }
+
+        [DataMember]
         public bool Enabled { get; set; }
 
-        public ScorpBotCommand() { }
+        public ScorpBotCommand()
+        {
+            this.Requirements = new RequirementViewModel();
+        }
 
         public ScorpBotCommand(string command, string text)
+            : this()
         {
             this.Command = command;
             this.Command = this.Command.ToLower();
@@ -36,7 +41,7 @@ namespace MixItUp.Base.ViewModel.Import
             this.Text = text;
             this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(this.Text);
 
-            this.Permission = UserRole.User;
+            this.Requirements.UserRole = UserRole.User;
 
             this.Enabled = true;
         }
@@ -47,13 +52,13 @@ namespace MixItUp.Base.ViewModel.Import
             string permInfo = (string)reader["PermInfo"];
             if (permInfo.Contains("followed.php"))
             {
-                this.Permission = UserRole.Follower;
+                this.Requirements.UserRole = UserRole.Follower;
             }
 
             string permission = (string)reader["Permission"];
             if (permission.Equals("Moderator"))
             {
-                this.Permission = UserRole.Mod;
+                this.Requirements.UserRole = UserRole.Mod;
             }
 
             this.Cooldown = (int)reader["Cooldown"];

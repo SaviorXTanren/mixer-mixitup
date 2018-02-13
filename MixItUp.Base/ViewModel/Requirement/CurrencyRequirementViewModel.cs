@@ -1,13 +1,27 @@
-﻿using Newtonsoft.Json;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace MixItUp.Base.ViewModel.User
+namespace MixItUp.Base.ViewModel.Requirement
 {
+    public enum CurrencyRequirementTypeEnum
+    {
+        [Name("No Currency Cost")]
+        NoCurrencyCost,
+        [Name("Minimum Only")]
+        MinimumOnly,
+        [Name("Minimum & Maximum")]
+        MinimumAndMaximum,
+        [Name("Required Amount")]
+        RequiredAmount
+    }
+
     [DataContract]
-    public class UserCurrencyRequirementViewModel
+    public class CurrencyRequirementViewModel
     {
         [DataMember]
         public Guid CurrencyID { get; set; }
@@ -16,22 +30,37 @@ namespace MixItUp.Base.ViewModel.User
         public int RequiredAmount { get; set; }
         [DataMember]
         public int MaximumAmount { get; set; }
+        [DataMember]
+        public CurrencyRequirementTypeEnum RequirementType { get; set; }
 
         [DataMember]
         public string RankName { get; set; }
         [DataMember]
         public bool MustEqual { get; set; }
 
-        public UserCurrencyRequirementViewModel() { }
-
-        public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, int amount, int maximumAmount = 0)
+        public CurrencyRequirementViewModel()
         {
-            this.CurrencyID = currency.ID;
-            this.RequiredAmount = amount;
+            this.RequirementType = CurrencyRequirementTypeEnum.RequiredAmount;
+        }
+
+        public CurrencyRequirementViewModel(UserCurrencyViewModel currency, int amount)
+            : this(currency, CurrencyRequirementTypeEnum.RequiredAmount, amount)
+        { }
+
+        public CurrencyRequirementViewModel(UserCurrencyViewModel currency, int minimumAmount, int maximumAmount)
+            : this(currency, CurrencyRequirementTypeEnum.MinimumAndMaximum, minimumAmount)
+        {
             this.MaximumAmount = maximumAmount;
         }
 
-        public UserCurrencyRequirementViewModel(UserCurrencyViewModel currency, UserRankViewModel rank, bool mustEqual = false)
+        public CurrencyRequirementViewModel(UserCurrencyViewModel currency, CurrencyRequirementTypeEnum requirementType, int amount)
+        {
+            this.CurrencyID = currency.ID;
+            this.RequiredAmount = amount;
+            this.RequirementType = requirementType;
+        }
+
+        public CurrencyRequirementViewModel(UserCurrencyViewModel currency, UserRankViewModel rank, bool mustEqual = false)
         {
             this.CurrencyID = currency.ID;
             this.RankName = rank.Name;
@@ -87,6 +116,25 @@ namespace MixItUp.Base.ViewModel.User
                 return true;
             }
             return false;
+        }
+
+        public bool DoesMeetCurrencyRequirement(UserDataViewModel userData)
+        {
+            UserCurrencyViewModel currency = this.GetCurrency();
+            if (currency == null)
+            {
+                return false;
+            }
+
+            UserRankViewModel rank = this.RequiredRank;
+            if (rank == null)
+            {
+                return false;
+            }
+
+            UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
+
+            return this.DoesMeetCurrencyRequirement(userCurrencyData.Amount);
         }
 
         public bool DoesMeetCurrencyRequirement(int amount)

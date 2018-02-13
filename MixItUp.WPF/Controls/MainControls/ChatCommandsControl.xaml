@@ -75,7 +75,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                     <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="Permission" Binding="{Binding PermissionsString}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="Permission" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" Width="*" />
                     <DataGridTemplateColumn Header="Actions" Width="240">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
