@@ -28,6 +28,8 @@ namespace MixItUp.WPF.Controls.Command
         public CommandButtonsControl()
         {
             InitializeComponent();
+
+            this.Loaded += CommandButtonsControl_Loaded;
         }
 
         public T GetCommandFromCommandButtons<T>(object sender) where T : CommandBase
@@ -48,6 +50,15 @@ namespace MixItUp.WPF.Controls.Command
             this.EditButton.IsEnabled = true;
             this.DeleteButton.IsEnabled = true;
             this.EnableDisableToggleSwitch.IsEnabled = true;
+        }
+
+        private void CommandButtonsControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
+            if (command != null && !command.IsEditable)
+            {
+                this.EditButton.IsEnabled = false;
+            }
         }
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)

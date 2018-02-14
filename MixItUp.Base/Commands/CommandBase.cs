@@ -18,8 +18,10 @@ namespace MixItUp.Base.Commands
         Event,
         Timer,
         Custom,
+        [Name("Action Group")]
         ActionGroup,
         Game,
+        Remote,
     }
 
     [DataContract]
@@ -72,6 +74,8 @@ namespace MixItUp.Base.Commands
             this.Commands.AddRange(commands);
         }
 
+        public virtual bool IsEditable { get { return true; } }
+
         public string CommandsString { get { return string.Join(" ", this.Commands); } }
 
         public bool ContainsCommand(string command) { return this.Commands.Contains(command); }
@@ -80,12 +84,30 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(IEnumerable<string> arguments) { await this.Perform(ChannelSession.GetCurrentUser(), arguments); }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        public Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
             if (this.IsEnabled)
             {
-                await this.PerformInternal(user, arguments);
+                if (arguments == null)
+                {
+                    arguments = new List<string>();
+                }
+
+                this.currentCancellationTokenSource = new CancellationTokenSource();
+                this.currentTaskRun = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await this.AsyncSemaphore.WaitAsync();
+
+                        await this.PerformInternal(user, arguments, this.currentCancellationTokenSource.Token);
+                    }
+                    catch (TaskCanceledException) { }
+                    catch (Exception ex) { Logger.Log(ex); }
+                    finally { this.AsyncSemaphore.Release(); }
+                }, this.currentCancellationTokenSource.Token);
             }
+            return Task.FromResult(0);
         }
 
         public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null)
@@ -97,46 +119,27 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        public virtual Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
-            if (arguments == null)
+            for (int i = 0; i < this.Actions.Count; i++)
             {
-                arguments = new List<string>();
-            }
+                token.ThrowIfCancellationRequested();
 
-            this.currentCancellationTokenSource = new CancellationTokenSource();
-            this.currentTaskRun = Task.Run(async () =>
-            {
-                CancellationToken token = this.currentCancellationTokenSource.Token;
-                try
+                if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
                 {
-                    await this.AsyncSemaphore.WaitAsync();
+                    ChannelSession.Services.OverlayServer.StartBatching();
+                }
 
-                    for (int i = 0; i < this.Actions.Count; i++)
+                await this.Actions[i].Perform(user, arguments);
+
+                if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                {
+                    if (i == (this.Actions.Count - 1) || !(this.Actions[i + 1] is OverlayAction))
                     {
-                        token.ThrowIfCancellationRequested();
-
-                        if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
-                        {
-                            ChannelSession.Services.OverlayServer.StartBatching();
-                        }
-
-                        await this.Actions[i].Perform(user, arguments);
-
-                        if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
-                        {
-                            if (i == (this.Actions.Count - 1) || !(this.Actions[i + 1] is OverlayAction))
-                            {
-                                await ChannelSession.Services.OverlayServer.EndBatching();
-                            }
-                        }
+                        await ChannelSession.Services.OverlayServer.EndBatching();
                     }
                 }
-                catch (TaskCanceledException) { }
-                catch (Exception ex) { Logger.Log(ex); }
-                finally { this.AsyncSemaphore.Release(); }
-            }, this.currentCancellationTokenSource.Token);
-            return Task.FromResult(0);
+            }
         }
 
         public void StopCurrentRun()

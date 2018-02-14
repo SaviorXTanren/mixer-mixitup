@@ -128,7 +128,7 @@ namespace MixItUp.Base.Commands
 
         public override int TotalUsers { get { return 1; } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (!await this.CheckLastRun(user))
             {
@@ -242,7 +242,7 @@ namespace MixItUp.Base.Commands
 
         public override int TotalUsers { get { return this.UserBets.Count; } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (!await this.CheckLastRun(user))
             {
@@ -344,7 +344,7 @@ namespace MixItUp.Base.Commands
 
         public override int TotalUsers { get { return this.UserBets.Count; } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (!await this.CheckLastRun(user))
             {
@@ -424,7 +424,7 @@ namespace MixItUp.Base.Commands
 
         public override int TotalUsers { get { return 1; } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (!await this.CheckLastRun(user))
             {

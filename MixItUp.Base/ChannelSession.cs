@@ -127,6 +127,21 @@ namespace MixItUp.Base
             }
         }
 
+        public static IEnumerable<CommandBase> AllCommands
+        {
+            get
+            {
+                List<CommandBase> commands = new List<CommandBase>();
+                commands.AddRange(ChannelSession.AllChatCommands);
+                commands.AddRange(ChannelSession.Settings.EventCommands);
+                commands.AddRange(ChannelSession.Settings.InteractiveCommands);
+                commands.AddRange(ChannelSession.Settings.TimerCommands);
+                commands.AddRange(ChannelSession.Settings.ActionGroupCommands);
+                commands.AddRange(ChannelSession.Settings.RemoteCommands);
+                return commands.Where(c => c.IsEnabled);
+            }
+        }
+
         public static bool IsStreamer
         {
             get
