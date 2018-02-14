@@ -49,9 +49,9 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.command != null)
             {
-                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(command.Requirements.UserRole);
-                this.CooldownTextBox.Text = command.Cooldown.ToString();
-                this.ChatCommandTextBox.Text = command.CommandsString;
+                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Requirements.UserRole);
+                this.CooldownTextBox.Text = this.command.Cooldown.ToString();
+                this.ChatCommandTextBox.Text = this.command.CommandsString;
                 if (this.command.Actions.First() is ChatAction)
                 {
                     this.actionControl = new ChatActionControl(null, (ChatAction)this.command.Actions.First());

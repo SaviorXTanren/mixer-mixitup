@@ -46,6 +46,7 @@ namespace MixItUp.Base.Commands
         public PermissionsCommandBase(string name, CommandTypeEnum type, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements)
             : base(name, type, commands)
         {
+            this.Cooldown = cooldown;
             this.Requirements = requirements;
         }
 
