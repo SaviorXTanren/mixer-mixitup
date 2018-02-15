@@ -28,7 +28,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public RequirementViewModel(UserRole userRole, CurrencyRequirementViewModel currency = null, CurrencyRequirementViewModel rank = null)
         {
-            this.UserRole = UserRole;
+            this.UserRole = userRole;
             this.Currency = currency;
             this.Rank = rank;
         }

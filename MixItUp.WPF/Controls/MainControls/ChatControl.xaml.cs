@@ -1,7 +1,4 @@
-﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.User;
-using MixItUp.Base;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -18,7 +15,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -72,7 +68,7 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Chat.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
             ChannelSession.Chat.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
 
-            if (ChannelSession.Channel.badge != null && !string.IsNullOrEmpty(ChannelSession.Channel.badge.url))
+            if (ChannelSession.Channel.badge != null && ChannelSession.Channel.badge != null && !string.IsNullOrEmpty(ChannelSession.Channel.badge.url))
             {
                 ChatControl.SubscriberBadgeBitmap = new BitmapImage();
                 ChatControl.SubscriberBadgeBitmap.BeginInit();
