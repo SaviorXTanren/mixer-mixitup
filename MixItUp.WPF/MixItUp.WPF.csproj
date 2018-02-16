@@ -392,6 +392,7 @@
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Util\LocalizationConverter.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
     <Compile Include="Util\NotifyPropertyChangedBase.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />

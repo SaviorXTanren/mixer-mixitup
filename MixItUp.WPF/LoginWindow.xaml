@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:Util="clr-namespace:MixItUp.WPF.Util"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -28,6 +29,10 @@
     </Windows:LoadingWindowBase.Resources>
 
     <Grid>
+        <Grid.Resources>
+            <Util:LocalizationConverter x:Key="LocalizationConverter" />
+        </Grid.Resources>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -54,7 +59,7 @@
 
                     <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Streamer Account" Style="{StaticResource BackgroundComboBox}" Visibility="Collapsed" />
 
-                    <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30">Login</Button>
+                    <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30" Content="{Binding Converter={StaticResource LocalizationConverter}, ConverterParameter='Login'}" />
                 </Grid>
             </GroupBox>
 
@@ -68,7 +73,7 @@
 
                     <TextBox Grid.Row="0" x:Name="ModeratorChannelTextBox" KeyDown="ModeratorChannelTextBox_KeyDown" Width="140" MaterialDesign:HintAssist.Hint="Channel Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                    <Button Grid.Row="2" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" Width="80" Height="30">Login</Button>
+                    <Button Grid.Row="2" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" Width="80" Height="30" Content="{Binding Converter={StaticResource LocalizationConverter}, ConverterParameter='Login'}" />
 
                 </Grid>
             </GroupBox>
