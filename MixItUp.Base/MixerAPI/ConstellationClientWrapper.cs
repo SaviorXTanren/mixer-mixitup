@@ -39,6 +39,8 @@ namespace MixItUp.Base.MixerAPI
 
         public ConstellationClient Client { get; private set; }
 
+        private HashSet<uint> userFollows = new HashSet<uint>();
+
         public ConstellationClientWrapper() { }
 
         public async Task<bool> Connect()
@@ -133,17 +135,22 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (followed.GetValueOrDefault())
                 {
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    if (!this.userFollows.Contains(user.ID))
                     {
-                        user.Data.SetCurrencyAmount(currency, currency.OnFollowBonus);
-                    }
+                        this.userFollows.Add(user.ID);
 
-                    if (this.OnFollowOccurred != null)
-                    {
-                        this.OnFollowOccurred(this, user);
-                    }
+                        foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                        {
+                            user.Data.SetCurrencyAmount(currency, currency.OnFollowBonus);
+                        }
 
-                    await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                        if (this.OnFollowOccurred != null)
+                        {
+                            this.OnFollowOccurred(this, user);
+                        }
+
+                        await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                    }
                 }
                 else
                 {
