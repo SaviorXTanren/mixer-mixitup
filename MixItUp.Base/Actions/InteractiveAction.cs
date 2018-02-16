@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -19,6 +20,12 @@ namespace MixItUp.Base.Actions
         MoveUserToGroup,
         [Name("Move Group to Scene")]
         MoveGroupToScene,
+        [Name("Cooldown Button")]
+        CooldownButton,
+        [Name("Cooldown Group")]
+        CooldownGroup,
+        [Name("Cooldown Scene")]
+        CooldownScene,
     }
 
     [DataContract]
@@ -39,6 +46,11 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public string SceneID { get; set; }
+
+        [DataMember]
+        public string CooldownID { get; set; }
+        [DataMember]
+        public int CooldownAmount { get; set; }
 
         [DataMember]
         [Obsolete]
@@ -64,6 +76,14 @@ namespace MixItUp.Base.Actions
             this.GroupName = groupName;
             this.SceneID = sceneID;
             this.RoleRequirement = roleRequirement;
+        }
+
+        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string cooldownID, int cooldownAmount)
+            : this()
+        {
+            this.InteractiveType = interactiveType;
+            this.CooldownID = cooldownID;
+            this.CooldownAmount = cooldownAmount;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -106,6 +126,54 @@ namespace MixItUp.Base.Actions
                     {
                         participant.groupID = this.GroupName;
                         await ChannelSession.Interactive.UpdateParticipants(new List<InteractiveParticipantModel>() { participant });
+                    }
+                }
+
+                if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
+                    this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
+                {
+                    InteractiveConnectedSceneModel scene = null;
+                    List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
+                    if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton)
+                    {
+                        if (ChannelSession.Interactive.Controls.ContainsKey(this.CooldownID) && ChannelSession.Interactive.Controls[this.CooldownID].Button != null)
+                        {
+                            InteractiveConnectedControlCommand command = ChannelSession.Interactive.Controls[this.CooldownID];
+                            scene = command.Scene;
+                            buttons.Add(command.Button);
+                        }
+                    }
+
+                    if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
+                    {
+                        IEnumerable<InteractiveConnectedControlCommand> commands = ChannelSession.Interactive.Controls.Values.Where(c => c.Button != null &&
+                            this.CooldownID.Equals(c.Command.CooldownGroup));
+                        if (commands.Count() > 0)
+                        {
+                            scene = commands.FirstOrDefault().Scene;
+                            buttons.AddRange(commands.Select(c => c.Button));
+                        }
+                    }
+
+                    if (this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
+                    {
+                        IEnumerable<InteractiveConnectedControlCommand> commands = ChannelSession.Interactive.Controls.Values.Where(c => c.Button != null &&
+                            this.CooldownID.Equals(c.Command.SceneID));
+                        if (commands.Count() > 0)
+                        {
+                            scene = commands.FirstOrDefault().Scene;
+                            buttons.AddRange(commands.Select(c => c.Button));
+                        }
+                    }
+
+                    if (buttons.Count > 0)
+                    {
+                        long timestamp = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount));
+                        foreach (InteractiveConnectedButtonControlModel button in buttons)
+                        {
+                            button.cooldown = timestamp;
+                        }
+                        await ChannelSession.Interactive.UpdateControls(scene, buttons);
                     }
                 }
             }
