@@ -185,6 +185,9 @@
     <Compile Include="Controls\Actions\ExternalProgramActionControl.xaml.cs">
       <DependentUpon>ExternalProgramActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\FileActionControl.xaml.cs">
+      <DependentUpon>FileActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\GameQueueActionControl.xaml.cs">
       <DependentUpon>GameQueueActionControl.xaml</DependentUpon>
     </Compile>
@@ -442,6 +445,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\ExternalProgramActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\FileActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

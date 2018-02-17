@@ -38,6 +38,7 @@ namespace MixItUp.Base.Actions
         ActionGroup,
         [Name("Special Identifier")]
         SpecialIdentifier,
+        File,
 
         Custom = 99,
     }
