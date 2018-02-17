@@ -13,7 +13,7 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="500" d:DesignWidth="600">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -66,20 +66,45 @@
 
         <GroupBox Header="Find Channel To Raid" Grid.Row="2">
             <Grid HorizontalAlignment="Center" Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <ComboBox Grid.Column="0" x:Name="ChannelToRaidSearchCriteriaComboBox" MaterialDesign:HintAssist.Hint="Search Criteria" Style="{StaticResource BackgroundComboBox}" Width="140" HorizontalAlignment="Left" />
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="2" x:Name="FindChannelToRaidButton" Click="FindChannelToRaidButton_Click">Search</Button>
+                    <ComboBox Grid.Column="0" x:Name="ChannelToRaidSearchCriteriaComboBox" MaterialDesign:HintAssist.Hint="Search Criteria" Style="{StaticResource BackgroundComboBox}" Width="200" HorizontalAlignment="Left" />
 
-                <TextBox Grid.Column="4" x:Name="ChannelRaidNameTextBox" MaterialDesign:HintAssist.Hint="Channel To Raid" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True" />
+                    <Button Grid.Column="2" x:Name="FindChannelToRaidButton" Click="FindChannelToRaidButton_Click">Search</Button>
 
+                </Grid>
+
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" x:Name="ChannelRaidNameTextBox" MaterialDesign:HintAssist.Hint="Username" Width="130" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsReadOnly="True" />
+
+                    <TextBox Grid.Column="2" x:Name="ChannelRaidViewersTextBox" MaterialDesign:HintAssist.Hint="Viewers" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
+
+                    <TextBox Grid.Column="4" x:Name="ChannelRaidAudienceTextBox" MaterialDesign:HintAssist.Hint="Audience" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
+
+                    <TextBox Grid.Column="6" x:Name="ChannelRaidGameTextBox" MaterialDesign:HintAssist.Hint="Game" Width="300" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
+
+                </Grid>
             </Grid>
         </GroupBox>
 

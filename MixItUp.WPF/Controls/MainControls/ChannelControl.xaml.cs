@@ -26,11 +26,11 @@ namespace MixItUp.WPF.Controls.MainControls
         SameGame,
         [Name("Same Age Rating")]
         AgeRating,
-        [Name("Small Streamer")]
+        [Name("Small Streamer (> 10)")]
         SmallStreamer,
-        [Name("Medium Streamer")]
+        [Name("Medium Streamer (10-25)")]
         MediumStreamer,
-        [Name("Large Streamer")]
+        [Name("Large Streamer (< 25)")]
         LargeStreamer,
         [Name("Partnered Streamer")]
         PartneredStreamer,
@@ -142,25 +142,28 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
                 else
                 {
-                    channels = await ChannelSession.Connection.GetChannels(500);
-                    switch (searchCriteria)
+                    string query = "channels";
+                    if (searchCriteria == RaidSearchCriteriaEnum.AgeRating)
                     {
-                        case RaidSearchCriteriaEnum.AgeRating:
-                            channels = channels.Where(c => c.audience.Equals(ChannelSession.Channel.audience));
-                            break;
-                        case RaidSearchCriteriaEnum.LargeStreamer:
-                            channels = channels.Where(c => c.viewersCurrent >= 25);
-                            break;
-                        case RaidSearchCriteriaEnum.MediumStreamer:
-                            channels = channels.Where(c => c.viewersCurrent >= 10 && c.viewersCurrent < 25);
-                            break;
-                        case RaidSearchCriteriaEnum.SmallStreamer:
-                            channels = channels.Where(c => c.viewersCurrent < 10);
-                            break;
-                        case RaidSearchCriteriaEnum.PartneredStreamer:
-                            channels = channels.Where(c => c.partnered);
-                            break;
+                        query += "?where=audience:eq:" + ChannelSession.Channel.audience;
                     }
+                    else if (searchCriteria == RaidSearchCriteriaEnum.LargeStreamer)
+                    {
+                        query += "?where=viewersCurrent:gte:25";
+                    }
+                    else if (searchCriteria == RaidSearchCriteriaEnum.MediumStreamer)
+                    {
+                        query += "?where=viewersCurrent:gte:10,viewersCurrent:lt:25";
+                    }
+                    else if (searchCriteria == RaidSearchCriteriaEnum.SmallStreamer)
+                    {
+                        query += "?where=viewersCurrent:gt:0,viewersCurrent:lt:10";
+                    }
+                    else if (searchCriteria == RaidSearchCriteriaEnum.PartneredStreamer)
+                    {
+                        query += "?where=partnered:eq:true";
+                    }
+                    channels = await ChannelSession.Connection.Connection.Channels.GetPagedAsync<ChannelModel>(query, 50, linkPagesAvailable: false);
                 }
 
                 this.ChannelRaidNameTextBox.Clear();
@@ -170,7 +173,12 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelModel channelToRaid = channels.ElementAt(random.Next(0, channels.Count()));
 
                     UserModel user = await ChannelSession.Connection.GetUser(channelToRaid.userId);
+                    GameTypeModel game = await ChannelSession.Connection.GetGameType(channelToRaid.typeId.GetValueOrDefault());
+
                     this.ChannelRaidNameTextBox.Text = user.username;
+                    this.ChannelRaidViewersTextBox.Text = channelToRaid.viewersCurrent.ToString();
+                    this.ChannelRaidAudienceTextBox.Text = EnumHelper.GetEnumName(EnumHelper.GetEnumValueFromString<AgeRatingEnum>(channelToRaid.audience));
+                    this.ChannelRaidGameTextBox.Text = (game != null) ? game.name : "Unknown";
                 }
                 else
                 {
