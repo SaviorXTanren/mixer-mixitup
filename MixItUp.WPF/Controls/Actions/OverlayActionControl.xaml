@@ -29,7 +29,7 @@
             <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="OverlayImageGrid" Visibility="Hidden">
+        <Grid Grid.Row="2" x:Name="OverlayImageGrid" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
@@ -68,7 +68,7 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="OverlayTextGrid" Visibility="Hidden">
+        <Grid Grid.Row="2" x:Name="OverlayTextGrid" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
@@ -96,7 +96,19 @@
             <TextBox Grid.Row="2" x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="OverlayHTMLGrid" Visibility="Hidden">
+        <Grid Grid.Row="2" x:Name="OverlayYoutubeVideoGrid" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="OverlayYoutubeVideoIDTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Youtube Video URL/ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox x:Name="OverlayYoutubeStartTimeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Start Time (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Row="2" x:Name="OverlayHTMLGrid" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -104,7 +116,7 @@
             <TextBox x:Name="OverlayHTMLTextBox" MaterialDesign:HintAssist.Hint="HTML Text" Style="{StaticResource MultiLineTextBox}" Height="150" />
         </Grid>
 
-        <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Hidden">
+        <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />

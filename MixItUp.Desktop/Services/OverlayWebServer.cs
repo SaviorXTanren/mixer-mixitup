@@ -102,6 +102,8 @@ namespace MixItUp.Overlay
 
         public async Task SetText(OverlayText text) { await this.SendPacket(new OverlayPacket("text", JObject.FromObject(text))); }
 
+        public async Task SetYoutubeVideo(OverlayYoutubeVideo youtubeVideo) { await this.SendPacket(new OverlayPacket("youtube", JObject.FromObject(youtubeVideo))); }
+
         public async Task SetHTMLText(OverlayHTML htmlText) { await this.SendPacket(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
 
         private async Task SendPacket(OverlayPacket packet)
