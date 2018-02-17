@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Game;
+using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base;
@@ -24,6 +25,8 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         [Name("Same Game")]
         SameGame,
+        [Name("Same Team")]
+        SameTeam,
         [Name("Same Age Rating")]
         AgeRating,
         [Name("Small Streamer (> 10)")]
@@ -139,6 +142,20 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (searchCriteria == RaidSearchCriteriaEnum.SameGame)
                 {
                     channels = await ChannelSession.Connection.GetChannelsByGameTypes(ChannelSession.Channel.type, 1);
+                }
+                else if (searchCriteria == RaidSearchCriteriaEnum.SameTeam)
+                {
+                    Dictionary<uint, UserWithChannelModel> teamChannels = new Dictionary<uint, UserWithChannelModel>();
+                    foreach (TeamMembershipExpandedModel extendedTeam in await ChannelSession.Connection.GetUserTeams(ChannelSession.User))
+                    {
+                        TeamModel team = await ChannelSession.Connection.GetTeam(extendedTeam.id);
+                        IEnumerable<UserWithChannelModel> teamUsers = await ChannelSession.Connection.GetTeamUsers(team);
+                        foreach (UserWithChannelModel userChannel in teamUsers.Where(u => u.channel.online))
+                        {
+                            teamChannels[userChannel.id] = userChannel;
+                        }
+                    }
+                    channels = teamChannels.Values.Select(c => c.channel);
                 }
                 else
                 {
