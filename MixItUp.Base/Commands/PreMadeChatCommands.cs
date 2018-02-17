@@ -412,24 +412,31 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Settings.QuotesEnabled)
                 {
-                    StringBuilder quoteBuilder = new StringBuilder();
-                    foreach (string arg in arguments)
+                    if (arguments.Count() > 0)
                     {
-                        quoteBuilder.Append(arg + " ");
+                        StringBuilder quoteBuilder = new StringBuilder();
+                        foreach (string arg in arguments)
+                        {
+                            quoteBuilder.Append(arg + " ");
+                        }
+
+                        string quoteText = quoteBuilder.ToString();
+                        quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
+
+                        UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.Channel.type);
+                        ChannelSession.Settings.UserQuotes.Add(quote);
+                        await ChannelSession.SaveSettings();
+
+                        GlobalEvents.QuoteAdded(quote);
+
+                        if (ChannelSession.Chat != null)
+                        {
+                            await ChannelSession.Chat.SendMessage("Added Quote: \"" + quote.ToString() + "\"");
+                        }
                     }
-
-                    string quoteText = quoteBuilder.ToString();
-                    quoteText = quoteText.Trim(new char[] { ' ', '\'', '\"' });
-
-                    UserQuoteViewModel quote = new UserQuoteViewModel(quoteText, DateTimeOffset.Now, ChannelSession.Channel.type);
-                    ChannelSession.Settings.UserQuotes.Add(quote);
-                    await ChannelSession.SaveSettings();
-
-                    GlobalEvents.QuoteAdded(quote);
-
-                    if (ChannelSession.Chat != null)
+                    else
                     {
-                        await ChannelSession.Chat.SendMessage("Added Quote: \"" + quote.ToString() + "\"");
+                        await ChannelSession.Chat.Whisper(user.UserName, "Usage: !addquote <FULL QUOTE TEXT>");
                     }
                 }
                 else
