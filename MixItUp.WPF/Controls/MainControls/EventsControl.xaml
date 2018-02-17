@@ -22,6 +22,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <EventControls:EventCommandControl x:Name="OnFollowCommandControl" Grid.Column="1" Grid.Row="1" />
@@ -31,6 +33,8 @@
         <EventControls:EventCommandControl x:Name="OnSubscribeCommandControl" Grid.Column="1" Grid.Row="3" />
 
         <EventControls:EventCommandControl x:Name="OnResubscribeCommandControl" Grid.Column="3" Grid.Row="3" />
+
+        <EventControls:EventCommandControl x:Name="OnDonationCommandControl" Grid.Column="1" Grid.Row="5" />
 
     </Grid>
 </local:MainControlBase>

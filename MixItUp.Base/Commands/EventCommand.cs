@@ -1,26 +1,37 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Runtime.Serialization;
 using System.Threading;
 
 namespace MixItUp.Base.Commands
 {
+    public enum OtherEventTypeEnum
+    {
+        None = 0,
+
+        [Name("Donation Received")]
+        Donation,
+    }
+
     public class EventCommand : CommandBase, IEquatable<EventCommand>
     {
         private static SemaphoreSlim eventCommandPerformSemaphore = new SemaphoreSlim(1);
 
         [DataMember]
         public ConstellationEventTypeEnum EventType { get; set; }
-
         [DataMember]
         public uint EventID { get; set; }
 
-        public EventCommand() { }
+        [DataMember]
+        public OtherEventTypeEnum OtherEventType { get; set; }
+
+        public EventCommand()
+        {
+            this.OtherEventType = OtherEventTypeEnum.None;
+        }
 
         public EventCommand(ConstellationEventTypeEnum type) : this(type, 0, string.Empty) { }
 
@@ -35,7 +46,25 @@ namespace MixItUp.Base.Commands
             this.EventID = id;
         }
 
-        public string UniqueEventID { get { return this.GetEventType().ToString(); } }
+        public EventCommand(OtherEventTypeEnum otherEventType, string name)
+            : base(EnumHelper.GetEnumName(otherEventType), CommandTypeEnum.Event, name)
+        {
+            this.OtherEventType = otherEventType;
+        }
+
+        public bool IsOtherEventType { get { return this.OtherEventType != OtherEventTypeEnum.None; } }
+
+        public string UniqueEventID
+        {
+            get
+            {
+                if (this.IsOtherEventType)
+                {
+                    return EnumHelper.GetEnumName(this.OtherEventType);
+                }
+                return this.GetEventType().ToString();
+            }
+        }
 
         public ConstellationEventType GetEventType() { return new ConstellationEventType(this.EventType, this.EventID); }
 
@@ -52,7 +81,14 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
-        public bool Equals(EventCommand other) { return this.EventType.Equals(other.EventType) && this.EventID.Equals(other.EventID); }
+        public bool Equals(EventCommand other)
+        {
+            if (this.IsOtherEventType)
+            {
+                return this.OtherEventType == other.OtherEventType;
+            }
+            return this.EventType.Equals(other.EventType) && this.EventID.Equals(other.EventID);
+        }
 
         public override int GetHashCode() { return this.GetEventType().GetHashCode(); }
 

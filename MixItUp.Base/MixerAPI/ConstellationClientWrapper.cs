@@ -2,7 +2,9 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
@@ -41,7 +43,10 @@ namespace MixItUp.Base.MixerAPI
 
         private HashSet<uint> userFollows = new HashSet<uint>();
 
-        public ConstellationClientWrapper() { }
+        public ConstellationClientWrapper()
+        {
+            GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+        }
 
         public async Task<bool> Connect()
         {
@@ -224,6 +229,25 @@ namespace MixItUp.Base.MixerAPI
             if (this.OnEventOccurred != null)
             {
                 this.OnEventOccurred(this, e);
+            }
+        }
+
+        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationViewModel donation)
+        {
+            UserViewModel user = new UserViewModel(0, donation.Username);
+
+            UserModel userModel = await ChannelSession.Connection.GetUser(donation.Username);
+            if (userModel != null)
+            {
+                user = new UserViewModel(userModel);
+            }
+
+            EventCommand command = this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.Donation));
+            if (command != null)
+            {
+                command.AddSpecialIdentifier("donationamount", donation.AmountText);
+                command.AddSpecialIdentifier("donationmessage", donation.Message);
+                await this.RunEventCommand(command, user);
             }
         }
 

@@ -41,5 +41,14 @@ namespace MixItUp.Base.Util
                 GlobalEvents.OnQuoteAdded(null, quote);
             }
         }
+
+        public static event EventHandler<UserDonationViewModel> OnDonationOccurred;
+        public static void DonationOccurred(UserDonationViewModel donation)
+        {
+            if (GlobalEvents.OnDonationOccurred != null)
+            {
+                GlobalEvents.OnDonationOccurred(null, donation);
+            }
+        }
     }
 }

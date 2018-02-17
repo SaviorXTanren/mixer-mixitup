@@ -14,14 +14,38 @@ namespace MixItUp.WPF.Controls.Events
     public class EventCommandItem
     {
         public ConstellationEventTypeEnum EventType { get; set; }
+        public OtherEventTypeEnum OtherEventType { get; set; }
 
         public EventCommand Command { get; set; }
 
-        public EventCommandItem(EventCommand command) : this(command.EventType) { this.Command = command; }
+        public EventCommandItem(EventCommand command)
+        {
+            this.Command = command;
+            if (this.Command.IsOtherEventType)
+            {
+                this.OtherEventType = this.Command.OtherEventType;
+            }
+            else
+            {
+                this.EventType = this.Command.EventType;
+            }
+        }
 
         public EventCommandItem(ConstellationEventTypeEnum eventType) { this.EventType = eventType; }
 
-        public string Name { get { return EnumHelper.GetEnumName(this.EventType); } }
+        public EventCommandItem(OtherEventTypeEnum otherEventType) { this.OtherEventType = otherEventType; }
+
+        public string Name
+        {
+            get
+            {
+                if (this.OtherEventType != OtherEventTypeEnum.None)
+                {
+                    return EnumHelper.GetEnumName(this.OtherEventType);
+                }
+                return EnumHelper.GetEnumName(this.EventType);
+            }
+        }
     }
 
     /// <summary>
@@ -31,6 +55,7 @@ namespace MixItUp.WPF.Controls.Events
     {
         private MainControlBase mainControl;
         private ConstellationEventTypeEnum eventType;
+        OtherEventTypeEnum otherEventType;
 
         private EventCommandItem commandItem;
 
@@ -43,9 +68,17 @@ namespace MixItUp.WPF.Controls.Events
             this.RefreshControl();
         }
 
+        public void Initialize(MainControlBase control, OtherEventTypeEnum otherEventType)
+        {
+            this.mainControl = control;
+            this.otherEventType = otherEventType;
+            this.RefreshControl();
+        }
+
         private void NewInteractiveCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandWindow window = new CommandWindow(new EventCommandDetailsControl(this.commandItem.EventType));
+            CommandWindow window = new CommandWindow((this.commandItem.OtherEventType != OtherEventTypeEnum.None) ?
+                new EventCommandDetailsControl(this.commandItem.OtherEventType) : new EventCommandDetailsControl(this.commandItem.EventType));
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -84,10 +117,33 @@ namespace MixItUp.WPF.Controls.Events
 
         private void RefreshControl()
         {
-            EventCommand command = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(this.eventType));
-            this.commandItem = (command != null) ? new EventCommandItem(command) : new EventCommandItem(this.eventType);
-            this.GroupBox.Header = this.commandItem.Name;
+            EventCommand command = null;
+            if (this.otherEventType != OtherEventTypeEnum.None)
+            {
+                command = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.OtherEventType.Equals(this.otherEventType));
+            }
+            else
+            {
+                command = ChannelSession.Settings.EventCommands.FirstOrDefault(c => c.EventType.Equals(this.eventType));
+            }
 
+            if (command != null)
+            {
+                this.commandItem = new EventCommandItem(command);
+            }
+            else
+            {
+                if (this.otherEventType != OtherEventTypeEnum.None)
+                {
+                    this.commandItem = new EventCommandItem(this.otherEventType);
+                }
+                else
+                {
+                    this.commandItem = new EventCommandItem(this.eventType);
+                }
+            }
+
+            this.GroupBox.Header = this.commandItem.Name;
             this.CommandButtons.DataContext = this.commandItem.Command;
 
             this.NewInteractiveCommandButton.Visibility = (this.commandItem.Command == null) ? Visibility.Visible : Visibility.Collapsed;

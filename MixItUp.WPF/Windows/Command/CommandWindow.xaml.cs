@@ -94,7 +94,14 @@ namespace MixItUp.WPF.Windows.Command
             else if (this.commandDetailsControl is EventCommandDetailsControl)
             {
                 EventCommandDetailsControl eventCommandDetails = (EventCommandDetailsControl)this.commandDetailsControl;
-                this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.EventType, BasicCommandTypeEnum.Chat));
+                if (eventCommandDetails.OtherEventType != OtherEventTypeEnum.None)
+                {
+                    this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.OtherEventType, BasicCommandTypeEnum.Chat));
+                }
+                else
+                {
+                    this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.EventType, BasicCommandTypeEnum.Chat));
+                }
             }
             else if (this.commandDetailsControl is TimerCommandDetailsControl)
             {
@@ -117,7 +124,14 @@ namespace MixItUp.WPF.Windows.Command
             else if (this.commandDetailsControl is EventCommandDetailsControl)
             {
                 EventCommandDetailsControl eventCommandDetails = (EventCommandDetailsControl)this.commandDetailsControl;
-                this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.EventType, BasicCommandTypeEnum.Sound));
+                if (eventCommandDetails.OtherEventType != OtherEventTypeEnum.None)
+                {
+                    this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.OtherEventType, BasicCommandTypeEnum.Sound));
+                }
+                else
+                {
+                    this.ShowCommandEditor(new BasicEventCommandEditorControl(this, eventCommandDetails.EventType, BasicCommandTypeEnum.Sound));
+                }
             }
             else if (this.commandDetailsControl is TimerCommandDetailsControl)
             {

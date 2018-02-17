@@ -16,7 +16,7 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public double Amount { get; set; }
         [DataMember]
-        public string CurrencyName { get; set; }
+        public string AmountText { get; set; }
 
         [DataMember]
         public DateTimeOffset DateTime { get; set; }

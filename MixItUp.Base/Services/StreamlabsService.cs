@@ -36,7 +36,7 @@ namespace MixItUp.Base.Services
                 Message = this.message,
 
                 Amount = this.amount,
-                CurrencyName = this.currency,
+                AmountText = string.Format("{0:C}", this.amount),
 
                 DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.created_at),
             };
@@ -51,8 +51,6 @@ namespace MixItUp.Base.Services
         private const string ClientID = "ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX";
         private const string ClientSecret = "ddcgpzlzeRAE7dAUvs87DJgAIQJSwiq5p4AkufWN";
         private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id=ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read";
-
-        public event EventHandler<UserDonationViewModel> OnDonationReceivedOccurred;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -157,10 +155,7 @@ namespace MixItUp.Base.Services
                         if (!donationsReceived.ContainsKey(donation.donation_id))
                         {
                             donationsReceived[donation.donation_id] = donation;
-                            if (this.OnDonationReceivedOccurred != null)
-                            {
-                                this.OnDonationReceivedOccurred(this, donation.ToGenericDonation());
-                            }
+                            GlobalEvents.DonationOccurred(donation.ToGenericDonation());
                         }
                     }
                 }

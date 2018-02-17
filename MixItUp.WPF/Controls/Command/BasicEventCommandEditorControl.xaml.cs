@@ -20,7 +20,10 @@ namespace MixItUp.WPF.Controls.Command
         private CommandWindow window;
 
         private BasicCommandTypeEnum commandType;
+
         private ConstellationEventTypeEnum eventType;
+        private OtherEventTypeEnum otherEventType;
+
         private EventCommand command;
 
         private ActionControlBase actionControl;
@@ -28,7 +31,18 @@ namespace MixItUp.WPF.Controls.Command
         public BasicEventCommandEditorControl(CommandWindow window, EventCommand command)
             : this(window, command.EventType, BasicCommandTypeEnum.None)
         {
+            this.window = window;
             this.command = command;
+            if (this.command.IsOtherEventType)
+            {
+                this.otherEventType = this.command.OtherEventType;               
+            }
+            else
+            {
+                this.eventType = this.command.EventType;
+            }
+
+            InitializeComponent();
         }
 
         public BasicEventCommandEditorControl(CommandWindow window, ConstellationEventTypeEnum eventType, BasicCommandTypeEnum commandType)
@@ -40,11 +54,27 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
+        public BasicEventCommandEditorControl(CommandWindow window, OtherEventTypeEnum otherEventType, BasicCommandTypeEnum commandType)
+        {
+            this.window = window;
+            this.otherEventType = otherEventType;
+            this.commandType = commandType;
+
+            InitializeComponent();
+        }
+
         public override CommandBase GetExistingCommand() { return this.command; }
 
         protected override async Task OnLoaded()
         {
-            this.EventTypeTextBlock.Text = EnumHelper.GetEnumName(this.eventType);
+            if (this.otherEventType != OtherEventTypeEnum.None)
+            {
+                this.EventTypeTextBlock.Text = EnumHelper.GetEnumName(this.otherEventType);
+            }
+            else
+            {
+                this.EventTypeTextBlock.Text = EnumHelper.GetEnumName(this.eventType);
+            }
 
             if (this.command != null)
             {
@@ -92,7 +122,16 @@ namespace MixItUp.WPF.Controls.Command
                     return;
                 }
 
-                EventCommand newCommand = new EventCommand(this.eventType, ChannelSession.Channel);
+                EventCommand newCommand = null;
+                if (this.otherEventType != OtherEventTypeEnum.None)
+                {
+                    newCommand = new EventCommand(this.otherEventType, ChannelSession.Channel.user.username);
+                }
+                else
+                {
+                    newCommand = new EventCommand(this.eventType, ChannelSession.Channel);
+                }
+
                 newCommand.IsBasic = true;
                 newCommand.Actions.Add(action);
 
