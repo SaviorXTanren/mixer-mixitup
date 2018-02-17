@@ -42,6 +42,9 @@ namespace MixItUp.Desktop
         public OAuthTokenModel BotOAuthToken { get; set; }
 
         [JsonProperty]
+        public OAuthTokenModel StreamlabsOAuthToken { get; set; }
+
+        [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]
@@ -320,6 +323,11 @@ namespace MixItUp.Desktop
             if (ChannelSession.BotConnection != null)
             {
                 this.BotOAuthToken = ChannelSession.BotConnection.Connection.GetOAuthTokenCopy();
+            }
+
+            if (ChannelSession.Services.Streamlabs != null)
+            {
+                this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();

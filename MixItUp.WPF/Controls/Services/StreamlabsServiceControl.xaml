@@ -1,0 +1,29 @@
+﻿<local:ServicesControlBase x:Class="MixItUp.WPF.Controls.Services.StreamlabsServiceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
+             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="10" HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="150" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" TextWrapping="Wrap">Streamlabs service connectivity allows you to perform actions when a donation is received. When you log in, an authenication webpage will open asking you to log in to Streamlabs and approve Mix It Up to access your information.</TextBlock>
+
+        <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid x:Name="ExistingAccountGrid" Visibility="Collapsed">
+                <Button x:Name="LogOutButton" Click="LogOutButton_Click" HorizontalAlignment="Center" Width="90">Log Out</Button>
+            </Grid>
+
+            <Grid x:Name="NewLoginGrid" Visibility="Collapsed">
+                <Button x:Name="LogInButton" Click="LogInButton_Click" HorizontalAlignment="Center" Width="90">Log In</Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</local:ServicesControlBase>

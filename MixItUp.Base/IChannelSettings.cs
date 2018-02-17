@@ -19,8 +19,10 @@ namespace MixItUp.Base
 
         bool IsStreamer { get; set; }
 
-        OAuthTokenModel OAuthToken { get; set; }    
+        OAuthTokenModel OAuthToken { get; set; }
         OAuthTokenModel BotOAuthToken { get; set; }
+
+        OAuthTokenModel StreamlabsOAuthToken { get; set; }
 
         ExpandedChannelModel Channel { get; set; }
 

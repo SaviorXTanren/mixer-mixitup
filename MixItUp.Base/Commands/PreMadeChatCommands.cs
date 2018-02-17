@@ -615,9 +615,9 @@ namespace MixItUp.Base.Commands
 
             if (steamGameList.Count == 0)
             {
-                using (HttpClientWrapper client = new HttpClientWrapper())
+                using (HttpClientWrapper client = new HttpClientWrapper("http://api.steampowered.com/"))
                 {
-                    HttpResponseMessage response = await client.GetAsync("http://api.steampowered.com/ISteamApps/GetAppList/v0002/");
+                    HttpResponseMessage response = await client.GetAsync("ISteamApps/GetAppList/v0002");
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
                         string result = await response.Content.ReadAsStringAsync();
@@ -648,9 +648,9 @@ namespace MixItUp.Base.Commands
 
             if (gameID > 0)
             {
-                using (HttpClientWrapper client = new HttpClientWrapper())
+                using (HttpClientWrapper client = new HttpClientWrapper("http://store.steampowered.com/"))
                 {
-                    HttpResponseMessage response = await client.GetAsync("http://store.steampowered.com/api/appdetails?appids=" + gameID);
+                    HttpResponseMessage response = await client.GetAsync("api/appdetails?appids=" + gameID);
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
                         string result = await response.Content.ReadAsStringAsync();
