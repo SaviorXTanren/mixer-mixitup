@@ -34,7 +34,7 @@
 
         <EventControls:EventCommandControl x:Name="OnResubscribeCommandControl" Grid.Column="3" Grid.Row="3" />
 
-        <EventControls:EventCommandControl x:Name="OnDonationCommandControl" Grid.Column="1" Grid.Row="5" />
+        <EventControls:EventCommandControl x:Name="OnDonationCommandControl" Grid.Column="1" Grid.Row="5" Visibility="Collapsed" />
 
     </Grid>
 </local:MainControlBase>
