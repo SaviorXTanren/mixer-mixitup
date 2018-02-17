@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,23 +18,67 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
+            this.CounterActionTypeComboBox.ItemsSource = new List<string>() { "Update", "Reset" };
+
             if (this.action != null)
             {
                 this.CounterNameTextBox.Text = this.action.CounterName;
-                this.CounterAmountTextBox.Text = this.action.CounterAmount.ToString();
+                this.SaveToFileToggleButton.IsChecked = this.action.SaveToFile;
+                this.ResetOnLoadToggleButton.IsChecked = this.action.ResetOnLoad;
+
+                if (this.action.UpdateAmount)
+                {
+                    this.CounterActionTypeComboBox.SelectedIndex = 0;
+                    this.CounterAmountTextBox.Text = this.action.CounterAmount.ToString();
+                }
+                else if (this.action.ResetAmount)
+                {
+                    this.CounterActionTypeComboBox.SelectedIndex = 1;
+                }
             }
             return Task.FromResult(0);
         }
 
         public override ActionBase GetAction()
         {
-            int counterAmount;
-            if (!string.IsNullOrEmpty(this.CounterNameTextBox.Text) && this.CounterNameTextBox.Text.All(c => char.IsLetterOrDigit(c)) &&
-                !string.IsNullOrEmpty(this.CounterAmountTextBox.Text) && int.TryParse(this.CounterAmountTextBox.Text, out counterAmount))
+            if (!string.IsNullOrEmpty(this.CounterNameTextBox.Text) && this.CounterNameTextBox.Text.All(c => char.IsLetterOrDigit(c)))
             {
-                return new CounterAction(this.CounterNameTextBox.Text, counterAmount);
+                if (this.CounterActionTypeComboBox.SelectedIndex == 0)
+                {
+                    if (int.TryParse(this.CounterAmountTextBox.Text, out int counterAmount))
+                    {
+                        return new CounterAction(this.CounterNameTextBox.Text, counterAmount, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(),
+                            this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
+                    }
+                }
+                else if (this.CounterActionTypeComboBox.SelectedIndex == 1)
+                {
+                    return new CounterAction(this.CounterNameTextBox.Text, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(), this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
+                }
             }
             return null;
+        }
+
+        private void SaveToFileToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.ResetOnLoadToggleButton.IsEnabled = this.SaveToFileToggleButton.IsChecked.GetValueOrDefault();
+            if (!this.ResetOnLoadToggleButton.IsEnabled)
+            {
+                this.ResetOnLoadToggleButton.IsChecked = true;
+            }
+        }
+
+        private void CounterActionTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.CounterActionTypeComboBox.SelectedIndex == 0)
+            {
+                this.CounterAmountTextBox.IsEnabled = true;
+            }
+            else if (this.CounterActionTypeComboBox.SelectedIndex == 1)
+            {
+                this.CounterAmountTextBox.IsEnabled = false;
+                this.CounterAmountTextBox.Clear();
+            }
         }
     }
 }
