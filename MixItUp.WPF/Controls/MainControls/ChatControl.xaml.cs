@@ -38,6 +38,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private ScrollViewer chatListScrollViewer;
         private bool scrolledToEnd = true;
 
+        private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 24 }, };
+
         public ChatControl(bool isPopOut = false)
         {
             InitializeComponent();
@@ -56,9 +58,18 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.Window.Closing += Window_Closing;
+            GlobalEvents.OnChatFontSizeChanged += GlobalEvents_OnChatFontSizeChanged;
+
+            if (ChannelSession.Settings.ChatFontSize == 0)
+            {
+                ChannelSession.Settings.ChatFontSize = this.fontSizes["Normal"];
+            }
 
             this.ChatList.ItemsSource = this.MessageControls;
             this.UserList.ItemsSource = this.UserControls;
+
+            this.FontSizeComboBox.ItemsSource = this.fontSizes.Keys;
+            this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -240,6 +251,25 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Chat.DisableChat = false;
             this.DisableChatButton.Visibility = Visibility.Visible;
             this.EnableChatButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.FontSizeComboBox.SelectedIndex >= 0)
+            {
+                string name = (string)this.FontSizeComboBox.SelectedItem;
+                ChannelSession.Settings.ChatFontSize = this.fontSizes[name];
+                GlobalEvents.ChatFontSizeChanged();
+            }
+        }
+
+        private void GlobalEvents_OnChatFontSizeChanged(object sender, EventArgs e)
+        {
+            this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
+            foreach (ChatMessageControl control in this.MessageControls)
+            {
+                control.UpdateSizing();
+            }
         }
 
         private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)

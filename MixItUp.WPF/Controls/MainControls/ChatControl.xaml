@@ -40,8 +40,10 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Grid Height="20" Grid.Column="0" HorizontalAlignment="Center">
+                    <Grid Height="20" Grid.Column="0" HorizontalAlignment="Center" Margin="5">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
@@ -67,6 +69,10 @@
 
                         <Button x:Name="DisableChatButton" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DisableChatButton_Click">Disable Chat</Button>
                         <Button x:Name="EnableChatButton" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="EnableChatButton_Click" Visibility="Collapsed">Enable Chat</Button>
+
+                        <Border Grid.Column="6" Margin="-10" BorderBrush="White" BorderThickness="1">
+                            <ComboBox x:Name="FontSizeComboBox" MaterialDesign:HintAssist.Hint="Font Size" Style="{StaticResource BackgroundComboBox}" Width="90" VerticalAlignment="Center" SelectionChanged="FontSizeComboBox_SelectionChanged" />
+                        </Border>
 
                     </Grid>
 

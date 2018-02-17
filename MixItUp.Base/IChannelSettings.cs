@@ -65,6 +65,7 @@ namespace MixItUp.Base
 
         bool EnableDeveloperAPI { get; set; }
 
+        int ChatFontSize { get; set; }
         int MaxMessagesInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }

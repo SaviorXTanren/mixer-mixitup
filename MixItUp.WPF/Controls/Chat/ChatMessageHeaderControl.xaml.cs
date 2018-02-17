@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Controls.MainControls;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,12 +34,22 @@ namespace MixItUp.WPF.Controls.Chat
                 this.SubscriberImage.Visibility = Visibility.Visible;
                 this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;
             }
+
+            this.UpdateSizing();
         }
 
         public void DeleteMessage()
         {
             this.UserTextBlock.TextDecorations = TextDecorations.Strikethrough;
             this.TargetUserTextBlock.TextDecorations = TextDecorations.Strikethrough;
+        }
+
+        public void UpdateSizing()
+        {
+            this.UserAvatar.SetSize(ChannelSession.Settings.ChatFontSize + 2);
+            this.SubscriberImage.Height = this.SubscriberImage.Width = ChannelSession.Settings.ChatFontSize + 2;
+            this.UserTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
+            this.TargetUserTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
         }
     }
 }
