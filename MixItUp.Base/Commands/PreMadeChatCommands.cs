@@ -771,4 +771,153 @@ namespace MixItUp.Base.Commands
             }));
         }
     }
+
+    public class AddCommandChatCommand : PreMadeChatCommand
+    {
+        public AddCommandChatCommand()
+            : base("Add Command", new List<string>() { "addcommand" }, 5, UserRole.Mod)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (arguments.Count() >= 3)
+                {
+                    string commandTrigger = arguments.ElementAt(0).ToLower();
+
+                    if (commandTrigger.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c) && c != '!'))
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Command trigger can only contain letters and numbers");
+                        return;
+                    }
+
+                    foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
+                    {
+                        if (command.IsEnabled)
+                        {
+                            if (command.Commands.Contains(commandTrigger))
+                            {
+                                await ChannelSession.Chat.Whisper(user.UserName, "ERROR: There already exists an enabled, chat command that uses the command trigger you have specified");
+                                return;
+                            }
+                        }
+                    }
+
+                    if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Cooldown must be 0 or greater");
+                        return;
+                    }
+
+                    StringBuilder commandTextBuilder = new StringBuilder();
+                    foreach (string arg in arguments.Skip(2))
+                    {
+                        commandTextBuilder.Append(arg + " ");
+                    }
+
+                    string commandText = commandTextBuilder.ToString();
+                    commandText = commandText.Trim(new char[] { ' ', '\'', '\"' });
+
+                    ChatCommand newCommand = new ChatCommand(commandTrigger, commandTrigger, cooldown, new RequirementViewModel());
+                    newCommand.Actions.Add(new ChatAction(commandText));
+                    ChannelSession.Settings.ChatCommands.Add(newCommand);
+
+                    if (ChannelSession.Chat != null)
+                    {
+                        await ChannelSession.Chat.SendMessage("Added New Command: !" + commandTrigger);
+                    }
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "Usage: !addcommand <COMMAND TRIGGER, NO !> <COOLDOWN> <FULL COMMAND MESSAGE TEXT>");
+                }
+            }));
+        }
+    }
+
+    public class UpdateCommandChatCommand : PreMadeChatCommand
+    {
+        public UpdateCommandChatCommand()
+            : base("Update Command", new List<string>() { "updatecommand" }, 5, UserRole.Mod)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (arguments.Count() >= 2)
+                {
+                    string commandTrigger = arguments.ElementAt(0).ToLower();
+
+                    PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger));
+                    if (command == null)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
+                        return;
+                    }
+
+                    if (!int.TryParse(arguments.ElementAt(1), out int cooldown) || cooldown < 0)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Cooldown must be 0 or greater");
+                        return;
+                    }
+
+                    command.Cooldown = cooldown;
+
+                    if (arguments.Count() > 2)
+                    {
+                        StringBuilder commandTextBuilder = new StringBuilder();
+                        foreach (string arg in arguments.Skip(2))
+                        {
+                            commandTextBuilder.Append(arg + " ");
+                        }
+
+                        string commandText = commandTextBuilder.ToString();
+                        commandText = commandText.Trim(new char[] { ' ', '\'', '\"' });
+
+                        command.Actions.Clear();
+                        command.Actions.Add(new ChatAction(commandText));
+                    }
+
+                    if (ChannelSession.Chat != null)
+                    {
+                        await ChannelSession.Chat.SendMessage("Updated Command: !" + commandTrigger);
+                    }
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "Usage: !updatecommand <COMMAND TRIGGER, NO !> <COOLDOWN> [OPTIONAL FULL COMMAND MESSAGE TEXT]");
+                }
+            }));
+        }
+    }
+
+
+    public class DisableCommandChatCommand : PreMadeChatCommand
+    {
+        public DisableCommandChatCommand()
+            : base("Disable Command", new List<string>() { "disablecommand" }, 5, UserRole.Mod)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (arguments.Count() == 1)
+                {
+                    string commandTrigger = arguments.ElementAt(0).ToLower();
+
+                    PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger));
+                    if (command == null)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
+                        return;
+                    }
+
+                    command.IsEnabled = false;
+
+                    if (ChannelSession.Chat != null)
+                    {
+                        await ChannelSession.Chat.SendMessage("Disabled Command: !" + commandTrigger);
+                    }
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "Usage: !disablecommand <COMMAND TRIGGER, NO !>");
+                }
+            }));
+        }
+    }
 }
