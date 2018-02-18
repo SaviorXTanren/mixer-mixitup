@@ -13,7 +13,7 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                           
-             d:DesignHeight="500" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="800">
     <local:MainControlBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -27,6 +27,9 @@
                 <MenuItem x:Name="MessageDeleteMenuItem" Header="Delete Message" Click="MessageDeleteMenuItem_Click" />
                 <MenuItem x:Name="MessageUserInformationMenuItem" Header="User Info" Click="MessageUserInformationMenuItem_Click" />
             </ContextMenu>
+
+            <MaterialDesign:PackIcon Kind="Settings" x:Key="ChatSettingsPopupBoxIcon" x:Shared="False" Margin="4 -4 4 -4" Width="24" Height="24"
+                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
 
         </ResourceDictionary>
     </local:MainControlBase.Resources>
@@ -70,9 +73,31 @@
                         <Button x:Name="DisableChatButton" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DisableChatButton_Click">Disable Chat</Button>
                         <Button x:Name="EnableChatButton" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="EnableChatButton_Click" Visibility="Collapsed">Enable Chat</Button>
 
-                        <Border Grid.Column="6" Margin="-10" BorderBrush="White" BorderThickness="1">
-                            <ComboBox x:Name="FontSizeComboBox" MaterialDesign:HintAssist.Hint="Font Size" Style="{StaticResource BackgroundComboBox}" Width="90" VerticalAlignment="Center" SelectionChanged="FontSizeComboBox_SelectionChanged" />
-                        </Border>
+                        <MaterialDesign:PopupBox Grid.Column="6" VerticalAlignment="Center" ToggleContent="{StaticResource ChatSettingsPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+                            <Grid Margin="20">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                
+                                <ComboBox x:Name="FontSizeComboBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Font Size" Style="{StaticResource BackgroundComboBox}" Width="120" HorizontalAlignment="Center" SelectionChanged="FontSizeComboBox_SelectionChanged" />
+
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0">Show User Join/Leave:</TextBlock>
+
+                                    <ToggleButton Grid.Column="2" x:Name="ShowUserJoinLeaveToggleButton" Checked="ShowUserJoinLeaveToggleButton_Checked" Unchecked="ShowUserJoinLeaveToggleButton_Checked" />
+
+                                </Grid>
+                                
+                            </Grid>
+                        </MaterialDesign:PopupBox>
 
                     </Grid>
 

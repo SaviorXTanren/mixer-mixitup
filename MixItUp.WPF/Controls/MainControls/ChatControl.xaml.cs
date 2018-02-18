@@ -70,6 +70,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.FontSizeComboBox.ItemsSource = this.fontSizes.Keys;
             this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
+            this.ShowUserJoinLeaveToggleButton.IsChecked = ChannelSession.Settings.ChatShowUserJoinLeave;
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -263,6 +264,11 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private void ShowUserJoinLeaveToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ChatShowUserJoinLeave = this.ShowUserJoinLeaveToggleButton.IsChecked.GetValueOrDefault();
+        }
+
         private void GlobalEvents_OnChatFontSizeChanged(object sender, EventArgs e)
         {
             this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
@@ -396,6 +402,10 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void ChatClient_OnUserJoinOccurred(object sender, UserViewModel user)
         {
             await this.RefreshUserList();
+            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Joined Chat  ---", user.UserName)));
+            }
         }
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, UserViewModel user)
@@ -406,6 +416,10 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void ChatClient_OnUserLeaveOccurred(object sender, UserViewModel user)
         {
             await this.RefreshUserList();
+            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Left Chat  ---", user.UserName)));
+            }
         }
 
         #endregion Chat Event Handlers

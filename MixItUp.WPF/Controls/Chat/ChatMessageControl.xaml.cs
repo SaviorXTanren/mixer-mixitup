@@ -35,7 +35,10 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.MessageWrapPanel.Children.Clear();
 
-            this.MessageWrapPanel.Children.Add(this.messageHeader);
+            if (!this.Message.IsAlertMessage)
+            {
+                this.MessageWrapPanel.Children.Add(this.messageHeader);
+            }
 
             foreach (ChatMessageDataModel messageData in this.Message.MessageComponents)
             {
@@ -61,6 +64,10 @@ namespace MixItUp.WPF.Controls.Chat
                         TextBlock textBlock = new TextBlock();
                         textBlock.Text = word + " ";
                         textBlock.VerticalAlignment = VerticalAlignment.Center;
+                        if (this.Message.IsAlertMessage)
+                        {
+                            textBlock.FontWeight = FontWeights.Bold;
+                        }
                         this.textBlocks.Add(textBlock);
                         this.MessageWrapPanel.Children.Add(textBlock);
                     }

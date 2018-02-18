@@ -125,6 +125,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int ChatFontSize { get; set; }
         [JsonProperty]
+        public bool ChatShowUserJoinLeave { get; set; }
+        [JsonProperty]
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]

@@ -24,17 +24,19 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatMessageHeaderControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.Message.User.AvatarLink))
+            if (!this.Message.IsAlertMessage)
             {
-                this.UserAvatar.SetImageUrl(this.Message.User.AvatarLink);
-            }
+                if (!string.IsNullOrEmpty(this.Message.User.AvatarLink))
+                {
+                    this.UserAvatar.SetImageUrl(this.Message.User.AvatarLink);
+                }
 
-            if (ChatControl.SubscriberBadgeBitmap != null && this.Message.User.IsSubscriber)
-            {
-                this.SubscriberImage.Visibility = Visibility.Visible;
-                this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;
+                if (ChatControl.SubscriberBadgeBitmap != null && this.Message.User.IsSubscriber)
+                {
+                    this.SubscriberImage.Visibility = Visibility.Visible;
+                    this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;
+                }
             }
-
             this.UpdateSizing();
         }
 
