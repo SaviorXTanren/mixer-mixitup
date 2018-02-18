@@ -373,7 +373,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ChatClient_OnMessageOccurred(object sender, ChatMessageViewModel message)
         {
-            await this.AddMessage(message);
+            await this.Dispatcher.InvokeAsync(async () => { await this.AddMessage(message); });
         }
 
         private void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
