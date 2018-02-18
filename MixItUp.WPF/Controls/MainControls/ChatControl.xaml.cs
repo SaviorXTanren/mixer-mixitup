@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private int totalMessages = 0;
         private ScrollViewer chatListScrollViewer;
-        private bool scrolledToEnd = true;
+        private bool autoScrollChatList = true;
 
         private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 24 }, };
 
@@ -108,11 +108,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.SendChatAsComboBox.SelectedIndex = 0;
             }
 
-            if (this.scrolledToEnd && this.chatListScrollViewer != null)
-            {
-                this.chatListScrollViewer.ScrollToEnd();
-            }
-
             return Task.FromResult(0);
         }
 
@@ -121,14 +116,27 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.chatListScrollViewer == null)
             {
                 this.chatListScrollViewer = (ScrollViewer)e.OriginalSource;
+                this.chatListScrollViewer.ScrollChanged += ChatListScrollViewer_ScrollChanged;
+            }
+        }
+
+        private void ChatListScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.ExtentHeightChange == 0)
+            {
+                if (this.chatListScrollViewer.VerticalOffset == this.chatListScrollViewer.ScrollableHeight)
+                {
+                    this.autoScrollChatList = true;
+                }
+                else
+                {
+                    this.autoScrollChatList = false;
+                }
             }
 
-            if (this.chatListScrollViewer != null)
+            if (this.autoScrollChatList && e.ExtentHeightChange != 0)
             {
-                if (this.MessageControls.Count > 0)
-                {
-                    this.scrolledToEnd = (this.chatListScrollViewer.VerticalOffset >= this.chatListScrollViewer.ScrollableHeight);
-                }
+                this.chatListScrollViewer.ScrollToVerticalOffset(this.chatListScrollViewer.ExtentHeight);
             }
         }
 
@@ -175,11 +183,6 @@ namespace MixItUp.WPF.Controls.MainControls
             ChatMessageControl messageControl = new ChatMessageControl(message);
             this.MessageControls.Add(messageControl);
             this.totalMessages++;
-
-            if (this.scrolledToEnd && this.chatListScrollViewer != null)
-            {
-                this.chatListScrollViewer.ScrollToEnd();
-            }
 
             while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
             {
