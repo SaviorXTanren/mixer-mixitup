@@ -58,9 +58,8 @@ namespace MixItUp.Base.Util
         {
             try
             {
-                using (HttpClientWrapper client = new HttpClientWrapper("https://api.mixitupapp.com/"))
+                using (HttpClientWrapper client = new HttpClientWrapper("https://api.mixitupapp.com/analytics/"))
                 {
-                    client.BaseAddress = new Uri("analytics");
                     HttpResponseMessage response = await client.GetAsync(string.Format("log?username={0}&eventName={1}&eventDetails={2}&appVersion={3}",
                         (ChannelSession.User != null) ? ChannelSession.User.username : "UNKNOWN", eventName, eventDetails,
                         Assembly.GetEntryAssembly().GetName().Version.ToString()));
