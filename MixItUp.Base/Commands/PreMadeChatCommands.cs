@@ -271,11 +271,10 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, user.GetModel());
-                    user.SetFollowDate(followDate);
-                    if (followDate != null)
+                    await user.SetFollowDate();
+                    if (user.FollowDate != null)
                     {
-                        await ChannelSession.Chat.SendMessage(this.GetFollowAge(user.GetModel(), followDate.GetValueOrDefault()));
+                        await ChannelSession.Chat.SendMessage(this.GetFollowAge(user.GetModel(), user.FollowDate.GetValueOrDefault()));
                     }
                     else
                     {

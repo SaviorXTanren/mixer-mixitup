@@ -64,7 +64,6 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.Roles = new HashSet<UserRole>();
             this.AvatarLink = UserViewModel.DefaultAvatarLink;
-            this.SetFollowDate(this.FollowDate);
         }
 
         public UserViewModel(UserModel user) : this(user.id, user.username)
@@ -239,8 +238,7 @@ namespace MixItUp.Base.ViewModel.User
 
             if (checkForFollow)
             {
-                DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
-                this.SetFollowDate(followDate);
+                await this.SetFollowDate();
 
                 if (this.Roles.Contains(UserRole.Subscriber))
                 {
@@ -249,9 +247,17 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public async Task SetFollowDate()
+        {
+            if (this.FollowDate == null || this.FollowDate.GetValueOrDefault() == DateTimeOffset.MinValue)
+            {
+                this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
+            }
+            this.SetFollowDate(this.FollowDate);
+        }
+
         public void SetFollowDate(DateTimeOffset? followDate)
         {
-            this.FollowDate = followDate;
             if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() != DateTimeOffset.MinValue)
             {
                 this.Roles.Add(UserRole.Follower);
@@ -264,14 +270,17 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task SetSubscribeDate()
         {
-            UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
-            if (userGroups != null && userGroups.groups != null)
+            if (this.SubscribeDate == null || this.SubscribeDate.GetValueOrDefault() == DateTimeOffset.MinValue)
             {
-                UserGroupModel subscriberGroup = userGroups.groups.FirstOrDefault(g => g.name.Equals("Subscriber") && g.deletedAt == null);
-                if (subscriberGroup != null)
+                UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
+                if (userGroups != null && userGroups.groups != null)
                 {
-                    this.SubscribeDate = subscriberGroup.createdAt;
-                    this.Roles.Add(UserRole.Subscriber);
+                    UserGroupModel subscriberGroup = userGroups.groups.FirstOrDefault(g => g.name.Equals("Subscriber") && g.deletedAt == null);
+                    if (subscriberGroup != null)
+                    {
+                        this.SubscribeDate = subscriberGroup.createdAt;
+                        this.Roles.Add(UserRole.Subscriber);
+                    }
                 }
             }
         }

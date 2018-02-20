@@ -19,17 +19,24 @@ namespace MixItUp.Base.Util
             days = days - (months * 30);
 
             List<string> dateSegments = new List<string>();
-            if (years > 0)
+            if (difference.TotalDays < 1)
             {
-                dateSegments.Add(years + " Year(s)");
+                dateSegments.Add(">1 Day");
             }
-            if (months > 0)
+            else
             {
-                dateSegments.Add(months + " Month(s)");
-            }
-            if (days > 0)
-            {
-                dateSegments.Add(days + " Day(s)");
+                if (years > 0)
+                {
+                    dateSegments.Add(years + " Year(s)");
+                }
+                if (months > 0)
+                {
+                    dateSegments.Add(months + " Month(s)");
+                }
+                if (days > 0)
+                {
+                    dateSegments.Add(days + " Day(s)");
+                }
             }
 
             return string.Join(", ", dateSegments);

@@ -231,9 +231,9 @@ namespace MixItUp.Base.MixerAPI
                         {
                             try
                             {
-                                if (this.ChatUsers.ContainsKey(kvp.Key.id))
+                                if (this.ChatUsers.ContainsKey(kvp.Key.id) && kvp.Value != null)
                                 {
-                                    this.ChatUsers[kvp.Key.id].SetFollowDate(kvp.Value);
+                                    this.ChatUsers[kvp.Key.id].SetFollowDate();
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex); }

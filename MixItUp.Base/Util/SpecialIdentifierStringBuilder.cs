@@ -67,6 +67,8 @@ namespace MixItUp.Base.Util
 
             if (user != null)
             {
+                await user.SetDetails();
+
                 if (string.IsNullOrEmpty(user.AvatarLink))
                 {
                     user.AvatarLink = UserViewModel.DefaultAvatarLink;
@@ -136,6 +138,7 @@ namespace MixItUp.Base.Util
                                 this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, rank.Name);
                                 this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                             }
+
                             this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usertime", userData.ViewingTimeString);
                             this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userhours", userData.ViewingHoursString);
                             this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usermins", userData.ViewingMinutesString);
