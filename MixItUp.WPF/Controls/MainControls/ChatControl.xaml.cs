@@ -135,7 +135,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (e.ExtentHeightChange == 0)
             {
-                if (this.chatListScrollViewer.VerticalOffset == this.chatListScrollViewer.ScrollableHeight)
+                if ((this.chatListScrollViewer.VerticalOffset + 2) >= this.chatListScrollViewer.ScrollableHeight)
                 {
                     this.autoScrollChatList = true;
                 }
@@ -147,7 +147,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (this.autoScrollChatList && e.ExtentHeightChange != 0)
             {
-                this.chatListScrollViewer.ScrollToVerticalOffset(this.chatListScrollViewer.ExtentHeight);
+                this.chatListScrollViewer.ScrollToBottom();
             }
         }
 
