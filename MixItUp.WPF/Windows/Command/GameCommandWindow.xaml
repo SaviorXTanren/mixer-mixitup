@@ -51,36 +51,20 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
                             <TextBox Grid.Column="0" x:Name="GameNameTextBox" MaterialDesign:HintAssist.Hint="Game Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <TextBox x:Name="GameChatCommandTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Commands in Chat (letters &amp; numbers only, space seperated)" Width="400" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBox x:Name="GameChatCommandTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Chat Triggers (letters/numbers only, space seperated)" Width="350" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <ComboBox x:Name="GameTypeComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource BackgroundComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
 
                         </Grid>
 
                         <Grid Grid.Row="2" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="40" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <Grid Grid.Column="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="20" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-
-                                <TextBox x:Name="GameCooldownTextBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
-
-                                <ComboBox x:Name="GameTypeComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource BackgroundComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
-
-                            </Grid>
-
                             <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
-                            
                         </Grid>
 
                         <Grid x:Name="CurrencyGrid" Grid.Row="4" HorizontalAlignment="Center" IsEnabled="False">

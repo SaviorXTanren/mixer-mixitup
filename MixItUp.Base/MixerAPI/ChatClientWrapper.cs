@@ -247,7 +247,7 @@ namespace MixItUp.Base.MixerAPI
                             {
                                 if (this.ChatUsers.ContainsKey(kvp.Key.id) && kvp.Value != null)
                                 {
-                                    this.ChatUsers[kvp.Key.id].SetFollowDate();
+                                    await this.ChatUsers[kvp.Key.id].SetFollowDate();
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex); }
@@ -453,7 +453,7 @@ namespace MixItUp.Base.MixerAPI
                         if ((user.Data.ViewingMinutes % currency.AcquireInterval) == 0)
                         {
                             user.Data.AddCurrencyAmount(currency, currency.AcquireAmount);
-                            if (user.Roles.Contains(UserRole.Subscriber))
+                            if (user.IsSubscriber)
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.SubscriberBonus);
                             }

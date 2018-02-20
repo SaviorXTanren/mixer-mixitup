@@ -107,7 +107,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.Roles.Add(UserRole.Mod);
             }
 
-            if (this.Roles.Contains(UserRole.Subscriber) || this.Roles.Contains(UserRole.Streamer))
+            if (this.IsSubscriber)
             {
                 this.Roles.Add(UserRole.Follower);
             }
@@ -164,7 +164,7 @@ namespace MixItUp.Base.ViewModel.User
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
 
         [JsonIgnore]
-        public bool IsSubscriber { get { return this.Roles.Contains(UserRole.Subscriber); } }
+        public bool IsSubscriber { get { return this.Roles.Contains(UserRole.Subscriber) || this.Roles.Contains(UserRole.Streamer); } }
 
         [JsonIgnore]
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }

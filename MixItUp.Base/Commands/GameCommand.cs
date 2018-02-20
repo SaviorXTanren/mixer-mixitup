@@ -118,8 +118,8 @@ namespace MixItUp.Base.Commands
 
         public UserCharityGameCommand() { }
 
-        public UserCharityGameCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements, bool giveToRandomUser)
-            : base(name, commands, cooldown, requirements)
+        public UserCharityGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, bool giveToRandomUser)
+            : base(name, commands, requirements)
         {
             this.GiveToRandomUser = giveToRandomUser;
         }
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckLastRun(user))
+            if (!await this.CheckCooldownRequirement(user))
             {
                 return;
             }
@@ -176,7 +176,7 @@ namespace MixItUp.Base.Commands
             if (await this.PerformUserJoinChecks(user, arguments))
             {
                 this.gameStarterUser = user;
-                this.SetLastRun();
+                this.SetLastRun(user);
 
                 this.lastBet = this.GetBetAmount(arguments);
 
@@ -231,8 +231,8 @@ namespace MixItUp.Base.Commands
 
         public OnlyOneWinnerGameCommand() { }
 
-        public OnlyOneWinnerGameCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements, int gameLength, int minimumParticipants)
-            : base(name, commands, cooldown, requirements)
+        public OnlyOneWinnerGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int gameLength, int minimumParticipants)
+            : base(name, commands, requirements)
         {
             this.GameLength = gameLength;
             this.MinimumParticipants = minimumParticipants;
@@ -244,7 +244,7 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckLastRun(user))
+            if (!await this.CheckCooldownRequirement(user))
             {
                 return;
             }
@@ -277,7 +277,7 @@ namespace MixItUp.Base.Commands
                 {
                     await Task.Delay(this.GameLength * 1000);
 
-                    this.SetLastRun();
+                    this.SetLastRun(user);
 
                     if (this.UserBets.Count >= this.MinimumParticipants)
                     {
@@ -331,10 +331,9 @@ namespace MixItUp.Base.Commands
 
         public IndividualProbabilityGameCommand() { }
 
-        public IndividualProbabilityGameCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes,
-            IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand, int gameLength,
-            int minimumParticipants)
-            : base(name, commands, cooldown, requirements, outcomes, groups, loseLeftoverCommand)
+        public IndividualProbabilityGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes,
+            IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand, int gameLength, int minimumParticipants)
+            : base(name, commands, requirements, outcomes, groups, loseLeftoverCommand)
         {
             this.GameLength = gameLength;
             this.MinimumParticipants = minimumParticipants;
@@ -346,7 +345,7 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckLastRun(user))
+            if (!await this.CheckCooldownRequirement(user))
             {
                 return;
             }
@@ -379,7 +378,7 @@ namespace MixItUp.Base.Commands
                 {
                     await Task.Delay(this.GameLength * 1000);
 
-                    this.SetLastRun();
+                    this.SetLastRun(user);
 
                     if (this.UserBets.Count >= this.MinimumParticipants)
                     {
@@ -415,9 +414,9 @@ namespace MixItUp.Base.Commands
 
         public SinglePlayerGameCommand() { }
 
-        public SinglePlayerGameCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes,
+        public SinglePlayerGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes,
             IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand)
-            : base(name, commands, cooldown, requirements, outcomes, groups, loseLeftoverCommand)
+            : base(name, commands, requirements, outcomes, groups, loseLeftoverCommand)
         { }
 
         public override int TotalBets { get { return this.lastBet; } }
@@ -426,7 +425,7 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckLastRun(user))
+            if (!await this.CheckCooldownRequirement(user))
             {
                 return;
             }
@@ -435,7 +434,7 @@ namespace MixItUp.Base.Commands
             {
                 this.gameStarterUser = user;
 
-                this.SetLastRun();
+                this.SetLastRun(user);
 
                 int betAmount = this.GetBetAmount(arguments);
 
@@ -471,9 +470,9 @@ namespace MixItUp.Base.Commands
             this.Groups = new List<GameOutcomeGroup>();
         }
 
-        public OutcomeGameCommandBase(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirement, IEnumerable<GameOutcome> outcomes,
+        public OutcomeGameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirement, IEnumerable<GameOutcome> outcomes,
             IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand)
-            : base(name, commands, cooldown, requirement)
+            : base(name, commands, requirement)
         {
             this.Outcomes = outcomes.ToList();
             this.Groups = groups.ToList();
@@ -544,8 +543,8 @@ namespace MixItUp.Base.Commands
         internal CurrencyRequirementTypeEnum CurrencyRequirementType { get; set; }
         public GameCommandBase() { }
 
-        public GameCommandBase(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirement)
-            : base(name, CommandTypeEnum.Game, commands, cooldown, requirement)
+        public GameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirement)
+            : base(name, CommandTypeEnum.Game, commands, requirement)
         { }
 
         [JsonIgnore]
@@ -655,7 +654,7 @@ namespace MixItUp.Base.Commands
             return amount;
         }
 
-        protected void SetLastRun() { this.lastRun = DateTimeOffset.Now; }
+        protected void SetLastRun(UserViewModel user) { this.Requirements.Cooldown.UpdateCooldown(user); }
 
         protected async Task WhisperUser(UserViewModel user, string message)
         {

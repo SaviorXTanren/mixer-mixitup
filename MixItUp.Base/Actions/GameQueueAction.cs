@@ -77,14 +77,14 @@ namespace MixItUp.Base.Actions
 
                         if (ChannelSession.Settings.GameQueueSubPriority)
                         {
-                            if (!user.Roles.Contains(UserRole.Subscriber))
+                            if (!user.IsSubscriber)
                             {
                                 await user.SetSubscribeDate();
                             }
 
-                            if (user.Roles.Contains(UserRole.Subscriber))
+                            if (user.IsSubscriber)
                             {
-                                int totalSubs = ChannelSession.GameQueue.Count(u => u.Roles.Contains(UserRole.Subscriber));
+                                int totalSubs = ChannelSession.GameQueue.Count(u => u.IsSubscriber);
                                 ChannelSession.GameQueue.Insert(totalSubs, user);
                             }
                             else

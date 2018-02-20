@@ -23,7 +23,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 8;
+        public const int LatestVersion = 9;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -166,7 +166,6 @@ namespace MixItUp.Desktop
         protected Dictionary<uint, List<InteractiveUserGroupViewModel>> interactiveUserGroupsInternal { get; set; }
         [JsonProperty]
         protected Dictionary<string, int> interactiveCooldownGroupsInternal { get; set; }
-
 
         public DesktopSavableChannelSettings()
         {

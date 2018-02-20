@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel.Import;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -20,16 +19,16 @@ namespace MixItUp.Base.Commands
 
         public ChatCommand() { }
 
-        public ChatCommand(string name, string command, int cooldown, RequirementViewModel requirements)
-            : this(name, new List<string>() { command }, cooldown, requirements)
+        public ChatCommand(string name, string command, RequirementViewModel requirements)
+            : this(name, new List<string>() { command }, requirements)
         { }
 
-        public ChatCommand(string name, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements)
-            : base(name, CommandTypeEnum.Chat, commands, cooldown, requirements)
+        public ChatCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements)
+            : base(name, CommandTypeEnum.Chat, commands, requirements)
         { }
 
         public ChatCommand(ScorpBotCommand command)
-            : this(command.Command, command.Command, command.Cooldown, command.Requirements)
+            : this(command.Command, command.Command, command.Requirements)
         {
             this.Actions.Add(new ChatAction(command.Text));
             this.IsEnabled = command.Enabled;

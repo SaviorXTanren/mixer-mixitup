@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Import
                 this.Requirements.UserRole = UserRole.Mod;
             }
 
-            this.Cooldown = (int)reader["Cooldown"];
+            this.Requirements.Cooldown.Amount = (int)reader["Cooldown"];
             this.Enabled = ((string)reader["Enabled"]).Equals("True");
         }
     }

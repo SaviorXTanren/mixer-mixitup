@@ -19,6 +19,9 @@
         <MaterialDesign:PackIcon Kind="AccountSettingsVariant" x:Key="UserRolePopupBoxIcon" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24"
                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
 
+        <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24"
+                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
+
         <MaterialDesign:PackIcon Kind="Coin" x:Key="CurrencyPopupBoxIcon" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24"
                   Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
 
@@ -35,6 +38,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <MaterialDesign:PopupBox Grid.Column="0" ToggleContent="{StaticResource UserRolePopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
@@ -43,13 +48,19 @@
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox x:Name="CurrencyPopup" Grid.Column="2" ToggleContent="{StaticResource CurrencyPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox Grid.Column="2" ToggleContent="{StaticResource CooldownPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+                <Grid Margin="10">
+                    <RequirementControls:CooldownRequirementControl x:Name="CooldownRequirement" />
+                </Grid>
+            </MaterialDesign:PopupBox>
+
+            <MaterialDesign:PopupBox x:Name="CurrencyPopup" Grid.Column="4" ToggleContent="{StaticResource CurrencyPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
                     <RequirementControls:CurrencyRequirementControl x:Name="CurrencyRequirement" />
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox Grid.Column="4" ToggleContent="{StaticResource RankPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox Grid.Column="6" ToggleContent="{StaticResource RankPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
                     <RequirementControls:RankRequirementControl x:Name="RankRequirement" />
                 </Grid>

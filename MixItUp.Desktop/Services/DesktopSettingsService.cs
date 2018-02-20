@@ -46,6 +46,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version6Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version7Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version8Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version9Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -261,6 +262,29 @@ namespace MixItUp.Desktop.Services
                 {
 #pragma warning disable CS0612 // Type or member is obsolete
                     command.Requirements.Currency.RequirementType = command.CurrencyRequirementType;
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version9Upgrade(int version, string filePath)
+        {
+            if (version < 9)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.GameCommands);
+                foreach (PermissionsCommandBase command in commands)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    command.Requirements.Cooldown.Amount = command.Cooldown;
+                    command.Requirements.Currency = command.CurrencyRequirement;
+                    command.Requirements.Rank = command.RankRequirement;
 #pragma warning restore CS0612 // Type or member is obsolete
                 }
 

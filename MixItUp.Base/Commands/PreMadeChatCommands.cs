@@ -40,7 +40,7 @@ namespace MixItUp.Base.Commands
             this.Name = command.Name;
             this.IsEnabled = command.IsEnabled;
             this.Permissions = command.Requirements.UserRole;
-            this.Cooldown = command.Cooldown;
+            this.Cooldown = command.Requirements.Cooldown.Amount;
         }
     }
 
@@ -60,13 +60,13 @@ namespace MixItUp.Base.Commands
     public class PreMadeChatCommand : ChatCommand
     {
         public PreMadeChatCommand(string name, string command, int cooldown, UserRole userRole)
-            : base(name, command, cooldown, new RequirementViewModel())
+            : base(name, command, new RequirementViewModel(userRole: userRole, cooldown: cooldown))
         {
             this.Requirements.UserRole = userRole;
         }
 
         public PreMadeChatCommand(string name, List<string> commands, int cooldown, UserRole userRole)
-            : base(name, commands, cooldown, new RequirementViewModel())
+            : base(name, commands, new RequirementViewModel(userRole: userRole, cooldown: cooldown))
         {
             this.Requirements.UserRole = userRole;
         }
@@ -75,7 +75,7 @@ namespace MixItUp.Base.Commands
         {
             this.IsEnabled = settings.IsEnabled;
             this.Requirements.UserRole = settings.Permissions;
-            this.Cooldown = settings.Cooldown;
+            this.Requirements.Cooldown.Amount = settings.Cooldown;
         }
 
         public string GetMixerAge(UserModel user)
@@ -676,7 +676,7 @@ namespace MixItUp.Base.Commands
         }
 
         public SteamGameChatCommand()
-            : base("Steam Game", new List<string>() { "steamgame", "steam" }, 30, UserRole.User)
+            : base("Steam Game", new List<string>() { "steamgame", "steam" }, 5, UserRole.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
@@ -815,7 +815,8 @@ namespace MixItUp.Base.Commands
                     string commandText = commandTextBuilder.ToString();
                     commandText = commandText.Trim(new char[] { ' ', '\'', '\"' });
 
-                    ChatCommand newCommand = new ChatCommand(commandTrigger, commandTrigger, cooldown, new RequirementViewModel());
+                    ChatCommand newCommand = new ChatCommand(commandTrigger, commandTrigger, new RequirementViewModel());
+                    newCommand.Requirements.Cooldown.Amount = cooldown;
                     newCommand.Actions.Add(new ChatAction(commandText));
                     ChannelSession.Settings.ChatCommands.Add(newCommand);
 
@@ -856,7 +857,7 @@ namespace MixItUp.Base.Commands
                         return;
                     }
 
-                    command.Cooldown = cooldown;
+                    command.Requirements.Cooldown.Amount = cooldown;
 
                     if (arguments.Count() > 2)
                     {
