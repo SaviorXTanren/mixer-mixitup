@@ -146,7 +146,7 @@ namespace MixItUp.Base.MixerAPI
 
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
-                            user.Data.SetCurrencyAmount(currency, currency.OnFollowBonus);
+                            user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
                         }
 
                         if (this.OnFollowOccurred != null)
@@ -175,7 +175,7 @@ namespace MixItUp.Base.MixerAPI
 
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    user.Data.SetCurrencyAmount(currency, currency.OnHostBonus);
+                    user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
                 }
 
                 if (this.OnHostedOccurred != null)
@@ -195,7 +195,7 @@ namespace MixItUp.Base.MixerAPI
                 user.SubscribeDate = DateTimeOffset.Now;
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    user.Data.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
+                    user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                 }
 
                 if (this.OnSubscribedOccurred != null)
@@ -209,7 +209,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    user.Data.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
+                    user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                 }
 
                 int resubMonths = 0;
