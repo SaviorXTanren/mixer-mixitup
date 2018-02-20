@@ -5,6 +5,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -187,11 +188,12 @@ namespace MixItUp.Desktop.Services
                 else if (urlSegments[0].Equals("commands"))
                 {
                     List<CommandBase> allCommands = new List<CommandBase>();
-                    allCommands.AddRange(ChannelSession.AllChatCommands);
+                    allCommands.AddRange(ChannelSession.Settings.ChatCommands);
                     allCommands.AddRange(ChannelSession.Settings.InteractiveCommands);
                     allCommands.AddRange(ChannelSession.Settings.EventCommands);
                     allCommands.AddRange(ChannelSession.Settings.TimerCommands);
                     allCommands.AddRange(ChannelSession.Settings.ActionGroupCommands);
+                    allCommands.AddRange(ChannelSession.Settings.GameCommands);
 
                     if (request.HttpMethod.Equals("GET"))
                     {
@@ -215,22 +217,44 @@ namespace MixItUp.Desktop.Services
                             }
                         }
                     }
-                    else if (request.HttpMethod.Equals("POST") && urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
+                    else if (request.HttpMethod.Equals("POST"))
                     {
-                        CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
-                        if (command != null)
+                        if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
                         {
+                            CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
+                            if (command != null)
+                            {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            command.Perform();
+                                command.Perform();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                            result = "";
-                            return HttpStatusCode.OK;
+                                result = "";
+                                return HttpStatusCode.OK;
+                            }
+                            else
+                            {
+                                result = "Could not find the command specified";
+                                return HttpStatusCode.NotFound;
+                            }
                         }
-                        else
+                    }
+                    else if (request.HttpMethod.Equals("PUT") || request.HttpMethod.Equals("PATCH"))
+                    {
+                        if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
                         {
-                            result = "Could not find the command specified";
-                            return HttpStatusCode.NotFound;
+                            CommandBase commandData = SerializerHelper.DeserializeAbstractFromString<CommandBase>(data);
+                            CommandBase matchedCommand = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
+                            if (matchedCommand != null)
+                            {
+                                matchedCommand.IsEnabled = commandData.IsEnabled;
+                                result = SerializerHelper.SerializeToString(matchedCommand);
+                                return HttpStatusCode.OK;
+                            }
+                            else
+                            {
+                                result = "Invalid data/could not find matching command";
+                                return HttpStatusCode.NotFound;
+                            }
                         }
                     }
                 }
