@@ -127,6 +127,10 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool ChatShowUserJoinLeave { get; set; }
         [JsonProperty]
+        public bool ChatShowEventAlerts { get; set; }
+        [JsonProperty]
+        public bool ChatShowInteractiveAlerts { get; set; }
+        [JsonProperty]
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]
