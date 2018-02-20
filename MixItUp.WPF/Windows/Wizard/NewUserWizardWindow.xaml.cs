@@ -595,7 +595,7 @@ namespace MixItUp.WPF.Windows.Wizard
             {
                 if (this.soundwaveData.StaticCooldown)
                 {
-                    ChannelSession.Settings.InteractiveCooldownGroups.Add(SoundwaveInteractiveCooldownGroupName, this.soundwaveData.StaticCooldownAmount / 1000);
+                    ChannelSession.Settings.InteractiveCooldownGroups[SoundwaveInteractiveCooldownGroupName] = this.soundwaveData.StaticCooldownAmount / 1000;
                 }
 
                 InteractiveGameListingModel soundwaveGame = this.interactiveGames.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
