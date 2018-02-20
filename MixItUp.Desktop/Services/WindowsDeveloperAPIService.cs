@@ -20,6 +20,9 @@ namespace MixItUp.Desktop.Services
         public Guid ID { get; set; }
 
         [DataMember]
+        public string Name { get; set; }
+
+        [DataMember]
         public int Amount { get; set; }
 
         public UserCurrencyDeveloperAPIModel() { }
@@ -27,6 +30,7 @@ namespace MixItUp.Desktop.Services
         public UserCurrencyDeveloperAPIModel(UserCurrencyDataViewModel currencyData)
         {
             this.ID = currencyData.Currency.ID;
+            this.Name = currencyData.Currency.Name;
             this.Amount = currencyData.Amount;
         }
     }
