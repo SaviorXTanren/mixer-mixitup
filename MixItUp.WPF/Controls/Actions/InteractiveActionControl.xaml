@@ -60,5 +60,17 @@
             <TextBox x:Name="InteractiveMoveUserToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
+        <Grid Grid.Row="2" x:Name="InteractiveCooldownGrid" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="InteractiveCooldownNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" />
+
+            <TextBox x:Name="InteractiveCooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown Amount" />
+        </Grid>
+
     </Grid>
 </local:ActionControlBase>

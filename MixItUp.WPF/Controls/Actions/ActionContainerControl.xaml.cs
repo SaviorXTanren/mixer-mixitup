@@ -91,6 +91,9 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.SpecialIdentifier:
                     this.actionControl = (this.action != null) ? new SpecialIdentifierActionControl(this, (SpecialIdentifierAction)this.action) : new SpecialIdentifierActionControl(this);
                     break;
+                case ActionTypeEnum.File:
+                    this.actionControl = (this.action != null) ? new FileActionControl(this, (FileAction)this.action) : new FileActionControl(this);
+                    break;
             }
 
             if (this.actionControl != null)

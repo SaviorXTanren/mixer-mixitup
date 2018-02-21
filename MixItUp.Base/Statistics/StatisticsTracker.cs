@@ -1,9 +1,6 @@
-﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Interactive;
-using Mixer.Base.Model.User;
-using MixItUp.Base.MixerAPI;
+﻿using Mixer.Base.Model.Interactive;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -30,6 +27,11 @@ namespace MixItUp.Base.Statistics
             return string.Format("Buttons Pressed: {0},    Average Presses: {1}", dataTracker.MaxValues, dataTracker.AverageValues);
         });
 
+        private EventStatisticDataTracker donationsTracker = new EventStatisticDataTracker("Donations", "CashMultiple", (EventStatisticDataTracker dataTracker) =>
+        {
+            return string.Format("Donations: {0},    Total Amount: {1:C}", dataTracker.MaxKeys, dataTracker.MaxValuesDecimal);
+        });
+
         public StatisticsTracker()
         {
             ChannelSession.Constellation.OnFollowOccurred += Constellation_OnFollowOccurred;
@@ -37,7 +39,10 @@ namespace MixItUp.Base.Statistics
             ChannelSession.Constellation.OnHostedOccurred += Constellation_OnHostedOccurred;
             ChannelSession.Constellation.OnSubscribedOccurred += Constellation_OnSubscribedOccurred;
             ChannelSession.Constellation.OnResubscribedOccurred += Constellation_OnResubscribedOccurred;
+
             ChannelSession.Interactive.OnGiveInput += Interactive_OnGiveInput;
+
+            GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
 
             this.Statistics = new List<StatisticDataTrackerBase>();
 
@@ -62,6 +67,8 @@ namespace MixItUp.Base.Statistics
             this.Statistics.Add(this.resubscriberTracker);
 
             this.Statistics.Add(this.interactiveTracker);
+
+            this.Statistics.Add(this.donationsTracker);
         }
 
         public string GetDefaultFileName() { return string.Format("Stream Statistics - {0}.csv", this.startTime.ToString("MM-dd-yy HH-mm")); }
@@ -107,6 +114,11 @@ namespace MixItUp.Base.Statistics
             {
                 this.interactiveTracker.OnStatisticEventOccurred(e.input.controlID, 1);
             }
+        }
+
+        private void GlobalEvents_OnDonationOccurred(object sender, UserDonationViewModel e)
+        {
+            this.donationsTracker.OnStatisticEventOccurred(e.ID, e.Amount);
         }
     }
 }

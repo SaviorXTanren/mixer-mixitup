@@ -61,6 +61,8 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<InteractiveParticipantCollectionModel> OnParticipantLeave = delegate { };
         public event EventHandler<InteractiveIssueMemoryWarningModel> OnIssueMemoryWarning = delegate { };
 
+        public event EventHandler<Tuple<UserViewModel, InteractiveConnectedControlCommand>> OnInteractiveControlUsed = delegate { };
+
         public InteractiveGameListingModel Game { get; private set; }
         public InteractiveClient Client { get; private set; }
 
@@ -424,6 +426,11 @@ namespace MixItUp.Base.MixerAPI
                     }
 
                     await connectedControl.Command.Perform(user);
+
+                    if (this.OnInteractiveControlUsed != null)
+                    {
+                        this.OnInteractiveControlUsed(this, new Tuple<UserViewModel, InteractiveConnectedControlCommand>(user, connectedControl));
+                    }
                 }
             }
 

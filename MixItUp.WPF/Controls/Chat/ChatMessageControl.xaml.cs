@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using MixItUp.Base;
 using MixItUp.Base.ViewModel.Chat;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,10 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.MessageWrapPanel.Children.Clear();
 
-            this.MessageWrapPanel.Children.Add(this.messageHeader);
+            if (!this.Message.IsAlertMessage)
+            {
+                this.MessageWrapPanel.Children.Add(this.messageHeader);
+            }
 
             foreach (ChatMessageDataModel messageData in this.Message.MessageComponents)
             {
@@ -50,7 +54,6 @@ namespace MixItUp.WPF.Controls.Chat
 
                     Image image = new Image();
                     image.Source = bitmap;
-                    image.Height = image.Width = 15;
                     image.VerticalAlignment = VerticalAlignment.Center;
                     this.MessageWrapPanel.Children.Add(image);
                 }
@@ -61,11 +64,17 @@ namespace MixItUp.WPF.Controls.Chat
                         TextBlock textBlock = new TextBlock();
                         textBlock.Text = word + " ";
                         textBlock.VerticalAlignment = VerticalAlignment.Center;
+                        if (this.Message.IsAlertMessage)
+                        {
+                            textBlock.FontWeight = FontWeights.Bold;
+                        }
                         this.textBlocks.Add(textBlock);
                         this.MessageWrapPanel.Children.Add(textBlock);
                     }
                 }
             }
+
+            this.UpdateSizing();
         }
 
         public void DeleteMessage(string reason = null)
@@ -81,6 +90,24 @@ namespace MixItUp.WPF.Controls.Chat
             foreach (TextBlock textBlock in this.textBlocks)
             {
                 textBlock.TextDecorations = TextDecorations.Strikethrough;
+            }
+        }
+
+        public void UpdateSizing()
+        {
+            this.messageHeader.UpdateSizing();
+            foreach (var item in this.MessageWrapPanel.Children)
+            {
+                if (item is TextBlock)
+                {
+                    TextBlock textBlock = (TextBlock)item;
+                    textBlock.FontSize = ChannelSession.Settings.ChatFontSize;
+                }
+                else if (item is Image)
+                {
+                    Image image = (Image)item;
+                    image.Height = image.Width = ChannelSession.Settings.ChatFontSize + 2;
+                }
             }
         }
     }

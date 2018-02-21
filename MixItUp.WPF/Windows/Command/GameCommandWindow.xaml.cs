@@ -78,8 +78,6 @@ namespace MixItUp.WPF.Windows.Command
                 this.GameNameTextBox.Text = this.command.Name;
                 this.GameChatCommandTextBox.Text = this.command.CommandsString;
 
-                this.GameCooldownTextBox.Text = this.command.Cooldown.ToString();
-
                 this.Requirements.HideCurrencyRequirement();
                 this.Requirements.SetRequirements(this.command.Requirements);
 
@@ -152,10 +150,6 @@ namespace MixItUp.WPF.Windows.Command
                     }
                 }
             }
-            else
-            {
-                this.GameCooldownTextBox.Text = "0";
-            }
         }
 
         private IEnumerable<string> GetCommandStrings() { return new List<string>(this.GameChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)); }
@@ -214,13 +208,6 @@ namespace MixItUp.WPF.Windows.Command
                             return;
                         }
                     }
-                }
-
-                int cooldown = 0;
-                if (!int.TryParse(this.GameCooldownTextBox.Text, out cooldown) || cooldown < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
-                    return;
                 }
 
                 if (!await this.Requirements.Validate())
@@ -330,12 +317,12 @@ namespace MixItUp.WPF.Windows.Command
 
                 if (gameType == GameTypeEnum.SinglePlayer)
                 {
-                    this.command = new SinglePlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), cooldown, requirements, outcomes,
+                    this.command = new SinglePlayerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), requirements, outcomes,
                         outcomeGroups, this.LoseLeftoverProbabilityCommandControl.GetCommand());
                 }
                 else if (gameType == GameTypeEnum.IndividualProbabilty)
                 {
-                    IndividualProbabilityGameCommand ipCommand = new IndividualProbabilityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), cooldown,
+                    IndividualProbabilityGameCommand ipCommand = new IndividualProbabilityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(),
                         requirements, outcomes, outcomeGroups, this.LoseLeftoverProbabilityCommandControl.GetCommand(), gameLength, minParticipants);
                     ipCommand.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
                     ipCommand.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
@@ -345,7 +332,7 @@ namespace MixItUp.WPF.Windows.Command
                 }
                 else if (gameType == GameTypeEnum.OnlyOneWinner)
                 {
-                    OnlyOneWinnerGameCommand oowCommand = new OnlyOneWinnerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), cooldown, requirements,
+                    OnlyOneWinnerGameCommand oowCommand = new OnlyOneWinnerGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), requirements,
                         gameLength, minParticipants);
                     oowCommand.GameStartedCommand = this.GameStartedCommandControl.GetCommand();
                     oowCommand.GameEndedCommand = this.GameEndedCommandControl.GetCommand();
@@ -355,7 +342,7 @@ namespace MixItUp.WPF.Windows.Command
                 }
                 else if (gameType == GameTypeEnum.UserCharity)
                 {
-                    UserCharityGameCommand ucCommand = new UserCharityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), cooldown, requirements,
+                    UserCharityGameCommand ucCommand = new UserCharityGameCommand(this.GameNameTextBox.Text, this.GetCommandStrings(), requirements,
                         this.GiveToRandomUserCharityToggleButton.IsChecked.GetValueOrDefault());
                     ucCommand.UserParticipatedCommand = this.UserParticipatedCommandControl.GetCommand();
                     this.command = ucCommand;

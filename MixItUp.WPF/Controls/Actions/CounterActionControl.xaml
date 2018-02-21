@@ -14,18 +14,43 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0">Special Identifier Name (Only Letters &amp; Numbers Allowed, no $):</TextBlock>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0">Special Identifier Name (Only Letters &amp; Numbers Allowed, no $):</TextBlock>
+
+            <TextBlock Grid.Column="2">Save To File:</TextBlock>
+            <ToggleButton Grid.Column="4" x:Name="SaveToFileToggleButton" Checked="SaveToFileToggleButton_Checked" Unchecked="SaveToFileToggleButton_Checked" ToolTip="Save To File" />
+
+            <TextBlock Grid.Column="6">Reset On Load:</TextBlock>
+            <ToggleButton Grid.Column="8" x:Name="ResetOnLoadToggleButton" ToolTip="Reset On Load" IsChecked="True" IsEnabled="False" />
+
+        </Grid>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name (No $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox Grid.Column="2" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <ComboBox Grid.Column="2" x:Name="CounterActionTypeComboBox"  MaterialDesign:HintAssist.Hint="Action" Style="{StaticResource BackgroundComboBox}" Width="150" SelectionChanged="CounterActionTypeComboBox_SelectionChanged" />
+            
+            <TextBox Grid.Column="4" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
         </Grid>
 
     </Grid>

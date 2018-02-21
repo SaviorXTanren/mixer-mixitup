@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Model.OAuth;
+using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Audio;
@@ -171,6 +172,30 @@ namespace MixItUp.Desktop.Services
                     this.DeveloperAPI = null;
                 }
             });
+        }
+
+        public override async Task<bool> InitializeStreamlabs()
+        {
+            this.Streamlabs = (ChannelSession.Settings.StreamlabsOAuthToken != null) ? new StreamlabsService(ChannelSession.Settings.StreamlabsOAuthToken) : new StreamlabsService();
+            if (await this.Streamlabs.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectStreamlabs();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectStreamlabs()
+        {
+            if (this.Streamlabs != null)
+            {
+                await this.Streamlabs.Disconnect();
+                this.Streamlabs = null;
+                ChannelSession.Settings.StreamlabsOAuthToken = null;
+            }
         }
 
         private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)

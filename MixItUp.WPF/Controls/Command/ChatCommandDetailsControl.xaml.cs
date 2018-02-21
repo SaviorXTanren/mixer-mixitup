@@ -31,15 +31,9 @@ namespace MixItUp.WPF.Controls.Command
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
-                this.CooldownTextBox.Text = this.command.Cooldown.ToString();
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.Requirements.SetRequirements(this.command.Requirements);
             }
-            else
-            {
-                this.CooldownTextBox.Text = "0";
-            }
-
             return Task.FromResult(0);
         }
 
@@ -66,16 +60,6 @@ namespace MixItUp.WPF.Controls.Command
             {
                 await MessageBoxHelper.ShowMessageDialog("Commands can only contain letters and numbers");
                 return false;
-            }
-
-            if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
-            {
-                int cooldown = 0;
-                if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
-                    return false;
-                }
             }
 
             foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
@@ -116,24 +100,18 @@ namespace MixItUp.WPF.Controls.Command
             if (await this.Validate())
             {
                 IEnumerable<string> commands = this.GetCommandStrings();
-                int cooldown = 0;
-                if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
-                {
-                    cooldown = int.Parse(this.CooldownTextBox.Text);
-                }
 
                 RequirementViewModel requirements = this.Requirements.GetRequirements();
 
                 if (this.command == null)
                 {
-                    this.command = new ChatCommand(this.NameTextBox.Text, commands, cooldown, requirements);
+                    this.command = new ChatCommand(this.NameTextBox.Text, commands, requirements);
                     ChannelSession.Settings.ChatCommands.Add(this.command);
                 }
                 else
                 {
                     this.command.Name = this.NameTextBox.Text;
                     this.command.Commands = commands.ToList();
-                    this.command.Cooldown = cooldown;
                     this.command.Requirements = requirements;
                 }
                 return this.command;

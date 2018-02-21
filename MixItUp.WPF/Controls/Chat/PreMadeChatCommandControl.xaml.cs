@@ -34,7 +34,9 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.window = window;
             this.DataContext = this.command = command;
+
             this.PermissionsComboBox.SelectedItem = this.command.UserRoleRequirementString;
+            this.CooldownTextBox.Text = this.command.Requirements.Cooldown.Amount.ToString();
 
             this.setting = ChannelSession.Settings.PreMadeChatCommandSettings.FirstOrDefault(c => c.Name.Equals(this.command.Name));
             if (this.setting == null)
@@ -64,8 +66,8 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 cooldown = Math.Max(cooldown, 0);
             }
-            command.Cooldown = cooldown;
-            textbox.Text = command.Cooldown.ToString();
+            command.Requirements.Cooldown.Amount = cooldown;
+            textbox.Text = command.Requirements.Cooldown.Amount.ToString();
 
             this.UpdateSetting();
         }
@@ -104,7 +106,7 @@ namespace MixItUp.WPF.Controls.Chat
             if (this.setting != null)
             {
                 this.setting.Permissions = command.Requirements.UserRole;
-                this.setting.Cooldown = command.Cooldown;
+                this.setting.Cooldown = command.Requirements.Cooldown.Amount;
                 this.setting.IsEnabled = command.IsEnabled;
             }
         }

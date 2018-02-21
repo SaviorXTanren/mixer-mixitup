@@ -19,8 +19,10 @@ namespace MixItUp.Base
 
         bool IsStreamer { get; set; }
 
-        OAuthTokenModel OAuthToken { get; set; }    
+        OAuthTokenModel OAuthToken { get; set; }
         OAuthTokenModel BotOAuthToken { get; set; }
+
+        OAuthTokenModel StreamlabsOAuthToken { get; set; }
 
         ExpandedChannelModel Channel { get; set; }
 
@@ -63,6 +65,10 @@ namespace MixItUp.Base
 
         bool EnableDeveloperAPI { get; set; }
 
+        int ChatFontSize { get; set; }
+        bool ChatShowUserJoinLeave { get; set; }
+        bool ChatShowEventAlerts { get; set; }
+        bool ChatShowInteractiveAlerts { get; set; }
         int MaxMessagesInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }

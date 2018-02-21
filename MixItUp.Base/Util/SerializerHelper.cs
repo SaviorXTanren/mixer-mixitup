@@ -37,5 +37,10 @@ namespace MixItUp.Base.Util
         {
             return JsonConvert.DeserializeObject<T>(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
         }
+
+        public static T DeserializeAbstractFromString<T>(string data)
+        {
+            return (T)JsonConvert.DeserializeObject(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
+        }
     }
 }

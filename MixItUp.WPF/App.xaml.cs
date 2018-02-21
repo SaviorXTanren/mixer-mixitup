@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Localization;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Services;
 using MixItUp.WPF.Properties;
@@ -60,6 +61,8 @@ namespace MixItUp.WPF
             {
                 this.SwitchTheme(isDark: true);
             }
+
+            LocalizationHandler.SetCurrentLanguage(Settings.Default.Language);
 
             DesktopServicesHandler desktopServicesHandler = new DesktopServicesHandler();
             desktopServicesHandler.Initialize();

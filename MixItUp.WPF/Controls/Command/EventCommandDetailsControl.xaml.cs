@@ -8,6 +8,7 @@ using MixItUp.WPF.Util;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
 {
@@ -17,14 +18,36 @@ namespace MixItUp.WPF.Controls.Command
     public partial class EventCommandDetailsControl : CommandDetailsControlBase
     {
         public ConstellationEventTypeEnum EventType { get; private set; }
+        public OtherEventTypeEnum OtherEventType { get; private set; }
 
         private EventCommand command;
 
-        public EventCommandDetailsControl(EventCommand command) : this(command.EventType) { this.command = command; }
+        public EventCommandDetailsControl(EventCommand command)
+        {
+            this.command = command;
+            if (this.command.IsOtherEventType)
+            {
+                this.OtherEventType = this.command.OtherEventType;
+            }
+            else
+            {
+                this.EventType = this.command.EventType;
+            }
+
+            InitializeComponent();
+        }
 
         public EventCommandDetailsControl(ConstellationEventTypeEnum eventType)
         {
             this.EventType = eventType;
+
+            InitializeComponent();
+        }
+
+        public EventCommandDetailsControl(OtherEventTypeEnum otherEventType)
+        {
+            this.OtherEventType = otherEventType;
+
             InitializeComponent();
         }
 
@@ -32,27 +55,39 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
-            this.EventTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ConstellationEventTypeEnum>();
+            if (this.OtherEventType != OtherEventTypeEnum.None)
+            {
+                this.OtherEventTypeTextBox.Text = EnumHelper.GetEnumName(this.OtherEventType);
+                this.OtherEventTypeTextBox.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.EventTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ConstellationEventTypeEnum>();
+                this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.EventType);
+                this.EventTypeComboBox.Visibility = Visibility.Visible;
+            }
 
             if (this.command != null)
             {
-                this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.EventType);
                 this.EventIDTextBox.Text = this.command.Commands.First();
             }
             else
             {
-                this.EventTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.EventType);
                 this.EventIDTextBox.Text = ChannelSession.User.username;
             }
-            this.EventTypeComboBox.IsEnabled = false;
-            this.EventIDTextBox.IsEnabled = false;
 
             return Task.FromResult(0);
         }
 
         public override async Task<bool> Validate()
         {
-            if (this.EventTypeComboBox.SelectedIndex < 0)
+            if (this.OtherEventTypeTextBox.Visibility == Visibility.Visible && string.IsNullOrEmpty(this.OtherEventTypeTextBox.Text))
+            {
+                await MessageBoxHelper.ShowMessageDialog("An event type must be specified");
+                return false;
+            }
+
+            if (this.EventTypeComboBox.Visibility == Visibility.Visible && this.EventTypeComboBox.SelectedIndex < 0)
             {
                 await MessageBoxHelper.ShowMessageDialog("An event type must be selected");
                 return false;
@@ -75,41 +110,48 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (this.command == null)
                 {
-                    ConstellationEventTypeEnum eventType = EnumHelper.GetEnumValueFromString<ConstellationEventTypeEnum>((string)this.EventTypeComboBox.SelectedItem);
-
-                    ChannelAdvancedModel channel = null;
-                    UserModel user = null;
-
-                    if (eventType.ToString().Contains("channel"))
+                    if (this.OtherEventTypeTextBox.Visibility == Visibility.Visible)
                     {
-                        channel = await ChannelSession.Connection.GetChannel(this.EventIDTextBox.Text);
-                        if (channel == null)
+                        this.command = new EventCommand(EnumHelper.GetEnumValueFromString<OtherEventTypeEnum>(this.OtherEventTypeTextBox.Text), ChannelSession.Channel.user.username);
+                    }
+                    else if (this.EventTypeComboBox.Visibility == Visibility.Visible)
+                    {
+                        ConstellationEventTypeEnum eventType = EnumHelper.GetEnumValueFromString<ConstellationEventTypeEnum>((string)this.EventTypeComboBox.SelectedItem);
+
+                        ChannelAdvancedModel channel = null;
+                        UserModel user = null;
+
+                        if (eventType.ToString().Contains("channel"))
                         {
-                            await MessageBoxHelper.ShowMessageDialog("Unable to find the channel for the specified username");
-                            return null;
+                            channel = await ChannelSession.Connection.GetChannel(this.EventIDTextBox.Text);
+                            if (channel == null)
+                            {
+                                await MessageBoxHelper.ShowMessageDialog("Unable to find the channel for the specified username");
+                                return null;
+                            }
                         }
-                    }
-                    else if (eventType.ToString().Contains("user"))
-                    {
-                        user = await ChannelSession.Connection.GetUser(this.EventIDTextBox.Text);
-                        if (user == null)
+                        else if (eventType.ToString().Contains("user"))
                         {
-                            await MessageBoxHelper.ShowMessageDialog("Unable to find a user for the specified username");
-                            return null;
+                            user = await ChannelSession.Connection.GetUser(this.EventIDTextBox.Text);
+                            if (user == null)
+                            {
+                                await MessageBoxHelper.ShowMessageDialog("Unable to find a user for the specified username");
+                                return null;
+                            }
                         }
-                    }
 
-                    if (channel != null)
-                    {
-                        this.command = new EventCommand(eventType, channel);
-                    }
-                    else if (user != null)
-                    {
-                        this.command = new EventCommand(eventType, user);
-                    }
-                    else
-                    {
-                        this.command = new EventCommand(eventType);
+                        if (channel != null)
+                        {
+                            this.command = new EventCommand(eventType, channel);
+                        }
+                        else if (user != null)
+                        {
+                            this.command = new EventCommand(eventType, user);
+                        }
+                        else
+                        {
+                            this.command = new EventCommand(eventType);
+                        }
                     }
 
                     if (ChannelSession.Settings.EventCommands.Any(se => se.UniqueEventID.Equals(this.command.UniqueEventID)))
@@ -131,15 +173,6 @@ namespace MixItUp.WPF.Controls.Command
             if (this.EventTypeComboBox.SelectedIndex >= 0)
             {
                 ConstellationEventTypeEnum eventType = EnumHelper.GetEnumValueFromString<ConstellationEventTypeEnum>((string)this.EventTypeComboBox.SelectedItem);
-                if (eventType.ToString().Contains("id") && this.command == null)
-                {
-                    this.EventIDTextBox.IsEnabled = true;
-                }
-                else
-                {
-                    this.EventIDTextBox.IsEnabled = false;
-                    this.EventIDTextBox.Clear();
-                }
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
@@ -44,6 +43,12 @@ namespace MixItUp.WPF.Controls.Actions
                     this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
                     this.InteractiveMoveUserToSceneSceneIDTextBox.Text = this.action.SceneID;
                 }
+                else if (this.action.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.action.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
+                    this.action.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
+                {
+                    this.InteractiveCooldownNameTextBox.Text = this.action.CooldownID;
+                    this.InteractiveCooldownAmountTextBox.Text = this.action.CooldownAmount.ToString();
+                }
             }
             return Task.FromResult(0);
         }
@@ -71,6 +76,14 @@ namespace MixItUp.WPF.Controls.Actions
                     return new InteractiveAction(interactiveType, this.InteractiveMoveUserToSceneSceneIDTextBox.Text, this.InteractiveMoveUserToSceneSceneIDTextBox.Text,
                         EnumHelper.GetEnumValueFromString<UserRole>((string)this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedItem));
                 }
+                else if (interactiveType == InteractiveActionTypeEnum.CooldownButton || interactiveType == InteractiveActionTypeEnum.CooldownGroup ||
+                    interactiveType == InteractiveActionTypeEnum.CooldownScene)
+                {
+                    if (!string.IsNullOrEmpty(this.InteractiveCooldownNameTextBox.Text) && int.TryParse(this.InteractiveCooldownAmountTextBox.Text, out int cooldownAmount) && cooldownAmount > 0)
+                    {
+                        return new InteractiveAction(interactiveType, this.InteractiveCooldownNameTextBox.Text, cooldownAmount);
+                    }
+                }
             }
             return null;
         }
@@ -80,6 +93,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.InteractiveMoveUserToGroupGrid.Visibility = Visibility.Hidden;
             this.InteractiveMoveGroupToSceneGrid.Visibility = Visibility.Hidden;
             this.InteractiveMoveUserToSceneGrid.Visibility = Visibility.Hidden;
+            this.InteractiveCooldownGrid.Visibility = Visibility.Hidden;
             if (this.InteractiveTypeComboBox.SelectedIndex >= 0)
             {
                 InteractiveActionTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveActionTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
@@ -94,6 +108,11 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (interactiveType == InteractiveActionTypeEnum.MoveUserToScene)
                 {
                     this.InteractiveMoveUserToSceneGrid.Visibility = Visibility.Visible;
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.CooldownButton || interactiveType == InteractiveActionTypeEnum.CooldownGroup ||
+                    interactiveType == InteractiveActionTypeEnum.CooldownScene)
+                {
+                    this.InteractiveCooldownGrid.Visibility = Visibility.Visible;
                 }
             }
         }

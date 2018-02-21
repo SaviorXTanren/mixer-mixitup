@@ -127,6 +127,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.User = null;
             this.Timestamp = DateTimeOffset.Now;
             this.Message = alertText;
+            this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
         }
 
         public override bool Equals(object obj)
@@ -137,6 +138,8 @@ namespace MixItUp.Base.ViewModel.Chat
             }
             return false;
         }
+
+        public bool IsAlertMessage { get { return this.ID == Guid.Empty; } }
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 

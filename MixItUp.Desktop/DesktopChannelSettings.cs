@@ -23,7 +23,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 8;
+        public const int LatestVersion = 9;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -40,6 +40,9 @@ namespace MixItUp.Desktop
         public OAuthTokenModel OAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel BotOAuthToken { get; set; }
+
+        [JsonProperty]
+        public OAuthTokenModel StreamlabsOAuthToken { get; set; }
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
@@ -120,6 +123,14 @@ namespace MixItUp.Desktop
         public bool EnableDeveloperAPI { get; set; }
 
         [JsonProperty]
+        public int ChatFontSize { get; set; }
+        [JsonProperty]
+        public bool ChatShowUserJoinLeave { get; set; }
+        [JsonProperty]
+        public bool ChatShowEventAlerts { get; set; }
+        [JsonProperty]
+        public bool ChatShowInteractiveAlerts { get; set; }
+        [JsonProperty]
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]
@@ -157,7 +168,6 @@ namespace MixItUp.Desktop
         protected Dictionary<uint, List<InteractiveUserGroupViewModel>> interactiveUserGroupsInternal { get; set; }
         [JsonProperty]
         protected Dictionary<string, int> interactiveCooldownGroupsInternal { get; set; }
-
 
         public DesktopSavableChannelSettings()
         {
@@ -327,6 +337,11 @@ namespace MixItUp.Desktop
             if (ChannelSession.BotConnection != null)
             {
                 this.BotOAuthToken = ChannelSession.BotConnection.Connection.GetOAuthTokenCopy();
+            }
+
+            if (ChannelSession.Services.Streamlabs != null)
+            {
+                this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();

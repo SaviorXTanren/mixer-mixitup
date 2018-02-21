@@ -13,6 +13,7 @@ namespace MixItUp.Base.Services
         public IOBSService OBSWebsocket { get; protected set; }
         public IXSplitService XSplitServer { get; protected set; }
         public IDeveloperAPIService DeveloperAPI { get; protected set; }
+        public StreamlabsService Streamlabs { get; protected set; }
 
         public abstract Task Close();
 
@@ -37,5 +38,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeDeveloperAPI();
         public abstract Task DisconnectDeveloperAPI();
+
+        public abstract Task<bool> InitializeStreamlabs();
+        public abstract Task DisconnectStreamlabs();
     }
 }

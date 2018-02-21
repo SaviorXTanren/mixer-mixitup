@@ -2,7 +2,9 @@
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
@@ -39,7 +41,12 @@ namespace MixItUp.Base.MixerAPI
 
         public ConstellationClient Client { get; private set; }
 
-        public ConstellationClientWrapper() { }
+        private HashSet<uint> userFollows = new HashSet<uint>();
+
+        public ConstellationClientWrapper()
+        {
+            GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+        }
 
         public async Task<bool> Connect()
         {
@@ -133,17 +140,22 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (followed.GetValueOrDefault())
                 {
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    if (!this.userFollows.Contains(user.ID))
                     {
-                        user.Data.SetCurrencyAmount(currency, currency.OnFollowBonus);
-                    }
+                        this.userFollows.Add(user.ID);
 
-                    if (this.OnFollowOccurred != null)
-                    {
-                        this.OnFollowOccurred(this, user);
-                    }
+                        foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                        {
+                            user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
+                        }
 
-                    await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                        if (this.OnFollowOccurred != null)
+                        {
+                            this.OnFollowOccurred(this, user);
+                        }
+
+                        await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                    }
                 }
                 else
                 {
@@ -163,7 +175,7 @@ namespace MixItUp.Base.MixerAPI
 
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    user.Data.SetCurrencyAmount(currency, currency.OnHostBonus);
+                    user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
                 }
 
                 if (this.OnHostedOccurred != null)
@@ -183,7 +195,7 @@ namespace MixItUp.Base.MixerAPI
                 user.SubscribeDate = DateTimeOffset.Now;
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    user.Data.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
+                    user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                 }
 
                 if (this.OnSubscribedOccurred != null)
@@ -197,7 +209,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    user.Data.SetCurrencyAmount(currency, currency.OnSubscribeBonus);
+                    user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                 }
 
                 int resubMonths = 0;
@@ -217,6 +229,25 @@ namespace MixItUp.Base.MixerAPI
             if (this.OnEventOccurred != null)
             {
                 this.OnEventOccurred(this, e);
+            }
+        }
+
+        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationViewModel donation)
+        {
+            UserViewModel user = new UserViewModel(0, donation.Username);
+
+            UserModel userModel = await ChannelSession.Connection.GetUser(donation.Username);
+            if (userModel != null)
+            {
+                user = new UserViewModel(userModel);
+            }
+
+            EventCommand command = this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.Donation));
+            if (command != null)
+            {
+                command.AddSpecialIdentifier("donationamount", donation.AmountText);
+                command.AddSpecialIdentifier("donationmessage", donation.Message);
+                await this.RunEventCommand(command, user);
             }
         }
 

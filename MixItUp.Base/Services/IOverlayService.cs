@@ -29,6 +29,15 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
+    public class OverlayYoutubeVideo : OverlayBase
+    {
+        [DataMember]
+        public string videoID;
+        [DataMember]
+        public int startTime;
+    }
+
+    [DataContract]
     public class OverlayHTML : OverlayBase
     {
         [DataMember]
@@ -72,6 +81,8 @@ namespace MixItUp.Base.Services
         Task SetImage(OverlayImage image);
 
         Task SetText(OverlayText text);
+
+        Task SetYoutubeVideo(OverlayYoutubeVideo youtubeVideo);
 
         Task SetHTMLText(OverlayHTML htmlText);
 

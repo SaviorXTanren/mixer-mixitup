@@ -16,6 +16,9 @@ namespace MixItUp.Base.ViewModel.Requirement
         public UserRole UserRole { get; set; }
 
         [JsonProperty]
+        public CooldownRequirementViewModel Cooldown { get; set; }
+
+        [JsonProperty]
         public CurrencyRequirementViewModel Currency { get; set; }
 
         [JsonProperty]
@@ -24,11 +27,20 @@ namespace MixItUp.Base.ViewModel.Requirement
         public RequirementViewModel()
         {
             this.UserRole = UserRole.User;
+            this.Cooldown = new CooldownRequirementViewModel();
         }
 
-        public RequirementViewModel(UserRole userRole, CurrencyRequirementViewModel currency = null, CurrencyRequirementViewModel rank = null)
+        public RequirementViewModel(UserRole userRole, int cooldown)
+            : this()
         {
             this.UserRole = userRole;
+            this.Cooldown.Amount = cooldown;
+        }
+
+        public RequirementViewModel(UserRole userRole, CooldownRequirementViewModel cooldown = null, CurrencyRequirementViewModel currency = null, CurrencyRequirementViewModel rank = null)
+        {
+            this.UserRole = userRole;
+            this.Cooldown = (cooldown != null) ? cooldown : new CooldownRequirementViewModel();
             this.Currency = currency;
             this.Rank = rank;
         }
@@ -45,16 +57,25 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             else if (this.UserRole == UserRole.Subscriber)
             {
-                if (!user.Roles.Contains(UserRole.Subscriber))
+                if (!user.IsSubscriber)
                 {
                     await user.SetSubscribeDate();
                 }
-                return user.Roles.Contains(UserRole.Subscriber);
+                return user.IsSubscriber;
             }
             else
             {
                 return user.PrimaryRole >= this.UserRole;
             }
+        }
+
+        public bool DoesMeetCooldownRequirement(UserViewModel user)
+        {
+            if (this.Cooldown != null)
+            {
+                return this.Cooldown.DoesMeetCooldownRequirement(user);
+            }
+            return true;
         }
 
         public bool DoesMeetCurrencyRequirement(UserViewModel user)
@@ -88,7 +109,15 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (ChannelSession.Chat != null)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You are not the required role of {0} to do this", EnumHelper.GetEnumName(this.UserRole)));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to do this", EnumHelper.GetEnumName(this.UserRole)));
+            }
+        }
+
+        public void UpdateCooldown(UserViewModel user)
+        {
+            if (this.Cooldown != null)
+            {
+                this.Cooldown.UpdateCooldown(user);
             }
         }
 

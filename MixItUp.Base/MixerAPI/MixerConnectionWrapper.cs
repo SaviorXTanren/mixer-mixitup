@@ -3,6 +3,7 @@ using Mixer.Base.Interactive;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Util;
@@ -68,6 +69,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<UserWithChannelModel> GetUser(UserModel user) { return await this.RunAsync(this.Connection.Users.GetUser(user)); }
 
+        public async Task<IEnumerable<TeamMembershipExpandedModel>> GetUserTeams(UserModel user) { return await this.RunAsync(this.Connection.Users.GetTeams(user)); }
+
         public async Task<UserWithGroupsModel> GetUserInChannel(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Channels.GetUser(channel, userID)); }
 
         public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, UserRole role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString())); }
@@ -107,6 +110,10 @@ namespace MixItUp.Base.MixerAPI
         public async Task<InteractiveGameVersionModel> GetInteractiveGameVersion(InteractiveGameVersionModel version) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGameVersion(version)); }
 
         public async Task UpdateInteractiveGameVersion(InteractiveGameVersionModel version) { await this.RunAsync(this.Connection.Interactive.UpdateInteractiveGameVersion(version)); }
+
+        public async Task<TeamModel> GetTeam(uint id) { return await this.RunAsync(this.Connection.Teams.GetTeam(id)); }
+
+        public async Task<IEnumerable<UserWithChannelModel>> GetTeamUsers(TeamModel team) { return await this.RunAsync(this.Connection.Teams.GetTeamUsers(team)); }
 
         private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
         {

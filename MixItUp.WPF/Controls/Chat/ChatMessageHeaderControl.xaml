@@ -23,7 +23,7 @@
 
         <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" />
 
-        <Image x:Name="SubscriberImage" Grid.Column="1" Margin="5,0,0,0" Width="15" Height="15" VerticalAlignment="Center" Visibility="Collapsed" />
+        <Image x:Name="SubscriberImage" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" Visibility="Collapsed" />
 
         <TextBlock x:Name="UserTextBlock" Grid.Column="3" Text="{Binding User.UserName}" Foreground="{Binding User.PrimaryRoleColor}" VerticalAlignment="Center" />
 

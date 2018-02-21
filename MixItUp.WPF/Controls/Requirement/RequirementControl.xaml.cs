@@ -24,11 +24,11 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
-                return await this.CurrencyRequirement.Validate() && await this.RankRequirement.Validate();
+                return await this.CooldownRequirement.Validate() && await this.CurrencyRequirement.Validate() && await this.RankRequirement.Validate();
             }
             else
             {
-                return await this.RankRequirement.Validate();
+                return await this.CooldownRequirement.Validate() && await this.RankRequirement.Validate();
             }
         }
 
@@ -36,6 +36,7 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             RequirementViewModel requirement = new RequirementViewModel();
             requirement.UserRole = this.UserRoleRequirement.GetUserRoleRequirement();
+            requirement.Cooldown = this.CooldownRequirement.GetCooldownRequirement();
             if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
                 requirement.Currency = this.CurrencyRequirement.GetCurrencyRequirement();
@@ -47,6 +48,7 @@ namespace MixItUp.WPF.Controls.Requirement
         public void SetRequirements(RequirementViewModel requirement)
         {
             this.UserRoleRequirement.SetUserRoleRequirement(requirement.UserRole);
+            this.CooldownRequirement.SetCooldownRequirement(requirement.Cooldown);
             if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
                 this.CurrencyRequirement.SetCurrencyRequirement(requirement.Currency);

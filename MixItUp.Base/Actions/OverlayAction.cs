@@ -33,6 +33,11 @@ namespace MixItUp.Base.Actions
         public int FontSize;
 
         [DataMember]
+        public string youtubeVideoID;
+        [DataMember]
+        public int youtubeStartTime;
+
+        [DataMember]
         public string HTMLText;
 
         [DataMember]
@@ -62,6 +67,13 @@ namespace MixItUp.Base.Actions
             this.Text = text;
             this.Color = color;
             this.FontSize = fontSize;
+        }
+
+        public OverlayAction(string youtubeVideoID, int startTime, double duration, int horizontal, int vertical, int fadeDuration)
+            : this(duration, horizontal, vertical, fadeDuration)
+        {
+            this.youtubeVideoID = youtubeVideoID;
+            this.youtubeStartTime = startTime;
         }
 
         public OverlayAction(string htmlText, double duration, int horizontal, int vertical, int fadeDuration)
@@ -122,6 +134,13 @@ namespace MixItUp.Base.Actions
                     {
                         text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal,
                         vertical = this.Vertical, fadeDuration = this.FadeDuration,
+                    });
+                }
+                else if (!string.IsNullOrEmpty(this.youtubeVideoID))
+                {
+                    await ChannelSession.Services.OverlayServer.SetYoutubeVideo(new OverlayYoutubeVideo()
+                    {
+                        videoID = this.youtubeVideoID, startTime = this.youtubeStartTime, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
                     });
                 }
                 else if (!string.IsNullOrEmpty(this.HTMLText))

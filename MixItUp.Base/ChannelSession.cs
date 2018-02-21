@@ -357,6 +357,11 @@ namespace MixItUp.Base
                         await ChannelSession.Services.InitializeDeveloperAPI();
                     }
 
+                    if (ChannelSession.Settings.StreamlabsOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeStreamlabs();
+                    }
+
                     await ChannelSession.Services.Settings.CleanUpData(ChannelSession.Settings);
 
                     await ChannelSession.SaveSettings();

@@ -4,9 +4,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
@@ -15,14 +13,15 @@ namespace MixItUp.Base.Commands
     public abstract class PermissionsCommandBase : CommandBase
     {
         [DataMember]
-        public int Cooldown { get; set; }
-
-        [DataMember]
         public RequirementViewModel Requirements { get; set; }
 
         [DataMember]
         [Obsolete]
         internal UserRole Permissions { get; set; }
+
+        [Obsolete]
+        [DataMember]
+        internal int Cooldown { get; set; }
 
         [DataMember]
         [Obsolete]
@@ -32,36 +31,49 @@ namespace MixItUp.Base.Commands
         [Obsolete]
         internal CurrencyRequirementViewModel RankRequirement { get; set; }
 
-        [JsonIgnore]
-        protected DateTimeOffset lastRun = DateTimeOffset.MinValue;
-
         public PermissionsCommandBase()
         {
             this.Requirements = new RequirementViewModel();
         }
 
-        public PermissionsCommandBase(string name, CommandTypeEnum type, string command, int cooldown, RequirementViewModel requirements)
-            : this(name, type, new List<string>() { command }, cooldown, requirements)
+        public PermissionsCommandBase(string name, CommandTypeEnum type, string command, RequirementViewModel requirements)
+            : this(name, type, new List<string>() { command }, requirements)
         { }
 
-        public PermissionsCommandBase(string name, CommandTypeEnum type, IEnumerable<string> commands, int cooldown, RequirementViewModel requirements)
+        public PermissionsCommandBase(string name, CommandTypeEnum type, IEnumerable<string> commands, RequirementViewModel requirements)
             : base(name, type, commands)
         {
-            this.Cooldown = cooldown;
             this.Requirements = requirements;
         }
 
         [JsonIgnore]
         public string UserRoleRequirementString { get { return EnumHelper.GetEnumName(this.Requirements.UserRole); } }
 
+        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            if (!await this.CheckCooldownRequirement(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
+            {
+                return;
+            }
+            await base.PerformInternal(user, arguments);
+        }
+
+        public async Task<bool> CheckCooldownRequirement(UserViewModel user)
+        {
+            if (!this.Requirements.DoesMeetCooldownRequirement(user))
+            {
+                await this.Requirements.Cooldown.SendCooldownNotMetWhisper(user);
+                return false;
+            }
+            this.Requirements.UpdateCooldown(user);
+            return true;
+        }
+
         public async Task<bool> CheckUserRoleRequirement(UserViewModel user)
         {
-            if (!user.Roles.Any(r => r >= this.Requirements.UserRole))
+            if (!await this.Requirements.DoesMeetUserRoleRequirement(user))
             {
-                if (ChannelSession.Chat != null)
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "You do not permission to run this command");
-                }
+                await this.Requirements.SendUserRoleNotMetWhisper(user);
                 return false;
             }
             return true;
@@ -91,32 +103,6 @@ namespace MixItUp.Base.Commands
                 }
             }
             return true;
-        }
-
-        public async Task<bool> CheckLastRun(UserViewModel user)
-        {
-            if (this.lastRun.AddSeconds(this.Cooldown) > DateTimeOffset.Now)
-            {
-                if (ChannelSession.Chat != null)
-                {
-                    TimeSpan timeLeft = this.lastRun.AddSeconds(this.Cooldown) - DateTimeOffset.Now;
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("This command is currently on cooldown, please wait another {0} second(s).", Math.Max((int)timeLeft.TotalSeconds, 1)));
-                }
-                return false;
-            }
-            return true;
-        }
-
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
-        {
-            if (!await this.CheckLastRun(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
-            {
-                return;
-            }
-
-            this.lastRun = DateTimeOffset.Now;
-
-            await base.PerformInternal(user, arguments, token);
         }
     }
 }

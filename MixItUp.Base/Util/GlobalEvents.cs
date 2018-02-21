@@ -6,6 +6,15 @@ namespace MixItUp.Base.Util
 {
     public static class GlobalEvents
     {
+        public static event EventHandler OnChatFontSizeChanged;
+        public static void ChatFontSizeChanged()
+        {
+            if (GlobalEvents.OnChatFontSizeChanged != null)
+            {
+                GlobalEvents.OnChatFontSizeChanged(null, new EventArgs());
+            }
+        }
+
         public static event EventHandler<ChatMessageCommandViewModel> OnChatCommandMessageReceived;
         public static void ChatCommandMessageReceived(ChatMessageCommandViewModel chatCommandMessage)
         {
@@ -39,6 +48,15 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnQuoteAdded != null)
             {
                 GlobalEvents.OnQuoteAdded(null, quote);
+            }
+        }
+
+        public static event EventHandler<UserDonationViewModel> OnDonationOccurred;
+        public static void DonationOccurred(UserDonationViewModel donation)
+        {
+            if (GlobalEvents.OnDonationOccurred != null)
+            {
+                GlobalEvents.OnDonationOccurred(null, donation);
             }
         }
     }

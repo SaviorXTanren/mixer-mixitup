@@ -35,6 +35,10 @@
                         {
                             textPacket(packet.data);
                         }
+                        else if (packet.type === "youtube")
+                        {
+                            youtubePacket(packet.data);
+                        }
                         else if (packet.type === "htmlText")
                         {
                             htmlTextPacket(packet.data);
@@ -103,6 +107,20 @@
                     addedElement.style.cssText += 'font-size: ' + data.fontSize + 'px; color: ' + data.color + '; ' +
                         'text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;';
                 }
+
+                addWaitRemoveElement(data, addedElement);
+            }
+
+            function youtubePacket(data)
+            {
+                addedElement = document.createElement('iframe');
+                addedElement.width = 560;
+                addedElement.height = 315;
+                addedElement.frameborder = 0;
+                addedElement.allow = "autoplay; encrypted-media";
+                addedElement.setAttribute('allowFullScreen', '');
+                addedElement.setAttribute('autoplay', '');
+                addedElement.src = "https://www.youtube.com/embed/" + data.videoID + "?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0&amp;start=" + data.startTime;
 
                 addWaitRemoveElement(data, addedElement);
             }

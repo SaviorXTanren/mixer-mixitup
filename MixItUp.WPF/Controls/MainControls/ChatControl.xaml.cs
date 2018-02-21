@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -36,7 +37,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private int totalMessages = 0;
         private ScrollViewer chatListScrollViewer;
-        private bool scrolledToEnd = true;
+        private bool autoScrollChatList = true;
+
+        private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 24 }, };
 
         public ChatControl(bool isPopOut = false)
         {
@@ -56,9 +59,29 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.Window.Closing += Window_Closing;
+            GlobalEvents.OnChatFontSizeChanged += GlobalEvents_OnChatFontSizeChanged;
+
+            ChannelSession.Constellation.OnFollowOccurred += Constellation_OnFollowOccurred;
+            ChannelSession.Constellation.OnUnfollowOccurred += Constellation_OnUnfollowOccurred;
+            ChannelSession.Constellation.OnHostedOccurred += Constellation_OnHostedOccurred;
+            ChannelSession.Constellation.OnSubscribedOccurred += Constellation_OnSubscribedOccurred;
+            ChannelSession.Constellation.OnResubscribedOccurred += Constellation_OnResubscribedOccurred;
+
+            ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
+
+            if (ChannelSession.Settings.ChatFontSize == 0)
+            {
+                ChannelSession.Settings.ChatFontSize = this.fontSizes["Normal"];
+            }
 
             this.ChatList.ItemsSource = this.MessageControls;
             this.UserList.ItemsSource = this.UserControls;
+
+            this.FontSizeComboBox.ItemsSource = this.fontSizes.Keys;
+            this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
+            this.ShowUserJoinLeaveToggleButton.IsChecked = ChannelSession.Settings.ChatShowUserJoinLeave;
+            this.ShowEventAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowEventAlerts;
+            this.ShowInteractiveAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowInteractiveAlerts;
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -96,11 +119,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.SendChatAsComboBox.SelectedIndex = 0;
             }
 
-            if (this.scrolledToEnd && this.chatListScrollViewer != null)
-            {
-                this.chatListScrollViewer.ScrollToEnd();
-            }
-
             return Task.FromResult(0);
         }
 
@@ -109,14 +127,27 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.chatListScrollViewer == null)
             {
                 this.chatListScrollViewer = (ScrollViewer)e.OriginalSource;
+                this.chatListScrollViewer.ScrollChanged += ChatListScrollViewer_ScrollChanged;
+            }
+        }
+
+        private void ChatListScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.ExtentHeightChange == 0)
+            {
+                if ((this.chatListScrollViewer.VerticalOffset + 2) >= this.chatListScrollViewer.ScrollableHeight)
+                {
+                    this.autoScrollChatList = true;
+                }
+                else
+                {
+                    this.autoScrollChatList = false;
+                }
             }
 
-            if (this.chatListScrollViewer != null)
+            if (this.autoScrollChatList && e.ExtentHeightChange != 0)
             {
-                if (this.MessageControls.Count > 0)
-                {
-                    this.scrolledToEnd = (this.chatListScrollViewer.VerticalOffset >= this.chatListScrollViewer.ScrollableHeight);
-                }
+                this.chatListScrollViewer.ScrollToBottom();
             }
         }
 
@@ -163,11 +194,6 @@ namespace MixItUp.WPF.Controls.MainControls
             ChatMessageControl messageControl = new ChatMessageControl(message);
             this.MessageControls.Add(messageControl);
             this.totalMessages++;
-
-            if (this.scrolledToEnd && this.chatListScrollViewer != null)
-            {
-                this.chatListScrollViewer.ScrollToEnd();
-            }
 
             while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
             {
@@ -240,6 +266,40 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Chat.DisableChat = false;
             this.DisableChatButton.Visibility = Visibility.Visible;
             this.EnableChatButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.FontSizeComboBox.SelectedIndex >= 0)
+            {
+                string name = (string)this.FontSizeComboBox.SelectedItem;
+                ChannelSession.Settings.ChatFontSize = this.fontSizes[name];
+                GlobalEvents.ChatFontSizeChanged();
+            }
+        }
+
+        private void ShowUserJoinLeaveToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ChatShowUserJoinLeave = this.ShowUserJoinLeaveToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void ShowEventAlertsToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ChatShowEventAlerts = this.ShowEventAlertsToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void ShowInteractiveAlertsToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.ChatShowInteractiveAlerts = this.ShowInteractiveAlertsToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void GlobalEvents_OnChatFontSizeChanged(object sender, EventArgs e)
+        {
+            this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
+            foreach (ChatMessageControl control in this.MessageControls)
+            {
+                control.UpdateSizing();
+            }
         }
 
         private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -334,7 +394,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ChatClient_OnMessageOccurred(object sender, ChatMessageViewModel message)
         {
-            await this.AddMessage(message);
+            await this.Dispatcher.InvokeAsync(async () => { await this.AddMessage(message); });
         }
 
         private void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
@@ -366,6 +426,10 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void ChatClient_OnUserJoinOccurred(object sender, UserViewModel user)
         {
             await this.RefreshUserList();
+            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Joined Chat  ---", user.UserName)));
+            }
         }
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, UserViewModel user)
@@ -376,6 +440,58 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void ChatClient_OnUserLeaveOccurred(object sender, UserViewModel user)
         {
             await this.RefreshUserList();
+            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Left Chat  ---", user.UserName)));
+            }
+        }
+
+        private async void Constellation_OnFollowOccurred(object sender, UserViewModel e)
+        {
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Followed  ---", e.UserName)));
+            }
+        }
+
+        private async void Constellation_OnUnfollowOccurred(object sender, UserViewModel e)
+        {
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Unfollowed  ---", e.UserName)));
+            }
+        }
+
+        private async void Constellation_OnHostedOccurred(object sender, Tuple<UserViewModel, int> e)
+        {
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Hosted With {1} Viewers  ---", e.Item1.UserName, e.Item2)));
+            }
+        }
+
+        private async void Constellation_OnSubscribedOccurred(object sender, UserViewModel e)
+        {
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Subscribed  ---", e.UserName)));
+            }
+        }
+
+        private async void Constellation_OnResubscribedOccurred(object sender, Tuple<UserViewModel, int> e)
+        {
+            if (ChannelSession.Settings.ChatShowEventAlerts)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Re-Subscribed For {1} Months  ---", e.Item1.UserName, e.Item2)));
+            }
+        }
+
+        private async void Interactive_OnInteractiveControlUsed(object sender, Tuple<UserViewModel, InteractiveConnectedControlCommand> e)
+        {
+            if (ChannelSession.Settings.ChatShowInteractiveAlerts)
+            {
+                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Used The \"{1}\" Interactive Control  ---", e.Item1.UserName, e.Item2.Name)));
+            }
         }
 
         #endregion Chat Event Handlers

@@ -6,7 +6,7 @@ namespace MixItUp.Base.Statistics
     public class EventStatisticDataTracker : UniqueNumberStatisticDataTracker
     {
         private event EventHandler<string> StatisticEventOccurred;
-        private event EventHandler<Tuple<string, int>> StatisticEventWithValueOccurred;
+        private event EventHandler<Tuple<string, double>> StatisticEventWithValueOccurred;
 
         private Func<EventStatisticDataTracker, string> customToStringFunction;
 
@@ -27,11 +27,11 @@ namespace MixItUp.Base.Statistics
             }
         }
 
-        public void OnStatisticEventOccurred(string key, int value)
+        public void OnStatisticEventOccurred(string key, double value)
         {
             if (this.StatisticEventOccurred != null)
             {
-                this.StatisticEventWithValueOccurred(this, new Tuple<string, int>(key, value));
+                this.StatisticEventWithValueOccurred(this, new Tuple<string, double>(key, value));
             }
         }
 
@@ -49,7 +49,7 @@ namespace MixItUp.Base.Statistics
             this.AddValue(e);
         }
 
-        private void EventStatisticsDataTracker_StatisticEventWithValueOccurred(object sender, Tuple<string, int> e)
+        private void EventStatisticsDataTracker_StatisticEventWithValueOccurred(object sender, Tuple<string, double> e)
         {
             this.AddValue(e.Item1, e.Item2);
         }

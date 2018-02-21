@@ -125,7 +125,14 @@ namespace MixItUp.Base.MixerAPI
         {
             if (this.GetBotClient(sendAsStreamer) != null)
             {
+                message = this.SplitLargeMessage(message, out string subMessage);
+
                 await this.RunAsync(this.GetBotClient(sendAsStreamer).SendMessage(message));
+
+                if (!string.IsNullOrEmpty(subMessage))
+                {
+                    await this.SendMessage(subMessage, sendAsStreamer: sendAsStreamer);
+                }
             }
         }
 
@@ -133,7 +140,14 @@ namespace MixItUp.Base.MixerAPI
         {
             if (this.GetBotClient(sendAsStreamer) != null)
             {
+                message = this.SplitLargeMessage(message, out string subMessage);
+
                 await this.RunAsync(this.GetBotClient(sendAsStreamer).Whisper(username, message));
+
+                if (!string.IsNullOrEmpty(subMessage))
+                {
+                    await this.Whisper(username, subMessage, sendAsStreamer: sendAsStreamer);
+                }
             }
         }
 
@@ -231,9 +245,9 @@ namespace MixItUp.Base.MixerAPI
                         {
                             try
                             {
-                                if (this.ChatUsers.ContainsKey(kvp.Key.id))
+                                if (this.ChatUsers.ContainsKey(kvp.Key.id) && kvp.Value != null)
                                 {
-                                    this.ChatUsers[kvp.Key.id].SetFollowDate(kvp.Value);
+                                    await this.ChatUsers[kvp.Key.id].SetFollowDate();
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex); }
@@ -294,6 +308,22 @@ namespace MixItUp.Base.MixerAPI
         }
 
         private ChatClient GetBotClient(bool sendAsStreamer = false) { return (this.BotClient != null && !sendAsStreamer) ? this.BotClient : this.Client; }
+
+        private string SplitLargeMessage(string message, out string subMessage)
+        {
+            subMessage = null;
+            if (message.Length > 360)
+            {
+                string message360 = message.Substring(0, 360);
+                int splitIndex = message360.LastIndexOf(' ');
+                if (splitIndex > 0 && (splitIndex + 1) < message.Length)
+                {
+                    subMessage = message.Substring(splitIndex + 1);
+                    message = message.Substring(0, splitIndex);
+                }
+            }
+            return message;
+        }
 
         #region Chat Update Methods
 
@@ -423,7 +453,7 @@ namespace MixItUp.Base.MixerAPI
                         if ((user.Data.ViewingMinutes % currency.AcquireInterval) == 0)
                         {
                             user.Data.AddCurrencyAmount(currency, currency.AcquireAmount);
-                            if (user.Roles.Contains(UserRole.Subscriber))
+                            if (user.IsSubscriber)
                             {
                                 user.Data.AddCurrencyAmount(currency, currency.SubscriberBonus);
                             }
@@ -497,7 +527,9 @@ namespace MixItUp.Base.MixerAPI
             ChatMessageViewModel message = new ChatMessageViewModel(e);
             if (await this.AddMessage(message))
             {
-                this.OnMessageOccurred(sender, message);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(() => { this.OnMessageOccurred(sender, message); });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
         }
 
