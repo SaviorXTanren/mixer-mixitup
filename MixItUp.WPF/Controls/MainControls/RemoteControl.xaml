@@ -18,7 +18,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -56,7 +56,96 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Column="2">
+        <Border Grid.Column="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}" />
+
+        <Grid x:Name="LogInGrid" Grid.Column="2" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Connect Your Mix It Up Remote Device:</TextBlock>
+
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">To connect your Mix It Up Remote device, ensure you have the app loaded up on your cellphone or tablet. Click the "Get Code" button below to get a 4-digit code to enter on your device to connect it up. The code will expire after 30 seconds and you will need to request a new code if you did not use it afterwards.</TextBlock>
+
+            <Button x:Name="GetCodeButton" Grid.Row="4" Click="GetCodeButton_Click" Width="100">Get Code</Button>
+            <TextBlock x:Name="RemoteCodeTextBlock" Grid.Row="4" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+            <TextBlock x:Name="RemoteCodeTimeLeftTextBlock" Grid.Row="6" Visibility="Collapsed" HorizontalAlignment="Center" />
+        </Grid>
+
+        <Grid x:Name="RemoteSetupGrid" Grid.Column="2" Visibility="Collapsed" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">To add Remote Commands, simply drag-and-drop them to the desired slot or click the row of the Command you want, then click the desired slot.</TextBlock>
+
+            <Border Grid.Row="2" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}" Width="175">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="5" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="5" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Column="1" Grid.Row="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+                        
+                    </Border>
+
+                    <Border Grid.Column="3" Grid.Row="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="1" Grid.Row="3" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="3" Grid.Row="3" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="1" Grid.Row="5" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="3" Grid.Row="5" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="1" Grid.Row="7" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="3" Grid.Row="7" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+                </Grid>
+            </Border>
+            
+            <Button x:Name="DisconnectRemoteButton" Grid.Row="4" Click="DisconnectRemoteButton_Click" Width="120">Disconnect</Button>
             
         </Grid>
 

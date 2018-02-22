@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
@@ -48,15 +49,6 @@ namespace MixItUp.Base.Commands
 
         [JsonIgnore]
         public string UserRoleRequirementString { get { return EnumHelper.GetEnumName(this.Requirements.UserRole); } }
-
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
-        {
-            if (!await this.CheckCooldownRequirement(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
-            {
-                return;
-            }
-            await base.PerformInternal(user, arguments);
-        }
 
         public async Task<bool> CheckCooldownRequirement(UserViewModel user)
         {
@@ -103,6 +95,15 @@ namespace MixItUp.Base.Commands
                 }
             }
             return true;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        {
+            if (!await this.CheckCooldownRequirement(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
+            {
+                return;
+            }
+            await base.PerformInternal(user, arguments, token);
         }
     }
 }

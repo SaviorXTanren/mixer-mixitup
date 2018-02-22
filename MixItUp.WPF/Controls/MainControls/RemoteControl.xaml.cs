@@ -92,6 +92,41 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
+        private async void GetCodeButton_Click(object sender, RoutedEventArgs e)
+        {
+            string code = "1234";   // Add code to query web service for connection code
+
+            // Normal Connection logic
+
+            //this.RemoteCodeTextBlock.Text = "Code: " + code;
+            //this.RemoteCodeTextBlock.Visibility = Visibility.Visible;
+            //this.RemoteCodeTimeLeftTextBlock.Visibility = Visibility.Visible;
+            //this.GetCodeButton.Visibility = Visibility.Collapsed;
+
+            //for (int i = 30; i > 0; i--)
+            //{
+            //    this.RemoteCodeTimeLeftTextBlock.Text = i + " Seconds Left...";
+            //    await Task.Delay(1000);
+            //}
+
+            //this.RemoteCodeTextBlock.Visibility = Visibility.Collapsed;
+            //this.RemoteCodeTimeLeftTextBlock.Visibility = Visibility.Collapsed;
+            //this.GetCodeButton.Visibility = Visibility.Visible;
+
+            this.LogInGrid.Visibility = Visibility.Collapsed;
+            this.RemoteSetupGrid.Visibility = Visibility.Visible;
+        }
+
+        private void DisconnectRemoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.RemoteCodeTextBlock.Visibility = Visibility.Collapsed;
+            this.RemoteCodeTimeLeftTextBlock.Visibility = Visibility.Collapsed;
+            this.GetCodeButton.Visibility = Visibility.Visible;
+
+            this.LogInGrid.Visibility = Visibility.Visible;
+            this.RemoteSetupGrid.Visibility = Visibility.Collapsed;
+        }
+
         private void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
