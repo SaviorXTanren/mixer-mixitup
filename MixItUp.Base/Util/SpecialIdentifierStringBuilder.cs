@@ -69,25 +69,9 @@ namespace MixItUp.Base.Util
             {
                 await user.SetDetails();
 
-                if (string.IsNullOrEmpty(user.AvatarLink))
+                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    user.AvatarLink = UserViewModel.DefaultAvatarLink;
-                }
-
-                if (user.AvatarLink.Equals(UserViewModel.DefaultAvatarLink))
-                {
-                    UserModel avatarUser = await ChannelSession.Connection.GetUser(user.UserName);
-                    if (!string.IsNullOrEmpty(user.AvatarLink))
-                    {
-                        user.AvatarLink = avatarUser.avatarUrl;
-                    }
-                }
-
-                for (int i = 0; i < ChannelSession.Settings.Currencies.Count; i++)
-                {
-                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.ElementAt(i);
                     UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(currency);
-
                     UserRankViewModel rank = currencyData.GetRank();
                     this.ReplaceSpecialIdentifier(currency.UserRankNameSpecialIdentifier, rank.Name);
                     this.ReplaceSpecialIdentifier(currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
@@ -103,7 +87,14 @@ namespace MixItUp.Base.Util
                 if (this.ContainsSpecialIdentifier("usergame"))
                 {
                     GameTypeModel game = await ChannelSession.Connection.GetGameType(user.GameTypeID);
-                    this.ReplaceSpecialIdentifier("usergame", game.name.ToString());
+                    if (game != null)
+                    {
+                        this.ReplaceSpecialIdentifier("usergame", game.name.ToString());
+                    }
+                    else
+                    {
+                        this.ReplaceSpecialIdentifier("usergame", "Unknown");
+                    }
                 }
 
                 this.ReplaceSpecialIdentifier("useravatar", user.AvatarLink);
@@ -129,11 +120,9 @@ namespace MixItUp.Base.Util
                         {
                             UserDataViewModel userData = ChannelSession.Settings.UserData[argUser.ID];
 
-                            for (int c = 0; c < ChannelSession.Settings.Currencies.Count; c++)
+                            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                             {
-                                UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.ElementAt(i);
                                 UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
-
                                 UserRankViewModel rank = currencyData.GetRank();
                                 this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, rank.Name);
                                 this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
@@ -147,7 +136,14 @@ namespace MixItUp.Base.Util
                         if (this.ContainsSpecialIdentifier("arg" + (i + 1) + "usergame"))
                         {
                             GameTypeModel game = await ChannelSession.Connection.GetGameType(argUser.GameTypeID);
-                            this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usergame", game.name.ToString());
+                            if (game != null)
+                            {
+                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usergame", game.name.ToString());
+                            }
+                            else
+                            {
+                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usergame", "Unknown");
+                            }
                         }
 
                         this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userfollowage", argUser.FollowAgeString);

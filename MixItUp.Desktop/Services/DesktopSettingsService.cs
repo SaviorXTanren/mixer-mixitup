@@ -47,6 +47,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version7Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version8Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version9Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version10Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -283,8 +284,43 @@ namespace MixItUp.Desktop.Services
                 {
 #pragma warning disable CS0612 // Type or member is obsolete
                     command.Requirements.Cooldown.Amount = command.Cooldown;
-                    command.Requirements.Currency = command.CurrencyRequirement;
-                    command.Requirements.Rank = command.RankRequirement;
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version10Upgrade(int version, string filePath)
+        {
+            if (version < 10)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                UserCurrencyViewModel currency = settings.Currencies.Values.FirstOrDefault(c => !c.IsRank);
+                if (currency == null)
+                {
+                    currency = settings.Currencies.Values.FirstOrDefault();
+                }
+
+                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
+                commands.AddRange(settings.GameCommands);
+                foreach (PermissionsCommandBase command in commands)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (command.Requirements.Currency == null)
+                    {
+                        command.Requirements.Currency = command.CurrencyRequirement;
+                        if (command.Requirements.Currency == null)
+                        {
+                            command.Requirements.Currency = new CurrencyRequirementViewModel(currency, 1, 1);
+                        }
+                    }
+                    if (command.Requirements.Rank == null)
+                    {
+                        command.Requirements.Rank = command.RankRequirement;
+                    }
 #pragma warning restore CS0612 // Type or member is obsolete
                 }
 

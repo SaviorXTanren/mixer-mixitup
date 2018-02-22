@@ -338,7 +338,10 @@ namespace MixItUp.WPF.Windows.Wizard
                         await databaseWrapper.RunReadCommand("SELECT * FROM Viewer",
                         (reader) =>
                         {
-                            scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
+                            if (reader["BeamID"] != null && int.TryParse((string)reader["BeamID"], out int id))
+                            {
+                                scorpBotData.Viewers.Add(new ScorpBotViewer(reader));
+                            }
                         });
                     }
                 }
