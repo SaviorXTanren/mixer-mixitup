@@ -527,9 +527,7 @@ namespace MixItUp.Base.MixerAPI
             ChatMessageViewModel message = new ChatMessageViewModel(e);
             if (await this.AddMessage(message))
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(() => { this.OnMessageOccurred(sender, message); });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                this.OnMessageOccurred(sender, message);
             }
         }
 
