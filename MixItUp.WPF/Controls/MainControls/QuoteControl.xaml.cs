@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class QuoteControl : MainControlBase
     {
-        private ObservableCollection<string> quotes = new ObservableCollection<string>();
+        private ObservableCollection<UserQuoteViewModel> quotes = new ObservableCollection<UserQuoteViewModel>();
 
         public QuoteControl()
         {
@@ -80,7 +80,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.quotes.Clear();
             foreach (UserQuoteViewModel quote in ChannelSession.Settings.UserQuotes)
             {
-                this.quotes.Add(quote.ToString());
+                this.quotes.Add(quote);
             }
         }
 
@@ -88,7 +88,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                this.quotes.Add(quote.ToString());
+                this.quotes.Add(quote);
             }));
         }
     }
