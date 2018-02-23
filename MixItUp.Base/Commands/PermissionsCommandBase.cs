@@ -57,7 +57,7 @@ namespace MixItUp.Base.Commands
                 await this.Requirements.Cooldown.SendCooldownNotMetWhisper(user);
                 return false;
             }
-            this.Requirements.UpdateCooldown(user);
+
             return true;
         }
 
@@ -88,7 +88,7 @@ namespace MixItUp.Base.Commands
         {
             if (this.Requirements.Currency != null && this.Requirements.Currency.GetCurrency() != null)
             {
-                if (!this.Requirements.Currency.TrySubtractAmount(user.Data, this.Requirements.Currency.RequiredAmount))
+                if (!this.Requirements.Currency.DoesMeetCurrencyRequirement(user.Data))
                 {
                     await this.Requirements.Currency.SendCurrencyNotMetWhisper(user);
                     return false;
@@ -103,6 +103,14 @@ namespace MixItUp.Base.Commands
             {
                 return;
             }
+
+            if (!this.Requirements.Currency.TrySubtractAmount(user.Data, this.Requirements.Currency.RequiredAmount))
+            {
+                return;
+            }
+
+            this.Requirements.UpdateCooldown(user);
+
             await base.PerformInternal(user, arguments, token);
         }
     }
