@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
@@ -49,15 +50,6 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public string UserRoleRequirementString { get { return EnumHelper.GetEnumName(this.Requirements.UserRole); } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
-        {
-            if (!await this.CheckCooldownRequirement(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
-            {
-                return;
-            }
-            await base.PerformInternal(user, arguments);
-        }
-
         public async Task<bool> CheckCooldownRequirement(UserViewModel user)
         {
             if (!this.Requirements.DoesMeetCooldownRequirement(user))
@@ -65,7 +57,7 @@ namespace MixItUp.Base.Commands
                 await this.Requirements.Cooldown.SendCooldownNotMetWhisper(user);
                 return false;
             }
-            this.Requirements.UpdateCooldown(user);
+
             return true;
         }
 
@@ -96,13 +88,30 @@ namespace MixItUp.Base.Commands
         {
             if (this.Requirements.Currency != null && this.Requirements.Currency.GetCurrency() != null)
             {
-                if (!this.Requirements.Currency.TrySubtractAmount(user.Data, this.Requirements.Currency.RequiredAmount))
+                if (!this.Requirements.Currency.DoesMeetCurrencyRequirement(user.Data))
                 {
                     await this.Requirements.Currency.SendCurrencyNotMetWhisper(user);
                     return false;
                 }
             }
             return true;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        {
+            if (!await this.CheckCooldownRequirement(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
+            {
+                return;
+            }
+
+            if (!this.Requirements.Currency.TrySubtractAmount(user.Data, this.Requirements.Currency.RequiredAmount))
+            {
+                return;
+            }
+
+            this.Requirements.UpdateCooldown(user);
+
+            await base.PerformInternal(user, arguments, token);
         }
     }
 }

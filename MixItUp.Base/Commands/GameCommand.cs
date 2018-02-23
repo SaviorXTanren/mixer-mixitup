@@ -130,11 +130,6 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckCooldownRequirement(user))
-            {
-                return;
-            }
-
             List<UserViewModel> users = ChannelSession.Chat.ChatUsers.Values.ToList();
             users.Remove(user);
             if (ChannelSession.BotUser != null)
@@ -244,11 +239,6 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckCooldownRequirement(user))
-            {
-                return;
-            }
-
             if (!this.UserBets.ContainsKey(user))
             {
                 if (await this.PerformUserJoinChecks(user, arguments))
@@ -345,11 +335,6 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckCooldownRequirement(user))
-            {
-                return;
-            }
-
             if (!this.UserBets.ContainsKey(user))
             {
                 if (await this.PerformUserJoinChecks(user, arguments))
@@ -425,11 +410,6 @@ namespace MixItUp.Base.Commands
 
         public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            if (!await this.CheckCooldownRequirement(user))
-            {
-                return;
-            }
-
             if (await this.PerformUserJoinChecks(user, arguments))
             {
                 this.gameStarterUser = user;
@@ -588,7 +568,7 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task<bool> PerformUserJoinChecks(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (!await this.CheckUserRoleRequirement(user))
+            if (!await this.CheckCooldownRequirement(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user))
             {
                 return false;
             }
@@ -634,6 +614,7 @@ namespace MixItUp.Base.Commands
                 await this.WhisperUser(user, string.Format("You do not have the minimum {0} {1} to participate", this.Requirements.Currency.RequiredAmount, currency.Name));
                 return false;
             }
+
             return true;
         }
 
