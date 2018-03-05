@@ -37,7 +37,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private int totalMessages = 0;
         private ScrollViewer chatListScrollViewer;
-        private bool autoScrollChatList = true;
+        private bool lockChatList = true;
 
         private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 24 }, };
 
@@ -120,35 +120,6 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             return Task.FromResult(0);
-        }
-
-        private void ChatList_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (this.chatListScrollViewer == null)
-            {
-                this.chatListScrollViewer = (ScrollViewer)e.OriginalSource;
-                this.chatListScrollViewer.ScrollChanged += ChatListScrollViewer_ScrollChanged;
-            }
-        }
-
-        private void ChatListScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (e.ExtentHeightChange == 0)
-            {
-                if ((this.chatListScrollViewer.VerticalOffset + 2) >= this.chatListScrollViewer.ScrollableHeight)
-                {
-                    this.autoScrollChatList = true;
-                }
-                else
-                {
-                    this.autoScrollChatList = false;
-                }
-            }
-
-            if (this.autoScrollChatList && e.ExtentHeightChange != 0)
-            {
-                this.chatListScrollViewer.ScrollToBottom();
-            }
         }
 
         private async Task ChatRefreshBackground()
@@ -299,6 +270,34 @@ namespace MixItUp.WPF.Controls.MainControls
             foreach (ChatMessageControl control in this.MessageControls)
             {
                 control.UpdateSizing();
+            }
+        }
+
+        private void ChatList_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (this.chatListScrollViewer == null)
+            {
+                this.chatListScrollViewer = (ScrollViewer)e.OriginalSource;
+                this.chatListScrollViewer.IsEnabled = !this.lockChatList;
+            }
+        }
+
+        private void ChatLockButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.lockChatList = !this.lockChatList;
+            this.chatListScrollViewer.IsEnabled = !this.lockChatList;
+            this.ChatLockButtonIcon.Kind = (this.lockChatList) ? MaterialDesignThemes.Wpf.PackIconKind.LockOutline : MaterialDesignThemes.Wpf.PackIconKind.LockOpenOutline;
+            if (this.lockChatList)
+            {
+                this.chatListScrollViewer.ScrollToBottom();
+            }
+        }
+
+        private void ChatList_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (this.lockChatList && this.chatListScrollViewer != null)
+            {
+                this.chatListScrollViewer.ScrollToBottom();
             }
         }
 

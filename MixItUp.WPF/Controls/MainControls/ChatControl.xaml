@@ -166,13 +166,17 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ListView x:Name="ChatList" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged">
+                    <ListView x:Name="ChatList" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged" LayoutUpdated="ChatList_LayoutUpdated">
                         <ListView.Resources>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}, Path=ActualWidth}" />
                             </Style>
                         </ListView.Resources>
                     </ListView>
+
+                    <Button x:Name="ChatLockButton" Click="ChatLockButton_Click" Margin="0,0,20,0" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" HorizontalAlignment="Right" Grid.Row="0" VerticalAlignment="Bottom">
+                        <MaterialDesign:PackIcon x:Name="ChatLockButtonIcon" Kind="LockOutline" Height="24" Width="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Button>
 
                     <Grid Grid.Row="1" Margin="5">
                         <Grid.ColumnDefinitions>
