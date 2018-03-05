@@ -87,6 +87,7 @@ namespace MixItUp.Base
         LockedList<TimerCommand> TimerCommands { get; }
         LockedList<ActionGroupCommand> ActionGroupCommands { get; }
         LockedList<GameCommandBase> GameCommands { get; }
+        LockedList<RemoteCommand> RemoteCommands { get; }
 
         LockedList<UserQuoteViewModel> UserQuotes { get; }
 

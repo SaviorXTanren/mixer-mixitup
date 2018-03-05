@@ -1,0 +1,153 @@
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.RemoteControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+                          
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+            </Grid.RowDefinitions>
+
+            <DataGrid x:Name="RemoteCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTemplateColumn Header="Actions" Width="240">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <Button x:Name="AddReferenceCommandButton" Grid.Column="0" Click="AddReferenceCommandButton_Click">Reference Command</Button>
+
+                <Button x:Name="AddCommandButton" Grid.Column="2" Click="AddCommandButton_Click">New Command</Button>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Column="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}" />
+
+        <Grid x:Name="LogInGrid" Grid.Column="2" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Connect Your Mix It Up Remote Device:</TextBlock>
+
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">To connect your Mix It Up Remote device, ensure you have the app loaded up on your cellphone or tablet. Click the "Get Code" button below to get a 4-digit code to enter on your device to connect it up. The code will expire after 30 seconds and you will need to request a new code if you did not use it afterwards.</TextBlock>
+
+            <Button x:Name="GetCodeButton" Grid.Row="4" Click="GetCodeButton_Click" Width="100">Get Code</Button>
+            <TextBlock x:Name="RemoteCodeTextBlock" Grid.Row="4" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+            <TextBlock x:Name="RemoteCodeTimeLeftTextBlock" Grid.Row="6" Visibility="Collapsed" HorizontalAlignment="Center" />
+        </Grid>
+
+        <Grid x:Name="RemoteSetupGrid" Grid.Column="2" Visibility="Collapsed" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">To add Remote Commands, simply drag-and-drop them to the desired slot or click the row of the Command you want, then click the desired slot.</TextBlock>
+
+            <Border Grid.Row="2" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}" Width="175">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="5" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="5" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Column="1" Grid.Row="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+                        
+                    </Border>
+
+                    <Border Grid.Column="3" Grid.Row="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="1" Grid.Row="3" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="3" Grid.Row="3" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="1" Grid.Row="5" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="3" Grid.Row="5" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="1" Grid.Row="7" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+
+                    <Border Grid.Column="3" Grid.Row="7" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+
+                    </Border>
+                </Grid>
+            </Border>
+            
+            <Button x:Name="DisconnectRemoteButton" Grid.Row="4" Click="DisconnectRemoteButton_Click" Width="120">Disconnect</Button>
+            
+        </Grid>
+
+    </Grid>
+</local:MainControlBase>

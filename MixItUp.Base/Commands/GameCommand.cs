@@ -128,7 +128,7 @@ namespace MixItUp.Base.Commands
 
         public override int TotalUsers { get { return 1; } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             List<UserViewModel> users = ChannelSession.Chat.ChatUsers.Values.ToList();
             users.Remove(user);
@@ -237,7 +237,7 @@ namespace MixItUp.Base.Commands
 
         public override int TotalUsers { get { return this.UserBets.Count; } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (!this.UserBets.ContainsKey(user))
             {
@@ -333,7 +333,7 @@ namespace MixItUp.Base.Commands
 
         public override int TotalUsers { get { return this.UserBets.Count; } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (!this.UserBets.ContainsKey(user))
             {
@@ -408,7 +408,7 @@ namespace MixItUp.Base.Commands
 
         public override int TotalUsers { get { return 1; } }
 
-        public override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments = null)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (await this.PerformUserJoinChecks(user, arguments))
             {

@@ -246,6 +246,15 @@
     <Compile Include="Controls\Requirement\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\RemoteCommandDetailsControl.xaml.cs">
+      <DependentUpon>RemoteCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\RemoteReferenceCommandDialogControl.xaml.cs">
+      <DependentUpon>RemoteReferenceCommandDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
+      <DependentUpon>RemoteControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
@@ -528,6 +537,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Requirement\CooldownRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\RemoteCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\RemoteReferenceCommandDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\RemoteControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
