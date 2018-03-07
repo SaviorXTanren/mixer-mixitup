@@ -329,6 +329,7 @@ namespace MixItUp.Base
                         ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, (channelName == null));
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
+                    ChannelSession.Settings.Channel = channel;
 
                     ChannelSession.Connection.Initialize();
 
