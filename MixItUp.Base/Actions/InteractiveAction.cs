@@ -88,7 +88,7 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Interactive != null && ChannelSession.Interactive.Client.Authenticated)
+            if (ChannelSession.Interactive != null && ChannelSession.Interactive.IsConnected())
             {
                 if (!user.Roles.Any(r => r >= this.RoleRequirement))
                 {

@@ -120,6 +120,8 @@ namespace MixItUp.Base.MixerAPI
             this.Client = null;
         }
 
+        public bool IsConnected() { return this.Client != null && this.Client.Authenticated; }
+
         public async Task<bool> CreateGroups(IEnumerable<InteractiveGroupModel> groups) { return await this.RunAsync(this.Client.CreateGroupsWithResponse(groups)); }
         public async Task<InteractiveGroupCollectionModel> GetGroups() { return await this.RunAsync(this.Client.GetGroups()); }
         public async Task UpdateGroups(IEnumerable<InteractiveGroupModel> groups) { await this.RunAsync(this.Client.UpdateGroupsWithResponse(groups)); }
