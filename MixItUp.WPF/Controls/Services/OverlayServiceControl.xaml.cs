@@ -98,6 +98,8 @@ namespace MixItUp.WPF.Controls.Services
 
                 do
                 {
+                    ChannelSession.ReconnectionAttemptOccurred("Overlay");
+
                     await this.DisconnectOverlayService();
 
                     await Task.Delay(2000);

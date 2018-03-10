@@ -90,6 +90,8 @@ namespace MixItUp.WPF.Controls.Services
 
                 do
                 {
+                    ChannelSession.ReconnectionAttemptOccurred("XSplit");
+
                     await this.DisconnectXSplitService();
 
                     await Task.Delay(2000);

@@ -455,6 +455,8 @@ namespace MixItUp.Base.MixerAPI
             InteractiveGameListingModel game = ChannelSession.Interactive.Client.InteractiveGame;
             do
             {
+                ChannelSession.ReconnectionAttemptOccurred("Interactive");
+
                 await this.Disconnect();
 
                 await Task.Delay(2000);

@@ -305,7 +305,12 @@ namespace MixItUp.Base
 
         public static void DisconnectionOccurred(string service)
         {
-            Logger.Log(service + " Service disconnection occurred, attempting to reconnect now...");
+            Logger.Log(service + " Service disconnection occurred");
+        }
+
+        public static void ReconnectionAttemptOccurred(string service)
+        {
+            Logger.Log(service + " reconnection attempt started");
         }
 
         public static void ReconnectionOccurred(string service)

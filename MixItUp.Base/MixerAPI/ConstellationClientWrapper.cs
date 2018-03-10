@@ -280,6 +280,8 @@ namespace MixItUp.Base.MixerAPI
 
             do
             {
+                ChannelSession.ReconnectionAttemptOccurred("Constellation");
+
                 await this.Disconnect();
 
                 await Task.Delay(2000);

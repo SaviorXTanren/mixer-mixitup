@@ -591,6 +591,8 @@ namespace MixItUp.Base.MixerAPI
 
             do
             {
+                ChannelSession.ReconnectionAttemptOccurred("Streamer Chat");
+
                 await this.Disconnect();
 
                 await Task.Delay(2000);
@@ -605,6 +607,8 @@ namespace MixItUp.Base.MixerAPI
 
             do
             {
+                ChannelSession.ReconnectionAttemptOccurred("Bot Chat");
+
                 await this.DisconnectBot();
 
                 await Task.Delay(2000);
