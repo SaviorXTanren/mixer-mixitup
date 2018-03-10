@@ -130,11 +130,7 @@ namespace MixItUp.Base.MixerAPI
 
             if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
             {
-                IDictionary<string, JToken> payloadValues = e.payload;
-                if (payloadValues.ContainsKey("online") && (bool)payloadValues["online"])
-                {
-                    UptimeChatCommand.SetUptime(DateTimeOffset.Now);
-                }
+
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()))
             {
