@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using Mixer.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -18,6 +19,9 @@ namespace MixItUp.Base.Actions
         public Guid CurrencyID { get; set; }
 
         [DataMember]
+        public string Username { get; set; }
+
+        [DataMember]
         public int Amount { get; set; }
 
         [DataMember]
@@ -28,10 +32,11 @@ namespace MixItUp.Base.Actions
 
         public CurrencyAction() : base(ActionTypeEnum.Currency) { }
 
-        public CurrencyAction(UserCurrencyViewModel currency, int amount, string chatText, bool isWhisper)
+        public CurrencyAction(UserCurrencyViewModel currency, string username, int amount, string chatText, bool isWhisper)
             : this()
         {
             this.CurrencyID = currency.ID;
+            this.Username = username;
             this.Amount = amount;
             this.ChatText = chatText;
             this.IsWhisper = isWhisper;
@@ -42,6 +47,23 @@ namespace MixItUp.Base.Actions
             if (ChannelSession.Chat != null)
             {
                 UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(this.CurrencyID);
+                if (!string.IsNullOrEmpty(this.Username))
+                {
+                    string usernameString = await this.ReplaceStringWithSpecialModifiers(this.Username, user, arguments);
+
+                    UserModel receivingUser = await ChannelSession.Connection.GetUser(usernameString);
+                    if (receivingUser != null)
+                    {
+                        UserDataViewModel userData = ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataViewModel(new UserViewModel(receivingUser)));
+                        currencyData = userData.GetCurrency(this.CurrencyID);
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "The user could not be found");
+                        return;
+                    }
+                }
+
                 if (currencyData != null)
                 {
                     currencyData.Amount += this.Amount;

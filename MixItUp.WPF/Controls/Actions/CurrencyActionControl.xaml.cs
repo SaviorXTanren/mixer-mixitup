@@ -1,20 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -37,6 +25,7 @@ namespace MixItUp.WPF.Controls.Actions
                 if (ChannelSession.Settings.Currencies.ContainsKey(this.action.CurrencyID))
                 {
                     this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.action.CurrencyID];
+                    this.CurrencyUsernameTextBox.IsEnabled = true;
                     this.CurrencyAmountTextBox.IsEnabled = true;
                 }
                 this.CurrencyAmountTextBox.Text = this.action.Amount.ToString();
@@ -52,7 +41,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount))
             {
                 UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
-                return new CurrencyAction(currency, currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
+                return new CurrencyAction(currency, this.CurrencyUsernameTextBox.Text, currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
             }
             return null;
         }
@@ -61,6 +50,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.CurrencyTypeComboBox.SelectedIndex >= 0)
             {
+                this.CurrencyUsernameTextBox.IsEnabled = true;
                 this.CurrencyAmountTextBox.IsEnabled = true;
             }
         }
