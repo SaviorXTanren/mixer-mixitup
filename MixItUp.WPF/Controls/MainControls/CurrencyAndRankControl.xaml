@@ -41,9 +41,15 @@
                         <DataGridTemplateColumn Header="Amount Special Identifier" IsReadOnly="True" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock>$</TextBlock>
-                                        <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock>$</TextBlock>
+                                            <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock>$arg1</TextBlock>
+                                            <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -102,9 +108,15 @@
                         <DataGridTemplateColumn Header="Amount Special Identifier" IsReadOnly="True" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock>$</TextBlock>
-                                        <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock>$</TextBlock>
+                                            <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock>$arg1</TextBlock>
+                                            <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -112,9 +124,15 @@
                         <DataGridTemplateColumn Header="Rank Name Special Identifier" IsReadOnly="True" Width="*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock>$</TextBlock>
-                                        <TextBlock Text="{Binding UserRankNameSpecialIdentifier}" />
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock>$</TextBlock>
+                                            <TextBlock Text="{Binding UserRankNameSpecialIdentifier}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock>$arg1</TextBlock>
+                                            <TextBlock Text="{Binding UserRankNameSpecialIdentifier}" />
+                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
