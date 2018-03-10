@@ -104,7 +104,7 @@ namespace MixItUp.Base.Commands
                 return;
             }
 
-            if (!this.Requirements.Currency.TrySubtractAmount(user.Data, this.Requirements.Currency.RequiredAmount))
+            if (!this.Requirements.TrySubtractCurrencyAmount(user))
             {
                 return;
             }

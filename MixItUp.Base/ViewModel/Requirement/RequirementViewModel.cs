@@ -125,7 +125,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.Currency != null)
             {
-                return ChannelSession.Settings.GameQueueRequirements.Currency.TrySubtractAmount(user.Data);
+                return this.Currency.TrySubtractAmount(user.Data);
             }
             return true;
         }
@@ -134,7 +134,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.Currency != null)
             {
-                return ChannelSession.Settings.GameQueueRequirements.Currency.TrySubtractAmount(user.Data, amount);
+                return this.Currency.TrySubtractAmount(user.Data, amount);
             }
             return true;
         }
