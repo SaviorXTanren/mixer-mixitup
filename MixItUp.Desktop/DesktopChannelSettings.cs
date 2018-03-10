@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.OAuth;
+using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
@@ -361,6 +362,9 @@ namespace MixItUp.Desktop
 
             if (this.IsStreamer)
             {
+                IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
+                await this.databaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
+
                 IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
                 addedUsers = addedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
                 await this.databaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts) VALUES(?,?,?,?)",
@@ -372,15 +376,51 @@ namespace MixItUp.Desktop
                 await this.databaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts WHERE ID = @ID",
                     changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
                     new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
-
-                IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
-                await this.databaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
             }
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }
 
         public bool ShouldBeUpgraded() { return this.Version < DesktopChannelSettings.LatestVersion; }
+
+        public async Task RemoveDuplicates()
+        {
+            List<string> dupes = new List<string>();
+            await this.databaseWrapper.RunReadCommand("SELECT UserName FROM (SELECT Users.UserName, COUNT(*) AS totalNum FROM Users GROUP BY Users.UserName) WHERE totalNum > 1", (SQLiteDataReader dataReader) =>
+            {
+                dupes.Add(dataReader["UserName"].ToString());
+            });
+
+            foreach (string dupe in dupes)
+            {
+                UserModel onlineUser = await ChannelSession.Connection.GetUser(dupe);
+                if (onlineUser != null)
+                {
+                    List<UserDataViewModel> dupeUsers = new List<UserDataViewModel>(ChannelSession.Settings.UserData.Values.Where(u => u.UserName.Equals(dupe)));
+                    if (dupeUsers.Count > 0)
+                    {
+                        UserDataViewModel solidUser = dupeUsers.FirstOrDefault(u => u.ID == onlineUser.id);
+                        if (solidUser != null)
+                        {
+                            dupeUsers.Remove(solidUser);
+                            foreach (UserDataViewModel dupeUser in dupeUsers)
+                            {
+                                solidUser.ViewingMinutes += dupeUser.ViewingMinutes;
+                                foreach (var kvp in dupeUser.CurrencyAmounts)
+                                {
+                                    solidUser.AddCurrencyAmount(kvp.Key, kvp.Value.Amount);
+                                }
+                            }
+
+                            foreach (UserDataViewModel dupeUser in dupeUsers)
+                            {
+                                ChannelSession.Settings.UserData.Remove(dupeUser.ID);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     [DataContract]

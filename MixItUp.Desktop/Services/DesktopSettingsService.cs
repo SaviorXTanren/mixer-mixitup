@@ -7,11 +7,9 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop.Database;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -42,8 +40,6 @@ namespace MixItUp.Desktop.Services
 
         internal static async Task UpgradeSettingsToLatest(int version, string filePath)
         {
-            await DesktopSettingsUpgrader.Version5Upgrade(version, filePath);
-            await DesktopSettingsUpgrader.Version6Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version7Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version8Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version9Upgrade(version, filePath);
@@ -55,139 +51,6 @@ namespace MixItUp.Desktop.Services
             settings.Version = DesktopChannelSettings.LatestVersion;
 
             await ChannelSession.Services.Settings.Save(settings);
-        }
-
-        private static async Task Version5Upgrade(int version, string filePath)
-        {
-            if (version < 5)
-            {
-                LegacyDesktopChannelSettings legacySettings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
-
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-                await ChannelSession.Services.Settings.Initialize(settings);
-                foreach (string quote in legacySettings.quotesInternal)
-                {
-                    settings.UserQuotes.Add(new UserQuoteViewModel(quote));
-                }
-
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.InteractiveCommands);
-                commands.AddRange(settings.EventCommands);
-                commands.AddRange(settings.TimerCommands);
-
-                UserCurrencyViewModel currency = settings.Currencies.Values.FirstOrDefault(c => !c.IsRank);
-                if (currency == null)
-                {
-                    currency = settings.Currencies.Values.FirstOrDefault();
-                }
-
-                foreach (CommandBase command in commands)
-                {
-                    foreach (ActionBase action in command.Actions)
-                    {
-                        if (action is InteractiveAction)
-                        {
-                            InteractiveAction nAction = (InteractiveAction)action;
-#pragma warning disable CS0612 // Type or member is obsolete
-                            if (nAction.AddUserToGroup)
-                            {
-                                nAction.InteractiveType = InteractiveActionTypeEnum.MoveUserToGroup;
-                            }
-                            else
-                            {
-                                nAction.InteractiveType = InteractiveActionTypeEnum.MoveGroupToScene;
-                            }
-                            nAction.SceneID = nAction.MoveGroupToScene;
-#pragma warning restore CS0612 // Type or member is obsolete
-                        }
-
-                        if (currency != null)
-                        {
-                            if (action is ChatAction)
-                            {
-                                ChatAction nAction = (ChatAction)action;
-                                nAction.ChatText = nAction.ChatText.Replace("$usercurrencyname", currency.Name);
-                            }
-                            else if (action is CurrencyAction)
-                            {
-                                CurrencyAction nAction = (CurrencyAction)action;
-                                nAction.ChatText = nAction.ChatText.Replace("$usercurrencyname", currency.Name);
-                            }
-                            else if (action is OBSStudioAction)
-                            {
-                                OBSStudioAction nAction = (OBSStudioAction)action;
-                                if (!string.IsNullOrEmpty(nAction.SourceText))
-                                {
-                                    nAction.SourceText = nAction.SourceText.Replace("$usercurrencyname", currency.Name);
-                                }
-                            }
-                            else if (action is OverlayAction)
-                            {
-                                OverlayAction nAction = (OverlayAction)action;
-                                if (!string.IsNullOrEmpty(nAction.Text))
-                                {
-                                    nAction.Text = nAction.Text.Replace("$usercurrencyname", currency.Name);
-                                }
-                            }
-                            else if (action is TextToSpeechAction)
-                            {
-                                TextToSpeechAction nAction = (TextToSpeechAction)action;
-                                nAction.SpeechText = nAction.SpeechText.Replace("$usercurrencyname", currency.Name);
-                            }
-                            else if (action is XSplitAction)
-                            {
-                                XSplitAction nAction = (XSplitAction)action;
-                                if (!string.IsNullOrEmpty(nAction.SourceText))
-                                {
-                                    nAction.SourceText = nAction.SourceText.Replace("$usercurrencyname", currency.Name);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                foreach (GameCommandBase game in settings.GameCommands)
-                {
-                    if (game is IndividualProbabilityGameCommand)
-                    {
-                        IndividualProbabilityGameCommand individualGame = (IndividualProbabilityGameCommand)game;
-                        DesktopSettingsUpgrader.SetAllGameChatActionsToWhispers(individualGame.UserJoinedCommand);
-                        DesktopSettingsUpgrader.SetAllGameChatActionsToWhispers(individualGame.LoseLeftoverCommand);
-                        foreach (GameOutcome outcome in individualGame.Outcomes)
-                        {
-                            DesktopSettingsUpgrader.SetAllGameChatActionsToWhispers(outcome.ResultCommand);
-                        }
-                    }
-                    else if (game is OnlyOneWinnerGameCommand)
-                    {
-                        OnlyOneWinnerGameCommand oneWinnerGame = (OnlyOneWinnerGameCommand)game;
-                        DesktopSettingsUpgrader.SetAllGameChatActionsToWhispers(oneWinnerGame.UserJoinedCommand);
-                    }
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
-        }
-
-        private static async Task Version6Upgrade(int version, string filePath)
-        {
-            if (version < 6)
-            {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
-
-                List<LegacyUserDataViewModel> legacyUsers = new List<LegacyUserDataViewModel>();
-                if (settings.IsStreamer)
-                {
-                    string dbPath = ((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(settings);
-                    SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(dbPath);
-                    await databaseWrapper.RunWriteCommand("DELETE FROM Users WHERE UserName IS NULL");
-                }
-
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
         }
 
         private static async Task Version7Upgrade(int version, string filePath)
@@ -327,71 +190,6 @@ namespace MixItUp.Desktop.Services
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }
-
-        private static string ReplaceSpecialIdentifiersVersion2(string text)
-        {
-            if (!string.IsNullOrEmpty(text))
-            {
-                text = Regex.Replace(text, "\\$user(?!(currency|rankname|rankpoints|rank|time|avatar|url))", "$username");
-                text = Regex.Replace(text, "\\$arg1user(?!(currency|rankname|rankpoints|rank|time|avatar|url))", "$arg1username");
-                text = Regex.Replace(text, "\\$arg1(?!user)", "$arg1string");
-            }
-            return text;
-        }
-
-        private static string ReplaceSpecialIdentifiersVersion4(string text, UserCurrencyViewModel currency, UserCurrencyViewModel rank)
-        {
-            if (!string.IsNullOrEmpty(text))
-            {
-                text = text.Replace("$userrank ", "$userrankname - $userrankpoints ");
-
-                if (currency != null)
-                {
-                    text = text.Replace("$usercurrency", "$" + currency.UserAmountSpecialIdentifier);
-                }
-
-                if (rank != null)
-                {
-                    text = text.Replace("$userrankpoints", "$" + rank.UserAmountSpecialIdentifier);
-                    text = text.Replace("$userrankname", "$" + rank.UserRankNameSpecialIdentifier);
-                }
-
-                for (int i = 0; i < 10; i++)
-                {
-                    text = text.Replace("$arg" + i + "string", "$arg" + i + "text");
-
-                    text = text.Replace("$arg" + i + "userrank", "$arg" + i + "userrankname - " + "$arg" + i + "userrankpoints");
-
-                    if (currency != null)
-                    {
-                        text = text.Replace("$arg" + i + "usercurrency", "$arg" + i + currency.UserAmountSpecialIdentifier);
-                    }
-
-                    if (rank != null)
-                    {
-                        text = text.Replace("$arg" + i + "userrankpoints", "$arg" + i + rank.UserAmountSpecialIdentifier);
-                        text = text.Replace("$arg" + i + "userrankname", "$arg" + i + rank.UserRankNameSpecialIdentifier);
-                    }
-                }
-            }
-            return text;
-        }
-
-        private static void SetAllGameChatActionsToWhispers(CustomCommand command)
-        {
-            if (command != null)
-            {
-                foreach (ActionBase action in command.Actions)
-                {
-                    if (action is ChatAction)
-                    {
-                        ChatAction cAction = (ChatAction)action;
-                        cAction.IsWhisper = true;
-                        cAction.SendAsStreamer = false;
-                    }
-                }
-            }
-        }
     }
 
     public class DesktopSettingsService : ISettingsService
@@ -493,25 +291,38 @@ namespace MixItUp.Desktop.Services
                 {
                     if (!string.IsNullOrEmpty(duplicateGroup.Key))
                     {
-                        UserModel realUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
-                        if (realUser != null)
+                        UserModel onlineUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
+                        if (onlineUser != null)
                         {
-                            UserDataViewModel correctUserData = duplicateGroup.FirstOrDefault(u => u.ID.Equals(realUser.id));
-                            if (correctUserData != null)
+                            List<UserDataViewModel> dupeUsers = new List<UserDataViewModel>(duplicateGroup);
+                            if (dupeUsers.Count > 0)
                             {
-                                foreach (var possibleDupeUser in duplicateGroup)
+                                UserDataViewModel solidUser = dupeUsers.FirstOrDefault(u => u.ID == onlineUser.id);
+                                if (solidUser != null)
                                 {
-                                    if (realUser.id != possibleDupeUser.ID)
+                                    dupeUsers.Remove(solidUser);
+                                    foreach (UserDataViewModel dupeUser in dupeUsers)
                                     {
-                                        correctUserData.ViewingMinutes += possibleDupeUser.ViewingMinutes;
-                                        foreach (var currencyData in possibleDupeUser.CurrencyAmounts)
+                                        solidUser.ViewingMinutes += dupeUser.ViewingMinutes;
+                                        foreach (var kvp in dupeUser.CurrencyAmounts)
                                         {
-                                            correctUserData.AddCurrencyAmount(currencyData.Key, currencyData.Value.Amount);
+                                            solidUser.AddCurrencyAmount(kvp.Key, kvp.Value.Amount);
                                         }
-                                        ChannelSession.Settings.UserData.Remove(possibleDupeUser.ID);
+                                    }
+
+                                    foreach (UserDataViewModel dupeUser in dupeUsers)
+                                    {
+                                        ChannelSession.Settings.UserData.Remove(dupeUser.ID);
                                     }
                                 }
                             }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var dupeUser in duplicateGroup)
+                        {
+                            ChannelSession.Settings.UserData.Remove(dupeUser.ID);
                         }
                     }
                 }

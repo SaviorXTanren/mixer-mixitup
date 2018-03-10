@@ -52,14 +52,6 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public int CooldownAmount { get; set; }
 
-        [DataMember]
-        [Obsolete]
-        public bool AddUserToGroup { get; set; }
-
-        [DataMember]
-        [Obsolete]
-        public string MoveGroupToScene { get; set; }
-
         [JsonIgnore]
         private InteractiveGroupModel group;
 
