@@ -1,10 +1,8 @@
-﻿using Mixer.Base.Model.Channel;
+﻿using Mixer.Base.Model.Broadcast;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
 using Mixer.Base.Web;
 using MixItUp.Base.Actions;
-using MixItUp.Base.MixerAPI;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -196,13 +194,6 @@ namespace MixItUp.Base.Commands
 
     public class UptimeChatCommand : PreMadeChatCommand
     {
-        private static DateTimeOffset streamStartDateTime = DateTimeOffset.MinValue;
-
-        public static void SetUptime(DateTimeOffset dateTime)
-        {
-            UptimeChatCommand.streamStartDateTime = dateTime;
-        }
-
         public UptimeChatCommand()
             : base("Uptime", "uptime", 5, UserRole.User)
         {
@@ -210,39 +201,21 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    if (UptimeChatCommand.streamStartDateTime > DateTimeOffset.MinValue)
+                    BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast(ChannelSession.Channel);
+                    if (broadcast != null && broadcast.online)
                     {
-                        TimeSpan duration = DateTimeOffset.Now.Subtract(UptimeChatCommand.streamStartDateTime);
-                        await ChannelSession.Chat.SendMessage("Start Time: " + UptimeChatCommand.streamStartDateTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                        DateTimeOffset startTime = broadcast.startedAt.ToLocalTime();
+                        if (startTime > DateTimeOffset.MinValue)
+                        {
+                            TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
+                            await ChannelSession.Chat.SendMessage("Start Time: " + startTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
+                            return;
+                        }
                     }
-                    else
-                    {
-                        await ChannelSession.Chat.SendMessage("Stream is currently offline");
-                    }
+
+                    await ChannelSession.Chat.SendMessage("Stream is currently offline");
                 }
             }));
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () =>
-            {
-                while (true)
-                {
-                    await this.GetLatestStreamSession();
-                    await Task.Delay(300000);
-                }
-            });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-        }
-
-        private async Task GetLatestStreamSession()
-        {
-            IEnumerable<StreamSessionsAnalyticModel> sessions = await ChannelSession.Connection.GetStreamSessions(ChannelSession.Channel, DateTimeOffset.Now.Subtract(TimeSpan.FromDays(1)));
-            sessions = sessions.OrderBy(s => s.dateTime);
-            if (sessions.Count() > 0 && sessions.Last().duration == null)
-            {
-                StreamSessionsAnalyticModel latestSession = sessions.Last();
-                UptimeChatCommand.SetUptime(latestSession.dateTime);
-            }
         }
     }
 
