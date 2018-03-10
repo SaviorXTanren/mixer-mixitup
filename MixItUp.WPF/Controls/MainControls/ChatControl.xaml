@@ -166,7 +166,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ListView x:Name="ChatList" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged" LayoutUpdated="ChatList_LayoutUpdated">
+                    <ListView x:Name="ChatList" Grid.Row="0" ContextMenu="{StaticResource ChatListContextMenu}" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ScrollViewer.ScrollChanged="ChatList_ScrollChanged">
                         <ListView.Resources>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}, Path=ActualWidth}" />

@@ -279,6 +279,11 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.chatListScrollViewer = (ScrollViewer)e.OriginalSource;
             }
+
+            if (this.lockChatList && this.chatListScrollViewer != null)
+            {
+                this.chatListScrollViewer.ScrollToBottom();
+            }
         }
 
         private void ChatLockButton_MouseEnter(object sender, MouseEventArgs e)
@@ -297,14 +302,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.chatListScrollViewer.VerticalScrollBarVisibility = (this.lockChatList) ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Visible;
             this.ChatLockButtonIcon.Kind = (this.lockChatList) ? MaterialDesignThemes.Wpf.PackIconKind.LockOutline : MaterialDesignThemes.Wpf.PackIconKind.LockOpenOutline;
             if (this.lockChatList)
-            {
-                this.chatListScrollViewer.ScrollToBottom();
-            }
-        }
-
-        private void ChatList_LayoutUpdated(object sender, EventArgs e)
-        {
-            if (this.lockChatList && this.chatListScrollViewer != null)
             {
                 this.chatListScrollViewer.ScrollToBottom();
             }
