@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
 
@@ -51,8 +52,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<UserDonationViewModel> OnDonationOccurred;
-        public static void DonationOccurred(UserDonationViewModel donation)
+        public static event EventHandler<UserDonationModel> OnDonationOccurred;
+        public static void DonationOccurred(UserDonationModel donation)
         {
             if (GlobalEvents.OnDonationOccurred != null)
             {

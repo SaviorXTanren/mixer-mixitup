@@ -4,6 +4,7 @@ using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -228,7 +229,7 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationViewModel donation)
+        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation)
         {
             UserViewModel user = new UserViewModel(0, donation.Username);
 

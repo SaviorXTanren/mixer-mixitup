@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Interactive;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -116,7 +117,7 @@ namespace MixItUp.Base.Statistics
             }
         }
 
-        private void GlobalEvents_OnDonationOccurred(object sender, UserDonationViewModel e)
+        private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)
         {
             this.donationsTracker.OnStatisticEventOccurred(e.ID, e.Amount);
         }

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.User
+namespace MixItUp.Base.Model.User
 {
     [DataContract]
-    public class UserDonationViewModel
+    public class UserDonationModel
     {
         [DataMember]
         public string ID { get; set; }

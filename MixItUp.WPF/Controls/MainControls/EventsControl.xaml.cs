@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Clients;
+using MixItUp.Base.Commands;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.MainControls
@@ -19,7 +20,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.OnHostCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__hosted);
             this.OnSubscribeCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__subscribed);
             this.OnResubscribeCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__resubscribed);
-            //this.OnDonationCommandControl.Initialize(this, OtherEventTypeEnum.Donation);
+            this.OnDonationCommandControl.Initialize(this, OtherEventTypeEnum.Donation);
 
             return Task.FromResult(0);
         }

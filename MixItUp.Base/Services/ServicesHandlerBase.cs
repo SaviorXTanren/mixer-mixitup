@@ -13,7 +13,7 @@ namespace MixItUp.Base.Services
         public IOBSService OBSWebsocket { get; protected set; }
         public IXSplitService XSplitServer { get; protected set; }
         public IDeveloperAPIService DeveloperAPI { get; protected set; }
-        public StreamlabsService Streamlabs { get; protected set; }
+        public IStreamlabsService Streamlabs { get; protected set; }
 
         public abstract Task Close();
 
