@@ -2,5 +2,5 @@
 Prop3=19,11
 [InternetShortcut]
 IDList=
-URL=https://api.mixitupapp.com/analytics/results?eventName=Exception
+URL=https://api.mixitupapp.com/analytics/exceptions?username=SaviorXTanren
 HotKey=0

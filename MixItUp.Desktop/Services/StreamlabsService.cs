@@ -60,7 +60,7 @@ namespace MixItUp.Desktop.Services
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        private StreamlabsWebSocketService websocketService;
+        //private StreamlabsWebSocketService websocketService;
 
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
 
@@ -108,7 +108,7 @@ namespace MixItUp.Desktop.Services
         public Task Disconnect()
         {
             this.token = null;
-            this.websocketService.Disconnect();
+            //this.websocketService.Disconnect();
             this.cancellationTokenSource.Cancel();
             return Task.FromResult(0);
         }
