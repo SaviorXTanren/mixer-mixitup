@@ -33,9 +33,17 @@ namespace MixItUp.Base.Actions
         public int FontSize;
 
         [DataMember]
+        public int VideoWidth;
+        [DataMember]
+        public int VideoHeight;
+
+        [DataMember]
         public string youtubeVideoID;
         [DataMember]
         public int youtubeStartTime;
+
+        [DataMember]
+        public string localVideoFilePath;
 
         [DataMember]
         public string HTMLText;
@@ -51,38 +59,58 @@ namespace MixItUp.Base.Actions
 
         private string imageData { get; set; }
 
-        public OverlayAction() : base(ActionTypeEnum.Overlay) { }
-
-        public OverlayAction(string imagePath, int width, int height, double duration, int horizontal, int vertical, int fadeDuration)
-            : this(duration, horizontal, vertical, fadeDuration)
+        public static OverlayAction CreateForImage(string imagePath, int width, int height, double duration, int horizontal, int vertical, int fadeDuration)
         {
-            this.ImagePath = imagePath;
-            this.ImageWidth = width;
-            this.ImageHeight = height;
+            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
+            action.ImagePath = imagePath;
+            action.ImageWidth = width;
+            action.ImageHeight = height;
+            return action;
         }
 
-        public OverlayAction(string text, string color, int fontSize, double duration, int horizontal, int vertical, int fadeDuration)
-            : this(duration, horizontal, vertical, fadeDuration)
+        public static OverlayAction CreateForText(string text, string color, int fontSize, double duration, int horizontal, int vertical, int fadeDuration)
         {
-            this.Text = text;
-            this.Color = color;
-            this.FontSize = fontSize;
+            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
+            action.Text = text;
+            action.Color = color;
+            action.FontSize = fontSize;
+            return action;
         }
 
-        public OverlayAction(string youtubeVideoID, int startTime, double duration, int horizontal, int vertical, int fadeDuration)
-            : this(duration, horizontal, vertical, fadeDuration)
+        public static OverlayAction CreateForYoutube(string youtubeVideoID, int startTime, int width, int height, double duration, int horizontal, int vertical, int fadeDuration)
         {
-            this.youtubeVideoID = youtubeVideoID;
-            this.youtubeStartTime = startTime;
+            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
+            action.youtubeVideoID = youtubeVideoID;
+            action.youtubeStartTime = startTime;
+            action.VideoWidth = width;
+            action.VideoHeight = height;
+            return action;
         }
 
-        public OverlayAction(string htmlText, double duration, int horizontal, int vertical, int fadeDuration)
-            : this(duration, horizontal, vertical, fadeDuration)
+        public static OverlayAction CreateForVideo(string localVideoFilePath, int width, int height, double duration, int horizontal, int vertical, int fadeDuration)
         {
-            this.HTMLText = htmlText;
+            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
+            action.localVideoFilePath = localVideoFilePath;
+            action.VideoWidth = width;
+            action.VideoHeight = height;
+            return action;
         }
 
-        public OverlayAction(double duration, int horizontal, int vertical, int fadeDuration)
+        public static OverlayAction CreateForHTML(string htmlText, double duration, int horizontal, int vertical, int fadeDuration)
+        {
+            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
+            action.HTMLText = htmlText;
+            return action;
+        }
+
+        public OverlayAction()
+            : base(ActionTypeEnum.Overlay)
+        {
+            this.VideoHeight = 315;
+            this.VideoWidth = 560;
+        }
+
+        private OverlayAction(double duration, int horizontal, int vertical, int fadeDuration)
             : this()
         {
             this.Duration = duration;
@@ -140,7 +168,16 @@ namespace MixItUp.Base.Actions
                 {
                     await ChannelSession.Services.OverlayServer.SetYoutubeVideo(new OverlayYoutubeVideo()
                     {
-                        videoID = this.youtubeVideoID, startTime = this.youtubeStartTime, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
+                        videoID = this.youtubeVideoID, startTime = this.youtubeStartTime, height = this.VideoHeight, width = this.VideoWidth,
+                        duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
+                    });
+                }
+                else if (!string.IsNullOrEmpty(this.localVideoFilePath))
+                {
+                    await ChannelSession.Services.OverlayServer.SetLocalVideo(new OverlayLocalVideo()
+                    {
+                        filepath = this.localVideoFilePath, height = this.VideoHeight, width = this.VideoWidth,
+                        duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration
                     });
                 }
                 else if (!string.IsNullOrEmpty(this.HTMLText))

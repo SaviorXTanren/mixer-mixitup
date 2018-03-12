@@ -104,6 +104,22 @@ namespace MixItUp.Overlay
 
         public async Task SetYoutubeVideo(OverlayYoutubeVideo youtubeVideo) { await this.SendPacket(new OverlayPacket("youtube", JObject.FromObject(youtubeVideo))); }
 
+        public async Task SetLocalVideo(OverlayLocalVideo localVideo)
+        {
+            localVideo.videoID = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            if (localVideo.filepath.EndsWith(".mp4"))
+            {
+                localVideo.videoType = "video/mp4";
+            }
+            else if (localVideo.filepath.EndsWith(".webm"))
+            {
+                localVideo.videoType = "video/webm";
+            }
+            this.httpListenerServer.SetLocalVideo(localVideo);
+
+            await this.SendPacket(new OverlayPacket("video", JObject.FromObject(localVideo)));
+        }
+
         public async Task SetHTMLText(OverlayHTML htmlText) { await this.SendPacket(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
 
         private async Task SendPacket(OverlayPacket packet)
@@ -126,7 +142,11 @@ namespace MixItUp.Overlay
 
         private const string WebSocketWrapperScriptReplacementString = "<script src=\"webSocketWrapper.js\"></script>";
 
+        private const string OverlayVideoWebPath = "overlay/video/";
+
         private string webPageInstance;
+
+        private Dictionary<string, OverlayLocalVideo> videoFiles = new Dictionary<string, OverlayLocalVideo>();
 
         public OverlayHttpListenerServer(string address)
             : base(address)
@@ -137,9 +157,47 @@ namespace MixItUp.Overlay
             this.webPageInstance = this.webPageInstance.Replace(WebSocketWrapperScriptReplacementString, string.Format("<script>{0}</script>", webSocketWrapperText));
         }
 
+        public void SetLocalVideo(OverlayLocalVideo video)
+        {
+            this.videoFiles[video.videoID] = video;
+        }
+
+        protected override void RequestReceived(HttpListenerContext context, string data)
+        {
+            string url = context.Request.RawUrl;
+            url = url.Trim(new char[] { '/' });
+
+            if (url.StartsWith(OverlayVideoWebPath))
+            {
+                string videoID = url.Replace(OverlayVideoWebPath, "");
+                if (this.videoFiles.ContainsKey(videoID) && File.Exists(this.videoFiles[videoID].filepath))
+                {
+                    context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.StatusDescription = HttpStatusCode.OK.ToString();
+                    context.Response.ContentType = this.videoFiles[videoID].videoType;
+
+                    byte[] videoData = File.ReadAllBytes(this.videoFiles[videoID].filepath);
+                    context.Response.OutputStream.Write(videoData, 0, videoData.Length);
+
+                    context.Response.Close();
+
+                    return;
+                }
+            }
+            base.RequestReceived(context, data);
+        }
+
         protected override HttpStatusCode RequestReceived(HttpListenerRequest request, string data, out string result)
         {
-            result = this.webPageInstance;
+            string url = request.RawUrl;
+            url = url.Trim(new char[] { '/' });
+
+            result = "";
+            if (url.Equals("overlay"))
+            {
+                result = this.webPageInstance;
+            }
             return HttpStatusCode.OK;
         }
     }

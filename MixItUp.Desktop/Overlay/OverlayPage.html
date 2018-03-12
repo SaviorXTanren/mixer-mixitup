@@ -39,6 +39,10 @@
                         {
                             youtubePacket(packet.data);
                         }
+                        else if (packet.type === "video")
+                        {
+                            videoPacket(packet.data);
+                        }
                         else if (packet.type === "htmlText")
                         {
                             htmlTextPacket(packet.data);
@@ -114,13 +118,30 @@
             function youtubePacket(data)
             {
                 addedElement = document.createElement('iframe');
-                addedElement.width = 560;
-                addedElement.height = 315;
+                addedElement.width = data.width;
+                addedElement.height = data.height;
                 addedElement.frameborder = 0;
                 addedElement.allow = "autoplay; encrypted-media";
                 addedElement.setAttribute('allowFullScreen', '');
                 addedElement.setAttribute('autoplay', '');
                 addedElement.src = "https://www.youtube.com/embed/" + data.videoID + "?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0&amp;start=" + data.startTime;
+
+                addWaitRemoveElement(data, addedElement);
+            }
+
+            function videoPacket(data)
+            {
+                addedElement = document.createElement('video');
+                addedElement.width = data.width;
+                addedElement.height = data.height;
+                addedElement.frameborder = 0;
+                addedElement.allow = "autoplay; encrypted-media";
+                addedElement.setAttribute('autoplay', '');
+
+                sourceElement = document.createElement('source');
+                sourceElement.src = "http://localhost:8111/overlay/video/" + data.videoID;
+                sourceElement.type = data.videoType;
+                addedElement.appendChild(sourceElement);
 
                 addWaitRemoveElement(data, addedElement);
             }

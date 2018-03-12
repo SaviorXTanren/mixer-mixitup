@@ -18,6 +18,7 @@ namespace MixItUp.WPF.Controls.Actions
             Text,
             Youtube,
             HTML,
+            Video,
         }
 
         private enum OverlayFadeEffectEnum
@@ -39,6 +40,9 @@ namespace MixItUp.WPF.Controls.Actions
             this.OverlayTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayTypeEnum>();
             this.OverlayFadeEffectComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayFadeEffectEnum>();
             this.OverlayYoutubeStartTimeTextBox.Text = "0";
+            this.OverlayYoutubeWidthTextBox.Text = this.OverlayVideoWidthTextBox.Text = "560";
+            this.OverlayYoutubeHeightTextBox.Text = this.OverlayVideoHeightTextBox.Text = "316";
+
             if (this.action != null)
             {
                 if (!string.IsNullOrEmpty(this.action.ImagePath))
@@ -60,6 +64,15 @@ namespace MixItUp.WPF.Controls.Actions
                     this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Youtube);
                     this.OverlayYoutubeVideoIDTextBox.Text = this.action.youtubeVideoID;
                     this.OverlayYoutubeStartTimeTextBox.Text = this.action.youtubeStartTime.ToString();
+                    this.OverlayYoutubeWidthTextBox.Text = this.action.VideoWidth.ToString();
+                    this.OverlayYoutubeHeightTextBox.Text = this.action.VideoHeight.ToString();
+                }
+                else if (!string.IsNullOrEmpty(this.action.localVideoFilePath))
+                {
+                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Video);
+                    this.OverlayVideoFilePathTextBox.Text = this.action.localVideoFilePath;
+                    this.OverlayVideoWidthTextBox.Text = this.action.VideoWidth.ToString();
+                    this.OverlayVideoHeightTextBox.Text = this.action.VideoHeight.ToString();
                 }
                 else if (!string.IsNullOrEmpty(this.action.HTMLText))
                 {
@@ -93,7 +106,7 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.OverlayImageWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.OverlayImageHeightTextBox.Text, out height) && height > 0)
                         {
-                            return new OverlayAction(this.OverlayImageFilePathTextBox.Text, width, height, duration, horizontal, vertical, fadeDuration);
+                            return OverlayAction.CreateForImage(this.OverlayImageFilePathTextBox.Text, width, height, duration, horizontal, vertical, fadeDuration);
                         }
                     }
                 }
@@ -104,7 +117,7 @@ namespace MixItUp.WPF.Controls.Actions
                         int fontSize;
                         if (int.TryParse(this.OverlayFontSizeTextBox.Text, out fontSize) && fontSize > 0)
                         {
-                            return new OverlayAction(this.OverlayTextTextBox.Text, this.OverlayFontColorTextBox.Text, fontSize, duration, horizontal, vertical, fadeDuration);
+                            return OverlayAction.CreateForText(this.OverlayTextTextBox.Text, this.OverlayFontColorTextBox.Text, fontSize, duration, horizontal, vertical, fadeDuration);
                         }
                     }
                 }
@@ -122,7 +135,26 @@ namespace MixItUp.WPF.Controls.Actions
 
                         if (int.TryParse(this.OverlayYoutubeStartTimeTextBox.Text, out int startTime))
                         {
-                            return new OverlayAction(videoID, startTime, duration, horizontal, vertical, fadeDuration);
+                            int width;
+                            int height;
+                            if (int.TryParse(this.OverlayYoutubeWidthTextBox.Text, out width) && width > 0 &&
+                                int.TryParse(this.OverlayYoutubeHeightTextBox.Text, out height) && height > 0)
+                            {
+                                return OverlayAction.CreateForYoutube(videoID, startTime, width, height, duration, horizontal, vertical, fadeDuration);
+                            }
+                        }
+                    }
+                }
+                else if (type == OverlayTypeEnum.Video)
+                {
+                    if (!string.IsNullOrEmpty(this.OverlayVideoFilePathTextBox.Text))
+                    {
+                        int width;
+                        int height;
+                        if (int.TryParse(this.OverlayVideoWidthTextBox.Text, out width) && width > 0 &&
+                            int.TryParse(this.OverlayVideoHeightTextBox.Text, out height) && height > 0)
+                        {
+                            return OverlayAction.CreateForVideo(this.OverlayVideoFilePathTextBox.Text, width, height, duration, horizontal, vertical, fadeDuration);
                         }
                     }
                 }
@@ -130,7 +162,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (!string.IsNullOrEmpty(this.OverlayHTMLTextBox.Text))
                     {
-                        return new OverlayAction(this.OverlayHTMLTextBox.Text, duration, horizontal, vertical, fadeDuration);
+                        return OverlayAction.CreateForHTML(this.OverlayHTMLTextBox.Text, duration, horizontal, vertical, fadeDuration); ;
                     }
                 }
             }
@@ -143,6 +175,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.OverlayImageGrid.Visibility = Visibility.Collapsed;
             this.OverlayTextGrid.Visibility = Visibility.Collapsed;
             this.OverlayYoutubeVideoGrid.Visibility = Visibility.Collapsed;
+            this.OverlayVideoGrid.Visibility = Visibility.Collapsed;
             this.OverlayHTMLGrid.Visibility = Visibility.Collapsed;
             if (this.OverlayTypeComboBox.SelectedIndex >= 0)
             {
@@ -159,6 +192,10 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.OverlayYoutubeVideoGrid.Visibility = Visibility.Visible;
                 }
+                else if (overlayType == OverlayTypeEnum.Video)
+                {
+                    this.OverlayVideoGrid.Visibility = Visibility.Visible;
+                }
                 else if (overlayType == OverlayTypeEnum.HTML)
                 {
                     this.OverlayHTMLGrid.Visibility = Visibility.Visible;
@@ -173,6 +210,15 @@ namespace MixItUp.WPF.Controls.Actions
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.OverlayImageFilePathTextBox.Text = filePath;
+            }
+        }
+
+        private void OverlayVideoFileBrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("MP4 Files (*.mp4)|*.mp4|WEBM Files (*.webm)|*.webm|All files (*.*)|*.*");
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                this.OverlayVideoFilePathTextBox.Text = filePath;
             }
         }
     }

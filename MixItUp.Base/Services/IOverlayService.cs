@@ -29,12 +29,32 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
+    public class OverlayLocalVideo : OverlayBase
+    {
+        [DataMember]
+        public string filepath;
+        [DataMember]
+        public int width;
+        [DataMember]
+        public int height;
+
+        [DataMember]
+        public string videoID;
+        [DataMember]
+        public string videoType;
+    }
+
+    [DataContract]
     public class OverlayYoutubeVideo : OverlayBase
     {
         [DataMember]
         public string videoID;
         [DataMember]
         public int startTime;
+        [DataMember]
+        public int width;
+        [DataMember]
+        public int height;
     }
 
     [DataContract]
@@ -83,6 +103,8 @@ namespace MixItUp.Base.Services
         Task SetText(OverlayText text);
 
         Task SetYoutubeVideo(OverlayYoutubeVideo youtubeVideo);
+
+        Task SetLocalVideo(OverlayLocalVideo localVideo);
 
         Task SetHTMLText(OverlayHTML htmlText);
 
