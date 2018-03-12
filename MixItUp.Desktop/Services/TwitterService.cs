@@ -40,8 +40,12 @@ namespace MixItUp.Base.Services
                         {
                             ConsumerKey = TwitterService.ClientID,
                             ConsumerSecret = TwitterService.ClientSecret,
-                            AccessToken = this.token.clientID,
-                            AccessTokenSecret = this.token.accessToken,
+
+                            AccessToken = this.token.accessToken,
+                            AccessTokenSecret = this.token.refreshToken,
+
+                            UserID = ulong.Parse(this.token.clientID),
+                            ScreenName = this.token.authorizationCode,
                         }
                     };
                     await singleUserAuth.AuthorizeAsync();
@@ -95,23 +99,34 @@ namespace MixItUp.Base.Services
         public async Task<IEnumerable<Tweet>> GetLatestTweets()
         {
             List<Tweet> results = new List<Tweet>();
-            using (var twitterCtx = new TwitterContext(this.auth))
+            try
             {
-                List<Status> tweets = await (from tweet in twitterCtx.Status
-                                             where tweet.Type == StatusType.User && tweet.ScreenName == this.auth.CredentialStore.ScreenName
-                                             select tweet).ToListAsync();
-
-                foreach (Status tweet in tweets)
+                using (var twitterCtx = new TwitterContext(this.auth))
                 {
-                    results.Add(new Tweet()
+                    List<Status> tweets = await (from tweet in twitterCtx.Status
+                                                 where tweet.Type == StatusType.User && tweet.ScreenName == this.auth.CredentialStore.ScreenName && tweet.TweetMode == TweetMode.Extended
+                                                 select tweet).ToListAsync();
+
+                    foreach (Status tweet in tweets)
                     {
-                        ID = tweet.StatusID,
-                        UserName = tweet.ScreenName,
-                        Text = tweet.Text,
-                        DateTime = new DateTimeOffset(tweet.CreatedAt, DateTimeOffset.UtcNow.Offset),
-                    });
+                        Tweet t = new Tweet()
+                        {
+                            ID = tweet.StatusID,
+                            UserName = tweet.ScreenName,
+                            Text = tweet.FullText,
+                            DateTime = new DateTimeOffset(tweet.CreatedAt, DateTimeOffset.UtcNow.Offset),
+                        };
+
+                        foreach (var urlEntry in tweet.Entities.UrlEntities)
+                        {
+                            t.Links.Add((!string.IsNullOrEmpty(urlEntry.ExpandedUrl) ? urlEntry.ExpandedUrl : urlEntry.DisplayUrl));
+                        }
+
+                        results.Add(t);
+                    }
                 }
             }
+            catch (Exception ex) { Logger.Log(ex); }
             return results;
         }
 
@@ -136,8 +151,12 @@ namespace MixItUp.Base.Services
             this.auth = auth;
 
             this.token = new OAuthTokenModel();
-            this.token.clientID = this.auth.CredentialStore.OAuthToken;
-            this.token.accessToken = this.auth.CredentialStore.OAuthTokenSecret;
+
+            this.token.accessToken = this.auth.CredentialStore.OAuthToken;
+            this.token.refreshToken = this.auth.CredentialStore.OAuthTokenSecret;
+
+            this.token.clientID = this.auth.CredentialStore.UserID.ToString();
+            this.token.authorizationCode = this.auth.CredentialStore.ScreenName;
 
             return Task.FromResult(0);
         }

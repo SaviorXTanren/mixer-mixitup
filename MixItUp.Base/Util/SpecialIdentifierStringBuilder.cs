@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,21 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
+
+            if (ChannelSession.Services.Twitter != null)
+            {
+                IEnumerable<Tweet> tweets = await ChannelSession.Services.Twitter.GetLatestTweets();
+                if (tweets.Count() > 0)
+                {
+                    this.ReplaceSpecialIdentifier("latesttweet", tweets.FirstOrDefault().TweetLink);
+
+                    Tweet streamTweet = tweets.FirstOrDefault(t => t.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.User.username.ToLower()))));
+                    if (streamTweet != null)
+                    {
+                        this.ReplaceSpecialIdentifier("streamtweet", streamTweet.TweetLink);
+                    }
+                }
+            }
 
             if (user != null)
             {

@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.OAuth;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -20,6 +21,17 @@ namespace MixItUp.Base.Services
 
         [DataMember]
         public DateTimeOffset DateTime { get; set; }
+
+        [DataMember]
+        public List<string> Links { get; set; }
+
+        [JsonIgnore]
+        public string TweetLink { get { return string.Format("https://twitter.com/{0}/status/{1}", this.UserName, this.ID); } }
+
+        public Tweet()
+        {
+            this.Links = new List<string>();
+        }
     }
 
     public interface ITwitterService
