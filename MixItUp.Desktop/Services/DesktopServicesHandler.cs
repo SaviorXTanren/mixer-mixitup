@@ -198,6 +198,30 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeTwitter()
+        {
+            this.Twitter = (ChannelSession.Settings.TwitterOAuthToken != null) ? new TwitterService(ChannelSession.Settings.TwitterOAuthToken) : new TwitterService();
+            if (await this.Twitter.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectTwitter();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectTwitter()
+        {
+            if (this.Twitter != null)
+            {
+                await this.Twitter.Disconnect();
+                this.Twitter = null;
+                ChannelSession.Settings.TwitterOAuthToken = null;
+            }
+        }
+
         private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)
         {
             await this.DisconnectOBSStudio();

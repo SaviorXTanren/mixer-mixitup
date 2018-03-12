@@ -44,6 +44,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel TwitterOAuthToken { get; set; }
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
@@ -343,6 +345,10 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.Streamlabs != null)
             {
                 this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Twitter != null)
+            {
+                this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();

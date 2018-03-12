@@ -367,6 +367,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeStreamlabs();
                     }
+                    if (ChannelSession.Settings.TwitterOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeTwitter();
+                    }
 
                     await ChannelSession.Services.Settings.CleanUpData(ChannelSession.Settings);
 
