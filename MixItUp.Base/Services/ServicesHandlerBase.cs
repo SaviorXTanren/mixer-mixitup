@@ -15,6 +15,7 @@ namespace MixItUp.Base.Services
         public IDeveloperAPIService DeveloperAPI { get; protected set; }
         public IStreamlabsService Streamlabs { get; protected set; }
         public ITwitterService Twitter { get; protected set; }
+        public IRemoteService Remote { get; protected set; }
 
         public abstract Task Close();
 
@@ -45,5 +46,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeTwitter();
         public abstract Task DisconnectTwitter();
+
+        public abstract Task<bool> InitializeRemote(string address);
+        public abstract Task DisconnectRemote();
     }
 }
