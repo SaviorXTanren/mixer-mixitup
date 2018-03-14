@@ -171,7 +171,7 @@ namespace MixItUp.Base.Model.Remote
 
     public class ActionRequestRemoteMessage : RemoteMessageBase
     {
-        public Guid ComponentID { get; set; }
+        public Guid ItemID { get; set; }
 
         public ActionRequestRemoteMessage()
         {
@@ -181,7 +181,7 @@ namespace MixItUp.Base.Model.Remote
 
     public class ActionAckRemoteMessage : RemoteMessageBase
     {
-        public Guid ComponentID { get; set; }
+        public Guid ItemID { get; set; }
 
         public ActionAckRemoteMessage()
         {
