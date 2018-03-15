@@ -43,6 +43,11 @@ namespace MixItUp.Base.Model.Remote
 
             this.Groups.Add(new RemoteBoardGroupModel("Default"));
         }
+
+        public RemoteBoardModel ToSimpleModel()
+        {
+            return new RemoteBoardModel() { ID = this.ID, Name = this.Name };
+        }
     }
 
     [DataContract]

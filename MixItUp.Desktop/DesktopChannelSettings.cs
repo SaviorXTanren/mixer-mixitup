@@ -143,7 +143,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public List<RemoteBoardModel> RemoteBoards { get; set; }
         [JsonProperty]
-        public List<RemoteDeviceModel> RemoteDevices { get; set; }
+        public List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
 
         [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
@@ -181,7 +181,7 @@ namespace MixItUp.Desktop
         public DesktopSavableChannelSettings()
         {
             this.RemoteBoards = new List<RemoteBoardModel>();
-            this.RemoteDevices = new List<RemoteDeviceModel>();
+            this.RemoteSavedDevices = new List<RemoteDeviceModel>();
 
             this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();

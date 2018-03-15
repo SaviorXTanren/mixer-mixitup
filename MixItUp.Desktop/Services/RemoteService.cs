@@ -5,7 +5,7 @@ using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,20 +16,22 @@ namespace MixItUp.Desktop.Services
         private const string BaseAddress = "ws://sockets.mixitupapp.com/Remote?SessionMode={0}&DeviceRole={1}&DeviceID={2}&SessionID={3}&AutoAccept={4}&AccessCode={5}&AuthToken={6}&DeviceInfo={7}";
 
         public Guid SessionID { get; private set; }
-        public Guid ClientID { get; private set; }
 
         public DateTimeOffset ServerLastSeen { get; private set; }
 
         public string AccessCode { get; private set; }
         public DateTimeOffset AccessCodeExpiration { get; private set; }
 
-        public bool AutoAcceptClients { get; protected set; }
-
-        public string RequestedClientName { get; private set; }
-        public Guid RequestedClientID { get; private set; }
-        public DateTimeOffset RequestedClientAuthExpiration { get; private set; }
+        public Guid ClientID { get; private set; }
+        public string ClientName { get; private set; }
+        public DateTimeOffset ClientAuthExpiration { get; private set; }
 
         public event EventHandler<HeartbeatRemoteMessage> OnHeartbeat;
+        public event EventHandler<AuthRequestRemoteMessage> OnAuthRequest;
+        public event EventHandler<AccessCodeNewRemoteMessage> OnNewAccessCode;
+
+        public event EventHandler<RemoteBoardModel> OnBoardRequest;
+        public event EventHandler<RemoteCommand> OnActionRequest;
 
         public static string GetConnectConnectionURL(Guid id, bool autoAccept = false, string authToken = null)
         {
@@ -72,7 +74,14 @@ namespace MixItUp.Desktop.Services
             this.Connected = this.Authenticated = true;
         }
 
-        public async Task SendAuthClientGrant(ObservableCollection<RemoteBoardModel> boards) { await Send(new AuthClientGrantRemoteMessage() { Boards = boards }); }
+        public async Task SendAuthClientGrant(AuthRequestRemoteMessage authRequest)
+        {
+            this.ClientID = authRequest.ClientID;
+            this.ClientName = authRequest.DeviceInfo;
+            this.ClientAuthExpiration = authRequest.Expiration;
+
+            await Send(new AuthClientGrantRemoteMessage() { SessionID = this.SessionID, Boards = ChannelSession.Settings.RemoteBoards.Select(b => b.ToSimpleModel()).ToList() });
+        }
 
         public async Task SendAuthClientDeny() { await Send(new AuthClientDenyRemoteMessage()); }
 
@@ -102,59 +111,76 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                dynamic jsonObject = JsonConvert.DeserializeObject(packet);
-                if (jsonObject["Type"] != null)
+                if (!string.IsNullOrEmpty(packet))
                 {
-                    MessageType type = (MessageType)((int)jsonObject["Type"]);
-                    switch (type)
+                    dynamic jsonObject = JsonConvert.DeserializeObject(packet);
+                    if (jsonObject["Type"] != null)
                     {
-                        case MessageType.HEARTBEAT:
-                            await ReceiveHeartbeat(packet);
-                            break;
+                        MessageType type = (MessageType)((int)jsonObject["Type"]);
+                        switch (type)
+                        {
+                            case MessageType.HEARTBEAT:
+                                await ReceiveHeartbeat(packet);
+                                break;
 
-                        case MessageType.DISCONNECT_REQ:
-                            break;
+                            case MessageType.DISCONNECT_REQ:
+                                break;
 
-                        case MessageType.MESSAGE_FAILED:
-                            break;
+                            case MessageType.MESSAGE_FAILED:
+                                break;
 
-                        case MessageType.SESSION_NEW://Host Receive -> Server Send
-                            NewSessionRemoteMessage newSessionPacket = JsonConvert.DeserializeObject<NewSessionRemoteMessage>(packet);
-                            this.SessionID = newSessionPacket.SessionID;
-                            this.AccessCode = newSessionPacket.AccessCode;
-                            this.AccessCodeExpiration = newSessionPacket.Expiration;
-                            break;
+                            case MessageType.SESSION_NEW:   //Host Receive -> Server Send
+                                NewSessionRemoteMessage newSessionPacket = JsonConvert.DeserializeObject<NewSessionRemoteMessage>(packet);
+                                this.SessionID = newSessionPacket.SessionID;
+                                this.AccessCode = newSessionPacket.AccessCode;
+                                this.AccessCodeExpiration = newSessionPacket.Expiration;
+                                break;
 
-                        case MessageType.ACCESS_CODE_NEW://Host Receive -> Server Send
-                            AccessCodeNewRemoteMessage newRemotePacket = JsonConvert.DeserializeObject<AccessCodeNewRemoteMessage>(packet);
-                            this.AccessCode = newRemotePacket.AccessCode;
-                            this.AccessCodeExpiration = newRemotePacket.Expiration;
-                            break;
+                            case MessageType.ACCESS_CODE_NEW:   //Host Receive -> Server Send
+                                AccessCodeNewRemoteMessage newRemotePacket = JsonConvert.DeserializeObject<AccessCodeNewRemoteMessage>(packet);
+                                this.AccessCode = newRemotePacket.AccessCode;
+                                this.AccessCodeExpiration = newRemotePacket.Expiration;
+                                this.SendEvent(packet, this.OnNewAccessCode);
+                                break;
 
-                        case MessageType.AUTH_REQ:
-                            AuthRequestRemoteMessage authRequestPacket = JsonConvert.DeserializeObject<AuthRequestRemoteMessage>(packet);
-                            this.RequestedClientName = authRequestPacket.DeviceInfo;
-                            this.RequestedClientID = authRequestPacket.ClientID;
-                            this.RequestedClientAuthExpiration = authRequestPacket.Expiration;
-                            break;
+                            case MessageType.AUTH_REQ:
+                                AuthRequestRemoteMessage authRequestPacket = JsonConvert.DeserializeObject<AuthRequestRemoteMessage>(packet);
+                                if (ChannelSession.Settings.RemoteSavedDevices.Any(d => d.ID.Equals(authRequestPacket.ClientID)))
+                                {
+                                    await this.SendAuthClientGrant(authRequestPacket);
+                                }
+                                else
+                                {
+                                    this.SendEvent(packet, this.OnAuthRequest);
+                                }
+                                break;
 
-                        case MessageType.BOARD_REQ:
-                            BoardRequestRemoteMessage boardRequestPacket = JsonConvert.DeserializeObject<BoardRequestRemoteMessage>(packet);
-                            RemoteBoardModel board = ChannelSession.Settings.RemoteBoards.FirstOrDefault(b => b.ID.Equals(boardRequestPacket.BoardID));
-                            if (board != null)
-                            {
-                                await this.SendBoardDetail(board);
-                            }
-                            break;
+                            case MessageType.BOARD_REQ:
+                                BoardRequestRemoteMessage boardRequestPacket = JsonConvert.DeserializeObject<BoardRequestRemoteMessage>(packet);
+                                RemoteBoardModel board = ChannelSession.Settings.RemoteBoards.FirstOrDefault(b => b.ID.Equals(boardRequestPacket.BoardID));
+                                if (board != null)
+                                {
+                                    await this.SendBoardDetail(board);
+                                    if (this.OnBoardRequest != null)
+                                    {
+                                        this.OnBoardRequest(this, board);
+                                    }
+                                }
+                                break;
 
-                        case MessageType.ACTION_REQ:
-                            ActionRequestRemoteMessage actionRequestPacket = JsonConvert.DeserializeObject<ActionRequestRemoteMessage>(packet);
-                            RemoteCommand command = ChannelSession.Settings.RemoteCommands.FirstOrDefault(c => c.ID.Equals(actionRequestPacket.ItemID));
-                            if (command != null)
-                            {
-                                await command.Perform();
-                            }
-                            break;
+                            case MessageType.ACTION_REQ:
+                                ActionRequestRemoteMessage actionRequestPacket = JsonConvert.DeserializeObject<ActionRequestRemoteMessage>(packet);
+                                RemoteCommand command = ChannelSession.Settings.RemoteCommands.FirstOrDefault(c => c.ID.Equals(actionRequestPacket.ItemID));
+                                if (command != null)
+                                {
+                                    await command.Perform();
+                                    if (this.OnActionRequest != null)
+                                    {
+                                        this.OnActionRequest(this, command);
+                                    }
+                                }
+                                break;
+                        }
                     }
                 }
             }

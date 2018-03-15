@@ -76,7 +76,7 @@ namespace MixItUp.Base
         bool AutoExportStatistics { get; set; }
 
         List<RemoteBoardModel> RemoteBoards { get; set; }
-        List<RemoteDeviceModel> RemoteDevices { get; set; }
+        List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings

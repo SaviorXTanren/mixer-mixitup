@@ -184,27 +184,36 @@
             <Button x:Name="ConnectRemoteButton" Grid.Row="8" Click="ConnectRemoteButton_Click" Width="160">Connect To Device</Button>
         </Grid>
 
-        <Grid x:Name="ConnectToDeviceGrid" Grid.Column="2" VerticalAlignment="Center" Visibility="Collapsed">
+        <Grid x:Name="ConnectToDeviceGrid" Grid.Column="2" Visibility="Collapsed" Margin="10,20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Connect Your Mix It Up Remote Device:</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Launch Mix It Up on your mobile device and enter the access code below to connect. You will then receive a notification here asking you to approve or deny the device.</TextBlock>
 
-            <TextBlock Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">To connect your Mix It Up Remote device, ensure you have the app loaded up on your cellphone or tablet. Click the "Get Code" button below to get a 4-digit code to enter on your device to connect it up. The code will expire after 30 seconds and you will need to request a new code if you did not use it afterwards.</TextBlock>
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <Button x:Name="GetCodeButton" Grid.Row="4" Click="GetCodeButton_Click" Width="100">Get Code</Button>
-            <TextBlock x:Name="RemoteCodeTextBlock" Grid.Row="4" Visibility="Collapsed" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}">Access Code:</TextBlock>
 
-            <TextBlock x:Name="RemoteCodeTimeLeftTextBlock" Grid.Row="6" Visibility="Collapsed" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="2" x:Name="AccessCodeTextBlock" />
+            </Grid>
 
-            <Button x:Name="DisconnectRemoteButton" Grid.Row="8" Click="DisconnectRemoteButton_Click" Width="120">Disconnect</Button>
+            <ScrollViewer Grid.Row="4" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+                <TextBlock x:Name="RemoteEventsTextBlock" TextWrapping="Wrap" />
+            </ScrollViewer>
+
+            <Button x:Name="DisconnectRemoteButton" Grid.Row="6" Click="DisconnectRemoteButton_Click" Width="120">Disconnect</Button>
         </Grid>
     </Grid>
 </local:MainControlBase>

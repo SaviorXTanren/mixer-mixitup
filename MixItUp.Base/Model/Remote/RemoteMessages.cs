@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Client;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.Model.Remote
@@ -140,12 +141,12 @@ namespace MixItUp.Base.Model.Remote
     public class AuthClientGrantRemoteMessage : RemoteMessageBase
     {
         public Guid SessionID { get; set; }
-        public ObservableCollection<RemoteBoardModel> Boards { get; set; }
+        public List<RemoteBoardModel> Boards { get; set; }
 
         public AuthClientGrantRemoteMessage()
         {
             this.Type = MessageType.AUTH_CLIENT_GRANT;
-            this.Boards = new ObservableCollection<RemoteBoardModel>();
+            this.Boards = new List<RemoteBoardModel>();
         }
     }
 

@@ -38,6 +38,10 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.remoteService.OnDisconnectOccurred += RemoteService_OnDisconnectOccurred;
+            this.remoteService.OnAuthRequest += RemoteService_OnAuthRequest;
+            this.remoteService.OnNewAccessCode += RemoteService_OnNewAccessCode;
+            this.remoteService.OnBoardRequest += RemoteService_OnBoardRequest;
+            this.remoteService.OnActionRequest += RemoteService_OnActionRequest;
 
             this.RemoteCommandsListView.ItemsSource = this.remoteCommands;
             this.BoardNameComboBox.ItemsSource = this.boards;
@@ -415,62 +419,79 @@ namespace MixItUp.WPF.Controls.MainControls
                 await ChannelSession.SaveSettings();
 
                 await this.remoteService.Connect();
+
+                this.BoardSetupGrid.Visibility = Visibility.Collapsed;
+                this.ConnectToDeviceGrid.Visibility = Visibility.Visible;
+
+                this.AccessCodeTextBlock.Text = this.remoteService.AccessCode;
+                this.RemoteEventsTextBlock.Text = string.Empty;
             });
+        }
+
+        private async void DisconnectRemoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.DisconnectRemote();
         }
 
         private async void RemoteService_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
-            await this.remoteService.Disconnect();
+            this.RemoteEventsTextBlock.Text += "Disconnection occurred, attempting reconnection..." + Environment.NewLine;
+
+            await this.DisconnectRemote();
         }
 
-
-
-
-        private void GetCodeButton_Click(object sender, RoutedEventArgs e)
+        private async void RemoteService_OnAuthRequest(object sender, AuthRequestRemoteMessage authRequest)
         {
-            //string code = "1234";   // Add code to query web service for connection code
+            this.RemoteEventsTextBlock.Text += "Device Authorization Requested: " + authRequest.DeviceInfo + Environment.NewLine;
 
-            // Normal Connection logic
-
-            //this.RemoteCodeTextBlock.Text = "Code: " + code;
-            //this.RemoteCodeTextBlock.Visibility = Visibility.Visible;
-            //this.RemoteCodeTimeLeftTextBlock.Visibility = Visibility.Visible;
-            //this.GetCodeButton.Visibility = Visibility.Collapsed;
-
-            //for (int i = 30; i > 0; i--)
-            //{
-            //    this.RemoteCodeTimeLeftTextBlock.Text = i + " Seconds Left...";
-            //    await Task.Delay(1000);
-            //}
-
-            //this.RemoteCodeTextBlock.Visibility = Visibility.Collapsed;
-            //this.RemoteCodeTimeLeftTextBlock.Visibility = Visibility.Collapsed;
-            //this.GetCodeButton.Visibility = Visibility.Visible;
-
-            //this.LogInGrid.Visibility = Visibility.Collapsed;
-            //this.RemoteSetupGrid.Visibility = Visibility.Visible;
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (await MessageBoxHelper.ShowConfirmationDialog("The following device would like to connect:" + Environment.NewLine + Environment.NewLine +
+                    "\t" + authRequest.DeviceInfo + Environment.NewLine + Environment.NewLine +
+                    "Would you like to approve this device?"))
+                {
+                    await this.remoteService.SendAuthClientGrant(authRequest);
+                    this.RemoteEventsTextBlock.Text += "Device Authorization Approved: " + authRequest.DeviceInfo + Environment.NewLine;
+                }
+                else
+                {
+                    await this.remoteService.SendAuthClientDeny();
+                    this.RemoteEventsTextBlock.Text += "Device Authorization Denied: " + authRequest.DeviceInfo + Environment.NewLine;
+                }
+            });
         }
 
-        private void DisconnectRemoteButton_Click(object sender, RoutedEventArgs e)
+        private void RemoteService_OnNewAccessCode(object sender, AccessCodeNewRemoteMessage e)
         {
-            //this.RemoteCodeTextBlock.Visibility = Visibility.Collapsed;
-            //this.RemoteCodeTimeLeftTextBlock.Visibility = Visibility.Collapsed;
-            //this.GetCodeButton.Visibility = Visibility.Visible;
-
-            //this.LogInGrid.Visibility = Visibility.Visible;
-            //this.RemoteSetupGrid.Visibility = Visibility.Collapsed;
+            this.AccessCodeTextBlock.Text = this.remoteService.AccessCode;
         }
 
+        private void RemoteService_OnBoardRequest(object sender, RemoteBoardModel board)
+        {
+            this.RemoteEventsTextBlock.Text += "Board Requested: " + board.Name + Environment.NewLine;
+        }
 
+        private void RemoteService_OnActionRequest(object sender, RemoteCommand command)
+        {
+            this.RemoteEventsTextBlock.Text += "Command Run: " + command.Name + Environment.NewLine;
+        }
+
+        private async Task DisconnectRemote()
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await this.remoteService.Disconnect();
+
+                this.ConnectToDeviceGrid.Visibility = Visibility.Collapsed;
+                this.BoardSetupGrid.Visibility = Visibility.Visible;
+            });
+        }
 
         private void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshCommandsList();
             this.UpdateRemoteItemsAndBoard();
         }
-
-
-
 
         private void SecretBetaAccess_Click(object sender, RoutedEventArgs e)
         {
