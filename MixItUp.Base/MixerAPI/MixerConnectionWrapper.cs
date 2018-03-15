@@ -2,6 +2,7 @@
 using Mixer.Base.Interactive;
 using Mixer.Base.Model.Broadcast;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.Teams;
@@ -97,6 +98,8 @@ namespace MixItUp.Base.MixerAPI
         public async Task<DateTimeOffset?> CheckIfFollows(ChannelModel channel, UserModel user) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(ChannelSession.Channel, user)); }
 
         public async Task<Dictionary<UserModel, DateTimeOffset?>> CheckIfFollows(ChannelModel channel, IEnumerable<UserModel> users) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(ChannelSession.Channel, users)); }
+
+        public async Task<CostreamModel> GetCurrentCostream() { return await this.RunAsync(this.Connection.Costream.GetCurrentCostream()); }
 
         public async Task<BroadcastModel> GetCurrentBroadcast(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetCurrentBroadcast(channel)); }
 

@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Broadcast;
+using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
 using Mixer.Base.Web;
@@ -214,6 +215,45 @@ namespace MixItUp.Base.Commands
                     }
 
                     await ChannelSession.Chat.SendMessage("Stream is currently offline");
+                }
+            }));
+        }
+    }
+
+
+    public class CostreamChatCommand : PreMadeChatCommand
+    {
+        public CostreamChatCommand()
+            : base("Costream", "costream", 5, UserRole.User)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    CostreamModel costream = await ChannelSession.Connection.GetCurrentCostream();
+                    if (costream != null && costream.channels != null)
+                    {
+                        List<UserModel> costreamUsers = new List<UserModel>();
+                        foreach (CostreamChannelModel channel in costream.channels)
+                        {
+                            costreamUsers.Add(await ChannelSession.Connection.GetUser(channel.userId));
+                        }
+
+                        if (costreamUsers.Count > 0)
+                        {
+                            StringBuilder message = new StringBuilder();
+
+                            message.Append("Costream Users: ");
+
+                            IEnumerable<string> costreamUserStrings = costreamUsers.Select(u => "@" + u.username);
+                            message.Append(string.Join(",", costreamUserStrings));
+
+                            await ChannelSession.Chat.SendMessage(message.ToString());
+                            return;
+                        }
+                    }
+
+                    await ChannelSession.Chat.SendMessage("A costream is currently not active");
                 }
             }));
         }
