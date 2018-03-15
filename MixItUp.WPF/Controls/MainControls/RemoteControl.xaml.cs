@@ -1,10 +1,12 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Remote;
+using MixItUp.Desktop.Services;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,11 +22,13 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         public RemoteBoardModel CurrentBoard { get; private set; }
         public RemoteBoardGroupModel CurrentGroup { get; private set; }
-        public RemoteCommand CurrentlySelectedCommand { get;set;}
+        public RemoteCommand CurrentlySelectedCommand { get; set; }
 
         private ObservableCollection<RemoteCommand> remoteCommands = new ObservableCollection<RemoteCommand>();
         private ObservableCollection<RemoteBoardModel> boards = new ObservableCollection<RemoteBoardModel>();
         private ObservableCollection<RemoteBoardGroupModel> groups = new ObservableCollection<RemoteBoardGroupModel>();
+
+        private RemoteService remoteService = new RemoteService();
 
         public RemoteControl()
         {
@@ -33,6 +37,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
+            this.remoteService.OnDisconnectOccurred += RemoteService_OnDisconnectOccurred;
+
             this.RemoteCommandsListView.ItemsSource = this.remoteCommands;
             this.BoardNameComboBox.ItemsSource = this.boards;
             this.GroupNameComboBox.ItemsSource = this.groups;
@@ -408,8 +414,13 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await ChannelSession.SaveSettings();
 
-
+                await this.remoteService.Connect();
             });
+        }
+
+        private async void RemoteService_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        {
+            await this.remoteService.Disconnect();
         }
 
 

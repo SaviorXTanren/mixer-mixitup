@@ -222,25 +222,6 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override async Task<bool> InitializeRemote(string address)
-        {
-            if (this.Remote == null)
-            {
-                this.Remote = new RemoteService(address);
-                return await this.Remote.Initialize();
-            }
-            return true;
-        }
-
-        public override async Task DisconnectRemote()
-        {
-            if (this.Remote != null)
-            {
-                await this.Remote.Disconnect();
-                this.Remote = null;
-            }
-        }
-
         private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)
         {
             await this.DisconnectOBSStudio();
