@@ -51,7 +51,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 if (!user.IsFollower)
                 {
-                    await user.SetDetails(checkForFollow: true);
+                    await user.SetDetails();
                 }
                 return user.IsFollower;
             }

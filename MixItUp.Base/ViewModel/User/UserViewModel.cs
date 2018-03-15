@@ -230,10 +230,6 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         this.AvatarLink = userWithChannel.avatarUrl;
                     }
-                    else
-                    {
-                        this.AvatarLink = UserViewModel.DefaultAvatarLink;
-                    }
                     this.MixerAccountDate = userWithChannel.createdAt;
                     this.Sparks = (int)userWithChannel.sparks;
                     this.GameTypeID = userWithChannel.channel.typeId.GetValueOrDefault();

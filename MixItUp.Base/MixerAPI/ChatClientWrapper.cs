@@ -234,24 +234,7 @@ namespace MixItUp.Base.MixerAPI
                     foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
                     {
                         UserViewModel user = new UserViewModel(chatUser);
-                        await user.SetDetails(checkForFollow: false);
                         this.ChatUsers[user.ID] = user;
-                    }
-
-                    if (this.ChatUsers.Count > 0)
-                    {
-                        Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.ChatUsers.Values.Select(u => u.GetModel()));
-                        foreach (var kvp in chatFollowers)
-                        {
-                            try
-                            {
-                                if (this.ChatUsers.ContainsKey(kvp.Key.id) && kvp.Value != null)
-                                {
-                                    await this.ChatUsers[kvp.Key.id].SetFollowDate();
-                                }
-                            }
-                            catch (Exception ex) { Logger.Log(ex); }
-                        }
                     }
 
                     if (ChannelSession.IsStreamer)
@@ -475,13 +458,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (UserViewModel user in users.Values)
                 {
-                    await user.SetDetails(checkForFollow: false);
-                }
-
-                Dictionary<UserModel, DateTimeOffset?> chatFollowers = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, users.Values.Select(u => u.GetModel()));
-                foreach (var kvp in chatFollowers)
-                {
-                    users[kvp.Key.id].SetFollowDate(kvp.Value);
+                    await user.SetDetails();
                 }
             }
         }
