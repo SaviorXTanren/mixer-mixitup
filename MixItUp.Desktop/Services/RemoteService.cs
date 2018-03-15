@@ -1,9 +1,12 @@
-﻿using MixItUp.Base.Model.Remote;
+﻿using MixItUp.Base;
+using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -27,10 +30,6 @@ namespace MixItUp.Desktop.Services
         public DateTimeOffset RequestedClientAuthExpiration { get; private set; }
 
         public event EventHandler<HeartbeatRemoteMessage> OnHeartbeat;
-        public event EventHandler<HeartbeatAckRemoteMessage> OnHeartbeatAck;
-
-        public event EventHandler<BoardRequestRemoteMessage> OnReceiveBoardRequest;
-        public event EventHandler<ActionRequestRemoteMessage> OnReceiveActionRequest;
 
         public static string GetConnectConnectionURL(Guid id, bool autoAccept = false, string authToken = null)
         {
@@ -49,25 +48,13 @@ namespace MixItUp.Desktop.Services
 
         public RemoteService(string address) : base(address) { }
 
-        public async Task SendAuthClientDeny()
-        {
-            await Send(new AuthClientDenyRemoteMessage());
-        }
+        public async Task SendAuthClientGrant(ObservableCollection<RemoteBoardModel> boards) { await Send(new AuthClientGrantRemoteMessage() { Boards = boards }); }
 
-        public async Task SendAuthClientGrant(ObservableCollection<RemoteBoardModel> boards)
-        {
-            await Send(new AuthClientGrantRemoteMessage() { Boards = boards });
-        }
+        public async Task SendAuthClientDeny() { await Send(new AuthClientDenyRemoteMessage()); }
 
-        public async Task SendBoardDetail(RemoteBoardModel board)
-        {
-            await Send(new BoardDetailRemoteMessage() { Board = board });
-        }
+        public async Task SendBoardDetail(RemoteBoardModel board) { await Send(new BoardDetailRemoteMessage() { Board = board }); }
 
-        public async Task SendActionAck(Guid componentID)
-        {
-            await Send(new ActionAckRemoteMessage() { ComponentID = componentID });
-        }
+        public async Task SendActionAck(Guid componentID) { await Send(new ActionAckRemoteMessage() { ItemID = componentID }); }
 
         protected override async Task PacketReceived(string packet)
         {
@@ -105,11 +92,21 @@ namespace MixItUp.Desktop.Services
                     break;
 
                 case MessageType.BOARD_REQ:
-                    this.SendEvent(packet, this.OnReceiveBoardRequest);
+                    BoardRequestRemoteMessage boardRequestPacket = JsonConvert.DeserializeObject<BoardRequestRemoteMessage>(packet);
+                    RemoteBoardModel board = ChannelSession.Settings.RemoteBoards.FirstOrDefault(b => b.ID.Equals(boardRequestPacket.BoardID));
+                    if (board != null)
+                    {
+                        await this.SendBoardDetail(board);
+                    }
                     break;
 
                 case MessageType.ACTION_REQ:
-                    this.SendEvent(packet, this.OnReceiveActionRequest);
+                    ActionRequestRemoteMessage actionRequestPacket = JsonConvert.DeserializeObject<ActionRequestRemoteMessage>(packet);
+                    RemoteCommand command = ChannelSession.Settings.RemoteCommands.FirstOrDefault(c => c.ID.Equals(actionRequestPacket.ItemID));
+                    if (command != null)
+                    {
+                        await command.Perform();
+                    }
                     break;
             }
 
@@ -132,11 +129,6 @@ namespace MixItUp.Desktop.Services
                 ClientID = ClientID,
             };
             await this.Send(heartbeatAck);
-
-            if (this.OnHeartbeatAck != null)
-            {
-                this.OnHeartbeatAck(this, heartbeatAck);
-            }
         }
 
         private void SendEvent<T>(string packet, EventHandler<T> eventHandler)

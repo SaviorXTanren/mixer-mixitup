@@ -3,6 +3,7 @@ using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
@@ -140,6 +141,11 @@ namespace MixItUp.Desktop
         public bool AutoExportStatistics { get; set; }
 
         [JsonProperty]
+        public List<RemoteBoardModel> RemoteBoards { get; set; }
+        [JsonProperty]
+        public List<RemoteDeviceModel> RemoteDevices { get; set; }
+
+        [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
 
         [JsonProperty]
@@ -174,6 +180,9 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
+            this.RemoteBoards = new List<RemoteBoardModel>();
+            this.RemoteDevices = new List<RemoteDeviceModel>();
+
             this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.chatCommandsInternal = new List<ChatCommand>();

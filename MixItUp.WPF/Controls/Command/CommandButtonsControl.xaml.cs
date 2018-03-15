@@ -32,6 +32,8 @@ namespace MixItUp.WPF.Controls.Command
             this.Loaded += CommandButtonsControl_Loaded;
         }
 
+        public T GetCommandFromCommandButtons<T>() where T : CommandBase { return this.GetCommandFromCommandButtons<T>(this); }
+
         public T GetCommandFromCommandButtons<T>(object sender) where T : CommandBase
         {
             CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;

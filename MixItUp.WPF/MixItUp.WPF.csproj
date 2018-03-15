@@ -273,6 +273,12 @@
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
+      <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Remote\RemoteButtonControl.xaml.cs">
+      <DependentUpon>RemoteButtonControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirement\CooldownRequirementControl.xaml.cs">
       <DependentUpon>CooldownRequirementControl.xaml</DependentUpon>
     </Compile>
@@ -568,6 +574,14 @@
     <Page Include="Controls\Command\CustomCommandDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Remote\RemoteButtonControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirement\CooldownRequirementControl.xaml">
       <SubType>Designer</SubType>
