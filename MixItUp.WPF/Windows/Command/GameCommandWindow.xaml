@@ -64,7 +64,7 @@
                         </Grid>
 
                         <Grid Grid.Row="2" HorizontalAlignment="Center">
-                            <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
+                            <RequirementControls:RequirementControl x:Name="Requirements" />
                         </Grid>
 
                         <Grid x:Name="CurrencyGrid" Grid.Row="4" HorizontalAlignment="Center" IsEnabled="False">

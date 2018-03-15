@@ -56,7 +56,7 @@
             </Grid>
 
             <Grid Grid.Row="4">
-                <RequirementControls:RequirementControl x:Name="Requirements" Width="200" />
+                <RequirementControls:RequirementControl x:Name="Requirements" />
             </Grid>
 
             <Grid Grid.Row="6" HorizontalAlignment="Center">
