@@ -59,7 +59,21 @@
 
         <Border Grid.Column="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}" />
 
-        <Grid x:Name="BoardSetupGrid" Grid.Column="2" Visibility="Visible" VerticalAlignment="Center">
+        <Grid x:Name="InBetaGrid" Grid.Column="2" Visibility="Visible" VerticalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">The Mix It Up mobile app is currently in closed beta for Android devices. The full, public version will be released at a later date on both iOS and <Hyperlink x:Name="SecretBetaAccess" Click="SecretBetaAccess_Click" Foreground="Black" FontWeight="Normal" TextDecorations="None">Android</Hyperlink>.</TextBlock>
+
+                <TextBlock Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">If you would like to participate in the closed beta for Android, you can head to the <Hyperlink NavigateUri="https://discord.gg/d9M5yr" RequestNavigate="Hyperlink_RequestNavigate">Mix It Up Discord</Hyperlink> and request more information.</TextBlock>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="BoardSetupGrid" Grid.Column="2" Visibility="Collapsed" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />

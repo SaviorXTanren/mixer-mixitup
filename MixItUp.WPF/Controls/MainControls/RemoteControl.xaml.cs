@@ -457,5 +457,14 @@ namespace MixItUp.WPF.Controls.MainControls
             this.RefreshCommandsList();
             this.UpdateRemoteItemsAndBoard();
         }
+
+
+
+
+        private void SecretBetaAccess_Click(object sender, RoutedEventArgs e)
+        {
+            this.InBetaGrid.Visibility = Visibility.Collapsed;
+            this.BoardSetupGrid.Visibility = Visibility.Visible;
+        }
     }
 }
