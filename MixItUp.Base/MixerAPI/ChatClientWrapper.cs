@@ -16,6 +16,8 @@ namespace MixItUp.Base.MixerAPI
 {
     public class ChatClientWrapper : MixerWebSocketWrapper
     {
+        private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
+
         private const string HypeBotUserName = "HypeBot";
         private const string BoomTVUserName = "boomtvmod";
 
@@ -27,8 +29,6 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<UserViewModel> OnUserJoinOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserLeaveOccurred = delegate { };
-
-        private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         public LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
         public Dictionary<Guid, ChatMessageViewModel> Messages { get; private set; }
@@ -45,6 +45,8 @@ namespace MixItUp.Base.MixerAPI
         {
             this.ChatUsers = new LockedDictionary<uint, UserViewModel>();
             this.Messages = new Dictionary<Guid, ChatMessageViewModel>();
+
+            this.OnPingDisconnectOcurred += Client_OnPingDisconnectOcurred;
         }
 
         public async Task<bool> Connect()
@@ -209,6 +211,8 @@ namespace MixItUp.Base.MixerAPI
         {
             if (ChannelSession.Connection != null)
             {
+                this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
+
                 this.Client = await this.ConnectAndAuthenticateChatClient(ChannelSession.Connection);
                 if (this.Client != null)
                 {
@@ -256,6 +260,10 @@ namespace MixItUp.Base.MixerAPI
                     }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () => { await this.PingChecker(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
@@ -271,6 +279,29 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
             return false;
+        }
+
+        protected override async Task<bool> Ping()
+        {
+            if (await this.RunAsync(this.Client.Ping()))
+            {
+                if (this.BotClient != null && this.BotClient.Authenticated)
+                {
+                    return await this.RunAsync(this.BotClient.Ping());
+                }
+                return true;
+            }
+            return false;
+        }
+
+        protected async Task BotPingChecker()
+        {
+            while (this.BotClient == null || await this.RunAsync(this.BotClient.Ping()))
+            {
+                await Task.Delay(5000);
+            }
+
+            this.BotClient_OnDisconnectOccurred(this, WebSocketCloseStatus.NormalClosure);
         }
 
         private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionWrapper connection)
@@ -453,14 +484,17 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task ChatUserRefreshBackground()
         {
-            Dictionary<uint, UserViewModel> users = this.ChatUsers.ToDictionary();
-            if (users.Count > 0)
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
-                foreach (UserViewModel user in users.Values)
+                Dictionary<uint, UserViewModel> users = this.ChatUsers.ToDictionary();
+                if (users.Count > 0)
                 {
-                    await user.SetDetails();
+                    foreach (UserViewModel user in users.Values)
+                    {
+                        await user.SetDetails();
+                    }
                 }
-            }
+            });
         }
 
         private async Task TimerCommandsBackground()
@@ -564,6 +598,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
+            await reconnectionLock.WaitAsync();
+
             ChannelSession.DisconnectionOccurred("Streamer Chat");
 
             do
@@ -576,10 +612,14 @@ namespace MixItUp.Base.MixerAPI
             } while (!await this.Connect());
 
             ChannelSession.ReconnectionOccurred("Streamer Chat");
+
+            reconnectionLock.Release();
         }
 
         private async void BotClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
+            await reconnectionLock.WaitAsync();
+
             ChannelSession.DisconnectionOccurred("Bot Chat");
 
             do
@@ -592,6 +632,13 @@ namespace MixItUp.Base.MixerAPI
             } while (!await this.ConnectBot());
 
             ChannelSession.ReconnectionOccurred("Bot Chat");
+
+            reconnectionLock.Release();
+        }
+
+        private void Client_OnPingDisconnectOcurred(object sender, EventArgs e)
+        {
+            this.StreamerClient_OnDisconnectOccurred(this, WebSocketCloseStatus.NormalClosure);
         }
 
         #endregion Chat Event Handlers

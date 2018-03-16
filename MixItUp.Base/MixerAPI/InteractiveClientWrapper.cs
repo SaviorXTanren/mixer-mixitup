@@ -46,6 +46,8 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveClientWrapper : MixerWebSocketWrapper
     {
+        private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
+
         public event EventHandler<InteractiveGiveInputModel> OnGiveInput = delegate { };
         public event EventHandler<InteractiveConnectedSceneModel> OnControlDelete = delegate { };
         public event EventHandler<InteractiveConnectedSceneModel> OnControlCreate = delegate { };
@@ -77,6 +79,8 @@ namespace MixItUp.Base.MixerAPI
             this.SceneGroups = new List<InteractiveConnectedSceneGroupModel>();
             this.Controls = new Dictionary<string, InteractiveConnectedControlCommand>();
             this.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
+
+            this.OnPingDisconnectOcurred += Client_OnPingDisconnectOcurred;
         }
 
         public async Task<bool> Connect(InteractiveGameListingModel game)
@@ -116,6 +120,8 @@ namespace MixItUp.Base.MixerAPI
                 this.Client.OnIssueMemoryWarning -= Client_OnIssueMemoryWarning;
 
                 await this.RunAsync(this.Client.Disconnect());
+
+                this.backgroundThreadCancellationTokenSource.Cancel();
             }
             this.Client = null;
         }
@@ -155,6 +161,8 @@ namespace MixItUp.Base.MixerAPI
             this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game));
             if (this.Client != null)
             {
+                this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
+
                 if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
                 {
                     this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
@@ -183,10 +191,20 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnParticipantLeave += Client_OnParticipantLeave;
                     this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () => { await this.PingChecker(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                     return await this.Initialize();
                 }
             }
             return false;
+        }
+
+        protected override async Task<bool> Ping()
+        {
+            DateTimeOffset? dateTime = await this.RunAsync(this.Client.GetTime());
+            return (dateTime != null && dateTime > DateTimeOffset.MinValue);
         }
 
         #region Interactive Update Methods
@@ -450,6 +468,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
+            await reconnectionLock.WaitAsync();
+
             ChannelSession.DisconnectionOccurred("Interactive");
 
             InteractiveGameListingModel game = ChannelSession.Interactive.Client.InteractiveGame;
@@ -463,6 +483,13 @@ namespace MixItUp.Base.MixerAPI
             } while (!await this.Connect(game));
 
             ChannelSession.ReconnectionOccurred("Interactive");
+
+            reconnectionLock.Release();
+        }
+
+        private void Client_OnPingDisconnectOcurred(object sender, EventArgs e)
+        {
+            this.InteractiveClient_OnDisconnectOccurred(this, WebSocketCloseStatus.NormalClosure);
         }
 
         #endregion Interactive Event Handlers

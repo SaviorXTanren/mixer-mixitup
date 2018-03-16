@@ -1,9 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using MixItUp.Base.Util;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
     public abstract class MixerWebSocketWrapper : MixerRequestWrapperBase
     {
+        protected CancellationTokenSource backgroundThreadCancellationTokenSource;
+
+        public event EventHandler OnPingDisconnectOcurred = delegate { };
+
         public async Task<bool> AttemptConnect(int connectionAttempts = 5)
         {
             for (int i = 0; i < connectionAttempts; i++)
@@ -18,5 +25,23 @@ namespace MixItUp.Base.MixerAPI
         }
 
         protected abstract Task<bool> ConnectInternal();
+
+        protected abstract Task<bool> Ping();
+
+        protected async Task PingChecker()
+        {
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            {
+                while (await this.Ping() && !tokenSource.IsCancellationRequested)
+                {
+                    await Task.Delay(5000);
+                }
+
+                if (this.OnPingDisconnectOcurred != null)
+                {
+                    this.OnPingDisconnectOcurred(this, new EventArgs());
+                }
+            });
+        }
     }
 }

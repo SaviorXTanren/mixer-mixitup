@@ -12,12 +12,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
     public class ConstellationClientWrapper : MixerWebSocketWrapper
     {
+        private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
+
         public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.Channel.id); } }
 
         public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel.id); } }
@@ -47,6 +50,8 @@ namespace MixItUp.Base.MixerAPI
         public ConstellationClientWrapper()
         {
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+
+            this.OnPingDisconnectOcurred += Client_OnPingDisconnectOcurred;
         }
 
         public async Task<bool> Connect()
@@ -73,6 +78,8 @@ namespace MixItUp.Base.MixerAPI
                 this.Client.OnSubscribedEventOccurred -= ConstellationClient_OnSubscribedEventOccurred;
 
                 await this.RunAsync(this.Client.Disconnect());
+
+                this.backgroundThreadCancellationTokenSource.Cancel();
             }
         }
 
@@ -81,6 +88,8 @@ namespace MixItUp.Base.MixerAPI
             this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.Connection.Connection));
             if (this.Client != null)
             {
+                this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
+
                 if (await this.RunAsync(this.Client.Connect()))
                 {
                     this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
@@ -95,10 +104,19 @@ namespace MixItUp.Base.MixerAPI
 
                     await this.SubscribeToEvents(ConstellationClientWrapper.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.Channel.id)));
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () => { await this.PingChecker(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                     return true;
                 }
             }
             return false;
+        }
+
+        protected override async Task<bool> Ping()
+        {
+            return await this.RunAsync(this.Client.Ping());
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
@@ -277,6 +295,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
+            await reconnectionLock.WaitAsync();
+
             ChannelSession.DisconnectionOccurred("Constellation");
 
             do
@@ -289,6 +309,13 @@ namespace MixItUp.Base.MixerAPI
             } while (!await this.Connect());
 
             ChannelSession.ReconnectionOccurred("Constellation");
+
+            reconnectionLock.Release();
+        }
+
+        private void Client_OnPingDisconnectOcurred(object sender, EventArgs e)
+        {
+            this.ConstellationClient_OnDisconnectOccurred(this, WebSocketCloseStatus.NormalClosure);
         }
     }
 }
