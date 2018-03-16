@@ -66,17 +66,19 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
 
-            if (ChannelSession.Services.Twitter != null)
+            if (ChannelSession.Services.Twitter != null && this.ContainsSpecialIdentifier("tweet"))
             {
                 IEnumerable<Tweet> tweets = await ChannelSession.Services.Twitter.GetLatestTweets();
                 if (tweets.Count() > 0)
                 {
-                    this.ReplaceSpecialIdentifier("latesttweet", tweets.FirstOrDefault().TweetLink);
+                    this.ReplaceSpecialIdentifier("tweetlatesturl", tweets.FirstOrDefault().TweetLink);
+                    this.ReplaceSpecialIdentifier("tweetlatesttext", tweets.FirstOrDefault().Text);
 
                     Tweet streamTweet = tweets.FirstOrDefault(t => t.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.User.username.ToLower()))));
                     if (streamTweet != null)
                     {
-                        this.ReplaceSpecialIdentifier("streamtweet", streamTweet.TweetLink);
+                        this.ReplaceSpecialIdentifier("tweetstreamurl", streamTweet.TweetLink);
+                        this.ReplaceSpecialIdentifier("tweetstreamtext", streamTweet.Text);
                     }
                 }
             }

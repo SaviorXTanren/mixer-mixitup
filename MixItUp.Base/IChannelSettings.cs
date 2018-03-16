@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
@@ -73,6 +74,9 @@ namespace MixItUp.Base
         int MaxMessagesInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }
+
+        List<RemoteBoardModel> RemoteBoards { get; set; }
+        List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings

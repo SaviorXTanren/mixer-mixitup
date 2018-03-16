@@ -58,6 +58,22 @@ namespace MixItUp.WPF.Util
             return MessageBoxHelper.lastConfirmationResult;
         }
 
+        public static async Task<string> ShowTextEntryDialog(string textEntryName, string defaultValue = null)
+        {
+            BasicTextEntryDialogControl textEntryControl = new BasicTextEntryDialogControl(textEntryName, defaultValue);
+            DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();
+            if (dialogHost != null && !isDialogShown)
+            {
+                MessageBoxHelper.isDialogShown = true;
+                dialogHost.DialogClosing += ConfirmationDialogHost_DialogClosing;
+                await dialogHost.ShowDialog(textEntryControl);
+                dialogHost.DialogClosing -= ConfirmationDialogHost_DialogClosing;
+                MessageBoxHelper.isDialogShown = false;
+            }
+
+            return (MessageBoxHelper.lastConfirmationResult) ? textEntryControl.TextEntry : null;
+        }
+
         public static async Task<UserDialogResult> ShowUserDialog(UserViewModel user)
         {
             DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();

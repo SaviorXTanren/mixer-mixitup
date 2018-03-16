@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Model.Remote;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +13,26 @@ namespace MixItUp.Base.Commands
     {
         private static SemaphoreSlim remoteCommandPerformSemaphore = new SemaphoreSlim(1);
 
+        [DataMember]
         public Guid CommandID { get; set; }
+
+        [DataMember]
+        public string BackgroundColor { get; set; }
+
+        [DataMember]
+        public string TextColor { get; set; }
+
+        [DataMember]
+        public string ImageName { get; set; }
 
         public RemoteCommand() { }
 
         public RemoteCommand(string name)
             : base(name, CommandTypeEnum.Remote, name)
-        { }
+        {
+            this.BackgroundColor = "#FFFFFF";
+            this.TextColor = "#000000";
+        }
 
         public RemoteCommand(string name, CommandBase commandToRun)
             : base(name, CommandTypeEnum.Remote, name)
@@ -41,15 +53,6 @@ namespace MixItUp.Base.Commands
         }
 
         public override bool IsEditable { get { return (this.ReferenceCommand == null); } }
-
-        public RemoteBoardItemModelBase GetRemoteBoardItem()
-        {
-            return new RemoteBoardButtonModel()
-            {
-                ID = this.ID,
-                Name = this.Name
-            };
-        }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return RemoteCommand.remoteCommandPerformSemaphore; } }
 
