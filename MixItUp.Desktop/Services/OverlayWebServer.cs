@@ -53,26 +53,30 @@ namespace MixItUp.Overlay
 
         public async Task<bool> Initialize()
         {
-            this.httpListenerServer.Start();
-            if (await this.webSocketServer.Initialize())
+            try
             {
-                if (!string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
+                this.httpListenerServer.Start();
+                if (await this.webSocketServer.Initialize())
                 {
-                    if (ChannelSession.Services.OBSWebsocket != null)
+                    if (!string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
                     {
-                        ChannelSession.Services.OBSWebsocket.SetSourceRender(ChannelSession.Settings.OverlaySourceName, isVisible: false);
-                        ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
-                        ChannelSession.Services.OBSWebsocket.SetSourceRender(ChannelSession.Settings.OverlaySourceName, isVisible: true);
-                    }
+                        if (ChannelSession.Services.OBSWebsocket != null)
+                        {
+                            ChannelSession.Services.OBSWebsocket.SetSourceRender(ChannelSession.Settings.OverlaySourceName, isVisible: false);
+                            ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
+                            ChannelSession.Services.OBSWebsocket.SetSourceRender(ChannelSession.Settings.OverlaySourceName, isVisible: true);
+                        }
 
-                    if (ChannelSession.Services.XSplitServer != null)
-                    {
-                        await ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = ChannelSession.Settings.OverlaySourceName, sourceVisible = false });
-                        await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = ChannelSession.Settings.OverlaySourceName, webBrowserUrl = OverlayHttpListenerServerAddress, sourceVisible = true });
+                        if (ChannelSession.Services.XSplitServer != null)
+                        {
+                            await ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = ChannelSession.Settings.OverlaySourceName, sourceVisible = false });
+                            await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = ChannelSession.Settings.OverlaySourceName, webBrowserUrl = OverlayHttpListenerServerAddress, sourceVisible = true });
+                        }
                     }
+                    return true;
                 }
-                return true;
             }
+            catch (Exception ex) { Logger.Log(ex); }
             return false;
         }
 
