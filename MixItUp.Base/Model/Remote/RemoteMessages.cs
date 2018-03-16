@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Client;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,10 +31,11 @@ namespace MixItUp.Base.Model.Remote
         public DateTimeOffset Timestamp { get; set; }
         public MessageType Type { get; set; }
 
+        public new string type { get { return this.Type.ToString(); } set { } }
+
         public RemoteMessageBase()
         {
             this.Timestamp = DateTimeOffset.Now;
-            this.type = this.Type.ToString();
         }
     }
 

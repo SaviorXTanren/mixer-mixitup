@@ -28,7 +28,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private ObservableCollection<RemoteBoardModel> boards = new ObservableCollection<RemoteBoardModel>();
         private ObservableCollection<RemoteBoardGroupModel> groups = new ObservableCollection<RemoteBoardGroupModel>();
 
-        private RemoteService remoteService = new RemoteService();
+        private RemoteService remoteService;
 
         public RemoteControl()
         {
@@ -37,12 +37,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.remoteService.OnDisconnectOccurred += RemoteService_OnDisconnectOccurred;
-            this.remoteService.OnAuthRequest += RemoteService_OnAuthRequest;
-            this.remoteService.OnNewAccessCode += RemoteService_OnNewAccessCode;
-            this.remoteService.OnBoardRequest += RemoteService_OnBoardRequest;
-            this.remoteService.OnActionRequest += RemoteService_OnActionRequest;
-
             this.RemoteCommandsListView.ItemsSource = this.remoteCommands;
             this.BoardNameComboBox.ItemsSource = this.boards;
             this.GroupNameComboBox.ItemsSource = this.groups;
@@ -418,6 +412,14 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await ChannelSession.SaveSettings();
 
+                this.remoteService = new RemoteService();
+
+                this.remoteService.OnDisconnectOccurred += RemoteService_OnDisconnectOccurred;
+                this.remoteService.OnAuthRequest += RemoteService_OnAuthRequest;
+                this.remoteService.OnNewAccessCode += RemoteService_OnNewAccessCode;
+                this.remoteService.OnBoardRequest += RemoteService_OnBoardRequest;
+                this.remoteService.OnActionRequest += RemoteService_OnActionRequest;
+
                 await this.remoteService.Connect();
 
                 this.BoardSetupGrid.Visibility = Visibility.Collapsed;
@@ -480,7 +482,15 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
+                this.remoteService.OnDisconnectOccurred -= RemoteService_OnDisconnectOccurred;
+                this.remoteService.OnAuthRequest -= RemoteService_OnAuthRequest;
+                this.remoteService.OnNewAccessCode -= RemoteService_OnNewAccessCode;
+                this.remoteService.OnBoardRequest -= RemoteService_OnBoardRequest;
+                this.remoteService.OnActionRequest -= RemoteService_OnActionRequest;
+
                 await this.remoteService.Disconnect();
+
+                this.remoteService = null;
 
                 this.ConnectToDeviceGrid.Visibility = Visibility.Collapsed;
                 this.BoardSetupGrid.Visibility = Visibility.Visible;
