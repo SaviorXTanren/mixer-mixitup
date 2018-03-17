@@ -5,7 +5,6 @@ using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,9 +54,6 @@ namespace MixItUp.Desktop.Services
 
         public async Task<bool> Connect()
         {
-            this.OnPacketReceivedOccurred -= RemoteService_OnPacketReceivedOccurred;
-
-            this.OnPacketReceivedOccurred += RemoteService_OnPacketReceivedOccurred;
             this.OnHeartbeat += ConnectHeartbeat;
 
             await this.ConnectInternal(RemoteService.GetConnectConnectionURL(this.ClientID));
@@ -89,30 +85,14 @@ namespace MixItUp.Desktop.Services
 
         public async Task SendActionAck(Guid componentID) { await Send(new ActionAckRemoteMessage() { ItemID = componentID }); }
 
-        private async Task ReceiveHeartbeat(string packet)
-        {
-            HeartbeatRemoteMessage heartbeat = JsonConvert.DeserializeObject<HeartbeatRemoteMessage>(packet);
-            this.ServerLastSeen = DateTimeOffset.Now;
-
-            if (this.OnHeartbeat != null)
-            {
-                this.OnHeartbeat(this, heartbeat);
-            }
-
-            HeartbeatAckRemoteMessage heartbeatAck = new HeartbeatAckRemoteMessage()
-            {
-                SessionID = SessionID,
-                ClientID = ClientID,
-            };
-            await this.Send(heartbeatAck);
-        }
-
-        private async void RemoteService_OnPacketReceivedOccurred(object sender, string packet)
+        protected override async Task ProcessReceivedPacket(string packetJSON)
         {
             try
             {
-                if (!string.IsNullOrEmpty(packet))
+                if (!string.IsNullOrEmpty(packetJSON))
                 {
+                    string packet = packetJSON.Substring(0, packetJSON.IndexOf('\0'));
+
                     dynamic jsonObject = JsonConvert.DeserializeObject(packet);
                     if (jsonObject["Type"] != null)
                     {
@@ -185,6 +165,24 @@ namespace MixItUp.Desktop.Services
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private async Task ReceiveHeartbeat(string packet)
+        {
+            HeartbeatRemoteMessage heartbeat = JsonConvert.DeserializeObject<HeartbeatRemoteMessage>(packet);
+            this.ServerLastSeen = DateTimeOffset.Now;
+
+            if (this.OnHeartbeat != null)
+            {
+                this.OnHeartbeat(this, heartbeat);
+            }
+
+            HeartbeatAckRemoteMessage heartbeatAck = new HeartbeatAckRemoteMessage()
+            {
+                SessionID = SessionID,
+                ClientID = ClientID,
+            };
+            await this.Send(heartbeatAck);
         }
 
         private void SendEvent<T>(string packet, EventHandler<T> eventHandler)
