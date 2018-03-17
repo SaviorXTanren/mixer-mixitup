@@ -47,6 +47,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public OAuthTokenModel StreamlabsOAuthToken { get; set; }
         [JsonProperty]
+        public OAuthTokenModel GameWispOAuthToken { get; set; }
+        [JsonProperty]
         public OAuthTokenModel TwitterOAuthToken { get; set; }
 
         [JsonProperty]
@@ -359,6 +361,10 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.Streamlabs != null)
             {
                 this.StreamlabsOAuthToken = ChannelSession.Services.Streamlabs.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.GameWisp != null)
+            {
+                this.GameWispOAuthToken = ChannelSession.Services.GameWisp.GetOAuthTokenCopy();
             }
             if (ChannelSession.Services.Twitter != null)
             {

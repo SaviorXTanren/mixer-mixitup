@@ -56,7 +56,7 @@ namespace MixItUp.Desktop.Services
 
         private const string ClientID = "ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX";
         private const string ClientSecret = "ddcgpzlzeRAE7dAUvs87DJgAIQJSwiq5p4AkufWN";
-        private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id=ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write";
+        private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -81,7 +81,7 @@ namespace MixItUp.Desktop.Services
                 catch (Exception ex) { Logger.Log(ex); }
             }
 
-            string authorizationCode = await this.ConnectViaOAuthRedirect(StreamlabsService.AuthorizationUrl);
+            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamlabsService.AuthorizationUrl, StreamlabsService.ClientID));
             if (!string.IsNullOrEmpty(authorizationCode))
             {
                 JObject payload = new JObject();

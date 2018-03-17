@@ -400,6 +400,9 @@
     <Compile Include="Controls\Services\DeveloperAPIServiceControl.xaml.cs">
       <DependentUpon>DeveloperAPIServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\GameWispServiceControl.xaml.cs">
+      <DependentUpon>GameWispServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
       <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
     </Compile>
@@ -751,6 +754,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\DeveloperAPIServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\GameWispServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

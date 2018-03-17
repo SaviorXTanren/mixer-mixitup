@@ -198,6 +198,30 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeGameWisp()
+        {
+            this.GameWisp = (ChannelSession.Settings.GameWispOAuthToken != null) ? new GameWispService(ChannelSession.Settings.GameWispOAuthToken) : new GameWispService();
+            if (await this.GameWisp.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectGameWisp();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectGameWisp()
+        {
+            if (this.GameWisp != null)
+            {
+                await this.GameWisp.Disconnect();
+                this.GameWisp = null;
+                ChannelSession.Settings.GameWispOAuthToken = null;
+            }
+        }
+
         public override async Task<bool> InitializeTwitter()
         {
             this.Twitter = (ChannelSession.Settings.TwitterOAuthToken != null) ? new TwitterService(ChannelSession.Settings.TwitterOAuthToken) : new TwitterService();

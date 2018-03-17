@@ -145,6 +145,7 @@
     <Compile Include="DesktopChannelSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DesktopServicesHandler.cs" />
+    <Compile Include="Services\GameWispService.cs" />
     <Compile Include="Services\RemoteService.cs" />
     <Compile Include="Services\OBSService.cs" />
     <Compile Include="Services\OverlayWebServer.cs" />
