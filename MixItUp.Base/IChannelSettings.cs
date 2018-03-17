@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -77,6 +78,8 @@ namespace MixItUp.Base
 
         List<RemoteBoardModel> RemoteBoards { get; set; }
         List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
+
+        List<FavoriteGroupModel> FavoriteGroups { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings

@@ -4,12 +4,16 @@ using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Model.Favorites;
+using MixItUp.Base.ViewModel.Favorites;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Favorites;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -48,6 +52,8 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         private ObservableCollection<GameTypeModel> relatedGames = new ObservableCollection<GameTypeModel>();
 
+        private ObservableCollection<FavoriteGroupViewModel> favoritedGroups = new ObservableCollection<FavoriteGroupViewModel>();
+
         public ChannelControl()
         {
             InitializeComponent();
@@ -69,12 +75,19 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ChannelToRaidSearchCriteriaComboBox.ItemsSource = EnumHelper.GetEnumNames<RaidSearchCriteriaEnum>();
 
+            this.AddFavoriteTypeComboBox.ItemsSource = new List<string>() { "Team", "User" };
+            this.AddFavoriteUserGroupNameTextBox.Text = "Favorite Users";
+
+            this.FavoriteGroupsDataGrid.ItemsSource = this.favoritedGroups;
+
             return base.InitializeInternal();
         }
 
         protected override async Task OnVisibilityChanged()
         {
             await this.InitializeInternal();
+
+            await this.RefreshFavoriteGroups();
         }
 
         private async void GameNameComboBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -214,6 +227,139 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     this.relatedGames.Add(game);
                 }
+            }
+        }
+
+        private void AddFavoriteTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            this.AddFavoriteTeamGrid.Visibility = System.Windows.Visibility.Collapsed;
+            this.AddFavoriteUserGrid.Visibility = System.Windows.Visibility.Collapsed;
+            if (this.AddFavoriteTypeComboBox.SelectedIndex >= 0)
+            {
+                string selection = (string)this.AddFavoriteTypeComboBox.SelectedItem;
+                if (selection.Equals("Team"))
+                {
+                    this.AddFavoriteTeamGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+                else if (selection.Equals("User"))
+                {
+                    this.AddFavoriteUserGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+            }
+        }
+
+        private async void AddFavoriteButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (this.AddFavoriteTypeComboBox.SelectedIndex >= 0)
+                {
+                    string selection = (string)this.AddFavoriteTypeComboBox.SelectedItem;
+                    if (selection.Equals("Team"))
+                    {
+                        if (!string.IsNullOrEmpty(this.AddFavoriteTeamTextBox.Text))
+                        {
+                            TeamModel team = await ChannelSession.Connection.GetTeam(this.AddFavoriteTeamTextBox.Text);
+                            if (team != null)
+                            {
+                                if (ChannelSession.Settings.FavoriteGroups.Any(t => t.Team != null && t.Team.id.Equals(team.id)))
+                                {
+                                    await MessageBoxHelper.ShowMessageDialog("You have already favorited this team.");
+                                    return;
+                                }
+
+                                ChannelSession.Settings.FavoriteGroups.Add(new FavoriteGroupModel(team));
+                                await ChannelSession.SaveSettings();
+
+                                await this.RefreshFavoriteGroups();
+                            }
+                            else
+                            {
+                                await MessageBoxHelper.ShowMessageDialog("Could not find a team by that name.");
+                            }
+                        }
+                    }
+                    else if (selection.Equals("User"))
+                    {
+                        if (!string.IsNullOrEmpty(this.AddFavoriteUserTextBox.Text) && !string.IsNullOrEmpty(this.AddFavoriteUserGroupNameTextBox.Text))
+                        {
+                            UserModel user = await ChannelSession.Connection.GetUser(this.AddFavoriteUserTextBox.Text);
+                            if (user != null)
+                            {
+                                FavoriteGroupModel group = ChannelSession.Settings.FavoriteGroups.FirstOrDefault(t => t.GroupName != null && t.GroupName.Equals(this.AddFavoriteUserGroupNameTextBox.Text));
+                                if (group != null)
+                                {
+                                    if (group.GroupUserIDs.Any(id => id.Equals(user.id)))
+                                    {
+                                        await MessageBoxHelper.ShowMessageDialog("This user already exists in this group.");
+                                        return;
+                                    }
+                                }
+
+                                if (group == null)
+                                {
+                                    group = new FavoriteGroupModel(this.AddFavoriteUserGroupNameTextBox.Text);
+                                    ChannelSession.Settings.FavoriteGroups.Add(group);
+                                }
+                                group.GroupUserIDs.Add(user.id);                              
+                                await ChannelSession.SaveSettings();
+
+                                await this.RefreshFavoriteGroups();
+                            }
+                            else
+                            {
+                                await MessageBoxHelper.ShowMessageDialog("Could not find a user by that name.");
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        private void ViewFavoriteGroupButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            FavoriteGroupViewModel group = (FavoriteGroupViewModel)button.DataContext;
+            FavoriteGroupWindow window = new FavoriteGroupWindow(group);
+            window.Closed += Window_Closed;
+            window.Show();
+        }
+
+        private async void DeleteFavoriteGroupButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            FavoriteGroupViewModel group = (FavoriteGroupViewModel)button.DataContext;
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to remove this group?"))
+                {
+                    ChannelSession.Settings.FavoriteGroups.Remove(group.Group);
+                    await ChannelSession.SaveSettings();
+
+                    await this.RefreshFavoriteGroups();
+                }
+            });
+        }
+
+        private async void Window_Closed(object sender, EventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await this.RefreshFavoriteGroups();
+            });
+        }
+
+        private async Task RefreshFavoriteGroups()
+        {
+            this.AddFavoriteTeamTextBox.Clear();
+            this.AddFavoriteUserTextBox.Clear();
+
+            this.favoritedGroups.Clear();
+            foreach (FavoriteGroupModel group in ChannelSession.Settings.FavoriteGroups)
+            {
+                FavoriteGroupViewModel groupViewModel = new FavoriteGroupViewModel(group);
+                await groupViewModel.RefreshGroup();
+                this.favoritedGroups.Add(groupViewModel);
             }
         }
     }

@@ -67,7 +67,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<UserModel> GetUser(string username) { return await this.RunAsync(this.Connection.Users.GetUser(username)); }
 
-        public async Task<UserModel> GetUser(uint userID) { return await this.RunAsync(this.Connection.Users.GetUser(userID)); }
+        public async Task<UserWithChannelModel> GetUser(uint userID) { return await this.RunAsync(this.Connection.Users.GetUser(userID)); }
 
         public async Task<UserWithChannelModel> GetUser(UserModel user) { return await this.RunAsync(this.Connection.Users.GetUser(user)); }
 
@@ -119,7 +119,9 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<TeamModel> GetTeam(uint id) { return await this.RunAsync(this.Connection.Teams.GetTeam(id)); }
 
-        public async Task<IEnumerable<UserWithChannelModel>> GetTeamUsers(TeamModel team) { return await this.RunAsync(this.Connection.Teams.GetTeamUsers(team)); }
+        public async Task<TeamModel> GetTeam(string name) { return await this.RunAsync(this.Connection.Teams.GetTeam(name)); }
+
+        public async Task<IEnumerable<UserWithChannelModel>> GetTeamUsers(TeamModel team, uint maxResults = 1) { return await this.RunAsync(this.Connection.Teams.GetTeamUsers(team, maxResults)); }
 
         private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
         {

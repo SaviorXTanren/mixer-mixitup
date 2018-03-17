@@ -3,6 +3,7 @@ using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -146,6 +147,9 @@ namespace MixItUp.Desktop
         public List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
 
         [JsonProperty]
+        public List<FavoriteGroupModel> FavoriteGroups { get; set; }
+
+        [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
 
         [JsonProperty]
@@ -182,6 +186,7 @@ namespace MixItUp.Desktop
         {
             this.RemoteBoards = new List<RemoteBoardModel>();
             this.RemoteSavedDevices = new List<RemoteDeviceModel>();
+            this.FavoriteGroups = new List<FavoriteGroupModel>();
 
             this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
