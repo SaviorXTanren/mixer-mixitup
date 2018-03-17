@@ -156,7 +156,7 @@
                                 <DataGridTextColumn Header="Total Users" Binding="{Binding TotalUsers}" IsReadOnly="True" Width="*" />
                                 <DataGridTextColumn Header="Live Users" Binding="{Binding LiveUsers}" IsReadOnly="True" Width="*" />
                                 <DataGridTextColumn Header="Live Viewers" Binding="{Binding LiveViewers}" IsReadOnly="True" Width="*" />
-                                <DataGridTemplateColumn Width="80">
+                                <DataGridTemplateColumn Width="120">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Grid>
