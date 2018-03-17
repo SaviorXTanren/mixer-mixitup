@@ -430,32 +430,44 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ChatClient_OnUserJoinOccurred(object sender, UserViewModel user)
         {
-            await this.RefreshUserList();
-            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Joined Chat  ---", user.UserName)));
-            }
+                await this.RefreshUserList();
+                if (ChannelSession.Settings.ChatShowUserJoinLeave)
+                {
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Joined Chat  ---", user.UserName)));
+                }
+            });
         }
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, UserViewModel user)
         {
-            await this.RefreshUserList();
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
+            {
+                await this.RefreshUserList();
+            });
         }
 
         private async void ChatClient_OnUserLeaveOccurred(object sender, UserViewModel user)
         {
-            await this.RefreshUserList();
-            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Left Chat  ---", user.UserName)));
-            }
+                await this.RefreshUserList();
+                if (ChannelSession.Settings.ChatShowUserJoinLeave)
+                {
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Left Chat  ---", user.UserName)));
+                }
+            });
         }
 
         private async void Constellation_OnFollowOccurred(object sender, UserViewModel e)
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Followed  ---", e.UserName)));
+                await this.Dispatcher.InvokeAsync<Task>(async () =>
+                {
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Followed  ---", e.UserName)));
+                });
             }
         }
 
@@ -463,7 +475,10 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Unfollowed  ---", e.UserName)));
+                await this.Dispatcher.InvokeAsync<Task>(async () =>
+                {
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Unfollowed  ---", e.UserName)));
+                });
             }
         }
 
@@ -471,7 +486,10 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Hosted With {1} Viewers  ---", e.Item1.UserName, e.Item2)));
+                await this.Dispatcher.InvokeAsync<Task>(async () =>
+                {
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Hosted With {1} Viewers  ---", e.Item1.UserName, e.Item2)));
+                });
             }
         }
 
@@ -479,7 +497,10 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Subscribed  ---", e.UserName)));
+                await this.Dispatcher.InvokeAsync<Task>(async () =>
+                {
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Subscribed  ---", e.UserName)));
+                });
             }
         }
 
@@ -487,7 +508,10 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Re-Subscribed For {1} Months  ---", e.Item1.UserName, e.Item2)));
+                await this.Dispatcher.InvokeAsync<Task>(async () =>
+                {
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Re-Subscribed For {1} Months  ---", e.Item1.UserName, e.Item2)));
+                });
             }
         }
 
@@ -495,7 +519,10 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowInteractiveAlerts)
             {
-                await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Used The \"{1}\" Interactive Control  ---", e.Item1.UserName, e.Item2.Name)));
+                await this.Dispatcher.InvokeAsync<Task>(async () =>
+                {
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Used The \"{1}\" Interactive Control  ---", e.Item1.UserName, e.Item2.Name)));
+                });
             }
         }
 
