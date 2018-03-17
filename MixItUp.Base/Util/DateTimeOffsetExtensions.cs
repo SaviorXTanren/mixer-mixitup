@@ -21,7 +21,7 @@ namespace MixItUp.Base.Util
             List<string> dateSegments = new List<string>();
             if (difference.TotalDays < 1)
             {
-                dateSegments.Add(">1 Day");
+                dateSegments.Add("<1 Day");
             }
             else
             {
