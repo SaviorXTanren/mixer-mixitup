@@ -27,6 +27,7 @@ namespace MixItUp.Base
         OAuthTokenModel StreamlabsOAuthToken { get; set; }
         OAuthTokenModel GameWispOAuthToken { get; set; }
         OAuthTokenModel TwitterOAuthToken { get; set; }
+        OAuthTokenModel SpotifyOAuthToken { get; set; }
 
         ExpandedChannelModel Channel { get; set; }
 

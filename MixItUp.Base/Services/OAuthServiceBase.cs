@@ -12,7 +12,7 @@ namespace MixItUp.Base.Services
     {
         protected OAuthTokenModel token;
 
-        private string baseAddress;
+        protected string baseAddress;
 
         protected OAuthServiceBase(string baseAddress) { this.baseAddress = baseAddress; }
 

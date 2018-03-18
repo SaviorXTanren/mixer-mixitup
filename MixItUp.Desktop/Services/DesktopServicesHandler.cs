@@ -246,6 +246,30 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeSpotify()
+        {
+            this.Spotify = (ChannelSession.Settings.SpotifyOAuthToken != null) ? new SpotifyService(ChannelSession.Settings.SpotifyOAuthToken) : new SpotifyService();
+            if (await this.Spotify.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectSpotify();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectSpotify()
+        {
+            if (this.Spotify != null)
+            {
+                await this.Spotify.Disconnect();
+                this.Spotify = null;
+                ChannelSession.Settings.SpotifyOAuthToken = null;
+            }
+        }
+
         private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)
         {
             await this.DisconnectOBSStudio();

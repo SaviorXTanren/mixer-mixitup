@@ -16,6 +16,7 @@ namespace MixItUp.Base.Services
         public IStreamlabsService Streamlabs { get; protected set; }
         public IGameWispService GameWisp { get; protected set; }
         public ITwitterService Twitter { get; protected set; }
+        public ISpotifyService Spotify { get; protected set; }
 
         public abstract Task Close();
 
@@ -49,5 +50,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeTwitter();
         public abstract Task DisconnectTwitter();
+
+        public abstract Task<bool> InitializeSpotify();
+        public abstract Task DisconnectSpotify();
     }
 }

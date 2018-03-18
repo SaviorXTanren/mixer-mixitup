@@ -15,7 +15,7 @@ namespace MixItUp.Desktop.Services
 
         private const string ClientID = "0b23546e4f147c63509c29928f2bf87e73ce62f";
         private const string ClientSecret = "898fdf933a202478cce285cce8b29a5b97cbff9";
-        private const string StateKey = "ADFASAWW";
+        private const string StateKey = "V21C2J2RWE51CYSM";
         private const string AuthorizationUrl = "https://api.gamewisp.com/pub/v1/oauth/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=read_only,subscriber_read_full,user_read&state={1}";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();

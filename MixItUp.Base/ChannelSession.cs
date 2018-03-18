@@ -367,9 +367,17 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeStreamlabs();
                     }
+                    if (ChannelSession.Settings.GameWispOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeGameWisp();
+                    }
                     if (ChannelSession.Settings.TwitterOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeTwitter();
+                    }
+                    if (ChannelSession.Settings.SpotifyOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeSpotify();
                     }
 
                     await ChannelSession.Services.Settings.CleanUpData(ChannelSession.Settings);

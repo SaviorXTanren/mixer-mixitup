@@ -50,6 +50,8 @@ namespace MixItUp.Desktop
         public OAuthTokenModel GameWispOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel TwitterOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel SpotifyOAuthToken { get; set; }
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
@@ -369,6 +371,10 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.Twitter != null)
             {
                 this.TwitterOAuthToken = ChannelSession.Services.Twitter.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Spotify != null)
+            {
+                this.SpotifyOAuthToken = ChannelSession.Services.Spotify.GetOAuthTokenCopy();
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();
