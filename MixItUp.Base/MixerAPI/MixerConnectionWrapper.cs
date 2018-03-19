@@ -95,19 +95,17 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<IEnumerable<ChannelModel>> GetChannelsByGameTypes(GameTypeSimpleModel gameType, uint maxResults = 1) { return await this.RunAsync(this.Connection.GameTypes.GetChannelsByGameType(gameType, maxResults)); }
 
-        public async Task<DateTimeOffset?> CheckIfFollows(ChannelModel channel, UserModel user) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(ChannelSession.Channel, user)); }
-
-        public async Task<Dictionary<UserModel, DateTimeOffset?>> CheckIfFollows(ChannelModel channel, IEnumerable<UserModel> users) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(ChannelSession.Channel, users)); }
+        public async Task<DateTimeOffset?> CheckIfFollows(ChannelModel channel, UserModel user) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(channel, user)); }
 
         public async Task<CostreamModel> GetCurrentCostream() { return await this.RunAsync(this.Connection.Costream.GetCurrentCostream()); }
 
         public async Task<BroadcastModel> GetCurrentBroadcast(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetCurrentBroadcast(channel)); }
 
-        public async Task<IEnumerable<StreamSessionsAnalyticModel>> GetStreamSessions(ChannelModel channel, DateTimeOffset startTime) { return await this.RunAsync(this.Connection.Channels.GetStreamSessions(ChannelSession.Channel, startTime)); }
+        public async Task<IEnumerable<StreamSessionsAnalyticModel>> GetStreamSessions(ChannelModel channel, DateTimeOffset startTime) { return await this.RunAsync(this.Connection.Channels.GetStreamSessions(channel, startTime)); }
 
-        public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<UserRole> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(ChannelSession.Channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
+        public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<UserRole> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
 
-        public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<UserRole> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(ChannelSession.Channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); } 
+        public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<UserRole> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); } 
 
         public async Task<IEnumerable<InteractiveGameListingModel>> GetOwnedInteractiveGames(ChannelModel channel) { return await this.RunAsync(this.Connection.Interactive.GetOwnedInteractiveGames(channel)); }
 
