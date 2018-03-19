@@ -82,6 +82,9 @@ namespace MixItUp.Base
         List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
 
         List<FavoriteGroupModel> FavoriteGroups { get; set; }
+
+        string SongRequestCommand { get; set; }
+        bool SpotifyAllowExplicit { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings

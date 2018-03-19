@@ -154,6 +154,11 @@ namespace MixItUp.Desktop
         public List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
         [JsonProperty]
+        public string SongRequestCommand { get; set; }
+        [JsonProperty]
+        public bool SpotifyAllowExplicit { get; set; }
+
+        [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
 
         [JsonProperty]

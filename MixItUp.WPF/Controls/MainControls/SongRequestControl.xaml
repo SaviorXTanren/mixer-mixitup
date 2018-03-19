@@ -1,0 +1,54 @@
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.SongRequestControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+             d:DesignHeight="500" d:DesignWidth="600">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0" x:Name="GiveawayCommandTextBox" Width="150" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <Grid Grid.Row="2">
+                <RequirementControls:RequirementControl x:Name="Requirements" />
+            </Grid>
+
+
+        </Grid>
+
+    </Grid>
+</local:MainControlBase>

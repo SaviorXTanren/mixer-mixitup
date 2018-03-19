@@ -133,17 +133,21 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SpotifySong>> SearchSongs(string songName);
 
+        Task<SpotifySong> GetSong(string songID);
+
         Task<IEnumerable<SpotifyPlaylist>> GetCurrentPlaylists();
 
         Task<SpotifyPlaylist> GetPlaylist(string playlistID);
 
+        Task<IEnumerable<SpotifySong>> GetPlaylistSongs(string playlistID);
+
         Task<SpotifyPlaylist> CreatePlaylist(string name, string description);
 
-        Task AddSongToPlaylist(string playlistID, string songID);
+        Task AddSongToPlaylist(string songID);
 
-        Task RemoveSongToPlaylist(string playlistID, IEnumerable<string> songID);
+        Task RemoveSongToPlaylist(IEnumerable<string> songID);
 
-        Task RemoveSongToPlaylist(string playlistID, string songID);
+        Task RemoveSongToPlaylist(string songID);
 
         Task<SpotifyCurrentlyPlaying> GetCurrentlyPlaying();
 

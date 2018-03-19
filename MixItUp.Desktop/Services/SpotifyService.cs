@@ -138,27 +138,26 @@ namespace MixItUp.Desktop.Services
             return songs;
         }
 
+
+        public async Task<SpotifySong> GetSong(string songID)
+        {
+            try
+            {
+                JObject result = await this.GetJObjectAsync(string.Format("tracks/" + songID));
+                return new SpotifySong(result);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return null;
+        }
+
         public async Task<IEnumerable<SpotifyPlaylist>> GetCurrentPlaylists()
         {
             List<SpotifyPlaylist> playlists = new List<SpotifyPlaylist>();
             try
             {
-                int offset = 0;
-                int total = 1;
-                while (offset < total)
+                foreach (JObject playlist in await this.GetPagedResult("me/playlists"))
                 {
-                    JObject result = await this.GetJObjectAsync("me/playlists?offset=" + offset);
-                    if (result != null)
-                    {
-                        offset += 20;
-                        total = int.Parse(result["total"].ToString());
-
-                        JArray results = (JArray)result["items"];
-                        foreach (JToken playlistResult in results)
-                        {
-                            playlists.Add(new SpotifyPlaylist((JObject)playlistResult));
-                        }
-                    }
+                    playlists.Add(new SpotifyPlaylist(playlist));
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -169,11 +168,25 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                JObject result = await this.GetJObjectAsync(string.Format("users/{0}/playlists/{1}?offset={2}", this.Profile.ID, playlistID));
+                JObject result = await this.GetJObjectAsync(string.Format("users/{0}/playlists/{1}", this.Profile.ID, playlistID));
                 return new SpotifyPlaylist(result);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
+        }
+
+        public async Task<IEnumerable<SpotifySong>> GetPlaylistSongs(string playlistID)
+        {
+            List<SpotifySong> results = new List<SpotifySong>();
+            try
+            {
+                foreach (JObject song in await this.GetPagedResult(string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlistID)))
+                {
+                    results.Add(new SpotifySong(song));
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return results;
         }
 
         public async Task<SpotifyPlaylist> CreatePlaylist(string name, string description)
@@ -194,21 +207,21 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
-        public async Task AddSongToPlaylist(string playlistID, string songID)
+        public async Task AddSongToPlaylist(string songID)
         {
             try
             {
-                HttpResponseMessage response = await this.PostAsync(string.Format("users/{0}/playlists/{1}/tracks?uris=spotify:track:" + songID, this.Profile.ID, playlistID), null);
+                HttpResponseMessage response = await this.PostAsync(string.Format("users/{0}/playlists/{1}/tracks?uris=spotify:track:" + songID, this.Profile.ID, this.Playlist.ID), null);
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task RemoveSongToPlaylist(string playlistID, string songID)
+        public async Task RemoveSongToPlaylist(string songID)
         {
-            await this.RemoveSongToPlaylist(playlistID, new List<string>() { songID });
+            await this.RemoveSongToPlaylist(new List<string>() { songID });
         }
 
-        public async Task RemoveSongToPlaylist(string playlistID, IEnumerable<string> songID)
+        public async Task RemoveSongToPlaylist(IEnumerable<string> songID)
         {
             try
             {
@@ -228,7 +241,8 @@ namespace MixItUp.Desktop.Services
                     using (HttpClientWrapper client = await this.GetHttpClient())
                     {
                         HttpMethod method = new HttpMethod("DELETE");
-                        HttpRequestMessage request = new HttpRequestMessage(method, string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlistID)) { Content = this.CreateContentFromObject(payload) };
+                        HttpRequestMessage request = new HttpRequestMessage(method, string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, this.Playlist.ID))
+                            { Content = this.CreateContentFromObject(payload) };
                         HttpResponseMessage response = await client.SendAsync(request);
                     }
                 }
@@ -315,6 +329,31 @@ namespace MixItUp.Desktop.Services
             {
                 this.Playlist = await this.CreatePlaylist(SpotifyService.MixItUpPlaylistName, SpotifyService.MixItUpPlaylistDescription);
             }
+        }
+
+        private async Task<IEnumerable<JObject>> GetPagedResult(string endpointURL)
+        {
+            List<JObject> results = new List<JObject>();
+
+            int offset = 0;
+            int total = 1;
+            while (offset < total)
+            {
+                JObject result = await this.GetJObjectAsync(endpointURL + "?offset=" + offset);
+                if (result != null)
+                {
+                    offset += 20;
+                    total = int.Parse(result["total"].ToString());
+
+                    JArray arrayResults = (JArray)result["items"];
+                    foreach (JToken arrayResult in arrayResults)
+                    {
+                        results.Add((JObject)arrayResult);
+                    }
+                }
+            }
+
+            return results;
         }
     }
 }

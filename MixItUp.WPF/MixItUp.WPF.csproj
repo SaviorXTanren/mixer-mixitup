@@ -276,6 +276,9 @@
     <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
+      <DependentUpon>SongRequestControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Remote\RemoteButtonControl.xaml.cs">
       <DependentUpon>RemoteButtonControl.xaml</DependentUpon>
     </Compile>
@@ -585,6 +588,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\SongRequestControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
