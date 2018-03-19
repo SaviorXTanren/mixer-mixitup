@@ -41,7 +41,7 @@ namespace MixItUp.Base.Util
             string exceptionJSON = JsonConvert.SerializeObject(ex.ToString());
             #if DEBUG
             #else
-                //Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", exceptionJSON); });
+                Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", exceptionJSON); });
             #endif
         }
 
