@@ -2,5 +2,5 @@
 Prop3=19,11
 [InternetShortcut]
 IDList=
-URL=https://api.mixitupapp.com/analytics/results?eventName=LogIn
+URL=https://api.mixitupapp.com/analytics/logins
 HotKey=0
