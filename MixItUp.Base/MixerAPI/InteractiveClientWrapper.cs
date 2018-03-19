@@ -39,7 +39,7 @@ namespace MixItUp.Base.MixerAPI
         }
 
         public string Name { get { return this.Control.controlID; } }
-        public int SparkCost { get { return (this.Button != null) ? this.Button.cost : -1; } }
+        public int SparkCost { get { return (this.Button != null) ? this.Button.cost.GetValueOrDefault() : 0; } }
         public long CooldownTimestamp { get { return this.Command.GetCooldownTimestamp(); } }
         public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
     }

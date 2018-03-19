@@ -28,7 +28,7 @@ namespace MixItUp.Base.ViewModel.Interactive
         [JsonIgnore]
         public int Cost
         {
-            get { return (this.Control is InteractiveButtonControlModel) ? ((InteractiveButtonControlModel)this.Control).cost : -1; }
+            get { return (this.Control is InteractiveButtonControlModel) ? ((InteractiveButtonControlModel)this.Control).cost.GetValueOrDefault() : 0; }
             set { if (this.Control is InteractiveButtonControlModel) { ((InteractiveButtonControlModel)this.Control).cost = value; } }
         }
 
