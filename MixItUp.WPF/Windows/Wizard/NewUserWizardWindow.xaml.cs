@@ -196,7 +196,7 @@ namespace MixItUp.WPF.Windows.Wizard
 
         private void InstallOBSStudioPlugin_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            string pluginPath = Path.Combine(this.directoryPath, "OBS\\obs-websocket-4.2.0-Windows-Installer.exe");
+            string pluginPath = Path.Combine(this.directoryPath, "OBS\\obs-websocket-4.3.3-Windows-Installer.exe");
             if (File.Exists(pluginPath))
             {
                 Process.Start(pluginPath);

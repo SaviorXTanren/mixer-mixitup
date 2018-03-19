@@ -119,7 +119,7 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Row="0" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">Requires OBS 20.0 or higher</TextBlock>
+                                <TextBlock Grid.Row="0" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">Requires OBS 21.1 or higher</TextBlock>
                                 <TextBlock Grid.Row="1" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">(OBS-FTL &amp; StreamLabs OBS NOT supported)</TextBlock>
 
                                 <TextBlock Grid.Row="3" TextWrapping="Wrap">To connect OBS Studio, install the websocket plugin and enable it in OBS Studio under Tools > Websocket server settings.</TextBlock>

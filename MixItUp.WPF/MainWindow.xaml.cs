@@ -1,7 +1,9 @@
 ﻿using MixItUp.Base;
 using MixItUp.WPF.Controls.MainControls;
+using MixItUp.WPF.Properties;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -79,6 +81,15 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
             }
             await this.MainMenu.AddMenuItem("About", new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
+
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.OBSStudioServerIP) && !Settings.Default.OBSUpgrade211)
+            {
+                if (await MessageBoxHelper.ShowConfirmationDialog("A new version of the OBS Studio WebSocket is available, but this version only works with OBS Studio 21.1.0 or higher. If you do not have OBS Studio 21.1.0 installed, we recommend you update OBS Studio first. Would you like us to install the new version of the OBS Studio WebSocket?"))
+                {
+                    Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OBS\\obs-websocket-4.3.3-Windows-Installer.exe"));
+                }
+            }
+            Settings.Default.OBSUpgrade211 = true;
         }
 
         private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
