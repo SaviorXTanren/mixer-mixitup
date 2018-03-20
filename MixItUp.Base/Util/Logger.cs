@@ -23,6 +23,8 @@ namespace MixItUp.Base.Util
             Logger.fileService = fileService;
             Logger.fileService.CreateDirectory(LogsDirectoryName);
             Logger.CurrentLogFileName = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm", CultureInfo.InvariantCulture)));
+
+            Mixer.Base.Util.Logger.LogOccurred += Logger_LogOccurred;
         }
 
         public static void Log(string message)
@@ -66,6 +68,11 @@ namespace MixItUp.Base.Util
                 }
             }
             catch (Exception) { }
+        }
+
+        private static void Logger_LogOccurred(object sender, string e)
+        {
+            Logger.Log(e);
         }
     }
 }

@@ -74,7 +74,7 @@ namespace MixItUp.Base.Actions
             {
                 await this.PerformInternal(user, arguments);
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex) { Util.Logger.Log(ex); }
             finally { this.AsyncSemaphore.Release(); }
         }
 

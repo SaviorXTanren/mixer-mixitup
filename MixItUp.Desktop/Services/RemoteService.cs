@@ -14,6 +14,8 @@ namespace MixItUp.Desktop.Services
     {
         private const string BaseAddress = "ws://sockets.mixitupapp.com/Remote?SessionMode={0}&DeviceRole={1}&DeviceID={2}&SessionID={3}&AutoAccept={4}&AccessCode={5}&AuthToken={6}&DeviceInfo={7}";
 
+        public bool Connected { get; private set; }
+
         public Guid SessionID { get; private set; }
 
         public DateTimeOffset ServerLastSeen { get; private set; }
@@ -50,6 +52,8 @@ namespace MixItUp.Desktop.Services
         public RemoteService()
         {
             this.ClientID = Guid.NewGuid();
+
+            this.OnDisconnectOccurred += RemoteService_OnDisconnectOccurred;
         }
 
         public async Task<bool> Connect()
@@ -67,7 +71,7 @@ namespace MixItUp.Desktop.Services
 
         private void ConnectHeartbeat(object sender, HeartbeatRemoteMessage e)
         {
-            this.Connected = this.Authenticated = true;
+            this.Connected = true;
         }
 
         public async Task SendAuthClientGrant(AuthRequestRemoteMessage authRequest)
@@ -191,6 +195,11 @@ namespace MixItUp.Desktop.Services
             {
                 eventHandler(this, JsonConvert.DeserializeObject<T>(packet));
             }
+        }
+
+        private void RemoteService_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
+        {
+            this.Connected = false;
         }
     }
 }

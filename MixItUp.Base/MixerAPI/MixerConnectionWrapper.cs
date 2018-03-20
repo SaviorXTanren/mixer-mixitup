@@ -127,18 +127,18 @@ namespace MixItUp.Base.MixerAPI
             {
                 try
                 {
-                    Logger.Log(string.Format("Rest API Request: {0} - {1}", e.Item1, e.Item2.ReadAsStringAsync().Result));
+                    Util.Logger.Log(string.Format("Rest API Request: {0} - {1}", e.Item1, e.Item2.ReadAsStringAsync().Result));
                 }
                 catch (Exception) { }
             }
             else
             {
-                Logger.Log(string.Format("Rest API Request: {0}", e.Item1));
+                Util.Logger.Log(string.Format("Rest API Request: {0}", e.Item1));
             }
         }
 
-        private void RestAPIService_OnSuccessResponseReceived(object sender, string e) { Logger.Log(string.Format("Rest API Success Response: {0}", e)); }
+        private void RestAPIService_OnSuccessResponseReceived(object sender, string e) { Util.Logger.Log(string.Format("Rest API Success Response: {0}", e)); }
 
-        private void RestAPIServices_OnFailureResponseReceived(object sender, RestServiceRequestException e) { Logger.Log(string.Format("Rest API Failure Response: {0}", e.ToString())); }
+        private void RestAPIServices_OnFailureResponseReceived(object sender, RestServiceRequestException e) { Util.Logger.Log(string.Format("Rest API Failure Response: {0}", e.ToString())); }
     }
 }

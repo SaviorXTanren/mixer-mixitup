@@ -449,7 +449,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 if (await MessageBoxHelper.ShowConfirmationDialog("The following device would like to connect:" + Environment.NewLine + Environment.NewLine +
-                    "\t" + authRequest.DeviceInfo + Environment.NewLine + Environment.NewLine +
+                    authRequest.DeviceInfo + Environment.NewLine + Environment.NewLine +
                     "Would you like to approve this device?"))
                 {
                     await this.remoteService.SendAuthClientGrant(authRequest);

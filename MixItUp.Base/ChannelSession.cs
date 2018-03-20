@@ -183,7 +183,7 @@ namespace MixItUp.Base
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Util.Logger.Log(ex);
             }
             return false;
         }
@@ -205,12 +205,12 @@ namespace MixItUp.Base
             }
             catch (RestServiceRequestException ex)
             {
-                Logger.Log(ex);
+                Util.Logger.Log(ex);
                 result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, null);
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Util.Logger.Log(ex);
             }
 
             return result;
@@ -313,17 +313,17 @@ namespace MixItUp.Base
 
         public static void DisconnectionOccurred(string service)
         {
-            Logger.Log(service + " Service disconnection occurred");
+            Util.Logger.Log(service + " Service disconnection occurred");
         }
 
         public static void ReconnectionAttemptOccurred(string service)
         {
-            Logger.Log(service + " reconnection attempt started");
+            Util.Logger.Log(service + " reconnection attempt started");
         }
 
         public static void ReconnectionOccurred(string service)
         {
-            Logger.Log(service + " Service reconnection successful");
+            Util.Logger.Log(service + " Service reconnection successful");
         }
 
         private static async Task<bool> InitializeInternal(string channelName = null)
@@ -393,7 +393,7 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
-                    await Logger.LogAnalyticsUsage("LogIn", "Desktop");
+                    await Util.Logger.LogAnalyticsUsage("LogIn", "Desktop");
 
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 

@@ -375,7 +375,7 @@ namespace MixItUp.WPF.Windows.Currency
                     }
                     catch (Exception ex)
                     {
-                        Logger.Log(ex);
+                        Base.Util.Logger.Log(ex);
                     }
 
                     await MessageBoxHelper.ShowMessageDialog("We were unable to import the data. Please ensure your file is in one of the following formats:" +

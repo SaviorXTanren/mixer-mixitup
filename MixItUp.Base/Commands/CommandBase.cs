@@ -103,7 +103,7 @@ namespace MixItUp.Base.Commands
                         await this.PerformInternal(user, arguments, this.currentCancellationTokenSource.Token);
                     }
                     catch (TaskCanceledException) { }
-                    catch (Exception ex) { Logger.Log(ex); }
+                    catch (Exception ex) { Util.Logger.Log(ex); }
                     finally { this.AsyncSemaphore.Release(); }
                 }, this.currentCancellationTokenSource.Token);
             }

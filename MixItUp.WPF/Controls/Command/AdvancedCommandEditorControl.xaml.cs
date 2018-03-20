@@ -180,7 +180,7 @@ namespace MixItUp.WPF.Controls.Command
                             }
                         }
                     }
-                    catch (Exception ex) { Logger.Log(ex); }
+                    catch (Exception ex) { Base.Util.Logger.Log(ex); }
                 }
             });
         }
