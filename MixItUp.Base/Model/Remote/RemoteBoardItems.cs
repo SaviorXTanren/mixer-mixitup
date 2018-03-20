@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.Remote
 {
     [DataContract]
-    public abstract class RemoteBoardItemModelBase
+    public class RemoteBoardItemModel
     {
         [DataMember]
         public Guid ID { get; set; }
@@ -25,6 +25,8 @@ namespace MixItUp.Base.Model.Remote
         [JsonIgnore]
         public RemoteCommand Command { get { return ChannelSession.Settings.RemoteCommands.FirstOrDefault(c => c.ID.Equals(this.ID)); } }
 
+        public RemoteBoardItemModel() { }
+
         public virtual void SetValuesFromCommand()
         {
             RemoteCommand command = this.Command;
@@ -36,7 +38,7 @@ namespace MixItUp.Base.Model.Remote
     }
 
     [DataContract]
-    public class RemoteBoardButtonModel : RemoteBoardItemModelBase
+    public class RemoteBoardButtonModel : RemoteBoardItemModel
     {
         [DataMember]
         public string BackgroundColor { get; set; }

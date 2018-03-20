@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Controls.Remote
         private int xPosition;
         private int yPosition;
 
-        private RemoteBoardItemModelBase item;
+        private RemoteBoardItemModel item;
 
         public RemoteButtonControl()
         {
@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Remote
             this.yPosition = yPosition;
         }
 
-        public void SetRemoteItem(RemoteBoardItemModelBase item)
+        public void SetRemoteItem(RemoteBoardItemModel item)
         {
             if (this.remoteControl.CurrentBoard != null && this.remoteControl.CurrentGroup != null)
             {

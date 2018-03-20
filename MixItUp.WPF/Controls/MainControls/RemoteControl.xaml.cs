@@ -132,12 +132,12 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 foreach (RemoteBoardGroupModel group in board.Groups)
                 {
-                    foreach (RemoteBoardItemModelBase item in group.Items.Where(i => i.Command == null).ToList())
+                    foreach (RemoteBoardItemModel item in group.Items.Where(i => i.Command == null).ToList())
                     {
                         group.Items.Remove(item);
                     }
 
-                    foreach (RemoteBoardItemModelBase item in group.Items)
+                    foreach (RemoteBoardItemModel item in group.Items)
                     {
                         item.SetValuesFromCommand();
                     }
@@ -362,7 +362,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (this.CurrentGroup != null)
             {
-                foreach (RemoteBoardItemModelBase item in this.CurrentGroup.Items)
+                foreach (RemoteBoardItemModel item in this.CurrentGroup.Items)
                 {
                     if (item.YPosition == 0)
                     {

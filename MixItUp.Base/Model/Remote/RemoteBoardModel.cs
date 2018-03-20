@@ -59,11 +59,11 @@ namespace MixItUp.Base.Model.Remote
         public string Name { get; set; }
 
         [DataMember]
-        public List<RemoteBoardItemModelBase> Items { get; set; }
+        public List<RemoteBoardItemModel> Items { get; set; }
 
         public RemoteBoardGroupModel()
         {
-            this.Items = new List<RemoteBoardItemModelBase>();
+            this.Items = new List<RemoteBoardItemModel>();
         }
 
         public RemoteBoardGroupModel(string name)
