@@ -1,5 +1,4 @@
-﻿using IWshRuntimeLibrary;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -21,9 +20,9 @@ namespace MixItUp.Installer
             this.Loaded += MainWindow_Loaded;
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Task.Run(async () =>
+            await Task.Run(() =>
             {
                 try
                 {
@@ -73,29 +72,26 @@ namespace MixItUp.Installer
                                     Directory.CreateDirectory(shortcutPath);
                                     if (Directory.Exists(shortcutPath))
                                     {
-                                        WshShell wsh = new WshShell();
-                                        IWshRuntimeLibrary.IWshShortcut shortcut = wsh.CreateShortcut(Path.Combine(shortcutPath, "Mix It Up.lnk")) as IWshRuntimeLibrary.IWshShortcut;
-                                        shortcut.Arguments = "";
-                                        shortcut.TargetPath = applicationPath;
-                                        shortcut.WindowStyle = 1;
-                                        shortcut.Description = "Mix It Up";
-                                        shortcut.WorkingDirectory = folderPath;
-                                        shortcut.IconLocation = applicationPath;
-                                        shortcut.Save();
-
-                                        Process.Start(applicationPath);
-                                        this.Dispatcher.Invoke(() =>
+                                        string tempLinkFilePath = Path.Combine(folderPath, "Mix It Up.link");
+                                        if (File.Exists(tempLinkFilePath))
                                         {
-                                            this.Close();
-                                        });
-                                        return;
+                                            string shortcutLinkFilePath = Path.Combine(shortcutPath, "Mix It Up.lnk");
+                                            File.Copy(tempLinkFilePath, shortcutLinkFilePath);
+
+                                            Process.Start(shortcutLinkFilePath);
+                                            this.Dispatcher.Invoke(() =>
+                                            {
+                                                this.Close();
+                                            });
+                                            return;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-                catch (Exception ex) { Console.WriteLine(ex); }
+                catch (Exception ex) { System.IO.File.WriteAllText("MixItUp-Installer-Log.txt", ex.ToString()); }
 
                 this.ShowError("We were unable to download the latest Mix It Up version. Please contact support@mixitupapp.com for assistance.");
             });
