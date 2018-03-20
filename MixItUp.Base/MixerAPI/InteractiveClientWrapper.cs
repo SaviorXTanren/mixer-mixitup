@@ -203,8 +203,12 @@ namespace MixItUp.Base.MixerAPI
 
         protected override async Task<bool> Ping()
         {
-            DateTimeOffset? dateTime = await this.RunAsync(this.Client.GetTime());
-            return (dateTime != null && dateTime > DateTimeOffset.MinValue);
+            if (this.Client != null)
+            {
+                DateTimeOffset? dateTime = await this.RunAsync(this.Client.GetTime());
+                return (dateTime != null && dateTime > DateTimeOffset.MinValue);
+            }
+            return true;
         }
 
         #region Interactive Update Methods

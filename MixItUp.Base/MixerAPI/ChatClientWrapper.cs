@@ -283,15 +283,19 @@ namespace MixItUp.Base.MixerAPI
 
         protected override async Task<bool> Ping()
         {
-            if (await this.RunAsync(this.Client.Ping()))
+            if (this.Client != null)
             {
-                if (this.BotClient != null && this.BotClient.Authenticated)
+                if (await this.RunAsync(this.Client.Ping()))
                 {
-                    return await this.RunAsync(this.BotClient.Ping());
+                    if (this.BotClient != null && this.BotClient.Authenticated)
+                    {
+                        return await this.RunAsync(this.BotClient.Ping());
+                    }
+                    return true;
                 }
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         protected async Task BotPingChecker()

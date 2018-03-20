@@ -116,7 +116,11 @@ namespace MixItUp.Base.MixerAPI
 
         protected override async Task<bool> Ping()
         {
-            return await this.RunAsync(this.Client.Ping());
+            if (this.Client != null)
+            {
+                return await this.RunAsync(this.Client.Ping());
+            }
+            return true;
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
