@@ -89,7 +89,9 @@ namespace MixItUp.WPF
                     Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OBS\\obs-websocket-4.3.3-Windows-Installer.exe"));
                 }
             }
+
             Settings.Default.OBSUpgrade211 = true;
+            Settings.Default.Save();
         }
 
         private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
