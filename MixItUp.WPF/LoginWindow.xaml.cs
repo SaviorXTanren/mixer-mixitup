@@ -5,6 +5,7 @@ using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
+using MixItUp.WPF.Properties;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
@@ -94,6 +95,9 @@ namespace MixItUp.WPF
                                 if (ChannelSession.Settings.ReRunWizard)
                                 {
                                     newWindow = new NewUserWizardWindow();
+
+                                    Settings.Default.OBSUpgrade211 = true;
+                                    Settings.Default.Save();
                                 }
                                 else
                                 {
