@@ -56,11 +56,16 @@ namespace MixItUp.Desktop.Services
             this.OnDisconnectOccurred += RemoteService_OnDisconnectOccurred;
         }
 
-        public async Task<bool> Connect()
+        public async Task<bool> Connect(bool autoReconnect = true)
+        {
+            return await this.Connect(RemoteService.GetConnectConnectionURL(this.ClientID), autoReconnect);
+        }
+
+        public override async Task<bool> Connect(string endpoint, bool autoReconnect = true)
         {
             this.OnHeartbeat += ConnectHeartbeat;
 
-            await this.ConnectInternal(RemoteService.GetConnectConnectionURL(this.ClientID));
+            await this.Connect(endpoint);
 
             await this.WaitForResponse(() => { return this.Connected; });
 
@@ -187,6 +192,11 @@ namespace MixItUp.Desktop.Services
                 ClientID = ClientID,
             };
             await this.Send(heartbeatAck);
+        }
+
+        private async Task Send(RemoteMessageBase message)
+        {
+            await base.Send(SerializerHelper.SerializeToString(message));
         }
 
         private void SendEvent<T>(string packet, EventHandler<T> eventHandler)

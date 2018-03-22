@@ -1,8 +1,5 @@
-﻿using Mixer.Base.Model.Client;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace MixItUp.Base.Model.Remote
 {
@@ -26,12 +23,10 @@ namespace MixItUp.Base.Model.Remote
         ACTION_ACK,             //[RELAY]Host->Client
     }
 
-    public abstract class RemoteMessageBase : WebSocketPacket
+    public abstract class RemoteMessageBase
     {
         public DateTimeOffset Timestamp { get; set; }
         public MessageType Type { get; set; }
-
-        public new string type { get { return this.Type.ToString(); } set { } }
 
         public RemoteMessageBase()
         {

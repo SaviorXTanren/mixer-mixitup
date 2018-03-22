@@ -79,8 +79,6 @@ namespace MixItUp.Base.MixerAPI
             this.SceneGroups = new List<InteractiveConnectedSceneGroupModel>();
             this.Controls = new Dictionary<string, InteractiveConnectedControlCommand>();
             this.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
-
-            this.OnPingDisconnectOcurred += Client_OnPingDisconnectOcurred;
         }
 
         public async Task<bool> Connect(InteractiveGameListingModel game)
@@ -94,6 +92,7 @@ namespace MixItUp.Base.MixerAPI
             if (this.Client != null)
             {
                 this.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
+                this.Client.OnReconnectionOccurred -= InteractiveClient_OnReconnectionOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
                     this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
@@ -166,6 +165,7 @@ namespace MixItUp.Base.MixerAPI
                 if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
                 {
                     this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
+                    this.Client.OnReconnectionOccurred += InteractiveClient_OnReconnectionOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
                         this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
@@ -191,24 +191,10 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnParticipantLeave += Client_OnParticipantLeave;
                     this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.PingChecker(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
                     return await this.Initialize();
                 }
             }
             return false;
-        }
-
-        protected override async Task<bool> Ping()
-        {
-            if (this.Client != null)
-            {
-                DateTimeOffset? dateTime = await this.RunAsync(this.Client.GetTime());
-                return (dateTime != null && dateTime > DateTimeOffset.MinValue);
-            }
-            return true;
         }
 
         #region Interactive Update Methods
@@ -470,30 +456,14 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private async void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            await reconnectionLock.WaitAsync();
-
             ChannelSession.DisconnectionOccurred("Interactive");
-
-            InteractiveGameListingModel game = ChannelSession.Interactive.Client.InteractiveGame;
-            do
-            {
-                ChannelSession.ReconnectionAttemptOccurred("Interactive");
-
-                await this.Disconnect();
-
-                await Task.Delay(2000);
-            } while (!await this.Connect(game));
-
-            ChannelSession.ReconnectionOccurred("Interactive");
-
-            reconnectionLock.Release();
         }
 
-        private void Client_OnPingDisconnectOcurred(object sender, EventArgs e)
+        private void InteractiveClient_OnReconnectionOccurred(object sender, EventArgs e)
         {
-            this.InteractiveClient_OnDisconnectOccurred(this, WebSocketCloseStatus.NormalClosure);
+            ChannelSession.ReconnectionOccurred("Interactive");
         }
 
         #endregion Interactive Event Handlers

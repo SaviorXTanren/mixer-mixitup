@@ -45,8 +45,6 @@ namespace MixItUp.Base.MixerAPI
         {
             this.ChatUsers = new LockedDictionary<uint, UserViewModel>();
             this.Messages = new Dictionary<Guid, ChatMessageViewModel>();
-
-            this.OnPingDisconnectOcurred += Client_OnPingDisconnectOcurred;
         }
 
         public async Task<bool> Connect()
@@ -62,6 +60,7 @@ namespace MixItUp.Base.MixerAPI
                 if (this.BotClient != null)
                 {
                     this.BotClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
+                    this.BotClient.OnReconnectionOccurred += BotClient_OnReconnectionOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
                         this.BotClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
@@ -90,6 +89,7 @@ namespace MixItUp.Base.MixerAPI
                 this.Client.OnUserTimeoutOccurred -= ChatClient_OnUserTimeoutOccurred;
                 this.Client.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
                 this.Client.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
+                this.Client.OnReconnectionOccurred -= StreamerClient_OnReconnectionOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
                     this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
@@ -110,6 +110,7 @@ namespace MixItUp.Base.MixerAPI
             if (this.BotClient != null)
             {
                 this.BotClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
+                this.BotClient.OnReconnectionOccurred -= BotClient_OnReconnectionOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
                     this.BotClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
@@ -227,6 +228,7 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
                     this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
                     this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
+                    this.Client.OnReconnectionOccurred += StreamerClient_OnReconnectionOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
                         this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
@@ -260,10 +262,6 @@ namespace MixItUp.Base.MixerAPI
                     }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.PingChecker(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
@@ -279,33 +277,6 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
             return false;
-        }
-
-        protected override async Task<bool> Ping()
-        {
-            if (this.Client != null)
-            {
-                if (await this.RunAsync(this.Client.Ping()))
-                {
-                    if (this.BotClient != null && this.BotClient.Authenticated)
-                    {
-                        return await this.RunAsync(this.BotClient.Ping());
-                    }
-                    return true;
-                }
-                return false;
-            }
-            return true;
-        }
-
-        protected async Task BotPingChecker()
-        {
-            while (this.BotClient == null || await this.RunAsync(this.BotClient.Ping()))
-            {
-                await Task.Delay(5000);
-            }
-
-            this.BotClient_OnDisconnectOccurred(this, WebSocketCloseStatus.NormalClosure);
         }
 
         private async Task<ChatClient> ConnectAndAuthenticateChatClient(MixerConnectionWrapper connection)
@@ -600,49 +571,24 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            await reconnectionLock.WaitAsync();
-
             ChannelSession.DisconnectionOccurred("Streamer Chat");
+        }
 
-            do
-            {
-                ChannelSession.ReconnectionAttemptOccurred("Streamer Chat");
-
-                await this.Disconnect();
-
-                await Task.Delay(2000);
-            } while (!await this.Connect());
-
+        private void StreamerClient_OnReconnectionOccurred(object sender, EventArgs e)
+        {
             ChannelSession.ReconnectionOccurred("Streamer Chat");
-
-            reconnectionLock.Release();
         }
 
-        private async void BotClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void BotClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
-            await reconnectionLock.WaitAsync();
-
             ChannelSession.DisconnectionOccurred("Bot Chat");
-
-            do
-            {
-                ChannelSession.ReconnectionAttemptOccurred("Bot Chat");
-
-                await this.DisconnectBot();
-
-                await Task.Delay(2000);
-            } while (!await this.ConnectBot());
-
-            ChannelSession.ReconnectionOccurred("Bot Chat");
-
-            reconnectionLock.Release();
         }
 
-        private void Client_OnPingDisconnectOcurred(object sender, EventArgs e)
+        private void BotClient_OnReconnectionOccurred(object sender, EventArgs e)
         {
-            this.StreamerClient_OnDisconnectOccurred(this, WebSocketCloseStatus.NormalClosure);
+            ChannelSession.ReconnectionOccurred("Bot Chat");
         }
 
         #endregion Chat Event Handlers
