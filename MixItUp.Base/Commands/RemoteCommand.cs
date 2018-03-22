@@ -35,7 +35,7 @@ namespace MixItUp.Base.Commands
         }
 
         public RemoteCommand(string name, CommandBase commandToRun)
-            : base(name, CommandTypeEnum.Remote, name)
+            : this(name)
         {
             this.CommandID = commandToRun.ID;
         }
