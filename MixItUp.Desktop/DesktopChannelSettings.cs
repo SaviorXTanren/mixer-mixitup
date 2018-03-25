@@ -5,6 +5,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Remote;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
@@ -154,7 +155,7 @@ namespace MixItUp.Desktop
         public List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
         [JsonProperty]
-        public string SongRequestCommand { get; set; }
+        public SongRequestServiceTypeEnum SongRequestServiceType { get; set; }
         [JsonProperty]
         public bool SpotifyAllowExplicit { get; set; }
 

@@ -39,6 +39,9 @@ namespace MixItUp.Base.Actions
         [Name("Special Identifier")]
         SpecialIdentifier,
         File,
+        [Name("Song Request")]
+        SongRequest,
+        Spotify,
 
         Custom = 99,
     }

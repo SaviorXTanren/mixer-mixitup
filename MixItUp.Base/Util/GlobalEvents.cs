@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -58,6 +59,15 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnDonationOccurred != null)
             {
                 GlobalEvents.OnDonationOccurred(null, donation);
+            }
+        }
+
+        public static event EventHandler OnSongRequestsChangedOccurred;
+        public static void SongRequestsChangedOccurred()
+        {
+            if (GlobalEvents.OnSongRequestsChangedOccurred != null)
+            {
+                GlobalEvents.OnSongRequestsChangedOccurred(null, new EventArgs());
             }
         }
     }

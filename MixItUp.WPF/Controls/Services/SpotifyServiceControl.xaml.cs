@@ -46,10 +46,21 @@ namespace MixItUp.WPF.Controls.Services
             }
             else
             {
-                this.NewLoginGrid.Visibility = Visibility.Collapsed;
-                this.ExistingAccountGrid.Visibility = Visibility.Visible;
+                await this.groupBoxControl.window.RunAsyncOperation(async () =>
+                {
+                    if (ChannelSession.Services.Spotify.Profile != null && !ChannelSession.Services.Spotify.Profile.IsPremium)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("You do not have Spotify Premium, which is required for this feature.");
+                        await ChannelSession.Services.DisconnectSpotify();
+                    }
+                    else
+                    {
+                        this.NewLoginGrid.Visibility = Visibility.Collapsed;
+                        this.ExistingAccountGrid.Visibility = Visibility.Visible;
 
-                this.SetCompletedIcon(visible: true);
+                        this.SetCompletedIcon(visible: true);
+                    }
+                });
             }
         }
 

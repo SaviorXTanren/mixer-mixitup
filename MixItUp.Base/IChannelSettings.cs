@@ -3,6 +3,7 @@ using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Remote;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
@@ -83,7 +84,7 @@ namespace MixItUp.Base
 
         List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
-        string SongRequestCommand { get; set; }
+        SongRequestServiceTypeEnum SongRequestServiceType { get; set; }
         bool SpotifyAllowExplicit { get; set; }
     }
 

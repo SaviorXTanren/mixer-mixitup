@@ -1,146 +1,144 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Util;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
-    public enum SongRequestServiceTypeEnum
-    {
-        Spotify,
-        Youtube,
-    }
-
     /// <summary>
     /// Interaction logic for SongRequestControl.xaml
     /// </summary>
     public partial class SongRequestControl : MainControlBase
     {
-        private const string SpotifyLinkPrefix = "https://open.spotify.com/track/";
-
-        private SongRequestServiceTypeEnum serviceType;
-
-        private List<string> youtubeRequests;
+        private ObservableCollection<SongRequestItem> requests = new ObservableCollection<SongRequestItem>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         public SongRequestControl()
         {
             InitializeComponent();
-
-            this.youtubeRequests = new List<string>();
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
-            GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
+            GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;
 
-            return base.InitializeInternal();
+            this.SongRequestsQueueListView.ItemsSource = this.requests;
+
+            this.SongServiceTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<SongRequestServiceTypeEnum>(new List<SongRequestServiceTypeEnum>() { SongRequestServiceTypeEnum.Spotify });
+
+            this.SongServiceTypeComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.SongRequestServiceType);
+            this.AllowExplicitSongToggleButton.IsChecked = ChannelSession.Settings.SpotifyAllowExplicit;
+
+            await this.RefreshRequestsList();
+
+            await base.InitializeInternal();
         }
 
-        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageCommandViewModel command)
+        private async void EnableGameQueueToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (command.CommandName.Equals(ChannelSession.Settings.SongRequestCommand))
+            if (this.SongServiceTypeComboBox.SelectedIndex < 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("You must select a song service type.");
+                this.EnableGameQueueToggleButton.IsChecked = false;
+                return;
+            }
+
+            SongRequestServiceTypeEnum service = EnumHelper.GetEnumValueFromString<SongRequestServiceTypeEnum>((string)this.SongServiceTypeComboBox.SelectedItem);
+            if (service == SongRequestServiceTypeEnum.Youtube)
             {
 
             }
-        }
-
-        public void AddYoutubeSongRequest(string identifier)
-        {
-            identifier = identifier.Replace("https://www.youtube.com/watch?v=", "");
-            identifier = identifier.Replace("https://youtu.be/", "");
-            if (identifier.Contains("&"))
+            else if (service == SongRequestServiceTypeEnum.Spotify)
             {
-                identifier = identifier.Substring(0, identifier.IndexOf("&"));
-            }
-            this.youtubeRequests.Add(identifier);
-        }
-
-        public async Task AddSpotifySongRequest(UserViewModel user, string identifier, int artistNumber = 0)
-        {
-            if (ChannelSession.Services.Spotify != null)
-            {
-                string songID = null;
-                if (identifier.StartsWith("spotify:track:"))
+                if (ChannelSession.Services.Spotify == null)
                 {
-                    songID = identifier.Replace("spotify:track:", "");
-                }
-                else if (identifier.StartsWith("https://open.spotify.com/track/"))
-                {
-                    identifier = identifier.Replace(SpotifyLinkPrefix, "");
-                    songID = identifier.Substring(0, identifier.IndexOf('?'));
-                }
-                else
-                {
-                    Dictionary<string, string> artistToSongID = new Dictionary<string, string>();
-                    foreach (SpotifySong song in await ChannelSession.Services.Spotify.SearchSongs(identifier))
-                    {
-                        if (!artistToSongID.ContainsKey(song.Artist.Name))
-                        {
-                            artistToSongID[song.Artist.Name] = song.ID;
-                        }
-                    }
-
-                    if (artistToSongID.Count == 0)
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find any songs with the name specified");
-                        return;
-                    }
-                    else if (artistToSongID.Count > 1)
-                    {
-                        if (artistNumber > 0)
-                        {
-                            songID = artistToSongID.ElementAt(artistNumber - 1).Value;
-                        }
-                        else
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("There are multiple artists with this song, please re-run the command with \"!{0} /# <SONG NAME>\" where the # is the number of the following artists:", ChannelSession.Settings.SongRequestCommand));
-                            List<string> artistsStrings = new List<string>();
-                            for (int i = 0; i < artistToSongID.Count; i++)
-                            {
-                                artistsStrings.Add((i + 1) + ") " + artistToSongID.ElementAt(i));
-                            }
-                            await ChannelSession.Chat.Whisper(user.UserName, string.Join(", ", artistsStrings));
-                            return;
-                        }
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(songID))
-                {
-                    SpotifySong song = await ChannelSession.Services.Spotify.GetSong(songID);
-                    if (song != null)
-                    {
-                        if (song.Explicit && !ChannelSession.Settings.SpotifyAllowExplicit)
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, "Explicit content is currently blocked for song requests");
-                            return;
-                        }
-                        else
-                        {
-                            await ChannelSession.Services.Spotify.AddSongToPlaylist(identifier);
-                            await ChannelSession.Chat.SendMessage(string.Format(string.Format("The song \"{0}\" by \"{1}\" was added to the queue", song.Name, song.Artist.Name)));
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find a valid song for your request");
-                        return;
-                    }
-                }
-                else
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "This was not a valid request");
+                    await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area.");
+                    this.EnableGameQueueToggleButton.IsChecked = false;
                     return;
                 }
+            }
+
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                ChannelSession.Settings.SongRequestServiceType = service;
+                ChannelSession.Settings.SpotifyAllowExplicit = this.AllowExplicitSongToggleButton.IsChecked.GetValueOrDefault();
+
+                this.ClearQueueButton.IsEnabled = true;
+
+                await ChannelSession.Services.SongRequestService.Initialize(ChannelSession.Settings.SongRequestServiceType);
+
+                await this.RefreshRequestsList();
+            });
+        }
+
+        private void EnableGameQueueToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Services.SongRequestService.Disable();
+
+            this.ClearQueueButton.IsEnabled = false;
+        }
+
+        private void SongServiceTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            this.SpotifyOptionsGrid.Visibility = Visibility.Collapsed;
+
+            if (this.SongServiceTypeComboBox.SelectedIndex >= 0)
+            {
+                SongRequestServiceTypeEnum service = EnumHelper.GetEnumValueFromString<SongRequestServiceTypeEnum>((string)this.SongServiceTypeComboBox.SelectedItem);
+                if (service == SongRequestServiceTypeEnum.Youtube)
+                {
+
+                }
+                else if (service == SongRequestServiceTypeEnum.Spotify)
+                {
+                    this.SpotifyOptionsGrid.Visibility = Visibility.Visible;
+                }
+            }
+        }
+
+        private async void ClearQueueButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.Services.SongRequestService.ClearAllRequests();
+                await this.RefreshRequestsList();
+            });
+        }
+
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                Button button = (Button)sender;
+                SongRequestItem songRequest = (SongRequestItem)button.DataContext;
+                await ChannelSession.Services.SongRequestService.RemoveSongRequest(songRequest);
+                await this.RefreshRequestsList();
+            });
+        }
+
+        private async void GlobalEvents_OnSongRequestsChangedOccurred(object sender, EventArgs e)
+        {
+            await this.Dispatcher.InvokeAsync(async () =>
+            {
+                await this.RefreshRequestsList();
+            });
+        }
+
+        private async Task RefreshRequestsList()
+        {
+            this.requests.Clear();
+            foreach (SongRequestItem item in await ChannelSession.Services.SongRequestService.GetAllRequests())
+            {
+                this.requests.Add(item);
             }
         }
     }

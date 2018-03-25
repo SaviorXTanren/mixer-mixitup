@@ -83,6 +83,21 @@ namespace MixItUp.Base.Util
                 }
             }
 
+            if (ChannelSession.Services.Spotify != null && this.ContainsSpecialIdentifier("spotify"))
+            {
+                SpotifyUserProfile profile = await ChannelSession.Services.Spotify.GetCurrentProfile();
+                if (profile != null)
+                {
+                    this.ReplaceSpecialIdentifier("spotifyprofileurl", profile.Link);
+                }
+
+                SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                if (currentlyPlaying != null)
+                {
+                    this.ReplaceSpecialIdentifier("spotifycurrentlyplaying", currentlyPlaying.ToString());
+                }
+            }
+
             if (user != null)
             {
                 await user.SetDetails();

@@ -233,11 +233,17 @@
     <Compile Include="Controls\Actions\OverlayActionControl.xaml.cs">
       <DependentUpon>OverlayActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\SongRequestActionControl.xaml.cs">
+      <DependentUpon>SongRequestActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\SoundActionControl.xaml.cs">
       <DependentUpon>SoundActionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\SpecialIdentifierActionControl.xaml.cs">
       <DependentUpon>SpecialIdentifierActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\SpotifyActionControl.xaml.cs">
+      <DependentUpon>SpotifyActionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
       <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
@@ -535,11 +541,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\SongRequestActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\SoundActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\SpecialIdentifierActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SpotifyActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

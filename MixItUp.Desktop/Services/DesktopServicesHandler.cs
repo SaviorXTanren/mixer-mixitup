@@ -1,7 +1,5 @@
-﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
 using MixItUp.Input;
@@ -21,6 +19,7 @@ namespace MixItUp.Desktop.Services
             this.InitializeFileService();
             this.InitializeInputService();
             this.InitializeTextToSpeechService();
+            this.InitializeSongRequestService();
         }
 
         public override async Task Close()
@@ -77,6 +76,16 @@ namespace MixItUp.Desktop.Services
             if (this.TextToSpeechService == null)
             {
                 this.TextToSpeechService = new WindowsTextToSpeechService();
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+
+        public override Task<bool> InitializeSongRequestService()
+        {
+            if (this.SongRequestService == null)
+            {
+                this.SongRequestService = new DesktopSongRequestService();
                 return Task.FromResult(true);
             }
             return Task.FromResult(false);

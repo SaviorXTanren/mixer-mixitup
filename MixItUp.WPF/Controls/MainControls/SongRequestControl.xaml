@@ -15,38 +15,81 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="500" d:DesignWidth="600">
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <TextBox Grid.Row="0" x:Name="GiveawayCommandTextBox" Width="150" MaterialDesign:HintAssist.Hint="Command" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="2">
-                <RequirementControls:RequirementControl x:Name="Requirements" />
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+                    <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Unchecked" ToolTip="Enable/Disable" />
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <ComboBox x:Name="SongServiceTypeComboBox" Width="200" SelectionChanged="SongServiceTypeComboBox_SelectionChanged" Style="{StaticResource BackgroundComboBox}" MaterialDesign:HintAssist.Hint="Song Service" />
+                </Grid>
             </Grid>
 
+            <Grid Grid.Column="2">
+                <Grid x:Name="SpotifyOptionsGrid" Grid.Row="2" Visibility="Collapsed" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Allow Explicit Songs:</TextBlock>
+                    <ToggleButton Grid.Column="2" x:Name="AllowExplicitSongToggleButton" ToolTip="Enable/Disable" />
+                </Grid>
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Button x:Name="ClearQueueButton" Grid.Row="0" Width="150" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
+
+            <DataGrid x:Name="SongRequestsQueueListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Song Request" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTemplateColumn Width="65">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="DeleteButton" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center">
+                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
 
         </Grid>
 

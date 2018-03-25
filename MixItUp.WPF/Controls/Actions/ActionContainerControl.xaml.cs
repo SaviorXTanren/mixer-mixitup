@@ -94,6 +94,12 @@ namespace MixItUp.WPF.Controls.Actions
                 case ActionTypeEnum.File:
                     this.actionControl = (this.action != null) ? new FileActionControl(this, (FileAction)this.action) : new FileActionControl(this);
                     break;
+                case ActionTypeEnum.SongRequest:
+                    this.actionControl = (this.action != null) ? new SongRequestActionControl(this, (SongRequestAction)this.action) : new SongRequestActionControl(this);
+                    break;
+                case ActionTypeEnum.Spotify:
+                    this.actionControl = (this.action != null) ? new SpotifyActionControl(this, (SpotifyAction)this.action) : new SpotifyActionControl(this);
+                    break;
             }
 
             if (this.actionControl != null)

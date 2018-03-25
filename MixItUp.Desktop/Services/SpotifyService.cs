@@ -20,13 +20,9 @@ namespace MixItUp.Desktop.Services
         private const string ClientID = "94c9f9c67c864ae9a0f9f8f5bdf3e000";
         private const string ClientSecret = "42d76a67bdfe4dd598ec4a0e9b524e7e";
         private const string StateKey = "V21C2J2RWE51CYSM";
-        private const string AuthorizationUrl = "https://accounts.spotify.com/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=playlist-read-private+playlist-modify-public+playlist-read-collaborative+user-top-read+user-read-recently-played+user-library-read+user-read-currently-playing+user-modify-playback-state+user-read-playback-state+streaming&state={1}";
-
-        private const string MixItUpPlaylistName = "Mix It Up Request Playlist";
-        private const string MixItUpPlaylistDescription = "This playlist contains songs that are requested by users through Mix It Up";
+        private const string AuthorizationUrl = "https://accounts.spotify.com/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=playlist-read-private+playlist-modify-public+playlist-read-collaborative+user-top-read+user-read-recently-played+user-library-read+user-read-currently-playing+user-modify-playback-state+user-read-playback-state+streaming+user-read-private&state={1}";
 
         public SpotifyUserProfile Profile { get; private set; }
-        public SpotifyPlaylist Playlist { get; private set; }
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -63,7 +59,7 @@ namespace MixItUp.Desktop.Services
                 byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
                 authorizationValue = Convert.ToBase64String(authorizationBytes);
 
-                using (HttpClientWrapper client = await this.GetHttpClient())
+                using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://accounts.spotify.com/api/");
                     client.DefaultRequestHeaders.Add("Authorization", "Basic " + authorizationValue);
@@ -138,6 +134,7 @@ namespace MixItUp.Desktop.Services
             return songs;
         }
 
+        public async Task<SpotifySong> GetSong(SpotifySong song) { return await this.GetSong(song.ID); }
 
         public async Task<SpotifySong> GetSong(string songID)
         {
@@ -164,25 +161,25 @@ namespace MixItUp.Desktop.Services
             return playlists;
         }
 
-        public async Task<SpotifyPlaylist> GetPlaylist(string playlistID)
+        public async Task<SpotifyPlaylist> GetPlaylist(SpotifyPlaylist playlist)
         {
             try
             {
-                JObject result = await this.GetJObjectAsync(string.Format("users/{0}/playlists/{1}", this.Profile.ID, playlistID));
+                JObject result = await this.GetJObjectAsync(string.Format("users/{0}/playlists/{1}", this.Profile.ID, playlist.ID));
                 return new SpotifyPlaylist(result);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
         }
 
-        public async Task<IEnumerable<SpotifySong>> GetPlaylistSongs(string playlistID)
+        public async Task<IEnumerable<SpotifySong>> GetPlaylistSongs(SpotifyPlaylist playlist)
         {
             List<SpotifySong> results = new List<SpotifySong>();
             try
             {
-                foreach (JObject song in await this.GetPagedResult(string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlistID)))
+                foreach (JObject song in await this.GetPagedResult(string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlist.ID)))
                 {
-                    results.Add(new SpotifySong(song));
+                    results.Add(new SpotifySong((JObject)song["track"]));
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -207,31 +204,31 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
-        public async Task AddSongToPlaylist(string songID)
+        public async Task AddSongToPlaylist(SpotifyPlaylist playlist, SpotifySong song)
         {
             try
             {
-                HttpResponseMessage response = await this.PostAsync(string.Format("users/{0}/playlists/{1}/tracks?uris=spotify:track:" + songID, this.Profile.ID, this.Playlist.ID), null);
+                HttpResponseMessage response = await this.PostAsync(string.Format("users/{0}/playlists/{1}/tracks?uris=spotify:track:" + song.ID, this.Profile.ID, playlist.ID), null);
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task RemoveSongToPlaylist(string songID)
+        public async Task RemoveSongFromPlaylist(SpotifyPlaylist playlist, SpotifySong song)
         {
-            await this.RemoveSongToPlaylist(new List<string>() { songID });
+            await this.RemoveSongsFromPlaylist(playlist, new List<SpotifySong>() { song });
         }
 
-        public async Task RemoveSongToPlaylist(IEnumerable<string> songID)
+        public async Task RemoveSongsFromPlaylist(SpotifyPlaylist playlist, IEnumerable<SpotifySong> songs)
         {
             try
             {
-                for (int i = 0; i < songID.Count(); i += 50)
+                for (int i = 0; i < songs.Count(); i += 50)
                 {
                     JArray songsToDeleteArray = new JArray();
-                    foreach (string songToDelete in songID.Skip(i).Take(50))
+                    foreach (SpotifySong songToDelete in songs.Skip(i).Take(50))
                     {
                         JObject songPayload = new JObject();
-                        songPayload["uri"] = "spotify:track:" + songToDelete;
+                        songPayload["uri"] = "spotify:track:" + songToDelete.ID;
                         songsToDeleteArray.Add(songPayload);
                     }
 
@@ -241,7 +238,7 @@ namespace MixItUp.Desktop.Services
                     using (HttpClientWrapper client = await this.GetHttpClient())
                     {
                         HttpMethod method = new HttpMethod("DELETE");
-                        HttpRequestMessage request = new HttpRequestMessage(method, string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, this.Playlist.ID))
+                        HttpRequestMessage request = new HttpRequestMessage(method, string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlist.ID))
                             { Content = this.CreateContentFromObject(payload) };
                         HttpResponseMessage response = await client.SendAsync(request);
                     }
@@ -283,7 +280,7 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                await this.PutAsync("me/player/next", null);
+                await this.PostAsync("me/player/next", null);
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
@@ -292,7 +289,7 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                await this.PostAsync("me/player/seek", null);
+                await this.PostAsync("me/player/previous", null);
             }
             catch (Exception ex) { Logger.Log(ex); }
         }
@@ -301,34 +298,35 @@ namespace MixItUp.Desktop.Services
         {
             if (this.token != null)
             {
-                JObject payload = new JObject();
-                payload["grant_type"] = "refresh_token";
-                payload["client_id"] = SpotifyService.ClientID;
-                payload["client_secret"] = SpotifyService.ClientSecret;
-                payload["refresh_token"] = this.token.refreshToken;
-                payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
+                var body = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("grant_type", "refresh_token"),
+                    new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
+                };
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload));
+                string authorizationValue = string.Format("{0}:{1}", SpotifyService.ClientID, SpotifyService.ClientSecret);
+                byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
+                authorizationValue = Convert.ToBase64String(authorizationBytes);
+
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://accounts.spotify.com/api/");
+                    client.DefaultRequestHeaders.Add("Authorization", "Basic " + authorizationValue);
+                    using (var content = new FormUrlEncodedContent(body))
+                    {
+                        content.Headers.Clear();
+                        content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+
+                        HttpResponseMessage response = await client.PostAsync("token", content);
+                        this.token = await this.ProcessResponse<OAuthTokenModel>(response);
+                    }
+                }
             }
         }
 
         private async Task InitializeInternal()
         {
             this.Profile = await this.GetCurrentProfile();
-
-            foreach (SpotifyPlaylist playlist in await this.GetCurrentPlaylists())
-            {
-                if (playlist.Name.Equals(SpotifyService.MixItUpPlaylistName))
-                {
-                    this.Playlist = playlist;
-                    break;
-                }
-            }
-
-            if (this.Playlist == null)
-            {
-                this.Playlist = await this.CreatePlaylist(SpotifyService.MixItUpPlaylistName, SpotifyService.MixItUpPlaylistDescription);
-            }
         }
 
         private async Task<IEnumerable<JObject>> GetPagedResult(string endpointURL)

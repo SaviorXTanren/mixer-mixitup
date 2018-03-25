@@ -1,12 +1,13 @@
 ﻿using Mixer.Base.Model.OAuth;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public abstract class SpotifyItemBase
+    public abstract class SpotifyItemBase : IEquatable<SpotifyItemBase>
     {
         public string ID { get; set; }
         public string Name { get; set; }
@@ -27,13 +28,35 @@ namespace MixItUp.Base.Services
             }           
             this.Link = data["external_urls"]["spotify"].ToString();
         }
+
+        public override bool Equals(object other)
+        {
+            if (other is SpotifyItemBase)
+            {
+                return this.Equals((SpotifyItemBase)other);
+            }
+            return false;
+        }
+
+        public bool Equals(SpotifyItemBase other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     public class SpotifyUserProfile : SpotifyItemBase
     {
+        public bool IsPremium { get; set; }
+
         public SpotifyUserProfile() { }
 
-        public SpotifyUserProfile(JObject data) : base(data) { }
+        public SpotifyUserProfile(JObject data)
+            : base(data)
+        {
+            if (data["product"] != null)
+            {
+                this.IsPremium = data["product"].ToString().Equals("premium");
+            }
+        }
     }
 
     public class SpotifyArtist : SpotifyItemBase
@@ -91,6 +114,15 @@ namespace MixItUp.Base.Services
                 this.Album = new SpotifyAlbum((JObject)data["album"]);
             }
         }
+
+        public override string ToString()
+        {
+            if (!string.IsNullOrEmpty(this.Link))
+            {
+                return string.Format("\"{0}\" by {1} - {2}", this.Name, this.Artist.Name, this.Link);
+            }
+            return string.Format("\"{0}\" by {1}", this.Name, this.Artist.Name);
+        }
     }
 
     public class SpotifyCurrentlyPlaying : SpotifySong
@@ -123,6 +155,8 @@ namespace MixItUp.Base.Services
 
     public interface ISpotifyService
     {
+        SpotifyUserProfile Profile { get; }
+
         Task<bool> Connect();
 
         Task Disconnect();
@@ -133,21 +167,23 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SpotifySong>> SearchSongs(string songName);
 
+        Task<SpotifySong> GetSong(SpotifySong song);
+
         Task<SpotifySong> GetSong(string songID);
 
         Task<IEnumerable<SpotifyPlaylist>> GetCurrentPlaylists();
 
-        Task<SpotifyPlaylist> GetPlaylist(string playlistID);
+        Task<SpotifyPlaylist> GetPlaylist(SpotifyPlaylist playlist);
 
-        Task<IEnumerable<SpotifySong>> GetPlaylistSongs(string playlistID);
+        Task<IEnumerable<SpotifySong>> GetPlaylistSongs(SpotifyPlaylist playlist);
 
         Task<SpotifyPlaylist> CreatePlaylist(string name, string description);
 
-        Task AddSongToPlaylist(string songID);
+        Task AddSongToPlaylist(SpotifyPlaylist playlist, SpotifySong song);
 
-        Task RemoveSongToPlaylist(IEnumerable<string> songID);
+        Task RemoveSongFromPlaylist(SpotifyPlaylist playlist, SpotifySong song);
 
-        Task RemoveSongToPlaylist(string songID);
+        Task RemoveSongsFromPlaylist(SpotifyPlaylist playlist, IEnumerable<SpotifySong> song);
 
         Task<SpotifyCurrentlyPlaying> GetCurrentlyPlaying();
 
