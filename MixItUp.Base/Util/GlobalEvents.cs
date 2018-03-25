@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Model.User;
-using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -8,6 +7,15 @@ namespace MixItUp.Base.Util
 {
     public static class GlobalEvents
     {
+        public static event EventHandler<string> OnShowMessageBox;
+        public static void ShowMessageBox(string message)
+        {
+            if (GlobalEvents.OnShowMessageBox != null)
+            {
+                GlobalEvents.OnShowMessageBox(null, message);
+            }
+        }
+
         public static event EventHandler OnChatFontSizeChanged;
         public static void ChatFontSizeChanged()
         {

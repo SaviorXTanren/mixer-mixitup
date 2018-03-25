@@ -3,6 +3,7 @@ using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
 using MixItUp.WPF.Properties;
@@ -44,6 +45,8 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
+            GlobalEvents.OnShowMessageBox += GlobalEvents_OnShowMessageBox;
+
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             List<IChannelSettings> settings = new List<IChannelSettings>(await ChannelSession.Services.Settings.GetAllSettings());
@@ -190,6 +193,14 @@ namespace MixItUp.WPF
                 UpdateWindow window = new UpdateWindow(args);
                 window.Show();
             }
+        }
+
+        private async void GlobalEvents_OnShowMessageBox(object sender, string message)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                await MessageBoxHelper.ShowMessageDialog(message);
+            });
         }
     }
 }

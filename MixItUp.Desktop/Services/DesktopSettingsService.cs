@@ -18,6 +18,8 @@ namespace MixItUp.Desktop.Services
         public const string SettingsDirectoryName = "Settings";
         public const string SettingsTemplateDatabaseFileName = "SettingsTemplateDatabase.sqlite";
 
+        private const string BackupFileExtension = ".backup";
+
         private static SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
         public async Task<IEnumerable<IChannelSettings>> GetAllSettings()
@@ -32,10 +34,26 @@ namespace MixItUp.Desktop.Services
             {
                 if (filePath.EndsWith(".xml"))
                 {
-                    IChannelSettings setting = await this.LoadSettings(filePath);
+                    IChannelSettings setting = null;
+                    try
+                    {
+                        setting = await this.LoadSettings(filePath);
+                        if (setting != null)
+                        {
+                            settings.Add(setting);
+                            continue;
+                        }
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+
+                    string backupFilePath = filePath + DesktopSettingsService.BackupFileExtension;
+
+                    setting = await this.LoadSettings(backupFilePath);
                     if (setting != null)
                     {
                         settings.Add(setting);
+
+                        GlobalEvents.ShowMessageBox("We were unable to load your settings file due to file corruption and will instead load your backup. This means that your most recent changes from the last time you ran Mix It Up will not be present." + Environment.NewLine + Environment.NewLine + "We apologize for this inconvenience and have already recorded this issue to help prevent this from happening in the future.");
                     }
                 }
             }
@@ -92,10 +110,10 @@ namespace MixItUp.Desktop.Services
         public async Task SaveBackup(IChannelSettings settings)
         {
             string filePath = this.GetFilePath(settings);
-            await this.SaveSettings(settings, filePath + ".backup");
+            await this.SaveSettings(settings, filePath + DesktopSettingsService.BackupFileExtension);
 
             DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
-            File.Copy(desktopSettings.DatabasePath, desktopSettings.DatabasePath + ".backup", overwrite: true);
+            File.Copy(desktopSettings.DatabasePath, desktopSettings.DatabasePath + DesktopSettingsService.BackupFileExtension, overwrite: true);
         }
 
         public string GetFilePath(IChannelSettings settings)
