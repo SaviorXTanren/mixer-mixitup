@@ -349,8 +349,23 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    UserWithChannelModel userModel = await ChannelSession.Connection.GetUser(user.GetModel());
-                    await ChannelSession.Chat.SendMessage(user.UserName + "'s Sparks: " + userModel.sparks);
+                    UserModel userModel = await ChannelSession.Connection.GetUser(user.GetModel());
+
+                    if (arguments.Count() == 1)
+                    {
+                        string username = arguments.ElementAt(0);
+                        if (username.StartsWith("@"))
+                        {
+                            username = username.Substring(1);
+                        }
+
+                        userModel = await ChannelSession.Connection.GetUser(username);
+                    }
+
+                    if (userModel != null)
+                    {
+                        await ChannelSession.Chat.SendMessage(userModel.username + "'s Sparks: " + userModel.sparks);
+                    }
                 }
             }));
         }
