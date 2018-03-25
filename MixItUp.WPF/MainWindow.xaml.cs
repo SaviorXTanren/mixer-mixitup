@@ -138,10 +138,9 @@ namespace MixItUp.WPF
             }
             else
             {
-                if (!await ChannelSession.Services.Settings.SaveAndValidate(ChannelSession.Settings))
+                for (int i = 0; i < 5 && !await ChannelSession.Services.Settings.SaveAndValidate(ChannelSession.Settings); i++)
                 {
                     await Task.Delay(1000);
-                    await ChannelSession.Services.Settings.SaveAndValidate(ChannelSession.Settings);
                 }
             }
 
