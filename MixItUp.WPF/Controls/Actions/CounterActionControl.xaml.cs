@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base.Actions;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -79,6 +81,11 @@ namespace MixItUp.WPF.Controls.Actions
                 this.CounterAmountTextBox.IsEnabled = false;
                 this.CounterAmountTextBox.Clear();
             }
+        }
+
+        private void CountersFolderHyperlink_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Process.Start(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), CounterAction.CounterFolderName));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class CounterAction : ActionBase
     {
-        private const string CounterFolderName = "Counters";
+        public const string CounterFolderName = "Counters";
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 

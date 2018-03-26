@@ -14,43 +14,45 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0">Special Identifier Name (Only Letters &amp; Numbers Allowed, no $):</TextBlock>
+            <TextBlock Grid.Column="0">Save To File:</TextBlock>
+            <ToggleButton Grid.Column="2" x:Name="SaveToFileToggleButton" Checked="SaveToFileToggleButton_Checked" Unchecked="SaveToFileToggleButton_Checked" ToolTip="Save To File" />
 
-            <TextBlock Grid.Column="2">Save To File:</TextBlock>
-            <ToggleButton Grid.Column="4" x:Name="SaveToFileToggleButton" Checked="SaveToFileToggleButton_Checked" Unchecked="SaveToFileToggleButton_Checked" ToolTip="Save To File" />
+            <TextBlock Grid.Column="4">Reset On Load:</TextBlock>
+            <ToggleButton Grid.Column="6" x:Name="ResetOnLoadToggleButton" ToolTip="Reset On Load" IsChecked="True" IsEnabled="False" />
 
-            <TextBlock Grid.Column="6">Reset On Load:</TextBlock>
-            <ToggleButton Grid.Column="8" x:Name="ResetOnLoadToggleButton" ToolTip="Reset On Load" IsChecked="True" IsEnabled="False" />
+            <TextBlock Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Hyperlink x:Name="CountersFolderHyperlink" Click="CountersFolderHyperlink_Click">Counters Folder</Hyperlink>
+            </TextBlock>
 
         </Grid>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name (No $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name (Only Letters &amp; Numbers Allowed, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox Grid.Column="2" x:Name="CounterActionTypeComboBox"  MaterialDesign:HintAssist.Hint="Action" Style="{StaticResource BackgroundComboBox}" Width="150" SelectionChanged="CounterActionTypeComboBox_SelectionChanged" />
-            
-            <TextBox Grid.Column="4" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <ComboBox Grid.Column="2" x:Name="CounterActionTypeComboBox"  MaterialDesign:HintAssist.Hint="Action" Style="{StaticResource BackgroundComboBox}" SelectionChanged="CounterActionTypeComboBox_SelectionChanged" />
+
+            <TextBox Grid.Column="4" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
     </Grid>
