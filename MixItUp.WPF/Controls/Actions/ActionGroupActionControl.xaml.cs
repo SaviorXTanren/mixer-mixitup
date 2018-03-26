@@ -19,7 +19,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.ActionGroupNameComboBox.ItemsSource = ChannelSession.Settings.ActionGroupCommands;
+            this.ActionGroupNameComboBox.ItemsSource = ChannelSession.Settings.ActionGroupCommands.OrderBy(c => c.Name);
             if (this.action != null)
             {
                 this.ActionGroupNameComboBox.SelectedItem = ChannelSession.Settings.ActionGroupCommands.FirstOrDefault(c => c.Name.Equals(this.action.ActionGroupName));

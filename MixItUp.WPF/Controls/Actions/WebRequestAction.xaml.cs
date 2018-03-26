@@ -23,15 +23,8 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.ResponseActionComboBox.ItemsSource = EnumHelper.GetEnumNames<WebRequestResponseActionTypeEnum>();
-            
-            List<string> commandNames = ChannelSession.Settings.ChatCommands.Select(c => c.Name).ToList();
-            CommandBase command = this.containerControl.EditorControl.GetExistingCommand();
-            if (command != null && command is ChatCommand)
-            {
-                commandNames.Remove(command.Name);
-            }
-            this.CommandResponseComboBox.ItemsSource = commandNames;
+            this.ResponseActionComboBox.ItemsSource = EnumHelper.GetEnumNames<WebRequestResponseActionTypeEnum>();           
+            this.CommandResponseComboBox.ItemsSource = ChannelSession.Settings.ChatCommands.OrderBy(c => c.Name);
 
             if (this.action != null)
             {

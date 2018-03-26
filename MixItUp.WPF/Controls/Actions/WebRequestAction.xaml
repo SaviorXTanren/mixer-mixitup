@@ -47,7 +47,7 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" DisplayMemberPath="Name" Style="{StaticResource BackgroundComboBox}" />
 
             <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Arguments ($webrequestresult = Result Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

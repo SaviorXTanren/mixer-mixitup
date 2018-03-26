@@ -40,7 +40,7 @@ namespace MixItUp.WPF.Controls.Dialogs
                 {
                     commands = commands.Where(c => !(c is PreMadeChatCommand));
                 }
-                this.CommandNameComboBox.ItemsSource = commands;
+                this.CommandNameComboBox.ItemsSource = commands.OrderBy(c => c.Name);
                 this.CommandNameComboBox.SelectedIndex = -1;
                 this.CommandNameComboBox.IsEnabled = true;
             }
