@@ -265,9 +265,13 @@ namespace MixItUp.Desktop.Services
                         await ChannelSession.Chat.Whisper(user.UserName, "We could not find any songs with the name specified");
                         return;
                     }
+                    else if (artistToSongID.Count == 1)
+                    {
+                        songID = artistToSongID.First().Value;
+                    }
                     else if (artistToSongID.Count > 1)
                     {
-                        if (artistIndex > 0)
+                        if (artistIndex > 0 && artistIndex < artistToSongID.Count())
                         {
                             songID = artistToSongID.ElementAt(artistIndex - 1).Value;
                         }

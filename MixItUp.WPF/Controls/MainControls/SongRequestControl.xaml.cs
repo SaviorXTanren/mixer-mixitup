@@ -18,6 +18,8 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class SongRequestControl : MainControlBase
     {
+        private static SemaphoreSlim songListLock = new SemaphoreSlim(1);
+
         private ObservableCollection<SongRequestItem> requests = new ObservableCollection<SongRequestItem>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
@@ -75,6 +77,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.ClearQueueButton.IsEnabled = true;
 
                 await ChannelSession.Services.SongRequestService.Initialize(ChannelSession.Settings.SongRequestServiceType);
+
+                await ChannelSession.SaveSettings();
 
                 await this.RefreshRequestsList();
             });
@@ -135,11 +139,15 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task RefreshRequestsList()
         {
+            await SongRequestControl.songListLock.WaitAsync();
+
             this.requests.Clear();
             foreach (SongRequestItem item in await ChannelSession.Services.SongRequestService.GetAllRequests())
             {
                 this.requests.Add(item);
             }
+
+            SongRequestControl.songListLock.Release();
         }
     }
 }
