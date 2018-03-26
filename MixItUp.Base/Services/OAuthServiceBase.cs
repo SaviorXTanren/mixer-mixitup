@@ -52,7 +52,7 @@ namespace MixItUp.Base.Services
 
         protected override async Task<OAuthTokenModel> GetOAuthToken()
         {
-            if (this.token != null && this.token.Expiration < DateTimeOffset.Now)
+            if (this.token != null && this.token.ExpirationDateTime < DateTimeOffset.Now)
             {
                 await this.RefreshOAuthToken();
             }
