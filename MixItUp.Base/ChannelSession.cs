@@ -3,6 +3,7 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Services;
@@ -381,6 +382,17 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.SpotifyOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeSpotify();
+                    }
+
+                    foreach (CommandBase command in ChannelSession.AllCommands)
+                    {
+                        foreach (ActionBase action in command.Actions)
+                        {
+                            if (action is CounterAction)
+                            {
+                                await ((CounterAction)action).SetCounterValue();
+                            }
+                        }
                     }
 
                     await ChannelSession.Services.Settings.CleanUpData(ChannelSession.Settings);

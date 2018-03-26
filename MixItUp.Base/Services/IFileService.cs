@@ -6,9 +6,8 @@ namespace MixItUp.Base.Services
     {
         Task CreateDirectory(string path);
 
-        Task<string> OpenFile(string filePath);
-
-        Task CreateFile(string filePath, string data);
+        Task<string> ReadFile(string filePath);
+        Task SaveFile(string filePath, string data);
         Task AppendFile(string filePath, string data);
 
         string ShowOpenFolderDialog();

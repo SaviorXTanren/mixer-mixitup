@@ -39,11 +39,11 @@ namespace MixItUp.Base.Actions
             {
                 SpecialIdentifierStringBuilder stringBuilder = new SpecialIdentifierStringBuilder(this.TransferText);
                 await stringBuilder.ReplaceCommonSpecialModifiers(user, arguments);
-                await ChannelSession.Services.FileService.CreateFile(this.FilePath, stringBuilder.ToString());
+                await ChannelSession.Services.FileService.SaveFile(this.FilePath, stringBuilder.ToString());
             }
             else
             {
-                string data = await ChannelSession.Services.FileService.OpenFile(this.FilePath);
+                string data = await ChannelSession.Services.FileService.ReadFile(this.FilePath);
                 if (!string.IsNullOrEmpty(data))
                 {
                     SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.TransferText, data);

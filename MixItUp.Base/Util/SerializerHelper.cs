@@ -16,7 +16,7 @@ namespace MixItUp.Base.Util
 
         public static async Task SerializeToFile<T>(string filePath, T data)
         {
-            await SerializerHelper.fileService.CreateFile(filePath, SerializerHelper.SerializeToString(data));
+            await SerializerHelper.fileService.SaveFile(filePath, SerializerHelper.SerializeToString(data));
         }
 
         public static string SerializeToString<T>(T data)
@@ -28,7 +28,7 @@ namespace MixItUp.Base.Util
         {
             if (File.Exists(filePath))
             {
-                return SerializerHelper.DeserializeFromString<T>(await SerializerHelper.fileService.OpenFile(filePath));
+                return SerializerHelper.DeserializeFromString<T>(await SerializerHelper.fileService.ReadFile(filePath));
             }
             return default(T);
         }

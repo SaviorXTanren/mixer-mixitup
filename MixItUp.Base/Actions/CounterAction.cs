@@ -53,19 +53,31 @@ namespace MixItUp.Base.Actions
             this.ResetOnLoad = resetOnLoad;
         }
 
+        public async Task SetCounterValue()
+        {
+            if (!ChannelSession.Counters.ContainsKey(this.CounterName))
+            {
+                ChannelSession.Counters[this.CounterName] = 0;
+                if (this.ResetOnLoad)
+                {
+                    if (File.Exists(this.GetCounterFilePath()))
+                    {
+                        string data = await ChannelSession.Services.FileService.ReadFile(this.GetCounterFilePath());
+                        if (int.TryParse(data, out int amount))
+                        {
+                            ChannelSession.Counters[this.CounterName] = amount;
+                        }
+                    }
+                }
+                await this.SaveCounterToFile();
+            }
+        }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (!ChannelSession.Counters.ContainsKey(this.CounterName))
             {
                 ChannelSession.Counters[this.CounterName] = 0;
-                if (!this.ResetOnLoad)
-                {
-                    string data = await ChannelSession.Services.FileService.OpenFile(Path.Combine(CounterAction.CounterFolderName, this.CounterName + ".txt"));
-                    if (int.TryParse(data, out int amount))
-                    {
-                        ChannelSession.Counters[this.CounterName] = amount;
-                    }
-                }
             }
 
             if (this.UpdateAmount)
@@ -77,11 +89,18 @@ namespace MixItUp.Base.Actions
                 ChannelSession.Counters[this.CounterName] = 0;
             }
 
+            await this.SaveCounterToFile();
+        }
+
+        private async Task SaveCounterToFile()
+        {
             if (this.SaveToFile)
             {
                 await ChannelSession.Services.FileService.CreateDirectory(CounterAction.CounterFolderName);
-                await ChannelSession.Services.FileService.CreateFile(Path.Combine(CounterAction.CounterFolderName, this.CounterName + ".txt"), ChannelSession.Counters[this.CounterName].ToString());
+                await ChannelSession.Services.FileService.SaveFile(this.GetCounterFilePath(), ChannelSession.Counters[this.CounterName].ToString());
             }
         }
+
+        private string GetCounterFilePath() { return Path.Combine(CounterAction.CounterFolderName, this.CounterName + ".txt"); }
     }
 }

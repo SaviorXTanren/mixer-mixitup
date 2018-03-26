@@ -22,7 +22,7 @@ namespace MixItUp.Desktop.Files
             return Task.FromResult(0);
         }
 
-        public async Task<string> OpenFile(string filePath)
+        public async Task<string> ReadFile(string filePath)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace MixItUp.Desktop.Files
             return null;
         }
 
-        public async Task CreateFile(string filePath, string data)
+        public async Task SaveFile(string filePath, string data)
         {
             try
             {
@@ -43,6 +43,7 @@ namespace MixItUp.Desktop.Files
                 using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
                 {
                     await writer.WriteAsync(data);
+                    await writer.FlushAsync();
                 }
                 WindowsFileService.createLock.Release();
             }
@@ -61,6 +62,7 @@ namespace MixItUp.Desktop.Files
                 using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
                 {
                     await writer.WriteAsync(data);
+                    await writer.FlushAsync();
                 }
                 WindowsFileService.appendLock.Release();
             }

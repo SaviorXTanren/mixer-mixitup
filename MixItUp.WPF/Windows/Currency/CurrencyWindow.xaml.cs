@@ -285,7 +285,7 @@ namespace MixItUp.WPF.Windows.Currency
                         string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
                         if (!string.IsNullOrEmpty(filePath))
                         {
-                            string fileContents = await ChannelSession.Services.FileService.OpenFile(filePath);
+                            string fileContents = await ChannelSession.Services.FileService.ReadFile(filePath);
                             string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
                             if (lines.Count() > 0)
                             {
@@ -551,7 +551,7 @@ namespace MixItUp.WPF.Windows.Currency
                         fileContents.AppendLine(string.Format("{0} {1} {2}", userData.ID, userData.UserName, userData.GetCurrencyAmount(this.currency)));
                     }
 
-                    await ChannelSession.Services.FileService.CreateFile(filePath, fileContents.ToString());
+                    await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
                 }
             });
         }
