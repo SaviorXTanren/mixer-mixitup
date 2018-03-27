@@ -98,9 +98,6 @@ namespace MixItUp.WPF
                                 if (ChannelSession.Settings.ReRunWizard)
                                 {
                                     newWindow = new NewUserWizardWindow();
-
-                                    App.AppSettings.OBSUpgrade211 = true;
-                                    App.AppSettings.Save();
                                 }
                                 else
                                 {

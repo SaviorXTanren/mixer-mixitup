@@ -27,14 +27,10 @@ namespace MixItUp.WPF
         [DataMember]
         public string Language { get; set; }
 
-        [DataMember]
-        public bool OBSUpgrade211 { get; set; }
-
         public ApplicationSettings()
         {
             this.DarkTheme = false;
             this.Language = "en";
-            this.OBSUpgrade211 = false;
         }
 
         public void Save()
