@@ -43,8 +43,8 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
-                    <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Unchecked" ToolTip="Enable/Disable" />
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
+                    <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Unchecked" />
                 </Grid>
 
                 <Grid Grid.Row="2">
@@ -61,7 +61,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" VerticalAlignment="Center">Allow Explicit Songs:</TextBlock>
-                    <ToggleButton Grid.Column="2" x:Name="AllowExplicitSongToggleButton" ToolTip="Enable/Disable" />
+                    <ToggleButton Grid.Column="2" x:Name="AllowExplicitSongToggleButton" />
                 </Grid>
             </Grid>
 

@@ -162,7 +162,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
                             <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
                             <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Style="{StaticResource BackgroundComboBox}" Width="150" SelectionChanged="ComboBox_SelectionChanged" />

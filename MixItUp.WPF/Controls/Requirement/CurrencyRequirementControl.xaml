@@ -14,7 +14,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <ToggleButton Grid.Column="0" x:Name="EnableDisableToggleSwitch" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" ToolTip="Enable/Disable" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
+        <ToggleButton Grid.Column="0" x:Name="EnableDisableToggleSwitch" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
 
         <Grid Grid.Column="2" x:Name="CurrencyDataGrid" IsEnabled="False">
             <Grid.ColumnDefinitions>

@@ -26,7 +26,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
 
             <ToggleButton Grid.Column="2" x:Name="EnableQuotesToggleButton" Checked="EnableQuotesToggleButton_Checked" Unchecked="EnableQuotesToggleButton_Checked" />
 

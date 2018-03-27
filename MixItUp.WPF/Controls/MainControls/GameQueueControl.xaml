@@ -42,7 +42,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable/Disable:</TextBlock>
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
                 <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Unchecked" ToolTip="Enable/Disable" />
 
                 <TextBlock Grid.Column="4" VerticalAlignment="Center">Sub Priority:</TextBlock>
