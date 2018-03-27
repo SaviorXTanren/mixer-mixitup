@@ -53,6 +53,8 @@ namespace MixItUp.Desktop
         public OAuthTokenModel TwitterOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel SpotifyOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel DiscordOAuthToken { get; set; }
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
@@ -381,6 +383,10 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.Spotify != null)
             {
                 this.SpotifyOAuthToken = ChannelSession.Services.Spotify.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Discord != null)
+            {
+                this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();

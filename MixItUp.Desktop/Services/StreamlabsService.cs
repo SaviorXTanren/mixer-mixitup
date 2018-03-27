@@ -91,7 +91,7 @@ namespace MixItUp.Desktop.Services
                 payload["code"] = authorizationCode;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload));
+                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload), autoRefreshToken: false);
                 if (this.token != null)
                 {
                     token.authorizationCode = authorizationCode;
@@ -140,7 +140,7 @@ namespace MixItUp.Desktop.Services
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload));
+                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload), autoRefreshToken: false);
             }
         }
 

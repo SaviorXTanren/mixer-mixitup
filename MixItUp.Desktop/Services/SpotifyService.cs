@@ -54,24 +54,7 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("code", authorizationCode),
                 };
-
-                string authorizationValue = string.Format("{0}:{1}", SpotifyService.ClientID, SpotifyService.ClientSecret);
-                byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
-                authorizationValue = Convert.ToBase64String(authorizationBytes);
-
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("https://accounts.spotify.com/api/");
-                    client.DefaultRequestHeaders.Add("Authorization", "Basic " + authorizationValue);
-                    using (var content = new FormUrlEncodedContent(body))
-                    {
-                        content.Headers.Clear();
-                        content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-
-                        HttpResponseMessage response = await client.PostAsync("token", content);
-                        this.token = await this.ProcessResponse<OAuthTokenModel>(response);
-                    }
-                }
+                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://accounts.spotify.com/api/token", SpotifyService.ClientID, SpotifyService.ClientSecret, body);
 
                 if (this.token != null)
                 {
@@ -303,24 +286,7 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("grant_type", "refresh_token"),
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
-
-                string authorizationValue = string.Format("{0}:{1}", SpotifyService.ClientID, SpotifyService.ClientSecret);
-                byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
-                authorizationValue = Convert.ToBase64String(authorizationBytes);
-
-                using (HttpClient client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("https://accounts.spotify.com/api/");
-                    client.DefaultRequestHeaders.Add("Authorization", "Basic " + authorizationValue);
-                    using (var content = new FormUrlEncodedContent(body))
-                    {
-                        content.Headers.Clear();
-                        content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-
-                        HttpResponseMessage response = await client.PostAsync("token", content);
-                        this.token = await this.ProcessResponse<OAuthTokenModel>(response);
-                    }
-                }
+                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://accounts.spotify.com/api/token", SpotifyService.ClientID, SpotifyService.ClientSecret, body);
             }
         }
 

@@ -3,7 +3,9 @@ using Mixer.Base.Model.OAuth;
 using Mixer.Base.Services;
 using Mixer.Base.Web;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -50,13 +52,33 @@ namespace MixItUp.Base.Services
 
         protected override string GetBaseAddress() { return this.baseAddress; }
 
-        protected override async Task<OAuthTokenModel> GetOAuthToken()
+        protected override async Task<OAuthTokenModel> GetOAuthToken(bool autoRefreshToken = true)
         {
-            if (this.token != null && this.token.ExpirationDateTime < DateTimeOffset.Now)
+            if (autoRefreshToken && this.token != null && this.token.ExpirationDateTime < DateTimeOffset.Now)
             {
                 await this.RefreshOAuthToken();
             }
             return this.token;
+        }
+
+        protected async Task<OAuthTokenModel> GetWWWFormUrlEncodedOAuthToken(string endpoint, string clientID, string clientSecret, List<KeyValuePair<string, string>> bodyContent)
+        {
+            string authorizationValue = string.Format("{0}:{1}", clientID, clientSecret);
+            byte[] authorizationBytes = System.Text.Encoding.UTF8.GetBytes(authorizationValue);
+            authorizationValue = Convert.ToBase64String(authorizationBytes);
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Authorization", "Basic " + authorizationValue);
+                using (var content = new FormUrlEncodedContent(bodyContent))
+                {
+                    content.Headers.Clear();
+                    content.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+
+                    HttpResponseMessage response = await client.PostAsync(endpoint, content);
+                    return await this.ProcessResponse<OAuthTokenModel>(response);
+                }
+            }
         }
 
         protected abstract Task RefreshOAuthToken();

@@ -383,6 +383,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeSpotify();
                     }
+                    if (ChannelSession.Settings.DiscordOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeDiscord();
+                    }
 
                     foreach (CommandBase command in ChannelSession.AllCommands)
                     {

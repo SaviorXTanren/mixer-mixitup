@@ -279,6 +279,30 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeDiscord()
+        {
+            this.Discord = (ChannelSession.Settings.DiscordOAuthToken != null) ? new DiscordService(ChannelSession.Settings.DiscordOAuthToken) : new DiscordService();
+            if (await this.Discord.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectDiscord();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectDiscord()
+        {
+            if (this.Discord != null)
+            {
+                await this.Discord.Disconnect();
+                this.Discord = null;
+                ChannelSession.Settings.DiscordOAuthToken = null;
+            }
+        }
+
         private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)
         {
             await this.DisconnectOBSStudio();
