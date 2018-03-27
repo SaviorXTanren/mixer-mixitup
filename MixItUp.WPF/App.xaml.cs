@@ -18,6 +18,8 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class App : Application
     {
+        public static ApplicationSettings AppSettings;
+
         private bool crashObtained = false;
 
         public void SwitchTheme(bool isDark = false)
@@ -57,12 +59,14 @@ namespace MixItUp.WPF
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            if (Settings.Default.DarkTheme)
+            App.AppSettings = ApplicationSettings.Load();
+
+            if (App.AppSettings.DarkTheme)
             {
                 this.SwitchTheme(isDark: true);
             }
 
-            LocalizationHandler.SetCurrentLanguage(Settings.Default.Language);
+            LocalizationHandler.SetCurrentLanguage(App.AppSettings.Language);
 
             DesktopServicesHandler desktopServicesHandler = new DesktopServicesHandler();
             desktopServicesHandler.Initialize();

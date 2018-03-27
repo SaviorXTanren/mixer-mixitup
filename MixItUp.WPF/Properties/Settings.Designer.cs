@@ -22,41 +22,5 @@ namespace MixItUp.WPF.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DarkTheme {
-            get {
-                return ((bool)(this["DarkTheme"]));
-            }
-            set {
-                this["DarkTheme"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("en")]
-        public string Language {
-            get {
-                return ((string)(this["Language"]));
-            }
-            set {
-                this["Language"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool OBSUpgrade211 {
-            get {
-                return ((bool)(this["OBSUpgrade211"]));
-            }
-            set {
-                this["OBSUpgrade211"] = value;
-            }
-        }
     }
 }

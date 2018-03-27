@@ -85,7 +85,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.EnableDiagnosticLogsButton.Visibility = Visibility.Visible;
             }
 
-            if (Settings.Default.DarkTheme)
+            if (App.AppSettings.DarkTheme)
             {
                 this.SwitchThemeButton.Content = MainMenuControl.SwitchToLightThemeText;
             }
@@ -174,8 +174,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (await MessageBoxHelper.ShowConfirmationDialog("This will switch themes and restart Mix It Up. Are you sure you wish to do this?"))
             {
-                Settings.Default.DarkTheme = !Settings.Default.DarkTheme;
-                Settings.Default.Save();
+                App.AppSettings.DarkTheme = !App.AppSettings.DarkTheme;
+                App.AppSettings.Save();
                 ((MainWindow)this.Window).Restart();
             }
         }

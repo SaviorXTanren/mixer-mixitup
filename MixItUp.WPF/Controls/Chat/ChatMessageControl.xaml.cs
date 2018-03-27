@@ -69,7 +69,7 @@ namespace MixItUp.WPF.Controls.Chat
                         if (this.Message.IsAlertMessage)
                         {
                             textBlock.FontWeight = FontWeights.Bold;
-                            textBlock.Foreground = (Settings.Default.DarkTheme) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
+                            textBlock.Foreground = (App.AppSettings.DarkTheme) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
                         }
                         this.textBlocks.Add(textBlock);
                         this.MessageWrapPanel.Children.Add(textBlock);

@@ -99,8 +99,8 @@ namespace MixItUp.WPF
                                 {
                                     newWindow = new NewUserWizardWindow();
 
-                                    Settings.Default.OBSUpgrade211 = true;
-                                    Settings.Default.Save();
+                                    App.AppSettings.OBSUpgrade211 = true;
+                                    App.AppSettings.Save();
                                 }
                                 else
                                 {

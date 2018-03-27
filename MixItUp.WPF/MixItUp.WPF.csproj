@@ -196,6 +196,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>
     </Compile>
@@ -1012,7 +1013,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rmdir /Q /S $(TargetDir)Settings\
+    <PostBuildEvent>del $(TargetDir)ApplicationSettings.xml
+
+rmdir /Q /S $(TargetDir)Settings\
 mkdir $(TargetDir)Settings\
 
 rmdir /Q /S $(TargetDir)Logs\</PostBuildEvent>
