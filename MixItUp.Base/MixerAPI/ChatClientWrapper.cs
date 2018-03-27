@@ -59,6 +59,7 @@ namespace MixItUp.Base.MixerAPI
                 this.BotClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.BotConnection);
                 if (this.BotClient != null)
                 {
+                    this.BotClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
                     this.BotClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
                     this.BotClient.OnReconnectionOccurred += BotClient_OnReconnectionOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
@@ -109,6 +110,7 @@ namespace MixItUp.Base.MixerAPI
         {
             if (this.BotClient != null)
             {
+                this.BotClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
                 this.BotClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
                 this.BotClient.OnReconnectionOccurred -= BotClient_OnReconnectionOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
@@ -389,6 +391,13 @@ namespace MixItUp.Base.MixerAPI
                 return true;
             }
 
+            await this.CheckMessageForCommandAndRun(message);
+
+            return true;
+        }
+
+        private async Task CheckMessageForCommandAndRun(ChatMessageViewModel message)
+        {
             if (ChannelSession.IsStreamer && ChatMessageCommandViewModel.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
             {
                 ChatMessageCommandViewModel messageCommand = new ChatMessageCommandViewModel(message);
@@ -401,8 +410,6 @@ namespace MixItUp.Base.MixerAPI
                     await command.Perform(message.User, messageCommand.CommandArguments);
                 }
             }
-
-            return true;
         }
 
         #endregion Chat Update Methods
@@ -514,6 +521,15 @@ namespace MixItUp.Base.MixerAPI
             if (await this.AddMessage(message))
             {
                 this.OnMessageOccurred(sender, message);
+            }
+        }
+
+        private async void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
+        {
+            ChatMessageViewModel message = new ChatMessageViewModel(e);
+            if (message.IsWhisper)
+            {
+                await this.CheckMessageForCommandAndRun(message);
             }
         }
 
