@@ -65,7 +65,7 @@ namespace MixItUp.Desktop.Services
         {
             this.OnHeartbeat += ConnectHeartbeat;
 
-            await this.Connect(endpoint);
+            await base.Connect(endpoint);
 
             await this.WaitForResponse(() => { return this.Connected; });
 
