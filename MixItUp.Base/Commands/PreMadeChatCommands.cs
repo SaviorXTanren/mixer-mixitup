@@ -810,9 +810,9 @@ namespace MixItUp.Base.Commands
                 {
                     string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                    if (commandTrigger.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c) && c != '!'))
+                    if (!CommandBase.IsValidCommandString(commandTrigger))
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Command trigger can only contain letters and numbers");
+                        await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Command trigger contain an invalid character");
                         return;
                     }
 

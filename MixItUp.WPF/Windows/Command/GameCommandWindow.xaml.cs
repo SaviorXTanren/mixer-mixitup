@@ -176,9 +176,9 @@ namespace MixItUp.WPF.Windows.Command
                     return;
                 }
 
-                if (this.GameChatCommandTextBox.Text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c)))
+                if (!CommandBase.IsValidCommandString(this.GameChatCommandTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("Commands can only contain letters and numbers");
+                    await MessageBoxHelper.ShowMessageDialog("Triggers contain an invalid character");
                     return;
                 }
 

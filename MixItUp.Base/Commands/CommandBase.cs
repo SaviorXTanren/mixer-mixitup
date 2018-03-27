@@ -1,9 +1,9 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +27,15 @@ namespace MixItUp.Base.Commands
     [DataContract]
     public abstract class CommandBase
     {
+        public static bool IsValidCommandString(string command)
+        {
+            if (!string.IsNullOrEmpty(command))
+            {
+                return command.All(c => Char.IsLetterOrDigit(c) || Char.IsWhiteSpace(c) || Char.IsSymbol(c) || Char.IsPunctuation(c));
+            }
+            return false;
+        }
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -38,6 +47,8 @@ namespace MixItUp.Base.Commands
 
         [DataMember]
         public List<string> Commands { get; set; }
+        [DataMember]
+        public bool IncludeExclamationInCommands { get; set; }
 
         [DataMember]
         public List<ActionBase> Actions { get; set; }
@@ -60,6 +71,7 @@ namespace MixItUp.Base.Commands
         {
             this.ID = Guid.NewGuid();
             this.Commands = new List<string>();
+            this.IncludeExclamationInCommands = true;
             this.Actions = new List<ActionBase>();
             this.IsEnabled = true;
         }
@@ -78,7 +90,15 @@ namespace MixItUp.Base.Commands
 
         public string CommandsString { get { return string.Join(" ", this.Commands); } }
 
-        public bool ContainsCommand(string command) { return this.Commands.Contains(command); }
+        public virtual bool ContainsCommand(string command)
+        {
+            var commandsToCheck = this.Commands;
+            if (this.IncludeExclamationInCommands)
+            {
+                commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
+            }
+            return commandsToCheck.Contains(command);
+        }
 
         public async Task Perform() { await this.Perform(null); }
 

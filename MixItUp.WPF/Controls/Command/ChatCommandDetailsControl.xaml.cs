@@ -1,8 +1,7 @@
-﻿using Mixer.Base.Util;
+﻿using MaterialDesignThemes.Wpf;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Requirement;
-using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
@@ -16,6 +15,9 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class ChatCommandDetailsControl : CommandDetailsControlBase
     {
+        private const string ChatTriggersNoExclamationHintAssist = "Trigger(s) in Chat (EX: \"!follow\") (No \"!\" needed, space seperated)";
+        private const string ChatTriggersHintAssist = "Trigger(s) in Chat (EX: \"!follow\") (Space seperated)";
+
         private ChatCommand command;
 
         public ChatCommandDetailsControl(ChatCommand command)
@@ -28,9 +30,12 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
+            this.IncludeExclamationInCommandsToggleButton.IsChecked = true;
+
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
+                this.IncludeExclamationInCommandsToggleButton.IsChecked = this.command.IncludeExclamationInCommands;
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.Requirements.SetRequirements(this.command.Requirements);
             }
@@ -56,9 +61,9 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            if (this.ChatCommandTextBox.Text.Any(c => !Char.IsLetterOrDigit(c) && !Char.IsWhiteSpace(c) && c != '!'))
+            if (!CommandBase.IsValidCommandString(this.ChatCommandTextBox.Text))
             {
-                await MessageBoxHelper.ShowMessageDialog("Commands can only contain letters and numbers");
+                await MessageBoxHelper.ShowMessageDialog("Triggers contain an invalid character");
                 return false;
             }
 
@@ -114,11 +119,34 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.Commands = commands.ToList();
                     this.command.Requirements = requirements;
                 }
+
+                this.command.IncludeExclamationInCommands = this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault();
+
                 return this.command;
             }
             return null;
         }
 
-        private IEnumerable<string> GetCommandStrings() { return new List<string>(this.ChatCommandTextBox.Text.Replace("!", "").Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)); }
+        private IEnumerable<string> GetCommandStrings()
+        {
+            string commandStrings = this.ChatCommandTextBox.Text;
+            if (this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault())
+            {
+                commandStrings = commandStrings.Replace("!", "");
+            }
+            return new List<string>(commandStrings.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        private void IncludeExclamationInCommandsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault())
+            {
+                HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersNoExclamationHintAssist);
+            }
+            else
+            {
+                HintAssist.SetHint(this.ChatCommandTextBox, ChatTriggersHintAssist);
+            }
+        }
     }
 }

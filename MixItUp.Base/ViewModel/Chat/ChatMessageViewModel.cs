@@ -143,6 +143,12 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
+        public string CommandName { get { return this.CommandPieces.First().ToLower(); } }
+
+        public IEnumerable<string> CommandArguments { get { return this.CommandPieces.Skip(1); } }
+
+        private IEnumerable<string> CommandPieces { get { return this.Message.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries); } }
+
         public bool ShouldBeModerated(out string reason)
         {
             reason = "";

@@ -398,16 +398,14 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task CheckMessageForCommandAndRun(ChatMessageViewModel message)
         {
-            if (ChannelSession.IsStreamer && ChatMessageCommandViewModel.IsCommand(message) && !message.User.Roles.Contains(UserRole.Banned))
+            if (ChannelSession.IsStreamer && !message.User.Roles.Contains(UserRole.Banned))
             {
-                ChatMessageCommandViewModel messageCommand = new ChatMessageCommandViewModel(message);
+                GlobalEvents.ChatCommandMessageReceived(message);
 
-                GlobalEvents.ChatCommandMessageReceived(messageCommand);
-
-                PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.ContainsCommand(messageCommand.CommandName));
+                PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.ContainsCommand(message.CommandName));
                 if (command != null)
                 {
-                    await command.Perform(message.User, messageCommand.CommandArguments);
+                    await command.Perform(message.User, message.CommandArguments);
                 }
             }
         }

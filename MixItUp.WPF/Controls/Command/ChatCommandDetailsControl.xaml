@@ -30,11 +30,28 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
                 <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Auto-Include "!" In Triggers:</TextBlock>
+                    <ToggleButton Grid.Column="2" x:Name="IncludeExclamationInCommandsToggleButton" Checked="IncludeExclamationInCommandsToggleButton_Checked" Unchecked="IncludeExclamationInCommandsToggleButton_Checked" />
+                </Grid>
             </Grid>
 
             <Grid Grid.Row="2">
-                <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Trigger(s) in Chat (EX: &quot;!follow&quot;) (No &quot;!&quot; needed, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
         </Grid>
 

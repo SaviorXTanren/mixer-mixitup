@@ -190,7 +190,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageCommandViewModel e)
+        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel e)
         {
             if (this.giveawayEnabled)
             {
