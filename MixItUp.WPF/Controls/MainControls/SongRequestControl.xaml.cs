@@ -38,7 +38,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.SongServiceTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<SongRequestServiceTypeEnum>(new List<SongRequestServiceTypeEnum>() { SongRequestServiceTypeEnum.Spotify });
 
             this.SongServiceTypeComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.SongRequestServiceType);
-            this.AllowExplicitSongToggleButton.IsChecked = ChannelSession.Settings.SpotifyAllowExplicit;
+            this.SpotifyAllowExplicitSongToggleButton.IsChecked = ChannelSession.Settings.SpotifyAllowExplicit;
 
             await this.RefreshRequestsList();
 
@@ -72,9 +72,10 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 ChannelSession.Settings.SongRequestServiceType = service;
-                ChannelSession.Settings.SpotifyAllowExplicit = this.AllowExplicitSongToggleButton.IsChecked.GetValueOrDefault();
+                ChannelSession.Settings.SpotifyAllowExplicit = this.SpotifyAllowExplicitSongToggleButton.IsChecked.GetValueOrDefault();
 
-                this.ClearQueueButton.IsEnabled = true;
+                this.SongServiceTypeComboBox.IsEnabled = this.SpotifyOptionsGrid.IsEnabled = false;
+                this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = true;
 
                 await ChannelSession.Services.SongRequestService.Initialize(ChannelSession.Settings.SongRequestServiceType);
 
@@ -88,7 +89,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             ChannelSession.Services.SongRequestService.Disable();
 
-            this.ClearQueueButton.IsEnabled = false;
+            this.SongServiceTypeComboBox.IsEnabled = this.SpotifyOptionsGrid.IsEnabled = true;
+            this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = false;
         }
 
         private void SongServiceTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -109,12 +111,44 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private async void PlayPauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (ChannelSession.Services.SongRequestService.GetRequestService() == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
+                {
+                    if ((await ChannelSession.Services.Spotify.GetCurrentlyPlaying()).IsPlaying)
+                    {
+                        await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
+                    }
+                    else
+                    {
+                        await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+                    }
+                }
+            });
+        }
+
+        private async void NextSongButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (ChannelSession.Services.SongRequestService.GetRequestService() == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
+                {
+                    await ChannelSession.Services.Spotify.NextCurrentlyPlaying();
+                }
+            });
+        }
+
         private async void ClearQueueButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                await ChannelSession.Services.SongRequestService.ClearAllRequests();
-                await this.RefreshRequestsList();
+                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you want to clear the Song Request queue?"))
+                {
+                    await ChannelSession.Services.SongRequestService.ClearAllRequests();
+                    await this.RefreshRequestsList();
+                }
             });
         }
 

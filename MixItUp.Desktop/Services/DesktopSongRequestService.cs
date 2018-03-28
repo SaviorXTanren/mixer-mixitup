@@ -262,7 +262,7 @@ namespace MixItUp.Desktop.Services
 
                     if (artistToSongID.Count == 0)
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find any songs with the name specified");
+                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find any songs with the name specified. You can visit https://open.spotify.com/search and search for the song you want. Once you have found it, right click on the song and select \"Copy Song Link\" and run this command with that link.");
                         return;
                     }
                     else if (artistToSongID.Count == 1)
@@ -302,6 +302,7 @@ namespace MixItUp.Desktop.Services
                         else
                         {
                             await ChannelSession.Services.Spotify.AddSongToPlaylist(this.playlist, song);
+
                             SongRequestItem request = this.GetSpotifySongRequest(song);
                             await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue", request.Name));
                             return;
@@ -309,7 +310,7 @@ namespace MixItUp.Desktop.Services
                     }
                     else
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find a valid song for your request");
+                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find a valid song for your request.");
                         return;
                     }
                 }

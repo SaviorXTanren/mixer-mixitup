@@ -56,25 +56,38 @@
                 <Grid x:Name="SpotifyOptionsGrid" Grid.Row="2" Visibility="Collapsed" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="20" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" VerticalAlignment="Center">Allow Explicit Songs:</TextBlock>
-                    <ToggleButton Grid.Column="2" x:Name="AllowExplicitSongToggleButton" />
+                    <ToggleButton Grid.Column="2" x:Name="SpotifyAllowExplicitSongToggleButton" />
                 </Grid>
             </Grid>
 
         </Grid>
 
-        <Grid Grid.Row="2">
+        <Grid x:Name="CurrentlyPlayingAndSongQueueGrid" Grid.Row="2" IsEnabled="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <Button x:Name="ClearQueueButton" Grid.Row="0" Width="150" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="PlayPauseButton" Grid.Column="0" Click="PlayPauseButton_Click" Content="{MaterialDesign:PackIcon PlayPause}" MaterialDesign:HintAssist.Hint="Play/Pause" />
+                <Button x:Name="NextSongButton" Grid.Column="2" Click="NextSongButton_Click" Content="{MaterialDesign:PackIcon SkipNext}" MaterialDesign:HintAssist.Hint="Next Song" />
+
+                <Button x:Name="ClearQueueButton" Grid.Column="4" Width="150" Click="ClearQueueButton_Click">Clear Queue</Button>
+            </Grid>
 
             <DataGrid x:Name="SongRequestsQueueListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
