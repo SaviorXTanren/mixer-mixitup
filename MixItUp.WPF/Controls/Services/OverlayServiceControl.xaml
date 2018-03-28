@@ -10,9 +10,9 @@
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="40" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="50" />
+            <ColumnDefinition Width="40" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 

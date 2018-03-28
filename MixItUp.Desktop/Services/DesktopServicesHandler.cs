@@ -6,6 +6,7 @@ using MixItUp.Input;
 using MixItUp.OBS;
 using MixItUp.Overlay;
 using MixItUp.XSplit;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -98,10 +99,11 @@ namespace MixItUp.Desktop.Services
                 this.OverlayServer = new OverlayWebServer();
                 if (await this.OverlayServer.Initialize())
                 {
+                    this.OverlayServer.OnWebSocketDisconnectOccurred += OverlayServer_OnWebSocketDisconnectOccurred;
                     return true;
                 }
-                this.OverlayServer = null;
             }
+            await this.DisconnectOverlayServer();
             return false;
         }
 
@@ -109,6 +111,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.OverlayServer != null)
             {
+                this.OverlayServer.OnWebSocketDisconnectOccurred -= OverlayServer_OnWebSocketDisconnectOccurred;
+
                 await this.OverlayServer.Disconnect();
                 this.OverlayServer = null;
             }
@@ -144,8 +148,13 @@ namespace MixItUp.Desktop.Services
             if (this.XSplitServer == null)
             {
                 this.XSplitServer = new XSplitWebServer("http://localhost:8211/");
-                return await this.XSplitServer.Initialize();
+                if (await this.XSplitServer.Initialize())
+                {
+                    this.XSplitServer.OnWebSocketDisconnectOccurred += XSplitServer_OnWebSocketDisconnectOccurred;
+                    return true;
+                }
             }
+            await this.DisconnectXSplitServer();
             return true;
         }
 
@@ -153,7 +162,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.XSplitServer != null)
             {
-                await this.XSplitServer.Disconnect();
+                this.XSplitServer.OnWebSocketDisconnectOccurred -= XSplitServer_OnWebSocketDisconnectOccurred;
+                await this.XSplitServer.DisconnectServer();
                 this.XSplitServer = null;
             }
         }
@@ -303,9 +313,19 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        private void OverlayServer_OnWebSocketDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        {
+            ChannelSession.DisconnectionOccurred("Overlay");
+        }
+
         private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)
         {
             await this.DisconnectOBSStudio();
+        }
+
+        private void XSplitServer_OnWebSocketDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        {
+            ChannelSession.DisconnectionOccurred("XSplit");
         }
     }
 }

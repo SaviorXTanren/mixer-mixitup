@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -88,7 +89,7 @@ namespace MixItUp.Base.Services
 
     public interface IOverlayService
     {
-        event EventHandler Disconnected;
+        event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectOccurred;
 
         Task<bool> Initialize();
 

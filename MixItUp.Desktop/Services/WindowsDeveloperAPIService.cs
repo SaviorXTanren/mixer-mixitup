@@ -5,12 +5,12 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
 {
@@ -71,202 +71,218 @@ namespace MixItUp.Desktop.Services
 
     public class WindowsDeveloperAPIService : HttpListenerServerBase, IDeveloperAPIService
     {
+        public const string GetHttpMethod = "GET";
+        public const string PostHttpMethod = "POST";
+        public const string PutHttpMethod = "PUT";
+        public const string PatchHttpMethod = "PATCH";
+
         public const string DeveloperAPIHttpListenerServerAddress = "http://localhost:8911/api/";
 
         public WindowsDeveloperAPIService() : base(WindowsDeveloperAPIService.DeveloperAPIHttpListenerServerAddress) { }
 
-        protected override HttpStatusCode RequestReceived(HttpListenerRequest request, string data, out string result)
+        protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
-            if (!string.IsNullOrEmpty(request.RawUrl) && request.RawUrl.ToLower().StartsWith("/api"))
+            if (!string.IsNullOrEmpty(listenerContext.Request.RawUrl))
             {
-                List<string> urlSegments = new List<string>(request.RawUrl.ToLower().Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries));
-                urlSegments.RemoveAt(0);
-                if (urlSegments.Count() == 0)
+                string url = listenerContext.Request.RawUrl.ToLower();
+                string httpMethod = listenerContext.Request.HttpMethod;
+                if (url.StartsWith("/api"))
                 {
-                    result = "Welcome to the Mix It Up Developer API! More detailed documentation about this service, please visit https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API";
-                    return HttpStatusCode.OK;
-                }
-                else if (urlSegments[0].Equals("mixer"))
-                {
-                    if (urlSegments.Count() == 3 && urlSegments[1].Equals("users"))
+                    List<string> urlSegments = new List<string>(url.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries));
+                    urlSegments.RemoveAt(0);
+                    if (urlSegments.Count() == 0)
                     {
-                        if (request.HttpMethod.Equals("GET"))
-                        {
-                            string identifier = urlSegments[2];
-
-                            UserModel user = null;
-                            if (uint.TryParse(identifier, out uint userID))
-                            {
-                                user = ChannelSession.Connection.GetUser(userID).Result;
-                            }
-                            else
-                            {
-                                user = ChannelSession.Connection.GetUser(identifier).Result;
-                            }
-
-                            if (user != null)
-                            {
-                                result = SerializerHelper.SerializeToString(user);
-                                return HttpStatusCode.OK;
-                            }
-                            else
-                            {
-                                result = "Could not find the user specified";
-                                return HttpStatusCode.NotFound;
-                            }
-                        }
-                    }
-                }
-                else if (urlSegments[0].Equals("users") && urlSegments.Count >= 2)
-                {
-                    string identifier = urlSegments[1];
-
-                    UserDataViewModel user = null;
-                    if (uint.TryParse(identifier, out uint userID) && ChannelSession.Settings.UserData.ContainsKey(userID))
-                    {
-                        user = ChannelSession.Settings.UserData[userID];
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, "Welcome to the Mix It Up Developer API! More detailed documentation about this service, please visit https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API");
+                        return;
                     }
                     else
                     {
-                        user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.ToLower().Equals(identifier));
+                        string data = await this.GetRequestData(listenerContext);
+                        await this.ProcessDeveloperAPIRequest(listenerContext, httpMethod, urlSegments, data);
+                        return;
                     }
+                }
+            }
+            await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "This is not a valid API");
+        }
 
-                    if (request.HttpMethod.Equals("GET"))
+        private async Task ProcessDeveloperAPIRequest(HttpListenerContext listenerContext, string httpMethod, List<string> urlSegments, string data)
+        {
+            if (urlSegments[0].Equals("mixer"))
+            {
+                if (urlSegments.Count() == 3 && urlSegments[1].Equals("users"))
+                {
+                    if (httpMethod.Equals(GetHttpMethod))
                     {
+                        string identifier = urlSegments[2];
+
+                        UserModel user = null;
+                        if (uint.TryParse(identifier, out uint userID))
+                        {
+                            user = ChannelSession.Connection.GetUser(userID).Result;
+                        }
+                        else
+                        {
+                            user = ChannelSession.Connection.GetUser(identifier).Result;
+                        }
+
                         if (user != null)
                         {
-                            result = SerializerHelper.SerializeToString(new UserDeveloperAPIModel(user));
-                            return HttpStatusCode.OK;
+                            await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(user));
+                            return;
                         }
                         else
                         {
-                            result = "Could not find the user specified";
-                            return HttpStatusCode.NotFound;
-                        }
-                    }
-                    else if (request.HttpMethod.Equals("PUT") || request.HttpMethod.Equals("PATCH"))
-                    {
-                        UserDeveloperAPIModel updatedUserData = SerializerHelper.DeserializeFromString<UserDeveloperAPIModel>(data);
-                        if (updatedUserData != null && updatedUserData.ID.Equals(user.ID))
-                        {
-                            user.ViewingMinutes = updatedUserData.ViewingMinutes;
-                            foreach (UserCurrencyDeveloperAPIModel currencyData in updatedUserData.CurrencyAmounts)
-                            {
-                                if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
-                                {
-                                    user.SetCurrencyAmount(ChannelSession.Settings.Currencies[currencyData.ID], currencyData.Amount);
-                                }
-                            }
-
-                            result = SerializerHelper.SerializeToString(new UserDeveloperAPIModel(user));
-                            return HttpStatusCode.OK;
-                        }
-                        else
-                        {
-                            result = "Invalid data/could not find matching user";
-                            return HttpStatusCode.NotFound;
+                            await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the user specified");
+                            return;
                         }
                     }
                 }
-                else if (urlSegments[0].Equals("currency") && urlSegments.Count() == 2)
+            }
+            else if (urlSegments[0].Equals("users") && urlSegments.Count() >= 2)
+            {
+                string identifier = urlSegments[1];
+
+                UserDataViewModel user = null;
+                if (uint.TryParse(identifier, out uint userID) && ChannelSession.Settings.UserData.ContainsKey(userID))
                 {
-                    if (request.HttpMethod.Equals("GET"))
+                    user = ChannelSession.Settings.UserData[userID];
+                }
+                else
+                {
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.ToLower().Equals(identifier));
+                }
+
+                if (httpMethod.Equals(GetHttpMethod))
+                {
+                    if (user != null)
                     {
-                        string identifier = urlSegments[1];
-                        if (Guid.TryParse(identifier, out Guid currencyID) && ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(new UserDeveloperAPIModel(user)));
+                        return;
+                    }
+                    else
+                    {
+                        await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the user specified");
+                        return;
+                    }
+                }
+                else if (httpMethod.Equals(PutHttpMethod) || httpMethod.Equals(PatchHttpMethod))
+                {
+                    UserDeveloperAPIModel updatedUserData = SerializerHelper.DeserializeFromString<UserDeveloperAPIModel>(data);
+                    if (updatedUserData != null && updatedUserData.ID.Equals(user.ID))
+                    {
+                        user.ViewingMinutes = updatedUserData.ViewingMinutes;
+                        foreach (UserCurrencyDeveloperAPIModel currencyData in updatedUserData.CurrencyAmounts)
                         {
-                            result = SerializerHelper.SerializeToString(ChannelSession.Settings.Currencies[currencyID]);
-                            return HttpStatusCode.OK;
+                            if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
+                            {
+                                user.SetCurrencyAmount(ChannelSession.Settings.Currencies[currencyData.ID], currencyData.Amount);
+                            }
+                        }
+
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(new UserDeveloperAPIModel(user)));
+                        return;
+                    }
+                    else
+                    {
+                        await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Invalid data/could not find matching user");
+                        return;
+                    }
+                }
+            }
+            else if (urlSegments[0].Equals("currency") && urlSegments.Count() == 2)
+            {
+                if (httpMethod.Equals(GetHttpMethod))
+                {
+                    string identifier = urlSegments[1];
+                    if (Guid.TryParse(identifier, out Guid currencyID) && ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+                    {
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(ChannelSession.Settings.Currencies[currencyID]));
+                        return;
+                    }
+                    else
+                    {
+                        await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the currency specified");
+                        return;
+                    }
+                }
+            }
+            else if (urlSegments[0].Equals("commands"))
+            {
+                List<CommandBase> allCommands = new List<CommandBase>();
+                allCommands.AddRange(ChannelSession.Settings.ChatCommands);
+                allCommands.AddRange(ChannelSession.Settings.InteractiveCommands);
+                allCommands.AddRange(ChannelSession.Settings.EventCommands);
+                allCommands.AddRange(ChannelSession.Settings.TimerCommands);
+                allCommands.AddRange(ChannelSession.Settings.ActionGroupCommands);
+                allCommands.AddRange(ChannelSession.Settings.GameCommands);
+
+                if (httpMethod.Equals(GetHttpMethod))
+                {
+                    if (urlSegments.Count() == 1)
+                    {
+                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(allCommands));
+                        return;
+                    }
+                    else if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
+                    {
+                        CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
+                        if (command != null)
+                        {
+                            await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(command));
+                            return;
                         }
                         else
                         {
-                            result = "Could not find the currency specified";
-                            return HttpStatusCode.NotFound;
+                            await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the command specified");
+                            return;
                         }
                     }
                 }
-                else if (urlSegments[0].Equals("commands"))
+                else if (httpMethod.Equals(PostHttpMethod))
                 {
-                    List<CommandBase> allCommands = new List<CommandBase>();
-                    allCommands.AddRange(ChannelSession.Settings.ChatCommands);
-                    allCommands.AddRange(ChannelSession.Settings.InteractiveCommands);
-                    allCommands.AddRange(ChannelSession.Settings.EventCommands);
-                    allCommands.AddRange(ChannelSession.Settings.TimerCommands);
-                    allCommands.AddRange(ChannelSession.Settings.ActionGroupCommands);
-                    allCommands.AddRange(ChannelSession.Settings.GameCommands);
-
-                    if (request.HttpMethod.Equals("GET"))
+                    if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
                     {
-                        if (urlSegments.Count() == 1)
+                        CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
+                        if (command != null)
                         {
-                            result = SerializerHelper.SerializeToString(allCommands);
-                            return HttpStatusCode.OK;
-                        }
-                        else if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
-                        {
-                            CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
-                            if (command != null)
-                            {
-                                result = SerializerHelper.SerializeToString(command);
-                                return HttpStatusCode.OK;
-                            }
-                            else
-                            {
-                                result = "Could not find the command specified";
-                                return HttpStatusCode.NotFound;
-                            }
-                        }
-                    }
-                    else if (request.HttpMethod.Equals("POST"))
-                    {
-                        if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
-                        {
-                            CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
-                            if (command != null)
-                            {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                                command.Perform();
+                            command.Perform();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                                result = "";
-                                return HttpStatusCode.OK;
-                            }
-                            else
-                            {
-                                result = "Could not find the command specified";
-                                return HttpStatusCode.NotFound;
-                            }
+                            await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(command));
+                            return;
                         }
-                    }
-                    else if (request.HttpMethod.Equals("PUT") || request.HttpMethod.Equals("PATCH"))
-                    {
-                        if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
+                        else
                         {
-                            CommandBase commandData = SerializerHelper.DeserializeAbstractFromString<CommandBase>(data);
-                            CommandBase matchedCommand = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
-                            if (matchedCommand != null)
-                            {
-                                matchedCommand.IsEnabled = commandData.IsEnabled;
-                                result = SerializerHelper.SerializeToString(matchedCommand);
-                                return HttpStatusCode.OK;
-                            }
-                            else
-                            {
-                                result = "Invalid data/could not find matching command";
-                                return HttpStatusCode.NotFound;
-                            }
+                            await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the command specified");
+                            return;
                         }
                     }
                 }
+                else if (httpMethod.Equals(PutHttpMethod) || httpMethod.Equals(PatchHttpMethod))
+                {
+                    if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
+                    {
+                        CommandBase commandData = SerializerHelper.DeserializeAbstractFromString<CommandBase>(data);
+                        CommandBase matchedCommand = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
+                        if (matchedCommand != null)
+                        {
+                            matchedCommand.IsEnabled = commandData.IsEnabled;
 
-                result = "This is not a valid API";
-                return HttpStatusCode.BadRequest;
+                            await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(matchedCommand));
+                            return;
+                        }
+                        else
+                        {
+                            await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Invalid data/could not find matching command");
+                            return;
+                        }
+                    }
+                }
             }
-            else
-            {
-                result = "This is not a valid API";
-                return HttpStatusCode.BadRequest;
-            }
+
+            await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "This is not a valid API");
         }
     }
 }

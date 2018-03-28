@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace MixItUp.Base.Services
 
     public interface IXSplitService
     {
-        event EventHandler Disconnected;
+        event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectOccurred;
 
         Task<bool> Initialize();
 
@@ -41,6 +42,6 @@ namespace MixItUp.Base.Services
 
         Task SetWebBrowserSource(XSplitWebBrowserSource source);
 
-        Task Disconnect();
+        Task DisconnectServer(WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure);
     }
 }

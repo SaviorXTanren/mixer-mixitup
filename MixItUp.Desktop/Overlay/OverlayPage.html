@@ -6,16 +6,28 @@
     <body style="background-color:transparent">
         <div id="mainOverlay" />
 
+        <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
+            <h1 style="font-size: 100px; color: red; text-align: center">No Connection To</h1>
+            <h1 style="font-size: 100px; color: red; text-align: center">Mix It Up Overlay!</h1>
+        </div>
+
 		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
         <script src="webSocketWrapper.js"></script>
 
 		<script>
             var mainOverlayDiv = document.getElementById('mainOverlay');
+            var noConnectionDiv = document.getElementById('noConnectionDiv');
 
-            function connectionOpened() { }
+            function connectionOpened()
+            {
+                noConnectionDiv.style.visibility = 'hidden';
+            }
 
-            function connectionClosed() { }
+            function connectionClosed()
+            {
+                noConnectionDiv.style.visibility = 'visible';
+            }
 
             function packetReceived(packet)
             {

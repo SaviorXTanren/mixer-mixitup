@@ -2,7 +2,7 @@
 {
     public interface IDeveloperAPIService
     {
-        void Start();
+        bool Start();
 
         void End();
     }

@@ -1,7 +1,5 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
-using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,8 +25,6 @@ namespace MixItUp.WPF.Controls.Services
             {
                 this.EnableXSplitConnectionButton.Visibility = Visibility.Collapsed;
                 this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
-
-                ChannelSession.Services.XSplitServer.Disconnected += XSplitServer_Disconnected;
 
                 this.TestXSplitConnectionButton.IsEnabled = true;
 
@@ -82,23 +78,6 @@ namespace MixItUp.WPF.Controls.Services
             }
         }
 
-        private async void XSplitServer_Disconnected(object sender, System.EventArgs e)
-        {
-            await this.Dispatcher.Invoke<Task>(async () =>
-            {
-                ChannelSession.DisconnectionOccurred("XSplit");
-
-                do
-                {
-                    await this.DisconnectXSplitService();
-
-                    await Task.Delay(2000);
-                } while (!await this.ConnectXSplitService());
-
-                ChannelSession.ReconnectionOccurred("XSplit");
-            });
-        }
-
         public async Task<bool> ConnectXSplitService()
         {
             if (!await ChannelSession.Services.InitializeXSplitServer())
@@ -109,8 +88,6 @@ namespace MixItUp.WPF.Controls.Services
             ChannelSession.Settings.EnableXSplitConnection = true;
             this.EnableXSplitConnectionButton.Visibility = Visibility.Collapsed;
             this.DisableXSplitConnectionButton.Visibility = Visibility.Visible;
-
-            ChannelSession.Services.XSplitServer.Disconnected += XSplitServer_Disconnected;
 
             this.TestXSplitConnectionButton.IsEnabled = true;
 
@@ -125,10 +102,6 @@ namespace MixItUp.WPF.Controls.Services
             this.DisableXSplitConnectionButton.Visibility = Visibility.Collapsed;
             this.TestXSplitConnectionButton.IsEnabled = false;
 
-            if (ChannelSession.Services.XSplitServer != null)
-            {
-                ChannelSession.Services.XSplitServer.Disconnected -= XSplitServer_Disconnected;
-            }
             await ChannelSession.Services.DisconnectXSplitServer();
 
             ChannelSession.Settings.EnableXSplitConnection = false;

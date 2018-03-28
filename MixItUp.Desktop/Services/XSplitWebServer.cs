@@ -2,6 +2,8 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace MixItUp.XSplit
@@ -19,6 +21,8 @@ namespace MixItUp.XSplit
 
     public class XSplitWebServer : WebSocketServerBase, IXSplitService
     {
+        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectOccurred { add { this.OnDisconnectOccurred += value; } remove { this.OnDisconnectOccurred -= value; } }
+
         public XSplitWebServer(string address) : base(address) { }
 
         public async Task SetCurrentScene(XSplitScene scene) { await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(scene))); }
@@ -27,9 +31,9 @@ namespace MixItUp.XSplit
 
         public async Task SetWebBrowserSource(XSplitWebBrowserSource source) { await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(source))); }
 
-        protected override async Task PacketReceived(string packet)
+        protected override async Task ProcessReceivedPacket(string packetJSON)
         {
-            await base.PacketReceived(packet);
+            await base.ProcessReceivedPacket(packetJSON);
         }
     }
 }

@@ -1,103 +1,100 @@
 ﻿using Mixer.Base.Model.Client;
+using Mixer.Base.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Net.WebSockets;
-using System.Text;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
-    public abstract class WebSocketServerBase
+    public abstract class WebSocketServerBase : WebSocketBase
     {
-        public event EventHandler Disconnected;
-
-        private const int bufferSize = 1000000;
-
         private SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        private UTF8Encoding encoder = new UTF8Encoding();
 
         private string address;
 
         private HttpListener httpListener;
-        private WebSocket webSocket;
-        private CancellationTokenSource webSocketTokenSource = new CancellationTokenSource();
 
         private bool connectionTestSuccessful;
 
         public WebSocketServerBase(string address) { this.address = address; }
 
-        public Task<bool> Initialize()
-        {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async() =>
-            {
-                try
-                {
-                    if (await this.ListenForConnection())
-                    {
-                        if (ChannelSession.Settings.DiagnosticLogging)
-                        {
-                            this.Send(new WebSocketPacket() { type = "debug" });
-                        }
-
-                        await this.ReceiveInternal();
-                        await this.ShutdownWebsocket();
-                    }
-                    this.OnDisconnected();
-                }
-                catch (ThreadAbortException) { return; }
-                catch (OperationCanceledException) { return; }
-                catch (Exception ex) { Logger.Log(ex); }
-            }, this.webSocketTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            return Task.FromResult(true);
-        }
-
-        public async Task Send(WebSocketPacket packet)
+        public async Task<bool> Initialize()
         {
             try
             {
-                string packetJson = JsonConvert.SerializeObject(packet);
-                byte[] buffer = this.encoder.GetBytes(packetJson);
+                this.httpListener = new HttpListener();
+                this.httpListener.Prefixes.Add(this.address);
+                this.httpListener.Start();
 
-                await this.asyncSemaphore.WaitAsync();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                this.WaitForWebSocketConnection();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                if (this.webSocket != null)
+                return true;
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+
+            await this.DisconnectServer();
+
+            return false;
+        }
+
+        public async Task DisconnectServer(WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure)
+        {
+            await this.Disconnect(closeStatus);
+
+            try
+            {
+                if (this.httpListener != null)
                 {
-                    await this.webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+                    using (this.httpListener)
+                    {
+                        this.httpListener.GetType().InvokeMember("RemoveAll", BindingFlags.NonPublic | BindingFlags.InvokeMethod | BindingFlags.Instance, null, this.httpListener, new object[] { false });
+                    }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-            finally { this.asyncSemaphore.Release(); }
+            this.httpListener = null;
         }
 
-        public async Task Disconnect()
-        {
-            this.webSocketTokenSource.Cancel();
-            this.ShutdownListener();
-            await this.ShutdownWebsocket();
-        }
+        public async Task Send(WebSocketPacket packet) { await this.Send(JsonConvert.SerializeObject(packet)); }
 
         public async Task<bool> TestConnection()
         {
             this.connectionTestSuccessful = false;
+
             await this.Send(new WebSocketPacket() { type = "test" });
-            for (int i = 0; i < 5 && !this.connectionTestSuccessful; i++)
-            {
-                await Task.Delay(500);
-            }
+
+            await this.WaitForResponse(() => this.connectionTestSuccessful);
+
             return this.connectionTestSuccessful;
         }
 
-        protected virtual Task PacketReceived(string packet)
+        protected override async Task SendInternal(byte[] buffer)
         {
-            if (packet != null)
+            try
             {
-                JObject packetObj = JObject.Parse(packet);
+                if (this.IsOpen())
+                {
+                    await this.webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        protected override Task ProcessReceivedPacket(string packetJSON)
+        {
+            if (!string.IsNullOrEmpty(packetJSON))
+            {
+                JObject packetObj = JObject.Parse(packetJSON);
                 if (packetObj["type"].ToString().Equals("exception"))
                 {
                     Logger.Log("WebSocket Client Exception: " + packetObj["data"].ToString());
@@ -110,111 +107,55 @@ namespace MixItUp.Base.Util
             return Task.FromResult(0);
         }
 
-        private async Task<bool> ListenForConnection()
+        protected async Task WaitForWebSocketConnection()
         {
-            this.webSocket = null;
             try
             {
-                this.httpListener = new HttpListener();
-                this.httpListener.Prefixes.Add(this.address);
-                this.httpListener.Start();
-
-                var hc = await this.httpListener.GetContextAsync();
-                if (hc.Request.IsWebSocketRequest)
+                while (this.httpListener != null && this.httpListener.IsListening)
                 {
-                    var wsc = await hc.AcceptWebSocketAsync(null);
-                    this.webSocket = wsc.WebSocket;
-                    return true;
-                }
-                else
-                {
-                    hc.Response.StatusCode = 400;
-                    hc.Response.Close();
-                    this.httpListener = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-
-            this.ShutdownListener();
-            return false;
-        }
-
-        private async Task ReceiveInternal()
-        {
-            await Task.Delay(100);
-
-            byte[] buffer = new byte[WebSocketServerBase.bufferSize];
-            while (this.webSocket != null && this.webSocket.State == WebSocketState.Open)
-            {
-                try
-                {
-                    Array.Clear(buffer, 0, buffer.Length);
-                    WebSocketReceiveResult result = await this.webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-                    if (result != null)
+                    try
                     {
-                        if (result.CloseStatus == null || result.CloseStatus != WebSocketCloseStatus.Empty)
+                        var hc = await this.httpListener.GetContextAsync();
+                        if (hc.Request.IsWebSocketRequest)
                         {
-                            try
+                            if (this.webSocket == null)
                             {
-                                string jsonBuffer = this.encoder.GetString(buffer);
-                                dynamic jsonObject = JsonConvert.DeserializeObject(jsonBuffer);
+                                HttpListenerWebSocketContext wsc = await hc.AcceptWebSocketAsync(null);
+                                this.SetWebSocket(wsc.WebSocket);
 
-                                await this.PacketReceived(jsonBuffer);
+                                if (ChannelSession.Settings.DiagnosticLogging)
+                                {
+                                    await this.Send(new WebSocketPacket() { type = "debug" });
+                                }
+
+                                await this.Receive();
+
+                                hc.Response.StatusCode = (int)HttpStatusCode.OK;
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                Console.WriteLine(ex);
+                                hc.Response.StatusCode = (int)HttpStatusCode.Conflict;
                             }
                         }
                         else
                         {
-                            return;
+                            hc.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         }
+                        hc.Response.Close();
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-            }
-        }
-
-        private void ShutdownListener()
-        {
-            try
-            {
-                if (this.httpListener != null)
-                {
-                    this.httpListener.Stop();
+                    catch (Exception ex) { Logger.Log(ex); }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-            this.httpListener = null;
         }
 
-        private async Task ShutdownWebsocket()
+        protected override async Task<WebSocketCloseStatus> Receive()
         {
-            try
-            {
-                if (this.webSocket != null && this.webSocket.State == WebSocketState.Open && this.webSocket.CloseStatus != null)
-                {
-                    await this.webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Done", CancellationToken.None);
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            this.webSocket = null;
-        }
+            WebSocketCloseStatus closeStatus = await base.Receive();
 
-        private void OnDisconnected()
-        {
-            if (this.Disconnected != null)
-            {
-                this.Disconnected(this, new EventArgs());
-            }
+            await this.Disconnect(closeStatus);
+
+            return closeStatus;
         }
     }
 }

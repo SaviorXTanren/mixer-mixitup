@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace MixItUp.Overlay
@@ -37,7 +38,7 @@ namespace MixItUp.Overlay
         public const string OverlayHttpListenerServerAddress = "http://localhost:8111/overlay/";
         public const string OverlayWebSocketServerAddress = "http://localhost:8111/ws/";
 
-        public event EventHandler Disconnected { add { this.webSocketServer.Disconnected += value; } remove { this.webSocketServer.Disconnected -= value; } }
+        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectOccurred { add { this.webSocketServer.OnDisconnectOccurred += value; } remove { this.webSocketServer.OnDisconnectOccurred -= value; } }
 
         private OverlayHttpListenerServer httpListenerServer;
         private OverlayWebSocketServer webSocketServer;
@@ -83,7 +84,7 @@ namespace MixItUp.Overlay
         public async Task Disconnect()
         {
             this.httpListenerServer.End();
-            await this.webSocketServer.Disconnect();
+            await this.webSocketServer.DisconnectServer();
         }
 
         public void StartBatching()
@@ -166,43 +167,35 @@ namespace MixItUp.Overlay
             this.videoFiles[video.videoID] = video;
         }
 
-        protected override void RequestReceived(HttpListenerContext context, string data)
+        protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
-            string url = context.Request.RawUrl;
+            string url = listenerContext.Request.RawUrl;
             url = url.Trim(new char[] { '/' });
 
-            if (url.StartsWith(OverlayVideoWebPath))
+            if (url.Equals("overlay"))
+            {
+                await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
+            }
+            else if (url.StartsWith(OverlayVideoWebPath))
             {
                 string videoID = url.Replace(OverlayVideoWebPath, "");
                 if (this.videoFiles.ContainsKey(videoID) && File.Exists(this.videoFiles[videoID].filepath))
                 {
-                    context.Response.Headers["Access-Control-Allow-Origin"] = "*";
-                    context.Response.StatusCode = (int)HttpStatusCode.OK;
-                    context.Response.StatusDescription = HttpStatusCode.OK.ToString();
-                    context.Response.ContentType = this.videoFiles[videoID].videoType;
+                    listenerContext.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                    listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                    listenerContext.Response.StatusDescription = HttpStatusCode.OK.ToString();
+                    listenerContext.Response.ContentType = this.videoFiles[videoID].videoType;
 
                     byte[] videoData = File.ReadAllBytes(this.videoFiles[videoID].filepath);
-                    context.Response.OutputStream.Write(videoData, 0, videoData.Length);
+                    await listenerContext.Response.OutputStream.WriteAsync(videoData, 0, videoData.Length);
 
-                    context.Response.Close();
-
-                    return;
+                    listenerContext.Response.Close();
                 }
             }
-            base.RequestReceived(context, data);
-        }
-
-        protected override HttpStatusCode RequestReceived(HttpListenerRequest request, string data, out string result)
-        {
-            string url = request.RawUrl;
-            url = url.Trim(new char[] { '/' });
-
-            result = "";
-            if (url.Equals("overlay"))
+            else
             {
-                result = this.webPageInstance;
+                await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "");
             }
-            return HttpStatusCode.OK;
         }
     }
 
@@ -210,13 +203,13 @@ namespace MixItUp.Overlay
     {
         public OverlayWebSocketServer(string address) : base(address) { }
 
-        protected override async Task PacketReceived(string packet)
+        protected override async Task ProcessReceivedPacket(string packetJSON)
         {
-            if (packet != null)
+            if (!string.IsNullOrEmpty(packetJSON))
             {
-                JObject packetObj = JObject.Parse(packet);
+                JObject packetObj = JObject.Parse(packetJSON);
             }
-            await base.PacketReceived(packet);
+            await base.ProcessReceivedPacket(packetJSON);
         }
     }
 }
