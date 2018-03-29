@@ -37,7 +37,7 @@
         </DataGrid>
 
         <Grid Grid.Row="2" HorizontalAlignment="Center">
-            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Command</Button>
+            <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Action Group</Button>
         </Grid>
 
     </Grid>
