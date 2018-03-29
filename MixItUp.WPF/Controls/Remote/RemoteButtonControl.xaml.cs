@@ -33,6 +33,7 @@ namespace MixItUp.WPF.Controls.Remote
 
         public void SetRemoteItem(RemoteBoardItemModel item)
         {
+            this.RemoveRemoteItem();
             if (this.remoteControl.CurrentBoard != null && this.remoteControl.CurrentGroup != null)
             {
                 this.item = item;
@@ -61,7 +62,6 @@ namespace MixItUp.WPF.Controls.Remote
                     return;
                 }
             }
-            this.RemoveRemoteItem();
         }
 
         public void SetRemoteCommand(RemoteCommand command)
@@ -71,6 +71,10 @@ namespace MixItUp.WPF.Controls.Remote
 
         private void RemoveRemoteItem()
         {
+            if (this.remoteControl.CurrentBoard != null && this.remoteControl.CurrentGroup != null)
+            {
+                this.remoteControl.CurrentGroup.Items.Remove(this.item);
+            }
             this.item = null;
             this.NameTextBlock.Text = "";
             this.DeleteButton.Visibility = System.Windows.Visibility.Collapsed;
