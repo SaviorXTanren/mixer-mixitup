@@ -271,7 +271,7 @@ namespace MixItUp.Desktop.Services
                     }
                     else if (artistToSongID.Count > 1)
                     {
-                        if (artistIndex > 0 && artistIndex < artistToSongID.Count())
+                        if (artistIndex > 0 && artistIndex <= artistToSongID.Count())
                         {
                             songID = artistToSongID.ElementAt(artistIndex - 1).Value;
                         }
