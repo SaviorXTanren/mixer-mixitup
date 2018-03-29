@@ -224,7 +224,7 @@
                     
                     <Button x:Name="SaveButton" Grid.Column="2" Width="80" Click="SaveButton_Click">Save</Button>
 
-                    <Button x:Name="ExportUserCurrencyToFileButton" Grid.Column="4" Click="ExportUserCurrencyToFileButton_Click">Export From File</Button>
+                    <Button x:Name="ExportUserCurrencyToFileButton" Grid.Column="4" Click="ExportUserCurrencyToFileButton_Click">Export To File</Button>
                 </Grid>
             </Grid>
         </ScrollViewer>
