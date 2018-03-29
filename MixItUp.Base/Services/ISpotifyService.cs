@@ -143,6 +143,7 @@ namespace MixItUp.Base.Services
     public class SpotifyPlaylist : SpotifyItemBase
     {
         public bool IsPublic { get; set; }
+        public string Uri { get; set; }
 
         public SpotifyPlaylist() { }
 
@@ -150,6 +151,7 @@ namespace MixItUp.Base.Services
             : base(data)
         {
             this.IsPublic = bool.Parse(data["public"].ToString());
+            this.Uri = data["uri"].ToString();
         }
     }
 
@@ -194,6 +196,8 @@ namespace MixItUp.Base.Services
         Task NextCurrentlyPlaying();
 
         Task PreviousCurrentlyPlaying();
+
+        Task<bool> PlayPlaylist(SpotifyPlaylist playlist);
 
         OAuthTokenModel GetOAuthTokenCopy();
     }

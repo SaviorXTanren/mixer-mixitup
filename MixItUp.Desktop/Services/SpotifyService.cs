@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -234,8 +235,13 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                JObject result = await this.GetJObjectAsync("me/player/currently-playing");
-                return new SpotifyCurrentlyPlaying(result);
+                HttpResponseMessage response = await this.GetAsync("me/player/currently-playing");
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    JObject jobj = JObject.Parse(responseString);
+                    return new SpotifyCurrentlyPlaying(jobj);
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -275,6 +281,24 @@ namespace MixItUp.Desktop.Services
                 await this.PostAsync("me/player/previous", null);
             }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        public async Task<bool> PlayPlaylist(SpotifyPlaylist playlist)
+        {
+            try
+            {
+                JObject payload = new JObject();
+                payload["context_uri"] = playlist.Uri;
+
+                JObject position = new JObject();
+                position["position"] = 0;
+                payload["offset"] = position;
+
+                HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
+                return (response.StatusCode == HttpStatusCode.NoContent);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return false;
         }
 
         protected override async Task RefreshOAuthToken()

@@ -39,19 +39,15 @@ namespace MixItUp.Desktop.Services
             }
             else if (this.serviceType == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
             {
-                foreach (SpotifyPlaylist playlist in await ChannelSession.Services.Spotify.GetCurrentPlaylists())
-                {
-                    if (playlist.Name.Equals(DesktopSongRequestService.MixItUpPlaylistName))
-                    {
-                        this.playlist = playlist;
-                        await this.ClearAllRequests();
-                        break;
-                    }
-                }
+                this.playlist = await this.GetSpotifySongRequestPlaylist();
 
                 if (this.playlist == null)
                 {
                     this.playlist = await ChannelSession.Services.Spotify.CreatePlaylist(DesktopSongRequestService.MixItUpPlaylistName, DesktopSongRequestService.MixItUpPlaylistDescription);
+                }
+                else
+                {
+                    await this.ClearAllRequests();
                 }
             }
         }
@@ -191,6 +187,18 @@ namespace MixItUp.Desktop.Services
                     await ChannelSession.Services.Spotify.RemoveSongsFromPlaylist(this.playlist, songs);
                 }
             }
+        }
+
+        public async Task<SpotifyPlaylist> GetSpotifySongRequestPlaylist()
+        {
+            foreach (SpotifyPlaylist playlist in await ChannelSession.Services.Spotify.GetCurrentPlaylists())
+            {
+                if (playlist.Name.Equals(DesktopSongRequestService.MixItUpPlaylistName))
+                {
+                    return playlist;
+                }
+            }
+            return null;
         }
 
         private async Task AddYoutubeSongRequest(UserViewModel user, string identifier)

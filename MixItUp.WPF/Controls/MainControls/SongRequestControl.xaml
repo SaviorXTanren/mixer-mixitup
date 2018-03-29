@@ -83,7 +83,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="PlayPauseButton" Grid.Column="0" Click="PlayPauseButton_Click" Content="{MaterialDesign:PackIcon PlayPause}" MaterialDesign:HintAssist.Hint="Play/Pause" />
+                <Button x:Name="PlayPauseButton" Grid.Column="0" Click="PlayPauseButton_Click" Content="{MaterialDesign:PackIcon PlayPause}" MaterialDesign:HintAssist.Hint="Play/Pause Playlist" />
                 <Button x:Name="NextSongButton" Grid.Column="2" Click="NextSongButton_Click" Content="{MaterialDesign:PackIcon SkipNext}" MaterialDesign:HintAssist.Hint="Next Song" />
 
                 <Button x:Name="ClearQueueButton" Grid.Column="4" Width="150" Click="ClearQueueButton_Click">Clear Queue</Button>

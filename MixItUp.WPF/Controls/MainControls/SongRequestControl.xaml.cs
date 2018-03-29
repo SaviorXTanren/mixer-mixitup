@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
@@ -117,13 +118,29 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (ChannelSession.Services.SongRequestService.GetRequestService() == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
                 {
-                    if ((await ChannelSession.Services.Spotify.GetCurrentlyPlaying()).IsPlaying)
+                    SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                    if (currentlyPlaying != null)
                     {
-                        await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
+                        if (currentlyPlaying.IsPlaying)
+                        {
+                            await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
+                        }
+                        else
+                        {
+                            await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+                        }
                     }
                     else
                     {
-                        await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+                        DesktopSongRequestService songRequestService = (DesktopSongRequestService)ChannelSession.Services.SongRequestService;
+                        SpotifyPlaylist playlist = await songRequestService.GetSpotifySongRequestPlaylist();
+                        if (playlist != null)
+                        {
+                            if (!await ChannelSession.Services.Spotify.PlayPlaylist(playlist))
+                            {
+                                await MessageBoxHelper.ShowMessageDialog("We could not play the Mix It Up playlist in Spotify. Please ensure Spotify is launched and you have played a song to let Spotify know what device you are on.");
+                            }
+                        }
                     }
                 }
             });
