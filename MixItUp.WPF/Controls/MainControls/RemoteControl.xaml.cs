@@ -310,13 +310,20 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to delete this group?"))
+                    if (this.groups.Count > 1)
                     {
-                        RemoteBoardGroupModel group = (RemoteBoardGroupModel)this.BoardNameComboBox.SelectedItem;
-                        this.CurrentBoard.Groups.Remove(group);
-                        await ChannelSession.SaveSettings();
+                        if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to delete this group?"))
+                        {
+                            RemoteBoardGroupModel group = (RemoteBoardGroupModel)this.GroupNameComboBox.SelectedItem;
+                            this.CurrentBoard.Groups.Remove(group);
+                            await ChannelSession.SaveSettings();
 
-                        this.RefreshBoardsView();
+                            this.RefreshBoardsView();
+                        }
+                    }
+                    else
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("All boards must have at least 1 group");
                     }
                 });
             }
@@ -351,14 +358,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void RefreshBoardItemsView()
         {
-            this.Button00.SetRemoteItem(null);
-            this.Button10.SetRemoteItem(null);
-            this.Button20.SetRemoteItem(null);
-            this.Button30.SetRemoteItem(null);
-            this.Button01.SetRemoteItem(null);
-            this.Button11.SetRemoteItem(null);
-            this.Button21.SetRemoteItem(null);
-            this.Button31.SetRemoteItem(null);
+            this.Button00.ClearCommand();
+            this.Button10.ClearCommand();
+            this.Button20.ClearCommand();
+            this.Button30.ClearCommand();
+            this.Button01.ClearCommand();
+            this.Button11.ClearCommand();
+            this.Button21.ClearCommand();
+            this.Button31.ClearCommand();
 
             if (this.CurrentGroup != null)
             {

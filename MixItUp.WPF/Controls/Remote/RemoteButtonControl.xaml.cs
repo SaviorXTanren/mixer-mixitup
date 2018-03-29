@@ -33,34 +33,31 @@ namespace MixItUp.WPF.Controls.Remote
 
         public void SetRemoteItem(RemoteBoardItemModel item)
         {
-            this.RemoveRemoteItem();
-            if (this.remoteControl.CurrentBoard != null && this.remoteControl.CurrentGroup != null)
+            if (this.remoteControl.CurrentBoard != null && this.remoteControl.CurrentGroup != null && item != null && item.Command != null)
             {
+                this.RemoveRemoteItem();
                 this.item = item;
 
-                if (this.item != null && this.item.Command != null)
+                this.item.SetValuesFromCommand();
+
+                this.item.Size = RemoteBoardItemSizeEnum.OneByOne;
+                this.item.XPosition = this.xPosition;
+                this.item.YPosition = this.yPosition;
+
+                this.NameTextBlock.Text = this.item.Name;
+                this.DeleteButton.Visibility = System.Windows.Visibility.Visible;
+                if (item is RemoteBoardButtonModel)
                 {
-                    this.item.SetValuesFromCommand();
-
-                    this.item.Size = RemoteBoardItemSizeEnum.OneByOne;
-                    this.item.XPosition = this.xPosition;
-                    this.item.YPosition = this.yPosition;
-
-                    this.NameTextBlock.Text = this.item.Name;
-                    this.DeleteButton.Visibility = System.Windows.Visibility.Visible;
-                    if (item is RemoteBoardButtonModel)
-                    {
-                        RemoteBoardButtonModel button = this.item as RemoteBoardButtonModel;
-                        this.NameTextBlock.Foreground = new BrushConverter().ConvertFromString(button.TextColor) as SolidColorBrush;
-                        this.BackgroundColor.Fill = new BrushConverter().ConvertFromString(button.BackgroundColor) as SolidColorBrush;
-                    }
-
-                    if (!this.remoteControl.CurrentGroup.Items.Contains(this.item))
-                    {
-                        this.remoteControl.CurrentGroup.Items.Add(this.item);
-                    }
-                    return;
+                    RemoteBoardButtonModel button = this.item as RemoteBoardButtonModel;
+                    this.NameTextBlock.Foreground = new BrushConverter().ConvertFromString(button.TextColor) as SolidColorBrush;
+                    this.BackgroundColor.Fill = new BrushConverter().ConvertFromString(button.BackgroundColor) as SolidColorBrush;
                 }
+
+                if (!this.remoteControl.CurrentGroup.Items.Contains(this.item))
+                {
+                    this.remoteControl.CurrentGroup.Items.Add(this.item);
+                }
+                return;
             }
         }
 
@@ -69,17 +66,22 @@ namespace MixItUp.WPF.Controls.Remote
             this.SetRemoteItem(new RemoteBoardButtonModel(command));
         }
 
+        public void ClearCommand()
+        {
+            this.item = null;
+            this.NameTextBlock.Text = "";
+            this.DeleteButton.Visibility = System.Windows.Visibility.Collapsed;
+            this.NameTextBlock.Foreground = Brushes.Black;
+            this.BackgroundColor.Fill = Brushes.Transparent;
+        }
+
         private void RemoveRemoteItem()
         {
             if (this.remoteControl.CurrentBoard != null && this.remoteControl.CurrentGroup != null)
             {
                 this.remoteControl.CurrentGroup.Items.Remove(this.item);
             }
-            this.item = null;
-            this.NameTextBlock.Text = "";
-            this.DeleteButton.Visibility = System.Windows.Visibility.Collapsed;
-            this.NameTextBlock.Foreground = Brushes.Black;
-            this.BackgroundColor.Fill = Brushes.Transparent;
+            this.ClearCommand();
         }
 
         private void ButtonRender_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
