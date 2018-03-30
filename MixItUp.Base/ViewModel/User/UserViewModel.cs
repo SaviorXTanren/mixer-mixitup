@@ -233,6 +233,8 @@ namespace MixItUp.Base.ViewModel.User
                     this.MixerAccountDate = userWithChannel.createdAt;
                     this.Sparks = (int)userWithChannel.sparks;
                     this.GameTypeID = userWithChannel.channel.typeId.GetValueOrDefault();
+
+                    this.Data.UpdateData(userWithChannel);
                 }
             }
 

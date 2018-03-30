@@ -399,8 +399,6 @@ namespace MixItUp.Base
                         }
                     }
 
-                    await ChannelSession.Services.Settings.CleanUpData(ChannelSession.Settings);
-
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 

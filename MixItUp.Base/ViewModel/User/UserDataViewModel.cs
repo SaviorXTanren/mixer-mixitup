@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using Mixer.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
 using System;
@@ -194,6 +195,11 @@ namespace MixItUp.Base.ViewModel.User
             {
                 return string.Format("{0} - {1}", this.RankName, this.RankPoints);
             }
+        }
+
+        public void UpdateData(UserModel user)
+        {
+            this.UserName = user.username;
         }
 
         public UserCurrencyDataViewModel GetCurrency(Guid currencyID)

@@ -406,6 +406,8 @@ namespace MixItUp.Desktop
 
             if (this.IsStreamer)
             {
+                await this.RemoveDuplicateUsers();
+
                 IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
                 await this.databaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
 
@@ -427,39 +429,51 @@ namespace MixItUp.Desktop
 
         public bool ShouldBeUpgraded() { return this.Version < DesktopChannelSettings.LatestVersion; }
 
-        public async Task RemoveDuplicates()
+        public async Task RemoveDuplicateUsers()
         {
-            List<string> dupes = new List<string>();
-            await this.databaseWrapper.RunReadCommand("SELECT UserName FROM (SELECT Users.UserName, COUNT(*) AS totalNum FROM Users GROUP BY Users.UserName) WHERE totalNum > 1", (SQLiteDataReader dataReader) =>
+            if (ChannelSession.Connection != null)
             {
-                dupes.Add(dataReader["UserName"].ToString());
-            });
-
-            foreach (string dupe in dupes)
-            {
-                UserModel onlineUser = await ChannelSession.Connection.GetUser(dupe);
-                if (onlineUser != null)
+                var duplicateGroups = this.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
+                foreach (var duplicateGroup in duplicateGroups)
                 {
-                    List<UserDataViewModel> dupeUsers = new List<UserDataViewModel>(ChannelSession.Settings.UserData.Values.Where(u => u.UserName.Equals(dupe)));
-                    if (dupeUsers.Count > 0)
+                    UserModel onlineUser = null;
+                    if (!string.IsNullOrEmpty(duplicateGroup.Key))
                     {
-                        UserDataViewModel solidUser = dupeUsers.FirstOrDefault(u => u.ID == onlineUser.id);
-                        if (solidUser != null)
+                        onlineUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
+                    }
+
+                    if (onlineUser != null)
+                    {
+                        List<UserDataViewModel> dupeUsers = new List<UserDataViewModel>(duplicateGroup);
+                        if (dupeUsers.Count > 0)
                         {
-                            dupeUsers.Remove(solidUser);
-                            foreach (UserDataViewModel dupeUser in dupeUsers)
+                            UserDataViewModel solidUser = dupeUsers.FirstOrDefault(u => u.ID == onlineUser.id);
+                            if (solidUser != null)
                             {
-                                solidUser.ViewingMinutes += dupeUser.ViewingMinutes;
-                                foreach (var kvp in dupeUser.CurrencyAmounts)
+                                dupeUsers.Remove(solidUser);
+                                foreach (UserDataViewModel dupeUser in dupeUsers)
                                 {
-                                    solidUser.AddCurrencyAmount(kvp.Key, kvp.Value.Amount);
+                                    solidUser.ViewingMinutes += dupeUser.ViewingMinutes;
+                                    foreach (var kvp in dupeUser.CurrencyAmounts)
+                                    {
+                                        solidUser.AddCurrencyAmount(kvp.Key, kvp.Value.Amount);
+                                    }
+                                }
+
+                                foreach (UserDataViewModel dupeUser in dupeUsers)
+                                {
+                                    this.UserData.Remove(dupeUser.ID);
                                 }
                             }
+                        }
+                    }
+                    else
+                    {
+                        onlineUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
 
-                            foreach (UserDataViewModel dupeUser in dupeUsers)
-                            {
-                                ChannelSession.Settings.UserData.Remove(dupeUser.ID);
-                            }
+                        foreach (var dupeUser in duplicateGroup)
+                        {
+                            this.UserData.Remove(dupeUser.ID);
                         }
                     }
                 }

@@ -1,13 +1,10 @@
 ﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -84,8 +81,6 @@ namespace MixItUp.Desktop.Services
             }
 
             await desktopSettings.Initialize();
-
-            await this.CleanUpData(desktopSettings);
         }
 
         public async Task<bool> SaveAndValidate(IChannelSettings settings)
@@ -119,53 +114,6 @@ namespace MixItUp.Desktop.Services
         public string GetFilePath(IChannelSettings settings)
         {
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
-        }
-
-        public async Task CleanUpData(IChannelSettings settings)
-        {
-            if (ChannelSession.Connection != null)
-            {
-                var duplicateGroups = settings.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
-                foreach (var duplicateGroup in duplicateGroups)
-                {
-                    if (!string.IsNullOrEmpty(duplicateGroup.Key))
-                    {
-                        UserModel onlineUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
-                        if (onlineUser != null)
-                        {
-                            List<UserDataViewModel> dupeUsers = new List<UserDataViewModel>(duplicateGroup);
-                            if (dupeUsers.Count > 0)
-                            {
-                                UserDataViewModel solidUser = dupeUsers.FirstOrDefault(u => u.ID == onlineUser.id);
-                                if (solidUser != null)
-                                {
-                                    dupeUsers.Remove(solidUser);
-                                    foreach (UserDataViewModel dupeUser in dupeUsers)
-                                    {
-                                        solidUser.ViewingMinutes += dupeUser.ViewingMinutes;
-                                        foreach (var kvp in dupeUser.CurrencyAmounts)
-                                        {
-                                            solidUser.AddCurrencyAmount(kvp.Key, kvp.Value.Amount);
-                                        }
-                                    }
-
-                                    foreach (UserDataViewModel dupeUser in dupeUsers)
-                                    {
-                                        ChannelSession.Settings.UserData.Remove(dupeUser.ID);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var dupeUser in duplicateGroup)
-                        {
-                            ChannelSession.Settings.UserData.Remove(dupeUser.ID);
-                        }
-                    }
-                }
-            }
         }
 
         private async Task<IChannelSettings> LoadSettings(string filePath)
