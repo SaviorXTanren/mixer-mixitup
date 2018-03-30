@@ -59,6 +59,9 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public bool IsBasic { get; set; }
 
+        [DataMember]
+        public bool Unlocked { get; set; }
+
         [XmlIgnore]
         public string TypeName { get { return EnumHelper.GetEnumName(this.Type); } }
 
@@ -118,13 +121,22 @@ namespace MixItUp.Base.Commands
                 {
                     try
                     {
-                        await this.AsyncSemaphore.WaitAsync();
+                        if (!this.Unlocked)
+                        {
+                            await this.AsyncSemaphore.WaitAsync();
+                        }
 
                         await this.PerformInternal(user, arguments, this.currentCancellationTokenSource.Token);
                     }
                     catch (TaskCanceledException) { }
                     catch (Exception ex) { Util.Logger.Log(ex); }
-                    finally { this.AsyncSemaphore.Release(); }
+                    finally
+                    {
+                        if (!this.Unlocked)
+                        {
+                            this.AsyncSemaphore.Release();
+                        }
+                    }
                 }, this.currentCancellationTokenSource.Token);
             }
             return Task.FromResult(0);

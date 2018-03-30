@@ -27,18 +27,26 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
+                <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
+
+            <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                
-                <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <Grid Grid.Column="2">
+                <Grid Grid.Column="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="10" />
@@ -48,10 +56,17 @@
                     <TextBlock Grid.Column="0" VerticalAlignment="Center">Auto-Include "!" In Triggers:</TextBlock>
                     <ToggleButton Grid.Column="2" x:Name="IncludeExclamationInCommandsToggleButton" Checked="IncludeExclamationInCommandsToggleButton_Checked" Unchecked="IncludeExclamationInCommandsToggleButton_Checked" />
                 </Grid>
-            </Grid>
 
-            <Grid Grid.Row="2">
-                <TextBox x:Name="ChatCommandTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Grid Grid.Column="2" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Don't Block Command:</TextBlock>
+                    <ToggleButton Grid.Column="2" x:Name="DontBlockCommandToggleButton" />
+                </Grid>
             </Grid>
         </Grid>
 
