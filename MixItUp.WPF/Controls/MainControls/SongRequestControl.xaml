@@ -63,6 +63,8 @@
                     <TextBlock Grid.Column="0" VerticalAlignment="Center">Allow Explicit Songs:</TextBlock>
                     <ToggleButton Grid.Column="2" x:Name="SpotifyAllowExplicitSongToggleButton" />
                 </Grid>
+                
+                
             </Grid>
 
         </Grid>

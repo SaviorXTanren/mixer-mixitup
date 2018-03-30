@@ -118,8 +118,12 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (ChannelSession.Services.SongRequestService.GetRequestService() == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
                 {
+                    DesktopSongRequestService songRequestService = (DesktopSongRequestService)ChannelSession.Services.SongRequestService;
+                    SpotifyPlaylist playlist = await songRequestService.GetSpotifySongRequestPlaylist();
+
                     SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
-                    if (currentlyPlaying != null)
+
+                    if (currentlyPlaying != null && currentlyPlaying.ID != null && playlist != null && playlist.Uri.Equals(currentlyPlaying.Uri))
                     {
                         if (currentlyPlaying.IsPlaying)
                         {
@@ -129,19 +133,15 @@ namespace MixItUp.WPF.Controls.MainControls
                         {
                             await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
                         }
+                        return;
                     }
-                    else
+
+                    if (playlist != null && await ChannelSession.Services.Spotify.PlayPlaylist(playlist))
                     {
-                        DesktopSongRequestService songRequestService = (DesktopSongRequestService)ChannelSession.Services.SongRequestService;
-                        SpotifyPlaylist playlist = await songRequestService.GetSpotifySongRequestPlaylist();
-                        if (playlist != null)
-                        {
-                            if (!await ChannelSession.Services.Spotify.PlayPlaylist(playlist))
-                            {
-                                await MessageBoxHelper.ShowMessageDialog("We could not play the Mix It Up playlist in Spotify. Please ensure Spotify is launched and you have played a song to let Spotify know what device you are on.");
-                            }
-                        }
+                        return;
                     }
+
+                    await MessageBoxHelper.ShowMessageDialog("We could not play the Mix It Up playlist in Spotify. Please ensure Spotify is launched and you have played a song to let Spotify know what device you are on.");
                 }
             });
         }

@@ -17,16 +17,23 @@ namespace MixItUp.Base.Services
 
         public SpotifyItemBase(JObject data)
         {
-            this.ID = data["id"].ToString();
-            if (data["name"] != null)
+            if (data != null)
             {
-                this.Name = data["name"].ToString();
+                this.ID = data["id"].ToString();
+                if (data["name"] != null)
+                {
+                    this.Name = data["name"].ToString();
+                }
+                else
+                {
+                    this.Name = data["display_name"].ToString();
+                }
+
+                if (data["external_urls"] != null && data["external_urls"]["spotify"] != null)
+                {
+                    this.Link = data["external_urls"]["spotify"].ToString();
+                }
             }
-            else
-            {
-                this.Name = data["display_name"].ToString();
-            }           
-            this.Link = data["external_urls"]["spotify"].ToString();
         }
 
         public override bool Equals(object other)
@@ -76,7 +83,10 @@ namespace MixItUp.Base.Services
             : base(data)
         {
             IEnumerable<JObject> images = data["images"].Children().Select(c => (JObject)c);
-            this.ImageLink = images.OrderByDescending(i => (int)i["width"]).First()["url"].ToString();
+            if (images.Count() > 0)
+            {
+                this.ImageLink = images.OrderByDescending(i => (int)i["width"]).First()["url"].ToString();
+            }
         }
     }
 
@@ -94,24 +104,27 @@ namespace MixItUp.Base.Services
         public SpotifySong(JObject data)
             : base(data)
         {
-            this.Duration = int.Parse(data["duration_ms"].ToString());
-            if (data["is_local"] != null)
+            if (data != null)
             {
-                this.IsLocal = bool.Parse(data["is_local"].ToString());
-            }
-            if (data["explicit"] != null)
-            {
-                this.Explicit = bool.Parse(data["explicit"].ToString());
-            }
+                this.Duration = int.Parse(data["duration_ms"].ToString());
+                if (data["is_local"] != null)
+                {
+                    this.IsLocal = bool.Parse(data["is_local"].ToString());
+                }
+                if (data["explicit"] != null)
+                {
+                    this.Explicit = bool.Parse(data["explicit"].ToString());
+                }
 
-            if (data["artists"] != null)
-            {
-                JArray artists = (JArray)data["artists"];
-                this.Artist = new SpotifyArtist((JObject)artists.First());
-            }
-            if (data["album"] != null)
-            {
-                this.Album = new SpotifyAlbum((JObject)data["album"]);
+                if (data["artists"] != null)
+                {
+                    JArray artists = (JArray)data["artists"];
+                    this.Artist = new SpotifyArtist((JObject)artists.First());
+                }
+                if (data["album"] != null)
+                {
+                    this.Album = new SpotifyAlbum((JObject)data["album"]);
+                }
             }
         }
 
@@ -128,15 +141,23 @@ namespace MixItUp.Base.Services
     public class SpotifyCurrentlyPlaying : SpotifySong
     {
         public bool IsPlaying { get; set; }
-        public int CurrentProgress { get; set; }
+        public long CurrentProgress { get; set; }
+        public string Uri { get; set; }
 
         public SpotifyCurrentlyPlaying() { }
 
         public SpotifyCurrentlyPlaying(JObject data)
-            : base((JObject)data["item"])
+            : base((data["item"] != null && data["item"] is JObject) ? (JObject)data["item"] : null)
         {
-            this.IsPlaying = bool.Parse(data["is_playing"].ToString());
-            this.CurrentProgress = int.Parse(data["progress_ms"].ToString());
+            if (data["item"] != null && data["item"] is JObject)
+            {
+                this.IsPlaying = bool.Parse(data["is_playing"].ToString());
+            }
+            this.CurrentProgress = long.Parse(data["progress_ms"].ToString());
+            if (data["context"] != null && data["context"]["uri"] != null)
+            {
+                this.Uri = data["context"]["uri"].ToString();
+            }
         }
     }
 
