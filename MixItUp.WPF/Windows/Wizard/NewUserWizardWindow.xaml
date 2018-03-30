@@ -146,7 +146,7 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect to XSplit, you must install the Mix It Up extension. Navigate to Tools > Add custom extension in XSplit and select the following file:</TextBlock>
+                                <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect to XSplit, you must install the Mix It Up extension. Navigate to "Extensions" -> "Add custom extension" in XSplit and select the following file:</TextBlock>
 
                                 <TextBox Grid.Row="2" x:Name="XSplitExtensionPathTextBox" IsReadOnly="True" MaterialDesign:HintAssist.Hint="XSplit Mix It Up Extension" Style="{StaticResource MaterialDesignFloatingHintTextBox}"></TextBox>
 

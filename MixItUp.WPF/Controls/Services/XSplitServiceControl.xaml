@@ -10,13 +10,13 @@
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="30" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="200">The Mix It Up extension must be installed from the <Hyperlink NavigateUri="XSplit" RequestNavigate="Hyperlink_RequestNavigate">XSplit Folder</Hyperlink> and running in XSplit</TextBlock>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Width="325">The Mix It Up extension must be installed from the <Hyperlink NavigateUri="XSplit" RequestNavigate="Hyperlink_RequestNavigate">XSplit Folder</Hyperlink> and running in XSplit. For instructions on how to do this, please check out the <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services#xsplit" RequestNavigate="Hyperlink_RequestNavigate">XSplit Service</Hyperlink> page</TextBlock>
 
             <Button x:Name="EnableXSplitConnectionButton" Grid.Column="2" Click="EnableXSplitConnectionButton_Click" Width="140">Enable XSplit</Button>
             <Button x:Name="DisableXSplitConnectionButton" Grid.Column="2" Click="DisableXSplitConnectionButton_Click" Width="140" Visibility="Collapsed">Disable XSplit</Button>
