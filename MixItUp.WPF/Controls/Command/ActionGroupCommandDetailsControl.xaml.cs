@@ -25,6 +25,7 @@ namespace MixItUp.WPF.Controls.Command
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
+                this.UnlockedControl.Unlocked = this.command.Unlocked;
             }
 
             return Task.FromResult(0);
@@ -56,6 +57,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     this.command.Name = this.NameTextBox.Text;
                 }
+                this.command.Unlocked = this.UnlockedControl.Unlocked;
                 return this.command;
             }
             return null;

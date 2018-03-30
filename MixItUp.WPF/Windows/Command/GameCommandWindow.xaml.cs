@@ -481,10 +481,5 @@ namespace MixItUp.WPF.Windows.Command
                 this.AddProbabilitiesForOutcome();
             });
         }
-
-        private void RandomUserCharityToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

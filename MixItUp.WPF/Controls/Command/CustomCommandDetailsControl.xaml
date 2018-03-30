@@ -13,7 +13,15 @@
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock x:Name="NameTextBlock" Text="{Binding Name}" />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock x:Name="NameTextBlock" Grid.Column="0" Text="{Binding Name}" />
+
+        <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="2" HorizontalAlignment="Center" />
     </Grid>
 </local:CommandDetailsControlBase>

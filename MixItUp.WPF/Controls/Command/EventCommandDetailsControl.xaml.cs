@@ -70,6 +70,7 @@ namespace MixItUp.WPF.Controls.Command
             if (this.command != null)
             {
                 this.EventIDTextBox.Text = this.command.Commands.First();
+                this.UnlockedControl.Unlocked = this.command.Unlocked;
             }
             else
             {
@@ -162,7 +163,7 @@ namespace MixItUp.WPF.Controls.Command
 
                     ChannelSession.Settings.EventCommands.Add(this.command);
                 }
-
+                this.command.Unlocked = this.UnlockedControl.Unlocked;
                 return this.command;
             }
             return null;

@@ -15,6 +15,14 @@
                                  
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBox x:Name="NameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        
+        <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="2" HorizontalAlignment="Center" />
     </Grid>
 </local:CommandDetailsControlBase>

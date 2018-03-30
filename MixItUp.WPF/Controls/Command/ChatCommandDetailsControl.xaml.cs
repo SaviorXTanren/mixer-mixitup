@@ -37,7 +37,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.NameTextBox.Text = this.command.Name;
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 this.IncludeExclamationInCommandsToggleButton.IsChecked = this.command.IncludeExclamationInCommands;
-                this.DontBlockCommandToggleButton.IsChecked = this.command.Unlocked;
+                this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.Requirements.SetRequirements(this.command.Requirements);
             }
             return Task.FromResult(0);
@@ -122,7 +122,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 this.command.IncludeExclamationInCommands = this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault();
-                this.command.Unlocked = this.DontBlockCommandToggleButton.IsChecked.GetValueOrDefault();
+                this.command.Unlocked = this.UnlockedControl.Unlocked;
 
                 return this.command;
             }

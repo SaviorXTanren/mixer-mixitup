@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
-    /// Interaction logic for EventCommandDetailsControl.xaml
+    /// Interaction logic for CustomCommandDetailsControl.xaml
     /// </summary>
     public partial class CustomCommandDetailsControl : CommandDetailsControlBase
     {
@@ -19,6 +19,10 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
+            if (this.command != null)
+            {
+                this.UnlockedControl.Unlocked = this.command.Unlocked;
+            }
             return Task.FromResult(0);
         }
 
@@ -36,6 +40,7 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (await this.Validate())
             {
+                this.command.Unlocked = this.UnlockedControl.Unlocked;
                 return this.command;
             }
             return null;

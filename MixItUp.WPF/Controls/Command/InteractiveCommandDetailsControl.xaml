@@ -24,12 +24,16 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Trigger" Style="{StaticResource BackgroundComboBox}" />
 
-            <TextBox x:Name="SparkCostTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="SparkCostTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+
+            <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="4" HorizontalAlignment="Center" />
         </Grid>
 
         <Grid Grid.Row="2">

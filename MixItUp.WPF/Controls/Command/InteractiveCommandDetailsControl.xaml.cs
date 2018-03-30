@@ -84,6 +84,8 @@ namespace MixItUp.WPF.Controls.Command
                     }
                 }
 
+                this.UnlockedControl.Unlocked = this.command.Unlocked;
+
                 IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
                 this.Game = games.FirstOrDefault(g => g.id.Equals(this.command.GameID));
                 if (this.Game != null)
@@ -185,6 +187,7 @@ namespace MixItUp.WPF.Controls.Command
 
                     await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
                 }
+                this.command.Unlocked = this.UnlockedControl.Unlocked;
                 return this.command;
             }
             return null;

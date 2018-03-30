@@ -57,16 +57,7 @@
                     <ToggleButton Grid.Column="2" x:Name="IncludeExclamationInCommandsToggleButton" Checked="IncludeExclamationInCommandsToggleButton_Checked" Unchecked="IncludeExclamationInCommandsToggleButton_Checked" />
                 </Grid>
 
-                <Grid Grid.Column="2" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="10" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Don't Block Command:</TextBlock>
-                    <ToggleButton Grid.Column="2" x:Name="DontBlockCommandToggleButton" />
-                </Grid>
+                <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="2" HorizontalAlignment="Center" />
             </Grid>
         </Grid>
 
