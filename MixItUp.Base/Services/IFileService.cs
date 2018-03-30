@@ -17,5 +17,7 @@ namespace MixItUp.Base.Services
 
         string ShowSaveFileDialog(string fileName);
         string ShowSaveFileDialog(string fileName, string filter);
+
+        string GetApplicationDirectory();
     }
 }

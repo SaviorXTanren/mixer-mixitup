@@ -86,7 +86,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private async void CountersFolderHyperlink_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            string counterFolderPath = Path.Combine(Path.GetDirectoryName(typeof(CounterActionControl).Assembly.Location), CounterAction.CounterFolderName);
+            string counterFolderPath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), CounterAction.CounterFolderName);
             if (!Directory.Exists(counterFolderPath))
             {
                 await ChannelSession.Services.FileService.CreateDirectory(counterFolderPath);
