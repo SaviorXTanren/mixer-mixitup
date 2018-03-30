@@ -114,5 +114,10 @@ namespace MixItUp.Desktop.Files
             }
             return null;
         }
+
+        public string GetApplicationDirectory()
+        {
+            return Path.GetDirectoryName(typeof(IFileService).Assembly.Location);
+        }
     }
 }

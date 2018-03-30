@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base;
+using MixItUp.Base.Actions;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -83,9 +84,15 @@ namespace MixItUp.WPF.Controls.Actions
             }
         }
 
-        private void CountersFolderHyperlink_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void CountersFolderHyperlink_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Process.Start(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), CounterAction.CounterFolderName));
+            string counterFolderPath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), CounterAction.CounterFolderName);
+            if (!Directory.Exists(counterFolderPath))
+            {
+                await ChannelSession.Services.FileService.CreateDirectory(counterFolderPath);
+            }
+
+            Process.Start(counterFolderPath);
         }
     }
 }

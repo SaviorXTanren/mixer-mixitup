@@ -50,7 +50,14 @@ namespace MixItUp.Base.Statistics
             this.Statistics.Add(new TrackedNumberStatisticDataTracker("Viewers", "Eye", (StatisticDataTrackerBase stats) =>
             {
                 TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
-                numberStats.AddValue((int)ChannelSession.Channel.viewersCurrent);
+
+                int viewersCurrent = 0;
+                if (ChannelSession.Channel != null)
+                {
+                    viewersCurrent = (int)ChannelSession.Channel.viewersCurrent;
+                }
+
+                numberStats.AddValue(viewersCurrent);
                 return Task.FromResult(0);
             }));
 
