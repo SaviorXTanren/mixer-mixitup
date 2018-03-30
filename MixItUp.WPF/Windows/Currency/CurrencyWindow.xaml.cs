@@ -292,7 +292,7 @@ namespace MixItUp.WPF.Windows.Currency
                                 Dictionary<uint, UserDataViewModel> userData = ChannelSession.Settings.UserData.ToDictionary();
                                 foreach (string line in lines)
                                 {
-                                    string[] segments = line.Split(new string[] { " ", "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                                    string[] segments = line.Split(new string[] { " ", "\t", "," }, StringSplitOptions.RemoveEmptyEntries);
                                     if (segments.Count() == 2)
                                     {
                                         int amount = 0;
