@@ -310,7 +310,9 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("grant_type", "refresh_token"),
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://accounts.spotify.com/api/token", SpotifyService.ClientID, SpotifyService.ClientSecret, body);
+                OAuthTokenModel token = await this.GetWWWFormUrlEncodedOAuthToken("https://accounts.spotify.com/api/token", SpotifyService.ClientID, SpotifyService.ClientSecret, body);
+                token.refreshToken = this.token.refreshToken;
+                this.token = token;
             }
         }
 
