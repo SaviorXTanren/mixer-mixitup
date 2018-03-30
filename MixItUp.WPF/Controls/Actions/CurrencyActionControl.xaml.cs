@@ -37,11 +37,11 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            int currencyAmount;
-            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount))
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text))
             {
                 UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
-                return new CurrencyAction(currency, this.CurrencyUsernameTextBox.Text, currencyAmount, this.CurrencyMessageTextBox.Text, this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
+                return new CurrencyAction(currency, this.CurrencyUsernameTextBox.Text, this.CurrencyAmountTextBox.Text, this.CurrencyMessageTextBox.Text,
+                    this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
             }
             return null;
         }

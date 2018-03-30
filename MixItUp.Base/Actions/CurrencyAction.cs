@@ -22,7 +22,7 @@ namespace MixItUp.Base.Actions
         public string Username { get; set; }
 
         [DataMember]
-        public int Amount { get; set; }
+        public string Amount { get; set; }
 
         [DataMember]
         public string ChatText { get; set; }
@@ -32,7 +32,7 @@ namespace MixItUp.Base.Actions
 
         public CurrencyAction() : base(ActionTypeEnum.Currency) { }
 
-        public CurrencyAction(UserCurrencyViewModel currency, string username, int amount, string chatText, bool isWhisper)
+        public CurrencyAction(UserCurrencyViewModel currency, string username, string amount, string chatText, bool isWhisper)
             : this()
         {
             this.CurrencyID = currency.ID;
@@ -66,17 +66,21 @@ namespace MixItUp.Base.Actions
 
                 if (currencyData != null)
                 {
-                    currencyData.Amount += this.Amount;
-                    if (!string.IsNullOrEmpty(this.ChatText))
+                    string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
+                    if (int.TryParse(amountTextValue, out int amountValue))
                     {
-                        string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
-                        if (this.IsWhisper)
+                        currencyData.Amount += amountValue;
+                        if (!string.IsNullOrEmpty(this.ChatText))
                         {
-                            await ChannelSession.Chat.Whisper(user.UserName, message);
-                        }
-                        else
-                        {
-                            await ChannelSession.Chat.SendMessage(message);
+                            string message = await this.ReplaceStringWithSpecialModifiers(this.ChatText, user, arguments);
+                            if (this.IsWhisper)
+                            {
+                                await ChannelSession.Chat.Whisper(user.UserName, message);
+                            }
+                            else
+                            {
+                                await ChannelSession.Chat.SendMessage(message);
+                            }
                         }
                     }
                 }
