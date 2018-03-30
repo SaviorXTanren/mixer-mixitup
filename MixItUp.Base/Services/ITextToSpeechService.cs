@@ -1,4 +1,6 @@
 ﻿using Mixer.Base.Util;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -26,8 +28,28 @@ namespace MixItUp.Base.Services
         ExtraLoud = 5,
     }
 
+    public class TextToSpeechVoice : IEquatable<TextToSpeechVoice>
+    {
+        public string Name { get; set; }
+
+        public override bool Equals(object other)
+        {
+            if (other is TextToSpeechVoice)
+            {
+                return this.Equals((TextToSpeechVoice)other);
+            }
+            return false;
+        }
+
+        public bool Equals(TextToSpeechVoice other) { return this.Name.Equals(other.Name); }
+
+        public override int GetHashCode() { return this.Name.GetHashCode(); }
+    }
+
     public interface ITextToSpeechService
     {
-        Task SayText(string text, SpeechRate rate, SpeechVolume volume);
+        Task SayText(string text, TextToSpeechVoice voice, SpeechRate rate, SpeechVolume volume);
+
+        IEnumerable<TextToSpeechVoice> GetInstalledVoices();
     }
 }

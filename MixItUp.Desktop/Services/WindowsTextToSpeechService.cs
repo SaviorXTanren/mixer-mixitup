@@ -1,4 +1,8 @@
-﻿using MixItUp.Base.Services;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Speech.Synthesis;
 using System.Threading.Tasks;
 
@@ -6,7 +10,7 @@ namespace MixItUp.Desktop.Services
 {
     public class WindowsTextToSpeechService : ITextToSpeechService
     {
-        public async Task SayText(string text, SpeechRate rate, SpeechVolume volume)
+        public Task SayText(string text, TextToSpeechVoice voice, SpeechRate rate, SpeechVolume volume)
         {
             PromptStyle style = new PromptStyle();
             
@@ -34,12 +38,56 @@ namespace MixItUp.Desktop.Services
             prompt.AppendText(text);
             prompt.EndStyle();
 
-            SpeechSynthesizer synthesizer = new SpeechSynthesizer();
-            Prompt promptAsync = synthesizer.SpeakAsync(prompt);
-            while (!promptAsync.IsCompleted)
+            Task.Run(async () =>
             {
-                await Task.Delay(1000);
+                try
+                {
+                    using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
+                    {
+                        if (voice == null)
+                        {
+                            voice = this.GetInstalledVoices().FirstOrDefault();
+                        }
+
+                        if (voice != null)
+                        {
+                            synthesizer.SelectVoice(voice.Name);
+                        }
+
+                        Prompt promptAsync = synthesizer.SpeakAsync(prompt);
+                        while (!promptAsync.IsCompleted)
+                        {
+                            await Task.Delay(1000);
+                        }
+                    }
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+            });
+
+            return Task.FromResult(0);
+        }
+
+        public IEnumerable<TextToSpeechVoice> GetInstalledVoices()
+        {
+            List<TextToSpeechVoice> voices = new List<TextToSpeechVoice>();
+            try
+            {
+                using (SpeechSynthesizer synthesizer = new SpeechSynthesizer())
+                {
+                    foreach (var voice in synthesizer.GetInstalledVoices())
+                    {
+                        if (voice.Enabled)
+                        {
+                            voices.Add(new TextToSpeechVoice()
+                            {
+                                Name = voice.VoiceInfo.Name
+                            });
+                        }
+                    }
+                }
             }
+            catch (Exception ex) { Logger.Log(ex); }
+            return voices;
         }
     }
 }
