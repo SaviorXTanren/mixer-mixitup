@@ -194,7 +194,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (this.giveawayEnabled)
             {
-                if (this.selectedWinner == null && e.CommandName.Equals(ChannelSession.Settings.GiveawayCommand))
+                if (this.selectedWinner == null && e.CommandName.Equals("!" + ChannelSession.Settings.GiveawayCommand))
                 {
                     if (this.enteredUsers.Contains(e.User))
                     {
