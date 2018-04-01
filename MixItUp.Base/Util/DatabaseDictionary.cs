@@ -83,7 +83,10 @@ namespace MixItUp.Base.Util
         {
             lock (valuesUpdateLock)
             {
-                this.addedValues.Add(key);
+                if (this.ContainsKey(key))
+                {
+                    this.addedValues.Add(key);
+                }
             }
         }
 
@@ -91,7 +94,10 @@ namespace MixItUp.Base.Util
         {
             lock (valuesUpdateLock)
             {
-                this.changedValues.Add(key);
+                if (this.ContainsKey(key))
+                {
+                    this.changedValues.Add(key);
+                }
             }
         }
 
