@@ -18,7 +18,7 @@ namespace MixItUp.Desktop.Services
 
         private const string ClientID = "422657136510631936";
         private const string ClientSecret = "3N6V7bHyXQEffnzxlbsTggMtosRcA7XG";
-        private const string AuthorizationUrl = "https://discordapp.com/api/oauth2/authorize?client_id={0}&permissions=281431041&redirect_uri=http%3A%2F%2Flocalhost%3A8919%2F&response_type=code&scope=bot%20guilds%20identify%20connections%20messages.read%20guilds.join%20email%20gdm.join";
+        private const string AuthorizationUrl = "https://discordapp.com/api/oauth2/authorize?client_id={0}&permissions=281463809&redirect_uri=http%3A%2F%2Flocalhost%3A8919%2F&response_type=code&scope=bot%20guilds%20identify%20connections%20messages.read%20guilds.join%20email%20gdm.join";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
