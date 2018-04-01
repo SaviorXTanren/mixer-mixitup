@@ -66,7 +66,6 @@ namespace MixItUp.Base.MixerAPI
             if (this.Client != null)
             {
                 this.Client.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
-                this.Client.OnReconnectionOccurred -= ConstellationClient_OnReconnectionOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
                     this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
@@ -92,7 +91,6 @@ namespace MixItUp.Base.MixerAPI
                 if (await this.RunAsync(this.Client.Connect()))
                 {
                     this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
-                    this.Client.OnReconnectionOccurred += ConstellationClient_OnReconnectionOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
                         this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
@@ -284,13 +282,12 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred("Constellation");
-        }
 
-        private void ConstellationClient_OnReconnectionOccurred(object sender, EventArgs e)
-        {
+            await ConstellationClient.Reconnect(this.Client);
+
             ChannelSession.ReconnectionOccurred("Constellation");
         }
     }

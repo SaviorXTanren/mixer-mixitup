@@ -1,4 +1,6 @@
-﻿using MixItUp.Base;
+﻿using MaterialDesignThemes.Wpf;
+using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Properties;
 using MixItUp.WPF.Util;
@@ -46,6 +48,9 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
+            GlobalEvents.OnShowSnackBar += GlobalEvents_OnShowSnackBar;
+            GlobalEvents.OnHideSnackBar += GlobalEvents_OnHideSnackBar;
+
             if (ChannelSession.Settings.IsStreamer)
             {
                 this.Title += " - Streamer";
@@ -82,25 +87,6 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Services", new ServicesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Services");
             }
             await this.MainMenu.AddMenuItem("About", new AboutControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki");
-        }
-
-        private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (!this.shutdownStarted)
-            {
-                e.Cancel = true;
-                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to exit Mix It Up?"))
-                {
-                    this.shutdownStarted = true;
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.StartShutdownProcess();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                }
-            }
-            else if (!this.shutdownComplete)
-            {
-                e.Cancel = true;
-            }
         }
 
         private async Task StartShutdownProcess()
@@ -144,6 +130,45 @@ namespace MixItUp.WPF
             {
                 Process.Start(Application.ResourceAssembly.Location);
             }
+        }
+
+        private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!this.shutdownStarted)
+            {
+                e.Cancel = true;
+                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to exit Mix It Up?"))
+                {
+                    this.shutdownStarted = true;
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    this.StartShutdownProcess();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
+            }
+            else if (!this.shutdownComplete)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void GlobalEvents_OnShowSnackBar(object sender, string e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                if (!this.BottomSnackBar.IsActive)
+                {
+                    this.BottomSnackBar.Message = new SnackbarMessage() { Content = e };
+                    this.BottomSnackBar.IsActive = true;
+                }
+            });
+        }
+
+        private void GlobalEvents_OnHideSnackBar(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                this.BottomSnackBar.IsActive = false;
+            });
         }
     }
 }

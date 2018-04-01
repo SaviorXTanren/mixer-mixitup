@@ -6,6 +6,7 @@ using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -56,12 +57,12 @@ namespace MixItUp.Desktop.Services
             this.OnDisconnectOccurred += RemoteService_OnDisconnectOccurred;
         }
 
-        public async Task<bool> Connect(bool autoReconnect = true)
+        public async Task<bool> Connect()
         {
-            return await this.Connect(RemoteService.GetConnectConnectionURL(this.ClientID), autoReconnect);
+            return await this.Connect(RemoteService.GetConnectConnectionURL(this.ClientID));
         }
 
-        public override async Task<bool> Connect(string endpoint, bool autoReconnect = true)
+        public override async Task<bool> Connect(string endpoint)
         {
             this.OnHeartbeat += ConnectHeartbeat;
 
@@ -71,7 +72,18 @@ namespace MixItUp.Desktop.Services
 
             this.OnHeartbeat -= ConnectHeartbeat;
 
+            if (this.Connected)
+            {
+                this.OnDisconnectOccurred += RemoteService_OnDisconnectOccurred;
+            }
+
             return this.Connected;
+        }
+
+        public override async Task Disconnect(WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure)
+        {
+            this.OnDisconnectOccurred -= RemoteService_OnDisconnectOccurred;
+            await base.Disconnect(closeStatus);
         }
 
         private void ConnectHeartbeat(object sender, HeartbeatRemoteMessage e)

@@ -16,6 +16,24 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<string> OnShowSnackBar;
+        public static void ShowSnackBar(string message)
+        {
+            if (GlobalEvents.OnShowSnackBar != null)
+            {
+                GlobalEvents.OnShowSnackBar(null, message);
+            }
+        }
+
+        public static event EventHandler OnHideSnackBar;
+        public static void HideSnackBar()
+        {
+            if (GlobalEvents.OnHideSnackBar != null)
+            {
+                GlobalEvents.OnHideSnackBar(null, new EventArgs());
+            }
+        }
+
         public static event EventHandler OnChatFontSizeChanged;
         public static void ChatFontSizeChanged()
         {

@@ -315,11 +315,13 @@ namespace MixItUp.Base
         public static void DisconnectionOccurred(string service)
         {
             Util.Logger.Log(service + " Service disconnection occurred");
+            GlobalEvents.ShowSnackBar("A service has been disconnected. Attempting to reconnect...");
         }
 
         public static void ReconnectionOccurred(string service)
         {
             Util.Logger.Log(service + " Service reconnection successful");
+            GlobalEvents.HideSnackBar();
         }
 
         private static async Task<bool> InitializeInternal(string channelName = null)

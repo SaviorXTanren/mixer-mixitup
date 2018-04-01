@@ -92,7 +92,6 @@ namespace MixItUp.Base.MixerAPI
             if (this.Client != null)
             {
                 this.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
-                this.Client.OnReconnectionOccurred -= InteractiveClient_OnReconnectionOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
                 {
                     this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
@@ -165,7 +164,6 @@ namespace MixItUp.Base.MixerAPI
                 if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
                 {
                     this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
-                    this.Client.OnReconnectionOccurred += InteractiveClient_OnReconnectionOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
                     {
                         this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
@@ -456,13 +454,15 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private async void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred("Interactive");
-        }
 
-        private void InteractiveClient_OnReconnectionOccurred(object sender, EventArgs e)
-        {
+            do
+            {
+                await InteractiveClient.Reconnect(this.Client);
+            } while (!await this.Client.Ready());
+
             ChannelSession.ReconnectionOccurred("Interactive");
         }
 
