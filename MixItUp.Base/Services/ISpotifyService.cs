@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.OAuth;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -149,11 +150,14 @@ namespace MixItUp.Base.Services
         public SpotifyCurrentlyPlaying(JObject data)
             : base((data["item"] != null && data["item"] is JObject) ? (JObject)data["item"] : null)
         {
-            if (data["item"] != null && data["item"] is JObject)
+            if (data["item"] != null && data["item"] is JObject && data["is_playing"] != null)
             {
                 this.IsPlaying = bool.Parse(data["is_playing"].ToString());
             }
-            this.CurrentProgress = long.Parse(data["progress_ms"].ToString());
+            if (data["progress_ms"] != null)
+            {
+                this.CurrentProgress = long.Parse(data["progress_ms"].ToString());
+            }
             if (data["context"] != null && data["context"]["uri"] != null)
             {
                 this.Uri = data["context"]["uri"].ToString();

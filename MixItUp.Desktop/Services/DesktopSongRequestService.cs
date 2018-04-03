@@ -245,7 +245,10 @@ namespace MixItUp.Desktop.Services
                 else if (identifier.StartsWith("https://open.spotify.com/track/"))
                 {
                     identifier = identifier.Replace(SpotifyLinkPrefix, "");
-                    songID = identifier.Substring(0, identifier.IndexOf('?'));
+                    if (identifier.Contains('?'))
+                    {
+                        songID = identifier.Substring(0, identifier.IndexOf('?'));
+                    }
                 }
                 else
                 {
