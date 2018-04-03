@@ -34,6 +34,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private bool isRank = false;
         private UserCurrencyViewModel currency;
+        private CustomCommand rankChangedCommand;
 
         private string specialIdentifier = null;
 
@@ -56,6 +57,7 @@ namespace MixItUp.WPF.Windows.Currency
         {
             this.currency = currency;
             this.isRank = this.currency.IsRank;
+            this.rankChangedCommand = this.currency.RankChangedCommand;
 
             InitializeComponent();
 
@@ -235,7 +237,7 @@ namespace MixItUp.WPF.Windows.Currency
                 CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
                 if (command != null)
                 {
-                    this.currency = null;
+                    this.rankChangedCommand = null;
                     await ChannelSession.SaveSettings();
                     this.UpdateRankChangedCommand();
                 }
@@ -244,7 +246,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
         {
-            this.currency.RankChangedCommand = (CustomCommand)e;
+            this.rankChangedCommand = (CustomCommand)e;
         }
 
         private void Window_Closed(object sender, System.EventArgs e)
@@ -254,11 +256,11 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void UpdateRankChangedCommand()
         {
-            if (this.currency.RankChangedCommand != null)
+            if (this.rankChangedCommand != null)
             {
                 this.NewCommandButton.Visibility = Visibility.Collapsed;
                 this.CommandButtons.Visibility = Visibility.Visible;
-                this.CommandButtons.DataContext = this.currency.RankChangedCommand;
+                this.CommandButtons.DataContext = this.rankChangedCommand;
             }
             else
             {
@@ -517,6 +519,7 @@ namespace MixItUp.WPF.Windows.Currency
                 if (this.isRank)
                 {
                     this.currency.Ranks = ranks.ToList();
+                    this.currency.RankChangedCommand = this.rankChangedCommand;
                 }
 
                 if (!ChannelSession.Settings.Currencies.ContainsKey(this.currency.ID))

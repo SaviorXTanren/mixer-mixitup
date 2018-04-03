@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -41,11 +42,17 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        public void DeleteCurrency(UserCurrencyViewModel currency)
+        public async void DeleteCurrency(UserCurrencyViewModel currency)
         {
-            ChannelSession.Settings.Currencies.Remove(currency.ID);
-            currency.Reset();
-            this.RefreshList();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to delete this?"))
+                {
+                    ChannelSession.Settings.Currencies.Remove(currency.ID);
+                    currency.Reset();
+                    this.RefreshList();
+                }
+            });
         }
 
         protected override async Task InitializeInternal()
