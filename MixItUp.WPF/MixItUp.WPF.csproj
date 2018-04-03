@@ -213,6 +213,9 @@
     <Compile Include="Controls\Actions\CurrencyActionControl.xaml.cs">
       <DependentUpon>CurrencyActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\DiscordActionControl.xaml.cs">
+      <DependentUpon>DiscordActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\ExternalProgramActionControl.xaml.cs">
       <DependentUpon>ExternalProgramActionControl.xaml</DependentUpon>
     </Compile>
@@ -517,6 +520,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\CurrencyActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\DiscordActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -192,10 +192,12 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
-        public async Task<IEnumerable<DiscordChannel>> GetServerChannel(DiscordServer server)
+        public async Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server)
         {
             try
             {
+                string result = await this.GetStringAsync("guilds/" + server.ID + "/channels");
+
                 return await this.GetAsync<IEnumerable<DiscordChannel>>("guilds/" + server.ID + "/channels");
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -298,7 +300,7 @@ namespace MixItUp.Desktop.Services
         protected override async Task<HttpClientWrapper> GetHttpClient(bool autoRefreshToken = true)
         {
             HttpClientWrapper client = await base.GetHttpClient(autoRefreshToken);
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bot", "NDIyNjU3MTM2NTEwNjMxOTM2.DaLZSw.b1mdE04J205RnZcVTZ0G3RuSbG0");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bot", this.botToken);
             return client;
         }
 
@@ -317,12 +319,14 @@ namespace MixItUp.Desktop.Services
 
     public class DiscordService : OAuthServiceBase, IDiscordService
     {
+        public const string ClientBotPermissions = "8";
+
         private const string BaseAddress = "https://discordapp.com/api/";
 
         private const string ClientID = "422657136510631936";
         private const string ClientSecret = "3N6V7bHyXQEffnzxlbsTggMtosRcA7XG";
 
-        private const string ClientBotPermissions = "8";
+        private const string BotTokenSecret = "";
 
         private const string AuthorizationUrl = "https://discordapp.com/api/oauth2/authorize?client_id={0}&permissions={1}&redirect_uri=http%3A%2F%2Flocalhost%3A8919%2F&response_type=code&scope=bot%20guilds%20identify%20connections%20messages.read%20guilds.join%20email%20gdm.join";
 
@@ -422,23 +426,23 @@ namespace MixItUp.Desktop.Services
 
         public async Task<DiscordServer> GetServer(string serverID) { return await this.botService.GetServer(serverID); }
 
-        public async Task<IEnumerable<DiscordChannel>> GetServerChannel(DiscordServer server) { return await this.botService.GetServerChannel(server); }
-
         public async Task<IEnumerable<DiscordServerUser>> GetServerMembers(DiscordServer server, int maxNumbers = 1) { return await this.botService.GetServerMembers(server, maxNumbers); }
 
         public async Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user) { return await this.botService.GetServerMember(server, user); }
 
-        public async Task ChangeServerMemberRole(DiscordServer server, DiscordUser user, IEnumerable<string> roles) { await this.botService.ChangeServerMemberRole(server, user, roles); }
-
-        public async Task MuteServerMember(DiscordServer server, DiscordUser user, bool mute = true) { await this.botService.MuteServerMember(server, user, mute); }
-
-        public async Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true) { await this.botService.DeafenServerMember(server, user, deaf); }
+        public async Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server) { return await this.botService.GetServerChannels(server); }
 
         public async Task<DiscordChannel> GetChannel(string channelID) { return await this.botService.GetChannel(channelID); }
 
         public async Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message) { return await this.botService.CreateMessage(channel, message); }
 
         public async Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false) { return await this.botService.CreateChannelInvite(channel, isTemporary); }
+
+        public async Task ChangeServerMemberRole(DiscordServer server, DiscordUser user, IEnumerable<string> roles) { await this.botService.ChangeServerMemberRole(server, user, roles); }
+
+        public async Task MuteServerMember(DiscordServer server, DiscordUser user, bool mute = true) { await this.botService.MuteServerMember(server, user, mute); }
+
+        public async Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true) { await this.botService.DeafenServerMember(server, user, deaf); }
 
         protected override async Task<string> ConnectViaOAuthRedirect(string oauthPageURL)
         {
@@ -473,29 +477,12 @@ namespace MixItUp.Desktop.Services
 
         private async Task InitializeInternal()
         {
-            this.botService = new DiscordBotService(this.baseAddress, "");
+            this.botService = new DiscordBotService(this.baseAddress, DiscordService.BotTokenSecret);
 
             this.User = await this.GetCurrentUser();
             if (!string.IsNullOrEmpty(this.serverID))
             {
-                var servers = await this.GetCurrentUserServers();
-
                 this.Server = await this.GetServer(this.serverID);
-
-                var channels = await this.GetServerChannel(this.Server);
-
-                var channel = channels.FirstOrDefault(c => c.Name.Equals("general"));
-
-                var users = await this.GetServerMembers(this.Server, 1000);
-
-                //await this.MuteServerMember(this.Server, users.FirstOrDefault(u => u.User.UserName.Equals("SaviorXTanren")).User);
-                //await this.DeafenServerMember(this.Server, users.FirstOrDefault(u => u.User.UserName.Equals("SaviorXTanren")).User);
-
-                //await this.ChangeServerMemberRole(this.Server, users.FirstOrDefault(u => u.User.UserName.Equals("UglyRugger")).User, users.FirstOrDefault(u => u.User.UserName.Equals("TheShadowNavy")).Roles);
-
-                //DiscordChannelInvite invite = await this.CreateChannelInvite(), isTemporary: true);
-
-                //DiscordMessage message = await this.CreateMessage(channels.FirstOrDefault(c => c.Name.Equals("general")), "TEST MESSAGE!");
             }
 
             //DiscordGateway gateway = await this.GetBotGateway();

@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows;
@@ -46,10 +47,22 @@ namespace MixItUp.WPF.Controls.Services
             }
             else
             {
-                this.NewLoginGrid.Visibility = Visibility.Collapsed;
-                this.ExistingAccountGrid.Visibility = Visibility.Visible;
+                await this.groupBoxControl.window.RunAsyncOperation(async () =>
+                {
+                    if (ChannelSession.Services.Discord.User != null && ChannelSession.Services.Discord.Server != null &&
+                        DiscordService.ClientBotPermissions.Equals(ChannelSession.Services.Discord.BotPermissions))
+                    {
+                        this.NewLoginGrid.Visibility = Visibility.Collapsed;
+                        this.ExistingAccountGrid.Visibility = Visibility.Visible;
 
-                this.SetCompletedIcon(visible: true);
+                        this.SetCompletedIcon(visible: true);
+                    }
+                    else
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("We were unable to complete the authentication with Discord. Please ensure you do not change any options on the approval webpage and correctly select the Discord server you would like us to connect to.");
+                        await ChannelSession.Services.DisconnectDiscord();
+                    }
+                });
             }
         }
 

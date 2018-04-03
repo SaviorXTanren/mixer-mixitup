@@ -1,13 +1,14 @@
 ﻿using Mixer.Base.Model.OAuth;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public class DiscordUser
+    public class DiscordUser : IEquatable<DiscordUser>
     {
         [JsonProperty("id")]
         public string ID { get; set; }
@@ -27,9 +28,22 @@ namespace MixItUp.Base.Services
             this.Discriminator = data["discriminator"].ToString();
             this.AvatarID = data["avatar"].ToString();
         }
+
+        public override bool Equals(object other)
+        {
+            if (other is DiscordUser)
+            {
+                return this.Equals((DiscordUser)other);
+            }
+            return false;
+        }
+
+        public bool Equals(DiscordUser other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
-    public class DiscordServer
+    public class DiscordServer : IEquatable<DiscordServer>
     {
         private const string MixItUpServerRoleName = "Mix It Up";
 
@@ -62,6 +76,19 @@ namespace MixItUp.Base.Services
                 return 0;
             }
         }
+
+        public override bool Equals(object other)
+        {
+            if (other is DiscordServer)
+            {
+                return this.Equals((DiscordServer)other);
+            }
+            return false;
+        }
+
+        public bool Equals(DiscordServer other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     public class DiscordServerRole
@@ -95,7 +122,7 @@ namespace MixItUp.Base.Services
         }
     }
 
-    public class DiscordChannel
+    public class DiscordChannel : IEquatable<DiscordChannel>
     {
         public enum DiscordChannelTypeEnum
         {
@@ -113,14 +140,26 @@ namespace MixItUp.Base.Services
         [JsonProperty("type")]
         public DiscordChannelTypeEnum Type { get; set; }
 
-        public DiscordChannel() { }
+        [JsonProperty("recipients")]
+        public List<DiscordUser> Users { get; set; }
 
-        public DiscordChannel(JObject data)
+        public DiscordChannel()
         {
-            this.ID = data["id"].ToString();
-            this.Name = data["name"].ToString();
-            this.Type = (DiscordChannelTypeEnum)((int)data["type"]);
+            this.Users = new List<DiscordUser>();
         }
+
+        public override bool Equals(object other)
+        {
+            if (other is DiscordChannel)
+            {
+                return this.Equals((DiscordChannel)other);
+            }
+            return false;
+        }
+
+        public bool Equals(DiscordChannel other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     public class DiscordMessage
@@ -203,6 +242,11 @@ namespace MixItUp.Base.Services
 
     public interface IDiscordService
     {
+        DiscordUser User { get; }
+        DiscordServer Server { get; }
+
+        string BotPermissions { get; }
+
         Task<bool> Connect();
 
         Task Disconnect();
@@ -221,19 +265,19 @@ namespace MixItUp.Base.Services
 
         Task<DiscordServerUser> GetServerMember(DiscordServer server, DiscordUser user);
 
-        Task ChangeServerMemberRole(DiscordServer server, DiscordUser user, IEnumerable<string> roles);
-
-        Task MuteServerMember(DiscordServer server, DiscordUser user, bool mute = true);
-
-        Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true);
-
-        Task<IEnumerable<DiscordChannel>> GetServerChannel(DiscordServer server);
+        Task<IEnumerable<DiscordChannel>> GetServerChannels(DiscordServer server);
 
         Task<DiscordChannel> GetChannel(string channelID);
 
         Task<DiscordMessage> CreateMessage(DiscordChannel channel, string message);
 
         Task<DiscordChannelInvite> CreateChannelInvite(DiscordChannel channel, bool isTemporary = false);
+
+        Task ChangeServerMemberRole(DiscordServer server, DiscordUser user, IEnumerable<string> roles);
+
+        Task MuteServerMember(DiscordServer server, DiscordUser user, bool mute = true);
+
+        Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true);
 
         OAuthTokenModel GetOAuthTokenCopy();
     }

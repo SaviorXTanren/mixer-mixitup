@@ -102,6 +102,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Spotify:
                         this.actionControl = (this.action != null) ? new SpotifyActionControl(this, (SpotifyAction)this.action) : new SpotifyActionControl(this);
                         break;
+                    case ActionTypeEnum.Discord:
+                        this.actionControl = (this.action != null) ? new DiscordActionControl(this, (DiscordAction)this.action) : new DiscordActionControl(this);
+                        break;
                 }
             }
 
