@@ -72,7 +72,10 @@ namespace MixItUp.Base.Util
                 List<V> values = new List<V>();
                 foreach (K key in keys)
                 {
-                    values.Add(base[key]);
+                    if (base.ContainsKey(key))
+                    {
+                        values.Add(base[key]);
+                    }
                 }
                 keys.Clear();
                 return values;
