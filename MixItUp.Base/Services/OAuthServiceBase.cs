@@ -36,7 +36,7 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL)
+        protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL)
         {
             OAuthHttpListenerServer oauthServer = new OAuthHttpListenerServer(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
             oauthServer.Start();

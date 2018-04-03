@@ -42,6 +42,7 @@ namespace MixItUp.Base.Actions
         [Name("Song Request")]
         SongRequest,
         Spotify,
+        Discord,
 
         Custom = 99,
     }
