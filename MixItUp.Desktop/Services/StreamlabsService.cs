@@ -28,12 +28,12 @@ namespace MixItUp.Desktop.Services
                 {
                     if (eventData != null)
                     {
-                        StreamlabsEventPacket packet = JsonConvert.DeserializeObject<StreamlabsEventPacket>(eventData.ToString());
-                        if (packet.type.Equals("donation"))
-                        {
-                            StreamlabsDonation donation = new StreamlabsDonation(packet);
-                            GlobalEvents.DonationOccurred(donation.ToGenericDonation());
-                        }
+                        //StreamlabsEventPacket packet = JsonConvert.DeserializeObject<StreamlabsEventPacket>(eventData.ToString());
+                        //if (packet.type.Equals("donation"))
+                        //{
+                            //StreamlabsDonation donation = new StreamlabsDonation(packet.message);
+                            //GlobalEvents.DonationOccurred(donation.ToGenericDonation());
+                        //}
                     }
                 }
                 catch (Exception ex)
@@ -116,16 +116,16 @@ namespace MixItUp.Desktop.Services
         public async Task<IEnumerable<StreamlabsDonation>> GetDonations()
         {
             List<StreamlabsDonation> results = new List<StreamlabsDonation>();
-
-            HttpResponseMessage result = await this.GetAsync("donations");
-            string resultJson = await result.Content.ReadAsStringAsync();
-            JObject jobj = JObject.Parse(resultJson);
-            JArray donations = (JArray)jobj["data"];
-            foreach (var donation in donations)
+            try
             {
-                results.Add(donation.ToObject<StreamlabsDonation>());
+                HttpResponseMessage response = await this.GetAsync("donations");
+                JObject jobj = await this.ProcessJObjectResponse(response);
+                foreach (var donation in (JArray)jobj["data"])
+                {
+                    results.Add(donation.ToObject<StreamlabsDonation>());
+                }
             }
-
+            catch (Exception ex) { Logger.Log(ex); }
             return results;
         }
 
@@ -164,19 +164,18 @@ namespace MixItUp.Desktop.Services
             IEnumerable<StreamlabsDonation> donations = await this.GetDonations();
             foreach (StreamlabsDonation donation in donations)
             {
-                donationsReceived[donation.donation_id] = donation;
+                donationsReceived[donation.ID] = donation;
             }
 
             while (!this.cancellationTokenSource.Token.IsCancellationRequested)
             {
                 try
                 {
-                    donations = await this.GetDonations();
-                    foreach (StreamlabsDonation donation in donations)
+                    foreach (StreamlabsDonation donation in await this.GetDonations())
                     {
-                        if (!donationsReceived.ContainsKey(donation.donation_id))
+                        if (!donationsReceived.ContainsKey(donation.ID))
                         {
-                            donationsReceived[donation.donation_id] = donation;
+                            donationsReceived[donation.ID] = donation;
                             GlobalEvents.DonationOccurred(donation.ToGenericDonation());
                         }
                     }

@@ -20,43 +20,39 @@ namespace MixItUp.Base.Services
 
     public class StreamlabsDonation
     {
-        public int donation_id { get; set; }
+        [JsonProperty("id")]
+        public int ID { get; set; }
 
-        public string name { get; set; }
-        public string message { get; set; }
-        public string email { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("message")]
+        public string Message { get; set; }
 
-        public double amount { get; set; }
-        public string currency { get; set; }
+        [JsonProperty("amount")]
+        public double Amount { get; set; }
+        [JsonProperty("currency")]
+        public string Currency { get; set; }
 
-        public long created_at { get; set; }
+        [JsonProperty("created_at")]
+        public long CreatedAt { get; set; }
 
-        public StreamlabsDonation() { }
-
-        public StreamlabsDonation(StreamlabsEventPacket packet)
+        public StreamlabsDonation()
         {
-            this.donation_id = int.Parse(packet.message["id"].ToString());
-            this.name = packet.message["name"].ToString();
-            this.message = packet.message["message"].ToString();
-
-            this.amount = double.Parse(packet.message["amount"].ToString());
-            this.currency = packet.message["currency"].ToString();
-
-            this.created_at = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now);
+            this.CreatedAt = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now);
         }
 
         public UserDonationModel ToGenericDonation()
         {
             return new UserDonationModel()
             {
-                ID = this.donation_id.ToString(),
-                Username = this.name,
-                Message = this.message,
+                ID = this.ID.ToString(),
+                Username = this.Name,
+                Message = this.Message,
 
-                Amount = this.amount,
-                AmountText = string.Format("{0:C}", this.amount),
+                Amount = this.Amount,
+                AmountText = string.Format("{0:C}", this.Amount),
 
-                DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.created_at),
+                DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.CreatedAt),
             };
         }
     }
