@@ -469,8 +469,6 @@ namespace MixItUp.Desktop
                     }
                     else
                     {
-                        onlineUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
-
                         foreach (var dupeUser in duplicateGroup)
                         {
                             this.UserData.Remove(dupeUser.ID);
