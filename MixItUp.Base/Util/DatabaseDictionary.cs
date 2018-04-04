@@ -36,7 +36,7 @@ namespace MixItUp.Base.Util
         public override void Add(K key, V value)
         {
             base.Add(key, value);
-            this.ValueChanged(key);
+            this.ValueAdded(key);
         }
 
         public override bool Remove(K key)
@@ -86,10 +86,7 @@ namespace MixItUp.Base.Util
         {
             lock (valuesUpdateLock)
             {
-                if (this.ContainsKey(key))
-                {
-                    this.addedValues.Add(key);
-                }
+                this.addedValues.Add(key);
             }
         }
 
