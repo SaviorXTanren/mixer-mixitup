@@ -38,7 +38,7 @@ namespace MixItUp.WPF.Windows.Currency
 
         private string specialIdentifier = null;
 
-        private Dictionary<uint, int> userImportData = new Dictionary<uint, int>();
+        private Dictionary<UserDataViewModel, int> userImportData = new Dictionary<UserDataViewModel, int>();
 
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
@@ -291,84 +291,65 @@ namespace MixItUp.WPF.Windows.Currency
                             string[] lines = fileContents.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries);
                             if (lines.Count() > 0)
                             {
-                                Dictionary<uint, UserDataViewModel> userData = ChannelSession.Settings.UserData.ToDictionary();
                                 foreach (string line in lines)
                                 {
+                                    UserModel user = null;
+                                    uint id = 0;
+                                    string username = null;
+                                    int amount = 0;
+
                                     string[] segments = line.Split(new string[] { " ", "\t", "," }, StringSplitOptions.RemoveEmptyEntries);
                                     if (segments.Count() == 2)
                                     {
-                                        int amount = 0;
                                         if (!int.TryParse(segments[1], out amount))
                                         {
                                             throw new InvalidOperationException("File is not in the correct format");
                                         }
 
-                                        UserModel user = null;
-                                        if (uint.TryParse(segments[0], out uint id))
+                                        if (!uint.TryParse(segments[0], out id))
                                         {
-                                            if (userData.ContainsKey(id))
-                                            {
-                                                this.userImportData[id] = amount;
-                                            }
-                                            else
-                                            {
-                                                user = await ChannelSession.Connection.GetUser(id);
-                                                if (user != null)
-                                                {
-                                                    UserViewModel userViewModel = new UserViewModel(user);
-                                                    UserDataViewModel data = new UserDataViewModel(userViewModel);
-                                                    ChannelSession.Settings.UserData[data.ID] = data;
-                                                    this.userImportData[data.ID] = amount;
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            UserDataViewModel data = userData.Values.FirstOrDefault(u => u.UserName.Equals(segments[0]));
-                                            if (data != null)
-                                            {
-                                                this.userImportData[data.ID] = amount;
-                                            }
-                                            else
-                                            {
-                                                user = await ChannelSession.Connection.GetUser(segments[0]);
-                                                if (user != null)
-                                                {
-                                                    UserViewModel userViewModel = new UserViewModel(user);
-                                                    data = new UserDataViewModel(userViewModel);
-                                                    ChannelSession.Settings.UserData[data.ID] = data;
-                                                    this.userImportData[data.ID] = amount;
-                                                }
-                                            }
+                                            username = segments[0];
                                         }
                                     }
                                     else if (segments.Count() == 3)
                                     {
-                                        uint id = 0;
                                         if (!uint.TryParse(segments[0], out id))
                                         {
                                             throw new InvalidOperationException("File is not in the correct format");
                                         }
 
-                                        int amount = 0;
                                         if (!int.TryParse(segments[2], out amount))
                                         {
                                             throw new InvalidOperationException("File is not in the correct format");
                                         }
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidOperationException("File is not in the correct format");
+                                    }
 
-                                        if (userData.ContainsKey(id))
+                                    if (amount > 0)
+                                    {
+                                        if (id > 0)
                                         {
-                                            this.userImportData[id] = amount;
+                                            user = await ChannelSession.Connection.GetUser(id);
                                         }
-                                        else
+                                        else if (!string.IsNullOrEmpty(username))
                                         {
-                                            UserDataViewModel data = new UserDataViewModel(id, segments[1]);
-                                            ChannelSession.Settings.UserData[data.ID] = data;
-                                            this.userImportData[data.ID] = amount;
+                                            user = await ChannelSession.Connection.GetUser(username);
                                         }
                                     }
 
-                                    this.ImportUserCurrencyFromFileButton.Content = string.Format("{0} Imported...", this.userImportData.Count());
+                                    if (user != null)
+                                    {
+                                        UserDataViewModel data = ChannelSession.Settings.UserData.GetValueIfExists(user.id, new UserDataViewModel(user));
+                                        if (!this.userImportData.ContainsKey(data))
+                                        {
+                                            this.userImportData[data] = amount;
+                                        }
+                                        this.userImportData[data] = Math.Max(this.userImportData[data], amount);
+                                        this.ImportUserCurrencyFromFileButton.Content = string.Format("{0} Imported...", this.userImportData.Count());
+                                    }
                                 }
                                 this.ImportUserCurrencyFromFileButton.Content = "Import From File";
                                 return;
@@ -529,10 +510,7 @@ namespace MixItUp.WPF.Windows.Currency
 
                 foreach (var kvp in this.userImportData)
                 {
-                    if (ChannelSession.Settings.UserData.ContainsKey(kvp.Key))
-                    {
-                        ChannelSession.Settings.UserData[kvp.Key].SetCurrencyAmount(this.currency, kvp.Value);
-                    }
+                    kvp.Key.SetCurrencyAmount(this.currency, kvp.Value);
                 }
 
                 await ChannelSession.SaveSettings();

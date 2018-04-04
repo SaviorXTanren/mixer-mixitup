@@ -101,6 +101,8 @@ namespace MixItUp.Base.ViewModel.User
             this.UserName = username;
         }
 
+        public UserDataViewModel(UserModel user) : this(user.id, user.username) { }
+
         public UserDataViewModel(UserViewModel user) : this(user.ID, user.UserName) { }
 
         public UserDataViewModel(ScorpBotViewer viewer)
