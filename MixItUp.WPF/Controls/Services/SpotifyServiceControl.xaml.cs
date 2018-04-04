@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.Services
             {
                 await this.groupBoxControl.window.RunAsyncOperation(async () =>
                 {
-                    if (ChannelSession.Services.Spotify.Profile != null)
+                    if (ChannelSession.Services.Spotify.Profile == null)
                     {
                         await MessageBoxHelper.ShowMessageDialog("We were unable to get your user data, please try to authenticate again with Spotify.");
                         await ChannelSession.Services.DisconnectSpotify();

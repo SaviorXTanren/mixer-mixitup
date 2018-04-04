@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await base.InitializeInternal();
         }
 
-        private async void EnableGameQueueToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        private async void EnableSongRequestsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
             {
