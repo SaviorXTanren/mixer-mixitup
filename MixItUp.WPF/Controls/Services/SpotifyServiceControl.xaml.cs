@@ -48,7 +48,12 @@ namespace MixItUp.WPF.Controls.Services
             {
                 await this.groupBoxControl.window.RunAsyncOperation(async () =>
                 {
-                    if (ChannelSession.Services.Spotify.Profile != null && !ChannelSession.Services.Spotify.Profile.IsPremium)
+                    if (ChannelSession.Services.Spotify.Profile != null)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("We were unable to get your user data, please try to authenticate again with Spotify.");
+                        await ChannelSession.Services.DisconnectSpotify();
+                    }
+                    else if (!ChannelSession.Services.Spotify.Profile.IsPremium)
                     {
                         await MessageBoxHelper.ShowMessageDialog("You do not have Spotify Premium, which is required for this feature.");
                         await ChannelSession.Services.DisconnectSpotify();

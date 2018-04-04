@@ -118,8 +118,6 @@ namespace MixItUp.Desktop.Services
             return songs;
         }
 
-        public async Task<SpotifySong> GetSong(SpotifySong song) { return await this.GetSong(song.ID); }
-
         public async Task<SpotifySong> GetSong(string songID)
         {
             try
@@ -149,8 +147,11 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                JObject result = await this.GetJObjectAsync(string.Format("users/{0}/playlists/{1}", this.Profile.ID, playlist.ID));
-                return new SpotifyPlaylist(result);
+                if (playlist != null)
+                {
+                    JObject result = await this.GetJObjectAsync(string.Format("users/{0}/playlists/{1}", this.Profile.ID, playlist.ID));
+                    return new SpotifyPlaylist(result);
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
             return null;
@@ -161,9 +162,12 @@ namespace MixItUp.Desktop.Services
             List<SpotifySong> results = new List<SpotifySong>();
             try
             {
-                foreach (JObject song in await this.GetPagedResult(string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlist.ID)))
+                if (playlist != null)
                 {
-                    results.Add(new SpotifySong((JObject)song["track"]));
+                    foreach (JObject song in await this.GetPagedResult(string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlist.ID)))
+                    {
+                        results.Add(new SpotifySong((JObject)song["track"]));
+                    }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -188,13 +192,18 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
-        public async Task AddSongToPlaylist(SpotifyPlaylist playlist, SpotifySong song)
+        public async Task<bool> AddSongToPlaylist(SpotifyPlaylist playlist, SpotifySong song)
         {
             try
             {
-                HttpResponseMessage response = await this.PostAsync(string.Format("users/{0}/playlists/{1}/tracks?uris=spotify:track:" + song.ID, this.Profile.ID, playlist.ID), null);
+                if (playlist != null && song != null)
+                {
+                    HttpResponseMessage response = await this.PostAsync(string.Format("users/{0}/playlists/{1}/tracks?uris=spotify:track:" + song.ID, this.Profile.ID, playlist.ID), null);
+                    return (response.StatusCode == HttpStatusCode.Created);
+                }
             }
             catch (Exception ex) { Logger.Log(ex); }
+            return false;
         }
 
         public async Task RemoveSongFromPlaylist(SpotifyPlaylist playlist, SpotifySong song)
@@ -206,25 +215,28 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                for (int i = 0; i < songs.Count(); i += 50)
+                if (playlist != null)
                 {
-                    JArray songsToDeleteArray = new JArray();
-                    foreach (SpotifySong songToDelete in songs.Skip(i).Take(50))
+                    for (int i = 0; i < songs.Count(); i += 50)
                     {
-                        JObject songPayload = new JObject();
-                        songPayload["uri"] = "spotify:track:" + songToDelete.ID;
-                        songsToDeleteArray.Add(songPayload);
-                    }
+                        JArray songsToDeleteArray = new JArray();
+                        foreach (SpotifySong songToDelete in songs.Skip(i).Take(50))
+                        {
+                            JObject songPayload = new JObject();
+                            songPayload["uri"] = "spotify:track:" + songToDelete.ID;
+                            songsToDeleteArray.Add(songPayload);
+                        }
 
-                    JObject payload = new JObject();
-                    payload["tracks"] = songsToDeleteArray;
+                        JObject payload = new JObject();
+                        payload["tracks"] = songsToDeleteArray;
 
-                    using (HttpClientWrapper client = await this.GetHttpClient())
-                    {
-                        HttpMethod method = new HttpMethod("DELETE");
-                        HttpRequestMessage request = new HttpRequestMessage(method, string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlist.ID))
+                        using (HttpClientWrapper client = await this.GetHttpClient())
+                        {
+                            HttpMethod method = new HttpMethod("DELETE");
+                            HttpRequestMessage request = new HttpRequestMessage(method, string.Format("users/{0}/playlists/{1}/tracks", this.Profile.ID, playlist.ID))
                             { Content = this.CreateContentFromObject(payload) };
-                        HttpResponseMessage response = await client.SendAsync(request);
+                            await client.SendAsync(request);
+                        }
                     }
                 }
             }

@@ -21,7 +21,7 @@ namespace MixItUp.Base.Services
     {
         SongRequestServiceTypeEnum GetRequestService();
 
-        Task Initialize(SongRequestServiceTypeEnum serviceType);
+        Task<bool> Initialize(SongRequestServiceTypeEnum serviceType);
 
         void Disable();
 

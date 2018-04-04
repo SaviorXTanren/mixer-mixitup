@@ -194,8 +194,6 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SpotifySong>> SearchSongs(string songName);
 
-        Task<SpotifySong> GetSong(SpotifySong song);
-
         Task<SpotifySong> GetSong(string songID);
 
         Task<IEnumerable<SpotifyPlaylist>> GetCurrentPlaylists();
@@ -206,7 +204,7 @@ namespace MixItUp.Base.Services
 
         Task<SpotifyPlaylist> CreatePlaylist(string name, string description);
 
-        Task AddSongToPlaylist(SpotifyPlaylist playlist, SpotifySong song);
+        Task<bool> AddSongToPlaylist(SpotifyPlaylist playlist, SpotifySong song);
 
         Task RemoveSongFromPlaylist(SpotifyPlaylist playlist, SpotifySong song);
 

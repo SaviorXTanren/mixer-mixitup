@@ -29,7 +29,7 @@ namespace MixItUp.Desktop.Services
 
         public SongRequestServiceTypeEnum GetRequestService() { return this.serviceType; }
 
-        public async Task Initialize(SongRequestServiceTypeEnum serviceType)
+        public async Task<bool> Initialize(SongRequestServiceTypeEnum serviceType)
         {
             this.serviceType = serviceType;
 
@@ -44,12 +44,17 @@ namespace MixItUp.Desktop.Services
                 if (this.playlist == null)
                 {
                     this.playlist = await ChannelSession.Services.Spotify.CreatePlaylist(DesktopSongRequestService.MixItUpPlaylistName, DesktopSongRequestService.MixItUpPlaylistDescription);
+                    if (this.playlist == null)
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
                     await this.ClearAllRequests();
                 }
             }
+            return true;
         }
 
         public void Disable()
@@ -312,16 +317,22 @@ namespace MixItUp.Desktop.Services
                         }
                         else
                         {
-                            await ChannelSession.Services.Spotify.AddSongToPlaylist(this.playlist, song);
-
-                            SongRequestItem request = this.GetSpotifySongRequest(song);
-                            await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue", request.Name));
-                            return;
+                            if (await ChannelSession.Services.Spotify.AddSongToPlaylist(this.playlist, song))
+                            {
+                                SongRequestItem request = this.GetSpotifySongRequest(song);
+                                await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue", request.Name));
+                                return;
+                            }
+                            else
+                            {
+                                await ChannelSession.Chat.Whisper(user.UserName, "We were unable to add the song to the playlist, please try again in a little bit.");
+                                return;
+                            }
                         }
                     }
                     else
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find a valid song for your request.");
+                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find a valid song for your request. If this is valid song, please try again in a little bit.");
                         return;
                     }
                 }

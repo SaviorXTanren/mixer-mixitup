@@ -48,45 +48,53 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void EnableGameQueueToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.SongServiceTypeComboBox.SelectedIndex < 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("You must select a song service type.");
-                this.EnableGameQueueToggleButton.IsChecked = false;
-                return;
-            }
-
-            SongRequestServiceTypeEnum service = EnumHelper.GetEnumValueFromString<SongRequestServiceTypeEnum>((string)this.SongServiceTypeComboBox.SelectedItem);
-            if (service == SongRequestServiceTypeEnum.Youtube)
-            {
-
-            }
-            else if (service == SongRequestServiceTypeEnum.Spotify)
-            {
-                if (ChannelSession.Services.Spotify == null)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area.");
-                    this.EnableGameQueueToggleButton.IsChecked = false;
-                    return;
-                }
-            }
-
             await this.Window.RunAsyncOperation(async () =>
             {
+                if (this.SongServiceTypeComboBox.SelectedIndex < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("You must select a song service type.");
+                    this.EnableSongRequestsToggleButton.IsChecked = false;
+                    return;
+                }
+
+                SongRequestServiceTypeEnum service = EnumHelper.GetEnumValueFromString<SongRequestServiceTypeEnum>((string)this.SongServiceTypeComboBox.SelectedItem);
+                if (service == SongRequestServiceTypeEnum.Youtube)
+                {
+
+                }
+                else if (service == SongRequestServiceTypeEnum.Spotify)
+                {
+                    if (ChannelSession.Services.Spotify == null)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area.");
+                        this.EnableSongRequestsToggleButton.IsChecked = false;
+                        return;
+                    }
+                }
+
                 ChannelSession.Settings.SongRequestServiceType = service;
                 ChannelSession.Settings.SpotifyAllowExplicit = this.SpotifyAllowExplicitSongToggleButton.IsChecked.GetValueOrDefault();
 
-                this.SongServiceTypeComboBox.IsEnabled = this.SpotifyOptionsGrid.IsEnabled = false;
-                this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = true;
+                if (await ChannelSession.Services.SongRequestService.Initialize(ChannelSession.Settings.SongRequestServiceType))
+                {
+                    this.SongServiceTypeComboBox.IsEnabled = this.SpotifyOptionsGrid.IsEnabled = false;
+                    this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = true;
 
-                await ChannelSession.Services.SongRequestService.Initialize(ChannelSession.Settings.SongRequestServiceType);
+                    await ChannelSession.SaveSettings();
 
-                await ChannelSession.SaveSettings();
-
-                await this.RefreshRequestsList();
+                    await this.RefreshRequestsList();
+                }
+                else
+                {
+                    if (ChannelSession.Settings.SongRequestServiceType == SongRequestServiceTypeEnum.Spotify)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("We were unable to get your Spotify information, please try again.");
+                    }
+                }
             });
         }
 
-        private void EnableGameQueueToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
+        private void EnableSongRequestsToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.Services.SongRequestService.Disable();
 
