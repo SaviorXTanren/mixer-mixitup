@@ -131,7 +131,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
 
-                    if (currentlyPlaying != null && currentlyPlaying.ID != null && playlist != null && playlist.Uri.Equals(currentlyPlaying.Uri))
+                    if (currentlyPlaying != null && currentlyPlaying.ID != null && playlist != null && playlist.Uri.Equals(currentlyPlaying.ContextUri))
                     {
                         if (currentlyPlaying.IsPlaying)
                         {

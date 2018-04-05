@@ -295,12 +295,16 @@ namespace MixItUp.Desktop.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task<bool> PlayPlaylist(SpotifyPlaylist playlist)
+        public async Task<bool> PlaySong(SpotifySong song) { return await this.PlayUri(song.Uri); }
+
+        public async Task<bool> PlayPlaylist(SpotifyPlaylist playlist) { return await this.PlayUri(playlist.Uri); }
+
+        public async Task<bool> PlayUri(string uri)
         {
             try
             {
                 JObject payload = new JObject();
-                payload["context_uri"] = playlist.Uri;
+                payload["context_uri"] = uri;
 
                 JObject position = new JObject();
                 position["position"] = 0;

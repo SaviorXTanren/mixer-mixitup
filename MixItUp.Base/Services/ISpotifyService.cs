@@ -97,6 +97,8 @@ namespace MixItUp.Base.Services
         public bool IsLocal { get; set; }
         public bool Explicit { get; set; }
 
+        public string Uri { get; set; }
+
         public SpotifyArtist Artist { get; set; }
         public SpotifyAlbum Album { get; set; }
 
@@ -115,6 +117,11 @@ namespace MixItUp.Base.Services
                 if (data["explicit"] != null)
                 {
                     this.Explicit = bool.Parse(data["explicit"].ToString());
+                }
+
+                if (data["uri"] != null)
+                {
+                    this.Uri = data["uri"].ToString();
                 }
 
                 if (data["artists"] != null)
@@ -143,7 +150,7 @@ namespace MixItUp.Base.Services
     {
         public bool IsPlaying { get; set; }
         public long CurrentProgress { get; set; }
-        public string Uri { get; set; }
+        public string ContextUri { get; set; }
 
         public SpotifyCurrentlyPlaying() { }
 
@@ -154,13 +161,15 @@ namespace MixItUp.Base.Services
             {
                 this.IsPlaying = bool.Parse(data["is_playing"].ToString());
             }
+
             if (data["progress_ms"] != null)
             {
                 this.CurrentProgress = long.Parse(data["progress_ms"].ToString());
             }
-            if (data["context"] != null && data["context"]["uri"] != null)
+
+            if (data["context"] != null && data["context"] is JObject && data["context"]["uri"] != null)
             {
-                this.Uri = data["context"]["uri"].ToString();
+                this.ContextUri = data["context"]["uri"].ToString();
             }
         }
     }
@@ -220,7 +229,11 @@ namespace MixItUp.Base.Services
 
         Task PreviousCurrentlyPlaying();
 
+        Task<bool> PlaySong(SpotifySong song);
+
         Task<bool> PlayPlaylist(SpotifyPlaylist playlist);
+
+        Task<bool> PlayUri(string uri);
 
         OAuthTokenModel GetOAuthTokenCopy();
     }

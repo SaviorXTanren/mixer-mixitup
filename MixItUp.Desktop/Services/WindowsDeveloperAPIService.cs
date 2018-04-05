@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Desktop.Services
 {
@@ -279,6 +280,80 @@ namespace MixItUp.Desktop.Services
                             return;
                         }
                     }
+                }
+            }
+            else if (urlSegments[0].Equals("spotify") && urlSegments.Count() >= 2)
+            {
+                if (ChannelSession.Services.Spotify != null)
+                {
+                    if (httpMethod.Equals(GetHttpMethod))
+                    {
+                        if (urlSegments.Count() == 2)
+                        {
+                            if (urlSegments[1].Equals("current"))
+                            {
+                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(await ChannelSession.Services.Spotify.GetCurrentlyPlaying()));
+                                return;
+                            }
+                            else if (urlSegments[1].StartsWith("search?query="))
+                            {
+                                string search = urlSegments[1].Replace("search?query=", "");
+                                search = HttpUtility.UrlDecode(search);
+
+                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(await ChannelSession.Services.Spotify.SearchSongs(search)));
+                                return;
+                            }
+                        }
+                    }
+                    else if (httpMethod.Equals(PostHttpMethod))
+                    {
+                        if (urlSegments.Count() == 2)
+                        {
+                            if (urlSegments[1].Equals("play"))
+                            {
+                                await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
+                                return;
+                            }
+                            else if (urlSegments[1].Equals("pause"))
+                            {
+                                await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
+                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
+                                return;
+                            }
+                            else if (urlSegments[1].Equals("next"))
+                            {
+                                await ChannelSession.Services.Spotify.NextCurrentlyPlaying();
+                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
+                                return;
+                            }
+                            else if (urlSegments[1].Equals("previous"))
+                            {
+                                await ChannelSession.Services.Spotify.PreviousCurrentlyPlaying();
+                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
+                                return;
+                            }
+                        }
+                        else if (urlSegments.Count() == 3)
+                        {
+                            if (urlSegments[1].Equals("play"))
+                            {
+                                if (await ChannelSession.Services.Spotify.PlayUri(urlSegments[2]))
+                                {
+                                    await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
+                                }
+                                else
+                                {
+                                    await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "We were unable to play the uri you specified. If your uri is correct, please try again in a moment");
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    await this.CloseConnection(listenerContext, HttpStatusCode.ServiceUnavailable, "The Spotify service is not currently connected in Mix It Up");
                 }
             }
 
