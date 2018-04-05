@@ -311,9 +311,24 @@ namespace MixItUp.Desktop.Services
                         {
                             if (urlSegments[1].Equals("play"))
                             {
-                                await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
-                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
-                                return;
+                                if (string.IsNullOrEmpty(data))
+                                {
+                                    await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+                                    await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
+                                    return;
+                                }
+                                else
+                                {
+                                    if (await ChannelSession.Services.Spotify.PlaySong(data))
+                                    {
+                                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
+                                    }
+                                    else
+                                    {
+                                        await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "We were unable to play the uri you specified. If your uri is correct, please try again in a moment");
+                                    }
+                                    return;
+                                }
                             }
                             else if (urlSegments[1].Equals("pause"))
                             {
@@ -331,21 +346,6 @@ namespace MixItUp.Desktop.Services
                             {
                                 await ChannelSession.Services.Spotify.PreviousCurrentlyPlaying();
                                 await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
-                                return;
-                            }
-                        }
-                        else if (urlSegments.Count() == 3)
-                        {
-                            if (urlSegments[1].Equals("play"))
-                            {
-                                if (await ChannelSession.Services.Spotify.PlayUri(urlSegments[2]))
-                                {
-                                    await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
-                                }
-                                else
-                                {
-                                    await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "We were unable to play the uri you specified. If your uri is correct, please try again in a moment");
-                                }
                                 return;
                             }
                         }

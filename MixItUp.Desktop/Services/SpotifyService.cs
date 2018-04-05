@@ -3,6 +3,7 @@ using Mixer.Base.Model.OAuth;
 using Mixer.Base.Web;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -295,20 +296,34 @@ namespace MixItUp.Desktop.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public async Task<bool> PlaySong(SpotifySong song) { return await this.PlayUri(song.Uri); }
+        public async Task<bool> PlaySong(SpotifySong song) { return await this.PlaySong(song.Uri); }
 
-        public async Task<bool> PlayPlaylist(SpotifyPlaylist playlist) { return await this.PlayUri(playlist.Uri); }
-
-        public async Task<bool> PlayUri(string uri)
+        public async Task<bool> PlayPlaylist(SpotifyPlaylist playlist)
         {
             try
             {
                 JObject payload = new JObject();
-                payload["context_uri"] = uri;
+                payload["context_uri"] = playlist.Uri;
 
                 JObject position = new JObject();
                 position["position"] = 0;
                 payload["offset"] = position;
+
+                HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
+                return (response.StatusCode == HttpStatusCode.NoContent);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return false;
+        }
+
+        public async Task<bool> PlaySong(string uri)
+        {
+            try
+            {
+                JArray songArray = new JArray();
+                songArray.Add(uri);
+                JObject payload = new JObject();
+                payload["uris"] = songArray;
 
                 HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
                 return (response.StatusCode == HttpStatusCode.NoContent);

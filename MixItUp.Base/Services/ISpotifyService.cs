@@ -231,9 +231,9 @@ namespace MixItUp.Base.Services
 
         Task<bool> PlaySong(SpotifySong song);
 
-        Task<bool> PlayPlaylist(SpotifyPlaylist playlist);
+        Task<bool> PlaySong(string uri);
 
-        Task<bool> PlayUri(string uri);
+        Task<bool> PlayPlaylist(SpotifyPlaylist playlist);
 
         OAuthTokenModel GetOAuthTokenCopy();
     }
