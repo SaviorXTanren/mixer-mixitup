@@ -14,7 +14,6 @@ namespace MixItUp.Base.Services
     public class TwitterService : ITwitterService
     {
         private const string ClientID = "TUcAbNHvyJuK6rtLK1NnHZSBV";
-        private const string ClientSecret = "OsaDTtU0ESBZRcIZuS0KpaZCraqNDIFC5qxQNRSQxvJlcQukcO";
 
         private OAuthTokenModel token;
         private IAuthorizer auth;
@@ -39,7 +38,7 @@ namespace MixItUp.Base.Services
                         CredentialStore = new SingleUserInMemoryCredentialStore
                         {
                             ConsumerKey = TwitterService.ClientID,
-                            ConsumerSecret = TwitterService.ClientSecret,
+                            ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
 
                             AccessToken = this.token.accessToken,
                             AccessTokenSecret = this.token.refreshToken,
@@ -62,7 +61,7 @@ namespace MixItUp.Base.Services
                 CredentialStore = new InMemoryCredentialStore
                 {
                     ConsumerKey = TwitterService.ClientID,
-                    ConsumerSecret = TwitterService.ClientSecret,
+                    ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
                 },
                 GoToTwitterAuthorization = pageLink => Process.Start(pageLink),
                 GetPin = () =>

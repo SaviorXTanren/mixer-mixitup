@@ -1,5 +1,6 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
+using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -55,7 +56,6 @@ namespace MixItUp.Desktop.Services
         private const string BaseAddress = "https://streamlabs.com/api/v1.0/";
 
         private const string ClientID = "ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX";
-        private const string ClientSecret = "ddcgpzlzeRAE7dAUvs87DJgAIQJSwiq5p4AkufWN";
         private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -87,7 +87,7 @@ namespace MixItUp.Desktop.Services
                 JObject payload = new JObject();
                 payload["grant_type"] = "authorization_code";
                 payload["client_id"] = StreamlabsService.ClientID;
-                payload["client_secret"] = StreamlabsService.ClientSecret;
+                payload["client_secret"] = ChannelSession.SecretManager.GetSecret("StreamlabsSecret");
                 payload["code"] = authorizationCode;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
@@ -136,7 +136,7 @@ namespace MixItUp.Desktop.Services
                 JObject payload = new JObject();
                 payload["grant_type"] = "refresh_token";
                 payload["client_id"] = StreamlabsService.ClientID;
-                payload["client_secret"] = StreamlabsService.ClientSecret;
+                payload["client_secret"] = ChannelSession.SecretManager.GetSecret("StreamlabsSecret");
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 

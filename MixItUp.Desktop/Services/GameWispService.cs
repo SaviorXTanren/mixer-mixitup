@@ -1,5 +1,6 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
+using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -14,7 +15,6 @@ namespace MixItUp.Desktop.Services
         private const string BaseAddress = "https://api.gamewisp.com/pub/v1/";
 
         private const string ClientID = "0b23546e4f147c63509c29928f2bf87e73ce62f";
-        private const string ClientSecret = "898fdf933a202478cce285cce8b29a5b97cbff9";
         private const string StateKey = "V21C2J2RWE51CYSM";
         private const string AuthorizationUrl = "https://api.gamewisp.com/pub/v1/oauth/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=read_only,subscriber_read_full,user_read&state={1}";
 
@@ -45,7 +45,7 @@ namespace MixItUp.Desktop.Services
                 JObject payload = new JObject();
                 payload["grant_type"] = "authorization_code";
                 payload["client_id"] = GameWispService.ClientID;
-                payload["client_secret"] = GameWispService.ClientSecret;
+                payload["client_secret"] = ChannelSession.SecretManager.GetSecret("GameWispSecret");
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
                 payload["code"] = authorizationCode;
                 payload["state"] = GameWispService.StateKey;
@@ -78,7 +78,7 @@ namespace MixItUp.Desktop.Services
                 JObject payload = new JObject();
                 payload["grant_type"] = "refresh_token";
                 payload["client_id"] = GameWispService.ClientID;
-                payload["client_secret"] = GameWispService.ClientSecret;
+                payload["client_secret"] = ChannelSession.SecretManager.GetSecret("GameWispSecret");
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
@@ -86,13 +86,14 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task InitializeInternal()
+        private Task InitializeInternal()
         {
             //HttpResponseMessage result = await this.GetAsync("socket/token");
             //string resultJson = await result.Content.ReadAsStringAsync();
             //JObject jobj = JObject.Parse(resultJson);
 
             //this.websocketService = new StreamlabsWebSocketService(jobj["socket_token"].ToString());
+            return Task.FromResult(0);
         }
     }
 }

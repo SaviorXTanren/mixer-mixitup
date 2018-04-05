@@ -92,6 +92,8 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.user__details__self,
         };
 
+        public static SecretManagerService SecretManager { get; internal set; }
+
         public static MixerConnectionWrapper Connection { get; private set; }
         public static MixerConnectionWrapper BotConnection { get; private set; }
 
@@ -157,6 +159,20 @@ namespace MixItUp.Base
 
         public static void Initialize(ServicesHandlerBase serviceHandler)
         {
+            try
+            {
+                Type mixItUpSecretsType = Type.GetType("MixItUp.Base.MixItUpSecrets");
+                if (mixItUpSecretsType != null)
+                {
+                    ChannelSession.SecretManager = (SecretManagerService)Activator.CreateInstance(mixItUpSecretsType);
+                }
+            } catch (Exception ex) { Util.Logger.Log(ex); }
+
+            if (ChannelSession.SecretManager == null)
+            {
+                ChannelSession.SecretManager = new SecretManagerService();
+            }
+
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
             ChannelSession.GameQueue = new LockedList<UserViewModel>();
 

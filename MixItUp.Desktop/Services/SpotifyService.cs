@@ -1,9 +1,9 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Web;
+using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,6 @@ namespace MixItUp.Desktop.Services
         private const string BaseAddress = "https://api.spotify.com/v1/";
 
         private const string ClientID = "94c9f9c67c864ae9a0f9f8f5bdf3e000";
-        private const string ClientSecret = "42d76a67bdfe4dd598ec4a0e9b524e7e";
         private const string StateKey = "V21C2J2RWE51CYSM";
         private const string AuthorizationUrl = "https://accounts.spotify.com/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=playlist-read-private+playlist-modify-public+playlist-read-collaborative+user-top-read+user-read-recently-played+user-library-read+user-read-currently-playing+user-modify-playback-state+user-read-playback-state+streaming+user-read-private&state={1}";
 
@@ -56,7 +55,7 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("code", authorizationCode),
                 };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://accounts.spotify.com/api/token", SpotifyService.ClientID, SpotifyService.ClientSecret, body);
+                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://accounts.spotify.com/api/token", SpotifyService.ClientID, ChannelSession.SecretManager.GetSecret("SpotifySecret"), body);
 
                 if (this.token != null)
                 {
@@ -341,7 +340,7 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("grant_type", "refresh_token"),
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
-                OAuthTokenModel token = await this.GetWWWFormUrlEncodedOAuthToken("https://accounts.spotify.com/api/token", SpotifyService.ClientID, SpotifyService.ClientSecret, body);
+                OAuthTokenModel token = await this.GetWWWFormUrlEncodedOAuthToken("https://accounts.spotify.com/api/token", SpotifyService.ClientID, ChannelSession.SecretManager.GetSecret("SpotifySecret"), body);
                 token.refreshToken = this.token.refreshToken;
                 this.token = token;
             }

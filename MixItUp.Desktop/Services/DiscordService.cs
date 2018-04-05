@@ -2,6 +2,7 @@
 using Mixer.Base.Clients;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Web;
+using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
@@ -52,14 +53,17 @@ namespace MixItUp.Desktop.Services
         public bool IsReady { get; private set; }
 
         private int shardCount;
+        private string botToken;
+
         private int? lastSequenceNumber = null;
         private int heartbeatTime = 0;
 
         private string sessionID;
 
-        public async Task<bool> Connect(string endpoint, int shardCount)
+        public async Task<bool> Connect(string endpoint, int shardCount, string botToken)
         {
             this.shardCount = shardCount;
+            this.botToken = botToken;
 
             endpoint += "?v=6&encoding=json";
             if (await base.Connect(endpoint))
@@ -112,7 +116,7 @@ namespace MixItUp.Desktop.Services
                         this.heartbeatTime = (int)packet.Data["heartbeat_interval"];
 
                         JObject data = new JObject();
-                        data["token"] = "NDIyNjU3MTM2NTEwNjMxOTM2.DaLZSw.b1mdE04J205RnZcVTZ0G3RuSbG0";
+                        data["token"] = this.botToken;
                         data["large_threshold"] = 100;
 
                         JObject propertiesObj = new JObject();
@@ -324,9 +328,6 @@ namespace MixItUp.Desktop.Services
         private const string BaseAddress = "https://discordapp.com/api/";
 
         private const string ClientID = "422657136510631936";
-        private const string ClientSecret = "3N6V7bHyXQEffnzxlbsTggMtosRcA7XG";
-
-        private const string BotTokenSecret = "";
 
         private const string AuthorizationUrl = "https://discordapp.com/api/oauth2/authorize?client_id={0}&permissions={1}&redirect_uri=http%3A%2F%2Flocalhost%3A8919%2F&response_type=code&scope=bot%20guilds%20identify%20connections%20messages.read%20guilds.join%20email%20gdm.join";
 
@@ -369,7 +370,7 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("code", authorizationCode),
                 };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", DiscordService.ClientID, DiscordService.ClientSecret, body);
+                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", DiscordService.ClientID, ChannelSession.SecretManager.GetSecret("DiscordSecret"), body);
 
                 if (this.token != null)
                 {
@@ -471,13 +472,13 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("redirect_uri", MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL),
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
-                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", DiscordService.ClientID, DiscordService.ClientSecret, body);
+                this.token = await this.GetWWWFormUrlEncodedOAuthToken("https://discordapp.com/api/oauth2/token", DiscordService.ClientID, ChannelSession.SecretManager.GetSecret("DiscordSecret"), body);
             }
         }
 
         private async Task InitializeInternal()
         {
-            this.botService = new DiscordBotService(this.baseAddress, DiscordService.BotTokenSecret);
+            this.botService = new DiscordBotService(this.baseAddress, ChannelSession.SecretManager.GetSecret("DiscordBotToken"));
 
             this.User = await this.GetCurrentUser();
             if (!string.IsNullOrEmpty(this.serverID))

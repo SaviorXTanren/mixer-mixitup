@@ -2,7 +2,6 @@
 using MixItUp.Base.Localization;
 using MixItUp.Base.Util;
 using MixItUp.Desktop.Services;
-using MixItUp.WPF.Properties;
 using System;
 using System.Diagnostics;
 using System.Linq;
