@@ -1,9 +1,8 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -14,7 +13,7 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private TextToSpeechAction action;
 
-        private ObservableCollection<TextToSpeechVoice> voices = new ObservableCollection<TextToSpeechVoice>();
+        private ObservableCollection<string> voices = new ObservableCollection<string>();
 
         public TextToSpeechActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
 
@@ -23,10 +22,10 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.TextToSpeechVoiceComboBox.ItemsSource = this.voices;
-            this.TextToSpeechRateComboBox.ItemsSource = EnumHelper.GetEnumNames<SpeechRate>();
-            this.TextToSpeechVolumeComboBox.ItemsSource = EnumHelper.GetEnumNames<SpeechVolume>();
 
-            foreach (TextToSpeechVoice voice in ChannelSession.Services.TextToSpeechService.GetInstalledVoices())
+            this.OverlayNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.OverlayServer == null) ? Visibility.Visible : Visibility.Collapsed;
+
+            foreach (string voice in TextToSpeechAction.AvailableVoices)
             {
                 this.voices.Add(voice);
             }
@@ -34,22 +33,27 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.TextToSpeechMessageTextBox.Text = this.action.SpeechText;
-                this.TextToSpeechVoiceComboBox.SelectedItem = this.action.SpeechVoice;
-                this.TextToSpeechRateComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.SpeechRate);
-                this.TextToSpeechVolumeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.SpeechVolume);
+                this.TextToSpeechVoiceComboBox.SelectedItem = this.action.Voice;
+                this.TextToSpeechVolumeTextBox.Text = (this.action.Volume * 100.0).ToString();
+                this.TextToSpeechPitchTextBox.Text = (this.action.Pitch * 100.0).ToString();
+                this.TextToSpeechRateTextBox.Text = (this.action.Rate * 100.0).ToString();
             }
             return Task.FromResult(0);
         }
 
         public override ActionBase GetAction()
         {
-            if (!string.IsNullOrEmpty(this.TextToSpeechMessageTextBox.Text) && this.TextToSpeechVoiceComboBox.SelectedIndex >= 0
-                && this.TextToSpeechVolumeComboBox.SelectedIndex >= 0 && this.TextToSpeechRateComboBox.SelectedIndex >= 0)
+            if (!string.IsNullOrEmpty(this.TextToSpeechMessageTextBox.Text) && this.TextToSpeechVoiceComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.TextToSpeechVolumeTextBox.Text)
+                && !string.IsNullOrEmpty(this.TextToSpeechPitchTextBox.Text) && !string.IsNullOrEmpty(this.TextToSpeechRateTextBox.Text))
             {
-                TextToSpeechVoice voice = (TextToSpeechVoice)this.TextToSpeechVoiceComboBox.SelectedItem;
-                SpeechVolume volume = EnumHelper.GetEnumValueFromString<SpeechVolume>(this.TextToSpeechVolumeComboBox.Text);
-                SpeechRate rate = EnumHelper.GetEnumValueFromString<SpeechRate>(this.TextToSpeechRateComboBox.Text);
-                return new TextToSpeechAction(this.TextToSpeechMessageTextBox.Text, voice, rate, volume);
+                if (double.TryParse(this.TextToSpeechVolumeTextBox.Text.Replace("%", ""), out double volume) && double.TryParse(this.TextToSpeechPitchTextBox.Text.Replace("%", ""), out double pitch) &&
+                    double.TryParse(this.TextToSpeechRateTextBox.Text.Replace("%", ""), out double rate))
+                {
+                    if (volume >= 0.0 && volume <= 100.0 && pitch >= 0.0 && pitch <= 200.0 && rate >= 0.0 && rate <= 150.0)
+                    {
+                        return new TextToSpeechAction(this.TextToSpeechMessageTextBox.Text, (string)this.TextToSpeechVoiceComboBox.SelectedItem, (volume / 100.0), (pitch / 100.0), (rate / 100.0));
+                    }
+                }
             }
             return null;
         }

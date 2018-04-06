@@ -168,6 +168,8 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="10" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Row="0" TextWrapping="Wrap">Copyright (c) 2017 Matthew Olivo. All rights reserved.</TextBlock>
@@ -179,6 +181,8 @@
                         <TextBlock Grid.Row="6" TextWrapping="Wrap">The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</TextBlock>
 
                         <TextBlock Grid.Row="8" TextWrapping="Wrap">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</TextBlock>
+
+                        <TextBlock Grid.Row="10" TextWrapping="Wrap"><Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">ResponsiveVoice</Hyperlink> used under <Hyperlink NavigateUri="https://creativecommons.org/licenses/by-nc-nd/4.0/" RequestNavigate="Hyperlink_RequestNavigate">Non-Commercial License</Hyperlink></TextBlock>
                     </Grid>
                 </ScrollViewer>
             </GroupBox>

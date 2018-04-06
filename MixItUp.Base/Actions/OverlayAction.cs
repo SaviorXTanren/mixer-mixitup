@@ -148,7 +148,7 @@ namespace MixItUp.Base.Actions
 
                     if (this.imageData != null)
                     {
-                        await ChannelSession.Services.OverlayServer.SetImage(new OverlayImage()
+                        await ChannelSession.Services.OverlayServer.SendImage(new OverlayImage()
                         {
                             imagePath = imageFilePath, imageData = this.imageData, width = this.ImageWidth, height = this.ImageHeight,
                             duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
@@ -158,7 +158,7 @@ namespace MixItUp.Base.Actions
                 else if (!string.IsNullOrEmpty(this.Text))
                 {
                     string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
-                    await ChannelSession.Services.OverlayServer.SetText(new OverlayText()
+                    await ChannelSession.Services.OverlayServer.SendText(new OverlayText()
                     {
                         text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal,
                         vertical = this.Vertical, fadeDuration = this.FadeDuration,
@@ -166,7 +166,7 @@ namespace MixItUp.Base.Actions
                 }
                 else if (!string.IsNullOrEmpty(this.youtubeVideoID))
                 {
-                    await ChannelSession.Services.OverlayServer.SetYoutubeVideo(new OverlayYoutubeVideo()
+                    await ChannelSession.Services.OverlayServer.SendYoutubeVideo(new OverlayYoutubeVideo()
                     {
                         videoID = this.youtubeVideoID, startTime = this.youtubeStartTime, height = this.VideoHeight, width = this.VideoWidth,
                         duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
@@ -174,7 +174,7 @@ namespace MixItUp.Base.Actions
                 }
                 else if (!string.IsNullOrEmpty(this.localVideoFilePath))
                 {
-                    await ChannelSession.Services.OverlayServer.SetLocalVideo(new OverlayLocalVideo()
+                    await ChannelSession.Services.OverlayServer.SendLocalVideo(new OverlayLocalVideo()
                     {
                         filepath = this.localVideoFilePath, height = this.VideoHeight, width = this.VideoWidth,
                         duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration
@@ -183,7 +183,7 @@ namespace MixItUp.Base.Actions
                 else if (!string.IsNullOrEmpty(this.HTMLText))
                 {
                     string htmlText = await this.ReplaceStringWithSpecialModifiers(this.HTMLText, user, arguments);
-                    await ChannelSession.Services.OverlayServer.SetHTMLText(new OverlayHTML()
+                    await ChannelSession.Services.OverlayServer.SendHTMLText(new OverlayHTML()
                     {
                         htmlText = htmlText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
                     });

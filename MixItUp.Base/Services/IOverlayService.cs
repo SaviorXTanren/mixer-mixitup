@@ -87,6 +87,21 @@ namespace MixItUp.Base.Services
         public int fadeDuration;
     }
 
+    [DataContract]
+    public class OverlayTextToSpeech
+    {
+        [DataMember]
+        public string text;
+        [DataMember]
+        public string voice;
+        [DataMember]
+        public double volume;
+        [DataMember]
+        public double pitch;
+        [DataMember]
+        public double rate;
+    }
+
     public interface IOverlayService
     {
         event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectOccurred;
@@ -99,15 +114,17 @@ namespace MixItUp.Base.Services
 
         Task EndBatching();
 
-        Task SetImage(OverlayImage image);
+        Task SendImage(OverlayImage image);
 
-        Task SetText(OverlayText text);
+        Task SendText(OverlayText text);
 
-        Task SetYoutubeVideo(OverlayYoutubeVideo youtubeVideo);
+        Task SendYoutubeVideo(OverlayYoutubeVideo youtubeVideo);
 
-        Task SetLocalVideo(OverlayLocalVideo localVideo);
+        Task SendLocalVideo(OverlayLocalVideo localVideo);
 
-        Task SetHTMLText(OverlayHTML htmlText);
+        Task SendHTMLText(OverlayHTML htmlText);
+
+        Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
 
         Task Disconnect();
     }

@@ -10,6 +10,74 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class TextToSpeechAction : ActionBase
     {
+        public static readonly IEnumerable<string> AvailableVoices = new List<string>()
+        {
+            "Afrikaans Male",
+            "Albanian Male",
+            "Arabic Female",
+            "Arabic Male",
+            "Armenian Male",
+            "Australian Female",
+            "Bosnian Male",
+            "Brazilian Portuguese Female",
+            "Catalan Male",
+            "Chinese (Hong Kong) Female",
+            "Chinese Female",
+            "Chinese Taiwan Female",
+            "Croatian Male",
+            "Czech Female",
+            "Czech Male",
+            "Danish Female",
+            "Danish Male",
+            "Deutsch Female",
+            "Dutch Female",
+            "Esperanto Male",
+            "Fallback UK Female",
+            "Finnish Female",
+            "Finnish Male",
+            "French Female",
+            "Greek Female",
+            "Greek Male",
+            "Hindi Female",
+            "Hungarian Female",
+            "Hungarian Male",
+            "Icelandic Male",
+            "Indonesian Female",
+            "Italian Female",
+            "Japanese Female",
+            "Korean Female",
+            "Latin Female",
+            "Latin Male",
+            "Latvian Male",
+            "Macedonian Male",
+            "Moldavian Male",
+            "Montenegrin Male",
+            "Norwegian Female",
+            "Norwegian Male",
+            "Polish Female",
+            "Portuguese Female",
+            "Romanian Male",
+            "Russian Female",
+            "Serbian Male",
+            "Serbo-Croatian Male",
+            "Slovak Female",
+            "Slovak Male",
+            "Spanish Female",
+            "Spanish Latin American Female",
+            "Swahili Male",
+            "Swedish Female",
+            "Swedish Male",
+            "Tamil Male",
+            "Thai Female",
+            "Turkish Female",
+            "UK English Female",
+            "UK English Male",
+            "US English Female",
+            "US English Male",
+            "Vietnamese Male",
+            "Welsh Male"
+        };
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return TextToSpeechAction.asyncSemaphore; } }
@@ -18,23 +86,34 @@ namespace MixItUp.Base.Actions
         public string SpeechText { get; set; }
 
         [DataMember]
-        public TextToSpeechVoice SpeechVoice { get; set; }
+        public string Voice { get; set; }
 
         [DataMember]
-        public SpeechRate SpeechRate { get; set; }
-        
+        public double Volume { get; set; }
+
         [DataMember]
-        public SpeechVolume SpeechVolume { get; set; }
+        public double Pitch { get; set; }
 
-        public TextToSpeechAction() : base(ActionTypeEnum.TextToSpeech) { }
+        [DataMember]
+        public double Rate { get; set; }
 
-        public TextToSpeechAction(string speechText, TextToSpeechVoice speechVoice, SpeechRate speechRate, SpeechVolume speechVolume)
+        public TextToSpeechAction()
+            : base(ActionTypeEnum.TextToSpeech)
+        {
+            this.Voice = "US English Male";
+            this.Pitch = 1;
+            this.Rate = 1;
+            this.Volume = 1;
+        }
+
+        public TextToSpeechAction(string speechText, string voice, double volume, double pitch, double rate)
             : this()
         {
             this.SpeechText = speechText;
-            this.SpeechVoice = speechVoice;
-            this.SpeechRate = speechRate;
-            this.SpeechVolume = speechVolume;
+            this.Voice = voice;
+            this.Volume = volume;
+            this.Pitch = pitch;
+            this.Rate = rate;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -42,9 +121,10 @@ namespace MixItUp.Base.Actions
             if (ChannelSession.Chat != null)
             {
                 string message = await this.ReplaceStringWithSpecialModifiers(this.SpeechText, user, arguments);
-                if (ChannelSession.Services.TextToSpeechService != null)
+                if (ChannelSession.Services.OverlayServer != null)
                 {
-                    await ChannelSession.Services.TextToSpeechService.SayText(message, this.SpeechVoice, this.SpeechRate, this.SpeechVolume);
+                    await ChannelSession.Services.OverlayServer.SendTextToSpeech(new OverlayTextToSpeech()
+                        { text = this.SpeechText, voice = this.Voice, volume = this.Volume, pitch = this.Pitch, rate = this.Rate });
                 }
             }
         }

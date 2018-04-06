@@ -6,63 +6,62 @@
     <body style="background-color:transparent">
         <div id="mainOverlay" />
 
-        <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
+        <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: hidden">
             <h1 style="font-size: 100px; color: red; text-align: center">No Connection To</h1>
             <h1 style="font-size: 100px; color: red; text-align: center">Mix It Up Overlay!</h1>
         </div>
 
-		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <div id="noTextToSpeechDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: hidden">
+            <h1 style="font-size: 100px; color: red; text-align: center">This Browser Does</h1>
+            <h1 style="font-size: 100px; color: red; text-align: center">Not Support Text</h1>
+            <h1 style="font-size: 100px; color: red; text-align: center">To Speech!</h1>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+        <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
 
         <script src="webSocketWrapper.js"></script>
 
-		<script>
+        <script>
             var mainOverlayDiv = document.getElementById('mainOverlay');
             var noConnectionDiv = document.getElementById('noConnectionDiv');
+            var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
 
-            function connectionOpened()
-            {
+            function connectionOpened() {
                 noConnectionDiv.style.visibility = 'hidden';
             }
 
-            function connectionClosed()
-            {
+            function connectionClosed() {
                 noConnectionDiv.style.visibility = 'visible';
             }
 
-            function packetReceived(packet)
-            {
-                try
-                {
-                    if (packet != null && typeof packet.type !== 'undefined')
-                    {
-                        if (packet.type === "test")
-                        {
+            function packetReceived(packet) {
+                try {
+                    if (packet != null && typeof packet.type !== 'undefined') {
+                        if (packet.type === "test") {
                             testPacket();
                         }
-                        else if (packet.type === "image")
-                        {
+                        else if (packet.type === "image") {
                             imagePacket(packet.data);
                         }
-                        else if (packet.type === "text")
-                        {
+                        else if (packet.type === "text") {
                             textPacket(packet.data);
                         }
-                        else if (packet.type === "youtube")
-                        {
+                        else if (packet.type === "youtube") {
                             youtubePacket(packet.data);
                         }
-                        else if (packet.type === "video")
-                        {
+                        else if (packet.type === "video") {
                             videoPacket(packet.data);
                         }
-                        else if (packet.type === "htmlText")
-                        {
+                        else if (packet.type === "htmlText") {
                             htmlTextPacket(packet.data);
                         }
-                        else if (packet.type == "batch")
-                        {
-                            for (var i = 0; i < packet.array.length; i++)
-                            {
+                        else if (packet.type === "textToSpeech") {
+                            textToSpeechPacket(packet.data);
+                        }
+                        else if (packet.type == "batch") {
+                            for (var i = 0; i < packet.array.length; i++) {
                                 packetReceived(packet.array[i]);
                             }
                         }
@@ -71,8 +70,7 @@
                 catch (err) { logException(err); }
             }
 
-            function testPacket()
-            {
+            function testPacket() {
                 var addedElement = document.createElement('h1');
                 addedElement.innerHTML = 'Connection Test!';
                 addedElement.style.cssText += 'font-size: 100px';
@@ -82,25 +80,20 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-            function imagePacket(data)
-            {
+            function imagePacket(data) {
                 var addedElement = null;
 
-                if (data.imagePath != null)
-                {
+                if (data.imagePath != null) {
                     addedElement = document.createElement('img');
 
                     var imageType = "data:image/png";
-                    if (data.imagePath.endsWith("gif"))
-                    {
+                    if (data.imagePath.endsWith("gif")) {
                         imageType = "data:image/gif";
                     }
-                    else if (data.imagePath.endsWith("jpg"))
-                    {
+                    else if (data.imagePath.endsWith("jpg")) {
                         imageType = "data:image/jpg";
                     }
-                    else if (data.imagePath.endsWith("jpeg"))
-                    {
+                    else if (data.imagePath.endsWith("jpeg")) {
                         imageType = "data:image/jpeg";
                     }
 
@@ -112,12 +105,10 @@
                 }
             }
 
-            function textPacket(data)
-            {
+            function textPacket(data) {
                 var addedElement = null;
 
-                if (data.text != null)
-                {
+                if (data.text != null) {
                     addedElement = document.createElement('h1');
                     addedElement.innerHTML = data.text;
                     addedElement.style.cssText += 'font-size: ' + data.fontSize + 'px; color: ' + data.color + '; ' +
@@ -127,8 +118,7 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-            function youtubePacket(data)
-            {
+            function youtubePacket(data) {
                 addedElement = document.createElement('iframe');
                 addedElement.width = data.width;
                 addedElement.height = data.height;
@@ -141,8 +131,7 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-            function videoPacket(data)
-            {
+            function videoPacket(data) {
                 addedElement = document.createElement('video');
                 addedElement.width = data.width;
                 addedElement.height = data.height;
@@ -158,12 +147,10 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-            function htmlTextPacket(data)
-            {
+            function htmlTextPacket(data) {
                 var addedElement = null;
 
-                if (data.htmlText != null)
-                {
+                if (data.htmlText != null) {
                     addedElement = document.createElement('div');
                     addedElement.innerHTML = data.htmlText;
                 }
@@ -171,32 +158,36 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-			function addWaitRemoveElement(data, addedElement)
-            {
-				if (addedElement != null)
-                {
-					addedElement.style.cssText += 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
+            function textToSpeechPacket(data) {
+                if (responsiveVoice.voiceSupport()) {
+                    responsiveVoice.speak(data.text, data.voice, { pitch: data.pitch, rate: data.rate, volume: data.volume });
+                }
+                else {
+                    var data = { horizontal: 50, vertical: 50, duration: 3, fadeDuration: 400 };
+
+                    addWaitRemoveElement(data, noTextToSpeechDiv);
+                }
+            }
+
+            function addWaitRemoveElement(data, addedElement) {
+                if (addedElement != null) {
+                    addedElement.style.cssText += 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
                         data.vertical.toString() + '%; transform: translate(-50%, -50%); display: none;'
 
                     mainOverlayDiv.appendChild(addedElement);
 
-                    $(addedElement).fadeIn(data.fadeDuration, function ()
-                    {
-                        setTimeout(function ()
-                        {
-                            $(addedElement).fadeOut(data.fadeDuration, function ()
-                            {
+                    $(addedElement).fadeIn(data.fadeDuration, function () {
+                        setTimeout(function () {
+                            $(addedElement).fadeOut(data.fadeDuration, function () {
                                 mainOverlayDiv.removeChild(addedElement);
                             });
                         }, data.duration * 1000);
                     });
-				}
+                }
             }
 
-            function logException(err)
-            {
-                if (isDebug)
-                {
+            function logException(err) {
+                if (isDebug) {
                     var addedElement = document.createElement('h1');
                     addedElement.innerHTML = err.toString();
                     addedElement.style.cssText += 'font-size: 100px';
@@ -209,6 +200,6 @@
             }
 
             openWebsocketConnection("8111");
-		</script>
+        </script>
     </body>
 </html>

@@ -103,13 +103,13 @@ namespace MixItUp.Overlay
 
         public async Task<bool> TestConnection() { return await this.webSocketServer.TestConnection(); }
 
-        public async Task SetImage(OverlayImage image) { await this.SendPacket(new OverlayPacket("image", JObject.FromObject(image))); }
+        public async Task SendImage(OverlayImage image) { await this.SendPacket(new OverlayPacket("image", JObject.FromObject(image))); }
 
-        public async Task SetText(OverlayText text) { await this.SendPacket(new OverlayPacket("text", JObject.FromObject(text))); }
+        public async Task SendText(OverlayText text) { await this.SendPacket(new OverlayPacket("text", JObject.FromObject(text))); }
 
-        public async Task SetYoutubeVideo(OverlayYoutubeVideo youtubeVideo) { await this.SendPacket(new OverlayPacket("youtube", JObject.FromObject(youtubeVideo))); }
+        public async Task SendYoutubeVideo(OverlayYoutubeVideo youtubeVideo) { await this.SendPacket(new OverlayPacket("youtube", JObject.FromObject(youtubeVideo))); }
 
-        public async Task SetLocalVideo(OverlayLocalVideo localVideo)
+        public async Task SendLocalVideo(OverlayLocalVideo localVideo)
         {
             localVideo.videoID = Guid.NewGuid().ToString().Replace("-", string.Empty);
             if (localVideo.filepath.EndsWith(".mp4"))
@@ -125,7 +125,9 @@ namespace MixItUp.Overlay
             await this.SendPacket(new OverlayPacket("video", JObject.FromObject(localVideo)));
         }
 
-        public async Task SetHTMLText(OverlayHTML htmlText) { await this.SendPacket(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
+        public async Task SendHTMLText(OverlayHTML htmlText) { await this.SendPacket(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
+
+        public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket(new OverlayPacket("textToSpeech", JObject.FromObject(textToSpeech))); }
 
         private async Task SendPacket(OverlayPacket packet)
         {

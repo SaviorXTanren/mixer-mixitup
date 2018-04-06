@@ -10,32 +10,43 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10" Foreground="Red" Visibility="Collapsed">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
+
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="14" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TextToSpeechVoiceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Speech Voice" Style="{StaticResource BackgroundComboBox}" DisplayMemberPath="Name" />
+            <ComboBox x:Name="TextToSpeechVoiceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Voice" Style="{StaticResource BackgroundComboBox}" Width="180" />
 
-            <ComboBox x:Name="TextToSpeechVolumeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Speech Volume" Style="{StaticResource BackgroundComboBox}" />
+            <TextBox x:Name="TextToSpeechVolumeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Volume (0% - 100%)" Width="115" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox x:Name="TextToSpeechRateComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Speech Rate" Style="{StaticResource BackgroundComboBox}" />
+            <TextBox x:Name="TextToSpeechPitchTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Pitch (0% - 200%)" Width="105" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock Grid.Column="6" VerticalAlignment="Center">
+            <TextBox x:Name="TextToSpeechRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Rate (0% - 150%)" Width="100" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="8" VerticalAlignment="Center">
                 <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
             </TextBlock>
         </Grid>
 
-        <TextBox Grid.Row="2" x:Name="TextToSpeechMessageTextBox" MaterialDesign:HintAssist.Hint="Speech Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="3" x:Name="TextToSpeechMessageTextBox" MaterialDesign:HintAssist.Hint="Speech Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        <TextBlock Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Center">Text-To-Speech functionality provided by <Hyperlink NavigateUri="https://responsivevoice.org/" RequestNavigate="Hyperlink_RequestNavigate">https://responsivevoice.org/</Hyperlink></TextBlock>
     </Grid>
 </local:ActionControlBase>
