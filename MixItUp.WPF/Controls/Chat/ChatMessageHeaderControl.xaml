@@ -25,7 +25,7 @@
 
         <Image x:Name="SubscriberImage" Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" Visibility="Collapsed" />
 
-        <TextBlock x:Name="UserTextBlock" Grid.Column="3" Text="{Binding User.UserName}" Foreground="{Binding User.PrimaryRoleColor}" VerticalAlignment="Center" />
+        <TextBlock x:Name="UserTextBlock" Grid.Column="3" Text="{Binding User.UserName}" VerticalAlignment="Center" />
 
         <Grid x:Name="WhisperTargetGrid" Grid.Column="4" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
             <Grid.ColumnDefinitions>

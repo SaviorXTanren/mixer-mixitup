@@ -18,7 +18,7 @@
 
         <Image x:Name="SubscriberImage" Grid.Column="1" Margin="5,0,0,0" Width="15" Height="15" VerticalAlignment="Center" Visibility="Collapsed" />
 
-        <TextBlock x:Name="UserNameTextBlock" Grid.Column="2" Margin="5,0,0,0" Text="{Binding UserName}" Foreground="{Binding PrimaryRoleColor}" FontWeight="Bold" VerticalAlignment="Center" />
+        <TextBlock x:Name="UserNameTextBlock" Grid.Column="2" Margin="5,0,0,0" Text="{Binding UserName}" FontWeight="Bold" VerticalAlignment="Center" />
 
     </Grid>
 </UserControl>

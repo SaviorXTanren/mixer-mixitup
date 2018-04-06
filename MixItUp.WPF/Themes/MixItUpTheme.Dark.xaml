@@ -6,4 +6,10 @@
         <ResourceDictionary Source="MixItUpTheme.Common.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <SolidColorBrush x:Key="UserStreamerRoleColor">#FFFFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="UserStaffRoleColor">#FFFFE978</SolidColorBrush>
+    <SolidColorBrush x:Key="UserModRoleColor">#FF00DA00</SolidColorBrush>
+    <SolidColorBrush x:Key="UserProRoleColor">#FFFF71FF</SolidColorBrush>
+    <SolidColorBrush x:Key="UserDefaultRoleColor">#FFC3C3FF</SolidColorBrush>
+
 </ResourceDictionary>

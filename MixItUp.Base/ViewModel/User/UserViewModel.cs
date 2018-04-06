@@ -192,29 +192,29 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string PrimaryRoleColor
+        public string PrimaryRoleColorName
         {
             get
             {
                 if (this.Roles.Contains(UserRole.Streamer))
                 {
-                    return "#FF000000";
+                    return "UserStreamerRoleColor";
                 }
                 else if (this.Roles.Contains(UserRole.Staff))
                 {
-                    return "#FFFFD700";
+                    return "UserStaffRoleColor";
                 }
                 else if (this.Roles.Contains(UserRole.Mod))
                 {
-                    return "#FF008000";
+                    return "UserModRoleColor";
                 }
                 else if (this.Roles.Contains(UserRole.Pro))
                 {
-                    return "#FF800080";
+                    return "UserProRoleColor";
                 }
                 else
                 {
-                    return "#FF0000FF";
+                    return "UserDefaultRoleColor";
                 }
             }
         }

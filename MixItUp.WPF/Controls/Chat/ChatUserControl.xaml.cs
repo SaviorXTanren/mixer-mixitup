@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows;
 using MixItUp.WPF.Controls.MainControls;
+using System.Windows.Media;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -23,6 +24,8 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatUserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            this.UserNameTextBlock.Foreground = Application.Current.FindResource(this.User.PrimaryRoleColorName) as SolidColorBrush;
+
             if (!string.IsNullOrEmpty(this.User.AvatarLink))
             {
                 this.UserAvatar.SetImageUrl(this.User.AvatarLink);
