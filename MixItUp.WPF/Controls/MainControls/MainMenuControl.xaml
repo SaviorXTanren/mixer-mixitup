@@ -48,13 +48,19 @@
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Button x:Name="SectionHelpButton" Grid.Column="0" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help">
+                            <Button x:Name="MixerStatusAlertButton" Grid.Column="0" Style="{StaticResource MaterialDesignFlatButton}" Click="MixerStatusAlertButton_Click" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" ToolTip="Mixer Status">
+                                <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
+                            </Button>
+
+                            <Button x:Name="SectionHelpButton" Grid.Column="2" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help">
                                 <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
 
-                            <MaterialDesign:PopupBox Grid.Column="2" DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                            <MaterialDesign:PopupBox Grid.Column="4" DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
                                 <StackPanel>
                                     <Button x:Name="SwitchThemeButton" Content="Switch to Dark Theme" Click="SwitchThemeButton_Click" />
                                     <Button x:Name="BackupSettingsButton" Content="Backup Settings" Click="BackupSettingsButton_Click" />

@@ -4,6 +4,8 @@ namespace MixItUp.Base.Services
 {
     public abstract class ServicesHandlerBase
     {
+        public IMixerStatusService MixerStatus { get; protected set; }
+
         public ISettingsService Settings { get; protected set; }
         public IFileService FileService { get; protected set; }
         public IAudioService AudioService { get; protected set; }

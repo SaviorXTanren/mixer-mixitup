@@ -15,6 +15,8 @@ namespace MixItUp.Desktop.Services
     {
         public void Initialize()
         {
+            this.MixerStatus = new MixerStatusService();
+
             this.InitializeSettingsService();
             this.InitializeAudioService();
             this.InitializeFileService();
