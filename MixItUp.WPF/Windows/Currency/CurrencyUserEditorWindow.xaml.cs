@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Currency;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -13,8 +12,6 @@ namespace MixItUp.WPF.Windows.Currency
     public partial class CurrencyUserEditorWindow : Window
     {
         private UserCurrencyViewModel currency;
-
-        private List<UserCurrencyDataViewModel> allUserCurrencyData = new List<UserCurrencyDataViewModel>();
 
         private ObservableCollection<UserCurrencyIndividualEditorControl> userCurrencyControls = new ObservableCollection<UserCurrencyIndividualEditorControl>();
 
@@ -29,11 +26,6 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void CurrencyUserEditorWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (var kvp in ChannelSession.Settings.UserData)
-            {
-                this.allUserCurrencyData.Add(kvp.Value.GetCurrency(this.currency));
-            }
-
             this.UserCurrencyDataListView.ItemsSource = this.userCurrencyControls;
 
             this.RefreshData();
@@ -49,11 +41,12 @@ namespace MixItUp.WPF.Windows.Currency
 
             this.LimitingResultsMessage.Visibility = Visibility.Collapsed;
             this.userCurrencyControls.Clear();
-            foreach (UserCurrencyDataViewModel userCurrencyData in this.allUserCurrencyData)
+
+            foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
             {
-                if (string.IsNullOrEmpty(filter) || userCurrencyData.User.UserName.ToLower().Contains(filter))
+                if (string.IsNullOrEmpty(filter) || userData.UserName.ToLower().Contains(filter))
                 {
-                    this.userCurrencyControls.Add(new UserCurrencyIndividualEditorControl(userCurrencyData));
+                    this.userCurrencyControls.Add(new UserCurrencyIndividualEditorControl(userData, this.currency));
                 }
 
                 if (this.userCurrencyControls.Count >= 200)

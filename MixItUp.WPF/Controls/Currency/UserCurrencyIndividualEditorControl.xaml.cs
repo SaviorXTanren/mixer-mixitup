@@ -8,20 +8,30 @@ namespace MixItUp.WPF.Controls.Currency
     /// </summary>
     public partial class UserCurrencyIndividualEditorControl : UserControl
     {
-        private UserCurrencyDataViewModel currencyData;
+        private UserDataViewModel userData;
+        private UserCurrencyViewModel currency;
 
-        public UserCurrencyIndividualEditorControl(UserCurrencyDataViewModel currencyData)
+        public UserCurrencyIndividualEditorControl(UserDataViewModel userData, UserCurrencyViewModel currency)
         {
-            this.DataContext = this.currencyData = currencyData;
+            this.userData = userData;
+            this.currency = currency;
 
             InitializeComponent();
+
+            this.Loaded += UserCurrencyIndividualEditorControl_Loaded;
+        }
+
+        private void UserCurrencyIndividualEditorControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.UsernameTextBlock.Text = this.userData.UserName;
+            this.AmountTextBox.Text = this.userData.GetCurrencyAmount(currency).ToString();
         }
 
         private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.AmountTextBox.Text) && int.TryParse(this.AmountTextBox.Text, out int amount) && amount >= 0)
+            if (!string.IsNullOrEmpty(this.AmountTextBox.Text) && int.TryParse(this.AmountTextBox.Text, out int amount) && amount > 0)
             {
-                this.currencyData.Amount = amount;
+                this.userData.SetCurrencyAmount(currency, amount);
             }
         }
     }

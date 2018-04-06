@@ -13,8 +13,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" Text="{Binding User.UserName}" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="0" x:Name="UsernameTextBlock" VerticalAlignment="Center" />
 
-        <TextBox Grid.Column="2" x:Name="AmountTextBox" Text="{Binding Amount}" TextChanged="TextBox_TextChanged" />
+        <TextBox Grid.Column="2" x:Name="AmountTextBox" TextChanged="TextBox_TextChanged" />
     </Grid>
 </UserControl>
