@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private ScrollViewer chatListScrollViewer;
         private bool lockChatList = true;
 
-        private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 24 }, };
+        private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 20 }, { "XX-Large", 24 }, };
 
         public ChatControl(bool isPopOut = false)
         {
