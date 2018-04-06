@@ -23,15 +23,15 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public bool AllowProfanity { get; set; }
 
-        public TranslationAction() : base(ActionTypeEnum.Translation) { }
+        //public TranslationAction() : base(ActionTypeEnum.Translation) { }
 
-        public TranslationAction(CultureInfo culture, string text, bool allowProfanity)
-            : this()
-        {
-            this.Culture = culture;
-            this.Text = text;
-            this.AllowProfanity = allowProfanity;
-        }
+        //public TranslationAction(CultureInfo culture, string text, bool allowProfanity)
+        //    : this()
+        //{
+        //    this.Culture = culture;
+        //    this.Text = text;
+        //    this.AllowProfanity = allowProfanity;
+        //}
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
