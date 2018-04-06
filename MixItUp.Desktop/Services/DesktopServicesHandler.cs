@@ -84,6 +84,16 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(false);
         }
 
+        public override Task<bool> InitializeTranslationService()
+        {
+            if (this.TranslationService == null)
+            {
+                this.TranslationService = new TranslationService();
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+
         public override Task<bool> InitializeSongRequestService()
         {
             if (this.SongRequestService == null)

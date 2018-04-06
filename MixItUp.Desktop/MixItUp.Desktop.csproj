@@ -155,6 +155,7 @@
     <Compile Include="Services\OverlayWebServer.cs" />
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="Services\StreamlabsService.cs" />
+    <Compile Include="Services\TranslationService.cs" />
     <Compile Include="Services\TwitterService.cs" />
     <Compile Include="Services\WindowsAudioService.cs" />
     <Compile Include="Services\WindowsDeveloperAPIService.cs" />
