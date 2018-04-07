@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -74,27 +75,17 @@ namespace MixItUp.WPF.Controls.MainControls
             this.menuItems.Add(new MainMenuItem(name, link));
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () => await this.CheckMixerStatus());
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             this.MenuItemsListBox.ItemsSource = this.menuItems;
 
-            if (ChannelSession.Settings.DiagnosticLogging)
-            {
-                this.DisableDiagnosticLogsButton.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.EnableDiagnosticLogsButton.Visibility = Visibility.Visible;
-            }
+            await this.MainSettings.Initialize(this.Window);
 
-            if (App.AppSettings.DarkTheme)
-            {
-                this.SwitchThemeButton.Content = MainMenuControl.SwitchToLightThemeText;
-            }
-
-            return base.InitializeInternal();
+            await base.InitializeInternal();
         }
 
         private void UIElement_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -265,6 +256,23 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.FlyoutMenuDialog.Visibility = Visibility.Collapsed;
+            this.SettingsGrid.Visibility = Visibility.Visible;
+        }
+
+        private void SettingsItemsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void CloseSettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.FlyoutMenuDialog.Visibility = Visibility.Visible;
+            this.SettingsGrid.Visibility = Visibility.Collapsed;
         }
     }
 }

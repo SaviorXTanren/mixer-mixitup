@@ -447,6 +447,15 @@
     <Compile Include="Controls\Services\XSplitServiceControl.xaml.cs">
       <DependentUpon>XSplitServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
+      <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\MainSettingsControl.xaml.cs">
+      <DependentUpon>MainSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\ServicesSettingsControl.xaml.cs">
+      <DependentUpon>ServicesSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SliderWithHeaderControl.xaml.cs">
       <DependentUpon>SliderWithHeaderControl.xaml</DependentUpon>
     </Compile>
@@ -836,6 +845,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\XSplitServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\GeneralSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\MainSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\ServicesSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

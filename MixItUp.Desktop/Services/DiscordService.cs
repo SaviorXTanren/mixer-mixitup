@@ -200,8 +200,6 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                string result = await this.GetStringAsync("guilds/" + server.ID + "/channels");
-
                 return await this.GetAsync<IEnumerable<DiscordChannel>>("guilds/" + server.ID + "/channels");
             }
             catch (Exception ex) { Logger.Log(ex); }

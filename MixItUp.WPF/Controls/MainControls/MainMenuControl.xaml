@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:SettingsControls="clr-namespace:MixItUp.WPF.Controls.Settings"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <local:MainControlBase.Resources>
@@ -18,71 +19,91 @@
         </ResourceDictionary>
     </local:MainControlBase.Resources>
 
-    <MaterialDesign:DialogHost x:Name="FlyoutMenuDialog" Identifier="FlyoutMenuDialog" SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}" Grid.Row="0">
-        <MaterialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-            <MaterialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="212">
-                    <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="16" IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
+    <Grid>
+        <MaterialDesign:DialogHost x:Name="FlyoutMenuDialog" Identifier="FlyoutMenuDialog" SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
+            <MaterialDesign:DrawerHost IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+                <MaterialDesign:DrawerHost.LeftDrawerContent>
+                    <DockPanel MinWidth="212">
+                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="16" IsChecked="{Binding ElementName=MenuToggleButton, Path=IsChecked, Mode=TwoWay}" />
 
-                    <ListBox x:Name="MenuItemsListBox" Margin="0 16 0 16" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp" SelectionChanged="MenuItemsListBox_SelectionChanged">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="32 0 32 0">
-                                    <TextBlock Text="{Binding Name}" Margin="0 0 5 0" VerticalAlignment="Center" />
-                                    <MaterialDesign:PackIcon Kind="Launch" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource PrimaryColor}" Visibility="{Binding LinkIconVisibility}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
-            </MaterialDesign:DrawerHost.LeftDrawerContent>
-
-            <DockPanel>
-                <MaterialDesign:ColorZone Padding="16,8,16,8" MaterialDesign:ShadowAssist.ShadowDepth="Depth2"
-                                            Mode="PrimaryMid" DockPanel.Dock="Top">
-                    <DockPanel>
-                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" />
-
-                        <Grid DockPanel.Dock="Right">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <Button x:Name="MixerStatusAlertButton" Grid.Column="0" Style="{StaticResource MaterialDesignFlatButton}" Click="MixerStatusAlertButton_Click" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" ToolTip="Mixer Status">
-                                <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
-                            </Button>
-
-                            <Button x:Name="SectionHelpButton" Grid.Column="2" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help">
-                                <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                            </Button>
-
-                            <MaterialDesign:PopupBox Grid.Column="4" DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
-                                <StackPanel>
-                                    <Button x:Name="SwitchThemeButton" Content="Switch to Dark Theme" Click="SwitchThemeButton_Click" />
-                                    <Button x:Name="BackupSettingsButton" Content="Backup Settings" Click="BackupSettingsButton_Click" />
-                                    <Button x:Name="RestoreSettingsButton" Content="Restore Settings" Click="RestoreSettingsButton_Click" />
-                                    <Button x:Name="ReRunWizardSettingsButton" Content="Re-Run New User Wizard" Click="ReRunWizardSettingsButton_Click" />
-                                    <Separator />
-                                    <Button x:Name="InstallationDirectoryButton" Content="Installation Folder" Click="InstallationDirectoryButton_Click" />
-                                    <Button x:Name="DocumentationButton" Content="Documentation" Click="DocumentationButton_Click" />
-                                    <Separator />
-                                    <Button x:Name="EnableDiagnosticLogsButton" Content="Enable Diagnostics" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
-                                    <Button x:Name="DisableDiagnosticLogsButton" Content="Disable Diagnostics" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
-                                </StackPanel>
-                            </MaterialDesign:PopupBox>
-
-                        </Grid>
-
-                        <TextBlock Text="{Binding Name}" Margin="40,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
+                        <ListBox x:Name="MenuItemsListBox" Margin="0 16 0 16" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp" SelectionChanged="MenuItemsListBox_SelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="32 0 32 0">
+                                        <TextBlock Text="{Binding Name}" Margin="0 0 5 0" VerticalAlignment="Center" />
+                                        <MaterialDesign:PackIcon Kind="Launch" Height="18" Width="18" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource PrimaryColor}" Visibility="{Binding LinkIconVisibility}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </DockPanel>
-                </MaterialDesign:ColorZone>
+                </MaterialDesign:DrawerHost.LeftDrawerContent>
 
-                <ContentControl x:Name="ActiveControlContentControl" />
+                <Grid>
+                    <MaterialDesign:DrawerHost BorderBrush="{DynamicResource MaterialDesignDivider}">
+                        <MaterialDesign:DrawerHost.RightDrawerContent>
+                            <SettingsControls:MainSettingsControl />
+                        </MaterialDesign:DrawerHost.RightDrawerContent>
+
+                        <DockPanel>
+                            <MaterialDesign:ColorZone Padding="16,8,16,8" MaterialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                            Mode="PrimaryMid" DockPanel.Dock="Top">
+                                <Grid>
+                                    <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" HorizontalAlignment="Left" />
+
+                                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
+                                    
+                                    <Grid HorizontalAlignment="Right">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button x:Name="MixerStatusAlertButton" Grid.Column="0" Style="{StaticResource MaterialDesignFlatButton}" Click="MixerStatusAlertButton_Click" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" ToolTip="Mixer Status">
+                                            <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
+                                        </Button>
+
+                                        <Button x:Name="SectionHelpButton" Grid.Column="2" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help">
+                                            <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+
+                                        <Button x:Name="SettingsButton" Grid.Column="4" Style="{StaticResource MaterialDesignFlatButton}" Click="SettingsButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Settings">
+                                            <MaterialDesign:PackIcon Kind="Settings" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+
+                                    </Grid>
+                                </Grid>
+                            </MaterialDesign:ColorZone>
+
+                            <ContentControl x:Name="ActiveControlContentControl" />
+                        </DockPanel>
+                    </MaterialDesign:DrawerHost>
+                </Grid>
+            </MaterialDesign:DrawerHost>
+        </MaterialDesign:DialogHost>
+
+        <Grid x:Name="SettingsGrid" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0">
+                <MaterialDesign:ColorZone Padding="16,8,16,8" MaterialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid" DockPanel.Dock="Top">
+                    <Grid>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" FontSize="22">Settings</TextBlock>
+
+                        <Button x:Name="CloseSettingsButton" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFlatButton}" Click="CloseSettingsButton_Click" Width="40" ToolTip="Close">
+                            <MaterialDesign:PackIcon Kind="CloseCircleOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                        </Button>
+                    </Grid>
+                </MaterialDesign:ColorZone>
             </DockPanel>
-        </MaterialDesign:DrawerHost>
-    </MaterialDesign:DialogHost>
+
+            <SettingsControls:MainSettingsControl x:Name="MainSettings" Grid.Row="1" />
+        </Grid>
+    </Grid>
 </local:MainControlBase>
