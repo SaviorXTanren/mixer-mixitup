@@ -46,6 +46,7 @@ namespace MixItUp.Base.MixerAPI
         public ConstellationClient Client { get; private set; }
 
         private HashSet<uint> userFollows = new HashSet<uint>();
+        private HashSet<uint> userSubs = new HashSet<uint>();
 
         public ConstellationClientWrapper()
         {
@@ -196,18 +197,23 @@ namespace MixItUp.Base.MixerAPI
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
             {
-                user.SubscribeDate = DateTimeOffset.Now;
-                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                if (!this.userSubs.Contains(user.ID))
                 {
-                    user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
-                }
+                    this.userSubs.Add(user.ID);
 
-                if (this.OnSubscribedOccurred != null)
-                {
-                    this.OnSubscribedOccurred(this, user);
-                }
+                    user.SubscribeDate = DateTimeOffset.Now;
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
+                    }
 
-                await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                    if (this.OnSubscribedOccurred != null)
+                    {
+                        this.OnSubscribedOccurred(this, user);
+                    }
+
+                    await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                }
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
             {
