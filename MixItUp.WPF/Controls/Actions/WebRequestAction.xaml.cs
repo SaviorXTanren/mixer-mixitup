@@ -36,7 +36,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (this.action.ResponseAction == WebRequestResponseActionTypeEnum.Command)
                 {
-                    this.CommandResponseComboBox.SelectedItem = this.action.ResponseCommandName;
+                    this.CommandResponseComboBox.SelectedItem = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.action.ResponseCommandID));
                     this.CommandResponseArgumentsTextBox.Text = this.action.ResponseCommandArgumentsText;
                 }
                 else if (this.action.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
@@ -63,7 +63,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (this.CommandResponseComboBox.SelectedIndex >= 0)
                     {
-                        return new WebRequestAction(this.WebRequestURLTextBox.Text, (string)this.CommandResponseComboBox.SelectedItem, this.CommandResponseArgumentsTextBox.Text);
+                        return new WebRequestAction(this.WebRequestURLTextBox.Text, (CommandBase)this.CommandResponseComboBox.SelectedItem, this.CommandResponseArgumentsTextBox.Text);
                     }
                 }
                 else if (responseType == WebRequestResponseActionTypeEnum.SpecialIdentifier)
