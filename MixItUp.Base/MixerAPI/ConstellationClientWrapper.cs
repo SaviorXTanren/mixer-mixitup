@@ -217,23 +217,28 @@ namespace MixItUp.Base.MixerAPI
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
             {
-                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                if (!this.userSubs.Contains(user.ID))
                 {
-                    user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
-                }
+                    this.userSubs.Add(user.ID);
 
-                int resubMonths = 0;
-                if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
-                {
-                    resubMonths = (int)resubMonthsToken;
-                }
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
+                    }
 
-                if (this.OnResubscribedOccurred != null)
-                {
-                    this.OnResubscribedOccurred(this, new Tuple<UserViewModel, int>(user, resubMonths));
-                }
+                    int resubMonths = 0;
+                    if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
+                    {
+                        resubMonths = (int)resubMonthsToken;
+                    }
 
-                await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user);
+                    if (this.OnResubscribedOccurred != null)
+                    {
+                        this.OnResubscribedOccurred(this, new Tuple<UserViewModel, int>(user, resubMonths));
+                    }
+
+                    await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user);
+                }
             }
 
             if (this.OnEventOccurred != null)
