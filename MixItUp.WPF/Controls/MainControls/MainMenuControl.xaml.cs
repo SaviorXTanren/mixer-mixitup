@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Desktop;
 using MixItUp.WPF.Util;
 using System;
@@ -52,11 +53,18 @@ namespace MixItUp.WPF.Controls.MainControls
         private const string SwitchToLightThemeText = "Switch to Light Theme";
         private const string SwitchToDarkThemeText = "Switch to Dark Theme";
 
+        private static readonly string DisconnectedServicesHeader = "These services have disconnected" + Environment.NewLine + "and are attempting to reconnect:";
+
+        private HashSet<string> serviceDisconnections = new HashSet<string>();
+
         private ObservableCollection<MainMenuItem> menuItems = new ObservableCollection<MainMenuItem>();
 
         public MainMenuControl()
         {
             InitializeComponent();
+
+            GlobalEvents.OnServiceDisconnect += GlobalEvents_OnServiceDisconnect;
+            GlobalEvents.OnServiceReconnect += GlobalEvents_OnServiceReconnect;
         }
 
         public async Task AddMenuItem(string name, MainControlBase control, string helpLink = null)
@@ -265,6 +273,35 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
+        }
+
+        private void GlobalEvents_OnServiceDisconnect(object sender, string serviceName)
+        {
+            this.serviceDisconnections.Add(serviceName);
+            this.RefreshServiceDisconnectionsAlertTooltip();
+        }
+
+        private void GlobalEvents_OnServiceReconnect(object sender, string serviceName)
+        {
+            this.serviceDisconnections.Remove(serviceName);
+            this.RefreshServiceDisconnectionsAlertTooltip();
+        }
+
+        private void RefreshServiceDisconnectionsAlertTooltip()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                StringBuilder tooltip = new StringBuilder();
+                tooltip.AppendLine(DisconnectedServicesHeader);
+                tooltip.AppendLine();
+                foreach (string serviceName in this.serviceDisconnections.OrderBy(s => s))
+                {
+                    tooltip.AppendLine("- " + serviceName);
+                }
+                this.DisconnectionAlertButton.ToolTip = tooltip.ToString();
+
+                this.DisconnectionAlertButton.Visibility = (serviceDisconnections.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
+            });
         }
     }
 }

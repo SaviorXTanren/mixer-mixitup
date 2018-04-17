@@ -5,7 +5,9 @@
     <SolidColorBrush x:Key="PrimaryColor">#3F51B5</SolidColorBrush>
     <SolidColorBrush x:Key="WhiteColor">White</SolidColorBrush>
 
-    <SolidColorBrush x:Key="AlertColor">#FFC107</SolidColorBrush>
+    <SolidColorBrush x:Key="WarningColor">#FFC107</SolidColorBrush>
+
+    <SolidColorBrush x:Key="AlertColor">#FF0000</SolidColorBrush>
 
     <Style x:Key="StandardDataGrid" TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
         <Setter Property="SelectionMode" Value="Single" />

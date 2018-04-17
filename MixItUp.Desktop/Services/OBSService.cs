@@ -9,6 +9,7 @@ namespace MixItUp.OBS
 {
     public class OBSService : IOBSService
     {
+        public event EventHandler Connected;
         public event EventHandler Disconnected;
 
         private OBSWebsocket OBSWebsocket;
@@ -36,7 +37,14 @@ namespace MixItUp.OBS
                 await Task.Delay(2000);
                 tokenSource.Cancel();
 
-                if (!connected)
+                if (connected)
+                {
+                    if (this.Connected != null)
+                    {
+                        this.Connected(this, new EventArgs());
+                    }
+                }
+                else
                 {
                     this.OBSWebsocket = null;
                 }

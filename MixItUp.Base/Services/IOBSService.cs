@@ -14,6 +14,7 @@ namespace MixItUp.Base.Services
 
     public interface IOBSService
     {
+        event EventHandler Connected;
         event EventHandler Disconnected;
 
         Task<bool> Initialize(string serverIP, string password);

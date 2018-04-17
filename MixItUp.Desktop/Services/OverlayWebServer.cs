@@ -38,7 +38,8 @@ namespace MixItUp.Overlay
         public const string OverlayHttpListenerServerAddress = "http://localhost:8111/overlay/";
         public const string OverlayWebSocketServerAddress = "http://localhost:8111/ws/";
 
-        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectOccurred { add { this.webSocketServer.OnDisconnectOccurred += value; } remove { this.webSocketServer.OnDisconnectOccurred -= value; } }
+        public event EventHandler OnWebSocketConnectedOccurred { add { this.webSocketServer.OnConnectedOccurred += value; } remove { this.webSocketServer.OnConnectedOccurred -= value; } }
+        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred { add { this.webSocketServer.OnDisconnectOccurred += value; } remove { this.webSocketServer.OnDisconnectOccurred -= value; } }
 
         private OverlayHttpListenerServer httpListenerServer;
         private OverlayWebSocketServer webSocketServer;

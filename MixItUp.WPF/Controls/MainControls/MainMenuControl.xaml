@@ -40,27 +40,26 @@
             <DockPanel>
                 <MaterialDesign:ColorZone Padding="16,8,16,8" MaterialDesign:ShadowAssist.ShadowDepth="Depth2"
                                             Mode="PrimaryMid" DockPanel.Dock="Top">
-                    <DockPanel>
-                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" />
+                    <Grid>
+                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" HorizontalAlignment="Left" />
 
-                        <Grid DockPanel.Dock="Right">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
+                        
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
-                            <Button x:Name="MixerStatusAlertButton" Grid.Column="0" Style="{StaticResource MaterialDesignFlatButton}" Click="MixerStatusAlertButton_Click" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" ToolTip="Mixer Status">
-                                <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
+                            <Button x:Name="DisconnectionAlertButton" Style="{StaticResource MaterialDesignFlatButton}" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" Margin="5,0">
+                                <MaterialDesign:PackIcon Kind="LanDisconnect" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
                             </Button>
 
-                            <Button x:Name="SectionHelpButton" Grid.Column="2" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help">
+                            <Button x:Name="MixerStatusAlertButton" Style="{StaticResource MaterialDesignFlatButton}" Click="MixerStatusAlertButton_Click" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" ToolTip="Mixer Status" Margin="5,0">
+                                <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WarningColor}" />
+                            </Button>
+
+                            <Button x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help" Margin="5,0">
                                 <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                             </Button>
 
-                            <MaterialDesign:PopupBox Grid.Column="4" DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                            <MaterialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Margin="5,0,0,0">
                                 <StackPanel>
                                     <Button x:Name="SwitchThemeButton" Content="Switch to Dark Theme" Click="SwitchThemeButton_Click" />
                                     <Button x:Name="BackupSettingsButton" Content="Backup Settings" Click="BackupSettingsButton_Click" />
@@ -75,10 +74,8 @@
                                 </StackPanel>
                             </MaterialDesign:PopupBox>
 
-                        </Grid>
-
-                        <TextBlock Text="{Binding Name}" Margin="40,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
-                    </DockPanel>
+                        </StackPanel>
+                    </Grid>
                 </MaterialDesign:ColorZone>
 
                 <ContentControl x:Name="ActiveControlContentControl" />

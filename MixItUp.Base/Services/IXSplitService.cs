@@ -30,7 +30,8 @@ namespace MixItUp.Base.Services
 
     public interface IXSplitService
     {
-        event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectOccurred;
+        event EventHandler OnWebSocketConnectedOccurred;
+        event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred;
 
         Task<bool> Initialize();
 
