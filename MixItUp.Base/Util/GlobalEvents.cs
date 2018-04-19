@@ -16,21 +16,21 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<string> OnShowSnackBar;
-        public static void ShowSnackBar(string message)
+        public static event EventHandler<string> OnServiceDisconnect;
+        public static void ServiceDisconnect(string serviceName)
         {
-            if (GlobalEvents.OnShowSnackBar != null)
+            if (GlobalEvents.OnServiceDisconnect != null)
             {
-                GlobalEvents.OnShowSnackBar(null, message);
+                GlobalEvents.OnServiceDisconnect(null, serviceName);
             }
         }
 
-        public static event EventHandler OnHideSnackBar;
-        public static void HideSnackBar()
+        public static event EventHandler<string> OnServiceReconnect;
+        public static void ServiceReconnect(string serviceName)
         {
-            if (GlobalEvents.OnHideSnackBar != null)
+            if (GlobalEvents.OnServiceReconnect != null)
             {
-                GlobalEvents.OnHideSnackBar(null, new EventArgs());
+                GlobalEvents.OnServiceReconnect(null, serviceName);
             }
         }
 

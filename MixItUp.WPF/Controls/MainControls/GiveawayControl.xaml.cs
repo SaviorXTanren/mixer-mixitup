@@ -236,7 +236,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.UserRole));
                     }
                 }
-                else if (this.selectedWinner != null && e.CommandName.Equals("claim") && this.selectedWinner.Equals(e.User))
+                else if (this.selectedWinner != null && e.CommandName.Equals("!claim") && this.selectedWinner.Equals(e.User))
                 {
                     await ChannelSession.Chat.SendMessage(string.Format("@{0} has claimed their prize! Listen closely to the streamer for instructions on getting your prize.", e.User.UserName));
                     await this.EndGiveaway();

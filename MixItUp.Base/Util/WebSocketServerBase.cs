@@ -13,6 +13,8 @@ namespace MixItUp.Base.Util
 {
     public abstract class WebSocketServerBase : WebSocketBase
     {
+        public event EventHandler OnConnectedOccurred;
+
         private SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         private string address;
@@ -126,6 +128,11 @@ namespace MixItUp.Base.Util
                                 if (ChannelSession.Settings.DiagnosticLogging)
                                 {
                                     await this.Send(new WebSocketPacket() { type = "debug" });
+                                }
+
+                                if (this.OnConnectedOccurred != null)
+                                {
+                                    this.OnConnectedOccurred(this, new EventArgs());
                                 }
 
                                 await this.Receive();

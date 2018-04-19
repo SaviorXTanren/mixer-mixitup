@@ -46,35 +46,31 @@
                         </MaterialDesign:DrawerHost.RightDrawerContent>
 
                         <DockPanel>
-                            <MaterialDesign:ColorZone Padding="16,8,16,8" MaterialDesign:ShadowAssist.ShadowDepth="Depth2"
-                                            Mode="PrimaryMid" DockPanel.Dock="Top">
+                            <MaterialDesign:ColorZone Padding="16,8,16,8" MaterialDesign:ShadowAssist.ShadowDepth="Depth2" Mode="PrimaryMid" DockPanel.Dock="Top">
                                 <Grid>
                                     <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" IsChecked="False" x:Name="MenuToggleButton" HorizontalAlignment="Left" />
 
                                     <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" />
-                                    
-                                    <Grid HorizontalAlignment="Right">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="10" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="10" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                        
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
-                                        <Button x:Name="MixerStatusAlertButton" Grid.Column="0" Style="{StaticResource MaterialDesignFlatButton}" Click="MixerStatusAlertButton_Click" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" ToolTip="Mixer Status">
-                                            <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
+                                        <Button x:Name="DisconnectionAlertButton" Style="{StaticResource MaterialDesignFlatButton}" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" Margin="5,0">
+                                            <MaterialDesign:PackIcon Kind="LanDisconnect" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
                                         </Button>
 
-                                        <Button x:Name="SectionHelpButton" Grid.Column="2" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help">
+                                        <Button x:Name="MixerStatusAlertButton" Style="{StaticResource MaterialDesignFlatButton}" Click="MixerStatusAlertButton_Click" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" ToolTip="Mixer Status" Margin="5,0">
+                                            <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WarningColor}" />
+                                        </Button>
+
+                                        <Button x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help" Margin="5,0">
                                             <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                        <Button x:Name="SettingsButton" Grid.Column="4" Style="{StaticResource MaterialDesignFlatButton}" Click="SettingsButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Settings">
+                                        <Button x:Name="SettingsButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SettingsButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Settings">
                                             <MaterialDesign:PackIcon Kind="Settings" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                    </Grid>
+                                    </StackPanel>
                                 </Grid>
                             </MaterialDesign:ColorZone>
 

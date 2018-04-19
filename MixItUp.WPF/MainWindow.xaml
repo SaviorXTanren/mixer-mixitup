@@ -53,8 +53,6 @@
 
         </Grid>
 
-        <MaterialDesign:Snackbar x:Name="BottomSnackBar" IsActive="False" />
-
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>
 </Windows:LoadingWindowBase>

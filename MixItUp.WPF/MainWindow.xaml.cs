@@ -2,7 +2,6 @@
 using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.MainControls;
-using MixItUp.WPF.Properties;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using System;
@@ -48,9 +47,6 @@ namespace MixItUp.WPF
 
         protected override async Task OnLoaded()
         {
-            GlobalEvents.OnShowSnackBar += GlobalEvents_OnShowSnackBar;
-            GlobalEvents.OnHideSnackBar += GlobalEvents_OnHideSnackBar;
-
             if (ChannelSession.Settings.IsStreamer)
             {
                 this.Title += " - Streamer";
@@ -149,26 +145,6 @@ namespace MixItUp.WPF
             {
                 e.Cancel = true;
             }
-        }
-
-        private void GlobalEvents_OnShowSnackBar(object sender, string e)
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                if (!this.BottomSnackBar.IsActive)
-                {
-                    this.BottomSnackBar.Message = new SnackbarMessage() { Content = e };
-                    this.BottomSnackBar.IsActive = true;
-                }
-            });
-        }
-
-        private void GlobalEvents_OnHideSnackBar(object sender, EventArgs e)
-        {
-            this.Dispatcher.Invoke(() =>
-            {
-                this.BottomSnackBar.IsActive = false;
-            });
         }
     }
 }

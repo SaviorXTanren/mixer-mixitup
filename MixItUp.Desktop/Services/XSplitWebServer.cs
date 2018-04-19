@@ -21,7 +21,8 @@ namespace MixItUp.XSplit
 
     public class XSplitWebServer : WebSocketServerBase, IXSplitService
     {
-        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectOccurred { add { this.OnDisconnectOccurred += value; } remove { this.OnDisconnectOccurred -= value; } }
+        public event EventHandler OnWebSocketConnectedOccurred { add { this.OnConnectedOccurred += value; } remove { this.OnConnectedOccurred -= value; } }
+        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred { add { this.OnDisconnectOccurred += value; } remove { this.OnDisconnectOccurred -= value; } }
 
         public XSplitWebServer(string address) : base(address) { }
 

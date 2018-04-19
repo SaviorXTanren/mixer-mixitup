@@ -111,7 +111,8 @@ namespace MixItUp.Desktop.Services
                 this.OverlayServer = new OverlayWebServer();
                 if (await this.OverlayServer.Initialize())
                 {
-                    this.OverlayServer.OnWebSocketDisconnectOccurred += OverlayServer_OnWebSocketDisconnectOccurred;
+                    this.OverlayServer.OnWebSocketConnectedOccurred += OverlayServer_OnWebSocketConnectedOccurred;
+                    this.OverlayServer.OnWebSocketDisconnectedOccurred += OverlayServer_OnWebSocketDisconnectedOccurred;
                     return true;
                 }
             }
@@ -123,7 +124,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.OverlayServer != null)
             {
-                this.OverlayServer.OnWebSocketDisconnectOccurred -= OverlayServer_OnWebSocketDisconnectOccurred;
+                this.OverlayServer.OnWebSocketConnectedOccurred -= OverlayServer_OnWebSocketConnectedOccurred;
+                this.OverlayServer.OnWebSocketDisconnectedOccurred -= OverlayServer_OnWebSocketDisconnectedOccurred;
 
                 await this.OverlayServer.Disconnect();
                 this.OverlayServer = null;
@@ -137,6 +139,7 @@ namespace MixItUp.Desktop.Services
                 this.OBSWebsocket = new OBSService();
                 if (await this.OBSWebsocket.Initialize(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword))
                 {
+                    this.OBSWebsocket.Connected += OBSWebsocket_Connected;
                     this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
                     return true;
                 }
@@ -162,7 +165,8 @@ namespace MixItUp.Desktop.Services
                 this.XSplitServer = new XSplitWebServer("http://localhost:8211/");
                 if (await this.XSplitServer.Initialize())
                 {
-                    this.XSplitServer.OnWebSocketDisconnectOccurred += XSplitServer_OnWebSocketDisconnectOccurred;
+                    this.XSplitServer.OnWebSocketConnectedOccurred += XSplitServer_OnWebSocketConnectedOccurred;
+                    this.XSplitServer.OnWebSocketDisconnectedOccurred += XSplitServer_OnWebSocketDisconnectedOccurred;
                     return true;
                 }
             }
@@ -174,7 +178,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.XSplitServer != null)
             {
-                this.XSplitServer.OnWebSocketDisconnectOccurred -= XSplitServer_OnWebSocketDisconnectOccurred;
+                this.XSplitServer.OnWebSocketConnectedOccurred -= XSplitServer_OnWebSocketConnectedOccurred;
+                this.XSplitServer.OnWebSocketDisconnectedOccurred -= XSplitServer_OnWebSocketDisconnectedOccurred;
                 await this.XSplitServer.DisconnectServer();
                 this.XSplitServer = null;
             }
@@ -325,17 +330,33 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private void OverlayServer_OnWebSocketDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("Overlay");
+        }
+
+        private void OverlayServer_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred("Overlay");
         }
 
+        private void OBSWebsocket_Connected(object sender, System.EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("OBS");
+        }
+
         private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)
         {
+            ChannelSession.DisconnectionOccurred("OBS");
             await this.DisconnectOBSStudio();
         }
 
-        private void XSplitServer_OnWebSocketDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        private void XSplitServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("XSplit");
+        }
+
+        private void XSplitServer_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred("XSplit");
         }

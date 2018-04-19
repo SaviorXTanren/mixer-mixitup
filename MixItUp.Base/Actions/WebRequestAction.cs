@@ -41,12 +41,16 @@ namespace MixItUp.Base.Actions
         public string ResponseChatText { get; set; }
 
         [DataMember]
-        public string ResponseCommandName { get; set; }
+        public Guid ResponseCommandID { get; set; }
         [DataMember]
         public string ResponseCommandArgumentsText { get; set; }
 
         [DataMember]
         public string SpecialIdentifierName { get; set; }
+
+        [DataMember]
+        [Obsolete]
+        public string ResponseCommandName { get; set; }
 
         public WebRequestAction() : base(ActionTypeEnum.WebRequest) { }
 
@@ -63,10 +67,10 @@ namespace MixItUp.Base.Actions
             this.ResponseChatText = chatText;
         }
 
-        public WebRequestAction(string url, string commandName, string arguments)
+        public WebRequestAction(string url, CommandBase command, string arguments)
             : this(url, WebRequestResponseActionTypeEnum.Command)
         {
-            this.ResponseCommandName = commandName;
+            this.ResponseCommandID = command.ID;
             this.ResponseCommandArgumentsText = arguments;
         }
 
@@ -90,7 +94,20 @@ namespace MixItUp.Base.Actions
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)
                             {
-                                ChatCommand command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.Name.Equals(this.ResponseCommandName));
+                                CommandBase command = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                                if (command == null && !string.IsNullOrEmpty(this.ResponseCommandName))
+                                {
+                                    command = ChannelSession.Settings.ChatCommands.FirstOrDefault(c => c.Name.Equals(this.ResponseCommandName));
+                                    if (command != null)
+                                    {
+                                        this.ResponseCommandID = command.ID;
+                                    }
+                                }
+                                this.ResponseCommandName = null;
+#pragma warning restore CS0612 // Type or member is obsolete
+
                                 if (command != null)
                                 {
                                     string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
