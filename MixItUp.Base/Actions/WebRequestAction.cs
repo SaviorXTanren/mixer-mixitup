@@ -25,7 +25,29 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class WebRequestAction : ActionBase
     {
-        private const string ResponseSpecialIdentifier = "webrequestresult";
+        public static WebRequestAction CreateForChat(string url, string chatText)
+        {
+            WebRequestAction action = new WebRequestAction(url, WebRequestResponseActionTypeEnum.Chat);
+            action.ResponseChatText = chatText;
+            return action;
+        }
+
+        public static WebRequestAction CreateForCommand(string url, CommandBase command, string arguments)
+        {
+            WebRequestAction action = new WebRequestAction(url, WebRequestResponseActionTypeEnum.Command);
+            action.ResponseCommandID = command.ID;
+            action.ResponseCommandArgumentsText = arguments;
+            return action;
+        }
+
+        public static WebRequestAction CreateForSpecialIdentifier(string url, string specialIdentifierName)
+        {
+            WebRequestAction action = new WebRequestAction(url, WebRequestResponseActionTypeEnum.SpecialIdentifier);
+            action.SpecialIdentifierName = specialIdentifierName;
+            return action;
+        }
+
+        public const string ResponseSpecialIdentifier = "webrequestresult";
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
@@ -54,24 +76,11 @@ namespace MixItUp.Base.Actions
 
         public WebRequestAction() : base(ActionTypeEnum.WebRequest) { }
 
-        public WebRequestAction(string url, WebRequestResponseActionTypeEnum responseAction = WebRequestResponseActionTypeEnum.None)
+        public WebRequestAction(string url, WebRequestResponseActionTypeEnum responseAction)
             : this()
         {
             this.Url = url;
             this.ResponseAction = responseAction;
-        }
-
-        public WebRequestAction(string url, string chatText)
-            : this(url, WebRequestResponseActionTypeEnum.Chat)
-        {
-            this.ResponseChatText = chatText;
-        }
-
-        public WebRequestAction(string url, CommandBase command, string arguments)
-            : this(url, WebRequestResponseActionTypeEnum.Command)
-        {
-            this.ResponseCommandID = command.ID;
-            this.ResponseCommandArgumentsText = arguments;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
