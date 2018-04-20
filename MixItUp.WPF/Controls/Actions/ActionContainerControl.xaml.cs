@@ -105,6 +105,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Discord:
                         this.actionControl = (this.action != null) ? new DiscordActionControl(this, (DiscordAction)this.action) : new DiscordActionControl(this);
                         break;
+                    case ActionTypeEnum.Translation:
+                        this.actionControl = (this.action != null) ? new TranslationActionControl(this, (TranslationAction)this.action) : new TranslationActionControl(this);
+                        break;
                 }
             }
 

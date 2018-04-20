@@ -252,6 +252,9 @@
     <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
       <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\TranslationActionControl.xaml.cs">
+      <DependentUpon>TranslationActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\WaitActionControl.xaml.cs">
       <DependentUpon>WaitActionControl.xaml</DependentUpon>
     </Compile>
@@ -572,6 +575,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\TextToSpeechActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\TranslationActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

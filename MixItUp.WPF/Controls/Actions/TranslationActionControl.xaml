@@ -1,0 +1,77 @@
+﻿<local:ActionControlBase x:Class="MixItUp.WPF.Controls.Actions.TranslationActionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <local:ActionControlBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </local:ActionControlBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="TranslationLanguageComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Language To Translate To" DisplayMemberPath="DisplayName" Style="{StaticResource BackgroundComboBox}" />
+
+            <TextBlock Grid.Column="2" VerticalAlignment="Center">Allow Profanity:</TextBlock>
+            <CheckBox Grid.Column="4" x:Name="AllowProfanityCheckBox" VerticalAlignment="Center" />
+
+            <TextBlock Grid.Column="6" VerticalAlignment="Center">
+                <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+            </TextBlock>
+        </Grid>
+
+        <TextBox Grid.Row="2" x:Name="TranslationTextTextBox" MaterialDesign:HintAssist.Hint="Text To Translate" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        <ComboBox Grid.Row="4" x:Name="ResponseActionComboBox" MaterialDesign:HintAssist.Hint="Action To Perform With Translation" Style="{StaticResource BackgroundComboBox}" SelectionChanged="ResponseActionComboBox_SelectionChanged" />
+
+        <Grid x:Name="ChatResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
+            <TextBox x:Name="ChatResponseTextBox" MaterialDesign:HintAssist.Hint="Chat Message ($translationresult = Translated Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid x:Name="CommandResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" DisplayMemberPath="Name" Style="{StaticResource BackgroundComboBox}" />
+
+            <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Arguments ($translationresult = Translated Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid x:Name="SpecialIdentifierResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
+            <TextBox x:Name="SpecialIdentifierResponseTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+    </Grid>
+</local:ActionControlBase>
