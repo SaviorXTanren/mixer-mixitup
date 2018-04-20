@@ -129,6 +129,18 @@ namespace MixItUp.Base.Services
             return results;
         }
 
+        public async Task SendTweet(string tweet)
+        {
+            try
+            {
+                using (var twitterCtx = new TwitterContext(this.auth))
+                {
+                    await twitterCtx.TweetAsync(tweet);
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
         public OAuthTokenModel GetOAuthTokenCopy()
         {
             if (this.token != null)

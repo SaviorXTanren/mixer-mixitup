@@ -108,6 +108,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Translation:
                         this.actionControl = (this.action != null) ? new TranslationActionControl(this, (TranslationAction)this.action) : new TranslationActionControl(this);
                         break;
+                    case ActionTypeEnum.Twitter:
+                        this.actionControl = (this.action != null) ? new TwitterActionControl(this, (TwitterAction)this.action) : new TwitterActionControl(this);
+                        break;
                 }
             }
 

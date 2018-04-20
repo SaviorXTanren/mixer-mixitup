@@ -44,6 +44,7 @@ namespace MixItUp.Base.Actions
         Spotify,
         Discord,
         Translation,
+        Twitter,
 
         Custom = 99,
     }
