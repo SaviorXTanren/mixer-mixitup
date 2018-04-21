@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Desktop;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using System.Diagnostics;
@@ -22,6 +23,10 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
+            this.UnlockAllCommandsTextBlock.ToolTip = UnlockedCommandControl.UnlockedGridTooltip;
+            this.UnlockAllCommandsToggleButton.ToolTip = UnlockedCommandControl.UnlockedGridTooltip;
+
+            this.UnlockAllCommandsToggleButton.IsChecked = ChannelSession.Settings.UnlockAllCommands;
             this.DisableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Visible : Visibility.Collapsed;
             this.EnableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -102,6 +107,11 @@ namespace MixItUp.WPF.Controls.Settings
                 ChannelSession.Settings.DiagnosticLogging = false;
                 ((MainWindow)this.Window).Restart();
             }
+        }
+
+        private void UnlockAllCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.UnlockAllCommands = this.UnlockAllCommandsToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }

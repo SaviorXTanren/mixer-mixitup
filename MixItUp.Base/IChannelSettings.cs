@@ -73,6 +73,8 @@ namespace MixItUp.Base
 
         bool EnableDeveloperAPI { get; set; }
 
+        bool UnlockAllCommands { get; set; }
+
         int ChatFontSize { get; set; }
         bool ChatShowUserJoinLeave { get; set; }
         bool ChatShowEventAlerts { get; set; }

@@ -137,6 +137,9 @@ namespace MixItUp.Desktop
         public bool EnableDeveloperAPI { get; set; }
 
         [JsonProperty]
+        public bool UnlockAllCommands { get; set; }
+
+        [JsonProperty]
         public int ChatFontSize { get; set; }
         [JsonProperty]
         public bool ChatShowUserJoinLeave { get; set; }
@@ -292,6 +295,7 @@ namespace MixItUp.Desktop
             this.GiveawayRequirements = new RequirementViewModel();
 
             this.MaxMessagesInChat = 100;
+            this.ChatFontSize = 13;
 
             this.ModerationFilteredWordsExcempt = UserRole.Mod;
             this.ModerationChatTextExcempt = UserRole.Mod;

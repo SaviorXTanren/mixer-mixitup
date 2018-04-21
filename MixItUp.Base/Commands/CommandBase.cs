@@ -121,7 +121,7 @@ namespace MixItUp.Base.Commands
                 {
                     try
                     {
-                        if (!this.Unlocked)
+                        if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
                         {
                             await this.AsyncSemaphore.WaitAsync();
                         }
@@ -132,7 +132,7 @@ namespace MixItUp.Base.Commands
                     catch (Exception ex) { Util.Logger.Log(ex); }
                     finally
                     {
-                        if (!this.Unlocked)
+                        if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
                         {
                             this.AsyncSemaphore.Release();
                         }
