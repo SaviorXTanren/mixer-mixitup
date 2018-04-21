@@ -62,6 +62,9 @@ namespace MixItUp.Desktop
         public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]
+        public bool FeatureMe { get; set; }
+
+        [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
         public RequirementViewModel GameQueueRequirements { get; set; }

@@ -425,6 +425,7 @@ namespace MixItUp.Base
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
                     await Util.Logger.LogAnalyticsUsage("LogIn", "Desktop");
+                    await Util.Logger.LogAnalyticsUsage("FeatureMe", ChannelSession.Settings.FeatureMe.ToString());
 
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 

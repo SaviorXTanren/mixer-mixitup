@@ -34,6 +34,8 @@ namespace MixItUp.Base
 
         ExpandedChannelModel Channel { get; set; }
 
+        bool FeatureMe { get; set; }
+
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }
 

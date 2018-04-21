@@ -24,8 +24,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Theme Type:</TextBlock>
-        <ComboBox x:Name="ThemeNameComboBox" Grid.Row="0" Grid.Column="2" Style="{StaticResource BackgroundComboBox}" />
-
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Feature me as a Mix it Up Streamer:</TextBlock>
+        <ToggleButton Grid.Row="0" Grid.Column="2" x:Name="FeatureMeToggleButton" Checked="FeatureMeToggleButton_Checked" Unchecked="FeatureMeToggleButton_Checked" />
     </Grid>
 </MainControls:MainControlBase>
