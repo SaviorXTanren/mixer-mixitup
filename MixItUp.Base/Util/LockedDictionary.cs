@@ -62,5 +62,16 @@ namespace MixItUp.Base.Util
             }
             return this[key];
         }
+
+        public V PickRandom()
+        {
+            if (this.Count > 0)
+            {
+                Random random = new Random();
+                int index = random.Next(this.Count);
+                return this.Values.ElementAt(index);
+            }
+            return default(V);
+        }
     }
 }

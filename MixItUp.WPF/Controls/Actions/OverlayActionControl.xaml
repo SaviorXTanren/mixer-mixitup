@@ -50,7 +50,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <TextBox Grid.Column="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path / URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                     <Button Grid.Column="2" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
                 </Grid>
 

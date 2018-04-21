@@ -12,6 +12,9 @@ namespace MixItUp.Base.Util
 {
     public class SpecialIdentifierStringBuilder
     {
+        private const string ArgSpecialIdentifierHeader = "arg";
+        private const string RandomSpecialIdentifierHeader = "random";
+
         private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
 
         public static void AddCustomSpecialIdentifier(string specialIdentifier, string replacement)
@@ -98,43 +101,7 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (user != null)
-            {
-                await user.SetDetails();
-
-                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                {
-                    UserCurrencyDataViewModel currencyData = user.Data.GetCurrency(currency);
-                    UserRankViewModel rank = currencyData.GetRank();
-                    this.ReplaceSpecialIdentifier(currency.UserRankNameSpecialIdentifier, rank.Name);
-                    this.ReplaceSpecialIdentifier(currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
-                }
-                this.ReplaceSpecialIdentifier("usertime", user.Data.ViewingTimeString);
-                this.ReplaceSpecialIdentifier("userhours", user.Data.ViewingHoursString);
-                this.ReplaceSpecialIdentifier("usermins", user.Data.ViewingMinutesString);
-
-                this.ReplaceSpecialIdentifier("userfollowage", user.FollowAgeString);
-                this.ReplaceSpecialIdentifier("usersubage", user.SubscribeAgeString);
-                this.ReplaceSpecialIdentifier("usersubmonths", user.SubscribeMonths.ToString());
-
-                if (this.ContainsSpecialIdentifier("usergame"))
-                {
-                    GameTypeModel game = await ChannelSession.Connection.GetGameType(user.GameTypeID);
-                    if (game != null)
-                    {
-                        this.ReplaceSpecialIdentifier("usergame", game.name.ToString());
-                    }
-                    else
-                    {
-                        this.ReplaceSpecialIdentifier("usergame", "Unknown");
-                    }
-                }
-
-                this.ReplaceSpecialIdentifier("useravatar", user.AvatarLink);
-                this.ReplaceSpecialIdentifier("userurl", "https://www.mixer.com/" + user.UserName);
-                this.ReplaceSpecialIdentifier("username", user.UserName);
-                this.ReplaceSpecialIdentifier("userid", user.ID.ToString());
-            }
+            await this.HandleUserSpecialIdentifiers(user, string.Empty);
 
             if (arguments != null)
             {
@@ -147,53 +114,16 @@ namespace MixItUp.Base.Util
                     if (argUserModel != null)
                     {
                         UserViewModel argUser = new UserViewModel(argUserModel);
-                        await argUser.SetDetails();
-
-                        if (ChannelSession.Settings.UserData.ContainsKey(argUser.ID))
-                        {
-                            UserDataViewModel userData = ChannelSession.Settings.UserData[argUser.ID];
-
-                            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                            {
-                                UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
-                                UserRankViewModel rank = currencyData.GetRank();
-                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserRankNameSpecialIdentifier, rank.Name);
-                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
-                            }
-
-                            this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usertime", userData.ViewingTimeString);
-                            this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userhours", userData.ViewingHoursString);
-                            this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usermins", userData.ViewingMinutesString);
-                        }
-
-                        if (this.ContainsSpecialIdentifier("arg" + (i + 1) + "usergame"))
-                        {
-                            GameTypeModel game = await ChannelSession.Connection.GetGameType(argUser.GameTypeID);
-                            if (game != null)
-                            {
-                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usergame", game.name.ToString());
-                            }
-                            else
-                            {
-                                this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usergame", "Unknown");
-                            }
-                        }
-
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userfollowage", argUser.FollowAgeString);
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usersubage", argUser.SubscribeAgeString);
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "usersubmonths", argUser.SubscribeMonths.ToString());
-
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "useravatar", argUser.AvatarLink);
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userurl", "https://www.mixer.com/" + argUser.UserName);
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "username", argUser.UserName);
-                        this.ReplaceSpecialIdentifier("arg" + (i + 1) + "userid", argUser.ID.ToString());
+                        await this.HandleUserSpecialIdentifiers(argUser, ArgSpecialIdentifierHeader + (i + 1));
                     }
 
-                    this.ReplaceSpecialIdentifier("arg" + (i + 1) + "text", arguments.ElementAt(i));
+                    this.ReplaceSpecialIdentifier(ArgSpecialIdentifierHeader + (i + 1) + "text", arguments.ElementAt(i));
                 }
 
                 this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
             }
+
+            await this.HandleUserSpecialIdentifiers(ChannelSession.Chat.ChatUsers.PickRandom(), RandomSpecialIdentifierHeader);
         }
 
         public void ReplaceSpecialIdentifier(string identifier, string replacement)
@@ -207,5 +137,52 @@ namespace MixItUp.Base.Util
         }
 
         public override string ToString() { return this.text; }
+
+        private async Task HandleUserSpecialIdentifiers(UserViewModel user, string identifierHeader)
+        {
+            if (user != null)
+            {
+                await user.SetDetails();
+
+                if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
+                {
+                    UserDataViewModel userData = ChannelSession.Settings.UserData[user.ID];
+
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
+                        UserRankViewModel rank = currencyData.GetRank();
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserRankNameSpecialIdentifier, rank.Name);
+                        this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
+                    }
+
+                    this.ReplaceSpecialIdentifier(identifierHeader + "usertime", userData.ViewingTimeString);
+                    this.ReplaceSpecialIdentifier(identifierHeader + "userhours", userData.ViewingHoursString);
+                    this.ReplaceSpecialIdentifier(identifierHeader + "usermins", userData.ViewingMinutesString);
+                }
+
+                if (this.ContainsSpecialIdentifier(identifierHeader + "usergame"))
+                {
+                    GameTypeModel game = await ChannelSession.Connection.GetGameType(user.GameTypeID);
+                    if (game != null)
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + "usergame", game.name.ToString());
+                    }
+                    else
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + "usergame", "Unknown");
+                    }
+                }
+
+                this.ReplaceSpecialIdentifier(identifierHeader + "userfollowage", user.FollowAgeString);
+                this.ReplaceSpecialIdentifier(identifierHeader + "usersubage", user.SubscribeAgeString);
+                this.ReplaceSpecialIdentifier(identifierHeader + "usersubmonths", user.SubscribeMonths.ToString());
+
+                this.ReplaceSpecialIdentifier(identifierHeader + "useravatar", user.AvatarLink);
+                this.ReplaceSpecialIdentifier(identifierHeader + "userurl", "https://www.mixer.com/" + user.UserName);
+                this.ReplaceSpecialIdentifier(identifierHeader + "username", user.UserName);
+                this.ReplaceSpecialIdentifier(identifierHeader + "userid", user.ID.ToString());
+            }
+        }
     }
 }

@@ -12,6 +12,8 @@ namespace MixItUp.Base.Model.User
         public string Username { get; set; }
         [DataMember]
         public string Message { get; set; }
+        [DataMember]
+        public string ImageLink { get; set; }
 
         [DataMember]
         public double Amount { get; set; }

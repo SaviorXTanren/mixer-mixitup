@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,5 +45,16 @@ namespace MixItUp.Base.Util
         IEnumerator IEnumerable.GetEnumerator() { lock (objLock) { return this.ToList().GetEnumerator(); } }
 
         public List<T> ToList() { lock (objLock) { return this.items.ToList(); } }
+
+        public T PickRandom()
+        {
+            if (this.Count > 0)
+            {
+                Random random = new Random();
+                int index = random.Next(this.Count);
+                return this[index];
+            }
+            return default(T);
+        }
     }
 }

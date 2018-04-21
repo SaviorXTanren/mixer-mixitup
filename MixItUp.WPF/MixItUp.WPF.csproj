@@ -428,6 +428,9 @@
     <Compile Include="Controls\Services\GameWispServiceControl.xaml.cs">
       <DependentUpon>GameWispServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\GawkBoxServiceControl.xaml.cs">
+      <DependentUpon>GawkBoxServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\MixerBotAccountServiceControl.xaml.cs">
       <DependentUpon>MixerBotAccountServiceControl.xaml</DependentUpon>
     </Compile>
@@ -827,6 +830,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\GameWispServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\GawkBoxServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
