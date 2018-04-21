@@ -6,7 +6,7 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Border BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}">
+    <Border BorderThickness="1" BorderBrush="{StaticResource PrimaryHueMidBrush}">
         <Grid>
             <Grid x:Name="ButtonRender" PreviewMouseLeftButtonUp="ButtonRender_PreviewMouseLeftButtonUp">
                 <Rectangle x:Name="BackgroundColor" Fill="Transparent" />

@@ -17,7 +17,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border BorderBrush="{StaticResource PrimaryColor}" BorderThickness="1" Grid.Column="0">
+        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1" Grid.Column="0">
             <Grid Margin="10" Width="120">
                 <Grid x:Name="PreDefinedGroupGrid" Grid.Column="0" Visibility="Collapsed" VerticalAlignment="Center">
                     <Grid.RowDefinitions>

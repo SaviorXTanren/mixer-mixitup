@@ -197,7 +197,7 @@
 
                         </Grid>
 
-                        <Border BorderBrush="{StaticResource PrimaryColor}" BorderThickness="1" Grid.Row="2" Width="700" Height="300">
+                        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1" Grid.Row="2" Width="700" Height="300">
                             <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -205,7 +205,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <Border BorderBrush="{StaticResource PrimaryColor}" BorderThickness="1" Grid.Row="0">
+                                    <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1" Grid.Row="0">
                                         <ItemsControl x:Name="OutcomeCommandsItemsControl" Margin="142,0,0,0">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
@@ -215,7 +215,7 @@
                                         </ItemsControl>
                                     </Border>
 
-                                    <Border BorderBrush="{StaticResource PrimaryColor}" BorderThickness="1" Grid.Row="1">
+                                    <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1" Grid.Row="1">
                                         <ItemsControl x:Name="OutcomeGroupsItemsControl">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>

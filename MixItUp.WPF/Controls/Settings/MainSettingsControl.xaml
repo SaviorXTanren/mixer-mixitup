@@ -25,7 +25,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Border Grid.Column="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryColor}" />
+        <Border Grid.Column="1" BorderThickness="1" BorderBrush="{StaticResource PrimaryHueMidBrush}" />
 
         <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <ContentControl x:Name="SettingsContent" Margin="10" />

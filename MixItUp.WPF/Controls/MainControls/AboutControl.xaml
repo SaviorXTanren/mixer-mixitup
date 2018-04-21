@@ -67,7 +67,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Grid.Row="2" Header="Contact &amp; Info">
+            <GroupBox Grid.Row="2" Header="Contact &amp; Resources">
                 <Grid HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

@@ -45,7 +45,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <MaterialDesign:PackIcon Kind="AccessPoint" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
+                    <MaterialDesign:PackIcon Kind="AccessPoint" Grid.Column="0" Foreground="{StaticResource PrimaryHueMidBrush}" VerticalAlignment="Center" />
                     <TextBox x:Name="OBSStudioIPAddressTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
                 </Grid>
 
@@ -56,7 +56,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <MaterialDesign:PackIcon Kind="KeyVariant" Grid.Column="0" Foreground="{StaticResource PrimaryColor}" VerticalAlignment="Center" />
+                    <MaterialDesign:PackIcon Kind="KeyVariant" Grid.Column="0" Foreground="{StaticResource PrimaryHueMidBrush}" VerticalAlignment="Center" />
                     <PasswordBox x:Name="OBSStudioPasswordTextBox" Grid.Column="2" Width="130" VerticalAlignment="Center" />
                 </Grid>
             </Grid>

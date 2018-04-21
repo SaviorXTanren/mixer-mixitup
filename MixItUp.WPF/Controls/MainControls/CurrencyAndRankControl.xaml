@@ -34,7 +34,7 @@
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Currencies</TextBlock>
 
-            <Border BorderBrush="{StaticResource PrimaryColor}" Grid.Row="2" BorderThickness="1">
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
                 <DataGrid x:Name="CurrenciesDataGrid" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
@@ -101,7 +101,7 @@
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Rank Systems</TextBlock>
 
-            <Border BorderBrush="{StaticResource PrimaryColor}" Grid.Row="2" BorderThickness="1">
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
                 <DataGrid x:Name="RanksDataGrid" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />

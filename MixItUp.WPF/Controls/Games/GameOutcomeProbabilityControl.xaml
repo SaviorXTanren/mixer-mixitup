@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Games"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
-    <Border BorderBrush="{StaticResource PrimaryColor}" BorderThickness="1">
+    <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1">
         <Grid Margin="10" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50" />

@@ -25,7 +25,7 @@
         </ResourceDictionary>
     </MainControls:MainControlBase.Resources>
 
-    <Border BorderBrush="{StaticResource PrimaryColor}" BorderThickness="1">
+    <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1">
         <Grid Margin="10" HorizontalAlignment="Center" Width="230">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

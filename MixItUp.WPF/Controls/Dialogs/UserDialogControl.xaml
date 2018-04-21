@@ -129,8 +129,8 @@
                     <system:String>Timeout1</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="Timer" Foreground="{StaticResource PrimaryColor}" />
-                    <TextBlock Foreground="{StaticResource PrimaryColor}">1</TextBlock>
+                    <MaterialDesign:PackIcon Kind="Timer" Foreground="{StaticResource PrimaryHueMidBrush}" />
+                    <TextBlock Foreground="{StaticResource PrimaryHueMidBrush}">1</TextBlock>
                 </StackPanel>
             </Button>
 
@@ -139,8 +139,8 @@
                     <system:String>Timeout5</system:String>
                 </Button.CommandParameter>
                 <StackPanel Orientation="Horizontal">
-                    <MaterialDesign:PackIcon Kind="Timer" Foreground="{StaticResource PrimaryColor}" />
-                    <TextBlock Foreground="{StaticResource PrimaryColor}">5</TextBlock>
+                    <MaterialDesign:PackIcon Kind="Timer" Foreground="{StaticResource PrimaryHueMidBrush}" />
+                    <TextBlock Foreground="{StaticResource PrimaryHueMidBrush}">5</TextBlock>
                 </StackPanel>
             </Button>
 

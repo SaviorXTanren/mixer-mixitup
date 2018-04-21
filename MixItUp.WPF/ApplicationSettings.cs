@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base.Util;
+using Newtonsoft.Json;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace MixItUp.WPF
 {
@@ -22,14 +22,24 @@ namespace MixItUp.WPF
             return new ApplicationSettings();
         }
 
+        [JsonIgnore]
+        public bool SettingsChangeRestartRequired { get; set; }
+
         [DataMember]
-        public bool DarkTheme { get; set; }
+        public string ThemeName { get; set; }
+        [JsonIgnore]
+        public bool IsDarkColoring { get { return App.AppSettings.ThemeName.Equals("Dark"); } }
+
+        [DataMember]
+        public string ColorScheme { get; set; }
+
         [DataMember]
         public string Language { get; set; }
 
         public ApplicationSettings()
         {
-            this.DarkTheme = false;
+            this.ThemeName = "Light";
+            this.ColorScheme = "Indigo";
             this.Language = "en";
         }
 
