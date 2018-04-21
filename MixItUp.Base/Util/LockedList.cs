@@ -48,9 +48,13 @@ namespace MixItUp.Base.Util
 
         public T PickRandom()
         {
-            Random random = new Random();
-            int index = random.Next(this.Count);
-            return this[index];
+            if (this.Count > 0)
+            {
+                Random random = new Random();
+                int index = random.Next(this.Count);
+                return this[index];
+            }
+            return default(T);
         }
     }
 }

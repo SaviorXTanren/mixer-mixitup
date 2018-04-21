@@ -256,12 +256,17 @@ namespace MixItUp.Base.MixerAPI
             {
                 user = new UserViewModel(userModel);
             }
+            else
+            {
+                user = new UserViewModel(0, donation.Username);
+            }
 
             EventCommand command = this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.Donation));
             if (command != null)
             {
                 command.AddSpecialIdentifier("donationamount", donation.AmountText);
                 command.AddSpecialIdentifier("donationmessage", donation.Message);
+                command.AddSpecialIdentifier("donationimage", donation.ImageLink);
                 await this.RunEventCommand(command, user);
             }
         }

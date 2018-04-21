@@ -50,6 +50,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public OAuthTokenModel GameWispOAuthToken { get; set; }
         [JsonProperty]
+        public OAuthTokenModel GawkBoxOAuthToken { get; set; }
+        [JsonProperty]
         public OAuthTokenModel TwitterOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel SpotifyOAuthToken { get; set; }
@@ -375,6 +377,10 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.GameWisp != null)
             {
                 this.GameWispOAuthToken = ChannelSession.Services.GameWisp.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.GawkBox != null)
+            {
+                this.GawkBoxOAuthToken = ChannelSession.Services.GawkBox.GetOAuthTokenCopy();
             }
             if (ChannelSession.Services.Twitter != null)
             {
