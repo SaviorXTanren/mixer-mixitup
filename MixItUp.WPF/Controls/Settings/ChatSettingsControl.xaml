@@ -20,6 +20,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Font Size:</TextBlock>
@@ -34,5 +40,12 @@
         <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show Interactive Alerts:</TextBlock>
         <ToggleButton Grid.Row="6" Grid.Column="2" x:Name="ShowInteractiveAlertsToggleButton" Checked="ShowInteractiveAlertsToggleButton_Checked" Unchecked="ShowInteractiveAlertsToggleButton_Checked" />
 
+        <Separator Grid.Row="8" Grid.ColumnSpan="2" Margin="10" />
+
+        <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Allow commands to be whispered:</TextBlock>
+        <ToggleButton Grid.Row="10" Grid.Column="2" x:Name="AllowCommandWhisperingToggleButton" Checked="AllowCommandWhisperingToggleButton_Checked" Unchecked="AllowCommandWhisperingToggleButton_Checked" />
+
+        <TextBlock Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Ignore your Bot account for commands:</TextBlock>
+        <ToggleButton Grid.Row="12" Grid.Column="2" x:Name="IgnoreBotAccountCommandsToggleButton" Checked="IgnoreBotAccountCommandsToggleButton_Checked" Unchecked="IgnoreBotAccountCommandsToggleButton_Checked" />
     </Grid>
 </MainControls:MainControlBase>

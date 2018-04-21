@@ -65,6 +65,11 @@ namespace MixItUp.Desktop
         public bool FeatureMe { get; set; }
 
         [JsonProperty]
+        public bool AllowCommandWhispering { get; set; }
+        [JsonProperty]
+        public bool IgnoreBotAccountCommands { get; set; }
+
+        [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
         public RequirementViewModel GameQueueRequirements { get; set; }

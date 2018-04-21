@@ -36,6 +36,9 @@ namespace MixItUp.Base
 
         bool FeatureMe { get; set; }
 
+        bool AllowCommandWhispering { get; set; }
+        bool IgnoreBotAccountCommands { get; set; }
+
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }
 

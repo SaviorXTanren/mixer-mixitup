@@ -394,6 +394,16 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task CheckMessageForCommandAndRun(ChatMessageViewModel message)
         {
+            if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
+            {
+                return;
+            }
+
+            if (ChannelSession.Settings.IgnoreBotAccountCommands && message.User != null && message.User.ID.Equals(ChannelSession.BotUser.id))
+            {
+                return;
+            }
+
             if (ChannelSession.IsStreamer && !message.User.Roles.Contains(UserRole.Banned))
             {
                 GlobalEvents.ChatCommandMessageReceived(message);

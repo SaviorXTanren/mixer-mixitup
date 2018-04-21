@@ -28,6 +28,8 @@ namespace MixItUp.WPF.Controls.Settings
             this.ShowUserJoinLeaveToggleButton.IsChecked = ChannelSession.Settings.ChatShowUserJoinLeave;
             this.ShowEventAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowEventAlerts;
             this.ShowInteractiveAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowInteractiveAlerts;
+            this.AllowCommandWhisperingToggleButton.IsChecked = ChannelSession.Settings.AllowCommandWhispering;
+            this.IgnoreBotAccountCommandsToggleButton.IsChecked = ChannelSession.Settings.IgnoreBotAccountCommands;
 
             await base.InitializeInternal();
         }
@@ -60,6 +62,16 @@ namespace MixItUp.WPF.Controls.Settings
         private void ShowInteractiveAlertsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.ChatShowInteractiveAlerts = this.ShowInteractiveAlertsToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void AllowCommandWhisperingToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.AllowCommandWhispering = this.AllowCommandWhisperingToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void IgnoreBotAccountCommandsToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.IgnoreBotAccountCommands = this.IgnoreBotAccountCommandsToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }
