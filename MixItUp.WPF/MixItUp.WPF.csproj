@@ -456,8 +456,8 @@
     <Compile Include="Controls\Services\XSplitServiceControl.xaml.cs">
       <DependentUpon>XSplitServiceControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
-      <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Settings\AdvancedSettingsControl.xaml.cs">
+      <DependentUpon>AdvancedSettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Settings\MainSettingsControl.xaml.cs">
       <DependentUpon>MainSettingsControl.xaml</DependentUpon>
@@ -869,7 +869,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Settings\GeneralSettingsControl.xaml">
+    <Page Include="Controls\Settings\AdvancedSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

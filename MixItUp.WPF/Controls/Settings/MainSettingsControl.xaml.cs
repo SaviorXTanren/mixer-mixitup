@@ -35,8 +35,8 @@ namespace MixItUp.WPF.Controls.Settings
         {
             this.settingsGroups.Clear();
 
-            this.settingsGroups.Add(new SettingsOption("General", new GeneralSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Theme", new ThemeSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption("Themes & Colors", new ThemeSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption("Advanced", new AdvancedSettingsControl()));
 
             foreach (SettingsOption settings in this.settingsGroups)
             {

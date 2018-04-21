@@ -11,32 +11,31 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Settings
 {
     /// <summary>
-    /// Interaction logic for GeneralSettingsControl.xaml
+    /// Interaction logic for AdvancedSettingsControl.xaml
     /// </summary>
-    public partial class GeneralSettingsControl : MainControlBase
+    public partial class AdvancedSettingsControl : MainControlBase
     {
-        public GeneralSettingsControl()
+        public AdvancedSettingsControl()
         {
             InitializeComponent();
-
-            if (ChannelSession.Settings.DiagnosticLogging)
-            {
-                //this.DisableDiagnosticLogsButton.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                //this.EnableDiagnosticLogsButton.Visibility = Visibility.Visible;
-            }
         }
 
         protected override async Task InitializeInternal()
         {
+            this.DisableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Visible : Visibility.Collapsed;
+            this.EnableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Collapsed : Visibility.Visible;
+
             await base.InitializeInternal();
         }
 
         protected override async Task OnVisibilityChanged()
         {
             await this.InitializeInternal();
+        }
+
+        private void InstallationDirectoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
         }
 
         private async void BackupSettingsButton_Click(object sender, RoutedEventArgs e)
@@ -85,11 +84,6 @@ namespace MixItUp.WPF.Controls.Settings
                 MainWindow mainWindow = (MainWindow)this.Window;
                 mainWindow.ReRunWizard();
             }
-        }
-
-        private void InstallationDirectoryButton_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location));
         }
 
         private async void EnableDiagnosticLogsButton_Click(object sender, RoutedEventArgs e)

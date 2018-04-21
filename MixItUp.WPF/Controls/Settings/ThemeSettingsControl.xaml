@@ -7,7 +7,7 @@
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Margin="30,0">
+    <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="*" />
@@ -43,7 +43,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Theme Name:</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Theme Type:</TextBlock>
         <ComboBox x:Name="ThemeNameComboBox" Grid.Row="2" Grid.Column="2" Style="{StaticResource BackgroundComboBox}" SelectionChanged="ThemeNameComboBox_SelectionChanged" />
 
     </Grid>
