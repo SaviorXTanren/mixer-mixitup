@@ -12,8 +12,8 @@ namespace MixItUp.WPF.Controls.Command
             "Mix It Up has build in Command locking functionality which ensures only" + Environment.NewLine +
             "1 command type (Chat, Interactive, etc) can run at the same time and" + Environment.NewLine +
             "ensures that each command finishes in the order it was run in." + Environment.NewLine + Environment.NewLine +
-            "This option will allow you to disable locking on this command, but be aware" + Environment.NewLine +
-            "that this could cause some unforeseen issues so please use with caution.";
+            "This option will allow you to disable locking on this command. Be aware" + Environment.NewLine +
+            "that this could cause some unforeseen issues, so please use with caution.";
 
         public UnlockedCommandControl()
         {
