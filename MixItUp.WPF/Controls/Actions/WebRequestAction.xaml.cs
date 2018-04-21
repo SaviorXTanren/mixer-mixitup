@@ -56,26 +56,26 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (!string.IsNullOrEmpty(this.ChatResponseTextBox.Text))
                     {
-                        return new WebRequestAction(this.WebRequestURLTextBox.Text, this.ChatResponseTextBox.Text);
+                        return WebRequestAction.CreateForChat(this.WebRequestURLTextBox.Text, this.ChatResponseTextBox.Text);
                     }
                 }
                 else if (responseType == WebRequestResponseActionTypeEnum.Command)
                 {
                     if (this.CommandResponseComboBox.SelectedIndex >= 0)
                     {
-                        return new WebRequestAction(this.WebRequestURLTextBox.Text, (CommandBase)this.CommandResponseComboBox.SelectedItem, this.CommandResponseArgumentsTextBox.Text);
+                        return WebRequestAction.CreateForCommand(this.WebRequestURLTextBox.Text, (CommandBase)this.CommandResponseComboBox.SelectedItem, this.CommandResponseArgumentsTextBox.Text);
                     }
                 }
                 else if (responseType == WebRequestResponseActionTypeEnum.SpecialIdentifier)
                 {
                     if (!string.IsNullOrEmpty(this.SpecialIdentifierResponseTextBox.Text) && this.SpecialIdentifierResponseTextBox.Text.All(c => Char.IsLetterOrDigit(c)))
                     {
-                        return new WebRequestAction(this.WebRequestURLTextBox.Text, WebRequestResponseActionTypeEnum.SpecialIdentifier) { SpecialIdentifierName = this.SpecialIdentifierResponseTextBox.Text };
+                        return WebRequestAction.CreateForSpecialIdentifier(this.WebRequestURLTextBox.Text, this.SpecialIdentifierResponseTextBox.Text);
                     }
                 }
                 else
                 {
-                    return new WebRequestAction(this.WebRequestURLTextBox.Text);
+                    return new WebRequestAction(this.WebRequestURLTextBox.Text, WebRequestResponseActionTypeEnum.None);
                 }
             }
             return null;

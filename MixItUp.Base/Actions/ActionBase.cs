@@ -43,7 +43,8 @@ namespace MixItUp.Base.Actions
         SongRequest,
         Spotify,
         Discord,
-        //Translation,
+        Translation,
+        Twitter,
 
         Custom = 99,
     }

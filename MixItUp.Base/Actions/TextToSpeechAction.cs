@@ -118,14 +118,11 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Chat != null)
+            if (ChannelSession.Services.OverlayServer != null)
             {
                 string message = await this.ReplaceStringWithSpecialModifiers(this.SpeechText, user, arguments);
-                if (ChannelSession.Services.OverlayServer != null)
-                {
-                    await ChannelSession.Services.OverlayServer.SendTextToSpeech(new OverlayTextToSpeech()
-                        { text = this.SpeechText, voice = this.Voice, volume = this.Volume, pitch = this.Pitch, rate = this.Rate });
-                }
+                await ChannelSession.Services.OverlayServer.SendTextToSpeech(new OverlayTextToSpeech()
+                    { text = message, voice = this.Voice, volume = this.Volume, pitch = this.Pitch, rate = this.Rate });
             }
         }
     }

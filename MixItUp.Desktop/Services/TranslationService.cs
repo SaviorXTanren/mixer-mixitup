@@ -11,14 +11,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using System.Xml;
 
 namespace MixItUp.Desktop.Services
 {
-    public class TranslationService : RestServiceBase, ITranslationService
+    public class BingTranslationService : RestServiceBase, ITranslationService
     {
         private const int ExpirationLength = 300000;
 
@@ -101,5 +99,23 @@ namespace MixItUp.Desktop.Services
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
             return client;
         }
+    }
+
+    public class TranslationService : ITranslationService
+    {
+        private ITranslationService currentTranslationService;
+
+        private BingTranslationService bingTranslation = new BingTranslationService();
+
+        public TranslationService()
+        {
+            this.currentTranslationService = this.bingTranslation;
+        }
+
+        public async Task<IEnumerable<CultureInfo>> GetAvailableLanguages() { return await this.currentTranslationService.GetAvailableLanguages(); }
+
+        public async Task SetAccessToken() { await this.currentTranslationService.SetAccessToken(); }
+
+        public async Task<string> Translate(CultureInfo language, string text, bool allowProfanity = true) { return await this.currentTranslationService.Translate(language, text, allowProfanity); }
     }
 }

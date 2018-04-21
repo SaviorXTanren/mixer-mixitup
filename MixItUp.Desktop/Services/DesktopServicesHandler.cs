@@ -23,6 +23,7 @@ namespace MixItUp.Desktop.Services
             this.InitializeInputService();
             this.InitializeTextToSpeechService();
             this.InitializeSongRequestService();
+            this.InitializeTranslationService();
         }
 
         public override async Task Close()

@@ -112,16 +112,14 @@ namespace MixItUp.Desktop.Services
             {
                 if (!string.IsNullOrEmpty(packetJSON))
                 {
-                    string packet = packetJSON.Substring(0, packetJSON.IndexOf('\0'));
-
-                    dynamic jsonObject = JsonConvert.DeserializeObject(packet);
+                    dynamic jsonObject = JsonConvert.DeserializeObject(packetJSON);
                     if (jsonObject["Type"] != null)
                     {
                         MessageType type = (MessageType)((int)jsonObject["Type"]);
                         switch (type)
                         {
                             case MessageType.HEARTBEAT:
-                                await ReceiveHeartbeat(packet);
+                                await ReceiveHeartbeat(packetJSON);
                                 break;
 
                             case MessageType.DISCONNECT_REQ:
@@ -131,33 +129,33 @@ namespace MixItUp.Desktop.Services
                                 break;
 
                             case MessageType.SESSION_NEW:   //Host Receive -> Server Send
-                                NewSessionRemoteMessage newSessionPacket = JsonConvert.DeserializeObject<NewSessionRemoteMessage>(packet);
+                                NewSessionRemoteMessage newSessionPacket = JsonConvert.DeserializeObject<NewSessionRemoteMessage>(packetJSON);
                                 this.SessionID = newSessionPacket.SessionID;
                                 this.AccessCode = newSessionPacket.AccessCode;
                                 this.AccessCodeExpiration = newSessionPacket.Expiration;
                                 break;
 
                             case MessageType.ACCESS_CODE_NEW:   //Host Receive -> Server Send
-                                AccessCodeNewRemoteMessage newRemotePacket = JsonConvert.DeserializeObject<AccessCodeNewRemoteMessage>(packet);
+                                AccessCodeNewRemoteMessage newRemotePacket = JsonConvert.DeserializeObject<AccessCodeNewRemoteMessage>(packetJSON);
                                 this.AccessCode = newRemotePacket.AccessCode;
                                 this.AccessCodeExpiration = newRemotePacket.Expiration;
-                                this.SendEvent(packet, this.OnNewAccessCode);
+                                this.SendEvent(packetJSON, this.OnNewAccessCode);
                                 break;
 
                             case MessageType.AUTH_REQ:
-                                AuthRequestRemoteMessage authRequestPacket = JsonConvert.DeserializeObject<AuthRequestRemoteMessage>(packet);
+                                AuthRequestRemoteMessage authRequestPacket = JsonConvert.DeserializeObject<AuthRequestRemoteMessage>(packetJSON);
                                 if (ChannelSession.Settings.RemoteSavedDevices.Any(d => d.ID.Equals(authRequestPacket.ClientID)))
                                 {
                                     await this.SendAuthClientGrant(authRequestPacket);
                                 }
                                 else
                                 {
-                                    this.SendEvent(packet, this.OnAuthRequest);
+                                    this.SendEvent(packetJSON, this.OnAuthRequest);
                                 }
                                 break;
 
                             case MessageType.BOARD_REQ:
-                                BoardRequestRemoteMessage boardRequestPacket = JsonConvert.DeserializeObject<BoardRequestRemoteMessage>(packet);
+                                BoardRequestRemoteMessage boardRequestPacket = JsonConvert.DeserializeObject<BoardRequestRemoteMessage>(packetJSON);
                                 RemoteBoardModel board = ChannelSession.Settings.RemoteBoards.FirstOrDefault(b => b.ID.Equals(boardRequestPacket.BoardID));
                                 if (board != null)
                                 {
@@ -170,7 +168,7 @@ namespace MixItUp.Desktop.Services
                                 break;
 
                             case MessageType.ACTION_REQ:
-                                ActionRequestRemoteMessage actionRequestPacket = JsonConvert.DeserializeObject<ActionRequestRemoteMessage>(packet);
+                                ActionRequestRemoteMessage actionRequestPacket = JsonConvert.DeserializeObject<ActionRequestRemoteMessage>(packetJSON);
                                 RemoteCommand command = ChannelSession.Settings.RemoteCommands.FirstOrDefault(c => c.ID.Equals(actionRequestPacket.ItemID));
                                 if (command != null)
                                 {
