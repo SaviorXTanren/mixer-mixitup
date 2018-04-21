@@ -50,8 +50,6 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
                         <Button x:Name="PopOutChatButton" Grid.Row="0" Visibility="Visible" HorizontalAlignment="Center" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="PopOutChatButton_Click">
@@ -72,62 +70,6 @@
 
                         <Button x:Name="DisableChatButton" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="DisableChatButton_Click">Disable Chat</Button>
                         <Button x:Name="EnableChatButton" Grid.Column="4" Width="115" Margin="-6" Style="{StaticResource MaterialDesignRaisedLightButton}" Click="EnableChatButton_Click" Visibility="Collapsed">Enable Chat</Button>
-
-                        <MaterialDesign:PopupBox Grid.Column="6" VerticalAlignment="Center" ToggleContent="{StaticResource ChatSettingsPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
-                            <Grid Margin="20">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="30" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="20" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="20" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                
-                                <ComboBox x:Name="FontSizeComboBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Font Size" Style="{StaticResource BackgroundComboBox}" Width="120" HorizontalAlignment="Center" SelectionChanged="FontSizeComboBox_SelectionChanged" />
-
-                                <Grid Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0">Show User Join/Leave:</TextBlock>
-
-                                    <ToggleButton Grid.Column="2" x:Name="ShowUserJoinLeaveToggleButton" Checked="ShowUserJoinLeaveToggleButton_Checked" Unchecked="ShowUserJoinLeaveToggleButton_Checked" />
-
-                                </Grid>
-
-                                <Grid Grid.Row="4">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0">Show Event Alerts:</TextBlock>
-
-                                    <ToggleButton Grid.Column="2" x:Name="ShowEventAlertsToggleButton" Checked="ShowEventAlertsToggleButton_Checked" Unchecked="ShowEventAlertsToggleButton_Checked" />
-
-                                </Grid>
-
-                                <Grid Grid.Row="6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0">Show Interactive Alerts:</TextBlock>
-
-                                    <ToggleButton Grid.Column="2" x:Name="ShowInteractiveAlertsToggleButton" Checked="ShowInteractiveAlertsToggleButton_Checked" Unchecked="ShowInteractiveAlertsToggleButton_Checked" />
-
-                                </Grid>
-
-                            </Grid>
-                        </MaterialDesign:PopupBox>
 
                     </Grid>
 

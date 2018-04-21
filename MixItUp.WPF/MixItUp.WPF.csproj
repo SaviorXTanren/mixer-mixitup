@@ -459,6 +459,12 @@
     <Compile Include="Controls\Settings\AdvancedSettingsControl.xaml.cs">
       <DependentUpon>AdvancedSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\ChatSettingsControl.xaml.cs">
+      <DependentUpon>ChatSettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
+      <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\MainSettingsControl.xaml.cs">
       <DependentUpon>MainSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -870,6 +876,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\AdvancedSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\ChatSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\GeneralSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -39,8 +39,6 @@ namespace MixItUp.WPF.Controls.MainControls
         private ScrollViewer chatListScrollViewer;
         private bool lockChatList = true;
 
-        private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 20 }, { "XX-Large", 24 }, };
-
         public ChatControl(bool isPopOut = false)
         {
             InitializeComponent();
@@ -69,19 +67,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
             ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 
-            if (ChannelSession.Settings.ChatFontSize == 0)
-            {
-                ChannelSession.Settings.ChatFontSize = this.fontSizes["Normal"];
-            }
-
             this.ChatList.ItemsSource = this.MessageControls;
             this.UserList.ItemsSource = this.UserControls;
-
-            this.FontSizeComboBox.ItemsSource = this.fontSizes.Keys;
-            this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
-            this.ShowUserJoinLeaveToggleButton.IsChecked = ChannelSession.Settings.ChatShowUserJoinLeave;
-            this.ShowEventAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowEventAlerts;
-            this.ShowInteractiveAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowInteractiveAlerts;
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -239,34 +226,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.EnableChatButton.Visibility = Visibility.Collapsed;
         }
 
-        private void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.FontSizeComboBox.SelectedIndex >= 0)
-            {
-                string name = (string)this.FontSizeComboBox.SelectedItem;
-                ChannelSession.Settings.ChatFontSize = this.fontSizes[name];
-                GlobalEvents.ChatFontSizeChanged();
-            }
-        }
-
-        private void ShowUserJoinLeaveToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.ChatShowUserJoinLeave = this.ShowUserJoinLeaveToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void ShowEventAlertsToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.ChatShowEventAlerts = this.ShowEventAlertsToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void ShowInteractiveAlertsToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.ChatShowInteractiveAlerts = this.ShowInteractiveAlertsToggleButton.IsChecked.GetValueOrDefault();
-        }
-
         private void GlobalEvents_OnChatFontSizeChanged(object sender, EventArgs e)
         {
-            this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
             foreach (ChatMessageControl control in this.MessageControls)
             {
                 control.UpdateSizing();
