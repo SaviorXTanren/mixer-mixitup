@@ -109,7 +109,7 @@ namespace MixItUp.WPF.Controls.Command
 
                 RequirementViewModel requirements = this.Requirements.GetRequirements();
 
-                if (this.command == null)
+                if (this.command == null || !ChannelSession.Settings.ChatCommands.Contains(this.command))
                 {
                     this.command = new ChatCommand(this.NameTextBox.Text, commands, requirements);
                     ChannelSession.Settings.ChatCommands.Add(this.command);
