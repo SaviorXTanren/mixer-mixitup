@@ -1,8 +1,11 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -136,6 +139,22 @@ namespace MixItUp.WPF.Controls.Actions
         public void OnWindowSizeChanged(Size size)
         {
             this.GroupBox.MaxWidth = size.Width - 38;
+        }
+
+        private async void PlayActionButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                ActionBase action = this.GetAction();
+                if (action != null)
+                {
+                    await action.Perform(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
+                }
+                else
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Required action information is missing");
+                }
+            });
         }
 
         private void MoveUpActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.MoveActionUp(this); }
