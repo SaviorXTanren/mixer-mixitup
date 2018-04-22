@@ -65,6 +65,8 @@ namespace MixItUp.Desktop
         public bool FeatureMe { get; set; }
 
         [JsonProperty]
+        public bool LatestChatAtTop { get; set; }
+        [JsonProperty]
         public bool AllowCommandWhispering { get; set; }
         [JsonProperty]
         public bool IgnoreBotAccountCommands { get; set; }

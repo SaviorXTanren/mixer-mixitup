@@ -150,12 +150,26 @@ namespace MixItUp.WPF.Controls.MainControls
             await messageUpdateLock.WaitAsync();
 
             ChatMessageControl messageControl = new ChatMessageControl(message);
-            this.MessageControls.Add(messageControl);
+            if (ChannelSession.Settings.LatestChatAtTop)
+            {
+                this.MessageControls.Insert(0, messageControl);
+            }
+            else
+            {
+                this.MessageControls.Add(messageControl);
+            }
             this.totalMessages++;
 
             while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
             {
-                this.MessageControls.RemoveAt(0);
+                if (ChannelSession.Settings.LatestChatAtTop)
+                {
+                    this.MessageControls.RemoveAt(this.MessageControls.Count - 1);
+                }
+                else
+                {
+                    this.MessageControls.RemoveAt(0);
+                }
             }
 
             messageUpdateLock.Release();
@@ -243,7 +257,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (this.lockChatList && this.chatListScrollViewer != null)
             {
-                this.chatListScrollViewer.ScrollToBottom();
+                if (ChannelSession.Settings.LatestChatAtTop)
+                {
+                    this.chatListScrollViewer.ScrollToTop();
+                }
+                else
+                {
+                    this.chatListScrollViewer.ScrollToBottom();
+                }
             }
         }
 
@@ -264,7 +285,14 @@ namespace MixItUp.WPF.Controls.MainControls
             this.ChatLockButtonIcon.Kind = (this.lockChatList) ? MaterialDesignThemes.Wpf.PackIconKind.LockOutline : MaterialDesignThemes.Wpf.PackIconKind.LockOpenOutline;
             if (this.lockChatList)
             {
-                this.chatListScrollViewer.ScrollToBottom();
+                if (ChannelSession.Settings.LatestChatAtTop)
+                {
+                    this.chatListScrollViewer.ScrollToTop();
+                }
+                else
+                {
+                    this.chatListScrollViewer.ScrollToBottom();
+                }
             }
         }
 
