@@ -10,6 +10,7 @@ using MixItUp.WPF.Properties;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -36,6 +37,8 @@ namespace MixItUp.WPF
     /// </summary>
     public partial class LoginWindow : LoadingWindowBase
     {
+        private static readonly Version minimumOSVersion = new Version(6, 2, 0, 0);
+
         public LoginWindow()
         {
             InitializeComponent();
@@ -48,6 +51,13 @@ namespace MixItUp.WPF
             GlobalEvents.OnShowMessageBox += GlobalEvents_OnShowMessageBox;
 
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+            if (Environment.OSVersion.Version < minimumOSVersion)
+            {
+                await MessageBoxHelper.ShowMessageDialog("Thank you for using Mix It Up, but unfortunately we only support Windows 8 & higher. If you are running Windows 8 or higher and see this message, please contact Mix It Up support for assistance.");
+                this.Close();
+                return;
+            }
 
             List<IChannelSettings> settings = new List<IChannelSettings>(await ChannelSession.Services.Settings.GetAllSettings());
             settings = settings.Where(s => s.IsStreamer).ToList();
