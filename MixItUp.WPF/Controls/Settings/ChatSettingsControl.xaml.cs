@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Controls.Settings
             ChannelSession.Settings.ChatShowInteractiveAlerts = this.ShowInteractiveAlertsToggleButton.IsChecked.GetValueOrDefault();
         }
 
-        private async void LatestChatAtTopToggleButton_Checked(object sender, RoutedEventArgs e)
+        private void LatestChatAtTopToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.LatestChatAtTop = this.LatestChatAtTopToggleButton.IsChecked.GetValueOrDefault();
         }
