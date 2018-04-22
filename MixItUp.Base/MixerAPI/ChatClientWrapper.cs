@@ -477,10 +477,10 @@ namespace MixItUp.Base.MixerAPI
         {
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
-                Dictionary<uint, UserViewModel> users = this.ChatUsers.ToDictionary();
-                if (users.Count > 0)
+                List<UserViewModel> users = this.ChatUsers.Values.ToList();
+                if (users.Count() > 0)
                 {
-                    foreach (UserViewModel user in users.Values)
+                    foreach (UserViewModel user in users)
                     {
                         await user.SetDetails();
                     }
