@@ -6,7 +6,7 @@ using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
-    public class MainControlBase : UserControl
+    public abstract class MainControlBase : UserControl
     {
         public LoadingWindowBase Window { get; private set; }
 

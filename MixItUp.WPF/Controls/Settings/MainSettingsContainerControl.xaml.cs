@@ -18,13 +18,13 @@ namespace MixItUp.WPF.Controls.Settings
     }
 
     /// <summary>
-    /// Interaction logic for MainSettingsControl.xaml
+    /// Interaction logic for MainSettingsContainerControl.xaml
     /// </summary>
-    public partial class MainSettingsControl : MainControlBase
+    public partial class MainSettingsContainerControl : MainControlBase
     {
         private ObservableCollection<SettingsOption> settingsGroups = new ObservableCollection<SettingsOption>();
 
-        public MainSettingsControl()
+        public MainSettingsContainerControl()
         {
             InitializeComponent();
 

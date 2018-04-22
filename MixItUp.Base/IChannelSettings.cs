@@ -84,8 +84,12 @@ namespace MixItUp.Base
 
         int ChatFontSize { get; set; }
         bool ChatShowUserJoinLeave { get; set; }
+        string ChatUserJoinLeaveColorScheme { get; set; }
         bool ChatShowEventAlerts { get; set; }
+        string ChatEventAlertsColorScheme { get; set; }
         bool ChatShowInteractiveAlerts { get; set; }
+        string ChatInteractiveAlertsColorScheme { get; set; }
+
         int MaxMessagesInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }

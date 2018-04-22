@@ -462,12 +462,16 @@
     <Compile Include="Controls\Settings\ChatSettingsControl.xaml.cs">
       <DependentUpon>ChatSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\ColorSchemeComboBox.xaml.cs">
+      <DependentUpon>ColorSchemeComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
       <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Settings\MainSettingsControl.xaml.cs">
-      <DependentUpon>MainSettingsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Settings\MainSettingsContainerControl.xaml.cs">
+      <DependentUpon>MainSettingsContainerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\SettingsControlBase.cs" />
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
     </Compile>
@@ -883,11 +887,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\ColorSchemeComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\GeneralSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Settings\MainSettingsControl.xaml">
+    <Page Include="Controls\Settings\MainSettingsContainerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

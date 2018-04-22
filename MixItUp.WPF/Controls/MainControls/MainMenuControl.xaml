@@ -42,7 +42,7 @@
                 <Grid>
                     <MaterialDesign:DrawerHost BorderBrush="{DynamicResource MaterialDesignDivider}">
                         <MaterialDesign:DrawerHost.RightDrawerContent>
-                            <SettingsControls:MainSettingsControl />
+                            <SettingsControls:MainSettingsContainerControl />
                         </MaterialDesign:DrawerHost.RightDrawerContent>
 
                         <DockPanel>
@@ -99,7 +99,7 @@
                 </MaterialDesign:ColorZone>
             </DockPanel>
 
-            <SettingsControls:MainSettingsControl x:Name="MainSettings" Grid.Row="1" />
+            <SettingsControls:MainSettingsContainerControl x:Name="MainSettings" Grid.Row="1" />
         </Grid>
     </Grid>
 </local:MainControlBase>

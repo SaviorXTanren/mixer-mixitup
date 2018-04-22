@@ -427,7 +427,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 await this.RefreshUserList();
                 if (ChannelSession.Settings.ChatShowUserJoinLeave)
                 {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Joined Chat  ---", user.UserName)));
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Joined Chat  ---", user.UserName), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                 }
             });
         }
@@ -447,7 +447,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 await this.RefreshUserList();
                 if (ChannelSession.Settings.ChatShowUserJoinLeave)
                 {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Left Chat  ---", user.UserName)));
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Left Chat  ---", user.UserName), ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
                 }
             });
         }
@@ -458,7 +458,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Dispatcher.InvokeAsync<Task>(async () =>
                 {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Followed  ---", e.UserName)));
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Followed  ---", e.UserName), ChannelSession.Settings.ChatEventAlertsColorScheme));
                 });
             }
         }
@@ -469,7 +469,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Dispatcher.InvokeAsync<Task>(async () =>
                 {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Unfollowed  ---", e.UserName)));
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Unfollowed  ---", e.UserName), ChannelSession.Settings.ChatEventAlertsColorScheme));
                 });
             }
         }
@@ -480,7 +480,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Dispatcher.InvokeAsync<Task>(async () =>
                 {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Hosted With {1} Viewers  ---", e.Item1.UserName, e.Item2)));
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Hosted With {1} Viewers  ---", e.Item1.UserName, e.Item2), ChannelSession.Settings.ChatEventAlertsColorScheme));
                 });
             }
         }
@@ -491,7 +491,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Dispatcher.InvokeAsync<Task>(async () =>
                 {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Subscribed  ---", e.UserName)));
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Subscribed  ---", e.UserName), ChannelSession.Settings.ChatEventAlertsColorScheme));
                 });
             }
         }
@@ -502,7 +502,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Dispatcher.InvokeAsync<Task>(async () =>
                 {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Re-Subscribed For {1} Months  ---", e.Item1.UserName, e.Item2)));
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Re-Subscribed For {1} Months  ---", e.Item1.UserName, e.Item2), ChannelSession.Settings.ChatEventAlertsColorScheme));
                 });
             }
         }
@@ -513,7 +513,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.Dispatcher.InvokeAsync<Task>(async () =>
                 {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Used The \"{1}\" Interactive Control  ---", e.Item1.UserName, e.Item2.Name)));
+                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Used The \"{1}\" Interactive Control  ---", e.Item1.UserName, e.Item2.Name), ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
                 });
             }
         }

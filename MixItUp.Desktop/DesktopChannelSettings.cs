@@ -6,6 +6,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Services;
+using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
@@ -156,9 +157,16 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool ChatShowUserJoinLeave { get; set; }
         [JsonProperty]
+        public string ChatUserJoinLeaveColorScheme { get; set; }
+        [JsonProperty]
         public bool ChatShowEventAlerts { get; set; }
         [JsonProperty]
+        public string ChatEventAlertsColorScheme { get; set; }
+        [JsonProperty]
         public bool ChatShowInteractiveAlerts { get; set; }
+        [JsonProperty]
+        public string ChatInteractiveAlertsColorScheme { get; set; }
+
         [JsonProperty]
         public int MaxMessagesInChat { get; set; }
 
@@ -308,6 +316,7 @@ namespace MixItUp.Desktop
 
             this.MaxMessagesInChat = 100;
             this.ChatFontSize = 13;
+            this.ChatUserJoinLeaveColorScheme = this.ChatEventAlertsColorScheme = this.ChatInteractiveAlertsColorScheme = ColorSchemes.DefaultColorScheme;
 
             this.ModerationFilteredWordsExcempt = UserRole.Mod;
             this.ModerationChatTextExcempt = UserRole.Mod;

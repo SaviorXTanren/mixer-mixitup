@@ -1,6 +1,5 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Util;
-using MixItUp.WPF.Controls.MainControls;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +11,7 @@ namespace MixItUp.WPF.Controls.Settings
     /// <summary>
     /// Interaction logic for ChatSettingsControl.xaml
     /// </summary>
-    public partial class ChatSettingsControl : MainControlBase
+    public partial class ChatSettingsControl : SettingsControlBase
     {
         private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 20 }, { "XX-Large", 24 }, };
 
@@ -23,11 +22,24 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
+            this.UserJoinLeaveColorSchemeComboBox.AddDefaultOption();
+            this.UserJoinLeaveColorSchemeComboBox.SelectionChanged += UserJoinLeaveColorSchemeComboBox_SelectionChanged;
+            this.EventAlertsColorSchemeComboBox.AddDefaultOption();
+            this.EventAlertsColorSchemeComboBox.SelectionChanged += EventAlertsColorSchemeComboBox_SelectionChanged;
+            this.InteractiveAlertsColorSchemeComboBox.AddDefaultOption();
+            this.InteractiveAlertsColorSchemeComboBox.SelectionChanged += InteractiveAlertsColorSchemeComboBox_SelectionChanged;
+
             this.FontSizeComboBox.ItemsSource = this.fontSizes.Keys;
+
             this.FontSizeComboBox.SelectedItem = this.fontSizes.FirstOrDefault(f => f.Value == ChannelSession.Settings.ChatFontSize).Key;
+
             this.ShowUserJoinLeaveToggleButton.IsChecked = ChannelSession.Settings.ChatShowUserJoinLeave;
+            this.UserJoinLeaveColorSchemeComboBox.SelectedItem = this.UserJoinLeaveColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
             this.ShowEventAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowEventAlerts;
+            this.EventAlertsColorSchemeComboBox.SelectedItem = this.EventAlertsColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatEventAlertsColorScheme));
             this.ShowInteractiveAlertsToggleButton.IsChecked = ChannelSession.Settings.ChatShowInteractiveAlerts;
+            this.InteractiveAlertsColorSchemeComboBox.SelectedItem = this.InteractiveAlertsColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
+
             this.LatestChatAtTopToggleButton.IsChecked = ChannelSession.Settings.LatestChatAtTop;
             this.AllowCommandWhisperingToggleButton.IsChecked = ChannelSession.Settings.AllowCommandWhispering;
             this.IgnoreBotAccountCommandsToggleButton.IsChecked = ChannelSession.Settings.IgnoreBotAccountCommands;
@@ -54,16 +66,46 @@ namespace MixItUp.WPF.Controls.Settings
         private void ShowUserJoinLeaveToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.ChatShowUserJoinLeave = this.ShowUserJoinLeaveToggleButton.IsChecked.GetValueOrDefault();
+            this.UserJoinLeaveColorSchemeComboBox.IsEnabled = ChannelSession.Settings.ChatShowUserJoinLeave;
+        }
+
+        private void UserJoinLeaveColorSchemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.UserJoinLeaveColorSchemeComboBox.SelectedIndex >= 0)
+            {
+                ColorSchemeOption colorScheme = (ColorSchemeOption)this.UserJoinLeaveColorSchemeComboBox.SelectedItem;
+                ChannelSession.Settings.ChatUserJoinLeaveColorScheme = colorScheme.Name;
+            }
         }
 
         private void ShowEventAlertsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.ChatShowEventAlerts = this.ShowEventAlertsToggleButton.IsChecked.GetValueOrDefault();
+            this.EventAlertsColorSchemeComboBox.IsEnabled = ChannelSession.Settings.ChatShowEventAlerts;
+        }
+
+        private void EventAlertsColorSchemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.EventAlertsColorSchemeComboBox.SelectedIndex >= 0)
+            {
+                ColorSchemeOption colorScheme = (ColorSchemeOption)this.EventAlertsColorSchemeComboBox.SelectedItem;
+                ChannelSession.Settings.ChatEventAlertsColorScheme = colorScheme.Name;
+            }
         }
 
         private void ShowInteractiveAlertsToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.ChatShowInteractiveAlerts = this.ShowInteractiveAlertsToggleButton.IsChecked.GetValueOrDefault();
+            this.InteractiveAlertsColorSchemeComboBox.IsEnabled = ChannelSession.Settings.ChatShowInteractiveAlerts;
+        }
+
+        private void InteractiveAlertsColorSchemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.InteractiveAlertsColorSchemeComboBox.SelectedIndex >= 0)
+            {
+                ColorSchemeOption colorScheme = (ColorSchemeOption)this.InteractiveAlertsColorSchemeComboBox.SelectedItem;
+                ChannelSession.Settings.ChatInteractiveAlertsColorScheme = colorScheme.Name;
+            }
         }
 
         private void LatestChatAtTopToggleButton_Checked(object sender, RoutedEventArgs e)

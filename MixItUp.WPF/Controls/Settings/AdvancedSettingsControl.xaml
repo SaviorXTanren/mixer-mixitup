@@ -1,4 +1,4 @@
-﻿<MainControls:MainControlBase x:Class="MixItUp.WPF.Controls.Settings.AdvancedSettingsControl"
+﻿<local:SettingsControlBase x:Class="MixItUp.WPF.Controls.Settings.AdvancedSettingsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -53,4 +53,4 @@
         <Button x:Name="EnableDiagnosticLogsButton" Grid.Row="14" Grid.Column="2" Content="Enable Diagnostics" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
         <Button x:Name="DisableDiagnosticLogsButton" Grid.Row="14" Grid.Column="2" Content="Disable Diagnostics" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
     </Grid>
-</MainControls:MainControlBase>
+</local:SettingsControlBase>

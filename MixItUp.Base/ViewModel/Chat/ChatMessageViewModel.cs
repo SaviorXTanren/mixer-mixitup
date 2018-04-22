@@ -125,12 +125,13 @@ namespace MixItUp.Base.ViewModel.Chat
             }
         }
 
-        public ChatMessageViewModel(string alertText)
+        public ChatMessageViewModel(string alertText, string foregroundBrush = null)
         {
             this.ID = Guid.Empty;
             this.User = null;
             this.Timestamp = DateTimeOffset.Now;
             this.Message = alertText;
+            this.AlertMessageBrush = foregroundBrush;
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
         }
 
@@ -144,6 +145,8 @@ namespace MixItUp.Base.ViewModel.Chat
         }
 
         public bool IsAlertMessage { get { return this.ID == Guid.Empty; } }
+
+        public string AlertMessageBrush { get; private set; }
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 

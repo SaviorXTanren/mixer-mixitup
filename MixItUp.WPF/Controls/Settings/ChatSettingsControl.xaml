@@ -1,4 +1,4 @@
-﻿<MainControls:MainControlBase x:Class="MixItUp.WPF.Controls.Settings.ChatSettingsControl"
+﻿<local:SettingsControlBase x:Class="MixItUp.WPF.Controls.Settings.ChatSettingsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -36,13 +36,40 @@
         <ComboBox x:Name="FontSizeComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="FontSizeComboBox_SelectionChanged" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show user join/leave:</TextBlock>
-        <ToggleButton Grid.Row="2" Grid.Column="2" x:Name="ShowUserJoinLeaveToggleButton" Checked="ShowUserJoinLeaveToggleButton_Checked" Unchecked="ShowUserJoinLeaveToggleButton_Checked" />
+        <Grid Grid.Row="2" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ToggleButton Grid.Column="0" x:Name="ShowUserJoinLeaveToggleButton" Checked="ShowUserJoinLeaveToggleButton_Checked" Unchecked="ShowUserJoinLeaveToggleButton_Checked" />
+            <local:ColorSchemeComboBox x:Name="UserJoinLeaveColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
+        </Grid>
 
         <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show event alerts:</TextBlock>
-        <ToggleButton Grid.Row="4" Grid.Column="2" x:Name="ShowEventAlertsToggleButton" Checked="ShowEventAlertsToggleButton_Checked" Unchecked="ShowEventAlertsToggleButton_Checked" />
+        <Grid Grid.Row="4" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ToggleButton Grid.Column="0" x:Name="ShowEventAlertsToggleButton" Checked="ShowEventAlertsToggleButton_Checked" Unchecked="ShowEventAlertsToggleButton_Checked" />
+            <local:ColorSchemeComboBox x:Name="EventAlertsColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
+        </Grid>
 
         <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show interactive alerts:</TextBlock>
-        <ToggleButton Grid.Row="6" Grid.Column="2" x:Name="ShowInteractiveAlertsToggleButton" Checked="ShowInteractiveAlertsToggleButton_Checked" Unchecked="ShowInteractiveAlertsToggleButton_Checked" />
+        <Grid Grid.Row="6" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ToggleButton Grid.Column="0" x:Name="ShowInteractiveAlertsToggleButton" Checked="ShowInteractiveAlertsToggleButton_Checked" Unchecked="ShowInteractiveAlertsToggleButton_Checked" />
+            <local:ColorSchemeComboBox x:Name="InteractiveAlertsColorSchemeComboBox" Grid.Column="2" Width="120" IsEnabled="False" />
+        </Grid>
 
         <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show latest chat messages at top instead of bottom:</TextBlock>
         <ToggleButton Grid.Row="8" Grid.Column="2" x:Name="LatestChatAtTopToggleButton" Checked="LatestChatAtTopToggleButton_Checked" Unchecked="LatestChatAtTopToggleButton_Checked" />
@@ -58,4 +85,4 @@
         <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Allow commands only in your channel during a Co-Stream:</TextBlock>
         <ToggleButton Grid.Row="16" Grid.Column="2" x:Name="CommandsOnlyInYourStreamToggleButton" Checked="CommandsOnlyInYourStreamToggleButton_Checked" Unchecked="CommandsOnlyInYourStreamToggleButton_Checked" />
     </Grid>
-</MainControls:MainControlBase>
+</local:SettingsControlBase>

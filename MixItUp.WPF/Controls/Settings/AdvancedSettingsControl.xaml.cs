@@ -15,7 +15,7 @@ namespace MixItUp.WPF.Controls.Settings
     /// <summary>
     /// Interaction logic for AdvancedSettingsControl.xaml
     /// </summary>
-    public partial class AdvancedSettingsControl : MainControlBase
+    public partial class AdvancedSettingsControl : SettingsControlBase
     {
         public static readonly string UnlockedAllTooltip =
             "Mix It Up has build in Command locking functionality which ensures only" + Environment.NewLine +

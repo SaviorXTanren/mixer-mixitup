@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base;
-using MixItUp.WPF.Controls.MainControls;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Settings
@@ -7,7 +6,7 @@ namespace MixItUp.WPF.Controls.Settings
     /// <summary>
     /// Interaction logic for GeneralSettingsControl.xaml
     /// </summary>
-    public partial class GeneralSettingsControl : MainControlBase
+    public partial class GeneralSettingsControl : SettingsControlBase
     {
         public GeneralSettingsControl()
         {

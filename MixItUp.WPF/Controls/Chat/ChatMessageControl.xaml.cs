@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base;
+using MixItUp.Base.Themes;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Properties;
 using System;
@@ -69,7 +70,14 @@ namespace MixItUp.WPF.Controls.Chat
                         if (this.Message.IsAlertMessage)
                         {
                             textBlock.FontWeight = FontWeights.Bold;
-                            textBlock.Foreground = (App.AppSettings.IsDarkColoring) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
+                            if (!string.IsNullOrEmpty(this.Message.AlertMessageBrush) && !this.Message.AlertMessageBrush.Equals(ColorSchemes.DefaultColorScheme))
+                            {
+                                textBlock.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(this.Message.AlertMessageBrush));
+                            }
+                            else
+                            {
+                                textBlock.Foreground = (App.AppSettings.IsDarkColoring) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
+                            }
                         }
                         this.textBlocks.Add(textBlock);
                         this.MessageWrapPanel.Children.Add(textBlock);
