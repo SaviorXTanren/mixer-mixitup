@@ -1,5 +1,7 @@
-﻿using MixItUp.Base.Util;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -7,6 +9,20 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
+    public enum FileActionTypeEnum
+    {
+        [Name("Save To File")]
+        SaveToFile,
+        [Name("Append To File")]
+        AppendToFile,
+        [Name("Read From File")]
+        ReadFromFile,
+        [Name("Read Specific Line From File")]
+        ReadSpecificLineFromFile,
+        [Name("Read Random Line From File")]
+        ReadRandomLineFromFile,
+    }
+
     [DataContract]
     public class FileAction : ActionBase
     {
@@ -15,37 +31,94 @@ namespace MixItUp.Base.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return FileAction.asyncSemaphore; } }
 
         [DataMember]
-        public string FilePath { get; set; }
-
-        [DataMember]
-        public bool SaveToFile { get; set; }
+        public FileActionTypeEnum FileActionType { get; set; }
 
         [DataMember]
         public string TransferText { get; set; }
 
+        [DataMember]
+        public string LineIndexToRead { get; set; }
+
+        [DataMember]
+        public string FilePath { get; set; }
+
+        [DataMember]
+        [Obsolete]
+        public bool SaveToFile { get; set; }
+
         public FileAction() : base(ActionTypeEnum.File) { }
 
-        public FileAction(bool saveToFile, string transferText, string filePath)
+        public FileAction(FileActionTypeEnum fileActionType, string transferText, string filePath)
             : this()
         {
-            this.SaveToFile = saveToFile;
+            this.FileActionType = fileActionType;
             this.TransferText = transferText;
             this.FilePath = filePath;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (this.SaveToFile)
+            if (this.FileActionType == FileActionTypeEnum.SaveToFile || this.FileActionType == FileActionTypeEnum.AppendToFile)
             {
                 SpecialIdentifierStringBuilder stringBuilder = new SpecialIdentifierStringBuilder(this.TransferText);
                 await stringBuilder.ReplaceCommonSpecialModifiers(user, arguments);
-                await ChannelSession.Services.FileService.SaveFile(this.FilePath, stringBuilder.ToString());
+                if (this.FileActionType == FileActionTypeEnum.SaveToFile)
+                {
+                    await ChannelSession.Services.FileService.SaveFile(this.FilePath, stringBuilder.ToString());
+                }
+                else if (this.FileActionType == FileActionTypeEnum.AppendToFile)
+                {
+                    string dataToWrite = stringBuilder.ToString();
+                    if (!string.IsNullOrEmpty(await ChannelSession.Services.FileService.ReadFile(this.FilePath)))
+                    {
+                        dataToWrite = Environment.NewLine + dataToWrite;
+                    }
+                    await ChannelSession.Services.FileService.AppendFile(this.FilePath, dataToWrite);
+                }
             }
             else
             {
                 string data = await ChannelSession.Services.FileService.ReadFile(this.FilePath);
                 if (!string.IsNullOrEmpty(data))
                 {
+                    if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile)
+                    {
+                        List<string> lines = new List<string>(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                        if (lines.Count > 0)
+                        {
+                            if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile)
+                            {
+                                if (!string.IsNullOrEmpty(this.LineIndexToRead))
+                                {
+                                    SpecialIdentifierStringBuilder stringBuilder = new SpecialIdentifierStringBuilder(this.LineIndexToRead);
+                                    await stringBuilder.ReplaceCommonSpecialModifiers(user, arguments);
+                                    string lineToRead = stringBuilder.ToString();
+                                    if (int.TryParse(lineToRead, out int lineIndex))
+                                    {
+                                        lineIndex = lineIndex - 1;
+                                        if (lineIndex >= 0 && lineIndex < lines.Count)
+                                        {
+                                            data = lines[lineIndex];
+                                        }
+                                        else
+                                        {
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Random random = new Random();
+                                int lineIndex = random.Next(lines.Count);
+                                data = lines[lineIndex];
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
                     SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.TransferText, data);
                 }
             }

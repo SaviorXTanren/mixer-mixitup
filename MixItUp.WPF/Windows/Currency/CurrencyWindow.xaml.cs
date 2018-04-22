@@ -1,8 +1,10 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
@@ -478,8 +480,10 @@ namespace MixItUp.WPF.Windows.Currency
                     }
                 }
 
+                bool newCurrencyRank = false;
                 if (this.currency == null)
                 {
+                    newCurrencyRank = true;
                     this.currency = new UserCurrencyViewModel();
                 }
 
@@ -514,6 +518,31 @@ namespace MixItUp.WPF.Windows.Currency
                 }
 
                 await ChannelSession.SaveSettings();
+
+                if (newCurrencyRank)
+                {
+                    string type = (this.currency.IsRank) ? "rank" : "currency";
+                    if (await MessageBoxHelper.ShowConfirmationDialog("Since you just created a new " + type + ", would you like to create a chat command to show a user's " + type + "?"))
+                    {
+                        ChatCommand currencyRankCommand = new ChatCommand(this.currency.Name, this.currency.SpecialIdentifier, new RequirementViewModel(UserRole.User, 5));
+                        string chatText = string.Empty;
+                        if (this.currency.IsRank)
+                        {
+                            chatText = string.Format("@$username is a ${0} with ${1} {2}!", this.currency.UserRankNameSpecialIdentifier, this.currency.UserAmountSpecialIdentifier, this.currency.Name);
+                        }
+                        else
+                        {
+                            chatText = string.Format("@$username has ${0} {1}!", this.currency.UserAmountSpecialIdentifier, this.currency.Name);
+                        }
+                        ChatAction chatAction = new ChatAction(chatText);
+                        currencyRankCommand.Actions.Add(chatAction);
+
+                        CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(currencyRankCommand));
+                        window.Closed += Window_Closed;
+                        window.Show();
+                        window.Focus();
+                    }
+                }
 
                 this.Close();
             });

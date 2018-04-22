@@ -45,16 +45,15 @@
             <TextBox Grid.Row="2" x:Name="SaveToFileTextTextBox" MaterialDesign:HintAssist.Hint="Text To Save" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid x:Name="ReadFromFileGrid" Visibility="Collapsed" Grid.Row="4">
+        <Grid x:Name="ReadFromFileGrid" Visibility="Visible" Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center">(Letters &amp; Numbers Only, no $):</TextBlock>
+            <TextBox Grid.Column="0" x:Name="SpecificLineTextBox" MaterialDesign:HintAssist.Hint="Line # To Read" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" Width="100" Margin="0,0,10,0" />
 
-            <TextBox Grid.Column="2" x:Name="SpecialIdentifierNameTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name To Save To" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="1" x:Name="SpecialIdentifierNameTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name To Save To (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

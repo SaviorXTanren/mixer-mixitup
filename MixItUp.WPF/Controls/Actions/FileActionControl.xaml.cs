@@ -14,14 +14,6 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class FileActionControl : ActionControlBase
     {
-        private enum FileTypeEnum
-        {
-            [Name("Save To File")]
-            SaveToFile,
-            [Name("Read From File")]
-            ReadFromFile,
-        }
-
         private FileAction action;
 
         public FileActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
@@ -30,20 +22,24 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.FileActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<FileTypeEnum>();
+            this.FileActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<FileActionTypeEnum>();
             if (this.action != null)
             {
-                this.FilePathTextBox.Text = this.action.FilePath;
-                if (this.action.SaveToFile)
+                this.FileActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.FileActionType);
+                if (this.action.FileActionType == FileActionTypeEnum.SaveToFile || this.action.FileActionType == FileActionTypeEnum.AppendToFile)
                 {
-                    this.FileActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(FileTypeEnum.SaveToFile);
                     this.SaveToFileTextTextBox.Text = this.action.TransferText;
                 }
-                else
+                else if (this.action.FileActionType == FileActionTypeEnum.ReadFromFile || this.action.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile ||
+                    this.action.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile)
                 {
-                    this.FileActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(FileTypeEnum.ReadFromFile);
                     this.SpecialIdentifierNameTextBox.Text = this.action.TransferText;
+                    if (this.action.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile)
+                    {
+                        this.SpecificLineTextBox.Text = this.action.LineIndexToRead;
+                    }
                 }
+                this.FilePathTextBox.Text = this.action.FilePath;
             }
             return Task.FromResult(0);
         }
@@ -52,19 +48,28 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (!string.IsNullOrEmpty(this.FilePathTextBox.Text))
             {
-                FileTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
-                if (fileType == FileTypeEnum.SaveToFile)
+                FileActionTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileActionTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
+                if (fileType == FileActionTypeEnum.SaveToFile || fileType == FileActionTypeEnum.AppendToFile)
                 {
                     if (!string.IsNullOrEmpty(this.SaveToFileTextTextBox.Text))
                     {
-                        return new FileAction(saveToFile: true, transferText: this.SaveToFileTextTextBox.Text, filePath: this.FilePathTextBox.Text);
+                        return new FileAction(fileType, transferText: this.SaveToFileTextTextBox.Text, filePath: this.FilePathTextBox.Text);
                     }
                 }
-                else if (fileType == FileTypeEnum.ReadFromFile)
+                else if (fileType == FileActionTypeEnum.ReadFromFile || fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.ReadRandomLineFromFile)
                 {
                     if (!string.IsNullOrEmpty(this.SpecialIdentifierNameTextBox.Text) && this.SpecialIdentifierNameTextBox.Text.All(c => Char.IsLetterOrDigit(c)))
                     {
-                        return new FileAction(saveToFile: false, transferText: this.SpecialIdentifierNameTextBox.Text, filePath: this.FilePathTextBox.Text);
+                        FileAction action = new FileAction(fileType, transferText: this.SpecialIdentifierNameTextBox.Text, filePath: this.FilePathTextBox.Text);
+                        if (fileType == FileActionTypeEnum.ReadSpecificLineFromFile)
+                        {
+                            if (string.IsNullOrEmpty(this.SpecificLineTextBox.Text))
+                            {
+                                return null;
+                            }
+                            action.LineIndexToRead = this.SpecificLineTextBox.Text;
+                        }
+                        return action;
                     }
                 }
             }
@@ -78,23 +83,29 @@ namespace MixItUp.WPF.Controls.Actions
                 this.FileGrid.Visibility = Visibility.Visible;
                 this.SaveToFileGrid.Visibility = Visibility.Collapsed;
                 this.ReadFromFileGrid.Visibility = Visibility.Collapsed;
+                this.SpecificLineTextBox.Visibility = Visibility.Collapsed;
 
-                FileTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
-                if (fileType == FileTypeEnum.SaveToFile)
+                FileActionTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileActionTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
+                if (fileType == FileActionTypeEnum.SaveToFile || fileType == FileActionTypeEnum.AppendToFile)
                 {
                     this.SaveToFileGrid.Visibility = Visibility.Visible;
                 }
-                else if (fileType == FileTypeEnum.ReadFromFile)
+                else if (fileType == FileActionTypeEnum.ReadFromFile || fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.ReadRandomLineFromFile)
                 {
                     this.ReadFromFileGrid.Visibility = Visibility.Visible;
+                    if (fileType == FileActionTypeEnum.ReadSpecificLineFromFile)
+                    {
+                        this.SpecificLineTextBox.Visibility = Visibility.Visible;
+                    }
                 }
             }
         }
 
         private void FileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            FileTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
-            string filePath = (fileType == FileTypeEnum.SaveToFile) ? ChannelSession.Services.FileService.ShowSaveFileDialog("") : ChannelSession.Services.FileService.ShowOpenFileDialog();
+            FileActionTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileActionTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
+            string filePath = (fileType == FileActionTypeEnum.SaveToFile || fileType == FileActionTypeEnum.AppendToFile) ?
+                ChannelSession.Services.FileService.ShowSaveFileDialog("") : ChannelSession.Services.FileService.ShowOpenFileDialog();
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.FilePathTextBox.Text = filePath;
