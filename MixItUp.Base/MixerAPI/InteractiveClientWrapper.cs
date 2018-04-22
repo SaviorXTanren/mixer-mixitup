@@ -234,7 +234,7 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
 
-            if (!await this.CreateGroups(groupsToAdd))
+            if (groupsToAdd.Count > 0 && !await this.CreateGroups(groupsToAdd))
             {
                 return false;
             }
