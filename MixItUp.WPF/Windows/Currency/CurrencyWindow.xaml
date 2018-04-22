@@ -69,7 +69,7 @@
 
                         <TextBox Grid.Column="0" x:Name="CurrencyNameTextBox" MaterialDesign:HintAssist.Hint="Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="CurrencyNameTextBox_TextChanged" />
 
-                        <ComboBox Grid.Column="2" x:Name="CurrencyAcquireRateComboBox" Width="150" Style="{StaticResource BackgroundComboBox}" MaterialDesign:HintAssist.Hint="Acquire Rate" SelectionChanged="CurrencyAcquireRateComboBox_SelectionChanged" />
+                        <ComboBox Grid.Column="2" x:Name="CurrencyAcquireRateComboBox" Width="150" MaterialDesign:HintAssist.Hint="Acquire Rate" SelectionChanged="CurrencyAcquireRateComboBox_SelectionChanged" />
 
                         <Grid x:Name="CustomRateGrid" Grid.Column="3" Visibility="Collapsed">
                             <Grid.ColumnDefinitions>
@@ -118,7 +118,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox Grid.Column="0" x:Name="ResetCurrencyComboBox" Width="150" Style="{StaticResource BackgroundComboBox}" MaterialDesign:HintAssist.Hint="Reset Frequency" />
+                        <ComboBox Grid.Column="0" x:Name="ResetCurrencyComboBox" Width="150" MaterialDesign:HintAssist.Hint="Reset Frequency" />
 
                         <Button Grid.Column="2" x:Name="ResetCurrencyManuallyButton" Click="ResetCurrencyManuallyButton_Click">Manual Reset</Button>
                     </Grid>

@@ -28,9 +28,6 @@
                 <MenuItem x:Name="MessageUserInformationMenuItem" Header="User Info" Click="MessageUserInformationMenuItem_Click" />
             </ContextMenu>
 
-            <MaterialDesign:PackIcon Kind="Settings" x:Key="ChatSettingsPopupBoxIcon" x:Shared="False" Margin="4 -4 4 -4" Width="24" Height="24"
-                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
-
         </ResourceDictionary>
     </local:MainControlBase.Resources>
 
@@ -129,7 +126,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ComboBox x:Name="SendChatAsComboBox" Grid.Column="1" MaterialDesign:HintAssist.Hint="Send As" Width="80" Style="{StaticResource BackgroundComboBox}" />
+                        <ComboBox x:Name="SendChatAsComboBox" Grid.Column="1" MaterialDesign:HintAssist.Hint="Send As" Width="80" />
 
                         <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

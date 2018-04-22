@@ -105,7 +105,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox x:Name="BoardNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Board Name" Style="{StaticResource BackgroundComboBox}" DisplayMemberPath="Name" SelectionChanged="BoardNameComboBox_SelectionChanged" Width="200" />
+                <ComboBox x:Name="BoardNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Board Name" DisplayMemberPath="Name" SelectionChanged="BoardNameComboBox_SelectionChanged" Width="200" />
 
                 <Button x:Name="BoardAddButton" Grid.Column="2" Click="BoardAddButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Add Board">
                     <MaterialDesign:PackIcon Kind="Plus" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
@@ -131,7 +131,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox x:Name="GroupNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Group Name" Style="{StaticResource BackgroundComboBox}" DisplayMemberPath="Name" SelectionChanged="GroupNameComboBox_SelectionChanged" Width="200" />
+                <ComboBox x:Name="GroupNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Group Name" DisplayMemberPath="Name" SelectionChanged="GroupNameComboBox_SelectionChanged" Width="200" />
 
                 <Button x:Name="GroupAddButton" Grid.Column="2" Click="GroupAddButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Add Group">
                     <MaterialDesign:PackIcon Kind="Plus" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />

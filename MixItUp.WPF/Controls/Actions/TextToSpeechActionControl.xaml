@@ -32,7 +32,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TextToSpeechVoiceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Voice" Style="{StaticResource BackgroundComboBox}" Width="180" />
+            <ComboBox x:Name="TextToSpeechVoiceComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Voice" Width="180" />
 
             <TextBox x:Name="TextToSpeechVolumeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Volume (0% - 100%)" Width="115" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

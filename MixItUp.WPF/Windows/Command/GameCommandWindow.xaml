@@ -59,7 +59,7 @@
 
                             <TextBox x:Name="GameChatCommandTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Chat Triggers (letters/numbers only, space seperated)" Width="350" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                            <ComboBox x:Name="GameTypeComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource BackgroundComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
+                            <ComboBox x:Name="GameTypeComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Game Type" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
 
                         </Grid>
 
@@ -76,9 +76,9 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency" Style="{StaticResource BackgroundComboBox}" Width="120" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
+                            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency" Width="120" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
 
-                            <ComboBox x:Name="CurrencyRequirementTypeComboBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Currency Requirement" Style="{StaticResource BackgroundComboBox}" Width="200" VerticalAlignment="Center" SelectionChanged="CurrencyRequirementTypeComboBox_SelectionChanged" />
+                            <ComboBox x:Name="CurrencyRequirementTypeComboBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Currency Requirement" Width="200" VerticalAlignment="Center" SelectionChanged="CurrencyRequirementTypeComboBox_SelectionChanged" />
 
                             <Grid x:Name="CurrencyCostsGrid" Grid.Column="4" IsEnabled="False">
                                 <Grid.ColumnDefinitions>

@@ -24,7 +24,7 @@
             <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
-        <MaterialDesign:PackIcon x:Name="StatisticIcon" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource PrimaryHueMidBrush}" />
+        <MaterialDesign:PackIcon x:Name="StatisticIcon" Style="{StaticResource DefaultPackIcon}" Grid.Column="0" Height="24" Width="24" VerticalAlignment="Center" />
 
         <TextBlock x:Name="StatisticNameTextBlock" Grid.Column="2" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}" />
 

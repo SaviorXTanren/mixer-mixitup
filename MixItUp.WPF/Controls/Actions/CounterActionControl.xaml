@@ -50,7 +50,7 @@
 
             <TextBox Grid.Column="0" x:Name="CounterNameTextBox" MaterialDesign:HintAssist.Hint="Counter Name (Only Letters &amp; Numbers Allowed, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox Grid.Column="2" x:Name="CounterActionTypeComboBox"  MaterialDesign:HintAssist.Hint="Action" Style="{StaticResource BackgroundComboBox}" SelectionChanged="CounterActionTypeComboBox_SelectionChanged" />
+            <ComboBox Grid.Column="2" x:Name="CounterActionTypeComboBox"  MaterialDesign:HintAssist.Hint="Action" SelectionChanged="CounterActionTypeComboBox_SelectionChanged" />
 
             <TextBox Grid.Column="4" x:Name="CounterAmountTextBox" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

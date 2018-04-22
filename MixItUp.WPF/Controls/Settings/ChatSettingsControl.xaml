@@ -29,7 +29,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Font Size:</TextBlock>
-        <ComboBox x:Name="FontSizeComboBox" Grid.Row="0" Grid.Column="2" Style="{StaticResource BackgroundComboBox}" SelectionChanged="FontSizeComboBox_SelectionChanged" />
+        <ComboBox x:Name="FontSizeComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="FontSizeComboBox_SelectionChanged" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Show User Join/Leave:</TextBlock>
         <ToggleButton Grid.Row="2" Grid.Column="2" x:Name="ShowUserJoinLeaveToggleButton" Checked="ShowUserJoinLeaveToggleButton_Checked" Unchecked="ShowUserJoinLeaveToggleButton_Checked" />

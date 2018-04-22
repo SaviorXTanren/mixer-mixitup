@@ -52,7 +52,7 @@
             <TextBox x:Name="SparkCostTextBox" Grid.Column="2" Grid.Row="0" MaterialDesign:HintAssist.Hint="Spark Cost (EX: 50)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,5" VerticalAlignment="Bottom">Should this button cooldown on its or together with all?:</TextBlock>
-            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="Cooldown Type" Style="{StaticResource BackgroundComboBox}" SelectionChanged="CooldownTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="2" Grid.Row="2" MaterialDesign:HintAssist.Hint="Cooldown Type" SelectionChanged="CooldownTypeComboBox_SelectionChanged" />
 
             <TextBlock Grid.Column="0" Grid.Row="4" Margin="0,0,0,5" VerticalAlignment="Bottom">How many seconds should the cooldown be?:</TextBlock>
             <TextBox x:Name="CooldownTextBox" Grid.Column="2" Grid.Row="4" MaterialDesign:HintAssist.Hint="Cooldown (EX: 30)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />

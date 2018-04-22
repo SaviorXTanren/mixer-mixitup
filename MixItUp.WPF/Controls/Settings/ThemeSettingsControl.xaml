@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Color Scheme:</TextBlock>
-        <ComboBox x:Name="ColorSchemeComboBox" Grid.Row="0" Grid.Column="2" Style="{StaticResource BackgroundComboBox}" SelectionChanged="ColorSchemeComboBox_SelectionChanged">
+        <ComboBox x:Name="ColorSchemeComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="ColorSchemeComboBox_SelectionChanged">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,0">
@@ -44,7 +44,7 @@
         </ComboBox>
 
         <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Theme Type:</TextBlock>
-        <ComboBox x:Name="ThemeNameComboBox" Grid.Row="2" Grid.Column="2" Style="{StaticResource BackgroundComboBox}" SelectionChanged="ThemeNameComboBox_SelectionChanged" />
+        <ComboBox x:Name="ThemeNameComboBox" Grid.Row="2" Grid.Column="2" SelectionChanged="ThemeNameComboBox_SelectionChanged" />
 
     </Grid>
 </MainControls:MainControlBase>

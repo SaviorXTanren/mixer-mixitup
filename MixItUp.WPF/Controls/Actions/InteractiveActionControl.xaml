@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="InteractiveTypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="InteractiveTypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="InteractiveMoveUserToGroupGrid" Visibility="Hidden">
@@ -33,7 +33,7 @@
 
             <TextBox x:Name="InteractiveMoveUserToGroupGroupNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <ComboBox x:Name="InteractiveMoveUserToGroupPermissionsAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="InteractiveMoveUserToGroupPermissionsAllowedComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Permissions" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="InteractiveMoveGroupToSceneGrid" Visibility="Hidden">
@@ -55,7 +55,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="InteractiveMoveUserToScenePermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="InteractiveMoveUserToScenePermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Permissions" />
 
             <TextBox x:Name="InteractiveMoveUserToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

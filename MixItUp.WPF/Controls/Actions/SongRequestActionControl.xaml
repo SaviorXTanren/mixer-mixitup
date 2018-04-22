@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <ComboBox x:Name="SongRequestActionTypeComboBox" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="SongRequestActionTypeComboBox" MaterialDesign:HintAssist.Hint="Type" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

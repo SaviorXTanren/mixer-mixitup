@@ -18,9 +18,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="CommandTypeComboBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Command Type" Style="{StaticResource BackgroundComboBox}" SelectionChanged="CommandTypeComboBox_SelectionChanged" Width="250" />
+        <ComboBox x:Name="CommandTypeComboBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Command Type" SelectionChanged="CommandTypeComboBox_SelectionChanged" Width="250" />
 
-        <ComboBox x:Name="CommandNameComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="Command Name" IsEnabled="False" Style="{StaticResource BackgroundComboBox}" SelectionChanged="CommandNameComboBox_SelectionChanged" DisplayMemberPath="Name" Width="250" />
+        <ComboBox x:Name="CommandNameComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="Command Name" IsEnabled="False" SelectionChanged="CommandNameComboBox_SelectionChanged" DisplayMemberPath="Name" Width="250" />
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>

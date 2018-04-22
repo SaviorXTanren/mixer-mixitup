@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="OBSStudioTypeComboBox" Grid.Column="0" SelectionChanged="OBSStudioTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="OBSStudioTypeComboBox" Grid.Column="0" SelectionChanged="OBSStudioTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
 
             <TextBlock x:Name="OBSStudioNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable OBS Studio connection in the Services Section!</TextBlock>
         </Grid>

@@ -22,7 +22,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <ComboBox x:Name="EventTypeComboBox" Grid.Column="0" SelectionChanged="EventTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Event Type" Style="{StaticResource BackgroundComboBox}" IsEnabled="False" Visibility="Collapsed" />
+        <ComboBox x:Name="EventTypeComboBox" Grid.Column="0" SelectionChanged="EventTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Event Type" IsEnabled="False" Visibility="Collapsed" />
         <TextBox x:Name="OtherEventTypeTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Event Type" IsEnabled="False" Visibility="Collapsed" />
 
         <TextBox x:Name="EventIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Username" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />

@@ -16,17 +16,13 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
 
-        <MaterialDesign:PackIcon Kind="AccountSettingsVariant" x:Key="UserRolePopupBoxIcon" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24"
-                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
+        <MaterialDesign:PackIcon Kind="AccountSettingsVariant" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24" />
 
-        <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24"
-                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
+        <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24" />
 
-        <MaterialDesign:PackIcon Kind="Coin" x:Key="CurrencyPopupBoxIcon" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24"
-                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
+        <MaterialDesign:PackIcon Kind="Coin" x:Key="CurrencyPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24" />
 
-        <MaterialDesign:PackIcon Kind="Wunderlist" x:Key="RankPopupBoxIcon" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24"
-                  Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=MaterialDesign:PopupBox}, Path=Foreground}" />
+        <MaterialDesign:PackIcon Kind="Wunderlist" x:Key="RankPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24" />
 
     </UserControl.Resources>
 

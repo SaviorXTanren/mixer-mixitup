@@ -48,7 +48,7 @@
                 </Grid>
 
                 <Grid Grid.Row="2">
-                    <ComboBox x:Name="SongServiceTypeComboBox" Width="200" SelectionChanged="SongServiceTypeComboBox_SelectionChanged" Style="{StaticResource BackgroundComboBox}" MaterialDesign:HintAssist.Hint="Song Service" />
+                    <ComboBox x:Name="SongServiceTypeComboBox" Width="200" SelectionChanged="SongServiceTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Song Service" />
                 </Grid>
             </Grid>
 

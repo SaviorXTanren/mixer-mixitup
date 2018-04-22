@@ -14,7 +14,7 @@
             </Grid>
 
             <Button x:Name="DeleteButton" Visibility="Collapsed" Width="20" Height="20" Margin="0,5,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.3" Click="DeleteButton_Click" MouseEnter="DeleteButton_MouseEnter" MouseLeave="DeleteButton_MouseLeave">
-                <MaterialDesign:PackIcon Kind="Close" Height="16" Width="16" Margin="-14,-2" Foreground="{StaticResource WhiteColor}" />
+                <MaterialDesign:PackIcon Kind="Close" Style="{StaticResource DefaultPackIcon}" Height="16" Width="16" Margin="-14,-2" />
             </Button>
         </Grid>
     </Border>

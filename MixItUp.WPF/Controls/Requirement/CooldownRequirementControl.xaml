@@ -20,7 +20,7 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         
-        <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" Width="90" />
+        <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Width="90" />
 
         <TextBox x:Name="CooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
     </Grid>

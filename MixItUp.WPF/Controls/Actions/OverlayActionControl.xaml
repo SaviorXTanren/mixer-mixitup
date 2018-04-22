@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="OverlayTypeComboBox" Grid.Column="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="OverlayTypeComboBox" Grid.Column="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
 
             <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
         </Grid>
@@ -180,7 +180,7 @@
 
             <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-            <ComboBox Grid.Column="2" x:Name="OverlayFadeEffectComboBox" MaterialDesign:HintAssist.Hint="Fade Effect" Width="100" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox Grid.Column="2" x:Name="OverlayFadeEffectComboBox" MaterialDesign:HintAssist.Hint="Fade Effect" Width="100" />
 
             <Controls:SliderWithHeaderControl Grid.Column="4" x:Name="OverlayHorizontalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Position % From Left:" />
 

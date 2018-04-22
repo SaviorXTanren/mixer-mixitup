@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TranslationLanguageComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Language To Translate To" DisplayMemberPath="DisplayName" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="TranslationLanguageComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Language To Translate To" DisplayMemberPath="DisplayName" />
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center">Allow Profanity:</TextBlock>
             <CheckBox Grid.Column="4" x:Name="AllowProfanityCheckBox" VerticalAlignment="Center" />
@@ -51,7 +51,7 @@
 
         <TextBox Grid.Row="2" x:Name="TranslationTextTextBox" MaterialDesign:HintAssist.Hint="Text To Translate" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <ComboBox Grid.Row="4" x:Name="ResponseActionComboBox" MaterialDesign:HintAssist.Hint="Action To Perform With Translation" Style="{StaticResource BackgroundComboBox}" SelectionChanged="ResponseActionComboBox_SelectionChanged" />
+        <ComboBox Grid.Row="4" x:Name="ResponseActionComboBox" MaterialDesign:HintAssist.Hint="Action To Perform With Translation" SelectionChanged="ResponseActionComboBox_SelectionChanged" />
 
         <Grid x:Name="ChatResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
             <TextBox x:Name="ChatResponseTextBox" MaterialDesign:HintAssist.Hint="Chat Message ($translationresult = Translated Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -64,7 +64,7 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" DisplayMemberPath="Name" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" DisplayMemberPath="Name" />
 
             <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Arguments ($translationresult = Translated Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>

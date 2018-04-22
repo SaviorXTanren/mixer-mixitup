@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
-            <ComboBox x:Name="SpotifyActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource BackgroundComboBox}" />
+            <ComboBox x:Name="SpotifyActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" />
 
             <TextBlock x:Name="SpotifyNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center">Please enable Spotify connection in the Services Section!</TextBlock>
         </Grid>
