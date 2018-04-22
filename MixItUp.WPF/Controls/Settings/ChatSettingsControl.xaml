@@ -26,6 +26,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Font Size:</TextBlock>
@@ -47,5 +49,8 @@
 
         <TextBlock Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Ignore your Bot account for commands:</TextBlock>
         <ToggleButton Grid.Row="12" Grid.Column="2" x:Name="IgnoreBotAccountCommandsToggleButton" Checked="IgnoreBotAccountCommandsToggleButton_Checked" Unchecked="IgnoreBotAccountCommandsToggleButton_Checked" />
+
+        <TextBlock Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Allow commands only in your channel during a Co-Stream:</TextBlock>
+        <ToggleButton Grid.Row="14" Grid.Column="2" x:Name="CommandsOnlyInYourStreamToggleButton" Checked="CommandsOnlyInYourStreamToggleButton_Checked" Unchecked="CommandsOnlyInYourStreamToggleButton_Checked" />
     </Grid>
 </MainControls:MainControlBase>

@@ -404,6 +404,11 @@ namespace MixItUp.Base.MixerAPI
                 return;
             }
 
+            if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
+            {
+                return;
+            }
+
             if (ChannelSession.IsStreamer && !message.User.Roles.Contains(UserRole.Banned))
             {
                 GlobalEvents.ChatCommandMessageReceived(message);

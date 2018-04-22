@@ -46,6 +46,8 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool ContainsLink { get; private set; }
 
+        public bool IsInUsersChannel { get; private set; }
+
         public bool IsDeleted { get; set; }
 
         public ChatMessageEventModel ChatMessageEvent { get; private set; }
@@ -65,6 +67,8 @@ namespace MixItUp.Base.ViewModel.Chat
             {
                 this.User = new UserViewModel(this.ChatMessageEvent);
             }
+
+            this.IsInUsersChannel = ChannelSession.Channel.id.Equals(this.ChatMessageEvent.channel);
             
             this.TargetUsername = this.ChatMessageEvent.target;
             this.Timestamp = DateTimeOffset.Now;
