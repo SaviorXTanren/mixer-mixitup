@@ -166,6 +166,9 @@ namespace MixItUp.WPF.Controls.Command
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
 
+                this.command.IndividualCooldown = 0;
+                this.command.CooldownGroup = null;
+
                 this.command.Button.cost = sparkCost;
                 if (this.CooldownTypeComboBox.SelectedIndex == 0)
                 {
