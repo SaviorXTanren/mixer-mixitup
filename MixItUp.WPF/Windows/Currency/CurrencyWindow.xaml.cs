@@ -32,8 +32,6 @@ namespace MixItUp.WPF.Windows.Currency
     /// </summary>
     public partial class CurrencyWindow : LoadingWindowBase
     {
-        public event EventHandler<UserCurrencyViewModel> NewCurrencyRankCreated;
-
         private const string RankChangedCommandName = "User Rank Changed";
 
         private bool isRank = false;
