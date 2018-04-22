@@ -38,6 +38,8 @@ namespace MixItUp.Base.Services
         {
             return new UserDonationModel()
             {
+                Source = "GawkBox",
+
                 ID = this.CreatorID.ToString(),
                 Username = this.UserName,
                 Message = this.Message,

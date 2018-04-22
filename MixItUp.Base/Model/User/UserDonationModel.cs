@@ -7,6 +7,9 @@ namespace MixItUp.Base.Model.User
     public class UserDonationModel
     {
         [DataMember]
+        public string Source { get; set; }
+
+        [DataMember]
         public string ID { get; set; }
         [DataMember]
         public string Username { get; set; }

@@ -45,6 +45,8 @@ namespace MixItUp.Base.Services
         {
             return new UserDonationModel()
             {
+                Source = "Streamlabs",
+
                 ID = this.ID.ToString(),
                 Username = this.Name,
                 Message = this.Message,

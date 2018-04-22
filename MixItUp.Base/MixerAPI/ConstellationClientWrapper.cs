@@ -264,6 +264,7 @@ namespace MixItUp.Base.MixerAPI
             EventCommand command = this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.Donation));
             if (command != null)
             {
+                command.AddSpecialIdentifier("donationsource", donation.Source);
                 command.AddSpecialIdentifier("donationamount", donation.AmountText);
                 command.AddSpecialIdentifier("donationmessage", donation.Message);
                 command.AddSpecialIdentifier("donationimage", donation.ImageLink);
