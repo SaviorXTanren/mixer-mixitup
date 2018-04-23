@@ -134,7 +134,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (!string.IsNullOrEmpty(this.XSplitSourceNameTextBox.Text))
             {
-                this.XSplitSourceLoadTextFromTextBox.Text = Path.Combine(XSplitAction.XSplitReferenceTextFilesDirectory, this.XSplitSourceNameTextBox.Text + ".txt");
+                this.XSplitSourceLoadTextFromTextBox.Text = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), XSplitAction.XSplitReferenceTextFilesDirectory, this.XSplitSourceNameTextBox.Text + ".txt");
             }
         }
 

@@ -13,6 +13,16 @@ namespace MixItUp.Desktop.Files
         private static SemaphoreSlim createLock = new SemaphoreSlim(1);
         private static SemaphoreSlim appendLock = new SemaphoreSlim(1);
 
+        public async Task CopyFile(string sourcePath, string destinationPath)
+        {
+            if (File.Exists(sourcePath))
+            {
+                string destinationDirectory = Path.GetDirectoryName(destinationPath);
+                await this.CreateDirectory(destinationDirectory);
+                File.Copy(sourcePath, destinationPath);
+            }
+        }
+
         public Task CreateDirectory(string path)
         {
             if (!Directory.Exists(path))
@@ -20,6 +30,18 @@ namespace MixItUp.Desktop.Files
                 Directory.CreateDirectory(path);
             }
             return Task.FromResult(0);
+        }
+
+        public async Task CopyDirectory(string sourceDirectoryPath, string destinationDirectoryPath)
+        {
+            if (Directory.Exists(sourceDirectoryPath))
+            {
+                await this.CreateDirectory(destinationDirectoryPath);
+                foreach (string filepath in Directory.GetFiles(sourceDirectoryPath))
+                {
+                    File.Copy(filepath, filepath.Replace(sourceDirectoryPath, destinationDirectoryPath));
+                }
+            }
         }
 
         public async Task<string> ReadFile(string filePath)

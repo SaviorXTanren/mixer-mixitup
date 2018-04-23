@@ -17,7 +17,7 @@ namespace MixItUp.Base.Actions
 
         protected override SemaphoreSlim AsyncSemaphore { get { return OBSStudioAction.asyncSemaphore; } }
 
-        public static string OBSStudioReferenceTextFilesDirectory = Path.Combine(Environment.CurrentDirectory, "OBS", "SourceTextFiles");
+        public static string OBSStudioReferenceTextFilesDirectory = Path.Combine("OBS", "SourceTextFiles");
 
         [DataMember]
         public string SceneCollection { get; set; }
@@ -74,7 +74,8 @@ namespace MixItUp.Base.Actions
             this.SourceVisible = sourceVisible;
         }
 
-        public string LoadTextFromFilePath { get { return Path.Combine(OBSStudioReferenceTextFilesDirectory, this.SourceName + ".txt"); } }
+        public string LoadTextFromDirectoryPath { get { return Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), OBSStudioReferenceTextFilesDirectory); } }
+        public string LoadTextFromFilePath { get { return Path.Combine(LoadTextFromDirectoryPath, this.SourceName + ".txt"); } }
 
         public void UpdateReferenceTextFile()
         {
@@ -82,10 +83,8 @@ namespace MixItUp.Base.Actions
             {
                 try
                 {
-                    Directory.CreateDirectory(OBSStudioReferenceTextFilesDirectory);
-
-                    string filePath = Path.Combine(OBSStudioReferenceTextFilesDirectory, this.SourceName + ".txt");
-                    using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
+                    Directory.CreateDirectory(this.LoadTextFromDirectoryPath);
+                    using (StreamWriter writer = new StreamWriter(File.Open(this.LoadTextFromFilePath, FileMode.Create)))
                     {
                         writer.Write(this.currentTextToWrite);
                     }

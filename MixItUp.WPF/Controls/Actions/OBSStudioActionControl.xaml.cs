@@ -166,7 +166,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (!string.IsNullOrEmpty(this.OBSStudioSourceNameTextBox.Text))
             {
-                this.OBSStudioSourceLoadTextFromTextBox.Text = Path.Combine(OBSStudioAction.OBSStudioReferenceTextFilesDirectory, this.OBSStudioSourceNameTextBox.Text + ".txt");
+                this.OBSStudioSourceLoadTextFromTextBox.Text = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), OBSStudioAction.OBSStudioReferenceTextFilesDirectory, this.OBSStudioSourceNameTextBox.Text + ".txt");
             }
         }
 

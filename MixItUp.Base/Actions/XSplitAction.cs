@@ -17,7 +17,7 @@ namespace MixItUp.Base.Actions
 
         protected override SemaphoreSlim AsyncSemaphore { get { return XSplitAction.asyncSemaphore; } }
 
-        public static string XSplitReferenceTextFilesDirectory = Path.Combine(Environment.CurrentDirectory, "XSplit", "SourceTextFiles");
+        public static string XSplitReferenceTextFilesDirectory = Path.Combine("XSplit", "SourceTextFiles");
 
         [DataMember]
         public string SceneName { get; set; }
@@ -63,7 +63,8 @@ namespace MixItUp.Base.Actions
             this.SourceVisible = sourceVisible;
         }
 
-        public string LoadTextFromFilePath { get { return Path.Combine(XSplitReferenceTextFilesDirectory, this.SourceName + ".txt"); } }
+        public string LoadTextFromDirectoryPath { get { return Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), XSplitReferenceTextFilesDirectory); } }
+        public string LoadTextFromFilePath { get { return Path.Combine(LoadTextFromDirectoryPath, this.SourceName + ".txt"); } }
 
         public void UpdateReferenceTextFile()
         {
@@ -71,10 +72,8 @@ namespace MixItUp.Base.Actions
             {
                 try
                 {
-                    Directory.CreateDirectory(XSplitReferenceTextFilesDirectory);
-
-                    string filePath = Path.Combine(XSplitReferenceTextFilesDirectory, this.SourceName + ".txt");
-                    using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
+                    Directory.CreateDirectory(this.LoadTextFromDirectoryPath);
+                    using (StreamWriter writer = new StreamWriter(File.Open(this.LoadTextFromFilePath, FileMode.Create)))
                     {
                         writer.Write(this.currentTextToWrite);
                     }

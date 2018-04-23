@@ -12,6 +12,8 @@ namespace MixItUp.Base.Util
 {
     public static class Logger
     {
+        public static bool IsDebug { get; private set; }
+
         private const string LogsDirectoryName = "Logs";
         private const string LogFileNameFormat = "MixItUpLog-{0}.txt";
 
@@ -25,6 +27,10 @@ namespace MixItUp.Base.Util
             Logger.CurrentLogFileName = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm", CultureInfo.InvariantCulture)));
 
             Mixer.Base.Util.Logger.LogOccurred += Logger_LogOccurred;
+
+            #if DEBUG
+                Logger.IsDebug = true;
+            #endif
         }
 
         public static void Log(string message)
@@ -39,21 +45,18 @@ namespace MixItUp.Base.Util
         public static void Log(Exception ex)
         {
             Logger.Log(ex.ToString());
-
-            string exceptionJSON = JsonConvert.SerializeObject(ex.ToString());
-            #if DEBUG
-            #else
-                Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", exceptionJSON); });
-            #endif
+            if (!Logger.IsDebug)
+            {
+                Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", JsonConvert.SerializeObject(ex.ToString())); });
+            }
         }
 
         public static async Task LogAnalyticsUsage(string eventName, string eventDetails)
         {
-            #if DEBUG
-                await Task.FromResult(0);
-            #else
-                await Logger.LogAnalyticsInternal(eventName, eventDetails);               
-            #endif
+            if (!Logger.IsDebug)
+            {
+                await Logger.LogAnalyticsInternal(eventName, eventDetails);
+            }
         }
 
         private static async Task LogAnalyticsInternal(string eventName, string eventDetails)

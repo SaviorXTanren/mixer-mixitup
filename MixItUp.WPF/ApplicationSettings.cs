@@ -26,6 +26,9 @@ namespace MixItUp.WPF
         public bool SettingsChangeRestartRequired { get; set; }
 
         [DataMember]
+        public bool InstallerFolderUpgradeAsked { get; set; }
+
+        [DataMember]
         public string ThemeName { get; set; }
         [JsonIgnore]
         public bool IsDarkColoring { get { return App.AppSettings.ThemeName.Equals("Dark"); } }

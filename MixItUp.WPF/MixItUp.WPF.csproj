@@ -196,6 +196,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\MixItUp.Installer\InstallerHelpers.cs">
+      <Link>InstallerHelpers.cs</Link>
+    </Compile>
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="Controls\Actions\ActionContainerControl.xaml.cs">
       <DependentUpon>ActionContainerControl.xaml</DependentUpon>

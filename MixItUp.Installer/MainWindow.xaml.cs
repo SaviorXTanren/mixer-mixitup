@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -26,70 +24,18 @@ namespace MixItUp.Installer
             {
                 try
                 {
-                    string autoUpdaterFile = null;
-                    using (WebClient client = new WebClient())
+                    if (InstallerHelpers.DownloadMixItUp())
                     {
-                        autoUpdaterFile = client.DownloadString(new System.Uri("https://updates.mixitupapp.com/AutoUpdater.xml"));
-                    }
-
-                    if (!string.IsNullOrEmpty(autoUpdaterFile))
-                    {
-                        string updateURL = autoUpdaterFile;
-                        updateURL = updateURL.Substring(updateURL.IndexOf("<url>"));
-                        updateURL = updateURL.Replace("<url>", "");
-                        updateURL = updateURL.Substring(0, updateURL.IndexOf("</url>"));
-
-                        string updateFilePath = Path.Combine(Path.GetTempPath(), "MixItUp.zip");
-                        using (WebClient client = new WebClient())
+                        if (InstallerHelpers.CreateMixItUpShortcut())
                         {
-                            client.DownloadFile(updateURL, updateFilePath);
-                        }
-
-                        if (System.IO.File.Exists(updateFilePath))
-                        {
-                            string folderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MixItUp");
-
-                            if (Directory.Exists(folderPath))
+                            Process.Start(Path.Combine(InstallerHelpers.StartMenuDirectory, InstallerHelpers.ShortcutFileName));
+                            this.Dispatcher.Invoke(() =>
                             {
-                                Directory.Delete(folderPath, recursive: true);
-                            }
-
-                            Directory.CreateDirectory(folderPath);
-                            if (Directory.Exists(folderPath))
-                            {
-                                ZipFile.ExtractToDirectory(updateFilePath, folderPath);
-
-                                string applicationPath = Path.Combine(folderPath, "MixItUp.exe");
-                                if (System.IO.File.Exists(applicationPath))
-                                {
-                                    string shortcutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Mix It Up");
-
-                                    if (Directory.Exists(shortcutPath))
-                                    {
-                                        Directory.Delete(shortcutPath, recursive: true);
-                                    }
-
-                                    Directory.CreateDirectory(shortcutPath);
-                                    if (Directory.Exists(shortcutPath))
-                                    {
-                                        string tempLinkFilePath = Path.Combine(folderPath, "Mix It Up.link");
-                                        if (File.Exists(tempLinkFilePath))
-                                        {
-                                            string shortcutLinkFilePath = Path.Combine(shortcutPath, "Mix It Up.lnk");
-                                            File.Copy(tempLinkFilePath, shortcutLinkFilePath);
-
-                                            Process.Start(shortcutLinkFilePath);
-                                            this.Dispatcher.Invoke(() =>
-                                            {
-                                                this.Close();
-                                            });
-                                            return;
-                                        }
-                                    }
-                                }
-                            }
+                                this.Close();
+                            });
                         }
                     }
+                    return;
                 }
                 catch (Exception ex) { System.IO.File.WriteAllText("MixItUp-Installer-Log.txt", ex.ToString()); }
 
