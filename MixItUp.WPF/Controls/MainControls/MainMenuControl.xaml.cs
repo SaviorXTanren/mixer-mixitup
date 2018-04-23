@@ -179,14 +179,24 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void GlobalEvents_OnServiceDisconnect(object sender, string serviceName)
+        private async void GlobalEvents_OnServiceDisconnect(object sender, string serviceName)
         {
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath))
+            {
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath, 100);
+            }
+
             this.serviceDisconnections.Add(serviceName);
             this.RefreshServiceDisconnectionsAlertTooltip();
         }
 
-        private void GlobalEvents_OnServiceReconnect(object sender, string serviceName)
+        private async void GlobalEvents_OnServiceReconnect(object sender, string serviceName)
         {
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationServiceConnectSoundFilePath))
+            {
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceConnectSoundFilePath, 100);
+            }
+
             this.serviceDisconnections.Remove(serviceName);
             this.RefreshServiceDisconnectionsAlertTooltip();
         }

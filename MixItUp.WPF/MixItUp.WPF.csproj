@@ -471,6 +471,9 @@
     <Compile Include="Controls\Settings\MainSettingsContainerControl.xaml.cs">
       <DependentUpon>MainSettingsContainerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\NotificationsSettingsControl.xaml.cs">
+      <DependentUpon>NotificationsSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\SettingsControlBase.cs" />
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
@@ -899,6 +902,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\NotificationsSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\ThemeSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1084,6 +1091,60 @@
     <Resource Include="Assets\Images\Discord.png" />
     <Resource Include="Assets\Images\Youtube.png" />
     <Resource Include="Assets\Images\Wiki.png" />
+    <Content Include="Assets\Sounds\Ariel.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Carme.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Ceres.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Computer Chime.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Doorbell.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Elara.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Europa.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\High Beeps.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Io.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Lapetus.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Level Up.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Low Beeps.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Rhea.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Salacia.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Robot SMS.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Tethys.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Titan.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\Watch Alarm.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Changelog.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

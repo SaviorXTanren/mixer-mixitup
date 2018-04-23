@@ -387,6 +387,16 @@ namespace MixItUp.Base.MixerAPI
                 return true;
             }
 
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsUserTagged)
+            {
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatTaggedSoundFilePath, 100);
+            }
+
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatWhisperSoundFilePath) && message.IsWhisper)
+            {
+                await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, 100);
+            }
+
             await this.CheckMessageForCommandAndRun(message);
 
             return true;

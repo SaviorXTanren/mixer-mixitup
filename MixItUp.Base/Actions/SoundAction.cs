@@ -33,7 +33,6 @@ namespace MixItUp.Base.Actions
         {
             if (File.Exists(this.FilePath))
             {
-                await ChannelSession.Services.InitializeAudioService();
                 await ChannelSession.Services.AudioService.Play(this.FilePath, this.VolumeScale);
             }
         }

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
 using System.IO;
@@ -11,7 +12,7 @@ namespace MixItUp.Desktop.Audio
     {
         public Task Play(string filePath, int volume)
         {
-            if (File.Exists(filePath))
+            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
             {
                 volume = MathHelper.Clamp(volume, 0, 100);
                 Task.Run(async () =>
@@ -23,6 +24,12 @@ namespace MixItUp.Desktop.Audio
                     {
                         mediaEnded = true;
                     };
+
+                    if (!Path.IsPathRooted(filePath))
+                    {
+                        filePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), filePath);
+                    }
+
                     mediaPlayer.Open(new Uri(filePath));
                     mediaPlayer.Volume = ((double)volume / 100.0);
                     mediaPlayer.Play();

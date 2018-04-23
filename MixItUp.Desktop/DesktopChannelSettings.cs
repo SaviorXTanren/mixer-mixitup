@@ -168,6 +168,15 @@ namespace MixItUp.Desktop
         public string ChatInteractiveAlertsColorScheme { get; set; }
 
         [JsonProperty]
+        public string NotificationChatTaggedSoundFilePath { get; set; }
+        [JsonProperty]
+        public string NotificationChatWhisperSoundFilePath { get; set; }
+        [JsonProperty]
+        public string NotificationServiceConnectSoundFilePath { get; set; }
+        [JsonProperty]
+        public string NotificationServiceDisconnectSoundFilePath { get; set; }
+
+        [JsonProperty]
         public int MaxMessagesInChat { get; set; }
 
         [JsonProperty]

@@ -90,6 +90,11 @@ namespace MixItUp.Base
         bool ChatShowInteractiveAlerts { get; set; }
         string ChatInteractiveAlertsColorScheme { get; set; }
 
+        string NotificationChatTaggedSoundFilePath { get; set; }
+        string NotificationChatWhisperSoundFilePath { get; set; }
+        string NotificationServiceConnectSoundFilePath { get; set; }
+        string NotificationServiceDisconnectSoundFilePath { get; set; }
+
         int MaxMessagesInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }
