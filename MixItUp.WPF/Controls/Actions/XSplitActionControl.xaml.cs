@@ -104,10 +104,10 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void XSplitTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.XSplitSceneGrid.Visibility = Visibility.Hidden;
-            this.XSplitSourceGrid.Visibility = Visibility.Hidden;
-            this.XSplitSourceTextGrid.Visibility = Visibility.Hidden;
-            this.XSplitSourceWebBrowserGrid.Visibility = Visibility.Hidden;
+            this.XSplitSceneGrid.Visibility = Visibility.Collapsed;
+            this.XSplitSourceGrid.Visibility = Visibility.Collapsed;
+            this.XSplitSourceTextGrid.Visibility = Visibility.Collapsed;
+            this.XSplitSourceWebBrowserGrid.Visibility = Visibility.Collapsed;
             if (this.XSplitTypeComboBox.SelectedIndex >= 0)
             {
                 XSplitTypeEnum xsplitType = EnumHelper.GetEnumValueFromString<XSplitTypeEnum>((string)this.XSplitTypeComboBox.SelectedItem);

@@ -45,7 +45,7 @@
             <TextBox Grid.Row="2" x:Name="SaveToFileTextTextBox" MaterialDesign:HintAssist.Hint="Text To Save" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid x:Name="ReadFromFileGrid" Visibility="Visible" Grid.Row="4">
+        <Grid x:Name="ReadFromFileGrid" Visibility="Collapsed" Grid.Row="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
