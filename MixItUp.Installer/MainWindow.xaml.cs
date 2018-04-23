@@ -11,6 +11,8 @@ namespace MixItUp.Installer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly Version minimumOSVersion = new Version(6, 2, 0, 0);
+
         public MainWindow()
         {
             InitializeComponent();
@@ -20,6 +22,13 @@ namespace MixItUp.Installer
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            if (Environment.OSVersion.Version < minimumOSVersion)
+            {
+                this.ShowError("Thank you for using Mix It Up, but unfortunately we only support Windows 8 & higher. If you are running Windows 8 or higher and see this message, please contact Mix It Up support for assistance.");
+                this.Close();
+                return;
+            }
+
             await Task.Run(() =>
             {
                 try
