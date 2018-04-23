@@ -17,7 +17,7 @@
         <Setter Property="AutoGenerateColumns" Value="False" />
     </Style>
 
-    <Style x:Key="BorderedListViewItem" TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+    <Style x:Key="BorderedListViewItem" TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
