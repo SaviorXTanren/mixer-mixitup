@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Themes;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -51,7 +52,13 @@ namespace MixItUp.WPF.Controls.Settings
             }
         }
 
-        public void AddDefaultOption() { this.AvailableColorSchemes.Add(new ColorSchemeOption(ColorSchemes.DefaultColorScheme, "")); }
+        public void AddDefaultOption()
+        {
+            if (!this.AvailableColorSchemes.Any(c => c.Name.Equals(ColorSchemes.DefaultColorScheme)))
+            {
+                this.AvailableColorSchemes.Add(new ColorSchemeOption(ColorSchemes.DefaultColorScheme, ""));
+            }
+        }
 
         private void ColorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

@@ -4,7 +4,7 @@ namespace MixItUp.Base.Themes
 {
     public static class ColorSchemes
     {
-        public const string DefaultColorScheme = "Default";
+        public const string DefaultColorScheme = "Default Color";
 
         public static readonly Dictionary<string, string> ColorSchemeDictionary = new Dictionary<string, string>()
         {
