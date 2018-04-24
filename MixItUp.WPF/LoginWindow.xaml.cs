@@ -69,7 +69,7 @@ namespace MixItUp.WPF
                 App.AppSettings.Save();
 
                 string currentInstallDirectory = ChannelSession.Services.FileService.GetApplicationDirectory();
-                if (Logger.IsDebug && !currentInstallDirectory.Equals(InstallerHelpers.InstallDirectory))
+                if (!Logger.IsDebug && !currentInstallDirectory.Equals(InstallerHelpers.InstallDirectory))
                 {
                     if (await MessageBoxHelper.ShowConfirmationDialog("We noticed you are not running Mix It Up from the default installation folder." +
                         " We now have a full installer that puts Mix It Up into your Local App Data folder and creates a Start Menu shortcut for you to easily launch it." +
