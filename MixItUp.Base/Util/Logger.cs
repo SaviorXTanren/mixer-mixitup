@@ -42,12 +42,17 @@ namespace MixItUp.Base.Util
             catch (Exception) { }
         }
 
-        public static void Log(Exception ex)
+        public static void Log(Exception ex, bool isCrashing = false)
         {
             Logger.Log(ex.ToString());
             if (!Logger.IsDebug)
             {
-                Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", JsonConvert.SerializeObject(ex.ToString())); });
+                string eventDetails = JsonConvert.SerializeObject(ex.ToString());
+                if (isCrashing)
+                {
+                    eventDetails = "CRASHING - " + eventDetails;
+                }
+                Task.Run(async () => { await Logger.LogAnalyticsInternal("Exception", eventDetails); });
             }
         }
 

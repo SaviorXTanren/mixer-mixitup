@@ -100,7 +100,7 @@ namespace MixItUp.WPF
                 this.crashObtained = true;
 
                 Logger.Log("CRASH OCCURRED! CRASH EXCEPTION BELOW:");
-                Logger.Log(ex);
+                Logger.Log(ex, isCrashing: true);
 
                 if (MessageBox.Show("Whoops! Looks like we ran into an issue and we'll have to close the program. Would you like to submit a bug to help us improve Mix It Up?", "Mix It Up - Crash", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
