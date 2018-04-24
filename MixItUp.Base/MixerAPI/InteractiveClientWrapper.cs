@@ -471,7 +471,7 @@ namespace MixItUp.Base.MixerAPI
             do
             {
                 await InteractiveClient.Reconnect(this.Client);
-            } while (!await this.Client.Ready());
+            } while (!await this.RunAsync(this.Client.Ready()));
 
             ChannelSession.ReconnectionOccurred("Interactive");
         }

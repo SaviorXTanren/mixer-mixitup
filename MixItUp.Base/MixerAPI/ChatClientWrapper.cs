@@ -613,7 +613,7 @@ namespace MixItUp.Base.MixerAPI
             do
             {
                 await ChatClient.Reconnect(this.Client);
-            } while (!await this.Client.Authenticate());
+            } while (!await this.RunAsync(this.Client.Authenticate()));
 
             ChannelSession.ReconnectionOccurred("Streamer Chat");
         }
@@ -625,7 +625,7 @@ namespace MixItUp.Base.MixerAPI
             do
             {
                 await ChatClient.Reconnect(this.BotClient);
-            } while (!await this.BotClient.Authenticate());
+            } while (!await this.RunAsync(this.BotClient.Authenticate()));
 
             ChannelSession.ReconnectionOccurred("Bot Chat");
         }
