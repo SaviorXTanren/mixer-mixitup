@@ -69,10 +69,10 @@ namespace MixItUp.WPF
                 App.AppSettings.Save();
 
                 string currentInstallDirectory = ChannelSession.Services.FileService.GetApplicationDirectory();
-                if (!Logger.IsDebug && !currentInstallDirectory.Equals(InstallerHelpers.InstallDirectory))
+                if (Logger.IsDebug && !currentInstallDirectory.Equals(InstallerHelpers.InstallDirectory))
                 {
                     if (await MessageBoxHelper.ShowConfirmationDialog("We noticed you are not running Mix It Up from the default installation folder." +
-                        " We now have a full installer that puts Mix It Up into a safe location and creates a Start Menu shortcut for you to easily launch it." +
+                        " We now have a full installer that puts Mix It Up into your Local App Data folder and creates a Start Menu shortcut for you to easily launch it." +
                         Environment.NewLine + Environment.NewLine + 
                         " We can install the latest version of Mix It Up with the Start Menu shortcut, copy over your current settings over there for you, and keep this version of Mix It Up as is for backup purposes." +
                         Environment.NewLine + Environment.NewLine +
@@ -101,6 +101,9 @@ namespace MixItUp.WPF
 
                             await ChannelSession.Services.FileService.CopyDirectory(Path.Combine(currentInstallDirectory, "Counters"),
                                 Path.Combine(InstallerHelpers.InstallDirectory, "Counters"));
+
+                            await MessageBoxHelper.ShowMessageDialog("Mix It Up was successfully installed to your Local App Data folder and a shortcut was created on the Start Menu." + 
+                                " We will now close this version of Mix It Up and launch your newly installed version.");
 
                             Process.Start(Path.Combine(InstallerHelpers.StartMenuDirectory, InstallerHelpers.ShortcutFileName));
                             this.Close();
