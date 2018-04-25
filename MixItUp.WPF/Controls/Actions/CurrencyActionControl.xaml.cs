@@ -28,6 +28,7 @@ namespace MixItUp.WPF.Controls.Actions
                     this.CurrencyUsernameTextBox.IsEnabled = true;
                     this.CurrencyAmountTextBox.IsEnabled = true;
                 }
+                this.CurrencyUsernameTextBox.Text = this.action.Username;
                 this.CurrencyAmountTextBox.Text = this.action.Amount.ToString();
                 this.CurrencyMessageTextBox.Text = this.action.ChatText;
                 this.CurrencyWhisperToggleButton.IsChecked = this.action.IsWhisper;
