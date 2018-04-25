@@ -28,5 +28,14 @@ namespace MixItUp.Base.Themes
             { "Teal", "#009688" },
             { "Yellow", "#ffeb3b" },
         };
+
+        public static string GetColorCode(string name)
+        {
+            if (ColorSchemes.ColorSchemeDictionary.ContainsKey(name))
+            {
+                return ColorSchemes.ColorSchemeDictionary[name];
+            }
+            return "#000000";
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -131,7 +132,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.User = null;
             this.Timestamp = DateTimeOffset.Now;
             this.Message = alertText;
-            this.AlertMessageBrush = foregroundBrush;
+            this.AlertMessageBrush = ColorSchemes.GetColorCode(foregroundBrush);
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
         }
 
