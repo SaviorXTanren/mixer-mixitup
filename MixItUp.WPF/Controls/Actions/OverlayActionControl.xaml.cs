@@ -1,6 +1,8 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Themes;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,6 +40,7 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.OverlayTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayTypeEnum>();
+            this.OverlayFontColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
             this.OverlayFadeEffectComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayFadeEffectEnum>();
             this.OverlayYoutubeStartTimeTextBox.Text = "0";
             this.OverlayYoutubeWidthTextBox.Text = this.OverlayVideoWidthTextBox.Text = "560";
@@ -57,7 +60,12 @@ namespace MixItUp.WPF.Controls.Actions
                     this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Text);
                     this.OverlayTextTextBox.Text = this.action.Text;
                     this.OverlayFontSizeTextBox.Text = this.action.FontSize.ToString();
-                    this.OverlayFontColorTextBox.Text = this.action.Color;
+                    string color = this.action.Color;
+                    if (ColorSchemes.ColorSchemeDictionary.ContainsValue(color))
+                    {
+                        color = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(color)).Key;
+                    }
+                    this.OverlayFontColorComboBox.Text = color;
                 }
                 else if (!string.IsNullOrEmpty(this.action.youtubeVideoID))
                 {
@@ -112,12 +120,17 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (type == OverlayTypeEnum.Text)
                 {
-                    if (!string.IsNullOrEmpty(this.OverlayTextTextBox.Text) && !string.IsNullOrEmpty(this.OverlayFontColorTextBox.Text))
+                    if (!string.IsNullOrEmpty(this.OverlayTextTextBox.Text) && !string.IsNullOrEmpty(this.OverlayFontColorComboBox.Text))
                     {
-                        int fontSize;
-                        if (int.TryParse(this.OverlayFontSizeTextBox.Text, out fontSize) && fontSize > 0)
+                        string color = this.OverlayFontColorComboBox.Text;
+                        if (ColorSchemes.ColorSchemeDictionary.ContainsKey(color))
                         {
-                            return OverlayAction.CreateForText(this.OverlayTextTextBox.Text, this.OverlayFontColorTextBox.Text, fontSize, duration, horizontal, vertical, fadeDuration);
+                            color = ColorSchemes.ColorSchemeDictionary[color];
+                        }
+
+                        if (int.TryParse(this.OverlayFontSizeTextBox.Text, out int fontSize) && fontSize > 0)
+                        {
+                            return OverlayAction.CreateForText(this.OverlayTextTextBox.Text, color, fontSize, duration, horizontal, vertical, fadeDuration);
                         }
                     }
                 }
