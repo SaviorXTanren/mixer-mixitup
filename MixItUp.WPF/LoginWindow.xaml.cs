@@ -43,6 +43,8 @@ namespace MixItUp.WPF
     {
         private static readonly Version minimumOSVersion = new Version(6, 2, 0, 0);
 
+        private bool updateFound = false;
+
         public LoginWindow()
         {
             InitializeComponent();
@@ -117,6 +119,9 @@ namespace MixItUp.WPF
                 }
             }
 
+            AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
+            AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater.xml");
+
             List<IChannelSettings> settings = new List<IChannelSettings>(await ChannelSession.Services.Settings.GetAllSettings());
             settings = settings.Where(s => s.IsStreamer).ToList();
             if (settings.Count() > 0)
@@ -135,29 +140,31 @@ namespace MixItUp.WPF
                 IChannelSettings autoLogInSettings = settings.FirstOrDefault(s => s.Channel.user.id == App.AppSettings.AutoLogInAccount);
                 if (autoLogInSettings != null)
                 {
-                    if (await this.StreamerLogin(autoLogInSettings))
+                    await Task.Delay(5000);
+
+                    if (!updateFound)
                     {
-                        LoadingWindowBase newWindow = null;
-                        if (ChannelSession.Settings.ReRunWizard)
+                        if (await this.StreamerLogin(autoLogInSettings))
                         {
-                            newWindow = new NewUserWizardWindow();
+                            LoadingWindowBase newWindow = null;
+                            if (ChannelSession.Settings.ReRunWizard)
+                            {
+                                newWindow = new NewUserWizardWindow();
+                            }
+                            else
+                            {
+                                newWindow = new MainWindow();
+                            }
+                            this.Hide();
+                            newWindow.Show();
+                            this.Close();
+                            return;
                         }
-                        else
-                        {
-                            newWindow = new MainWindow();
-                        }
-                        this.Hide();
-                        newWindow.Show();
-                        this.Close();
-                        return;
                     }
                 }
             }
 
             await base.OnLoaded();
-
-            AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
-            AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater.xml");
         }
 
         private async void StreamerLoginButton_Click(object sender, RoutedEventArgs e)
@@ -290,6 +297,7 @@ namespace MixItUp.WPF
         {
             if (args != null && args.IsUpdateAvailable)
             {
+                updateFound = true;
                 UpdateWindow window = new UpdateWindow(args);
                 window.Show();
             }
