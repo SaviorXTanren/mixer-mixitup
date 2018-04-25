@@ -85,6 +85,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<ExpandedChannelModel> GetChannel(string name) { return await this.RunAsync(this.Connection.Channels.GetChannel(name)); }
 
+        public async Task<ExpandedChannelModel> GetChannel(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetChannel(channel.id)); }
+
         public async Task<IEnumerable<ExpandedChannelModel>> GetChannels(uint maxResults = 1) { return await this.RunAsync(this.Connection.Channels.GetChannels(maxResults)); }
 
         public async Task<ChannelModel> UpdateChannel(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.UpdateChannel(channel)); }
@@ -120,6 +122,8 @@ namespace MixItUp.Base.MixerAPI
         public async Task<TeamModel> GetTeam(string name) { return await this.RunAsync(this.Connection.Teams.GetTeam(name)); }
 
         public async Task<IEnumerable<UserWithChannelModel>> GetTeamUsers(TeamModel team, uint maxResults = 1) { return await this.RunAsync(this.Connection.Teams.GetTeamUsers(team, maxResults)); }
+
+        public async Task<ChannelModel> SetHostChannel(ChannelModel hosterChannel, ChannelModel channelToHost) { return await this.RunAsync(this.Connection.Channels.SetHostChannel(hosterChannel, channelToHost)); }
 
         private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
         {
