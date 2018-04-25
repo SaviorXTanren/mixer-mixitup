@@ -223,7 +223,6 @@ namespace MixItUp.Base.ViewModel.Chat
 
                 if (ChannelSession.Settings.ModerationPunctuationBlockCount > 0)
                 {
-                    MatchCollection matches = EmoteRegex.Matches(lower);
                     int count = lower.Count(c => char.IsSymbol(c) || char.IsPunctuation(c));
                     if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
                     {
@@ -239,10 +238,21 @@ namespace MixItUp.Base.ViewModel.Chat
 
                 if (ChannelSession.Settings.ModerationEmoteBlockCount > 0)
                 {
-                    MatchCollection matches = EmoteRegex.Matches(lower);
-                    int count = matches.Count;
+                    MatchCollection emoteMatches = EmoteRegex.Matches(lower);
+                    MatchCollection emojiMatches = EmojiRegex.Matches(lower);
+                    int count = emoteMatches.Count + emojiMatches.Count;
                     if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
                     {
+                        List<Match> matches = new List<Match>();
+                        foreach (Match match in emoteMatches)
+                        {
+                            matches.Add(match);
+                        }
+                        foreach (Match match in emojiMatches)
+                        {
+                            matches.Add(match);
+                        }
+
                         string leftOverText = lower.ToString();
                         foreach (Match match in matches)
                         {
