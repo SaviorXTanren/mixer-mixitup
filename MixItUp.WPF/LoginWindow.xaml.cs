@@ -76,7 +76,7 @@ namespace MixItUp.WPF
                     if (await MessageBoxHelper.ShowConfirmationDialog("We noticed you are not running Mix It Up from the default installation folder." +
                         " We now have a full installer that puts Mix It Up into your Local App Data folder and creates a Start Menu shortcut for you to easily launch it." +
                         Environment.NewLine + Environment.NewLine + 
-                        " We can install the latest version of Mix It Up with the Start Menu shortcut, copy over your current settings over there for you, and keep this version of Mix It Up as is for backup purposes." +
+                        "We can install the latest version of Mix It Up with the Start Menu shortcut, copy over your current settings over there for you, and keep this version of Mix It Up as is for backup purposes." +
                         Environment.NewLine + Environment.NewLine +
                         "The process should take no more than a miunute; would you like us to do this for you?"))
                     {
