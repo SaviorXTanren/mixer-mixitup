@@ -258,7 +258,7 @@ namespace MixItUp.Desktop.Services
                 else
                 {
                     int artistIndex = 0;
-                    if (identifier.StartsWith("/"))
+                    if (identifier.StartsWith("/") && identifier.Contains(' '))
                     {
                         string artistIndexString = identifier.Substring(0, identifier.IndexOf(' '));
                         identifier = identifier.Substring(identifier.IndexOf(' ') + 1);
