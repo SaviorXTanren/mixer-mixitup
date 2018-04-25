@@ -14,17 +14,14 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Feature me as a Mix it Up Streamer:</TextBlock>
         <ToggleButton Grid.Row="0" Grid.Column="2" x:Name="FeatureMeToggleButton" Checked="FeatureMeToggleButton_Checked" Unchecked="FeatureMeToggleButton_Checked" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" x:Name="AutoLogInAccountTextBlock" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Auto Log-In Current Account:</TextBlock>
+        <ToggleButton Grid.Row="2" Grid.Column="2" x:Name="AutoLogInAccountToggleButton" Checked="AutoLogInAccountToggleButton_Checked" Unchecked="AutoLogInAccountToggleButton_Unchecked" />
     </Grid>
 </local:SettingsControlBase>

@@ -130,6 +130,30 @@ namespace MixItUp.WPF
                 }
             }
 
+            if (App.AppSettings.AutoLogInAccount > 0)
+            {
+                IChannelSettings autoLogInSettings = settings.FirstOrDefault(s => s.Channel.user.id == App.AppSettings.AutoLogInAccount);
+                if (autoLogInSettings != null)
+                {
+                    if (await this.StreamerLogin(autoLogInSettings))
+                    {
+                        LoadingWindowBase newWindow = null;
+                        if (ChannelSession.Settings.ReRunWizard)
+                        {
+                            newWindow = new NewUserWizardWindow();
+                        }
+                        else
+                        {
+                            newWindow = new MainWindow();
+                        }
+                        this.Hide();
+                        newWindow.Show();
+                        this.Close();
+                        return;
+                    }
+                }
+            }
+
             await base.OnLoaded();
 
             AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
@@ -154,14 +178,8 @@ namespace MixItUp.WPF
                         }
                         else
                         {
-                            result = await ChannelSession.ConnectUser(setting);
-                            if (result)
+                            if (await this.StreamerLogin(setting))
                             {
-                                if (!await ChannelSession.ConnectBot(setting))
-                                {
-                                    await MessageBoxHelper.ShowMessageDialog("Bot Account failed to authenticate, please re-connect it from the Services section.");
-                                }
-
                                 LoadingWindowBase newWindow = null;
                                 if (ChannelSession.Settings.ReRunWizard)
                                 {
@@ -174,6 +192,7 @@ namespace MixItUp.WPF
                                 this.Hide();
                                 newWindow.Show();
                                 this.Close();
+                                return;
                             }
                         }
                     }
@@ -187,11 +206,6 @@ namespace MixItUp.WPF
                     result = await this.NewStreamerLogin();
                 }
             });
-
-            if (!result)
-            {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
-            }
         }
 
         private void ModeratorChannelTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -231,6 +245,23 @@ namespace MixItUp.WPF
             }
         }
 
+        private async Task<bool> StreamerLogin(IChannelSettings setting)
+        {
+            bool result = await ChannelSession.ConnectUser(setting);
+            if (result)
+            {
+                if (!await ChannelSession.ConnectBot(setting))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Bot Account failed to authenticate, please re-connect it from the Services section.");
+                }
+            }
+            else
+            {
+                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
+            }
+            return result;
+        }
+
         private async Task<bool> NewStreamerLogin()
         {
             if (await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null))
@@ -239,6 +270,10 @@ namespace MixItUp.WPF
                 window.Show();
                 this.Close();
                 return true;
+            }
+            else
+            {
+                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
             }
             return false;
         }

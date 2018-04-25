@@ -29,6 +29,9 @@ namespace MixItUp.WPF
         public bool InstallerFolderUpgradeAsked { get; set; }
 
         [DataMember]
+        public uint AutoLogInAccount { get; set; }
+
+        [DataMember]
         public string ThemeName { get; set; }
         [JsonIgnore]
         public bool IsDarkColoring { get { return App.AppSettings.ThemeName.Equals("Dark"); } }
@@ -41,6 +44,7 @@ namespace MixItUp.WPF
 
         public ApplicationSettings()
         {
+            this.AutoLogInAccount = 0;
             this.ThemeName = "Light";
             this.ColorScheme = "Indigo";
             this.Language = "en";
