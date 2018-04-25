@@ -31,6 +31,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" />
@@ -41,7 +43,9 @@
                 <Button Grid.Column="4" x:Name="MoveUpActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowUpBold}" Click="MoveUpActionButton_Click" />
                 <Button Grid.Column="6" x:Name="MoveDownActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowDownBold}" Click="MoveDownActionButton_Click" />
 
-                <Button Grid.Column="8" x:Name="DeleteActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" />
+                <Button Grid.Column="8" x:Name="ActionHelpButton" Margin="-10" Content="{MaterialDesign:PackIcon Help}" Click="ActionHelpButton_Click" />
+
+                <Button Grid.Column="10" x:Name="DeleteActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" />
             </Grid>
         </GroupBox.Header>
 

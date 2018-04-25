@@ -6,6 +6,7 @@ using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -141,6 +142,18 @@ namespace MixItUp.WPF.Controls.Actions
             this.GroupBox.MaxWidth = size.Width - 38;
         }
 
+        public void GroupBoxHeader_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (this.GroupBox.Height == MinimizedGroupBoxHeight)
+            {
+                this.GroupBox.Height = Double.NaN;
+            }
+            else
+            {
+                this.Minimize();
+            }
+        }
+
         private async void PlayActionButton_Click(object sender, RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
@@ -163,16 +176,13 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void DeleteActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.DeleteAction(this); }
 
-        public void GroupBoxHeader_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ActionHelpButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.GroupBox.Height == MinimizedGroupBoxHeight)
-            {
-                this.GroupBox.Height = Double.NaN;
-            }
-            else
-            {
-                this.Minimize();
-            }
+            string actionName = EnumHelper.GetEnumName(this.type);
+            actionName = actionName.ToLower();
+            actionName = actionName.Replace(" ", "-");
+            actionName = actionName.Replace("/", "");
+            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#" + actionName);
         }
     }
 }
