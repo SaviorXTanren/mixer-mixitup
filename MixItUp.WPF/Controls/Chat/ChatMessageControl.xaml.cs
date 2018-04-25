@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Themes;
 using MixItUp.Base.ViewModel.Chat;
@@ -47,18 +48,25 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 if (messageData.type.Equals("emoticon") && ChatMessageViewModel.EmoticonImages.ContainsKey(messageData.text))
                 {
-                    if (!ChatMessageControl.emoticonBitmapImages.ContainsKey(messageData.text))
+                    try
                     {
-                        ChatMessageControl.emoticonBitmapImages[messageData.text] = new BitmapImage(new Uri(ChatMessageViewModel.EmoticonImages[messageData.text].FilePath));
+                        if (!ChatMessageControl.emoticonBitmapImages.ContainsKey(messageData.text))
+                        {
+                            ChatMessageControl.emoticonBitmapImages[messageData.text] = new BitmapImage(new Uri(ChatMessageViewModel.EmoticonImages[messageData.text].FilePath));
+                        }
+
+                        if (ChatMessageControl.emoticonBitmapImages.ContainsKey(messageData.text))
+                        {
+                            CoordinatesModel coords = ChatMessageViewModel.EmoticonImages[messageData.text].Coordinates;
+                            CroppedBitmap bitmap = new CroppedBitmap(ChatMessageControl.emoticonBitmapImages[messageData.text], new Int32Rect((int)coords.x, (int)coords.y, (int)coords.width, (int)coords.height));
+
+                            Image image = new Image();
+                            image.Source = bitmap;
+                            image.VerticalAlignment = VerticalAlignment.Center;
+                            this.MessageWrapPanel.Children.Add(image);
+                        }
                     }
-
-                    CoordinatesModel coords = ChatMessageViewModel.EmoticonImages[messageData.text].Coordinates;
-                    CroppedBitmap bitmap = new CroppedBitmap(ChatMessageControl.emoticonBitmapImages[messageData.text], new Int32Rect((int)coords.x, (int)coords.y, (int)coords.width, (int)coords.height));
-
-                    Image image = new Image();
-                    image.Source = bitmap;
-                    image.VerticalAlignment = VerticalAlignment.Center;
-                    this.MessageWrapPanel.Children.Add(image);
+                    catch (Exception ex) { Logger.Log(ex); }
                 }
                 else
                 {
