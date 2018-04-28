@@ -58,17 +58,21 @@ namespace MixItUp.Base.Actions
             if (!ChannelSession.Counters.ContainsKey(this.CounterName))
             {
                 ChannelSession.Counters[this.CounterName] = 0;
-                if (this.ResetOnLoad)
+
+                if (File.Exists(this.GetCounterFilePath()))
                 {
-                    if (File.Exists(this.GetCounterFilePath()))
+                    string data = await ChannelSession.Services.FileService.ReadFile(this.GetCounterFilePath());
+                    if (int.TryParse(data, out int amount))
                     {
-                        string data = await ChannelSession.Services.FileService.ReadFile(this.GetCounterFilePath());
-                        if (int.TryParse(data, out int amount))
-                        {
-                            ChannelSession.Counters[this.CounterName] = amount;
-                        }
+                        ChannelSession.Counters[this.CounterName] = amount;
                     }
                 }
+
+                if (this.ResetOnLoad)
+                {
+                    ChannelSession.Counters[this.CounterName] = 0;
+                }
+
                 await this.SaveCounterToFile();
             }
         }
