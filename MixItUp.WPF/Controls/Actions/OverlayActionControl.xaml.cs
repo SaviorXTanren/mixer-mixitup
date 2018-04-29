@@ -22,6 +22,11 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
+            if (ChannelSession.Services.OverlayServer == null)
+            {
+                this.OverlayNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
+            }
+
             this.OverlayTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectTypeEnum>();
             this.OverlayFontColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
             this.OverlayYoutubeStartTimeTextBox.Text = "0";
