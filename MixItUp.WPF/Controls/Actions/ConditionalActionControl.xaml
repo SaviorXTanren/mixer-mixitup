@@ -36,7 +36,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" VerticalAlignment="Center">Ignore Casing:</TextBlock>
+            <TextBlock Grid.Column="0" VerticalAlignment="Center">Disable Case Sensitivity:</TextBlock>
             <ToggleButton Grid.Column="2" x:Name="IgnoreCasingToggleButton" />
 
             <TextBlock Grid.Column="4">
