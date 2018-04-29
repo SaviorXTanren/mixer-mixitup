@@ -47,8 +47,6 @@ namespace MixItUp.Base.Commands
 
         [DataMember]
         public List<string> Commands { get; set; }
-        [DataMember]
-        public bool IncludeExclamationInCommands { get; set; }
 
         [DataMember]
         public List<ActionBase> Actions { get; set; }
@@ -74,7 +72,6 @@ namespace MixItUp.Base.Commands
         {
             this.ID = Guid.NewGuid();
             this.Commands = new List<string>();
-            this.IncludeExclamationInCommands = true;
             this.Actions = new List<ActionBase>();
             this.IsEnabled = true;
         }
@@ -93,15 +90,7 @@ namespace MixItUp.Base.Commands
 
         public string CommandsString { get { return string.Join(" ", this.Commands); } }
 
-        public virtual bool ContainsCommand(string command)
-        {
-            var commandsToCheck = this.Commands;
-            if (this.IncludeExclamationInCommands)
-            {
-                commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
-            }
-            return commandsToCheck.Contains(command);
-        }
+        public virtual bool ContainsCommand(string command) { return this.Commands.Contains(command); }
 
         public async Task Perform() { await this.Perform(null); }
 

@@ -1,8 +1,7 @@
-﻿using MixItUp.Base.Actions;
-using MixItUp.Base.ViewModel.Import;
+﻿using MixItUp.Base.ViewModel.Import;
 using MixItUp.Base.ViewModel.Requirement;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 
@@ -13,9 +12,8 @@ namespace MixItUp.Base.Commands
     {
         private static SemaphoreSlim chatCommandPerformSemaphore = new SemaphoreSlim(1);
 
-        [Obsolete]
         [DataMember]
-        public int CurrencyCost { get; set; }
+        public bool IncludeExclamationInCommands { get; set; }
 
         public ChatCommand() { }
 
@@ -25,13 +23,26 @@ namespace MixItUp.Base.Commands
 
         public ChatCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements)
             : base(name, CommandTypeEnum.Chat, commands, requirements)
-        { }
+        {
+            this.IncludeExclamationInCommands = true;
+        }
 
         public ChatCommand(ScorpBotCommand command)
             : this(command.Command, command.Command, command.Requirements)
         {
-            this.Actions.Add(new ChatAction(command.Text));
+            this.Actions.AddRange(command.Actions);
+            this.IncludeExclamationInCommands = false;
             this.IsEnabled = command.Enabled;
+        }
+
+        public override bool ContainsCommand(string command)
+        {
+            var commandsToCheck = this.Commands;
+            if (this.IncludeExclamationInCommands)
+            {
+                commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
+            }
+            return commandsToCheck.Contains(command);
         }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }

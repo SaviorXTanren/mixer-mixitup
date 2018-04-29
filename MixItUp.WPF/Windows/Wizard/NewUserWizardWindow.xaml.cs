@@ -300,10 +300,7 @@ namespace MixItUp.WPF.Windows.Wizard
                         await databaseWrapper.RunReadCommand("SELECT * FROM RegCommand",
                         (reader) =>
                         {
-                            if (ScorpBotCommand.IsACommand(reader))
-                            {
-                                scorpBotData.Commands.Add(new ScorpBotCommand(reader));
-                            }
+                            scorpBotData.Commands.Add(new ScorpBotCommand(reader));
                         });
 
                         databaseWrapper.DatabaseFilePath = Path.Combine(databasePath, "Timers2DB.sqlite");

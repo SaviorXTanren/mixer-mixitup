@@ -24,15 +24,20 @@ namespace MixItUp.Base.Util
 
         public static string ConvertScorpBotText(string text)
         {
-            text = text.Replace("$user ", "@$username ");
+            text = text.Replace("$user", "@$username");
+            text = text.Replace("$url", "$userurl");
+            text = text.Replace("$hours", "$userhours");
+
             text = text.Replace("$target", "@$arg1username");
             for (int i = 1; i < 10; i++)
             {
                 text = text.Replace("$target" + i, "@$arg" + i + "username");
             }
+
+            text = text.Replace("$randuser", "@$randomusername");
+
             text = text.Replace("$msg", "$allargs");
-            text = text.Replace("$hours", "$userhours");
-            text = text.Replace("$raids", "");
+
             return text;
         }
 

@@ -1,21 +1,29 @@
-﻿using MixItUp.Base.Util;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace MixItUp.Base.ViewModel.Import
 {
     [DataContract]
     public class ScorpBotCommand
     {
-        public static bool IsACommand(DbDataReader reader) { return ((string)reader["Command"]).StartsWith("!"); }
+        public const string SFXRegexHeaderPattern = "$sfx(";
+        public const string ReadAPIRegexHeaderPattern = "$readapi(";
 
         [DataMember]
         public string Command { get; set; }
 
         [DataMember]
         public string Text { get; set; }
+
+        [DataMember]
+        public List<ActionBase> Actions { get; set; }
 
         [DataMember]
         public int Cooldown { get; set; }
@@ -28,6 +36,7 @@ namespace MixItUp.Base.ViewModel.Import
 
         public ScorpBotCommand()
         {
+            this.Actions = new List<ActionBase>();
             this.Requirements = new RequirementViewModel();
         }
 
@@ -38,8 +47,24 @@ namespace MixItUp.Base.ViewModel.Import
             this.Command = this.Command.ToLower();
             this.Command = this.Command.Replace("!", "");
 
-            this.Text = text;
-            this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(this.Text);
+            this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(text);
+
+            this.GetRegexEntries(SFXRegexHeaderPattern, (string entry) =>
+            {
+                this.Actions.Add(new SoundAction(entry, 100));
+                return string.Empty;
+            });
+
+            int webRequestCount = 1;
+            this.GetRegexEntries(ReadAPIRegexHeaderPattern, (string entry) =>
+            {
+                string si = "webrequest" + webRequestCount;
+                this.Actions.Add(WebRequestAction.CreateForSpecialIdentifier(entry, si));
+                webRequestCount++;
+                return "$" + si;
+            });
+
+            this.Actions.Add(new ChatAction(this.Text));
 
             this.Requirements.UserRole = UserRole.User;
 
@@ -63,6 +88,30 @@ namespace MixItUp.Base.ViewModel.Import
 
             this.Requirements.Cooldown.Amount = (int)reader["Cooldown"];
             this.Enabled = ((string)reader["Enabled"]).Equals("True");
+        }
+
+        private IEnumerable<string> GetRegexEntries(string pattern, Func<string, string> replacement)
+        {
+            List<string> entries = new List<string>();
+
+            int startIndex = 0;
+            do
+            {
+                startIndex = this.Text.IndexOf(pattern);
+                if (startIndex >= 0)
+                {
+                    int endIndex = this.Text.IndexOf(")", startIndex);
+                    if (endIndex >= 0)
+                    {
+                        string fullEntry = this.Text.Substring(startIndex, endIndex - startIndex + 1);
+                        string entry = fullEntry.Replace(pattern, "").Replace(")", "");
+                        entries.Add(entry);
+                        this.Text = this.Text.Replace(fullEntry, replacement(entry));
+                    }
+                }
+            } while (startIndex >= 0);
+
+            return entries;
         }
     }
 }
