@@ -45,6 +45,7 @@ namespace MixItUp.Base.Actions
         Discord,
         Translation,
         Twitter,
+        Conditional,
 
         Custom = 99,
     }

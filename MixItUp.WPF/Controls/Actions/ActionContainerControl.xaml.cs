@@ -115,6 +115,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Twitter:
                         this.actionControl = (this.action != null) ? new TwitterActionControl(this, (TwitterAction)this.action) : new TwitterActionControl(this);
                         break;
+                    case ActionTypeEnum.Conditional:
+                        this.actionControl = (this.action != null) ? new ConditionalActionControl(this, (ConditionalAction)this.action) : new ConditionalActionControl(this);
+                        break;
                 }
             }
 

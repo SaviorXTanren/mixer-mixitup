@@ -210,6 +210,9 @@
     <Compile Include="Controls\Actions\ChatActionControl.xaml.cs">
       <DependentUpon>ChatActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\ConditionalActionControl.xaml.cs">
+      <DependentUpon>ConditionalActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\CounterActionControl.xaml.cs">
       <DependentUpon>CounterActionControl.xaml</DependentUpon>
     </Compile>
@@ -289,6 +292,9 @@
       <DependentUpon>BasicTimerCommandEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\CommandEditorControlBase.cs" />
+    <Compile Include="Controls\Command\CommandReferenceControl.xaml.cs">
+      <DependentUpon>CommandReferenceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -549,6 +555,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\ConditionalActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\CounterActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -650,6 +660,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\BasicTimerCommandEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\CommandReferenceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
