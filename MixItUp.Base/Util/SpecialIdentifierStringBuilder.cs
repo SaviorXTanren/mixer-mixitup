@@ -12,8 +12,11 @@ namespace MixItUp.Base.Util
 {
     public class SpecialIdentifierStringBuilder
     {
+        public const string SpecialIdentifierHeader = "$";
+
         private const string ArgSpecialIdentifierHeader = "arg";
         private const string RandomSpecialIdentifierHeader = "random";
+        private const string RandomNumberSpecialIdentifier = "randomnumber";
 
         private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
 
@@ -129,16 +132,59 @@ namespace MixItUp.Base.Util
             }
 
             await this.HandleUserSpecialIdentifiers(ChannelSession.Chat.ChatUsers.PickRandom(), RandomSpecialIdentifierHeader);
+            if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
+            {
+                int startIndex = 0;
+                do
+                {
+                    startIndex = this.GetFirstInstanceOfSpecialIdentifier(RandomNumberSpecialIdentifier, startIndex);
+                    if (startIndex >= 0)
+                    {
+                        int endIndex = 0;
+                        for (endIndex = startIndex + RandomNumberSpecialIdentifier.Length + 1; endIndex < this.text.Length; endIndex++)
+                        {
+                            if (!char.IsDigit(this.text[endIndex]))
+                            {
+                                break;
+                            }
+                        }
+
+                        if (endIndex < this.text.Length)
+                        {
+                            string randomSI = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
+                            if (int.TryParse(randomSI.Replace(RandomNumberSpecialIdentifier, ""), out int randomNumberMax) && randomNumberMax > 0)
+                            {
+                                Random random = new Random();
+                                int randomNumber = (random.Next() % randomNumberMax) + 1;
+                                this.ReplaceSpecialIdentifier(randomSI, randomNumber.ToString());
+                            }
+                            else
+                            {
+                                startIndex = endIndex;
+                            }
+                        }
+                        else
+                        {
+                            startIndex = endIndex;
+                        }
+                    }
+                } while (startIndex > 0);
+            }
         }
 
         public void ReplaceSpecialIdentifier(string identifier, string replacement)
         {
-            this.text = this.text.Replace("$" + identifier, replacement);
+            this.text = this.text.Replace(SpecialIdentifierHeader + identifier, replacement);
         }
 
         public bool ContainsSpecialIdentifier(string identifier)
         {
-            return this.text.Contains("$" + identifier);
+            return this.text.Contains(SpecialIdentifierHeader + identifier);
+        }
+
+        public int GetFirstInstanceOfSpecialIdentifier(string identifier, int startIndex)
+        {
+            return this.text.IndexOf(SpecialIdentifierHeader + identifier, startIndex);
         }
 
         public override string ToString() { return this.text; }
