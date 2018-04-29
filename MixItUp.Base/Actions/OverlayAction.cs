@@ -1,16 +1,385 @@
-﻿using MixItUp.Base.Services;
-using MixItUp.Base.Util;
+﻿using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
+    public enum OverlayEffectTypeEnum
+    {
+        Text,
+        Image,
+        Video,
+        Youtube,
+        HTML,
+    }
+
+    public enum OverlayEffectEntranceAnimationTypeEnum
+    {
+        None,
+
+        [Name("Bounce In")]
+        BounceIn,
+        [Name("Bounce In Up")]
+        BounceInUp,
+        [Name("Bounce In Down")]
+        BounceInDown,
+        [Name("Bounce In Left")]
+        BounceInLeft,
+        [Name("Bounce In Right")]
+        BounceInRight,
+
+        [Name("Fade In")]
+        FadeIn,
+        [Name("Fade In Up")]
+        FadeInUp,
+        [Name("Fade In Down")]
+        FadeInDown,
+        [Name("Fade In Left")]
+        FadeInLeft,
+        [Name("Fade In Right")]
+        FadeInRight,
+
+        [Name("Flip In X")]
+        FlipInX,
+        [Name("Flip In Y")]
+        FlipInY,
+
+        [Name("Light Speed In")]
+        LightSpeedIn,
+
+        [Name("Rotate In")]
+        RotateIn,
+        [Name("Rotate In Up")]
+        RotateInUp,
+        [Name("Rotate In Down")]
+        RotateInDown,
+        [Name("Rotate In Left")]
+        RotateInLeft,
+        [Name("Rotate In Right")]
+        RotateInRight,
+
+        [Name("Slide In Up")]
+        SlideInUp,
+        [Name("Slide In Down")]
+        SlideInDown,
+        [Name("Slide In Left")]
+        SlideInLeft,
+        [Name("Slide In Right")]
+        SlideInRight,
+
+        [Name("Zoom In")]
+        ZoomIn,
+        [Name("Zoom In Up")]
+        ZoomInUp,
+        [Name("Zoom In Down")]
+        ZoomInDown,
+        [Name("Zoom In Left")]
+        ZoomInLeft,
+        [Name("Zoom In Right")]
+        ZoomInRight,
+
+        [Name("Jack In The Box")]
+        JackInTheBox,
+
+        [Name("Roll In")]
+        RollIn,
+    }
+
+    public enum OverlayEffectVisibleAnimationTypeEnum
+    {
+        None,
+
+        Bounce,
+        Flash,
+        Pulse,
+        [Name("Rubber Band")]
+        RubberBand,
+        Shake,
+        Swing,
+        Tada,
+        Wobble,
+        Jello,
+        Flip,
+    }
+
+    public enum OverlayEffectExitAnimationTypeEnum
+    {
+        None,
+
+        [Name("Bounce Out")]
+        BounceOut,
+        [Name("Bounce Out Up")]
+        BounceOutUp,
+        [Name("Bounce Out Down")]
+        BounceOutDown,
+        [Name("Bounce Out Left")]
+        BounceOutLeft,
+        [Name("Bounce Out Right")]
+        BounceOutRight,
+
+        [Name("Fade Out")]
+        FadeOut,
+        [Name("Fade Out Up")]
+        FadeOutUp,
+        [Name("Fade Out Down")]
+        FadeOutDown,
+        [Name("Fade Out Left")]
+        FadeOutLeft,
+        [Name("Fade Out Right")]
+        FadeOutRight,
+
+        [Name("Flip Out X")]
+        FlipOutX,
+        [Name("Flip Out Y")]
+        FlipOutY,
+
+        [Name("Light Speed Out")]
+        LightSpeedOut,
+
+        [Name("Rotate Out")]
+        RotateOut,
+        [Name("Rotate Out Up")]
+        RotateOutUp,
+        [Name("Rotate Out Down")]
+        RotateOutDown,
+        [Name("Rotate Out Left")]
+        RotateOutLeft,
+        [Name("Rotate Out Right")]
+        RotateOutRight,
+
+        [Name("Slide Out Up")]
+        SlideOutUp,
+        [Name("Slide Out Down")]
+        SlideOutDown,
+        [Name("Slide Out Left")]
+        SlideOutLeft,
+        [Name("Slide Out Right")]
+        SlideOutRight,
+
+        [Name("Zoom Out")]
+        ZoomOut,
+        [Name("Zoom Out Up")]
+        ZoomOutUp,
+        [Name("Zoom Out Down")]
+        ZoomOutDown,
+        [Name("Zoom Out Left")]
+        ZoomOutLeft,
+        [Name("Zoom Out Right")]
+        ZoomOutRight,
+
+        Hinge,
+
+        [Name("Roll Out")]
+        RollOut,
+    }
+
+    [DataContract]
+    public class OverlayTextEffect : OverlayEffectBase
+    {
+        [DataMember]
+        public string Text { get; set; }
+        [DataMember]
+        public string Color { get; set; }
+        [DataMember]
+        public int Size { get; set; }
+
+        public OverlayTextEffect() { }
+
+        public OverlayTextEffect(string text, string color, int size, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
+            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.Text, entrance, visible, exit, duration, horizontal, vertical)
+        {
+            this.Text = text;
+            this.Color = color;
+            this.Size = size;
+        }
+    }
+
+    [DataContract]
+    public class OverlayImageEffect : OverlayEffectBase
+    {
+        [DataMember]
+        public string FilePath { get; set; }
+        [DataMember]
+        public int Width { get; set; }
+        [DataMember]
+        public int Height { get; set; }
+
+        [DataMember]
+        public string ID { get; set; }
+
+        [DataMember]
+        public string FullLink
+        {
+            get
+            {
+                if (!Uri.IsWellFormedUriString(this.FilePath, UriKind.RelativeOrAbsolute))
+                {
+                    return string.Format("http://localhost:8111/overlay/files/{0}", this.ID);
+                }
+                return this.FilePath;
+            }
+            set { }
+        }
+
+        public OverlayImageEffect() { }
+
+        public OverlayImageEffect(string filepath, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
+            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.Image, entrance, visible, exit, duration, horizontal, vertical)
+        {
+            this.FilePath = filepath;
+            this.Width = width;
+            this.Height = height;
+            this.ID = Guid.NewGuid().ToString().Replace("-", string.Empty);
+        }
+    }
+
+    [DataContract]
+    public class OverlayVideoEffect : OverlayEffectBase
+    {
+        public const int DefaultHeight = 315;
+        public const int DefaultWidth = 560;
+
+        [DataMember]
+        public string FilePath { get; set; }
+        [DataMember]
+        public int Width { get; set; }
+        [DataMember]
+        public int Height { get; set; }
+
+        [DataMember]
+        public string ID { get; set; }
+
+        [DataMember]
+        public string FullLink
+        {
+            get
+            {
+                if (!Uri.IsWellFormedUriString(this.FilePath, UriKind.RelativeOrAbsolute))
+                {
+                    return string.Format("http://localhost:8111/overlay/files/{0}", this.ID);
+                }
+                return this.FilePath;
+            }
+            set { }
+        }
+
+        public OverlayVideoEffect() { }
+
+        public OverlayVideoEffect(string filepath, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
+            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.Video, entrance, visible, exit, duration, horizontal, vertical)
+        {
+            this.FilePath = filepath;
+            this.Width = width;
+            this.Height = height;
+            this.ID = Guid.NewGuid().ToString().Replace("-", string.Empty);
+        }
+    }
+
+    [DataContract]
+    public class OverlayYoutubeEffect : OverlayEffectBase
+    {
+        [DataMember]
+        public string ID { get; set; }
+        [DataMember]
+        public int StartTime { get; set; }
+        [DataMember]
+        public int Width { get; set; }
+        [DataMember]
+        public int Height { get; set; }
+
+        public OverlayYoutubeEffect() { }
+
+        public OverlayYoutubeEffect(string id, int startTime, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
+            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.Youtube, entrance, visible, exit, duration, horizontal, vertical)
+        {
+            this.ID = id;
+            this.StartTime = startTime;
+            this.Width = width;
+            this.Height = height;
+        }
+    }
+
+    [DataContract]
+    public class OverlayHTMLEffect : OverlayEffectBase
+    {
+        [DataMember]
+        public string HTMLText { get; set; }
+
+        public OverlayHTMLEffect() { }
+
+        public OverlayHTMLEffect(string htmlText, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible, OverlayEffectExitAnimationTypeEnum exit,
+            double duration, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.HTML, entrance, visible, exit, duration, horizontal, vertical)
+        {
+            this.HTMLText = htmlText;
+        }
+    }
+
+    [DataContract]
+    public class OverlayEffectBase
+    {
+        [DataMember]
+        public OverlayEffectTypeEnum EffectType { get; set; }
+
+        [DataMember]
+        public OverlayEffectEntranceAnimationTypeEnum EntranceAnimation { get; set; }
+        [DataMember]
+        public string EntranceAnimationName { get { return this.GetAnimationClassName(this.EntranceAnimation.ToString()); } set { } }
+        [DataMember]
+        public OverlayEffectVisibleAnimationTypeEnum VisibleAnimation { get; set; }
+        [DataMember]
+        public string VisibleAnimationName { get { return this.GetAnimationClassName(this.VisibleAnimation.ToString()); } set { } }
+        [DataMember]
+        public OverlayEffectExitAnimationTypeEnum ExitAnimation { get; set; }
+        [DataMember]
+        public string ExitAnimationName { get { return this.GetAnimationClassName(this.ExitAnimation.ToString()); } set { } }
+
+        [DataMember]
+        public double Duration;
+        [DataMember]
+        public int Horizontal;
+        [DataMember]
+        public int Vertical;
+
+        public OverlayEffectBase() { }
+
+        public OverlayEffectBase(OverlayEffectTypeEnum effectType, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
+            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
+        {
+            this.EffectType = effectType;
+            this.EntranceAnimation = entrance;
+            this.VisibleAnimation = visible;
+            this.ExitAnimation = exit;
+            this.Duration = duration;
+            this.Horizontal = horizontal;
+            this.Vertical = vertical;
+        }
+
+        public T Copy<T>()
+        {
+            JObject jobj = JObject.FromObject(this);
+            return jobj.ToObject<T>();
+        }
+
+        private string GetAnimationClassName(string name)
+        {
+            if (!string.IsNullOrEmpty(name) && !name.Equals("None"))
+            {
+                return Char.ToLowerInvariant(name[0]) + name.Substring(1);
+            }
+            return string.Empty;
+        }
+    }
+
     [DataContract]
     public class OverlayAction : ActionBase
     {
@@ -19,174 +388,54 @@ namespace MixItUp.Base.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return OverlayAction.asyncSemaphore; } }
 
         [DataMember]
-        public string ImagePath;
-        [DataMember]
-        public int ImageWidth;
-        [DataMember]
-        public int ImageHeight;
+        public OverlayEffectBase Effect { get; set; }
 
-        [DataMember]
-        public string Text;
-        [DataMember]
-        public string Color;
-        [DataMember]
-        public int FontSize;
+        public OverlayAction() : base(ActionTypeEnum.Overlay) { }
 
-        [DataMember]
-        public int VideoWidth;
-        [DataMember]
-        public int VideoHeight;
-
-        [DataMember]
-        public string youtubeVideoID;
-        [DataMember]
-        public int youtubeStartTime;
-
-        [DataMember]
-        public string localVideoFilePath;
-
-        [DataMember]
-        public string HTMLText;
-
-        [DataMember]
-        public double Duration;
-        [DataMember]
-        public int FadeDuration;
-        [DataMember]
-        public int Horizontal;
-        [DataMember]
-        public int Vertical;
-
-        private string imageData { get; set; }
-
-        public static OverlayAction CreateForImage(string imagePath, int width, int height, double duration, int horizontal, int vertical, int fadeDuration)
-        {
-            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
-            action.ImagePath = imagePath;
-            action.ImageWidth = width;
-            action.ImageHeight = height;
-            return action;
-        }
-
-        public static OverlayAction CreateForText(string text, string color, int fontSize, double duration, int horizontal, int vertical, int fadeDuration)
-        {
-            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
-            action.Text = text;
-            action.Color = color;
-            action.FontSize = fontSize;
-            return action;
-        }
-
-        public static OverlayAction CreateForYoutube(string youtubeVideoID, int startTime, int width, int height, double duration, int horizontal, int vertical, int fadeDuration)
-        {
-            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
-            action.youtubeVideoID = youtubeVideoID;
-            action.youtubeStartTime = startTime;
-            action.VideoWidth = width;
-            action.VideoHeight = height;
-            return action;
-        }
-
-        public static OverlayAction CreateForVideo(string localVideoFilePath, int width, int height, double duration, int horizontal, int vertical, int fadeDuration)
-        {
-            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
-            action.localVideoFilePath = localVideoFilePath;
-            action.VideoWidth = width;
-            action.VideoHeight = height;
-            return action;
-        }
-
-        public static OverlayAction CreateForHTML(string htmlText, double duration, int horizontal, int vertical, int fadeDuration)
-        {
-            OverlayAction action = new OverlayAction(duration, horizontal, vertical, fadeDuration);
-            action.HTMLText = htmlText;
-            return action;
-        }
-
-        public OverlayAction()
-            : base(ActionTypeEnum.Overlay)
-        {
-            this.VideoHeight = 315;
-            this.VideoWidth = 560;
-        }
-
-        private OverlayAction(double duration, int horizontal, int vertical, int fadeDuration)
+        public OverlayAction(OverlayEffectBase effect)
             : this()
         {
-            this.Duration = duration;
-            this.Horizontal = horizontal;
-            this.Vertical = vertical;
-            this.FadeDuration = fadeDuration;
+            this.Effect = effect;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.Services.OverlayServer != null)
             {
-                if (!string.IsNullOrEmpty(this.ImagePath))
+                if (this.Effect is OverlayImageEffect)
                 {
-                    string imageFilePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, arguments);
-                    try
+                    OverlayImageEffect imageEffect = (OverlayImageEffect)this.Effect;
+                    string imageFilePath = await this.ReplaceStringWithSpecialModifiers(imageEffect.FilePath, user, arguments);
+                    if (!string.IsNullOrEmpty(imageFilePath))
                     {
-                        if (!string.IsNullOrEmpty(imageFilePath) && Uri.IsWellFormedUriString(imageFilePath, UriKind.RelativeOrAbsolute))
-                        {
-                            string tempFilePath = Path.GetTempFileName();
-                            using (WebClient client = new WebClient())
-                            {
-                                client.DownloadFile(new Uri(imageFilePath), tempFilePath);
-                            }
-                            imageFilePath = tempFilePath;
-                        }
-
-                        if (File.Exists(imageFilePath))
-                        {
-                            byte[] byteData = File.ReadAllBytes(imageFilePath);
-                            this.imageData = Convert.ToBase64String(byteData);
-                        }
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
-
-                    if (this.imageData != null)
-                    {
-                        await ChannelSession.Services.OverlayServer.SendImage(new OverlayImage()
-                        {
-                            imagePath = imageFilePath, imageData = this.imageData, width = this.ImageWidth, height = this.ImageHeight,
-                            duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
-                        });
+                        OverlayImageEffect copy = imageEffect.Copy<OverlayImageEffect>();
+                        copy.FilePath = imageFilePath;
+                        await ChannelSession.Services.OverlayServer.SendImage(copy);
                     }
                 }
-                else if (!string.IsNullOrEmpty(this.Text))
+                else if (this.Effect is OverlayTextEffect)
                 {
-                    string text = await this.ReplaceStringWithSpecialModifiers(this.Text, user, arguments);
-                    await ChannelSession.Services.OverlayServer.SendText(new OverlayText()
-                    {
-                        text = text, color = this.Color, fontSize = this.FontSize, duration = this.Duration, horizontal = this.Horizontal,
-                        vertical = this.Vertical, fadeDuration = this.FadeDuration,
-                    });
+                    OverlayTextEffect textEffect = (OverlayTextEffect)this.Effect;
+                    string text = await this.ReplaceStringWithSpecialModifiers(textEffect.Text, user, arguments);
+                    OverlayTextEffect copy = textEffect.Copy<OverlayTextEffect>();
+                    copy.Text = text;
+                    await ChannelSession.Services.OverlayServer.SendText(copy);
                 }
-                else if (!string.IsNullOrEmpty(this.youtubeVideoID))
+                else if (this.Effect is OverlayYoutubeEffect)
                 {
-                    await ChannelSession.Services.OverlayServer.SendYoutubeVideo(new OverlayYoutubeVideo()
-                    {
-                        videoID = this.youtubeVideoID, startTime = this.youtubeStartTime, height = this.VideoHeight, width = this.VideoWidth,
-                        duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
-                    });
+                    await ChannelSession.Services.OverlayServer.SendYoutubeVideo((OverlayYoutubeEffect)this.Effect);
                 }
-                else if (!string.IsNullOrEmpty(this.localVideoFilePath))
+                else if (this.Effect is OverlayVideoEffect)
                 {
-                    await ChannelSession.Services.OverlayServer.SendLocalVideo(new OverlayLocalVideo()
-                    {
-                        filepath = this.localVideoFilePath, height = this.VideoHeight, width = this.VideoWidth,
-                        duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration
-                    });
+                    await ChannelSession.Services.OverlayServer.SendLocalVideo((OverlayVideoEffect)this.Effect);
                 }
-                else if (!string.IsNullOrEmpty(this.HTMLText))
+                else if (this.Effect is OverlayHTMLEffect)
                 {
-                    string htmlText = await this.ReplaceStringWithSpecialModifiers(this.HTMLText, user, arguments);
-                    await ChannelSession.Services.OverlayServer.SendHTMLText(new OverlayHTML()
-                    {
-                        htmlText = htmlText, duration = this.Duration, horizontal = this.Horizontal, vertical = this.Vertical, fadeDuration = this.FadeDuration,
-                    });
+                    OverlayHTMLEffect htmlEffect = (OverlayHTMLEffect)this.Effect;
+                    string htmlText = await this.ReplaceStringWithSpecialModifiers(htmlEffect.HTMLText, user, arguments);
+                    OverlayHTMLEffect copy = htmlEffect.Copy<OverlayHTMLEffect>();
+                    copy.HTMLText = htmlText;
+                    await ChannelSession.Services.OverlayServer.SendHTMLText(copy);
                 }
             }
         }

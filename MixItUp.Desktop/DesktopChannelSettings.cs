@@ -28,7 +28,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 10;
+        public const int LatestVersion = 11;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -517,68 +517,5 @@ namespace MixItUp.Desktop
                 }
             }
         }
-    }
-
-    [DataContract]
-    public class LegacyDesktopChannelSettings : DesktopChannelSettings
-    {
-        [JsonProperty]
-        public bool CurrencyEnabled { get; set; }
-        [JsonProperty]
-        public string CurrencyName { get; set; }
-        [JsonProperty]
-        public int CurrencyAcquireAmount { get; set; }
-        [JsonProperty]
-        public int CurrencyAcquireInterval { get; set; }
-
-        [JsonProperty]
-        public UserCurrencyViewModel CurrencyAcquisition { get; set; }
-
-        [JsonProperty]
-        public UserCurrencyViewModel RankAcquisition { get; set; }
-        [JsonProperty]
-        public List<UserRankViewModel> Ranks { get; set; }
-        [JsonProperty]
-        public CustomCommand RankChangedCommand { get; set; }
-
-        [JsonProperty]
-        public UserRankViewModel GameQueueMinimumRank { get; set; }
-        [JsonProperty]
-        public int GameQueueCurrencyCost { get; set; }
-
-        [JsonProperty]
-        public bool GameQueueMustFollow { get; set; }
-        [JsonProperty]
-        public CurrencyRequirementViewModel GameQueueRankRequirement { get; set; }
-        [JsonProperty]
-        public CurrencyRequirementViewModel GameQueueCurrencyRequirement { get; set; }
-
-        [JsonProperty]
-        public int GiveawayCurrencyCost { get; set; }
-        [JsonProperty]
-        public string GiveawayUserRank { get; set; }
-
-        [JsonProperty]
-        public UserRole GiveawayUserRole { get; set; }
-        [JsonProperty]
-        public CurrencyRequirementViewModel GiveawayCurrencyRequirement { get; set; }
-        [JsonProperty]
-        public CurrencyRequirementViewModel GiveawayRankRequirement { get; set; }
-
-        [JsonProperty]
-        public List<UserDataViewModel> userDataInternal { get; set; }
-
-        [JsonProperty]
-        public List<string> quotesInternal { get; set; }
-
-        [JsonProperty]
-        public new Dictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; set; }
-        [JsonProperty]
-        public new Dictionary<string, int> InteractiveCooldownGroups { get; set; }
-
-        [JsonProperty]
-        public bool ModerationUseCommunityBannedWords { get; set; }
-        [JsonProperty]
-        public bool ModerationIncludeModerators { get; set; }
     }
 }

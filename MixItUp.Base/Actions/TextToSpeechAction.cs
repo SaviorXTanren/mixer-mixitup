@@ -122,7 +122,7 @@ namespace MixItUp.Base.Actions
             {
                 string message = await this.ReplaceStringWithSpecialModifiers(this.SpeechText, user, arguments);
                 await ChannelSession.Services.OverlayServer.SendTextToSpeech(new OverlayTextToSpeech()
-                    { text = message, voice = this.Voice, volume = this.Volume, pitch = this.Pitch, rate = this.Rate });
+                    { Text = message, Voice = this.Voice, Volume = this.Volume, Pitch = this.Pitch, Rate = this.Rate });
             }
         }
     }

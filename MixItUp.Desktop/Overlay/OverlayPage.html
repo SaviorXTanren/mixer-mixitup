@@ -2,8 +2,11 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="utf-8" />
+        <title>Mix It Up - Overlay</title>
+        <link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Wiki/Images/LogoSmall.png" />
+        <link rel="stylesheet" type="text/css" href="animate.min.css">
     </head>
-    <body style="background-color:transparent">
+    <body style="background-color: transparent; overflow: hidden;">
         <div id="mainOverlay" />
 
         <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: visible">
@@ -17,13 +20,47 @@
             <h1 style="font-size: 100px; color: red; text-align: center">To Speech!</h1>
         </div>
 
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-
-        <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+        <script src="jquery.min.js"></script>
 
         <script src="webSocketWrapper.js"></script>
 
+        <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+
+        <style>
+
+        </style>
+
         <script>
+            $.fn.extend({
+                animateCss: function(animationName, callback) {
+                    var animationEnd = (function(el) {
+                        var animations = {
+                            animation: 'animationend',
+                            OAnimation: 'oAnimationEnd',
+                            MozAnimation: 'mozAnimationEnd',
+                            WebkitAnimation: 'webkitAnimationEnd',
+                        };
+
+                        for (var t in animations) {
+                            if (el.style[t] !== undefined) {
+                                return animations[t];
+                            }
+                        }
+                    })(document.createElement('div'));
+                
+                    if (animationName) {
+                        this.addClass('animated ' + animationName).one(animationEnd, function() {
+                            $(this).removeClass('animated ' + animationName);
+
+                            if (typeof callback === 'function') callback();
+                        });               
+                    }
+                    else if (typeof callback === 'function') callback();
+
+                    return this;
+                },
+            });
+
             var mainOverlayDiv = document.getElementById('mainOverlay');
             var noConnectionDiv = document.getElementById('noConnectionDiv');
             var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
@@ -70,131 +107,134 @@
             }
 
             function testPacket() {
-                var addedElement = document.createElement('h1');
-                addedElement.innerHTML = 'Connection Test!';
-                addedElement.style.cssText += 'font-size: 100px';
+                var data = { Text: 'Connection Test!', Size: 100, Color: 'red', EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut',
+                    Horizontal: 50, Vertical: 50, Duration: 3 };
+                textPacket(data);
+            }
 
-                var data = { horizontal: 50, vertical: 50, duration: 3, fadeDuration: 400 };
+            function imagePacket(data) {
+                var addedElement = document.createElement('img');
+                addedElement.src = data.FullLink;
+                addedElement.style.cssText += 'width: ' + data.Width + 'px; height: ' + data.Height + 'px; ';
 
                 addWaitRemoveElement(data, addedElement);
             }
 
-            function imagePacket(data) {
-                var addedElement = null;
-
-                if (data.imagePath != null) {
-                    addedElement = document.createElement('img');
-
-                    var imageType = "data:image/png";
-                    if (data.imagePath.endsWith("gif")) {
-                        imageType = "data:image/gif";
-                    }
-                    else if (data.imagePath.endsWith("jpg")) {
-                        imageType = "data:image/jpg";
-                    }
-                    else if (data.imagePath.endsWith("jpeg")) {
-                        imageType = "data:image/jpeg";
-                    }
-
-                    addedElement.src = imageType + ";base64," + data.imageData;
-
-                    addedElement.style.cssText += 'width: ' + data.width + 'px; height: ' + data.height + 'px; ';
-
-                    addWaitRemoveElement(data, addedElement);
-                }
-            }
-
             function textPacket(data) {
-                var addedElement = null;
-
-                if (data.text != null) {
-                    addedElement = document.createElement('h1');
-                    addedElement.innerHTML = data.text;
-                    addedElement.style.cssText += 'font-size: ' + data.fontSize + 'px; color: ' + data.color + '; ' +
-                        'text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;';
-                }
+                var addedElement = document.createElement('h1');
+                addedElement.innerHTML = data.Text;
+                addedElement.style.cssText += 'font-size: ' + data.Size + 'px; color: ' + data.Color + '; ' + 'text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;';
 
                 addWaitRemoveElement(data, addedElement);
             }
 
             function youtubePacket(data) {
-                addedElement = document.createElement('iframe');
-                addedElement.width = data.width;
-                addedElement.height = data.height;
+                var addedElement = document.createElement('iframe');
+                addedElement.width = data.Width;
+                addedElement.height = data.Height;
                 addedElement.frameborder = 0;
                 addedElement.allow = "autoplay; encrypted-media";
                 addedElement.setAttribute('allowFullScreen', '');
                 addedElement.setAttribute('autoplay', '');
-                addedElement.src = "https://www.youtube.com/embed/" + data.videoID + "?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0&amp;start=" + data.startTime;
+                addedElement.src = "https://www.youtube.com/embed/" + data.ID + "?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0&amp;start=" + data.StartTime;
 
                 addWaitRemoveElement(data, addedElement);
             }
 
             function videoPacket(data) {
-                addedElement = document.createElement('video');
-                addedElement.width = data.width;
-                addedElement.height = data.height;
+                var addedElement = document.createElement('video');
+                addedElement.width = data.Width;
+                addedElement.height = data.Height;
                 addedElement.frameborder = 0;
                 addedElement.allow = "autoplay; encrypted-media";
                 addedElement.setAttribute('autoplay', '');
 
                 sourceElement = document.createElement('source');
-                sourceElement.src = "http://localhost:8111/overlay/video/" + data.videoID;
-                sourceElement.type = data.videoType;
+                sourceElement.src = data.FullLink;
+                if (data.FilePath.endsWith(".mp4")) {
+                    sourceElement.type = "video/mp4";
+                }
+                else if (data.FilePath.endsWith(".webm")) {
+                    sourceElement.type = "video/webm";
+                }
                 addedElement.appendChild(sourceElement);
 
                 addWaitRemoveElement(data, addedElement);
             }
 
             function htmlTextPacket(data) {
-                var addedElement = null;
-
-                if (data.htmlText != null) {
-                    addedElement = document.createElement('div');
-                    addedElement.innerHTML = data.htmlText;
-                }
+                var addedElement = document.createElement('div');
+                addedElement.innerHTML = data.HTMLText;
 
                 addWaitRemoveElement(data, addedElement);
             }
 
             function textToSpeechPacket(data) {
                 if (responsiveVoice.voiceSupport()) {
-                    responsiveVoice.speak(data.text, data.voice, { pitch: data.pitch, rate: data.rate, volume: data.volume });
+                    responsiveVoice.speak(data.Text, data.Voice, { pitch: data.Pitch, rate: data.Rate, volume: data.Volume });
                 }
                 else {
-                    var data = { horizontal: 50, vertical: 50, duration: 3, fadeDuration: 400 };
-
+                    var data = { Horizontal: 50, Vertical: 50, Duration: 3 };
                     addWaitRemoveElement(data, noTextToSpeechDiv);
                 }
             }
 
             function addWaitRemoveElement(data, addedElement) {
                 if (addedElement != null) {
-                    addedElement.style.cssText += 'position: absolute; left: ' + data.horizontal.toString() + '%; top: ' +
-                        data.vertical.toString() + '%; transform: translate(-50%, -50%); display: none;'
+                    addedElement.style.cssText += 'position: absolute; left: ' + data.Horizontal.toString() + '%; top: ' + data.Vertical.toString() + '%; transform: translate(-50%, -50%);'
 
-                    mainOverlayDiv.appendChild(addedElement);
+                    var divContainer = document.createElement('div');
+                    divContainer.style.cssText += 'position: absolute; width: 1920px; height: 1080px; max-width: 1920px; max-height: 1080px; min-width: 1920px; min-height: 1080px;';
+                    divContainer.appendChild(addedElement);
 
-                    $(addedElement).fadeIn(data.fadeDuration, function () {
+                    $(divContainer).animateCss(data.EntranceAnimationName, function() {
+
                         setTimeout(function () {
-                            $(addedElement).fadeOut(data.fadeDuration, function () {
-                                mainOverlayDiv.removeChild(addedElement);
-                            });
-                        }, data.duration * 1000);
+
+                            $(divContainer).animateCss(data.VisibleAnimationName);
+
+                            setTimeout(function () {
+
+                                var elementToAnimate = divContainer;
+                                if (data.ExitAnimationName && data.ExitAnimationName == 'hinge') {
+                                    elementToAnimate = addedElement;
+                                }
+
+                                $(elementToAnimate).animateCss(data.ExitAnimationName, function() {
+
+                                    mainOverlayDiv.removeChild(divContainer);
+                                });
+ 
+                            }, (data.Duration * 1000 * 2) / 3);
+ 
+                        }, (data.Duration * 1000) / 3);
+
                     });
+
+                    mainOverlayDiv.appendChild(divContainer);
+
+                    //$(addedElement).animateCss('rollIn', function() {
+
+                    //    setTimeout(function () {
+
+                    //        $(addedElement).animateCss('flip');
+
+                    //        setTimeout(function () {
+
+                    //            $(addedElement).animateCss('rollOut', function() {
+
+                    //                mainOverlayDiv.removeChild(addedElement);
+                    //            });
+ 
+                    //        }, (data.Duration * 1000) / 2);
+
+                    //    }, (data.Duration * 1000) / 2);
+
+                    //});
                 }
             }
 
             function logException(err) {
-                if (isDebug) {
-                    var addedElement = document.createElement('h1');
-                    addedElement.innerHTML = err.toString();
-                    addedElement.style.cssText += 'font-size: 100px';
-
-                    var data = { horizontal: 50, vertical: 50, duration: 10 };
-
-                    addWaitRemoveElement(data, addedElement);
-                }
                 logToSessionStorage(err);
             }
 

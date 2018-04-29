@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Client;
 using Mixer.Base.Web;
 using MixItUp.Base;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.WebSockets;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MixItUp.Overlay
@@ -104,34 +106,29 @@ namespace MixItUp.Overlay
 
         public async Task<bool> TestConnection() { return await this.webSocketServer.TestConnection(); }
 
-        public async Task SendImage(OverlayImage image) { await this.SendPacket(new OverlayPacket("image", JObject.FromObject(image))); }
-
-        public async Task SendText(OverlayText text) { await this.SendPacket(new OverlayPacket("text", JObject.FromObject(text))); }
-
-        public async Task SendYoutubeVideo(OverlayYoutubeVideo youtubeVideo) { await this.SendPacket(new OverlayPacket("youtube", JObject.FromObject(youtubeVideo))); }
-
-        public async Task SendLocalVideo(OverlayLocalVideo localVideo)
+        public async Task SendImage(OverlayImageEffect effect)
         {
-            localVideo.videoID = Guid.NewGuid().ToString().Replace("-", string.Empty);
-            if (localVideo.filepath.EndsWith(".mp4"))
-            {
-                localVideo.videoType = "video/mp4";
-            }
-            else if (localVideo.filepath.EndsWith(".webm"))
-            {
-                localVideo.videoType = "video/webm";
-            }
-            this.httpListenerServer.SetLocalVideo(localVideo);
-
-            await this.SendPacket(new OverlayPacket("video", JObject.FromObject(localVideo)));
+            this.httpListenerServer.SetLocalFile(effect.ID, effect.FilePath);
+            await this.SendPacket("image", effect);
         }
 
-        public async Task SendHTMLText(OverlayHTML htmlText) { await this.SendPacket(new OverlayPacket("htmlText", JObject.FromObject(htmlText))); }
+        public async Task SendText(OverlayTextEffect effect) { await this.SendPacket("text", effect); }
 
-        public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket(new OverlayPacket("textToSpeech", JObject.FromObject(textToSpeech))); }
+        public async Task SendYoutubeVideo(OverlayYoutubeEffect effect) { await this.SendPacket("youtube", effect); }
 
-        private async Task SendPacket(OverlayPacket packet)
+        public async Task SendLocalVideo(OverlayVideoEffect effect)
         {
+            this.httpListenerServer.SetLocalFile(effect.ID, effect.FilePath);
+            await this.SendPacket("video", effect);
+        }
+
+        public async Task SendHTMLText(OverlayHTMLEffect effect) { await this.SendPacket("htmlText", effect); }
+
+        public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket("textToSpeech", textToSpeech); }
+
+        private async Task SendPacket(string type, object contents)
+        {
+            OverlayPacket packet = new OverlayPacket(type, JObject.FromObject(contents));
             if (this.isBatching)
             {
                 this.batchPackets.Add(packet);
@@ -145,29 +142,53 @@ namespace MixItUp.Overlay
 
     public class OverlayHttpListenerServer : HttpListenerServerBase
     {
-        private const string OverlayWebpageFilePath = "Overlay\\OverlayPage.html";
-        private const string WebSocketWrapperFilePath = "Overlay\\WebSocketWrapper.js";
+        private const string OverlayFolderPath = "Overlay\\";
+        private const string OverlayWebpageFilePath = OverlayFolderPath + "OverlayPage.html";
+
+        private const string CSSIncludeReplacementStringFormat = "<link rel=\"stylesheet\" type=\"text/css\" href=\".*\">";
+
+        private const string JQueryScriptReplacementString = "<script src=\"jquery.min.js\"></script>";
+        private const string JQueryFilePath = OverlayFolderPath + "jquery.min.js";
 
         private const string WebSocketWrapperScriptReplacementString = "<script src=\"webSocketWrapper.js\"></script>";
+        private const string WebSocketWrapperFilePath = OverlayFolderPath + "WebSocketWrapper.js";
 
-        private const string OverlayVideoWebPath = "overlay/video/";
+        private const string OverlayFilesWebPath = "overlay/files/";
 
         private string webPageInstance;
 
-        private Dictionary<string, OverlayLocalVideo> videoFiles = new Dictionary<string, OverlayLocalVideo>();
+        private Dictionary<string, string> localFiles = new Dictionary<string, string>();
 
         public OverlayHttpListenerServer(string address)
             : base(address)
         {
             this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
-            string webSocketWrapperText = File.ReadAllText(WebSocketWrapperFilePath);
 
+            string[] splits = CSSIncludeReplacementStringFormat.Split(new string[] { ".*" }, StringSplitOptions.RemoveEmptyEntries);
+            Regex cssRegex = new Regex(CSSIncludeReplacementStringFormat);
+            foreach (Match match in cssRegex.Matches(this.webPageInstance))
+            {
+                string cssFileName = match.Value;
+                cssFileName = cssFileName.Replace(splits[0], "");
+                cssFileName = cssFileName.Replace(splits[1], "");
+                string cssFileContents = File.ReadAllText(OverlayFolderPath + cssFileName);
+
+                this.webPageInstance = this.webPageInstance.Replace(match.Value, string.Format("<style>{0}</style>", cssFileContents));
+            }
+
+            string jqueryText = File.ReadAllText(JQueryFilePath);
+            this.webPageInstance = this.webPageInstance.Replace(JQueryScriptReplacementString, string.Format("<script>{0}</script>", jqueryText));
+
+            string webSocketWrapperText = File.ReadAllText(WebSocketWrapperFilePath);
             this.webPageInstance = this.webPageInstance.Replace(WebSocketWrapperScriptReplacementString, string.Format("<script>{0}</script>", webSocketWrapperText));
         }
 
-        public void SetLocalVideo(OverlayLocalVideo video)
+        public void SetLocalFile(string id, string filepath)
         {
-            this.videoFiles[video.videoID] = video;
+            if (!Uri.IsWellFormedUriString(filepath, UriKind.RelativeOrAbsolute))
+            {
+                this.localFiles[id] = filepath;
+            }
         }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
@@ -179,18 +200,25 @@ namespace MixItUp.Overlay
             {
                 await this.CloseConnection(listenerContext, HttpStatusCode.OK, this.webPageInstance);
             }
-            else if (url.StartsWith(OverlayVideoWebPath))
+            else if (url.StartsWith(OverlayFilesWebPath))
             {
-                string videoID = url.Replace(OverlayVideoWebPath, "");
-                if (this.videoFiles.ContainsKey(videoID) && File.Exists(this.videoFiles[videoID].filepath))
+                string fileID = url.Replace(OverlayFilesWebPath, "");
+                if (this.localFiles.ContainsKey(fileID) && File.Exists(this.localFiles[fileID]))
                 {
                     listenerContext.Response.Headers["Access-Control-Allow-Origin"] = "*";
                     listenerContext.Response.StatusCode = (int)HttpStatusCode.OK;
                     listenerContext.Response.StatusDescription = HttpStatusCode.OK.ToString();
-                    listenerContext.Response.ContentType = this.videoFiles[videoID].videoType;
+                    if (this.localFiles[fileID].EndsWith(".mp4") || this.localFiles[fileID].EndsWith(".webm"))
+                    {
+                        listenerContext.Response.ContentType = "video/" + Path.GetExtension(this.localFiles[fileID]).Replace(".", "");
+                    }
+                    else
+                    {
+                        listenerContext.Response.ContentType = "image/" + Path.GetExtension(this.localFiles[fileID]).Replace(".", "");
+                    }
 
-                    byte[] videoData = File.ReadAllBytes(this.videoFiles[videoID].filepath);
-                    await listenerContext.Response.OutputStream.WriteAsync(videoData, 0, videoData.Length);
+                    byte[] imageData = File.ReadAllBytes(this.localFiles[fileID]);
+                    await listenerContext.Response.OutputStream.WriteAsync(imageData, 0, imageData.Length);
 
                     listenerContext.Response.Close();
                 }

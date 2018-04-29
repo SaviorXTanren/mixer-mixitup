@@ -14,23 +14,6 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class OverlayActionControl : ActionControlBase
     {
-        private enum OverlayTypeEnum
-        {
-            Image,
-            Text,
-            Youtube,
-            HTML,
-            Video,
-        }
-
-        private enum OverlayFadeEffectEnum
-        {
-            Instant = 0,
-            Fast = 200,
-            Medium = 400,
-            Slow = 600,
-        }
-
         private OverlayAction action;
 
         public OverlayActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
@@ -39,58 +22,71 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.OverlayTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayTypeEnum>();
+            this.OverlayTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectTypeEnum>();
             this.OverlayFontColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
-            this.OverlayFadeEffectComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayFadeEffectEnum>();
             this.OverlayYoutubeStartTimeTextBox.Text = "0";
-            this.OverlayYoutubeWidthTextBox.Text = this.OverlayVideoWidthTextBox.Text = "560";
-            this.OverlayYoutubeHeightTextBox.Text = this.OverlayVideoHeightTextBox.Text = "316";
+            this.OverlayYoutubeWidthTextBox.Text = this.OverlayVideoWidthTextBox.Text = OverlayVideoEffect.DefaultWidth.ToString();
+            this.OverlayYoutubeHeightTextBox.Text = this.OverlayVideoHeightTextBox.Text = OverlayVideoEffect.DefaultHeight.ToString();
+
+            this.OverlayEntranceAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
+            this.OverlayEntranceAnimationComboBox.SelectedIndex = 0;
+            this.OverlayVisibleAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
+            this.OverlayVisibleAnimationComboBox.SelectedIndex = 0;
+            this.OverlayExitAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectExitAnimationTypeEnum>();
+            this.OverlayExitAnimationComboBox.SelectedIndex = 0;
 
             if (this.action != null)
             {
-                if (!string.IsNullOrEmpty(this.action.ImagePath))
+                if (this.action.Effect is OverlayImageEffect)
                 {
-                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Image);
-                    this.OverlayImageFilePathTextBox.Text = this.action.ImagePath;
-                    this.OverlayImageWidthTextBox.Text = this.action.ImageWidth.ToString();
-                    this.OverlayImageHeightTextBox.Text = this.action.ImageHeight.ToString();
+                    OverlayImageEffect imageEffect = (OverlayImageEffect)this.action.Effect;
+                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Image);
+                    this.OverlayImageFilePathTextBox.Text = imageEffect.FilePath;
+                    this.OverlayImageWidthTextBox.Text = imageEffect.Width.ToString();
+                    this.OverlayImageHeightTextBox.Text = imageEffect.Height.ToString();
                 }
-                else if (!string.IsNullOrEmpty(this.action.Text))
+                else if (this.action.Effect is OverlayTextEffect)
                 {
-                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Text);
-                    this.OverlayTextTextBox.Text = this.action.Text;
-                    this.OverlayFontSizeTextBox.Text = this.action.FontSize.ToString();
-                    string color = this.action.Color;
+                    OverlayTextEffect textEffect = (OverlayTextEffect)this.action.Effect;
+                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Text);
+                    this.OverlayTextTextBox.Text = textEffect.Text;
+                    this.OverlayFontSizeTextBox.Text = textEffect.Size.ToString();
+                    string color = textEffect.Color;
                     if (ColorSchemes.ColorSchemeDictionary.ContainsValue(color))
                     {
                         color = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(color)).Key;
                     }
                     this.OverlayFontColorComboBox.Text = color;
                 }
-                else if (!string.IsNullOrEmpty(this.action.youtubeVideoID))
+                else if (this.action.Effect is OverlayYoutubeEffect)
                 {
-                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Youtube);
-                    this.OverlayYoutubeVideoIDTextBox.Text = this.action.youtubeVideoID;
-                    this.OverlayYoutubeStartTimeTextBox.Text = this.action.youtubeStartTime.ToString();
-                    this.OverlayYoutubeWidthTextBox.Text = this.action.VideoWidth.ToString();
-                    this.OverlayYoutubeHeightTextBox.Text = this.action.VideoHeight.ToString();
+                    OverlayYoutubeEffect youtubeEffect = (OverlayYoutubeEffect)this.action.Effect;
+                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Youtube);
+                    this.OverlayYoutubeVideoIDTextBox.Text = youtubeEffect.ID;
+                    this.OverlayYoutubeStartTimeTextBox.Text = youtubeEffect.StartTime.ToString();
+                    this.OverlayYoutubeWidthTextBox.Text = youtubeEffect.Width.ToString();
+                    this.OverlayYoutubeHeightTextBox.Text = youtubeEffect.Height.ToString();
                 }
-                else if (!string.IsNullOrEmpty(this.action.localVideoFilePath))
+                else if (this.action.Effect is OverlayVideoEffect)
                 {
-                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.Video);
-                    this.OverlayVideoFilePathTextBox.Text = this.action.localVideoFilePath;
-                    this.OverlayVideoWidthTextBox.Text = this.action.VideoWidth.ToString();
-                    this.OverlayVideoHeightTextBox.Text = this.action.VideoHeight.ToString();
+                    OverlayVideoEffect videoEffect = (OverlayVideoEffect)this.action.Effect;
+                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Video);
+                    this.OverlayVideoFilePathTextBox.Text = videoEffect.FilePath;
+                    this.OverlayVideoWidthTextBox.Text = videoEffect.Width.ToString();
+                    this.OverlayVideoHeightTextBox.Text = videoEffect.Height.ToString();
                 }
-                else if (!string.IsNullOrEmpty(this.action.HTMLText))
+                else if (this.action.Effect is OverlayHTMLEffect)
                 {
-                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayTypeEnum.HTML);
-                    this.OverlayHTMLTextBox.Text = this.action.HTMLText;
+                    OverlayHTMLEffect htmlEffect = (OverlayHTMLEffect)this.action.Effect;
+                    this.OverlayTypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.HTML);
+                    this.OverlayHTMLTextBox.Text = htmlEffect.HTMLText;
                 }
-                this.OverlayDurationTextBox.Text = this.action.Duration.ToString();
-                this.OverlayHorizontalSlider.Value = this.action.Horizontal;
-                this.OverlayVerticalSlider.Value = this.action.Vertical;
-                this.OverlayFadeEffectComboBox.SelectedItem = ((OverlayFadeEffectEnum)this.action.FadeDuration).ToString();
+                this.OverlayDurationTextBox.Text = this.action.Effect.Duration.ToString();
+                this.OverlayEntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.EntranceAnimation);
+                this.OverlayVisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.VisibleAnimation);
+                this.OverlayExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.ExitAnimation);
+                this.OverlayHorizontalSlider.Value = this.action.Effect.Horizontal;
+                this.OverlayVerticalSlider.Value = this.action.Effect.Vertical;
             }
             return Task.FromResult(0);
         }
@@ -98,14 +94,17 @@ namespace MixItUp.WPF.Controls.Actions
         public override ActionBase GetAction()
         {
             double duration;
-            if (double.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0 && this.OverlayFadeEffectComboBox.SelectedIndex >= 0)
+            if (double.TryParse(this.OverlayDurationTextBox.Text, out duration) && duration > 0 && this.OverlayEntranceAnimationComboBox.SelectedIndex >= 0 &&
+                this.OverlayVisibleAnimationComboBox.SelectedIndex >= 0 && this.OverlayExitAnimationComboBox.SelectedIndex >= 0)
             {
+                OverlayEffectEntranceAnimationTypeEnum entrance = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.OverlayEntranceAnimationComboBox.SelectedItem);
+                OverlayEffectVisibleAnimationTypeEnum animation = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>((string)this.OverlayVisibleAnimationComboBox.SelectedItem);
+                OverlayEffectExitAnimationTypeEnum exit = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.OverlayExitAnimationComboBox.SelectedItem);
                 int horizontal = (int)this.OverlayHorizontalSlider.Value;
                 int vertical = (int)this.OverlayVerticalSlider.Value;
-                int fadeDuration = (int)EnumHelper.GetEnumValueFromString<OverlayFadeEffectEnum>((string)this.OverlayFadeEffectComboBox.SelectedItem);
 
-                OverlayTypeEnum type = EnumHelper.GetEnumValueFromString<OverlayTypeEnum>((string)this.OverlayTypeComboBox.SelectedItem);
-                if (type == OverlayTypeEnum.Image)
+                OverlayEffectTypeEnum type = EnumHelper.GetEnumValueFromString<OverlayEffectTypeEnum>((string)this.OverlayTypeComboBox.SelectedItem);
+                if (type == OverlayEffectTypeEnum.Image)
                 {
                     if (!string.IsNullOrEmpty(this.OverlayImageFilePathTextBox.Text))
                     {
@@ -114,11 +113,11 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.OverlayImageWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.OverlayImageHeightTextBox.Text, out height) && height > 0)
                         {
-                            return OverlayAction.CreateForImage(this.OverlayImageFilePathTextBox.Text, width, height, duration, horizontal, vertical, fadeDuration);
+                            return new OverlayAction(new OverlayImageEffect(this.OverlayImageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, horizontal, vertical));
                         }
                     }
                 }
-                else if (type == OverlayTypeEnum.Text)
+                else if (type == OverlayEffectTypeEnum.Text)
                 {
                     if (!string.IsNullOrEmpty(this.OverlayTextTextBox.Text) && !string.IsNullOrEmpty(this.OverlayFontColorComboBox.Text))
                     {
@@ -128,13 +127,13 @@ namespace MixItUp.WPF.Controls.Actions
                             color = ColorSchemes.ColorSchemeDictionary[color];
                         }
 
-                        if (int.TryParse(this.OverlayFontSizeTextBox.Text, out int fontSize) && fontSize > 0)
+                        if (int.TryParse(this.OverlayFontSizeTextBox.Text, out int size) && size > 0)
                         {
-                            return OverlayAction.CreateForText(this.OverlayTextTextBox.Text, color, fontSize, duration, horizontal, vertical, fadeDuration);
+                            return new OverlayAction(new OverlayTextEffect(this.OverlayTextTextBox.Text, color, size, entrance, animation, exit, duration, horizontal, vertical));
                         }
                     }
                 }
-                else if (type == OverlayTypeEnum.Youtube)
+                else if (type == OverlayEffectTypeEnum.Youtube)
                 {
                     if (!string.IsNullOrEmpty(this.OverlayYoutubeVideoIDTextBox.Text))
                     {
@@ -153,12 +152,12 @@ namespace MixItUp.WPF.Controls.Actions
                             if (int.TryParse(this.OverlayYoutubeWidthTextBox.Text, out width) && width > 0 &&
                                 int.TryParse(this.OverlayYoutubeHeightTextBox.Text, out height) && height > 0)
                             {
-                                return OverlayAction.CreateForYoutube(videoID, startTime, width, height, duration, horizontal, vertical, fadeDuration);
+                                return new OverlayAction(new OverlayYoutubeEffect(videoID, startTime, width, height, entrance, animation, exit, duration, horizontal, vertical));
                             }
                         }
                     }
                 }
-                else if (type == OverlayTypeEnum.Video)
+                else if (type == OverlayEffectTypeEnum.Video)
                 {
                     if (!string.IsNullOrEmpty(this.OverlayVideoFilePathTextBox.Text))
                     {
@@ -167,15 +166,15 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.OverlayVideoWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.OverlayVideoHeightTextBox.Text, out height) && height > 0)
                         {
-                            return OverlayAction.CreateForVideo(this.OverlayVideoFilePathTextBox.Text, width, height, duration, horizontal, vertical, fadeDuration);
+                            return new OverlayAction(new OverlayVideoEffect(this.OverlayVideoFilePathTextBox.Text, width, height, entrance, animation, exit, duration, horizontal, vertical));
                         }
                     }
                 }
-                else if (type == OverlayTypeEnum.HTML)
+                else if (type == OverlayEffectTypeEnum.HTML)
                 {
                     if (!string.IsNullOrEmpty(this.OverlayHTMLTextBox.Text))
                     {
-                        return OverlayAction.CreateForHTML(this.OverlayHTMLTextBox.Text, duration, horizontal, vertical, fadeDuration); ;
+                        return new OverlayAction(new OverlayHTMLEffect(this.OverlayHTMLTextBox.Text, entrance, animation, exit, duration, horizontal, vertical));
                     }
                 }
             }
@@ -184,35 +183,45 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void OverlayTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.OverlayPositionGrid.Visibility = Visibility.Collapsed;
-            this.OverlayImageGrid.Visibility = Visibility.Collapsed;
-            this.OverlayTextGrid.Visibility = Visibility.Collapsed;
-            this.OverlayYoutubeVideoGrid.Visibility = Visibility.Collapsed;
-            this.OverlayVideoGrid.Visibility = Visibility.Collapsed;
+            this.OverlayImageGrid1.Visibility = Visibility.Collapsed;
+            this.OverlayImageGrid2.Visibility = Visibility.Collapsed;
+            this.OverlayTextGrid1.Visibility = Visibility.Collapsed;
+            this.OverlayTextGrid2.Visibility = Visibility.Collapsed;
+            this.OverlayYoutubeGrid1.Visibility = Visibility.Collapsed;
+            this.OverlayYoutubeGrid2.Visibility = Visibility.Collapsed;
+            this.OverlayVideoGrid1.Visibility = Visibility.Collapsed;
+            this.OverlayVideoGrid2.Visibility = Visibility.Collapsed;
             this.OverlayHTMLGrid.Visibility = Visibility.Collapsed;
+            this.OverlayDurationAndAnimationsGrid.Visibility = Visibility.Collapsed;
+            this.OverlayPositionGrid.Visibility = Visibility.Collapsed;
             if (this.OverlayTypeComboBox.SelectedIndex >= 0)
             {
-                OverlayTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayTypeEnum>((string)this.OverlayTypeComboBox.SelectedItem);
-                if (overlayType == OverlayTypeEnum.Image)
+                OverlayEffectTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayEffectTypeEnum>((string)this.OverlayTypeComboBox.SelectedItem);
+                if (overlayType == OverlayEffectTypeEnum.Image)
                 {
-                    this.OverlayImageGrid.Visibility = Visibility.Visible;
+                    this.OverlayImageGrid1.Visibility = Visibility.Visible;
+                    this.OverlayImageGrid2.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayTypeEnum.Text)
+                else if (overlayType == OverlayEffectTypeEnum.Text)
                 {
-                    this.OverlayTextGrid.Visibility = Visibility.Visible;
+                    this.OverlayTextGrid1.Visibility = Visibility.Visible;
+                    this.OverlayTextGrid2.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayTypeEnum.Youtube)
+                else if (overlayType == OverlayEffectTypeEnum.Youtube)
                 {
-                    this.OverlayYoutubeVideoGrid.Visibility = Visibility.Visible;
+                    this.OverlayYoutubeGrid1.Visibility = Visibility.Visible;
+                    this.OverlayYoutubeGrid2.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayTypeEnum.Video)
+                else if (overlayType == OverlayEffectTypeEnum.Video)
                 {
-                    this.OverlayVideoGrid.Visibility = Visibility.Visible;
+                    this.OverlayVideoGrid1.Visibility = Visibility.Visible;
+                    this.OverlayVideoGrid2.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayTypeEnum.HTML)
+                else if (overlayType == OverlayEffectTypeEnum.HTML)
                 {
                     this.OverlayHTMLGrid.Visibility = Visibility.Visible;
                 }
+                this.OverlayDurationAndAnimationsGrid.Visibility = Visibility.Visible;
                 this.OverlayPositionGrid.Visibility = Visibility.Visible;
             }
         }

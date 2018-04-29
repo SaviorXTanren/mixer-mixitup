@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Services
 
         protected override async Task OnLoaded()
         {
-            this.SetHeaderText("Mix It Up Overlay");
+            this.SetHeaderText("Overlay");
 
             this.OverlaySourceRefreshTextBox.Text = ChannelSession.Settings.OverlaySourceName;
 
