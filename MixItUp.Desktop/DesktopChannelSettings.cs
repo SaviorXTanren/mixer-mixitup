@@ -58,6 +58,8 @@ namespace MixItUp.Desktop
         public OAuthTokenModel SpotifyOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel DiscordOAuthToken { get; set; }
+        [JsonProperty]
+        public string StreamDeckDeviceName { get; set; }
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
