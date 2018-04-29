@@ -38,7 +38,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" x:Name="GawkBoxURLTextBox" MaterialDesign:HintAssist.Hint="GawkBox Overlay URL/ID" Width="250" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Row="0" x:Name="GawkBoxURLTextBox" MaterialDesign:HintAssist.Hint="GawkBox Alerts Overlay URL/ID" Width="250" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <Button x:Name="LogInButton" Grid.Row="2" Click="LogInButton_Click" HorizontalAlignment="Center" Width="90">Log In</Button>
             </Grid>
