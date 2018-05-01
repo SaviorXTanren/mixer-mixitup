@@ -16,6 +16,7 @@ namespace MixItUp.Base.Util
 
         private const string ArgSpecialIdentifierHeader = "arg";
         private const string RandomSpecialIdentifierHeader = "random";
+        private const string StreamerSpecialIdentifierHeader = "streamer";
         private const string RandomNumberSpecialIdentifier = "randomnumber";
 
         private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
@@ -130,6 +131,8 @@ namespace MixItUp.Base.Util
 
                 this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
             }
+
+            await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Channel.user), StreamerSpecialIdentifierHeader);
 
             await this.HandleUserSpecialIdentifiers(ChannelSession.Chat.ChatUsers.PickRandom(), RandomSpecialIdentifierHeader);
             if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
