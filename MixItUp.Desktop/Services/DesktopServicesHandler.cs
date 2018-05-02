@@ -240,6 +240,7 @@ namespace MixItUp.Desktop.Services
             this.GameWisp = (ChannelSession.Settings.GameWispOAuthToken != null) ? new GameWispService(ChannelSession.Settings.GameWispOAuthToken) : new GameWispService();
             if (await this.GameWisp.Connect())
             {
+
                 return true;
             }
             else
@@ -253,6 +254,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.GameWisp != null)
             {
+                this.GameWisp.OnWebSocketConnectedOccurred -= GameWisp_OnWebSocketConnectedOccurred;
+                this.GameWisp.OnWebSocketDisconnectedOccurred -= GameWisp_OnWebSocketDisconnectedOccurred;
                 await this.GameWisp.Disconnect();
                 this.GameWisp = null;
                 ChannelSession.Settings.GameWispOAuthToken = null;
@@ -384,6 +387,16 @@ namespace MixItUp.Desktop.Services
         private void XSplitServer_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred("XSplit");
+        }
+
+        private void GameWisp_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("GameWisp");
+        }
+
+        private void GameWisp_OnWebSocketDisconnectedOccurred(object sender, System.EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("GameWisp");
         }
     }
 }

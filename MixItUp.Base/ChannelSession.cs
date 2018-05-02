@@ -409,6 +409,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeDiscord();
                     }
+                    if (ChannelSession.Settings.GameWispOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeGameWisp();
+                    }
 
                     foreach (CommandBase command in ChannelSession.AllCommands)
                     {
