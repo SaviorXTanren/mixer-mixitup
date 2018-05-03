@@ -190,7 +190,7 @@ namespace MixItUp.Desktop.Services
         {
             return await Task.Run(() =>
             {
-                if (this.XSplitServer == null)
+                if (this.DeveloperAPI == null)
                 {
                     this.DeveloperAPI = new WindowsDeveloperAPIService();
                     this.DeveloperAPI.Start();
