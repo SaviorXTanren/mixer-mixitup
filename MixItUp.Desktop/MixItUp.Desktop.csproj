@@ -158,6 +158,7 @@
     <Compile Include="Services\OBSService.cs" />
     <Compile Include="Services\OverlayWebServer.cs" />
     <Compile Include="Services\SpotifyService.cs" />
+    <Compile Include="Services\StreamlabsOBSService.cs" />
     <Compile Include="Services\StreamlabsService.cs" />
     <Compile Include="Services\TranslationService.cs" />
     <Compile Include="Services\TwitterService.cs" />

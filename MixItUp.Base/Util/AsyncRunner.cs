@@ -55,5 +55,36 @@ namespace MixItUp.Base.Util
             }
             return default(T);
         }
+
+        public static async Task RunSyncAsAsync(Action action)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+        }
+
+        public static async Task<T> RunSyncAsAsync<T>(Func<T> function)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    return function();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+                return default(T);
+            });
+        }
     }
 }
