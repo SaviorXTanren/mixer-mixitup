@@ -148,15 +148,21 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
-            this.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(dataReader["CustomCommands"].ToString()));
-
-            JObject optionsJObj = JObject.Parse(dataReader["Options"].ToString());
-            if (optionsJObj["EntranceCommand"] != null)
+            if (dataReader["CustomCommands"] != null && !string.IsNullOrEmpty(dataReader["CustomCommands"].ToString()))
             {
-                this.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
+                this.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(dataReader["CustomCommands"].ToString()));
             }
-            this.IsSparkExempt = this.GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
-            this.IsCurrencyRankExempt = this.GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
+
+            if (dataReader["Options"] != null && !string.IsNullOrEmpty(dataReader["Options"].ToString()))
+            {
+                JObject optionsJObj = JObject.Parse(dataReader["Options"].ToString());
+                if (optionsJObj["EntranceCommand"] != null)
+                {
+                    this.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
+                }
+                this.IsSparkExempt = this.GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
+                this.IsCurrencyRankExempt = this.GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
+            }
         }
 
         [JsonIgnore]
