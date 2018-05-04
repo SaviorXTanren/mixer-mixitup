@@ -47,17 +47,21 @@ namespace MixItUp.WPF.Controls.Services
             {
                 string gawkBoxID = this.GawkBoxURLTextBox.Text;
                 gawkBoxID = gawkBoxID.Replace(GawkBoxStreamURLFormat, "");
-                if (!await ChannelSession.Services.InitializeGawkBox(gawkBoxID))
-                {
-                    await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with GawkBox. Please ensure you correctly input your GawkBox URL/ID.");
-                }
-                else
-                {
-                    this.NewLoginGrid.Visibility = Visibility.Collapsed;
-                    this.ExistingAccountGrid.Visibility = Visibility.Visible;
 
-                    this.SetCompletedIcon(visible: true);
-                }
+                await this.groupBoxControl.window.RunAsyncOperation(async () =>
+                {
+                    if (!await ChannelSession.Services.InitializeGawkBox(gawkBoxID))
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with GawkBox. Please ensure you correctly input your GawkBox URL/ID.");
+                    }
+                    else
+                    {
+                        this.NewLoginGrid.Visibility = Visibility.Collapsed;
+                        this.ExistingAccountGrid.Visibility = Visibility.Visible;
+
+                        this.SetCompletedIcon(visible: true);
+                    }
+                });
             }
 
             this.LogInButton.IsEnabled = true;
