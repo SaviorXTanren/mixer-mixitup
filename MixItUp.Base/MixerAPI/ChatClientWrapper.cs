@@ -434,7 +434,9 @@ namespace MixItUp.Base.MixerAPI
             {
                 GlobalEvents.ChatCommandMessageReceived(message);
 
-                PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.ContainsCommand(message.CommandName));
+                List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllChatCommands);
+                commandsToCheck.AddRange(message.User.Data.CustomCommands);
+                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.CommandName));
                 if (command != null)
                 {
                     await command.Perform(message.User, message.CommandArguments);

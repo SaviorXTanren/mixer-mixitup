@@ -24,6 +24,8 @@ namespace MixItUp.WPF.Windows.Currency
         private ObservableCollection<UserCurrencyIndividualEditorControl> currencies = new ObservableCollection<UserCurrencyIndividualEditorControl>();
         private ObservableCollection<UserCurrencyIndividualEditorControl> ranks = new ObservableCollection<UserCurrencyIndividualEditorControl>();
 
+        private ObservableCollection<ChatCommand> userOnlyCommands = new ObservableCollection<ChatCommand>();
+
         public UserDataEditorWindow(UserDataViewModel userData)
         {
             this.user = new UserViewModel(userData);
@@ -35,10 +37,10 @@ namespace MixItUp.WPF.Windows.Currency
 
         protected override async Task OnLoaded()
         {
-            this.DataContext = this.user;
-
             this.CurrencyDataGrid.ItemsSource = this.currencies;
             this.RankDataGrid.ItemsSource = this.ranks;
+
+            this.UserOnlyChatCommandsListView.ItemsSource = this.userOnlyCommands;
 
             await this.RefreshData();
         }
@@ -46,6 +48,7 @@ namespace MixItUp.WPF.Windows.Currency
         private async Task RefreshData()
         {
             await this.user.SetDetails();
+            await this.user.SetRoles();
 
             this.ranks.Clear();
             this.currencies.Clear();
@@ -62,6 +65,17 @@ namespace MixItUp.WPF.Windows.Currency
                 }
             }
 
+            this.UserOnlyChatCommandsListView.Visibility = Visibility.Collapsed;
+            this.userOnlyCommands.Clear();
+            if (this.user.Data.CustomCommands.Count > 0)
+            {
+                this.UserOnlyChatCommandsListView.Visibility = Visibility.Visible;
+                foreach (ChatCommand command in this.user.Data.CustomCommands)
+                {
+                    this.userOnlyCommands.Add(command);
+                }
+            }
+
             if (this.user.Data.EntranceCommand != null)
             {
                 this.NewEntranceCommandButton.Visibility = Visibility.Collapsed;
@@ -73,6 +87,9 @@ namespace MixItUp.WPF.Windows.Currency
                 this.NewEntranceCommandButton.Visibility = Visibility.Visible;
                 this.ExistingEntranceCommandButtons.Visibility = Visibility.Collapsed;
             }
+
+            this.DataContext = null;
+            this.DataContext = this.user;
         }
 
         private void CurrencyAmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -97,7 +114,42 @@ namespace MixItUp.WPF.Windows.Currency
 
         private void AddUserOnlyCommandButton_Click(object sender, RoutedEventArgs e)
         {
+            CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(autoAddToChatCommands: false));
+            window.CommandSaveSuccessfully += NewUserOnlyCommandWindow_CommandSaveSuccessfully;
+            window.Closed += Window_Closed;
+            window.Show();
+        }
 
+        private void NewUserOnlyCommandWindow_CommandSaveSuccessfully(object sender, CommandBase e)
+        {
+            this.user.Data.CustomCommands.Add((ChatCommand)e);
+        }
+
+        private void UserOnlyChatCommandButtons_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
+        }
+
+        private async void UserOnlyChatCommandButtons_DeleteClicked(object sender, RoutedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+                ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
+                if (command != null)
+                {
+                    this.user.Data.CustomCommands.Remove(command);
+                    await ChannelSession.SaveSettings();
+                    await this.RefreshData();
+                }
+            });
         }
 
         private void ExistingEntranceCommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -122,6 +174,7 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     this.user.Data.EntranceCommand = null;
                     await ChannelSession.SaveSettings();
+                    await this.RefreshData();
                 }
             });
         }
@@ -129,9 +182,14 @@ namespace MixItUp.WPF.Windows.Currency
         private void NewEntranceCommandButton_Click(object sender, RoutedEventArgs e)
         {
             CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(new CustomCommand(UserEntranceCommandName)));
-            window.CommandSaveSuccessfully += Window_CommandSaveSuccessfully;
+            window.CommandSaveSuccessfully += NewEntranceCommandWindow_CommandSaveSuccessfully;
             window.Closed += Window_Closed;
             window.Show();
+        }
+
+        private void NewEntranceCommandWindow_CommandSaveSuccessfully(object sender, CommandBase e)
+        {
+            this.user.Data.EntranceCommand = (CustomCommand)e;
         }
 
         private async void Window_Closed(object sender, System.EventArgs e)
@@ -140,11 +198,6 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 await this.RefreshData();
             });
-        }
-
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
-        {
-            this.user.Data.EntranceCommand = (CustomCommand)e;
         }
     }
 }

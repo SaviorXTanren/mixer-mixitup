@@ -112,6 +112,20 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
+                        <DataGrid x:Name="UserOnlyChatCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" Margin="0,0,0,10" Visibility="Collapsed">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
+                                <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="125" />
+                                <DataGridTemplateColumn Header="Actions" Width="240">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CommandControls:CommandButtonsControl x:Name="UserOnlyChatCommandButtons" HorizontalAlignment="Center" EditClicked="UserOnlyChatCommandButtons_EditClicked" DeleteClicked="UserOnlyChatCommandButtons_DeleteClicked" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
                         <Button x:Name="AddUserOnlyCommandButton" Grid.Row="2" HorizontalAlignment="Center" Click="AddUserOnlyCommandButton_Click">Add Command</Button>
                     </Grid>
                 </GroupBox>
@@ -132,7 +146,7 @@
                         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Custom Entrance Command:</TextBlock>
 
                         <Button x:Name="NewEntranceCommandButton" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Click="NewEntranceCommandButton_Click">Add Command</Button>
-                        <CommandControls:CommandButtonsControl x:Name="ExistingEntranceCommandButtons" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" />
+                        <CommandControls:CommandButtonsControl x:Name="ExistingEntranceCommandButtons" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" Visibility="Collapsed" />
                         
                         <Grid Grid.Column="0" Grid.Row="2">
                             <Grid.ColumnDefinitions>
