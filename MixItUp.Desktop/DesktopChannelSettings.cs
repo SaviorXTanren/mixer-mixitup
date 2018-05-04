@@ -28,7 +28,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 11;
+        public const int LatestVersion = 12;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -296,8 +296,9 @@ namespace MixItUp.Desktop
 
         [JsonIgnore]
         public string DatabasePath { get; set; }
+
         [JsonIgnore]
-        private SQLiteDatabaseWrapper databaseWrapper;
+        internal SQLiteDatabaseWrapper DatabaseWrapper;
 
         [JsonIgnore]
         internal bool InitializeDB = true;
@@ -377,11 +378,11 @@ namespace MixItUp.Desktop
 
             if (this.IsStreamer)
             {
-                this.databaseWrapper = new SQLiteDatabaseWrapper(this.DatabasePath);
+                this.DatabaseWrapper = new SQLiteDatabaseWrapper(this.DatabasePath);
                 if (this.InitializeDB)
                 {
                     Dictionary<uint, UserDataViewModel> initialUsers = new Dictionary<uint, UserDataViewModel>();
-                    await this.databaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
+                    await this.DatabaseWrapper.RunReadCommand("SELECT * FROM Users", (SQLiteDataReader dataReader) =>
                     {
                         UserDataViewModel userData = new UserDataViewModel(dataReader, this);
                         initialUsers[userData.ID] = userData;
@@ -449,19 +450,22 @@ namespace MixItUp.Desktop
                 await this.RemoveDuplicateUsers();
 
                 IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
-                await this.databaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
+                await this.DatabaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
 
                 IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
                 addedUsers = addedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
-                await this.databaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts) VALUES(?,?,?,?)",
+                await this.DatabaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts, CustomCommands, Options) VALUES(?,?,?,?,?,?)",
                     addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
-                    new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()) }));
+                    new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()),
+                    new SQLiteParameter(DbType.String, value: u.GetCustomCommandsString()), new SQLiteParameter(DbType.String, value: u.GetOptionsString()) }));
 
                 IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
                 changedUsers = changedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
-                await this.databaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts WHERE ID = @ID",
+                await this.DatabaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts," + 
+                    " CustomCommands = @CustomCommands, Options = @Options WHERE ID = @ID",
                     changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
-                    new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
+                    new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()),
+                        new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
             }
         }
 

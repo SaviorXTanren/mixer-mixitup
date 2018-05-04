@@ -150,7 +150,7 @@
                     </Grid>
 
                     <Grid Grid.Row="2" Height="250">
-                        <DataGrid x:Name="FavoriteGroupsDataGrid" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                        <DataGrid x:Name="FavoriteGroupsDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                                 <DataGridTextColumn Header="Total Users" Binding="{Binding TotalUsers}" IsReadOnly="True" Width="*" />

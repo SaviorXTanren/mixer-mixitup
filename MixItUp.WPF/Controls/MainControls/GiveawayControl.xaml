@@ -98,7 +98,7 @@
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center">Entered Users:</TextBlock>
 
-            <DataGrid x:Name="EnteredUsersListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+            <DataGrid x:Name="EnteredUsersListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
                 </DataGrid.Columns>

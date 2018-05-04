@@ -1,0 +1,81 @@
+﻿<local:MainControlBase x:Class="MixItUp.WPF.Controls.MainControls.UsersControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             xmlns:CustomControls="clr-namespace:MixItUp.WPF.Controls.Command"
+                          
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+                          
+             d:DesignHeight="700" d:DesignWidth="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Username:" />
+
+            <TextBox Grid.Column="2" x:Name="UsernameFilterTextBox" Width="150" TextChanged="UsernameFilterTextBox_TextChanged" />
+
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid Height="20" />
+
+            <Grid x:Name="LimitingResultsMessage" Visibility="Collapsed" Height="40">
+                <TextBlock Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" HorizontalAlignment="Center">** LIMITING TO FIRST 200 USERS **</TextBlock>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="10,0">
+            <Border Style="{StaticResource DefaultBorder}">
+                <DataGrid x:Name="UserDataGridView" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Username" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
+                        <DataGridTextColumn Header="Minutes" Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="80" />
+                        <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="100">
+                            <DataGridTextColumn.Header>
+                                <Grid HorizontalAlignment="Center" Margin="26,0,0,0">
+                                    <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" />
+                                </Grid>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding RankNameAndPoints}" IsReadOnly="True" Width="200">
+                            <DataGridTextColumn.Header>
+                                <Grid HorizontalAlignment="Center" Margin="76,0,0,0">
+                                    <MaterialDesign:PackIcon Kind="Wunderlist" Height="24" Width="24" />
+                                </Grid>
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Actions">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="UserEditButton" Click="UserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+                                        <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Grid>
+</local:MainControlBase>

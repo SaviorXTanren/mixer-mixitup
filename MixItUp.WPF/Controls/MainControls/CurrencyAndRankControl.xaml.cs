@@ -70,15 +70,6 @@ namespace MixItUp.WPF.Controls.MainControls
             window.Show();
         }
 
-        private void CurrencyUserEditButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            UserCurrencyViewModel currency = (UserCurrencyViewModel)button.DataContext;
-            CurrencyUserEditorWindow window = new CurrencyUserEditorWindow(currency);
-            window.Closed += Window_Closed;
-            window.Show();
-        }
-
         private void CurrencyDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
@@ -98,15 +89,6 @@ namespace MixItUp.WPF.Controls.MainControls
             Button button = (Button)sender;
             UserCurrencyViewModel currency = (UserCurrencyViewModel)button.DataContext;
             CurrencyWindow window = new CurrencyWindow(currency);
-            window.Closed += Window_Closed;
-            window.Show();
-        }
-
-        private void RankUserEditButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            UserCurrencyViewModel currency = (UserCurrencyViewModel)button.DataContext;
-            CurrencyUserEditorWindow window = new CurrencyUserEditorWindow(currency);
             window.Closed += Window_Closed;
             window.Show();
         }

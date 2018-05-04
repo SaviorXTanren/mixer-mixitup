@@ -56,7 +56,7 @@
             </Grid>
         </Grid>
 
-        <DataGrid x:Name="GameQueueUsersListView" Grid.Row="4" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+        <DataGrid x:Name="GameQueueUsersListView" Grid.Row="4" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Pos #" Binding="{Binding QueuePosition}" IsReadOnly="True" Width="55" />
                 <DataGridTextColumn Header="Name" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />

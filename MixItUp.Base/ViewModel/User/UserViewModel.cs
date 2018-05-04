@@ -84,6 +84,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(uint id, string username) : this(id, username, new string[] { }) { }
 
+        public UserViewModel(UserDataViewModel user) : this(user.ID, user.UserName) { }
+
         public UserViewModel(uint id, string username, string[] userRoles)
             : this()
         {

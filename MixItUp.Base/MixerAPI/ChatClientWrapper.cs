@@ -41,6 +41,8 @@ namespace MixItUp.Base.MixerAPI
         private object userUpdateLock = new object();
         private object messageUpdateLock = new object();
 
+        private HashSet<uint> userJoins = new HashSet<uint>();
+
         public ChatClientWrapper()
         {
             this.ChatUsers = new LockedDictionary<uint, UserViewModel>();
@@ -331,6 +333,15 @@ namespace MixItUp.Base.MixerAPI
                 if (!this.ChatUsers.ContainsKey(user.ID))
                 {
                     this.ChatUsers[user.ID] = user;
+                }
+            }
+
+            if (!this.userJoins.Contains(user.ID))
+            {
+                this.userJoins.Add(user.ID);
+                if (user.Data.EntranceCommand != null)
+                {
+                    await user.Data.EntranceCommand.Perform(user);
                 }
             }
         }

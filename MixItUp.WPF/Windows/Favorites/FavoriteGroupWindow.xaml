@@ -33,7 +33,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <DataGrid x:Name="FavoriteGroupsDataGrid" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+            <DataGrid x:Name="FavoriteGroupsDataGrid" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                     <DataGridTextColumn Header="Live" Binding="{Binding Live}" IsReadOnly="True" Width="60" />
