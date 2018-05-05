@@ -144,6 +144,9 @@ namespace MixItUp.Desktop
         public string OBSStudioServerPassword { get; set; }
 
         [JsonProperty]
+        public bool EnableStreamlabsOBSConnection { get; set; }
+
+        [JsonProperty]
         public bool EnableXSplitConnection { get; set; }
 
         [JsonProperty]

@@ -76,6 +76,8 @@ namespace MixItUp.Base
         string OBSStudioServerIP { get; set; }
         string OBSStudioServerPassword { get; set; }
 
+        bool EnableStreamlabsOBSConnection { get; set; }
+
         bool EnableXSplitConnection { get; set; }
 
         bool EnableDeveloperAPI { get; set; }

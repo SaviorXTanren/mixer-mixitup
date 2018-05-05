@@ -159,6 +159,25 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override Task<bool> InitializeStreamlabsOBSService()
+        {
+            if (this.StreamlabsOBSService == null)
+            {
+                this.StreamlabsOBSService = new StreamlabsOBSService();
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+
+        public override Task DisconnectStreamlabsOBSService()
+        {
+            if (this.StreamlabsOBSService != null)
+            {
+                this.StreamlabsOBSService = null;
+            }
+            return Task.FromResult(0);
+        }
+
         public override async Task<bool> InitializeXSplitServer()
         {
             if (this.XSplitServer == null)

@@ -369,7 +369,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeOBSWebsocket();
                     }
-
+                    if (ChannelSession.Settings.EnableStreamlabsOBSConnection)
+                    {
+                        await ChannelSession.Services.InitializeStreamlabsOBSService();
+                    }
                     if (ChannelSession.Settings.EnableXSplitConnection)
                     {
                         await ChannelSession.Services.InitializeXSplitServer();

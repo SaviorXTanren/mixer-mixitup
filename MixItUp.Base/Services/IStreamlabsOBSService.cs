@@ -12,8 +12,27 @@ namespace MixItUp.Base.Services
         [JsonProperty("id")]
         public string ID { get; set; }
 
+        [JsonProperty("resourceId")]
+        public string ResourceID { get; set; }
+
         [JsonProperty("name")]
         public string Name { get; set; }
+    }
+
+    [DataContract]
+    public class StreamlabsOBSSceneItem
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("resourceId")]
+        public string ResourceID { get; set; }
+
+        [JsonProperty("muted")]
+        public bool Muted { get; set; }
+
+        [JsonProperty("visible")]
+        public bool Visible { get; set; }
     }
 
     [DataContract]
@@ -24,6 +43,9 @@ namespace MixItUp.Base.Services
 
         [JsonProperty("params")]
         public JObject Parameters { get; set; }
+
+        [JsonIgnore]
+        public JArray Arguments { get { return (JArray)this.Parameters["args"]; } }
 
         public StreamlabsOBSRequest() { this.Parameters = new JObject(); }
 
@@ -68,6 +90,16 @@ namespace MixItUp.Base.Services
 
     public interface IStreamlabsOBSService
     {
+        Task<bool> TestConnection();
+
         Task<IEnumerable<StreamlabsOBSScene>> GetScenes();
+
+        Task<StreamlabsOBSScene> GetActiveScene();
+
+        Task MakeSceneActive(StreamlabsOBSScene scene);
+
+        Task<IEnumerable<StreamlabsOBSSceneItem>> GetSceneItems(StreamlabsOBSScene scene);
+
+        Task SetSceneItemVisibility(StreamlabsOBSSceneItem sceneItem, bool visibility);
     }
 }

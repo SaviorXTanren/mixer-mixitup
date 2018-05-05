@@ -255,6 +255,9 @@
     <Compile Include="Controls\Actions\SpotifyActionControl.xaml.cs">
       <DependentUpon>SpotifyActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\StreamlabsOBSActionControl.xaml.cs">
+      <DependentUpon>StreamlabsOBSActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
       <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
     </Compile>
@@ -459,6 +462,9 @@
     <Compile Include="Controls\Services\SpotifyServiceControl.xaml.cs">
       <DependentUpon>SpotifyServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\StreamlabsOBSServiceControl.xaml.cs">
+      <DependentUpon>StreamlabsOBSServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\StreamlabsServiceControl.xaml.cs">
       <DependentUpon>StreamlabsServiceControl.xaml</DependentUpon>
     </Compile>
@@ -615,6 +621,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\SpotifyActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\StreamlabsOBSActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -891,6 +901,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\SpotifyServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\StreamlabsOBSServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
