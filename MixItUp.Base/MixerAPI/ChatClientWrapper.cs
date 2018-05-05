@@ -420,7 +420,7 @@ namespace MixItUp.Base.MixerAPI
                 return;
             }
 
-            if (ChannelSession.Settings.IgnoreBotAccountCommands && message.User != null && message.User.ID.Equals(ChannelSession.BotUser.id))
+            if (ChannelSession.BotUser != null && ChannelSession.Settings.IgnoreBotAccountCommands && message.User != null && message.User.ID.Equals(ChannelSession.BotUser.id))
             {
                 return;
             }
