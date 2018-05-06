@@ -550,6 +550,13 @@ namespace MixItUp.Base.Commands
             }
         }
 
+        public override bool ContainsCommand(string command)
+        {
+            var commandsToCheck = this.Commands;
+            commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
+            return commandsToCheck.Contains(command);
+        }
+
         protected virtual void AddSpecialIdentifiersToCommand(CustomCommand command, UserViewModel user = null, int payout = 0)
         {
             command.AddSpecialIdentifier(GameCommandBase.GameTotalBetsSpecialIdentifier, this.TotalBets.ToString());
