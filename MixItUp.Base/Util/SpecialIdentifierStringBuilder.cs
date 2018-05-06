@@ -177,6 +177,7 @@ namespace MixItUp.Base.Util
 
         public void ReplaceSpecialIdentifier(string identifier, string replacement)
         {
+            replacement = (replacement == null) ? string.Empty : replacement;
             this.text = this.text.Replace(SpecialIdentifierHeader + identifier, replacement);
         }
 
