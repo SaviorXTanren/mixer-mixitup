@@ -316,7 +316,7 @@ namespace MixItUp.Base.ViewModel.User
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
             foreach (UserCurrencyDataViewModel currencyData in this.CurrencyAmounts.Values.ToList())
             {
-                amounts.Add(currencyData.Currency.ID, currencyData.Amount);
+                amounts[currencyData.Currency.ID] = currencyData.Amount;
             }
             return SerializerHelper.SerializeToString(amounts);
         }
