@@ -84,33 +84,15 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(uint id, string username) : this(id, username, new string[] { }) { }
 
+        public UserViewModel(UserDataViewModel user) : this(user.ID, user.UserName) { }
+
         public UserViewModel(uint id, string username, string[] userRoles)
             : this()
         {
             this.ID = id;
             this.UserName = username;
 
-            this.Roles.Add(UserRole.User);
-            if (userRoles != null)
-            {
-                if (userRoles.Any(r => r.Equals("Owner"))) { this.Roles.Add(UserRole.Streamer); }
-                if (userRoles.Any(r => r.Equals("Staff"))) { this.Roles.Add(UserRole.Staff); }
-                if (userRoles.Any(r => r.Equals("Mod"))) { this.Roles.Add(UserRole.Mod); }
-                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.Roles.Add(UserRole.Subscriber); }
-                if (userRoles.Any(r => r.Equals("Pro"))) { this.Roles.Add(UserRole.Pro); }
-                if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
-            }
-
-            if (this.Roles.Contains(UserRole.Streamer))
-            {
-                this.Roles.Add(UserRole.Subscriber);
-                this.Roles.Add(UserRole.Mod);
-            }
-
-            if (this.IsSubscriber)
-            {
-                this.Roles.Add(UserRole.Follower);
-            }
+            this.SetUserRoles(userRoles);
         }
 
         public UserDataViewModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.ID, new UserDataViewModel(this)); } }
@@ -249,6 +231,18 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public async Task SetRoles()
+        {
+            if (this.ID > 0)
+            {
+                ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, this.ID);
+                if (chatUser != null)
+                {
+                    this.SetUserRoles(chatUser.userRoles);
+                }
+            }
+        }
+
         public async Task SetFollowDate()
         {
             if (this.FollowDate == null || this.FollowDate.GetValueOrDefault() == DateTimeOffset.MinValue)
@@ -321,5 +315,30 @@ namespace MixItUp.Base.ViewModel.User
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 
         public override string ToString() { return this.UserName; }
+
+        private void SetUserRoles(string[] userRoles)
+        {
+            this.Roles.Add(UserRole.User);
+            if (userRoles != null)
+            {
+                if (userRoles.Any(r => r.Equals("Owner"))) { this.Roles.Add(UserRole.Streamer); }
+                if (userRoles.Any(r => r.Equals("Staff"))) { this.Roles.Add(UserRole.Staff); }
+                if (userRoles.Any(r => r.Equals("Mod"))) { this.Roles.Add(UserRole.Mod); }
+                if (userRoles.Any(r => r.Equals("Subscriber"))) { this.Roles.Add(UserRole.Subscriber); }
+                if (userRoles.Any(r => r.Equals("Pro"))) { this.Roles.Add(UserRole.Pro); }
+                if (userRoles.Any(r => r.Equals("Banned"))) { this.Roles.Add(UserRole.Banned); }
+            }
+
+            if (this.Roles.Contains(UserRole.Streamer))
+            {
+                this.Roles.Add(UserRole.Subscriber);
+                this.Roles.Add(UserRole.Mod);
+            }
+
+            if (this.IsSubscriber)
+            {
+                this.Roles.Add(UserRole.Follower);
+            }
+        }
     }
 }

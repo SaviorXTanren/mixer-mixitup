@@ -1,0 +1,181 @@
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Currency.UserDataEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Currency"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+                                        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+                  
+        Icon="./../../Logo.ico"
+        Title="User Editing" Height="600" Width="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Visible">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <GroupBox Header="Mixer Data" Grid.Row="0">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0">Username:</TextBlock>
+                        <TextBlock x:Name="UserNameTextBlock" Grid.Row="0" Grid.Column="2" Text="{Binding UserName}" />
+
+                        <TextBlock Grid.Row="0" Grid.Column="4">Roles:</TextBlock>
+                        <TextBlock x:Name="RolesTextBlock" Grid.Row="0" Grid.Column="6" Text="{Binding RolesDisplayString}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0">Watch Time:</TextBlock>
+                        <TextBlock x:Name="ViewingHoursTextBlock" Grid.Row="2" Grid.Column="2" Text="{Binding Data.ViewingTimeString}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="4">Follow Age:</TextBlock>
+                        <TextBlock x:Name="FollowAgeTextBlock" Grid.Row="2" Grid.Column="6" Text="{Binding FollowAgeString}" />
+                    </Grid>
+                </GroupBox>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Header="Currency" Grid.Column="0">
+                        <DataGrid x:Name="CurrencyDataGrid" Style="{StaticResource StandardDataGrid}" HeadersVisibility="None">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ContentControl Content="{Binding}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+
+                    <GroupBox Header="Rank" Grid.Column="2">
+                        <DataGrid x:Name="RankDataGrid" Style="{StaticResource StandardDataGrid}" HeadersVisibility="None">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ContentControl Content="{Binding}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </GroupBox>
+                </Grid>
+
+                <GroupBox Header="User-Only Chat Commands" Grid.Row="4">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <DataGrid x:Name="UserOnlyChatCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch" Margin="0,0,0,10" Visibility="Collapsed">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
+                                <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="125" />
+                                <DataGridTemplateColumn Header="Actions" Width="240">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CommandControls:CommandButtonsControl x:Name="UserOnlyChatCommandButtons" HorizontalAlignment="Center" EditClicked="UserOnlyChatCommandButtons_EditClicked" DeleteClicked="UserOnlyChatCommandButtons_DeleteClicked" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <Button x:Name="AddUserOnlyCommandButton" Grid.Row="2" HorizontalAlignment="Center" Click="AddUserOnlyCommandButton_Click">Add Command</Button>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="Options" Grid.Row="6">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Custom Entrance Command:</TextBlock>
+
+                        <Button x:Name="NewEntranceCommandButton" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" Click="NewEntranceCommandButton_Click">Add Command</Button>
+                        <CommandControls:CommandButtonsControl x:Name="ExistingEntranceCommandButtons" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" EditClicked="ExistingEntranceCommandButtons_EditClicked" DeleteClicked="ExistingEntranceCommandButtons_DeleteClicked" Visibility="Collapsed" />
+                        
+                        <Grid Grid.Column="0" Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Currency/Rank Exempt:</TextBlock>
+                            <ToggleButton Grid.Column="2" x:Name="CurrencyRankExemptToggleButton" IsChecked="{Binding Path=IsCurrencyRankExempt, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Grid Grid.Column="2" Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Spark Exempt:</TextBlock>
+                            <ToggleButton Grid.Column="2" x:Name="SparkExemptToggleButton" IsChecked="{Binding Path=IsSparkExempt, Mode=TwoWay}" />
+                        </Grid>
+
+                    </Grid>
+                </GroupBox>
+
+            </Grid>
+        </ScrollViewer>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+    </Grid>
+</Windows:LoadingWindowBase>

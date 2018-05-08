@@ -369,7 +369,10 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeOBSWebsocket();
                     }
-
+                    if (ChannelSession.Settings.EnableStreamlabsOBSConnection)
+                    {
+                        await ChannelSession.Services.InitializeStreamlabsOBSService();
+                    }
                     if (ChannelSession.Settings.EnableXSplitConnection)
                     {
                         await ChannelSession.Services.InitializeXSplitServer();
@@ -408,6 +411,10 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.DiscordOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeDiscord();
+                    }
+                    if (ChannelSession.Settings.GameWispOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeGameWisp();
                     }
 
                     foreach (CommandBase command in ChannelSession.AllCommands)

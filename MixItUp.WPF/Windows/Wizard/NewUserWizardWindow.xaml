@@ -219,7 +219,7 @@
 
                     <TextBlock TextWrapping="Wrap" Grid.Row="6">Please select the profiles below that you would like us to import for you:</TextBlock>
 
-                    <DataGrid x:Name="SoundwaveInteractiveProfilesDataGrid" Grid.Row="8" Style="{StaticResource StandardDataGrid}" Width="400" Height="225" VerticalScrollBarVisibility="Visible">
+                    <DataGrid x:Name="SoundwaveInteractiveProfilesDataGrid" Grid.Row="8" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" Width="400" Height="225" VerticalScrollBarVisibility="Visible">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Profile" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                             <DataGridTemplateColumn Header="Add">

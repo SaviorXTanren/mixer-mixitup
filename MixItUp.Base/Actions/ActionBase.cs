@@ -46,6 +46,8 @@ namespace MixItUp.Base.Actions
         Translation,
         Twitter,
         Conditional,
+        [Name("Streamlabs OBS")]
+        StreamlabsOBS,
 
         Custom = 99,
     }

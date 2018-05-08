@@ -20,13 +20,16 @@ namespace MixItUp.WPF.Controls.Command
 
         private ChatCommand command;
 
+        private bool autoAddToChatCommands = true;
+
         public ChatCommandDetailsControl(ChatCommand command)
         {
             this.command = command;
+
             InitializeComponent();
         }
 
-        public ChatCommandDetailsControl() : this(null) { }
+        public ChatCommandDetailsControl(bool autoAddToChatCommands = true) : this(null) { this.autoAddToChatCommands = autoAddToChatCommands; }
 
         public override Task Initialize()
         {
@@ -112,7 +115,10 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.command == null || !ChannelSession.Settings.ChatCommands.Contains(this.command))
                 {
                     this.command = new ChatCommand(this.NameTextBox.Text, commands, requirements);
-                    ChannelSession.Settings.ChatCommands.Add(this.command);
+                    if (this.autoAddToChatCommands)
+                    {
+                        ChannelSession.Settings.ChatCommands.Add(this.command);
+                    }
                 }
                 else
                 {

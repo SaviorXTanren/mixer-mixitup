@@ -1,7 +1,9 @@
 ﻿using Mixer.Base.Model.User;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -27,6 +29,11 @@ namespace MixItUp.Base.ViewModel.User
             get { return _Amount; }
             set
             {
+                if (value < 0)
+                {
+                    value = 0;
+                }
+
                 UserRankViewModel prevRank = this.GetRank();
                 this._Amount = value;
                 UserRankViewModel newRank = this.GetRank();
@@ -89,9 +96,22 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel> CurrencyAmounts { get; set; }
 
+        [DataMember]
+        public LockedList<ChatCommand> CustomCommands { get; set; }
+
+        [DataMember]
+        public CustomCommand EntranceCommand { get; set; }
+
+        [DataMember]
+        public bool IsCurrencyRankExempt { get; set; }
+
+        [DataMember]
+        public bool IsSparkExempt { get; set; }
+
         public UserDataViewModel()
         {
             this.CurrencyAmounts = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
+            this.CustomCommands = new LockedList<ChatCommand>();
         }
 
         public UserDataViewModel(uint id, string username)
@@ -126,6 +146,22 @@ namespace MixItUp.Base.ViewModel.User
                         this.SetCurrencyAmount(settings.Currencies[kvp.Key], kvp.Value);
                     }
                 }
+            }
+
+            if (dataReader["CustomCommands"] != null && !string.IsNullOrEmpty(dataReader["CustomCommands"].ToString()))
+            {
+                this.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(dataReader["CustomCommands"].ToString()));
+            }
+
+            if (dataReader["Options"] != null && !string.IsNullOrEmpty(dataReader["Options"].ToString()))
+            {
+                JObject optionsJObj = JObject.Parse(dataReader["Options"].ToString());
+                if (optionsJObj["EntranceCommand"] != null)
+                {
+                    this.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
+                }
+                this.IsSparkExempt = this.GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
+                this.IsCurrencyRankExempt = this.GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
             }
         }
 
@@ -225,8 +261,11 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SetCurrencyAmount(UserCurrencyViewModel currency, int amount)
         {
-            UserCurrencyDataViewModel currencyData = this.GetCurrency(currency);
-            currencyData.Amount = Math.Min(amount, currencyData.Currency.MaxAmount);
+            if (!this.IsCurrencyRankExempt)
+            {
+                UserCurrencyDataViewModel currencyData = this.GetCurrency(currency);
+                currencyData.Amount = Math.Min(amount, currencyData.Currency.MaxAmount);
+            }
         }
 
         public void AddCurrencyAmount(UserCurrencyViewModel currency, int amount)
@@ -277,9 +316,32 @@ namespace MixItUp.Base.ViewModel.User
             Dictionary<Guid, int> amounts = new Dictionary<Guid, int>();
             foreach (UserCurrencyDataViewModel currencyData in this.CurrencyAmounts.Values.ToList())
             {
-                amounts.Add(currencyData.Currency.ID, currencyData.Amount);
+                amounts[currencyData.Currency.ID] = currencyData.Amount;
             }
-            return JsonConvert.SerializeObject(amounts);
+            return SerializerHelper.SerializeToString(amounts);
+        }
+
+        internal string GetCustomCommandsString()
+        {
+            return SerializerHelper.SerializeToString(this.CustomCommands.ToList());
+        }
+
+        internal string GetOptionsString()
+        {
+            JObject options = new JObject();
+            options["EntranceCommand"] = SerializerHelper.SerializeToString(this.EntranceCommand);
+            options["IsSparkExempt"] = this.IsSparkExempt;
+            options["IsCurrencyRankExempt"] = this.IsCurrencyRankExempt;
+            return options.ToString();
+        }
+
+        private T GetOptionValue<T>(JObject jobj, string key)
+        {
+            if (jobj[key] != null)
+            {
+                return jobj[key].ToObject<T>();
+            }
+            return default(T);
         }
     }
 }

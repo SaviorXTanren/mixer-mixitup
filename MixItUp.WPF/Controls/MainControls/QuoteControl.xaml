@@ -35,7 +35,7 @@
             <Button x:Name="AddQuoteButton" Grid.Column="6" Click="AddQuoteButton_Click">Add Quote</Button>
         </Grid>
 
-        <DataGrid x:Name="QuotesDataGrid" Grid.Row="2" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+        <DataGrid x:Name="QuotesDataGrid" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
                 <DataGridTemplateColumn IsReadOnly="True" Width="*">
                     <DataGridTemplateColumn.CellTemplate>

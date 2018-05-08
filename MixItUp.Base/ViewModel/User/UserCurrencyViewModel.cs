@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Clients;
-using MixItUp.Base.Commands;
+﻿using MixItUp.Base.Commands;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

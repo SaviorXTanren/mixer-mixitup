@@ -424,11 +424,6 @@ namespace MixItUp.Base.MixerAPI
 
                     }
 
-                    if (!string.IsNullOrEmpty(e.transactionID))
-                    {
-                        await this.CaptureSparkTransaction(e.transactionID);
-                    }
-
                     UserViewModel user = ChannelSession.GetCurrentUser();
                     if (this.InteractiveUsers.ContainsKey(e.participantID))
                     {
@@ -441,6 +436,11 @@ namespace MixItUp.Base.MixerAPI
                         {
                             user = new UserViewModel(participant.userID, participant.username);
                         }
+                    }
+
+                    if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
+                    {
+                        await this.CaptureSparkTransaction(e.transactionID);
                     }
 
                     await connectedControl.Command.Perform(user);

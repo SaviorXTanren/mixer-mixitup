@@ -3,6 +3,7 @@ using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -40,14 +41,18 @@ namespace MixItUp.Desktop.Services
 
         public async Task<bool> Connect()
         {
-            this.webSocket = new GawkBoxWebSocketClient(this);
-            if (await this.webSocket.Connect("wss://stream.gawkbox.com/ws/" + this.token.accessToken))
+            try
             {
-                GlobalEvents.ServiceReconnect("GawkBox");
+                this.webSocket = new GawkBoxWebSocketClient(this);
+                if (await this.webSocket.Connect("wss://stream.gawkbox.com/ws/" + this.token.accessToken))
+                {
+                    GlobalEvents.ServiceReconnect("GawkBox");
 
-                this.webSocket.OnDisconnectOccurred += WebSocket_OnDisconnectOccurred;
-                return true;
+                    this.webSocket.OnDisconnectOccurred += WebSocket_OnDisconnectOccurred;
+                    return true;
+                }
             }
+            catch (Exception ex) { Logger.Log(ex); }
             return false;
         }
 

@@ -118,6 +118,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Conditional:
                         this.actionControl = (this.action != null) ? new ConditionalActionControl(this, (ConditionalAction)this.action) : new ConditionalActionControl(this);
                         break;
+                    case ActionTypeEnum.StreamlabsOBS:
+                        this.actionControl = (this.action != null) ? new StreamlabsOBSActionControl(this, (StreamlabsOBSAction)this.action) : new StreamlabsOBSActionControl(this);
+                        break;
                 }
             }
 

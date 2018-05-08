@@ -61,7 +61,7 @@
             <Button Grid.Column="8" x:Name="RefreshButton" Click="RefreshButton_Click" Content="{MaterialDesign:PackIcon Refresh}" />
         </Grid>
 
-        <DataGrid x:Name="InteractiveControlsGridView" Grid.Row="2" Style="{StaticResource StandardDataGrid}">
+        <DataGrid x:Name="InteractiveControlsGridView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                 <DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" Width="80" />

@@ -36,6 +36,8 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
+            this.OBSStudioNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.OBSWebsocket == null) ? Visibility.Visible : Visibility.Collapsed;
+
             this.OBSStudioTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OBSStudioTypeEnum>();
             this.OBSStudioSourceVisibleCheckBox.IsChecked = true;
             this.OBSStudioSourceDimensionsXScaleTextBox.Text = "1";

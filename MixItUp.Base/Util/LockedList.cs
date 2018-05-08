@@ -26,6 +26,14 @@ namespace MixItUp.Base.Util
 
         public void Add(T item) { lock (objLock) { this.items.Add(item); } }
 
+        public void AddRange(IEnumerable<T> items)
+        {
+            foreach (T item in items)
+            {
+                this.Add(item);
+            }
+        }
+
         public void Clear() { lock (objLock) { this.items.Clear(); } }
 
         public bool Contains(T item) { lock (objLock) { return this.items.Contains(item); } }

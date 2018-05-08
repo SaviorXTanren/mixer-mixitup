@@ -35,7 +35,7 @@
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Currencies</TextBlock>
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
-                <DataGrid x:Name="CurrenciesDataGrid" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                <DataGrid x:Name="CurrenciesDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                         <DataGridTemplateColumn Header="Amount Special Identifier" IsReadOnly="True" Width="*">
@@ -54,13 +54,11 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="190">
+                        <DataGridTemplateColumn Header="Actions" Width="130">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="20" />
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="20" />
                                             <ColumnDefinition Width="Auto" />
@@ -70,11 +68,7 @@
                                             <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                        <Button x:Name="CurrencyUserEditButton" Grid.Column="2" Click="CurrencyUserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit User Amounts">
-                                            <MaterialDesign:PackIcon Kind="AccountSearch" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                        </Button>
-
-                                        <Button x:Name="CurrencyDeleteButton" Grid.Column="4" Click="CurrencyDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Currency">
+                                        <Button x:Name="CurrencyDeleteButton" Grid.Column="2" Click="CurrencyDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Currency">
                                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
                                     </Grid>
@@ -102,7 +96,7 @@
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Rank Systems</TextBlock>
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1">
-                <DataGrid x:Name="RanksDataGrid" Style="{StaticResource StandardDataGrid}" HorizontalContentAlignment="Stretch">
+                <DataGrid x:Name="RanksDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                         <DataGridTemplateColumn Header="Amount Special Identifier" IsReadOnly="True" Width="*">
@@ -137,13 +131,11 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Width="190">
+                        <DataGridTemplateColumn Header="Actions" Width="130">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="20" />
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="20" />
                                             <ColumnDefinition Width="Auto" />
@@ -153,11 +145,7 @@
                                             <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
 
-                                        <Button x:Name="RankUserEditButton" Grid.Column="2" Click="RankUserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit User Amounts">
-                                            <MaterialDesign:PackIcon Kind="AccountSearch" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                        </Button>
-
-                                        <Button x:Name="RankyDeleteButton" Grid.Column="4" Click="RankDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Rank">
+                                        <Button x:Name="RankyDeleteButton" Grid.Column="2" Click="RankDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete Rank">
                                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                         </Button>
                                     </Grid>

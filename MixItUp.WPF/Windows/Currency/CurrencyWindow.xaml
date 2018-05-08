@@ -165,7 +165,7 @@
                         </Grid.RowDefinitions>
 
                         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Visible" Height="200" Width="450">
-                            <DataGrid x:Name="RanksListView" Style="{StaticResource StandardDataGrid}">
+                            <DataGrid x:Name="RanksListView" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Rank Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                                     <DataGridTextColumn Header="Minimum Points" Binding="{Binding MinimumPoints}" IsReadOnly="True" Width="*" />

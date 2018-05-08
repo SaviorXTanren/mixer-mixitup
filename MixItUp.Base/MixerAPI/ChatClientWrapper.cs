@@ -41,6 +41,8 @@ namespace MixItUp.Base.MixerAPI
         private object userUpdateLock = new object();
         private object messageUpdateLock = new object();
 
+        private HashSet<uint> userJoins = new HashSet<uint>();
+
         public ChatClientWrapper()
         {
             this.ChatUsers = new LockedDictionary<uint, UserViewModel>();
@@ -333,6 +335,15 @@ namespace MixItUp.Base.MixerAPI
                     this.ChatUsers[user.ID] = user;
                 }
             }
+
+            if (!this.userJoins.Contains(user.ID))
+            {
+                this.userJoins.Add(user.ID);
+                if (user.Data.EntranceCommand != null)
+                {
+                    await user.Data.EntranceCommand.Perform(user);
+                }
+            }
         }
 
         private void RemoveUser(UserViewModel user)
@@ -423,7 +434,9 @@ namespace MixItUp.Base.MixerAPI
             {
                 GlobalEvents.ChatCommandMessageReceived(message);
 
-                PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.ContainsCommand(message.CommandName));
+                List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllChatCommands);
+                commandsToCheck.AddRange(message.User.Data.CustomCommands);
+                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.CommandName));
                 if (command != null)
                 {
                     await command.Perform(message.User, message.CommandArguments);

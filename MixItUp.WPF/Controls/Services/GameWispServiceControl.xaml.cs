@@ -40,8 +40,9 @@ namespace MixItUp.WPF.Controls.Services
                 return await ChannelSession.Services.InitializeGameWisp();
             });
 
-            if (!result)
+            if (!result || !ChannelSession.Services.GameWisp.WebSocketConnectedAndAuthenticated)
             {
+                await ChannelSession.Services.DisconnectGameWisp();
                 await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with GameWisp. Please ensure you approved access for the application in a timely manner.");
             }
             else

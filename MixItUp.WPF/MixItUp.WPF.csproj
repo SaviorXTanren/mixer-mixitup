@@ -85,8 +85,8 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.4.0.1044, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.4.0.1044\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.6.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.6.1.6-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.6.1.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.6.1.8-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -255,6 +255,9 @@
     <Compile Include="Controls\Actions\SpotifyActionControl.xaml.cs">
       <DependentUpon>SpotifyActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\StreamlabsOBSActionControl.xaml.cs">
+      <DependentUpon>StreamlabsOBSActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
       <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
     </Compile>
@@ -301,11 +304,17 @@
     <Compile Include="Controls\Command\UnlockedCommandControl.xaml.cs">
       <DependentUpon>UnlockedCommandControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
+      <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainControls\UsersControl.xaml.cs">
+      <DependentUpon>UsersControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Remote\RemoteButtonControl.xaml.cs">
       <DependentUpon>RemoteButtonControl.xaml</DependentUpon>
@@ -324,9 +333,6 @@
     </Compile>
     <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
-      <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\GameOutcomeCommandControl.xaml.cs">
       <DependentUpon>GameOutcomeCommandControl.xaml</DependentUpon>
@@ -456,6 +462,9 @@
     <Compile Include="Controls\Services\SpotifyServiceControl.xaml.cs">
       <DependentUpon>SpotifyServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\StreamlabsOBSServiceControl.xaml.cs">
+      <DependentUpon>StreamlabsOBSServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\StreamlabsServiceControl.xaml.cs">
       <DependentUpon>StreamlabsServiceControl.xaml</DependentUpon>
     </Compile>
@@ -524,9 +533,6 @@
     <Compile Include="Windows\Command\GameCommandWindow.xaml.cs">
       <DependentUpon>GameCommandWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Currency\CurrencyUserEditorWindow.xaml.cs">
-      <DependentUpon>CurrencyUserEditorWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\Currency\CurrencyWindow.xaml.cs">
       <DependentUpon>CurrencyWindow.xaml</DependentUpon>
     </Compile>
@@ -539,6 +545,9 @@
     <Compile Include="Windows\LoadingWindowBase.cs" />
     <Compile Include="Windows\PopOut\PopOutWindow.xaml.cs">
       <DependentUpon>PopOutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Users\UserDataEditorWindow.xaml.cs">
+      <DependentUpon>UserDataEditorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Wizard\NewUserWizardWindow.xaml.cs">
       <DependentUpon>NewUserWizardWindow.xaml</DependentUpon>
@@ -615,6 +624,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Actions\StreamlabsOBSActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Actions\TextToSpeechActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -675,11 +688,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainControls\SongRequestControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainControls\UsersControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -704,10 +725,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirement\CurrencyRequirementControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -887,6 +904,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Services\StreamlabsOBSServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Services\StreamlabsServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1004,10 +1025,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Currency\CurrencyUserEditorWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Windows\Currency\CurrencyWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1021,6 +1038,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\PopOut\PopOutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Users\UserDataEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

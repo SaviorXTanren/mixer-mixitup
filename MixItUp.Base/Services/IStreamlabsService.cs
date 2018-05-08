@@ -20,7 +20,7 @@ namespace MixItUp.Base.Services
 
     public class StreamlabsDonation
     {
-        [JsonProperty("id")]
+        [JsonProperty("donation_id")]
         public int ID { get; set; }
 
         [JsonProperty("name")]

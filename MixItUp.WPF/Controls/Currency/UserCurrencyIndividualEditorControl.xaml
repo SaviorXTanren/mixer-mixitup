@@ -8,12 +8,12 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="5,0">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="20" />
             <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="35" />
-            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" x:Name="UsernameTextBlock" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="0" x:Name="NameTextBlock" VerticalAlignment="Center" />
 
         <TextBox Grid.Column="2" x:Name="AmountTextBox" TextChanged="TextBox_TextChanged" />
     </Grid>
