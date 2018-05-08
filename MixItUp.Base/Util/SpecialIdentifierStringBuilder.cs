@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -74,9 +75,25 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
 
+            this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
-            this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
+
+            if (this.ContainsSpecialIdentifier("uptime") || this.ContainsSpecialIdentifier("starttime"))
+            {
+                DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+                if (startTime > DateTimeOffset.MinValue)
+                {
+                    TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
+
+                    this.ReplaceSpecialIdentifier("starttime", startTime.ToString("MMMM dd, yyyy - h:mm tt"));
+
+                    this.ReplaceSpecialIdentifier("uptimetotal", duration.ToString("h\\:mm"));
+                    this.ReplaceSpecialIdentifier("uptimehours", duration.ToString("%h"));
+                    this.ReplaceSpecialIdentifier("uptimeminutes", duration.ToString("mm"));
+                    this.ReplaceSpecialIdentifier("uptimeseconds", duration.ToString("ss"));
+                }
+            }
 
             if (ChannelSession.Services.Twitter != null && this.ContainsSpecialIdentifier("tweet"))
             {
