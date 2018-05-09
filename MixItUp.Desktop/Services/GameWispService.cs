@@ -279,10 +279,13 @@ namespace MixItUp.Desktop.Services
 
         public async Task<IEnumerable<GameWispSubscriber>> GetCachedSubscribers()
         {
-            if ((DateTimeOffset.Now - this.lastCachedSubscribersCall).TotalMinutes > 5)
+            if (this.WebSocketConnectedAndAuthenticated)
             {
-                this.cachedSubscribers = new List<GameWispSubscriber>(await this.GetSubscribers());
-                this.lastCachedSubscribersCall = DateTimeOffset.Now;
+                if ((DateTimeOffset.Now - this.lastCachedSubscribersCall).TotalMinutes > 5)
+                {
+                    this.cachedSubscribers = new List<GameWispSubscriber>(await this.GetSubscribers());
+                    this.lastCachedSubscribersCall = DateTimeOffset.Now;
+                }
             }
             return this.cachedSubscribers;
         }
@@ -369,6 +372,10 @@ namespace MixItUp.Desktop.Services
                     new KeyValuePair<string, string>("refresh_token", this.token.refreshToken),
                 };
                 this.token = await this.GetWWWFormUrlEncodedOAuthToken(BaseAddress + "oauth/token", ClientID, ChannelSession.SecretManager.GetSecret("GameWispSecret"), body);
+                if (this.token != null)
+                {
+                    this.token.clientID = GameWispService.ClientID;
+                }
             }
         }
 
@@ -404,7 +411,7 @@ namespace MixItUp.Desktop.Services
         private async Task<T> GetDataWithAccessTokenAsync<T>(string requestUri)
         {
             GameWispResponse<T> response = await this.GetWithAccessTokenAsync<GameWispResponse<T>>(requestUri);
-            return (response.HasData) ? response.GetResponseData() : default(T);
+            return (response != null && response.HasData) ? response.GetResponseData() : default(T);
         }
 
         private async Task<IEnumerable<T>> GetPagedWithAccessTokenAsync<T>(string requestUri)
@@ -422,19 +429,22 @@ namespace MixItUp.Desktop.Services
                 currentRequestUri += "&limit=" + PagedItemLimit;
 
                 GameWispArrayResponse<T> response = await this.GetWithAccessTokenAsync<GameWispArrayResponse<T>>(currentRequestUri);
-                if (response.HasData)
+                if (response != null)
                 {
-                    results.AddRange(response.GetResponseData());
-                }
+                    if (response.HasData)
+                    {
+                        results.AddRange(response.GetResponseData());
+                    }
 
-                GameWispCursor cursor = response.GetCursor();
-                if (cursor != null && cursor.Count == PagedItemLimit)
-                {
-                    nextPage = cursor.Next;
-                }
-                else
-                {
-                    nextPage = null;
+                    GameWispCursor cursor = response.GetCursor();
+                    if (cursor != null && cursor.Count == PagedItemLimit)
+                    {
+                        nextPage = cursor.Next;
+                    }
+                    else
+                    {
+                        nextPage = null;
+                    }
                 }
             } while (!string.IsNullOrEmpty(nextPage));
 
@@ -443,7 +453,12 @@ namespace MixItUp.Desktop.Services
 
         private async Task<T> GetWithAccessTokenAsync<T>(string requestUri)
         {
-            return await this.GetAsync<T>(requestUri + (requestUri.Contains("?") ? "&" : "?") + string.Format("access_token={0}", this.token.accessToken));
+            try
+            {
+                return await this.GetAsync<T>(requestUri + (requestUri.Contains("?") ? "&" : "?") + string.Format("access_token={0}", this.token.accessToken));
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return default(T);
         }
     }
 }

@@ -287,7 +287,7 @@ namespace MixItUp.Base.ViewModel.User
             if (this.ID > 0)
             {
                 this.CustomRoles.Clear();
-                if (ChannelSession.Services.GameWisp != null && this.Data.GameWispUserID > 0)
+                if (ChannelSession.Services.GameWisp != null)
                 {
                     if (this.GameWispUser == null)
                     {
