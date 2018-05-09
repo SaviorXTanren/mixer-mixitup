@@ -83,7 +83,7 @@ namespace MixItUp.Base.Actions
                 {
                     if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile)
                     {
-                        List<string> lines = new List<string>(data.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                        List<string> lines = new List<string>(data.Split(new string[] { Environment.NewLine, "\n" }, StringSplitOptions.RemoveEmptyEntries));
                         if (lines.Count > 0)
                         {
                             if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile)
