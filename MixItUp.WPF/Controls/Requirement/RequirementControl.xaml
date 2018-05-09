@@ -40,7 +40,7 @@
 
             <MaterialDesign:PopupBox Grid.Column="0" ToggleContent="{StaticResource UserRolePopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <RequirementControls:UserRoleRequirementControl x:Name="UserRoleRequirement" />
+                    <RequirementControls:RoleRequirementControl x:Name="RoleRequirement" />
                 </Grid>
             </MaterialDesign:PopupBox>
 

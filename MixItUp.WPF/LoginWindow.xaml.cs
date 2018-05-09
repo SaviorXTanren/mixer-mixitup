@@ -233,7 +233,7 @@ namespace MixItUp.WPF
 
             if (await this.EstablishConnection(ChannelSession.ModeratorScopes, this.ModeratorChannelTextBox.Text))
             {
-                IEnumerable<UserWithGroupsModel> users = await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, UserRole.Mod);
+                IEnumerable<UserWithGroupsModel> users = await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Mod);
                 if (users.Any(uwg => uwg.id.Equals(ChannelSession.User.id)))
                 {
                     MainWindow window = new MainWindow();

@@ -11,7 +11,7 @@ namespace MixItUp.Base.ViewModel.Requirement
     {
         [JsonProperty]
         [Obsolete]
-        public UserRole UserRole { get; set; }
+        public MixerRoleEnum UserRole { get; set; }
 
         [JsonProperty]
         public RoleRequirementViewModel Role { get; set; }
@@ -31,7 +31,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.Cooldown = new CooldownRequirementViewModel();
         }
 
-        public RequirementViewModel(UserRole userRole, int cooldown)
+        public RequirementViewModel(MixerRoleEnum userRole, int cooldown)
             : this()
         {
             this.Role.MixerRole = userRole;

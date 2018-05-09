@@ -42,7 +42,7 @@ namespace MixItUp.Base.Actions
         public string GroupName { get; set; }
 
         [DataMember]
-        public UserRole RoleRequirement { get; set; }
+        public MixerRoleEnum RoleRequirement { get; set; }
 
         [DataMember]
         public string SceneID { get; set; }
@@ -58,10 +58,10 @@ namespace MixItUp.Base.Actions
         public InteractiveAction()
             : base(ActionTypeEnum.Interactive)
         {
-            this.RoleRequirement = UserRole.User;
+            this.RoleRequirement = MixerRoleEnum.User;
         }
 
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string groupName = null, string sceneID = null, UserRole roleRequirement = UserRole.User)
+        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string groupName = null, string sceneID = null, MixerRoleEnum roleRequirement = MixerRoleEnum.User)
             : this()
         {
             this.InteractiveType = interactiveType;

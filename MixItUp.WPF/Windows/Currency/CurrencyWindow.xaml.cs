@@ -524,7 +524,7 @@ namespace MixItUp.WPF.Windows.Currency
                     string type = (this.currency.IsRank) ? "rank" : "currency";
                     if (await MessageBoxHelper.ShowConfirmationDialog("Since you just created a new " + type + ", would you like to create a chat command to show a user's " + type + "?"))
                     {
-                        ChatCommand currencyRankCommand = new ChatCommand(this.currency.Name, this.currency.SpecialIdentifier, new RequirementViewModel(UserRole.User, 5));
+                        ChatCommand currencyRankCommand = new ChatCommand(this.currency.Name, this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
                         string chatText = string.Empty;
                         if (this.currency.IsRank)
                         {

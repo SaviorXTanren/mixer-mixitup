@@ -199,7 +199,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
                     {
                         reason = "The following word is banned: " + word;
-                        ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, this.User.GetModel(), new List<UserRole>() { UserRole.Banned }).Wait();
+                        ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, this.User.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned }).Wait();
                         return true;
                     }
                 }

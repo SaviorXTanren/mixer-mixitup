@@ -304,7 +304,7 @@ namespace MixItUp.Base.MixerAPI
                     participantsToUpdate.Add(participant);
                     if (ChannelSession.Chat.ChatUsers.ContainsKey(participant.userID))
                     {
-                        UserRole role = ChannelSession.Chat.ChatUsers[participant.userID].PrimaryRole;
+                        MixerRoleEnum role = ChannelSession.Chat.ChatUsers[participant.userID].PrimaryRole;
                         InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == role);
                         if (group != null)
                         {

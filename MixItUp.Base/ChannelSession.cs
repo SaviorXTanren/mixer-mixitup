@@ -319,11 +319,11 @@ namespace MixItUp.Base
             UserViewModel user = new UserViewModel(ChannelSession.User);
             if (ChannelSession.Channel.user.id.Equals(user.ID))
             {
-                user.MixerRoles.Add(UserRole.Streamer);
+                user.MixerRoles.Add(MixerRoleEnum.Streamer);
             }
             else
             {
-                user.MixerRoles.Add(UserRole.Mod);
+                user.MixerRoles.Add(MixerRoleEnum.Mod);
             }
             return user;
         }

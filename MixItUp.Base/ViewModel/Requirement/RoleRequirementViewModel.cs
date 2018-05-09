@@ -15,32 +15,32 @@ namespace MixItUp.Base.ViewModel.Requirement
         public static IEnumerable<string> AdvancedUserRoleAllowedValues { get { return UserViewModel.SelectableAdvancedUserRoles(); } }
 
         [JsonProperty]
-        public UserRole MixerRole { get; set; }
+        public MixerRoleEnum MixerRole { get; set; }
 
         [JsonProperty]
         public string CustomRole { get; set; }
 
         public RoleRequirementViewModel()
         {
-            this.MixerRole = UserRole.User;
+            this.MixerRole = MixerRoleEnum.User;
         }
 
-        public RoleRequirementViewModel(UserRole mixerRole)
+        public RoleRequirementViewModel(MixerRoleEnum mixerRole)
         {
             this.MixerRole = mixerRole;
         }
 
         public RoleRequirementViewModel(string customRole)
-            : this(UserRole.Custom)
         {
-            this.CustomRole = customRole;
+            this.SetRoleBasedOnString(customRole);
         }
 
+        [JsonIgnore]
         public string RoleNameString
         {
             get
             {
-                if (this.MixerRole == UserRole.Custom && !string.IsNullOrEmpty(this.CustomRole))
+                if (this.MixerRole == MixerRoleEnum.Custom && !string.IsNullOrEmpty(this.CustomRole))
                 {
                     return this.CustomRole;
                 }
@@ -48,9 +48,27 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
         }
 
+        public void SetRoleBasedOnString(string role)
+        {
+            MixerRoleEnum mixerRole = EnumHelper.GetEnumValueFromString<MixerRoleEnum>(role);
+            if (mixerRole > MixerRoleEnum.Banned)
+            {
+                this.MixerRole = mixerRole;
+            }
+            else
+            {
+                this.MixerRole = MixerRoleEnum.Custom;
+                this.CustomRole = role;
+            }
+        }
+
         public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
         {
-            if (this.MixerRole == UserRole.Follower)
+            if (user.PrimaryRole == MixerRoleEnum.Streamer)
+            {
+                return true;
+            }
+            else if (this.MixerRole == MixerRoleEnum.Follower)
             {
                 if (!user.IsFollower)
                 {
@@ -58,7 +76,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 }
                 return user.IsFollower;
             }
-            else if (this.MixerRole == UserRole.Subscriber)
+            else if (this.MixerRole == MixerRoleEnum.Subscriber)
             {
                 if (!user.IsSubscriber)
                 {
@@ -66,7 +84,7 @@ namespace MixItUp.Base.ViewModel.Requirement
                 }
                 return user.IsSubscriber;
             }
-            else if (this.MixerRole == UserRole.Custom && !string.IsNullOrEmpty(this.CustomRole))
+            else if (this.MixerRole == MixerRoleEnum.Custom && !string.IsNullOrEmpty(this.CustomRole))
             {
                 if (this.CustomRole.StartsWith(GameWispTier.MIURolePrefix))
                 {
@@ -84,7 +102,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (ChannelSession.Chat != null)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to do this", (this.MixerRole != UserRole.Custom) ?
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to do this", (this.MixerRole != MixerRoleEnum.Custom) ?
                     EnumHelper.GetEnumName(this.MixerRole) : this.CustomRole));
             }
         }

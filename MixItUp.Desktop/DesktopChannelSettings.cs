@@ -102,7 +102,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int ModerationFilteredWordsTimeout5MinuteOffenseCount { get; set; }
         [JsonProperty]
-        public UserRole ModerationFilteredWordsExcempt { get; set; }
+        public MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
 
         [JsonProperty]
         public int ModerationCapsBlockCount { get; set; }
@@ -121,12 +121,12 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int ModerationChatTextTimeout5MinuteOffenseCount { get; set; }
         [JsonProperty]
-        public UserRole ModerationChatTextExcempt { get; set; }
+        public MixerRoleEnum ModerationChatTextExcempt { get; set; }
 
         [JsonProperty]
         public bool ModerationBlockLinks { get; set; }
         [JsonProperty]
-        public UserRole ModerationBlockLinksExcempt { get; set; }
+        public MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
 
         [JsonProperty]
         public int ModerationTimeout1MinuteOffenseCount { get; set; }
@@ -331,9 +331,9 @@ namespace MixItUp.Desktop
             this.ChatFontSize = 13;
             this.ChatUserJoinLeaveColorScheme = this.ChatEventAlertsColorScheme = this.ChatInteractiveAlertsColorScheme = ColorSchemes.DefaultColorScheme;
 
-            this.ModerationFilteredWordsExcempt = UserRole.Mod;
-            this.ModerationChatTextExcempt = UserRole.Mod;
-            this.ModerationBlockLinksExcempt = UserRole.Mod;
+            this.ModerationFilteredWordsExcempt = MixerRoleEnum.Mod;
+            this.ModerationChatTextExcempt = MixerRoleEnum.Mod;
+            this.ModerationBlockLinksExcempt = MixerRoleEnum.Mod;
 
             this.ModerationCapsBlockIsPercentage = true;
             this.ModerationPunctuationBlockIsPercentage = true;

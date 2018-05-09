@@ -72,7 +72,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     this.SetWordsFromTextBoxInList(this.FilteredWordsTextBox, ChannelSession.Settings.FilteredWords);
                     this.SetWordsFromTextBoxInList(this.BannedWordsTextBox, ChannelSession.Settings.BannedWords);
-                    ChannelSession.Settings.ModerationFilteredWordsExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.FilteredWordsExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationFilteredWordsExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.FilteredWordsExemptComboBox.SelectedItem);
 
                     ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
                     ChannelSession.Settings.ModerationCapsBlockIsPercentage = (this.MaxCapsTypeComboBox.SelectedIndex == 0);
@@ -80,10 +80,10 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsTypeComboBox.SelectedIndex == 0);
                     ChannelSession.Settings.ModerationEmoteBlockCount = (int)this.MaxEmotesSlider.Value;
                     ChannelSession.Settings.ModerationEmoteBlockIsPercentage = (this.MaxEmotesTypeComboBox.SelectedIndex == 0);
-                    ChannelSession.Settings.ModerationChatTextExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.ChatTextModerationExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationChatTextExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.ChatTextModerationExemptComboBox.SelectedItem);
 
                     ChannelSession.Settings.ModerationBlockLinks = this.BlockLinksToggleButton.IsChecked.GetValueOrDefault();
-                    ChannelSession.Settings.ModerationBlockLinksExcempt = EnumHelper.GetEnumValueFromString<UserRole>((string)this.BlockLinksExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationBlockLinksExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.BlockLinksExemptComboBox.SelectedItem);
 
                     ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = (int)this.ModerationTimeout1MinAfterSlider.Value;
                     ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount = (int)this.ModerationTimeout5MinAfterSlider.Value;

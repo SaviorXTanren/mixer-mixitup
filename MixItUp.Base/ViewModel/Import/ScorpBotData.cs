@@ -59,17 +59,17 @@ namespace MixItUp.Base.ViewModel.Import
             return (this.GetIntSettingsValue(key, value) == 1);
         }
 
-        public UserRole GetUserRoleSettingsValue(string key, string value)
+        public MixerRoleEnum GetUserRoleSettingsValue(string key, string value)
         {
             switch (this.GetIntSettingsValue(key, value))
             {
-                case 0: return UserRole.User;
-                case 1: return UserRole.Subscriber;
-                case 2: return UserRole.Mod;
+                case 0: return MixerRoleEnum.User;
+                case 1: return MixerRoleEnum.Subscriber;
+                case 2: return MixerRoleEnum.Mod;
                 case 3:
                 case 4:
                 default:
-                    return UserRole.Streamer;
+                    return MixerRoleEnum.Streamer;
             }
         }
     }

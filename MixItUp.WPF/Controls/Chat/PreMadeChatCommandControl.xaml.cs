@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.Chat
             ComboBox combobox = (ComboBox)sender;
             PreMadeChatCommand command = (PreMadeChatCommand)combobox.DataContext;
 
-            command.Requirements.Role.MixerRole = EnumHelper.GetEnumValueFromString<UserRole>((string)combobox.SelectedItem);
+            command.Requirements.Role.MixerRole = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)combobox.SelectedItem);
 
             this.UpdateSetting();
         }

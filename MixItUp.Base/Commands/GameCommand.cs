@@ -40,7 +40,7 @@ namespace MixItUp.Base.Commands
     public class GameOutcomeGroup
     {
         [DataMember]
-        public UserRole Role { get; set; }
+        public MixerRoleEnum Role { get; set; }
 
         [DataMember]
         public CurrencyRequirementViewModel RankRequirement { get; set; }
@@ -50,7 +50,7 @@ namespace MixItUp.Base.Commands
 
         public GameOutcomeGroup() { this.Probabilities = new List<GameOutcomeProbability>(); }
 
-        public GameOutcomeGroup(UserRole role) : this() { this.Role = role; }
+        public GameOutcomeGroup(MixerRoleEnum role) : this() { this.Role = role; }
 
         public GameOutcomeGroup(CurrencyRequirementViewModel rankRequirement) : this() { this.RankRequirement = rankRequirement; }
 

@@ -54,7 +54,7 @@ namespace MixItUp.Base
         RequirementViewModel GiveawayRequirements { get; set; }
 
         bool ModerationUseCommunityFilteredWords { get; set; }
-        UserRole ModerationFilteredWordsExcempt { get; set; }
+        MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
 
         int ModerationCapsBlockCount { get; set; }
         bool ModerationCapsBlockIsPercentage { get; set; }
@@ -62,10 +62,10 @@ namespace MixItUp.Base
         bool ModerationPunctuationBlockIsPercentage { get; set; }
         int ModerationEmoteBlockCount { get; set; }
         bool ModerationEmoteBlockIsPercentage { get; set; }
-        UserRole ModerationChatTextExcempt { get; set; }
+        MixerRoleEnum ModerationChatTextExcempt { get; set; }
 
         bool ModerationBlockLinks { get; set; }
-        UserRole ModerationBlockLinksExcempt { get; set; }
+        MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
 
         int ModerationTimeout1MinuteOffenseCount { get; set; }
         int ModerationTimeout5MinuteOffenseCount { get; set; }

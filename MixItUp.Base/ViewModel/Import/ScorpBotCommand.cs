@@ -66,7 +66,7 @@ namespace MixItUp.Base.ViewModel.Import
 
             this.Actions.Add(new ChatAction(this.Text));
 
-            this.Requirements.Role.MixerRole = UserRole.User;
+            this.Requirements.Role.MixerRole = MixerRoleEnum.User;
 
             this.Enabled = true;
         }
@@ -77,13 +77,13 @@ namespace MixItUp.Base.ViewModel.Import
             string permInfo = (string)reader["PermInfo"];
             if (permInfo.Contains("followed.php"))
             {
-                this.Requirements.Role.MixerRole = UserRole.Follower;
+                this.Requirements.Role.MixerRole = MixerRoleEnum.Follower;
             }
 
             string permission = (string)reader["Permission"];
             if (permission.Equals("Moderator"))
             {
-                this.Requirements.Role.MixerRole = UserRole.Mod;
+                this.Requirements.Role.MixerRole = MixerRoleEnum.Mod;
             }
 
             this.Requirements.Cooldown.Amount = (int)reader["Cooldown"];

@@ -398,15 +398,15 @@ namespace MixItUp.WPF.Windows.Command
 
                         this.outcomeGroupControls.Clear();
 
-                        GameOutcomeGroup userGroup = new GameOutcomeGroup(UserRole.User);
+                        GameOutcomeGroup userGroup = new GameOutcomeGroup(MixerRoleEnum.User);
                         userGroup.Probabilities.Add(new GameOutcomeProbability(50, 25));
                         this.outcomeGroupControls.Add(new GameOutcomeGroupControl(userGroup));
 
-                        GameOutcomeGroup subscriberGroup = new GameOutcomeGroup(UserRole.Subscriber);
+                        GameOutcomeGroup subscriberGroup = new GameOutcomeGroup(MixerRoleEnum.Subscriber);
                         subscriberGroup.Probabilities.Add(new GameOutcomeProbability(50, 25));
                         this.outcomeGroupControls.Add(new GameOutcomeGroupControl(subscriberGroup));
 
-                        GameOutcomeGroup modGroup = new GameOutcomeGroup(UserRole.Mod);
+                        GameOutcomeGroup modGroup = new GameOutcomeGroup(MixerRoleEnum.Mod);
                         modGroup.Probabilities.Add(new GameOutcomeProbability(50, 25));
                         this.outcomeGroupControls.Add(new GameOutcomeGroupControl(modGroup));
                     }

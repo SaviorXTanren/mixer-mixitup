@@ -13,11 +13,11 @@ namespace MixItUp.Base.ViewModel.Interactive
 
         public InteractiveUserGroupViewModel() { }
 
-        public InteractiveUserGroupViewModel(UserRole associatedUserRole)
-            : this((associatedUserRole != UserRole.User) ? EnumHelper.GetEnumName(associatedUserRole) : DefaultName)
+        public InteractiveUserGroupViewModel(MixerRoleEnum associatedUserRole)
+            : this((associatedUserRole != MixerRoleEnum.User) ? EnumHelper.GetEnumName(associatedUserRole) : DefaultName)
         {
             this.AssociatedUserRole = associatedUserRole;
-            if (this.AssociatedUserRole != UserRole.User)
+            if (this.AssociatedUserRole != MixerRoleEnum.User)
             {
                 this.IsEnabled = false;
             }
@@ -29,7 +29,7 @@ namespace MixItUp.Base.ViewModel.Interactive
         {
             this.GroupName = groupName;
             this.DefaultScene = defaultScene;
-            this.AssociatedUserRole = UserRole.Custom;
+            this.AssociatedUserRole = MixerRoleEnum.Custom;
             this.IsEnabled = true;
         }
 
@@ -40,7 +40,7 @@ namespace MixItUp.Base.ViewModel.Interactive
         [DataMember]
         public string DefaultScene { get; set; }
         [DataMember]
-        public UserRole AssociatedUserRole { get; set; }
+        public MixerRoleEnum AssociatedUserRole { get; set; }
         [DataMember]
         public bool IsEnabled { get; set; }
 

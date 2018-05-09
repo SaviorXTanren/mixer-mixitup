@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Dialogs
             }
         }
 
-        public bool IsCustomGroup { get { return this.Group.AssociatedUserRole == UserRole.Custom; } }
+        public bool IsCustomGroup { get { return this.Group.AssociatedUserRole == MixerRoleEnum.Custom; } }
 
         public Visibility ShowToggleButton { get { return this.IsCustomGroup ? Visibility.Collapsed : Visibility.Visible; } }
         public Visibility ShowDeleteButton { get { return this.IsCustomGroup ? Visibility.Visible : Visibility.Collapsed; } }

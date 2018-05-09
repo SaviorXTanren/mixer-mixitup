@@ -431,8 +431,8 @@
     <Compile Include="Controls\Requirement\RequirementControl.xaml.cs">
       <DependentUpon>RequirementControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\UserRoleRequirementControl.xaml.cs">
-      <DependentUpon>UserRoleRequirementControl.xaml</DependentUpon>
+    <Compile Include="Controls\Requirement\RoleRequirementControl.xaml.cs">
+      <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\DeveloperAPIServiceControl.xaml.cs">
       <DependentUpon>DeveloperAPIServiceControl.xaml</DependentUpon>
@@ -864,7 +864,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\UserRoleRequirementControl.xaml">
+    <Page Include="Controls\Requirement\RoleRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

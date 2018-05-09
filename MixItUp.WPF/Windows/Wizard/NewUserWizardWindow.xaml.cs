@@ -555,19 +555,19 @@ namespace MixItUp.WPF.Windows.Wizard
 
                 if (this.scorpBotData.GetBoolSettingsValue("settings", "chatcapschecknowarnregs"))
                 {
-                    ChannelSession.Settings.ModerationChatTextExcempt = UserRole.User;
+                    ChannelSession.Settings.ModerationChatTextExcempt = MixerRoleEnum.User;
                 }
                 else if (this.scorpBotData.GetBoolSettingsValue("settings", "chatcapschecknowarnsubs"))
                 {
-                    ChannelSession.Settings.ModerationChatTextExcempt = UserRole.Subscriber;
+                    ChannelSession.Settings.ModerationChatTextExcempt = MixerRoleEnum.Subscriber;
                 }
                 else if (this.scorpBotData.GetBoolSettingsValue("settings", "chatcapschecknowarnmods"))
                 {
-                    ChannelSession.Settings.ModerationChatTextExcempt = UserRole.Mod;
+                    ChannelSession.Settings.ModerationChatTextExcempt = MixerRoleEnum.Mod;
                 }
                 else
                 {
-                    ChannelSession.Settings.ModerationChatTextExcempt = UserRole.Streamer;
+                    ChannelSession.Settings.ModerationChatTextExcempt = MixerRoleEnum.Streamer;
                 }
 
                 ChannelSession.Settings.ModerationCapsBlockIsPercentage = !this.scorpBotData.GetBoolSettingsValue("settings", "chatcapsfiltertype");
