@@ -195,6 +195,20 @@ namespace MixItUp.Base.Commands
 
     public class UptimeChatCommand : PreMadeChatCommand
     {
+        public static async Task<DateTimeOffset> GetStartTime()
+        {
+            BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast(ChannelSession.Channel);
+            if (broadcast != null && broadcast.online)
+            {
+                DateTimeOffset startTime = broadcast.startedAt.ToLocalTime();
+                if (startTime > DateTimeOffset.MinValue)
+                {
+                    return startTime;
+                }
+            }
+            return DateTimeOffset.MinValue;
+        }
+
         public UptimeChatCommand()
             : base("Uptime", "uptime", 5, UserRole.User)
         {
@@ -202,19 +216,16 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast(ChannelSession.Channel);
-                    if (broadcast != null && broadcast.online)
+                    DateTimeOffset startTime = await UptimeChatCommand.GetStartTime();
+                    if (startTime > DateTimeOffset.MinValue)
                     {
-                        DateTimeOffset startTime = broadcast.startedAt.ToLocalTime();
-                        if (startTime > DateTimeOffset.MinValue)
-                        {
-                            TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
-                            await ChannelSession.Chat.SendMessage("Start Time: " + startTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
-                            return;
-                        }
+                        TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
+                        await ChannelSession.Chat.SendMessage("Start Time: " + startTime.ToString("MMMM dd, yyyy - h:mm tt") + ", Stream Length: " + duration.ToString("h\\:mm"));
                     }
-
-                    await ChannelSession.Chat.SendMessage("Stream is currently offline");
+                    else
+                    {
+                        await ChannelSession.Chat.SendMessage("Stream is currently offline");
+                    }
                 }
             }));
         }
@@ -748,6 +759,7 @@ namespace MixItUp.Base.Commands
                 {
                     if (arguments.Count() > 0)
                     {
+                        await ChannelSession.RefreshChannel();
                         string newTitle = string.Join(" ", arguments);
                         ChannelSession.Channel.name = newTitle;
                         await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
@@ -781,6 +793,7 @@ namespace MixItUp.Base.Commands
                         GameTypeModel newGame = games.FirstOrDefault(g => g.name.Equals(newGameName, StringComparison.CurrentCultureIgnoreCase));
                         if (newGame != null)
                         {
+                            await ChannelSession.RefreshChannel();
                             ChannelSession.Channel.typeId = newGame.id;
                             await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
                             await ChannelSession.RefreshChannel();
@@ -794,6 +807,43 @@ namespace MixItUp.Base.Commands
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "Usage: !setgame <GAME NAME>");
                     }
+                }
+            }));
+        }
+    }
+
+    public class SetAudienceChatCommand : PreMadeChatCommand
+    {
+        private const string FamilySetting = "family";
+        private const string TeenSetting = "teen";
+        private const string AdultSettings = "adult";
+        private const string Adult18PlusSetting = "18+";
+
+        private Dictionary<string, int> steamGameList = new Dictionary<string, int>();
+
+        public SetAudienceChatCommand()
+            : base("Set Audience", "setaudience", 5, UserRole.Mod)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    if (arguments.Count() == 1)
+                    {
+                        string rating = arguments.ElementAt(0);
+                        if (rating.Equals(FamilySetting) || rating.Equals(TeenSetting) || rating.Equals(AdultSettings) || rating.Equals(Adult18PlusSetting))
+                        {
+                            await ChannelSession.RefreshChannel();
+                            rating = rating.ToLower().Replace(AdultSettings, Adult18PlusSetting);
+                            ChannelSession.Channel.audience = rating;
+                            await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
+                            await ChannelSession.RefreshChannel();
+
+                            return;
+                        }
+                    }
+
+                    await ChannelSession.Chat.Whisper(user.UserName, "Usage: !setaudience family|teen|adult");
                 }
             }));
         }
