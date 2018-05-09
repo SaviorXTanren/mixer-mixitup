@@ -45,11 +45,11 @@ namespace MixItUp.WPF.Controls.Command
 
         protected override async Task OnLoaded()
         {
-            this.LowestRoleAllowedComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
+            this.LowestRoleAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
 
             if (this.command != null)
             {
-                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Requirements.UserRole);
+                this.LowestRoleAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Requirements.Role.MixerRole);
                 this.CooldownTextBox.Text = this.command.Requirements.Cooldown.Amount.ToString();
                 this.ChatCommandTextBox.Text = this.command.CommandsString;
                 if (this.command.Actions.First() is ChatAction)

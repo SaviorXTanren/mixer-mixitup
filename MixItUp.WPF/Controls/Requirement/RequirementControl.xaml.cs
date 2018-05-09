@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Controls.Requirement
         public RequirementViewModel GetRequirements()
         {
             RequirementViewModel requirement = new RequirementViewModel();
-            requirement.UserRole = this.UserRoleRequirement.GetUserRoleRequirement();
+            requirement.Role = this.UserRoleRequirement.GetUserRoleRequirement();
             requirement.Cooldown = this.CooldownRequirement.GetCooldownRequirement();
             if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
@@ -47,7 +47,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         public void SetRequirements(RequirementViewModel requirement)
         {
-            this.UserRoleRequirement.SetUserRoleRequirement(requirement.UserRole);
+            this.UserRoleRequirement.SetUserRoleRequirement(requirement.Role);
             this.CooldownRequirement.SetCooldownRequirement(requirement.Cooldown);
             if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {

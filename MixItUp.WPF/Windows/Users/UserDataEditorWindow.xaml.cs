@@ -48,7 +48,6 @@ namespace MixItUp.WPF.Windows.Currency
         private async Task RefreshData()
         {
             await this.user.SetDetails();
-            await this.user.SetRoles();
 
             this.ranks.Clear();
             this.currencies.Clear();

@@ -82,7 +82,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Interactive != null && ChannelSession.Interactive.IsConnected())
             {
-                if (!user.Roles.Any(r => r >= this.RoleRequirement))
+                if (!user.MixerRoles.Any(r => r >= this.RoleRequirement))
                 {
                     if (ChannelSession.Chat != null)
                     {

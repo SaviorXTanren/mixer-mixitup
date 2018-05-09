@@ -64,7 +64,7 @@ namespace MixItUp.Base.Commands
             }
             else
             {
-                return (user.Roles.Any(r => r >= this.Role));
+                return (user.MixerRoles.Any(r => r >= this.Role));
             }
         }
     }

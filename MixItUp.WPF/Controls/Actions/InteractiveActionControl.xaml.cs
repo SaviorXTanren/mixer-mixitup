@@ -22,8 +22,8 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionTypeEnum>();
-            this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
-            this.InteractiveMoveUserToScenePermissionsAllowedComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
+            this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
+            this.InteractiveMoveUserToScenePermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
 
             if (this.action != null)
             {

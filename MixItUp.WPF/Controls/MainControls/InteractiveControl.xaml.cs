@@ -124,7 +124,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id] = new List<InteractiveUserGroupViewModel>();
             }
 
-            foreach (UserRole role in UserViewModel.SelectableUserRoles())
+            foreach (UserRole role in UserViewModel.SelectableBasicUserRoles())
             {
                 if (!ChannelSession.Settings.InteractiveUserGroups[this.selectedGame.id].Any(ug => ug.AssociatedUserRole == role))
                 {

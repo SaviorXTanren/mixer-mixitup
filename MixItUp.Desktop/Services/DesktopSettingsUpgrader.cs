@@ -37,10 +37,9 @@ namespace MixItUp.Desktop.Services
 
         internal static async Task UpgradeSettingsToLatest(int version, string filePath)
         {
-            await DesktopSettingsUpgrader.Version9Upgrade(version, filePath);
-            await DesktopSettingsUpgrader.Version10Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version11Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version12Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version13Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -48,64 +47,6 @@ namespace MixItUp.Desktop.Services
             settings.Version = DesktopChannelSettings.LatestVersion;
 
             await ChannelSession.Services.Settings.Save(settings);
-        }
-
-        private static async Task Version9Upgrade(int version, string filePath)
-        {
-            if (version < 9)
-            {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.GameCommands);
-                foreach (PermissionsCommandBase command in commands)
-                {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    command.Requirements.Cooldown.Amount = command.Cooldown;
-#pragma warning restore CS0612 // Type or member is obsolete
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
-        }
-
-        private static async Task Version10Upgrade(int version, string filePath)
-        {
-            if (version < 10)
-            {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                UserCurrencyViewModel currency = settings.Currencies.Values.FirstOrDefault(c => !c.IsRank);
-                if (currency == null)
-                {
-                    currency = settings.Currencies.Values.FirstOrDefault();
-                }
-
-                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
-                commands.AddRange(settings.GameCommands);
-                foreach (PermissionsCommandBase command in commands)
-                {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    if (command.Requirements.Currency == null)
-                    {
-                        command.Requirements.Currency = command.CurrencyRequirement;
-                        if (command.Requirements.Currency == null)
-                        {
-                            command.Requirements.Currency = new CurrencyRequirementViewModel(currency, 1, 1);
-                        }
-                    }
-                    if (command.Requirements.Rank == null)
-                    {
-                        command.Requirements.Rank = command.RankRequirement;
-                    }
-#pragma warning restore CS0612 // Type or member is obsolete
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
         }
 
         private static async Task Version11Upgrade(int version, string filePath)
@@ -217,6 +158,27 @@ namespace MixItUp.Desktop.Services
 
                 await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN CustomCommands TEXT");
                 await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN Options TEXT");
+            }
+        }
+
+        private static async Task Version13Upgrade(int version, string filePath)
+        {
+            if (version < 13)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.GameCommands);
+                foreach (PermissionsCommandBase command in commands)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    command.Requirements.Role.MixerRole = command.Requirements.UserRole;
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
             }
         }
     }

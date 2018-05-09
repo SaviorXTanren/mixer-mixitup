@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,7 +11,7 @@ namespace MixItUp.WPF.Controls.Requirement
     /// </summary>
     public partial class UserRoleRequirementControl : UserControl
     {
-        private UserRole tempRole = UserRole.User;
+        private RoleRequirementViewModel tempRole = new RoleRequirementViewModel();
 
         public UserRoleRequirementControl()
         {
@@ -21,18 +20,18 @@ namespace MixItUp.WPF.Controls.Requirement
             this.Loaded += RequirementControl_Loaded;
         }
 
-        public UserRole GetUserRoleRequirement()
+        public RoleRequirementViewModel GetUserRoleRequirement()
         {
             return this.tempRole;
         }
 
-        public void SetUserRoleRequirement(UserRole role)
+        public void SetUserRoleRequirement(RoleRequirementViewModel role)
         {
-            if (role != UserRole.Banned)
+            if (role != null)
             {
                 this.tempRole = role;
-                this.UserRoleComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
-                this.UserRoleComboBox.SelectedItem = EnumHelper.GetEnumName(role);
+                this.UserRoleComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
+                this.UserRoleComboBox.SelectedItem = role.RoleNameString;
             }
         }
 
@@ -43,7 +42,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         private void UserRoleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.tempRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.UserRoleComboBox.SelectedItem);
+            this.tempRole.MixerRole = EnumHelper.GetEnumValueFromString<UserRole>((string)this.UserRoleComboBox.SelectedItem);
         }
     }
 }

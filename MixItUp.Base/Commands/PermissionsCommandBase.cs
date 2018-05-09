@@ -1,8 +1,6 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -15,22 +13,6 @@ namespace MixItUp.Base.Commands
     {
         [DataMember]
         public RequirementViewModel Requirements { get; set; }
-
-        [DataMember]
-        [Obsolete]
-        internal UserRole Permissions { get; set; }
-
-        [Obsolete]
-        [DataMember]
-        internal int Cooldown { get; set; }
-
-        [DataMember]
-        [Obsolete]
-        internal CurrencyRequirementViewModel CurrencyRequirement { get; set; }
-
-        [DataMember]
-        [Obsolete]
-        internal CurrencyRequirementViewModel RankRequirement { get; set; }
 
         public PermissionsCommandBase()
         {
@@ -48,7 +30,17 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
-        public string UserRoleRequirementString { get { return EnumHelper.GetEnumName(this.Requirements.UserRole); } }
+        public string UserRoleRequirementString
+        {
+            get
+            {
+                if (this.Requirements.Role != null)
+                {
+                    return this.Requirements.Role.RoleNameString;
+                }
+                return string.Empty;
+            }
+        }
 
         public async Task<bool> CheckCooldownRequirement(UserViewModel user)
         {
@@ -65,7 +57,7 @@ namespace MixItUp.Base.Commands
         {
             if (!await this.Requirements.DoesMeetUserRoleRequirement(user))
             {
-                await this.Requirements.SendUserRoleNotMetWhisper(user);
+                await this.Requirements.Role.SendUserRoleNotMetWhisper(user);
                 return false;
             }
             return true;

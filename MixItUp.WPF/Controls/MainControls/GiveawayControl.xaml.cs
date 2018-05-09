@@ -233,7 +233,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     }
                     else
                     {
-                        await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.UserRole));
+                        await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.Role.RoleNameString));
                     }
                 }
                 else if (this.selectedWinner != null && e.CommandName.Equals("!claim") && this.selectedWinner.Equals(e.User))

@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Chat
         {
             InitializeComponent();
 
-            this.PermissionsComboBox.ItemsSource = RequirementViewModel.UserRoleAllowedValues;
+            this.PermissionsComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
         }
 
         public void Initialize(LoadingWindowBase window, PreMadeChatCommand command)
@@ -51,7 +51,7 @@ namespace MixItUp.WPF.Controls.Chat
             ComboBox combobox = (ComboBox)sender;
             PreMadeChatCommand command = (PreMadeChatCommand)combobox.DataContext;
 
-            command.Requirements.UserRole = EnumHelper.GetEnumValueFromString<UserRole>((string)combobox.SelectedItem);
+            command.Requirements.Role.MixerRole = EnumHelper.GetEnumValueFromString<UserRole>((string)combobox.SelectedItem);
 
             this.UpdateSetting();
         }
@@ -105,7 +105,7 @@ namespace MixItUp.WPF.Controls.Chat
         {
             if (this.setting != null)
             {
-                this.setting.Permissions = command.Requirements.UserRole;
+                this.setting.Permissions = command.Requirements.Role.MixerRole;
                 this.setting.Cooldown = command.Requirements.Cooldown.Amount;
                 this.setting.IsEnabled = command.IsEnabled;
             }

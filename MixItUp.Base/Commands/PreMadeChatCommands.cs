@@ -38,7 +38,7 @@ namespace MixItUp.Base.Commands
         {
             this.Name = command.Name;
             this.IsEnabled = command.IsEnabled;
-            this.Permissions = command.Requirements.UserRole;
+            this.Permissions = command.Requirements.Role.MixerRole;
             this.Cooldown = command.Requirements.Cooldown.Amount;
         }
     }
@@ -61,19 +61,19 @@ namespace MixItUp.Base.Commands
         public PreMadeChatCommand(string name, string command, int cooldown, UserRole userRole)
             : base(name, command, new RequirementViewModel(userRole: userRole, cooldown: cooldown))
         {
-            this.Requirements.UserRole = userRole;
+            this.Requirements.Role.MixerRole = userRole;
         }
 
         public PreMadeChatCommand(string name, List<string> commands, int cooldown, UserRole userRole)
             : base(name, commands, new RequirementViewModel(userRole: userRole, cooldown: cooldown))
         {
-            this.Requirements.UserRole = userRole;
+            this.Requirements.Role.MixerRole = userRole;
         }
 
         public void UpdateFromSettings(PreMadeChatCommandSettings settings)
         {
             this.IsEnabled = settings.IsEnabled;
-            this.Requirements.UserRole = settings.Permissions;
+            this.Requirements.Role.MixerRole = settings.Permissions;
             this.Requirements.Cooldown.Amount = settings.Cooldown;
         }
 
@@ -117,8 +117,15 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    IEnumerable<PermissionsCommandBase> commands = ChannelSession.AllChatCommands;
-                    commands = commands.Where(c => user.PrimaryRole >= c.Requirements.UserRole);
+                    List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
+                    foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
+                    {
+                        if (await command.Requirements.DoesMeetUserRoleRequirement(user))
+                        {
+                            commands.Add(command);
+                        }
+                    }
+
                     if (commands.Count() > 0)
                     {
                         IEnumerable<string> commandTriggers = commands.SelectMany(c => c.Commands);

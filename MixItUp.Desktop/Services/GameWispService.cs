@@ -3,6 +3,7 @@ using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
@@ -38,7 +39,6 @@ namespace MixItUp.Desktop.Services
 
         private Socket socket;
 
-        private string sessionID;
         private string channelID;
 
         public GameWispWebSocketService(GameWispService service, OAuthTokenModel oauthToken)
@@ -47,8 +47,7 @@ namespace MixItUp.Desktop.Services
             this.oauthToken = oauthToken;
         }
 
-        public bool Connected { get { return !string.IsNullOrEmpty(this.sessionID); } }
-        public bool Authenticated { get { return !string.IsNullOrEmpty(this.channelID); } }
+        public bool ConnectedAndAuthenticated { get { return !string.IsNullOrEmpty(this.channelID); } }
 
         public async Task Connect()
         {
@@ -69,7 +68,7 @@ namespace MixItUp.Desktop.Services
             {
                 JObject jobj = new JObject();
                 jobj["key"] = GameWispService.ClientID;
-                jobj["access_token"] = this.oauthToken.accessToken;
+                jobj["secret"] = ChannelSession.SecretManager.GetSecret("GameWispSecret");
                 this.SocketSendWrapper("authentication", jobj);
             });
 
@@ -77,22 +76,23 @@ namespace MixItUp.Desktop.Services
             {
                 if (authData != null)
                 {
-                    JObject jobj = (JObject)authData;
-                    if (jobj["session"] != null)
-                    {
-                        this.sessionID = jobj["session"].ToString();
-                    }
+                    JObject sendJObj = new JObject();
+                    sendJObj["access_token"] = this.oauthToken.accessToken;
+                    this.SocketSendWrapper("channel-connect", sendJObj);
                 }
             });
 
             this.SocketReceiveWrapper("app-channel-connected", (appChannelData) =>
             {
-                if (this.Connected && appChannelData != null)
+                if (appChannelData != null)
                 {
                     JObject jobj = JObject.Parse(appChannelData.ToString());
-                    if (jobj != null && jobj["data"] != null && jobj["data"]["channel_id"] != null)
+                    if (jobj != null && jobj["data"] != null && jobj["data"]["status"] != null && jobj["data"]["channel_id"] != null)
                     {
-                        this.channelID = jobj["data"]["channel_id"].ToString();
+                        if (jobj["data"]["status"].ToString().Equals("authenticated"))
+                        {
+                            this.channelID = jobj["data"]["channel_id"].ToString();
+                        }
                     }
                 }
             });
@@ -122,12 +122,12 @@ namespace MixItUp.Desktop.Services
                 this.service.SubscriberAnniversaryOccurred(new GameWispAnniversaryEvent(eventData.Data));
             });
 
-            for (int i = 0; i < 5 && (!this.Connected && !this.Authenticated); i++)
+            for (int i = 0; i < 10 && !this.ConnectedAndAuthenticated; i++)
             {
                 await Task.Delay(1000);
             }
 
-            if (this.Connected && this.Authenticated)
+            if (this.ConnectedAndAuthenticated)
             {
                 this.service.WebSocketConnectedOccurred();
             }
@@ -143,7 +143,6 @@ namespace MixItUp.Desktop.Services
                 this.socket.Close();
             }
             this.socket = null;
-            this.sessionID = null;
             this.channelID = null;
 
             return Task.FromResult(0);
@@ -165,7 +164,7 @@ namespace MixItUp.Desktop.Services
         {
             this.SocketReceiveWrapper(eventString, (eventData) =>
             {
-                if (this.Connected && this.Authenticated)
+                if (this.ConnectedAndAuthenticated)
                 {
                     JObject jobj = JObject.Parse(eventData.ToString());
                     if (jobj != null)
@@ -199,7 +198,7 @@ namespace MixItUp.Desktop.Services
 
         public GameWispChannelInformation ChannelInfo { get; private set; }
 
-        public bool WebSocketConnectedAndAuthenticated { get { return (this.socket != null && this.socket.Connected && this.socket.Authenticated); } }
+        public bool WebSocketConnectedAndAuthenticated { get { return (this.socket != null && this.socket.ConnectedAndAuthenticated); } }
 
         public event EventHandler OnWebSocketConnectedOccurred;
         public event EventHandler OnWebSocketDisconnectedOccurred;
@@ -213,6 +212,9 @@ namespace MixItUp.Desktop.Services
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private GameWispWebSocketService socket;
+
+        private List<GameWispSubscriber> cachedSubscribers = new List<GameWispSubscriber>();
+        private DateTimeOffset lastCachedSubscribersCall = DateTimeOffset.MinValue;
 
         public GameWispService() : base(GameWispService.BaseAddress) { }
 
@@ -275,9 +277,25 @@ namespace MixItUp.Desktop.Services
             return await this.GetPagedWithAccessTokenAsync<GameWispSubscriber>("channel/subscribers?include=user");
         }
 
+        public async Task<IEnumerable<GameWispSubscriber>> GetCachedSubscribers()
+        {
+            if ((DateTimeOffset.Now - this.lastCachedSubscribersCall).TotalMinutes > 5)
+            {
+                this.cachedSubscribers = new List<GameWispSubscriber>(await this.GetSubscribers());
+                this.lastCachedSubscribersCall = DateTimeOffset.Now;
+            }
+            return this.cachedSubscribers;
+        }
+
         public async Task<GameWispSubscriber> GetSubscriber(string username)
         {
             IEnumerable<GameWispSubscriber> data = await this.GetPagedWithAccessTokenAsync<GameWispSubscriber>(string.Format("channel/subscriber-for-channel?type=gamewisp&include=user,benefits,anniversaries&user_name={0}", username));
+            return data.FirstOrDefault();
+        }
+
+        public async Task<GameWispSubscriber> GetSubscriber(uint userID)
+        {
+            IEnumerable<GameWispSubscriber> data = await this.GetPagedWithAccessTokenAsync<GameWispSubscriber>(string.Format("channel/subscriber-for-channel?type=gamewisp&include=user,benefits,anniversaries&user_id={0}", userID));
             return data.FirstOrDefault();
         }
 
@@ -357,6 +375,16 @@ namespace MixItUp.Desktop.Services
         private async Task InitializeInternal()
         {
             this.ChannelInfo = await this.GetChannelInformation();
+
+            foreach (GameWispSubscriber subscriber in await this.GetCachedSubscribers())
+            {
+                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(subscriber.UserName, StringComparison.CurrentCultureIgnoreCase));
+                if (userData != null)
+                {
+                    userData.GameWispUserID = subscriber.UserID;
+                }
+            }
+
             this.socket = new GameWispWebSocketService(this, await this.GetOAuthToken());
             await this.socket.Connect();
         }
