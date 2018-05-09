@@ -86,7 +86,9 @@ namespace MixItUp.Base.Util
                 {
                     TimeSpan duration = DateTimeOffset.Now.Subtract(startTime);
 
-                    this.ReplaceSpecialIdentifier("starttime", startTime.ToString("MMMM dd, yyyy - h:mm tt"));
+                    this.ReplaceSpecialIdentifier("startdatetime", startTime.ToString("g"));
+                    this.ReplaceSpecialIdentifier("startdate", startTime.ToString("d"));
+                    this.ReplaceSpecialIdentifier("starttime", startTime.ToString("t"));
 
                     this.ReplaceSpecialIdentifier("uptimetotal", duration.ToString("h\\:mm"));
                     this.ReplaceSpecialIdentifier("uptimehours", duration.ToString("%h"));
