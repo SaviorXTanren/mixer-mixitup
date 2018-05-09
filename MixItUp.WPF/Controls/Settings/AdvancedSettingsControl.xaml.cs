@@ -121,5 +121,18 @@ namespace MixItUp.WPF.Controls.Settings
         {
             ChannelSession.Settings.UnlockAllCommands = this.UnlockAllCommandsToggleButton.IsChecked.GetValueOrDefault();
         }
+
+        private async void ClearAllUserDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will clear all data for your Users, which includes their Hours, Currency, Rank, & Custom User Commands, then restart Mix It Up." +
+                Environment.NewLine + Environment.NewLine + "This CAN NOT be un-done! Are you sure you wish to do this?"))
+            {
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await ChannelSession.Services.Settings.ClearAllUserData(ChannelSession.Settings);
+                });
+                ((MainWindow)this.Window).Restart();
+            }
+        }
     }
 }

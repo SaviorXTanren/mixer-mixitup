@@ -116,6 +116,12 @@ namespace MixItUp.Desktop.Services
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.xml", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
         }
 
+        public async Task ClearAllUserData(IChannelSettings settings)
+        {
+            DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
+            await desktopSettings.DatabaseWrapper.RunWriteCommand("DELETE FROM Users");
+        }
+
         private async Task<IChannelSettings> LoadSettings(string filePath)
         {
             string data = File.ReadAllText(filePath);

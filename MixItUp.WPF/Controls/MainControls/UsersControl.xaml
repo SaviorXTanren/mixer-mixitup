@@ -67,9 +67,21 @@
                         <DataGridTemplateColumn Header="Actions">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="UserEditButton" Click="UserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
-                                        <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                    </Button>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="10" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Button x:Name="UserEditButton" Grid.Column="0" Click="UserEditButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Edit">
+                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+
+                                        <Button x:Name="UserDeleteButton" Grid.Column="2" Click="UserDeleteButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Delete">
+                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                        </Button>
+                                    </Grid>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
