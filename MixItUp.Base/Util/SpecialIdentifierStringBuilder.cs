@@ -258,8 +258,11 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + "username", user.UserName);
                 this.ReplaceSpecialIdentifier(identifierHeader + "userid", user.ID.ToString());
 
-                ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(user.UserName);
-                this.ReplaceSpecialIdentifier(identifierHeader  + "userfollowers", channel?.numFollowers.ToString() ?? "0");
+                if (this.ContainsSpecialIdentifier(identifierHeader + "userfollowers"))
+                {
+                    ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(user.UserName);
+                    this.ReplaceSpecialIdentifier(identifierHeader + "userfollowers", channel?.numFollowers.ToString() ?? "0");
+                }
             }
         }
     }
