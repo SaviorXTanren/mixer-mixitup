@@ -178,6 +178,20 @@ namespace MixItUp.Desktop.Services
 #pragma warning restore CS0612 // Type or member is obsolete
                 }
 
+                foreach (InteractiveCommand command in settings.InteractiveCommands)
+                {
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (!string.IsNullOrEmpty(command.CooldownGroup) && settings.interactiveCooldownGroupsInternal.ContainsKey(command.CooldownGroup))
+                    {
+                        command.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, command.CooldownGroup, settings.interactiveCooldownGroupsInternal[command.CooldownGroup]);
+                    }
+                    else
+                    {
+                        command.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Individual, command.IndividualCooldown);
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }

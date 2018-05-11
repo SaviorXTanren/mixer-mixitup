@@ -403,9 +403,9 @@ namespace MixItUp.Base.MixerAPI
                         connectedControl.Button.cooldown = connectedControl.Command.GetCooldownTimestamp();
 
                         List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
-                        if (!string.IsNullOrEmpty(connectedControl.Command.CooldownGroup))
+                        if (!string.IsNullOrEmpty(connectedControl.Command.CooldownGroupName))
                         {
-                            var otherItems = this.Controls.Values.Where(c => c.Button != null && connectedControl.Command.CooldownGroup.Equals(c.Command.CooldownGroup));
+                            var otherItems = this.Controls.Values.Where(c => c.Button != null && connectedControl.Command.CooldownGroupName.Equals(c.Command.CooldownGroupName));
                             foreach (var otherItem in otherItems)
                             {
                                 otherItem.Button.cooldown = connectedControl.Button.cooldown;

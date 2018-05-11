@@ -116,6 +116,8 @@ namespace MixItUp.Base
 
         LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; }
 
+        LockedDictionary<string, int> CooldownGroups { get; }
+
         LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; }
         LockedList<ChatCommand> ChatCommands { get; }
         LockedList<EventCommand> EventCommands { get; }
@@ -132,7 +134,6 @@ namespace MixItUp.Base
         LockedList<string> CommunityFilteredWords { get; }
 
         LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; }
-        LockedDictionary<string, int> InteractiveCooldownGroups { get; }
     }
 }
 

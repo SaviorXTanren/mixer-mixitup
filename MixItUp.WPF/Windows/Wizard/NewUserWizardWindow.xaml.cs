@@ -6,6 +6,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Import;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
 using MixItUp.WPF.Util;
@@ -595,7 +596,7 @@ namespace MixItUp.WPF.Windows.Wizard
             {
                 if (this.soundwaveData.StaticCooldown)
                 {
-                    ChannelSession.Settings.InteractiveCooldownGroups[SoundwaveInteractiveCooldownGroupName] = this.soundwaveData.StaticCooldownAmount / 1000;
+                    ChannelSession.Settings.CooldownGroups[SoundwaveInteractiveCooldownGroupName] = this.soundwaveData.StaticCooldownAmount / 1000;
                 }
 
                 InteractiveGameListingModel soundwaveGame = this.interactiveGames.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
@@ -625,12 +626,14 @@ namespace MixItUp.WPF.Windows.Wizard
                                     InteractiveButtonControlModel button = InteractiveGameHelper.CreateButton(soundwaveButton.name, soundwaveButton.name, soundwaveButton.sparks);
                                     button.position = soundwaveControl.position;
 
-                                    InteractiveCommand command = new InteractiveCommand(profileGame, profileScene, button, InteractiveButtonCommandTriggerType.MouseDown);
-                                    command.IndividualCooldown = soundwaveButton.cooldown;
+                                    RequirementViewModel requirements = new RequirementViewModel();
+                                    requirements.Cooldown.Amount = soundwaveButton.cooldown;
                                     if (this.soundwaveData.StaticCooldown)
                                     {
-                                        command.CooldownGroup = SoundwaveInteractiveCooldownGroupName;
+                                        requirements.Cooldown.Type = CooldownTypeEnum.Group;
+                                        requirements.Cooldown.GroupName = SoundwaveInteractiveCooldownGroupName;
                                     }
+                                    InteractiveCommand command = new InteractiveCommand(profileGame, profileScene, button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
 
                                     SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
                                     command.Actions.Add(action);

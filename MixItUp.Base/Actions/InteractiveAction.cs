@@ -139,7 +139,7 @@ namespace MixItUp.Base.Actions
                     if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
                     {
                         IEnumerable<InteractiveConnectedControlCommand> commands = ChannelSession.Interactive.Controls.Values.Where(c => c.Button != null &&
-                            this.CooldownID.Equals(c.Command.CooldownGroup));
+                            this.CooldownID.Equals(c.Command.CooldownGroupName));
                         if (commands.Count() > 0)
                         {
                             scene = commands.FirstOrDefault().Scene;

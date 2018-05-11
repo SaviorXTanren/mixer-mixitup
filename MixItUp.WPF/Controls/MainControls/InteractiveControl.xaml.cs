@@ -3,6 +3,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
@@ -55,9 +56,13 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             get
             {
-                if (this.Command != null)
+                if (this.Command != null && this.Command.Requirements.Cooldown != null)
                 {
-                    return (!string.IsNullOrEmpty(this.Command.CooldownGroup)) ? this.Command.CooldownGroup : this.Command.CooldownAmount.ToString();
+                    if (this.Command.Requirements.Cooldown.IsGroup)
+                    {
+                        return this.Command.Requirements.Cooldown.GroupName;
+                    }
+                    return this.Command.Requirements.Cooldown.CooldownAmount.ToString();
                 }
                 return string.Empty;
             }
