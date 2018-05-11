@@ -101,6 +101,8 @@ namespace MixItUp.Base
         public static PrivatePopulatedUserModel BotUser { get; private set; }
         public static ExpandedChannelModel Channel { get; private set; }
 
+        public static LockedDictionary<uint, UserViewModel> ChannelUsers { get; private set; }
+
         public static IChannelSettings Settings { get; private set; }
 
         public static ChatClientWrapper Chat { get; private set; }
@@ -172,6 +174,8 @@ namespace MixItUp.Base
             {
                 ChannelSession.SecretManager = new SecretManagerService();
             }
+
+            ChannelSession.ChannelUsers = new LockedDictionary<uint, UserViewModel>();
 
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
             ChannelSession.GameQueue = new LockedList<UserViewModel>();
@@ -458,9 +462,9 @@ namespace MixItUp.Base
 
         private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)
         {
-            if (currency.Currency.RankChangedCommand != null && ChannelSession.Chat.ChatUsers.ContainsKey(currency.User.ID) == true)
+            if (currency.Currency.RankChangedCommand != null && ChannelSession.ChannelUsers.ContainsKey(currency.User.ID) == true)
             {
-                var user = ChannelSession.Chat.ChatUsers[currency.User.ID];
+                var user = ChannelSession.ChannelUsers[currency.User.ID];
                 await currency.Currency.RankChangedCommand.Perform(user);
             }
         }

@@ -42,6 +42,11 @@ namespace MixItUp.Base.Commands
             }
         }
 
+        public async Task<bool> CheckAllRequirements(UserViewModel user)
+        {
+            return (await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user) && await this.CheckCurrencyRequirement(user));
+        }
+
         public async Task<bool> CheckCooldownRequirement(UserViewModel user)
         {
             if (!this.Requirements.DoesMeetCooldownRequirement(user))
@@ -49,7 +54,6 @@ namespace MixItUp.Base.Commands
                 await this.Requirements.Cooldown.SendCooldownNotMetWhisper(user);
                 return false;
             }
-
             return true;
         }
 
@@ -91,7 +95,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
-            if (!await this.CheckCooldownRequirement(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user) || !await this.CheckCurrencyRequirement(user))
+            if (!await this.CheckAllRequirements(user))
             {
                 return;
             }

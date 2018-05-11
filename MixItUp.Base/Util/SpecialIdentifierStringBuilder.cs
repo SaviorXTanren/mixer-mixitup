@@ -153,7 +153,7 @@ namespace MixItUp.Base.Util
 
             await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Channel.user), StreamerSpecialIdentifierHeader);
 
-            await this.HandleUserSpecialIdentifiers(ChannelSession.Chat.ChatUsers.PickRandom(), RandomSpecialIdentifierHeader);
+            await this.HandleUserSpecialIdentifiers(ChannelSession.ChannelUsers.PickRandom(), RandomSpecialIdentifierHeader);
             if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
             {
                 int startIndex = 0;

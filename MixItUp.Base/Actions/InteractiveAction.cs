@@ -113,11 +113,10 @@ namespace MixItUp.Base.Actions
 
                 if (this.InteractiveType == InteractiveActionTypeEnum.MoveUserToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
                 {
-                    InteractiveParticipantModel participant = ChannelSession.Interactive.InteractiveUsers.Values.FirstOrDefault(p => p.userID.Equals(user.ID));
-                    if (participant != null)
+                    if (user.IsInteractiveParticipant)
                     {
-                        participant.groupID = this.GroupName;
-                        await ChannelSession.Interactive.UpdateParticipants(new List<InteractiveParticipantModel>() { participant });
+                        user.InteractiveGroupID = this.GroupName;
+                        await ChannelSession.Interactive.UpdateParticipant(user.GetParticipantModel());
                     }
                 }
 

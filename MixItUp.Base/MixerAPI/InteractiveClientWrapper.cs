@@ -70,7 +70,6 @@ namespace MixItUp.Base.MixerAPI
 
         public List<InteractiveConnectedSceneGroupModel> SceneGroups { get; private set; }
         public Dictionary<string, InteractiveConnectedControlCommand> Controls { get; private set; }
-        public LockedDictionary<string, InteractiveParticipantModel> InteractiveUsers { get; private set; }
 
         private SemaphoreSlim interactiveUserLock = new SemaphoreSlim(1);
 
@@ -78,7 +77,6 @@ namespace MixItUp.Base.MixerAPI
         {
             this.SceneGroups = new List<InteractiveConnectedSceneGroupModel>();
             this.Controls = new Dictionary<string, InteractiveConnectedControlCommand>();
-            this.InteractiveUsers = new LockedDictionary<string, InteractiveParticipantModel>();
         }
 
         public async Task<bool> Connect(InteractiveGameListingModel game)
@@ -87,7 +85,6 @@ namespace MixItUp.Base.MixerAPI
 
             this.SceneGroups.Clear();
             this.Controls.Clear();
-            this.InteractiveUsers.Clear();
 
             return await this.AttemptConnect();
         }
@@ -104,8 +101,6 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
                     this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
                 }
-
-                ChannelSession.Chat.OnUserJoinOccurred -= Chat_OnUserJoinOccurred;
 
                 this.Client.OnGiveInput -= Client_OnGiveInput;
                 this.Client.OnControlDelete -= Client_OnControlDelete;
@@ -130,7 +125,6 @@ namespace MixItUp.Base.MixerAPI
 
             this.SceneGroups.Clear();
             this.Controls.Clear();
-            this.InteractiveUsers.Clear();
         }
 
         public bool IsConnected() { return this.Client != null && this.Client.Authenticated; }
@@ -141,6 +135,7 @@ namespace MixItUp.Base.MixerAPI
         public async Task DeleteGroup(InteractiveGroupModel groupToDelete, InteractiveGroupModel groupToReplace) { await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
 
         public async Task<InteractiveParticipantCollectionModel> GetAllParticipants() { return await this.RunAsync(this.Client.GetAllParticipants()); }
+        public async Task UpdateParticipant(InteractiveParticipantModel participant) { await this.UpdateParticipants(new List<InteractiveParticipantModel>() { participant }); }
         public async Task UpdateParticipants(IEnumerable<InteractiveParticipantModel> participants) { await this.RunAsync(this.Client.UpdateParticipants(participants)); }
 
         public async Task<InteractiveConnectedSceneGroupCollectionModel> GetScenes() { return await this.RunAsync(this.Client.GetScenes()); }
@@ -181,8 +176,6 @@ namespace MixItUp.Base.MixerAPI
                         this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
                     }
 
-                    ChannelSession.Chat.OnUserJoinOccurred += Chat_OnUserJoinOccurred;
-
                     this.Client.OnGiveInput += Client_OnGiveInput;
                     this.Client.OnControlDelete += Client_OnControlDelete;
                     this.Client.OnControlCreate += Client_OnControlCreate;
@@ -210,7 +203,6 @@ namespace MixItUp.Base.MixerAPI
         {
             this.SceneGroups.Clear();
             this.Controls.Clear();
-            this.InteractiveUsers.Clear();
 
             // Initialize Scenes
             InteractiveConnectedSceneGroupCollectionModel scenes = await ChannelSession.Interactive.GetScenes();
@@ -257,7 +249,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (InteractiveParticipantModel participant in participants.participants)
                 {
-                    if (ChannelSession.Chat.ChatUsers.ContainsKey(participant.userID))
+                    if (ChannelSession.ChannelUsers.ContainsKey(participant.userID))
                     {
                         participantsToAdd.Add(participant);
                     }
@@ -299,20 +291,26 @@ namespace MixItUp.Base.MixerAPI
             List<InteractiveParticipantModel> participantsToUpdate = new List<InteractiveParticipantModel>();
             foreach (InteractiveParticipantModel participant in participants)
             {
-                if (!string.IsNullOrEmpty(participant.sessionID) && !this.InteractiveUsers.ContainsKey(participant.sessionID))
+                if (!string.IsNullOrEmpty(participant.sessionID) && !ChannelSession.ChannelUsers.ContainsKey(participant.userID))
                 {
                     participantsToUpdate.Add(participant);
-                    if (ChannelSession.Chat.ChatUsers.ContainsKey(participant.userID))
+                    if (ChannelSession.ChannelUsers.ContainsKey(participant.userID))
                     {
-                        MixerRoleEnum role = ChannelSession.Chat.ChatUsers[participant.userID].PrimaryRole;
+                        ChannelSession.ChannelUsers[participant.userID].SetInteractiveDetails(participant);
+
+                        MixerRoleEnum role = ChannelSession.ChannelUsers[participant.userID].PrimaryRole;
                         InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == role);
                         if (group != null)
                         {
                             participant.groupID = group.GroupName;
                         }
                     }
+                    else
+                    {
+                        ChannelSession.ChannelUsers[participant.userID] = new UserViewModel(participant);
+                        await ChannelSession.ChannelUsers[participant.userID].SetDetails();
+                    }
                 }
-                this.InteractiveUsers[participant.sessionID] = participant;
             }
 
             if (participantsToUpdate.Any(p => !p.groupID.Equals(InteractiveUserGroupViewModel.DefaultName)))
@@ -356,7 +354,10 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (InteractiveParticipantModel participant in e.participants)
                 {
-                    this.InteractiveUsers.Remove(participant.sessionID);
+                    if (ChannelSession.ChannelUsers.ContainsKey(participant.userID))
+                    {
+                        ChannelSession.ChannelUsers[participant.userID].RemoveInteractiveDetails();
+                    }
                 }
             }
             this.OnParticipantLeave(this, e);
@@ -382,86 +383,72 @@ namespace MixItUp.Base.MixerAPI
 
         private async void Client_OnGiveInput(object sender, InteractiveGiveInputModel e)
         {
-            if (e != null && e.input != null)
+            try
             {
-                if (this.Controls.ContainsKey(e.input.controlID))
+                if (e != null && e.input != null)
                 {
-                    InteractiveConnectedControlCommand connectedControl = this.Controls[e.input.controlID];
-
-                    if (!connectedControl.Command.IsEnabled)
+                    if (this.Controls.ContainsKey(e.input.controlID))
                     {
-                        return;
-                    }
+                        InteractiveConnectedControlCommand connectedControl = this.Controls[e.input.controlID];
 
-                    if (connectedControl.Button != null && !connectedControl.TriggerTransactionString.Equals(e.input.eventType))
-                    {
-                        return;
-                    }
-
-                    if (connectedControl.Button != null)
-                    {
-                        connectedControl.Button.cooldown = connectedControl.Command.GetCooldownTimestamp();
-
-                        List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
-                        if (!string.IsNullOrEmpty(connectedControl.Command.CooldownGroupName))
+                        if (!connectedControl.Command.IsEnabled)
                         {
-                            var otherItems = this.Controls.Values.Where(c => c.Button != null && connectedControl.Command.CooldownGroupName.Equals(c.Command.CooldownGroupName));
-                            foreach (var otherItem in otherItems)
+                            return;
+                        }
+
+                        if (connectedControl.Button != null && !connectedControl.TriggerTransactionString.Equals(e.input.eventType))
+                        {
+                            return;
+                        }
+
+                        if (connectedControl.Button != null)
+                        {
+                            connectedControl.Button.cooldown = connectedControl.Command.GetCooldownTimestamp();
+
+                            List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
+                            if (!string.IsNullOrEmpty(connectedControl.Command.CooldownGroupName))
                             {
-                                otherItem.Button.cooldown = connectedControl.Button.cooldown;
+                                var otherItems = this.Controls.Values.Where(c => c.Button != null && connectedControl.Command.CooldownGroupName.Equals(c.Command.CooldownGroupName));
+                                foreach (var otherItem in otherItems)
+                                {
+                                    otherItem.Button.cooldown = connectedControl.Button.cooldown;
+                                }
+                                buttons.AddRange(otherItems.Select(i => i.Button));
                             }
-                            buttons.AddRange(otherItems.Select(i => i.Button));
+                            else
+                            {
+                                buttons.Add(connectedControl.Button);
+                            }
+
+                            await this.UpdateControls(connectedControl.Scene, buttons);
                         }
-                        else
+                        else if (connectedControl.Joystick != null)
                         {
-                            buttons.Add(connectedControl.Button);
+
                         }
 
-                        await this.UpdateControls(connectedControl.Scene, buttons);
-                    }
-                    else if (connectedControl.Joystick != null)
-                    {
-
-                    }
-
-                    UserViewModel user = ChannelSession.GetCurrentUser();
-                    if (this.InteractiveUsers.ContainsKey(e.participantID))
-                    {
-                        InteractiveParticipantModel participant = this.InteractiveUsers[e.participantID];
-                        if (ChannelSession.Chat.ChatUsers.ContainsKey(participant.userID))
+                        UserViewModel user = ChannelSession.ChannelUsers.Values.FirstOrDefault(u => e.participantID.Equals(u.InteractiveID));
+                        if (user == null)
                         {
-                            user = ChannelSession.Chat.ChatUsers[participant.userID];
+                            user = ChannelSession.GetCurrentUser();
                         }
-                        else
+
+                        if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
                         {
-                            user = new UserViewModel(participant.userID, participant.username);
+                            await this.CaptureSparkTransaction(e.transactionID);
                         }
-                    }
 
-                    if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
-                    {
-                        await this.CaptureSparkTransaction(e.transactionID);
-                    }
+                        await connectedControl.Command.Perform(user);
 
-                    await connectedControl.Command.Perform(user);
-
-                    if (this.OnInteractiveControlUsed != null)
-                    {
-                        this.OnInteractiveControlUsed(this, new Tuple<UserViewModel, InteractiveConnectedControlCommand>(user, connectedControl));
+                        if (this.OnInteractiveControlUsed != null)
+                        {
+                            this.OnInteractiveControlUsed(this, new Tuple<UserViewModel, InteractiveConnectedControlCommand>(user, connectedControl));
+                        }
                     }
                 }
+                this.OnGiveInput(this, e);
             }
-
-            this.OnGiveInput(this, e);
-        }
-
-        private async void Chat_OnUserJoinOccurred(object sender, UserViewModel user)
-        {
-            InteractiveParticipantModel participant = this.InteractiveUsers.Values.ToList().FirstOrDefault(u => u.userID.Equals(user.ID));
-            if (participant != null)
-            {
-                await this.AddParticipants(new List<InteractiveParticipantModel>() { participant });
-            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

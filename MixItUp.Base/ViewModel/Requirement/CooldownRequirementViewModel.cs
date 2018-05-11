@@ -91,7 +91,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             else if (this.IsGroup)
             {
                 if (!CooldownRequirementViewModel.groupCooldowns.ContainsKey(this.GroupName) ||
-                    CooldownRequirementViewModel.groupCooldowns[this.GroupName].AddSeconds(this.CooldownAmount) < DateTimeOffset.Now)
+                    CooldownRequirementViewModel.groupCooldowns[this.GroupName].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
                 {
                     return true;
                 }

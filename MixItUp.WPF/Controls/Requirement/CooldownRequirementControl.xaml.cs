@@ -44,13 +44,18 @@ namespace MixItUp.WPF.Controls.Requirement
             if (this.CooldownTypeComboBox.SelectedIndex >= 0 && this.GetCooldownAmount() >= 0)
             {
                 CooldownTypeEnum type = EnumHelper.GetEnumValueFromString<CooldownTypeEnum>((string)this.CooldownTypeComboBox.SelectedItem);
-                if (type == CooldownTypeEnum.Group && string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
+                if (type == CooldownTypeEnum.Group)
                 {
-                    return null;
+                    if (string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
+                    {
+                        return null;
+                    }
+                    return new CooldownRequirementViewModel(type, this.CooldownGroupsComboBox.Text, this.GetCooldownAmount());
                 }
-
-                return new CooldownRequirementViewModel(EnumHelper.GetEnumValueFromString<CooldownTypeEnum>((string)this.CooldownTypeComboBox.SelectedItem),
-                    (string)this.CooldownGroupsComboBox.SelectedItem, this.GetCooldownAmount());
+                else
+                {
+                    return new CooldownRequirementViewModel(type, this.GetCooldownAmount());
+                }
             }
             return new CooldownRequirementViewModel();
         }

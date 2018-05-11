@@ -44,7 +44,7 @@ namespace MixItUp.Base.ViewModel.User
         public static IEnumerable<string> SelectableAdvancedUserRoles()
         {
             List<string> roles = new List<string>(UserViewModel.SelectableBasicUserRoles().Select(r => EnumHelper.GetEnumName(r)));
-            if (ChannelSession.Services.GameWisp != null)
+            if (ChannelSession.Services != null && ChannelSession.Services.GameWisp != null)
             {
                 foreach (GameWispTier tier in ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers())
                 {
@@ -76,6 +76,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public int Sparks { get; set; }
 
+        public string InteractiveID { get; set; }
+
+        public string InteractiveGroupID { get; set; }
+
         public GameWispSubscriber GameWispUser { get; set; }
 
         public UserViewModel()
@@ -99,7 +103,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(ChatMessageEventModel messageEvent) : this(messageEvent.user_id, messageEvent.user_name, messageEvent.user_roles) { }
 
-        public UserViewModel(InteractiveParticipantModel participant) : this(participant.userID, participant.username) { }
+        public UserViewModel(InteractiveParticipantModel participant) : this(participant.userID, participant.username) { this.SetInteractiveDetails(participant); }
 
         public UserViewModel(uint id, string username) : this(id, username, new string[] { }) { }
 
@@ -225,6 +229,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
+        public bool IsInteractiveParticipant { get { return !string.IsNullOrEmpty(this.InteractiveID) && !string.IsNullOrEmpty(this.InteractiveGroupID); } }
+
+        [JsonIgnore]
         public GameWispTier GameWispTier
         {
             get
@@ -331,6 +338,18 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public void SetInteractiveDetails(InteractiveParticipantModel participant)
+        {
+            this.InteractiveID = participant.sessionID;
+            this.InteractiveGroupID = participant.groupID;
+        }
+
+        public void RemoveInteractiveDetails()
+        {
+            this.InteractiveID = null;
+            this.InteractiveGroupID = null;
+        }
+
         public async Task SetGameWispSubscriber()
         {
             if (ChannelSession.Services.GameWisp != null)
@@ -374,6 +393,17 @@ namespace MixItUp.Base.ViewModel.User
             };
         }
 
+        public InteractiveParticipantModel GetParticipantModel()
+        {
+            return new InteractiveParticipantModel()
+            {
+                userID = this.ID,
+                username = this.UserName,
+                sessionID = this.InteractiveID,
+                groupID = this.InteractiveGroupID,
+            };
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is UserViewModel)
@@ -412,6 +442,11 @@ namespace MixItUp.Base.ViewModel.User
                 if (userRoles.Any(r => r.Equals("Subscriber"))) { this.MixerRoles.Add(MixerRoleEnum.Subscriber); }
                 if (userRoles.Any(r => r.Equals("Pro"))) { this.MixerRoles.Add(MixerRoleEnum.Pro); }
                 if (userRoles.Any(r => r.Equals("Banned"))) { this.MixerRoles.Add(MixerRoleEnum.Banned); }
+            }
+
+            if (ChannelSession.Channel.user.username.Equals(this.UserName))
+            {
+                this.MixerRoles.Add(MixerRoleEnum.Streamer);
             }
 
             if (this.MixerRoles.Contains(MixerRoleEnum.Streamer))

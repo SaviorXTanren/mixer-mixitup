@@ -60,9 +60,9 @@ namespace MixItUp.Base.ViewModel.Chat
             this.ChatMessageEvent = chatMessageEvent;
             this.ID = this.ChatMessageEvent.id;
 
-            if (ChannelSession.Chat.ChatUsers.ContainsKey(this.ChatMessageEvent.user_id))
+            if (ChannelSession.ChannelUsers.ContainsKey(this.ChatMessageEvent.user_id))
             {
-                this.User = ChannelSession.Chat.ChatUsers[this.ChatMessageEvent.user_id];
+                this.User = ChannelSession.ChannelUsers[this.ChatMessageEvent.user_id];
             }
             else
             {

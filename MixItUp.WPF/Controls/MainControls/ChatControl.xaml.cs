@@ -120,7 +120,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     await this.RefreshUserList();
 
                     this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
-                    this.ChatCountTextBlock.Text = ChannelSession.Chat.ChatUsers.Count.ToString();
+                    this.ChatCountTextBlock.Text = ChannelSession.ChannelUsers.Count.ToString();
                 });
 
                 tokenSource.Token.ThrowIfCancellationRequested();
@@ -136,7 +136,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await userUpdateLock.WaitAsync();
 
             this.UserControls.Clear();
-            var orderedUsers = ChannelSession.Chat.ChatUsers.Values.ToList().OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
+            var orderedUsers = ChannelSession.ChannelUsers.Values.ToList().OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
             foreach (UserViewModel user in orderedUsers)
             {
                 this.UserControls.Add(new ChatUserControl(user));
