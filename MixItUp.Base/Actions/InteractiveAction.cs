@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -52,9 +53,6 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public int CooldownAmount { get; set; }
 
-        [JsonIgnore]
-        private InteractiveGroupModel group;
-
         public InteractiveAction()
             : base(ActionTypeEnum.Interactive)
         {
@@ -91,33 +89,16 @@ namespace MixItUp.Base.Actions
                     return;
                 }
 
-                if (this.group == null)
-                {
-                    InteractiveGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
-                    if (groups != null && groups.groups != null)
-                    {
-                        this.group = groups.groups.FirstOrDefault(g => g.groupID.Equals(this.GroupName));
-                        if (this.group == null)
-                        {
-                            this.group = new InteractiveGroupModel() { groupID = this.GroupName, sceneID = this.SceneID };
-                            await ChannelSession.Interactive.CreateGroups(new List<InteractiveGroupModel>() { this.group });
-                        }
-                    }
-                }
+                await ChannelSession.Interactive.AddGroup(this.GroupName, (!string.IsNullOrEmpty(this.SceneID)) ? this.SceneID : InteractiveUserGroupViewModel.DefaultName);
 
-                if (this.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
+                if (this.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene)
                 {
-                    this.group.sceneID = this.SceneID;
-                    await ChannelSession.Interactive.UpdateGroups(new List<InteractiveGroupModel>() { this.group });
+                    await ChannelSession.Interactive.UpdateGroup(this.GroupName, this.SceneID);
                 }
 
                 if (this.InteractiveType == InteractiveActionTypeEnum.MoveUserToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
                 {
-                    if (user.IsInteractiveParticipant)
-                    {
-                        user.InteractiveGroupID = this.GroupName;
-                        await ChannelSession.Interactive.UpdateParticipant(user.GetParticipantModel());
-                    }
+                    await ChannelSession.Interactive.AddUserToGroup(user, this.GroupName);
                 }
 
                 if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||

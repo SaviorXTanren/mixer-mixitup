@@ -25,6 +25,9 @@ namespace MixItUp.WPF.Controls.Actions
             this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
             this.InteractiveMoveUserToScenePermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
 
+            this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedIndex = 0;
+            this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedIndex = 0;
+
             if (this.action != null)
             {
                 this.InteractiveTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.InteractiveType);

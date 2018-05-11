@@ -7,37 +7,39 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.Dialogs
 {
     public class GroupListItem : NotifyPropertyChangedBase
     {
         public InteractiveUserGroupViewModel Group { get; set; }
+        public InteractiveSceneModel Scene { get; set; }
 
-        public GroupListItem(InteractiveUserGroupViewModel group) { this.Group = group; }
+        public GroupListItem(InteractiveUserGroupViewModel group, InteractiveSceneModel scene)
+        {
+            this.Group = group;
+            this.Scene = scene;
+            this.SetAsDefault = this.Group.DefaultScene.Equals(this.Scene.sceneID);
+        }
 
         public string GroupName { get { return this.Group.GroupName; } set { this.Group.GroupName = value; } }
         public string DefaultScene { get { return this.Group.DefaultScene; } set { this.Group.DefaultScene = value; } }
-        public bool IsEnabled
-        {
-            get { return this.Group.IsEnabled; }
-            set
-            {
-                this.Group.IsEnabled = value;
-                this.NotifyPropertyChanged("DefaultScene");
-                this.NotifyPropertyChanged("MatchesCurrentScene");
-                this.NotifyPropertyChanged("IsEnabled");
-                this.NotifyPropertyChanged("CanBeClicked");
-            }
-        }
 
         public bool IsCustomGroup { get { return this.Group.AssociatedUserRole == MixerRoleEnum.Custom; } }
 
-        public Visibility ShowToggleButton { get { return this.IsCustomGroup ? Visibility.Collapsed : Visibility.Visible; } }
-        public Visibility ShowDeleteButton { get { return this.IsCustomGroup ? Visibility.Visible : Visibility.Collapsed; } }
+        public bool CanBeToggled { get { return !(this.Scene.sceneID.Equals(InteractiveUserGroupViewModel.DefaultName) && this.SetAsDefault); } }
 
-        public bool MatchesCurrentScene { get; set; }
-        public bool CanBeClicked { get { return this.IsEnabled && (!this.MatchesCurrentScene || !this.Group.DefaultScene.Equals(InteractiveUserGroupViewModel.DefaultName)); } }
+        public bool SetAsDefault { get; set; }
+
+        public void NotifyProperties()
+        {
+            this.NotifyPropertyChanged("GroupName");
+            this.NotifyPropertyChanged("DefaultScene");
+            this.NotifyPropertyChanged("IsCustomGroup");
+            this.NotifyPropertyChanged("CanBeToggled");
+            this.NotifyPropertyChanged("SetAsDefault");
+        }
     }
 
     /// <summary>
@@ -67,32 +69,35 @@ namespace MixItUp.WPF.Controls.Dialogs
             this.InteractiveGroupsListView.ItemsSource = this.UserGroups;
             foreach (InteractiveUserGroupViewModel userGroup in ChannelSession.Settings.InteractiveUserGroups[this.game.id])
             {
-                GroupListItem group = new GroupListItem(userGroup);
-                group.MatchesCurrentScene = userGroup.DefaultScene.Equals(this.scene.sceneID);
-                this.UserGroups.Add(group);
+                if (!userGroup.GroupName.Equals(InteractiveUserGroupViewModel.DefaultName))
+                {
+                    this.UserGroups.Add(new GroupListItem(userGroup, this.scene));
+                }
+            }
+
+            foreach (GroupListItem groupItem in this.UserGroups)
+            {
+                groupItem.NotifyProperties();
             }
         }
 
-        private void SetDefaultForGroupCheckBox_Checked(object sender, RoutedEventArgs e)
+        private void SetAsDefaultToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox checkbox = (CheckBox)sender;
+            ToggleButton checkbox = (ToggleButton)sender;
             GroupListItem group = (GroupListItem)checkbox.DataContext;
             if (group != null)
             {
                 if (checkbox.IsChecked.GetValueOrDefault())
                 {
                     group.DefaultScene = this.scene.sceneID;
-                    group.MatchesCurrentScene = true;
-                    if (this.scene.sceneID.Equals(InteractiveUserGroupViewModel.DefaultName))
-                    {
-                        checkbox.IsEnabled = false;
-                    }
+                    group.SetAsDefault = true;
                 }
                 else
                 {
                     group.DefaultScene = InteractiveUserGroupViewModel.DefaultName;
-                    group.MatchesCurrentScene = false;
+                    group.SetAsDefault = false;
                 }
+                group.NotifyProperties();
             }
         }
 
@@ -116,13 +121,7 @@ namespace MixItUp.WPF.Controls.Dialogs
                     return;
                 }
 
-                InteractiveUserGroupViewModel userGroup = new InteractiveUserGroupViewModel(this.GroupNameTextBox.Text);
-                GroupListItem group = new GroupListItem(userGroup);
-
-                if (group.DefaultScene.Equals(this.scene.sceneID))
-                {
-                    group.MatchesCurrentScene = true;
-                }
+                GroupListItem group = new GroupListItem(new InteractiveUserGroupViewModel(this.GroupNameTextBox.Text), this.scene);
 
                 this.UserGroups.Add(group);
                 ChannelSession.Settings.InteractiveUserGroups[this.game.id].Add(group.Group);
@@ -131,9 +130,14 @@ namespace MixItUp.WPF.Controls.Dialogs
             }
         }
 
-        private void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
+        private void SetAsDefaultToggleButton_Loaded(object sender, RoutedEventArgs e)
         {
-
+            ToggleButton checkbox = (ToggleButton)sender;
+            GroupListItem group = (GroupListItem)checkbox.DataContext;
+            if (group != null)
+            {
+                checkbox.IsChecked = group.SetAsDefault;
+            }
         }
     }
 }

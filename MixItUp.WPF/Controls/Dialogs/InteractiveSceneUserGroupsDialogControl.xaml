@@ -25,7 +25,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Margin="16" MaxWidth="350" MaxHeight="400">
+    <Grid Margin="16" MaxWidth="300" MaxHeight="425">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
@@ -36,27 +36,25 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" HorizontalAlignment="Center">Set groups to start on selected Scene:</TextBlock>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" Width="225" TextWrapping="Wrap">Select the groups you want to start on the currently selected Scene:</TextBlock>
 
         <ListView x:Name="InteractiveGroupsListView" Grid.Row="2" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="20" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <CheckBox x:Name="SetDefaultForGroupCheckBox" Grid.Column="0" IsChecked="{Binding MatchesCurrentScene}" IsEnabled="{Binding CanBeClicked}" Checked="SetDefaultForGroupCheckBox_Checked" Unchecked="SetDefaultForGroupCheckBox_Checked" />
+                        <TextBlock Text="{Binding GroupName}" Grid.Column="0" VerticalAlignment="Center" />
 
-                        <TextBlock Text="{Binding GroupName}" Grid.Column="2" VerticalAlignment="Center" IsEnabled="{Binding IsEnabled}" />
+                        <ToggleButton x:Name="SetAsDefaultToggleButton" Grid.Column="2" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Set As Default" IsChecked="{Binding IsEnabled}" IsEnabled="{Binding CanBeToggled}" Loaded="SetAsDefaultToggleButton_Loaded" Checked="SetAsDefaultToggleButton_Checked" Unchecked="SetAsDefaultToggleButton_Checked" />
 
-                        <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="4" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Group" IsChecked="{Binding IsEnabled}" Visibility="{Binding ShowToggleButton}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
-
-                        <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" Visibility="{Binding ShowDeleteButton}">
+                        <Button x:Name="DeleteButton" Grid.Column="4" Click="DeleteButton_Click" Width="40" HorizontalAlignment="Center" IsEnabled="{Binding IsCustomGroup}">
                             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                         </Button>
                     </Grid>
