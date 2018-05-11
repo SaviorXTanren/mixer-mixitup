@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.Import
@@ -51,7 +52,17 @@ namespace MixItUp.Base.ViewModel.Import
 
         public int GetIntSettingsValue(string key, string value)
         {
-            return int.Parse(this.GetSettingsValue(key, value, "0"));
+            BigInteger bigInt = BigInteger.Parse(this.GetSettingsValue(key, value, "0"));
+            if (bigInt > int.MaxValue)
+            {
+                return int.MaxValue;
+            }
+
+            if (bigInt < int.MinValue)
+            {
+                return int.MinValue;
+            }
+            return (int)bigInt;
         }
 
         public bool GetBoolSettingsValue(string key, string value)
