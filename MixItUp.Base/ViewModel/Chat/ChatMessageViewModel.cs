@@ -126,10 +126,10 @@ namespace MixItUp.Base.ViewModel.Chat
             }
         }
 
-        public ChatMessageViewModel(string alertText, string foregroundBrush = null)
+        public ChatMessageViewModel(string alertText, UserViewModel user = null, string foregroundBrush = null)
         {
             this.ID = Guid.Empty;
-            this.User = null;
+            this.User = user;
             this.Timestamp = DateTimeOffset.Now;
             this.Message = alertText;
             this.AlertMessageBrush = ColorSchemes.GetColorCode(foregroundBrush);
