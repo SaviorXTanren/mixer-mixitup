@@ -184,6 +184,7 @@ namespace MixItUp.Desktop.Services
                     if (!string.IsNullOrEmpty(command.CooldownGroup) && settings.interactiveCooldownGroupsInternal.ContainsKey(command.CooldownGroup))
                     {
                         command.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, command.CooldownGroup, settings.interactiveCooldownGroupsInternal[command.CooldownGroup]);
+                        settings.CooldownGroups[command.CooldownGroup] = settings.interactiveCooldownGroupsInternal[command.CooldownGroup];
                     }
                     else
                     {

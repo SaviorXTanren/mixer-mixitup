@@ -49,7 +49,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.Type = type;
             this.GroupName = groupName;
 
-            if (!string.IsNullOrEmpty(this.GroupName))
+            if (!string.IsNullOrEmpty(this.GroupName) && ChannelSession.Settings != null)
             {
                 ChannelSession.Settings.CooldownGroups[this.GroupName] = amount;
             }
