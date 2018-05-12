@@ -57,7 +57,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Streamer Account" Visibility="Collapsed" />
+                    <ComboBox Grid.Row="0" x:Name="ExistingStreamerComboBox" Width="140" DisplayMemberPath="Channel.user.username" MaterialDesign:HintAssist.Hint="Streamer Account" Visibility="Collapsed" />
 
                     <Button Grid.Row="2" Grid.RowSpan="3" x:Name="StreamerLoginButton" Click="StreamerLoginButton_Click" Width="80" Height="30" Content="{Binding Converter={StaticResource LocalizationConverter}, ConverterParameter='Login'}" />
                 </Grid>
@@ -71,7 +71,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBox Grid.Row="0" x:Name="ModeratorChannelTextBox" KeyDown="ModeratorChannelTextBox_KeyDown" Width="140" MaterialDesign:HintAssist.Hint="Channel Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <ComboBox Grid.Row="0" x:Name="ModeratorChannelComboBox" Width="140" DisplayMemberPath="Channel.user.username" MaterialDesign:HintAssist.Hint="Channel Name" IsEditable="True" />
 
                     <Button Grid.Row="2" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" Width="80" Height="30" Content="{Binding Converter={StaticResource LocalizationConverter}, ConverterParameter='Login'}" />
 

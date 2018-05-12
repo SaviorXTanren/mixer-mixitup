@@ -221,13 +221,13 @@ namespace MixItUp.Base
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                    result = await ChannelSession.InitializeInternal();
+                    result = await ChannelSession.InitializeInternal(settings.Channel.user.username);
                 }
             }
             catch (RestServiceRequestException ex)
             {
                 Util.Logger.Log(ex);
-                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, null);
+                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, settings.Channel.user.username);
             }
             catch (Exception ex)
             {
