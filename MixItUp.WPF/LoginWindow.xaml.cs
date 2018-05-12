@@ -24,18 +24,6 @@ using System.Windows.Input;
 
 namespace MixItUp.WPF
 {
-    public class StreamerLoginItem
-    {
-        public IChannelSettings Setting;
-
-        public StreamerLoginItem(IChannelSettings setting)
-        {
-            this.Setting = setting;
-        }
-
-        public string Name { get { return this.Setting.Channel.user.username; } }
-    }
-
     /// <summary>
     /// Interaction logic for LoginWindow.xaml
     /// </summary>
@@ -200,8 +188,7 @@ namespace MixItUp.WPF
                 {
                     if (this.ExistingStreamerComboBox.SelectedIndex >= 0)
                     {
-                        StreamerLoginItem loginItem = (StreamerLoginItem)this.ExistingStreamerComboBox.SelectedItem;
-                        IChannelSettings setting = loginItem.Setting;
+                        IChannelSettings setting = (IChannelSettings)this.ExistingStreamerComboBox.SelectedItem;
                         if (setting.Channel.id == 0)
                         {
                             result = await this.NewStreamerLogin();

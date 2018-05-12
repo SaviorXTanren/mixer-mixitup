@@ -108,7 +108,7 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             if (this.CooldownGroupsComboBox.SelectedIndex >= 0)
             {
-                string cooldownGroup = this.CooldownGroupsComboBox.Text;
+                string cooldownGroup = (string)this.CooldownGroupsComboBox.SelectedItem;
                 if (ChannelSession.Settings.CooldownGroups.ContainsKey(cooldownGroup))
                 {
                     this.CooldownAmountTextBox.Text = ChannelSession.Settings.CooldownGroups[cooldownGroup].ToString();
