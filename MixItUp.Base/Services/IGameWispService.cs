@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.OAuth;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -387,6 +388,19 @@ namespace MixItUp.Base.Services
             }
             this.SubscribedAt = jobj["subscribed_at"].ToString();
             this.Active = jobj["status"].ToString();
+        }
+
+        [JsonIgnore]
+        public int SubscribeMonths
+        {
+            get
+            {
+                if (DateTimeOffset.TryParse(this.SubscribedAt, out DateTimeOffset subDate))
+                {
+                    return subDate.TotalMonthsFromNow();
+                }
+                return 1;
+            }
         }
     }
 

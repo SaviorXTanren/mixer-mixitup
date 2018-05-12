@@ -183,20 +183,11 @@ namespace MixItUp.Base.ViewModel.User
         {
             get
             {
-                int subMonths = 0;
                 if (this.SubscribeDate != null)
                 {
-                    TimeSpan span = DateTimeOffset.Now.Date - this.SubscribeDate.GetValueOrDefault().Date;
-                    double totalMonths = ((double)span.Days) / 30.0;
-
-                    subMonths = (int)totalMonths;
-                    totalMonths = totalMonths - subMonths;
-                    if (totalMonths > 0.0)
-                    {
-                        subMonths++;
-                    }
+                    return this.SubscribeDate.GetValueOrDefault().TotalMonthsFromNow();
                 }
-                return subMonths;
+                return 0;
             }
         }
 

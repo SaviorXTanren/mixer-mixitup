@@ -271,60 +271,14 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private async void GlobalEvents_OnGameWispSubscribedOccurred(object sender, GameWispSubscribeEvent subscriber)
+        private async void GlobalEvents_OnGameWispSubscribedOccurred(object sender, GameWispSubscribeEvent subscribeEvent)
         {
-            UserViewModel user = new UserViewModel(0, subscriber.Username);
-
-            UserModel userModel = await ChannelSession.Connection.GetUser(subscriber.Username);
-            if (userModel != null)
-            {
-                user = new UserViewModel(userModel);
-            }
-
-            GameWispTier tier = null;
-            if (ChannelSession.Services.GameWisp != null)
-            {
-                tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscriber.TierID));
-            }
-
-            EventCommand command = this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispSubscribed));
-            if (command != null)
-            {
-                command.AddSpecialIdentifier("subscribeamount", subscriber.Amount);
-                if (tier != null)
-                {
-                    command.AddSpecialIdentifier("subscribetier", tier.Title);
-                }
-                await this.RunEventCommand(command, user);
-            }
+            await this.RunGameWispCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispSubscribed)), subscribeEvent);
         }
 
-        private async void GlobalEvents_OnGameWispResubscribedOccurred(object sender, GameWispResubscribeEvent subscriber)
+        private async void GlobalEvents_OnGameWispResubscribedOccurred(object sender, GameWispResubscribeEvent subscribeEvent)
         {
-            UserViewModel user = new UserViewModel(0, subscriber.Username);
-
-            UserModel userModel = await ChannelSession.Connection.GetUser(subscriber.Username);
-            if (userModel != null)
-            {
-                user = new UserViewModel(userModel);
-            }
-
-            GameWispTier tier = null;
-            if (ChannelSession.Services.GameWisp != null)
-            {
-                tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscriber.TierID));
-            }
-
-            EventCommand command = this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispResubscribed));
-            if (command != null)
-            {
-                command.AddSpecialIdentifier("subscribeamount", subscriber.Amount);
-                if (tier != null)
-                {
-                    command.AddSpecialIdentifier("subscribetier", tier.Title);
-                }
-                await this.RunEventCommand(command, user);
-            }
+            await this.RunGameWispCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispResubscribed)), subscribeEvent);
         }
 
         private EventCommand FindMatchingEventCommand(string eventDetails)
@@ -351,6 +305,34 @@ namespace MixItUp.Base.MixerAPI
                 {
                     await command.Perform();
                 }
+            }
+        }
+
+        private async Task RunGameWispCommand(EventCommand command, GameWispSubscribeEvent subscribeEvent)
+        {
+            if (command != null)
+            {
+                UserViewModel user = new UserViewModel(0, subscribeEvent.Username);
+
+                UserModel userModel = await ChannelSession.Connection.GetUser(subscribeEvent.Username);
+                if (userModel != null)
+                {
+                    user = new UserViewModel(userModel);
+                }
+
+                GameWispTier tier = null;
+                if (ChannelSession.Services.GameWisp != null)
+                {
+                    tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscribeEvent.TierID));
+                }
+
+                command.AddSpecialIdentifier("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
+                command.AddSpecialIdentifier("subscribeamount", subscribeEvent.Amount);
+                if (tier != null)
+                {
+                    command.AddSpecialIdentifier("subscribetier", tier.Title);
+                }
+                await this.RunEventCommand(command, user);
             }
         }
 
