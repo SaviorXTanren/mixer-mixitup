@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -85,6 +86,24 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnDonationOccurred != null)
             {
                 GlobalEvents.OnDonationOccurred(null, donation);
+            }
+        }
+
+        public static event EventHandler<GameWispSubscribeEvent> OnGameWispSubscribedOccurred;
+        public static void GameWispSubscribedOccurred(GameWispSubscribeEvent subscriber)
+        {
+            if (GlobalEvents.OnGameWispSubscribedOccurred != null)
+            {
+                GlobalEvents.OnGameWispSubscribedOccurred(null, subscriber);
+            }
+        }
+
+        public static event EventHandler<GameWispResubscribeEvent> OnGameWispResubscribedOccurred;
+        public static void GameWispResubscribedOccurred(GameWispResubscribeEvent subscriber)
+        {
+            if (GlobalEvents.OnGameWispResubscribedOccurred != null)
+            {
+                GlobalEvents.OnGameWispResubscribedOccurred(null, subscriber);
             }
         }
 

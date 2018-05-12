@@ -99,12 +99,16 @@ namespace MixItUp.Desktop.Services
 
             this.SocketEventReceiverWrapper("subscriber-new", (eventData) =>
             {
-                this.service.SubscribeOccurred(new GameWispSubscribeEvent(eventData.Data));
+                GameWispSubscribeEvent subscribeEvent = new GameWispSubscribeEvent(eventData.Data);
+                this.service.SubscribeOccurred(subscribeEvent);
+                GlobalEvents.GameWispSubscribedOccurred(subscribeEvent);
             });
 
             this.SocketEventReceiverWrapper("subscriber-renewed", (eventData) =>
             {
-                this.service.ResubscribeOccurred(new GameWispResubscribeEvent(eventData.Data));
+                GameWispResubscribeEvent resubscribeEvent = new GameWispResubscribeEvent(eventData.Data);
+                this.service.ResubscribeOccurred(resubscribeEvent);
+                GlobalEvents.GameWispResubscribedOccurred(resubscribeEvent);
             });
 
             this.SocketEventReceiverWrapper("subscriber-benefits-change", (eventData) =>
@@ -114,7 +118,9 @@ namespace MixItUp.Desktop.Services
 
             this.SocketEventReceiverWrapper("subscriber-status-change", (eventData) =>
             {
-                this.service.SubscriberStatusChangeOccurred(new GameWispSubscribeEvent(eventData.Data));
+                GameWispSubscribeEvent subscribeEvent = new GameWispSubscribeEvent(eventData.Data);
+                this.service.SubscriberStatusChangeOccurred(subscribeEvent);
+                GlobalEvents.GameWispSubscribedOccurred(subscribeEvent);
             });
 
             this.SocketEventReceiverWrapper("subscriber-anniversary", (eventData) =>
