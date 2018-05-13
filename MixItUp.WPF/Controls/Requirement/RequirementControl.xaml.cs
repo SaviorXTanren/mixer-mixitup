@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.Requirement;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -55,5 +56,7 @@ namespace MixItUp.WPF.Controls.Requirement
             }
             this.RankRequirement.SetCurrencyRequirement(requirement.Rank);
         }
+
+        private void UsageRequirementsHelpButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements"); }
     }
 }
