@@ -71,7 +71,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ComboBox Grid.Row="0" x:Name="ModeratorChannelComboBox" Width="140" DisplayMemberPath="Channel.user.username" MaterialDesign:HintAssist.Hint="Channel Name" IsEditable="True" />
+                    <ComboBox Grid.Row="0" x:Name="ModeratorChannelComboBox" Width="140" DisplayMemberPath="Channel.user.username" MaterialDesign:HintAssist.Hint="Channel Name" IsEditable="True" KeyDown="ModeratorChannelComboBox_KeyDown" />
 
                     <Button Grid.Row="2" x:Name="ModeratorLoginButton" Click="ModeratorLoginButton_Click" Width="80" Height="30" Content="{Binding Converter={StaticResource LocalizationConverter}, ConverterParameter='Login'}" />
 
