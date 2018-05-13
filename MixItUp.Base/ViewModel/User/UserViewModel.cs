@@ -305,10 +305,6 @@ namespace MixItUp.Base.ViewModel.User
             if (this.FollowDate == null || this.FollowDate.GetValueOrDefault() == DateTimeOffset.MinValue)
             {
                 this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
-                if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
-                {
-                    this.MixerRoles.Add(MixerRoleEnum.Follower);
-                }
             }
         }
 
@@ -446,7 +442,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.MixerRoles.Add(MixerRoleEnum.Mod);
             }
 
-            if (this.IsSubscriber)
+            if (this.IsSubscriber || (this.FollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue))
             {
                 this.MixerRoles.Add(MixerRoleEnum.Follower);
             }
