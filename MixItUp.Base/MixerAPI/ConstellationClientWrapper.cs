@@ -5,6 +5,7 @@ using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -51,6 +52,8 @@ namespace MixItUp.Base.MixerAPI
         public ConstellationClientWrapper()
         {
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+            GlobalEvents.OnGameWispSubscribedOccurred += GlobalEvents_OnGameWispSubscribedOccurred;
+            GlobalEvents.OnGameWispResubscribedOccurred += GlobalEvents_OnGameWispResubscribedOccurred;
         }
 
         public async Task<bool> Connect()
@@ -256,10 +259,6 @@ namespace MixItUp.Base.MixerAPI
             {
                 user = new UserViewModel(userModel);
             }
-            else
-            {
-                user = new UserViewModel(0, donation.Username);
-            }
 
             EventCommand command = this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.Donation));
             if (command != null)
@@ -270,6 +269,16 @@ namespace MixItUp.Base.MixerAPI
                 command.AddSpecialIdentifier("donationimage", donation.ImageLink);
                 await this.RunEventCommand(command, user);
             }
+        }
+
+        private async void GlobalEvents_OnGameWispSubscribedOccurred(object sender, GameWispSubscribeEvent subscribeEvent)
+        {
+            await this.RunGameWispCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispSubscribed)), subscribeEvent);
+        }
+
+        private async void GlobalEvents_OnGameWispResubscribedOccurred(object sender, GameWispResubscribeEvent subscribeEvent)
+        {
+            await this.RunGameWispCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispResubscribed)), subscribeEvent);
         }
 
         private EventCommand FindMatchingEventCommand(string eventDetails)
@@ -296,6 +305,34 @@ namespace MixItUp.Base.MixerAPI
                 {
                     await command.Perform();
                 }
+            }
+        }
+
+        private async Task RunGameWispCommand(EventCommand command, GameWispSubscribeEvent subscribeEvent)
+        {
+            if (command != null)
+            {
+                UserViewModel user = new UserViewModel(0, subscribeEvent.Username);
+
+                UserModel userModel = await ChannelSession.Connection.GetUser(subscribeEvent.Username);
+                if (userModel != null)
+                {
+                    user = new UserViewModel(userModel);
+                }
+
+                GameWispTier tier = null;
+                if (ChannelSession.Services.GameWisp != null)
+                {
+                    tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscribeEvent.TierID));
+                }
+
+                command.AddSpecialIdentifier("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
+                command.AddSpecialIdentifier("subscribeamount", subscribeEvent.Amount);
+                if (tier != null)
+                {
+                    command.AddSpecialIdentifier("subscribetier", tier.Title);
+                }
+                await this.RunEventCommand(command, user);
             }
         }
 

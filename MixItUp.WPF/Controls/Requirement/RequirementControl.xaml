@@ -26,7 +26,22 @@
 
     </UserControl.Resources>
 
-    <GroupBox Header="Usage Requirements" Width="250">
+    <GroupBox Width="250">
+        <GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBox" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}">Usage Requirements</TextBlock>
+
+                <Button Grid.Column="2" x:Name="UsageRequirementsHelpButton" Margin="-10" Content="{MaterialDesign:PackIcon Help}" Click="UsageRequirementsHelpButton_Click" />
+            </Grid>
+        </GroupBox.Header>
+        
         <Grid Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -40,7 +55,7 @@
 
             <MaterialDesign:PopupBox Grid.Column="0" ToggleContent="{StaticResource UserRolePopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <RequirementControls:UserRoleRequirementControl x:Name="UserRoleRequirement" />
+                    <RequirementControls:RoleRequirementControl x:Name="RoleRequirement" />
                 </Grid>
             </MaterialDesign:PopupBox>
 

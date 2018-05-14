@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -42,7 +43,7 @@ namespace MixItUp.Base.Actions
         public string GroupName { get; set; }
 
         [DataMember]
-        public UserRole RoleRequirement { get; set; }
+        public MixerRoleEnum RoleRequirement { get; set; }
 
         [DataMember]
         public string SceneID { get; set; }
@@ -52,16 +53,13 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public int CooldownAmount { get; set; }
 
-        [JsonIgnore]
-        private InteractiveGroupModel group;
-
         public InteractiveAction()
             : base(ActionTypeEnum.Interactive)
         {
-            this.RoleRequirement = UserRole.User;
+            this.RoleRequirement = MixerRoleEnum.User;
         }
 
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string groupName = null, string sceneID = null, UserRole roleRequirement = UserRole.User)
+        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string groupName = null, string sceneID = null, MixerRoleEnum roleRequirement = MixerRoleEnum.User)
             : this()
         {
             this.InteractiveType = interactiveType;
@@ -82,7 +80,7 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Interactive != null && ChannelSession.Interactive.IsConnected())
             {
-                if (!user.Roles.Any(r => r >= this.RoleRequirement))
+                if (!user.MixerRoles.Any(r => r >= this.RoleRequirement))
                 {
                     if (ChannelSession.Chat != null)
                     {
@@ -91,34 +89,16 @@ namespace MixItUp.Base.Actions
                     return;
                 }
 
-                if (this.group == null)
-                {
-                    InteractiveGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
-                    if (groups != null && groups.groups != null)
-                    {
-                        this.group = groups.groups.FirstOrDefault(g => g.groupID.Equals(this.GroupName));
-                        if (this.group == null)
-                        {
-                            this.group = new InteractiveGroupModel() { groupID = this.GroupName, sceneID = this.SceneID };
-                            await ChannelSession.Interactive.CreateGroups(new List<InteractiveGroupModel>() { this.group });
-                        }
-                    }
-                }
+                await ChannelSession.Interactive.AddGroup(this.GroupName, (!string.IsNullOrEmpty(this.SceneID)) ? this.SceneID : InteractiveUserGroupViewModel.DefaultName);
 
-                if (this.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
+                if (this.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene)
                 {
-                    this.group.sceneID = this.SceneID;
-                    await ChannelSession.Interactive.UpdateGroups(new List<InteractiveGroupModel>() { this.group });
+                    await ChannelSession.Interactive.UpdateGroup(this.GroupName, this.SceneID);
                 }
 
                 if (this.InteractiveType == InteractiveActionTypeEnum.MoveUserToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
                 {
-                    InteractiveParticipantModel participant = ChannelSession.Interactive.InteractiveUsers.Values.FirstOrDefault(p => p.userID.Equals(user.ID));
-                    if (participant != null)
-                    {
-                        participant.groupID = this.GroupName;
-                        await ChannelSession.Interactive.UpdateParticipants(new List<InteractiveParticipantModel>() { participant });
-                    }
+                    await ChannelSession.Interactive.AddUserToGroup(user, this.GroupName);
                 }
 
                 if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
@@ -139,7 +119,7 @@ namespace MixItUp.Base.Actions
                     if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
                     {
                         IEnumerable<InteractiveConnectedControlCommand> commands = ChannelSession.Interactive.Controls.Values.Where(c => c.Button != null &&
-                            this.CooldownID.Equals(c.Command.CooldownGroup));
+                            this.CooldownID.Equals(c.Command.CooldownGroupName));
                         if (commands.Count() > 0)
                         {
                             scene = commands.FirstOrDefault().Scene;

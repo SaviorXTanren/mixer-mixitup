@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Model.Game;
+﻿using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Game;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
@@ -153,7 +154,7 @@ namespace MixItUp.Base.Util
 
             await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Channel.user), StreamerSpecialIdentifierHeader);
 
-            await this.HandleUserSpecialIdentifiers(ChannelSession.Chat.ChatUsers.PickRandom(), RandomSpecialIdentifierHeader);
+            await this.HandleUserSpecialIdentifiers(ChannelSession.ChannelUsers.PickRandom(), RandomSpecialIdentifierHeader);
             if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
             {
                 int startIndex = 0;
@@ -256,6 +257,12 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + "userurl", "https://www.mixer.com/" + user.UserName);
                 this.ReplaceSpecialIdentifier(identifierHeader + "username", user.UserName);
                 this.ReplaceSpecialIdentifier(identifierHeader + "userid", user.ID.ToString());
+
+                if (this.ContainsSpecialIdentifier(identifierHeader + "userfollowers"))
+                {
+                    ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(user.UserName);
+                    this.ReplaceSpecialIdentifier(identifierHeader + "userfollowers", channel?.numFollowers.ToString() ?? "0");
+                }
             }
         }
     }

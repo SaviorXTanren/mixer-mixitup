@@ -259,7 +259,6 @@ namespace MixItUp.Desktop.Services
             this.GameWisp = (ChannelSession.Settings.GameWispOAuthToken != null) ? new GameWispService(ChannelSession.Settings.GameWispOAuthToken) : new GameWispService();
             if (await this.GameWisp.Connect())
             {
-
                 return true;
             }
             else

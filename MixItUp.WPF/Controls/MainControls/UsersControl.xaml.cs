@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -73,6 +74,17 @@ namespace MixItUp.WPF.Controls.MainControls
             UserDataEditorWindow window = new UserDataEditorWindow(userData);
             window.Closed += Window_Closed;
             window.Show();
+        }
+
+        private async void UserDeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            UserDataViewModel userData = (UserDataViewModel)button.DataContext;
+            if (await MessageBoxHelper.ShowConfirmationDialog("This will delete this user's data, which includes their Hours, Currency, Rank, & Custom User Commands. Are you sure you want to do this?"))
+            {
+                ChannelSession.Settings.UserData.Remove(userData.ID);
+            }
+            this.RefreshList();
         }
 
         private void Window_Closed(object sender, System.EventArgs e)

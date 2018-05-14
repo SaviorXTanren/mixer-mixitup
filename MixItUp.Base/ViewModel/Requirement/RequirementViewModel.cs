@@ -1,7 +1,6 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using System.Collections.Generic;
+using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -10,10 +9,12 @@ namespace MixItUp.Base.ViewModel.Requirement
     [DataContract]
     public class RequirementViewModel
     {
-        public static IEnumerable<string> UserRoleAllowedValues { get { return EnumHelper.GetEnumNames(UserViewModel.SelectableUserRoles()); } }
+        [JsonProperty]
+        [Obsolete]
+        public MixerRoleEnum UserRole { get; set; }
 
         [JsonProperty]
-        public UserRole UserRole { get; set; }
+        public RoleRequirementViewModel Role { get; set; }
 
         [JsonProperty]
         public CooldownRequirementViewModel Cooldown { get; set; }
@@ -26,20 +27,20 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public RequirementViewModel()
         {
-            this.UserRole = UserRole.User;
+            this.Role = new RoleRequirementViewModel();
             this.Cooldown = new CooldownRequirementViewModel();
         }
 
-        public RequirementViewModel(UserRole userRole, int cooldown)
+        public RequirementViewModel(MixerRoleEnum userRole, int cooldown)
             : this()
         {
-            this.UserRole = userRole;
+            this.Role.MixerRole = userRole;
             this.Cooldown.Amount = cooldown;
         }
 
-        public RequirementViewModel(UserRole userRole, CooldownRequirementViewModel cooldown = null, CurrencyRequirementViewModel currency = null, CurrencyRequirementViewModel rank = null)
+        public RequirementViewModel(RoleRequirementViewModel role, CooldownRequirementViewModel cooldown = null, CurrencyRequirementViewModel currency = null, CurrencyRequirementViewModel rank = null)
         {
-            this.UserRole = userRole;
+            this.Role = role;
             this.Cooldown = (cooldown != null) ? cooldown : new CooldownRequirementViewModel();
             this.Currency = currency;
             this.Rank = rank;
@@ -47,26 +48,11 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
         {
-            if (this.UserRole == UserRole.Follower)
+            if (this.Role != null)
             {
-                if (!user.IsFollower)
-                {
-                    await user.SetDetails();
-                }
-                return user.IsFollower;
+                return await this.Role.DoesMeetUserRoleRequirement(user);
             }
-            else if (this.UserRole == UserRole.Subscriber)
-            {
-                if (!user.IsSubscriber)
-                {
-                    await user.SetSubscribeDate();
-                }
-                return user.IsSubscriber;
-            }
-            else
-            {
-                return user.PrimaryRole >= this.UserRole;
-            }
+            return true;
         }
 
         public bool DoesMeetCooldownRequirement(UserViewModel user)
@@ -103,14 +89,6 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return this.Rank.DoesMeetRankRequirement(user.Data);
             }
             return true;
-        }
-
-        public async Task SendUserRoleNotMetWhisper(UserViewModel user)
-        {
-            if (ChannelSession.Chat != null)
-            {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to do this", EnumHelper.GetEnumName(this.UserRole)));
-            }
         }
 
         public void UpdateCooldown(UserViewModel user)

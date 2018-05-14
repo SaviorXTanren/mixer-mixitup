@@ -21,5 +21,7 @@ namespace MixItUp.Base.Services
         Task SaveBackup(IChannelSettings settings);
 
         string GetFilePath(IChannelSettings settings);
+
+        Task ClearAllUserData(IChannelSettings settings);
     }
 }

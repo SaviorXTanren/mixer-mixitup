@@ -14,6 +14,11 @@ namespace MixItUp.Base.Commands
 
         [Name("Donation Received")]
         Donation,
+
+        [Name("GameWisp Subscribed")]
+        GameWispSubscribed,
+        [Name("GameWisp Resubscribed")]
+        GameWispResubscribed,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>

@@ -1,8 +1,10 @@
 ﻿using Mixer.Base.Model.OAuth;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -114,10 +116,12 @@ namespace MixItUp.Base.Services
         public GameWispLinks Links { get; set; }
 
         [JsonProperty("tiers")]
-        public GameWispDataArrayWrapper<GameWispTiers> Tiers { get; set; }
+        public GameWispDataArrayWrapper<GameWispTier> Tiers { get; set; }
 
         [JsonProperty("sponsor_counts")]
         public GameWispDataWrapper<GameWispSponsorCounts> SponsorCounts { get; set; }
+
+        public IEnumerable<GameWispTier> GetActiveTiers() { return this.Tiers.Data.Where(t => t.Published); }
     }
 
     public class GameWispLinks
@@ -147,8 +151,10 @@ namespace MixItUp.Base.Services
         public int BillingGracePeriod { get; set; }
     }
 
-    public class GameWispTiers
+    public class GameWispTier
     {
+        public const string MIURolePrefix = "GW - ";
+
         [JsonProperty("id")]
         public uint ID { get; set; }
 
@@ -172,6 +178,9 @@ namespace MixItUp.Base.Services
 
         [JsonProperty("updated_at")]
         public string UpdatedAt { get; set; }
+
+        [JsonIgnore]
+        public string MIURoleName { get { return string.Format("{0}{1}", GameWispTier.MIURolePrefix, this.Title); } }
     }
 
     public class GameWispSubscriber
@@ -199,6 +208,9 @@ namespace MixItUp.Base.Services
 
         [JsonProperty("anniversaries")]
         public GameWispDataArrayWrapper<GameWispAnniversary> Anniversaries { get; set; }
+
+        [JsonIgnore]
+        public string UserName { get { return this.User.Data.Username; } }
     }
 
     public class GameWispUser
@@ -377,6 +389,19 @@ namespace MixItUp.Base.Services
             this.SubscribedAt = jobj["subscribed_at"].ToString();
             this.Active = jobj["status"].ToString();
         }
+
+        [JsonIgnore]
+        public int SubscribeMonths
+        {
+            get
+            {
+                if (DateTimeOffset.TryParse(this.SubscribedAt, out DateTimeOffset subDate))
+                {
+                    return subDate.TotalMonthsFromNow();
+                }
+                return 1;
+            }
+        }
     }
 
     [DataContract]
@@ -453,8 +478,10 @@ namespace MixItUp.Base.Services
         Task<GameWispChannelInformation> GetChannelInformation();
 
         Task<IEnumerable<GameWispSubscriber>> GetSubscribers();
+        Task<IEnumerable<GameWispSubscriber>> GetCachedSubscribers();
 
         Task<GameWispSubscriber> GetSubscriber(string username);
+        Task<GameWispSubscriber> GetSubscriber(uint userID);
 
         OAuthTokenModel GetOAuthTokenCopy();
     }

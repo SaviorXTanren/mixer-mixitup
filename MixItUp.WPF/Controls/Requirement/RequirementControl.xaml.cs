@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.Requirement;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,7 +36,7 @@ namespace MixItUp.WPF.Controls.Requirement
         public RequirementViewModel GetRequirements()
         {
             RequirementViewModel requirement = new RequirementViewModel();
-            requirement.UserRole = this.UserRoleRequirement.GetUserRoleRequirement();
+            requirement.Role = this.RoleRequirement.GetRoleRequirement();
             requirement.Cooldown = this.CooldownRequirement.GetCooldownRequirement();
             if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
@@ -47,7 +48,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         public void SetRequirements(RequirementViewModel requirement)
         {
-            this.UserRoleRequirement.SetUserRoleRequirement(requirement.UserRole);
+            this.RoleRequirement.SetRoleRequirement(requirement.Role);
             this.CooldownRequirement.SetCooldownRequirement(requirement.Cooldown);
             if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
@@ -55,5 +56,7 @@ namespace MixItUp.WPF.Controls.Requirement
             }
             this.RankRequirement.SetCurrencyRequirement(requirement.Rank);
         }
+
+        private void UsageRequirementsHelpButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements"); }
     }
 }

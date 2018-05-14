@@ -41,5 +41,19 @@ namespace MixItUp.Base.Util
 
             return string.Join(", ", dateSegments);
         }
+
+        public static int TotalMonthsFromNow(this DateTimeOffset dt)
+        {
+            DateTime currentDateTime = DateTimeOffset.Now.Date;
+            DateTime tempDateTime = dt.Date;
+
+            int subMonths = 1;
+            while (tempDateTime.Year < currentDateTime.Year || tempDateTime.Month < currentDateTime.Month)
+            {
+                tempDateTime = tempDateTime.AddMonths(1);
+                subMonths++;
+            }
+            return subMonths;
+        }
     }
 }

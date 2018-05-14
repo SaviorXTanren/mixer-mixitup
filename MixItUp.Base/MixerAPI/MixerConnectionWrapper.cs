@@ -75,7 +75,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<UserWithGroupsModel> GetUserInChannel(ChannelModel channel, uint userID) { return await this.RunAsync(this.Connection.Channels.GetUser(channel, userID)); }
 
-        public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, UserRole role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString())); }
+        public async Task<IEnumerable<UserWithGroupsModel>> GetUsersWithRoles(ChannelModel channel, MixerRoleEnum role) { return await this.RunAsync(this.Connection.Channels.GetUsersWithRoles(channel, role.ToString())); }
 
         public async Task<PrivatePopulatedUserModel> GetCurrentUser() { return await this.RunAsync(this.Connection.Users.GetCurrentUser()); }
 
@@ -105,9 +105,9 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<IEnumerable<StreamSessionsAnalyticModel>> GetStreamSessions(ChannelModel channel, DateTimeOffset startTime) { return await this.RunAsync(this.Connection.Channels.GetStreamSessions(channel, startTime)); }
 
-        public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<UserRole> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
+        public async Task AddUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, roles.Select(r => EnumHelper.GetEnumName(r)), null)); }
 
-        public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<UserRole> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); } 
+        public async Task RemoveUserRoles(ChannelModel channel, UserModel user, IEnumerable<MixerRoleEnum> roles) { await this.RunAsync(this.Connection.Channels.UpdateUserRoles(channel, user, null, roles.Select(r => EnumHelper.GetEnumName(r)))); } 
 
         public async Task<IEnumerable<InteractiveGameListingModel>> GetOwnedInteractiveGames(ChannelModel channel) { return await this.RunAsync(this.Connection.Interactive.GetOwnedInteractiveGames(channel)); }
 

@@ -101,6 +101,8 @@ namespace MixItUp.Base
         public static PrivatePopulatedUserModel BotUser { get; private set; }
         public static ExpandedChannelModel Channel { get; private set; }
 
+        public static LockedDictionary<uint, UserViewModel> ChannelUsers { get; private set; }
+
         public static IChannelSettings Settings { get; private set; }
 
         public static ChatClientWrapper Chat { get; private set; }
@@ -173,6 +175,8 @@ namespace MixItUp.Base
                 ChannelSession.SecretManager = new SecretManagerService();
             }
 
+            ChannelSession.ChannelUsers = new LockedDictionary<uint, UserViewModel>();
+
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
             ChannelSession.GameQueue = new LockedList<UserViewModel>();
 
@@ -217,13 +221,13 @@ namespace MixItUp.Base
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                    result = await ChannelSession.InitializeInternal();
+                    result = await ChannelSession.InitializeInternal(settings.Channel.user.username);
                 }
             }
             catch (RestServiceRequestException ex)
             {
                 Util.Logger.Log(ex);
-                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, null);
+                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, settings.Channel.user.username);
             }
             catch (Exception ex)
             {
@@ -319,11 +323,11 @@ namespace MixItUp.Base
             UserViewModel user = new UserViewModel(ChannelSession.User);
             if (ChannelSession.Channel.user.id.Equals(user.ID))
             {
-                user.Roles.Add(UserRole.Streamer);
+                user.MixerRoles.Add(MixerRoleEnum.Streamer);
             }
             else
             {
-                user.Roles.Add(UserRole.Mod);
+                user.MixerRoles.Add(MixerRoleEnum.Mod);
             }
             return user;
         }
@@ -412,10 +416,6 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeDiscord();
                     }
-                    if (ChannelSession.Settings.GameWispOAuthToken != null)
-                    {
-                        await ChannelSession.Services.InitializeGameWisp();
-                    }
 
                     foreach (CommandBase command in ChannelSession.AllCommands)
                     {
@@ -462,9 +462,9 @@ namespace MixItUp.Base
 
         private static async void GlobalEvents_OnRankChanged(object sender, UserCurrencyDataViewModel currency)
         {
-            if (currency.Currency.RankChangedCommand != null && ChannelSession.Chat.ChatUsers.ContainsKey(currency.User.ID) == true)
+            if (currency.Currency.RankChangedCommand != null && ChannelSession.ChannelUsers.ContainsKey(currency.User.ID) == true)
             {
-                var user = ChannelSession.Chat.ChatUsers[currency.User.ID];
+                var user = ChannelSession.ChannelUsers[currency.User.ID];
                 await currency.Currency.RankChangedCommand.Perform(user);
             }
         }

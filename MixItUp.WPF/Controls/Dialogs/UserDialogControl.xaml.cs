@@ -22,12 +22,12 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            await this.user.SetDetails(checkForFollow: true);
+            await this.user.SetDetails();
 
             this.UserAvatar.SetSize(100);
             this.UserAvatar.SetImageUrl(this.user.AvatarLink);
 
-            if (this.user.Roles.Contains(UserRole.Banned))
+            if (this.user.MixerRoles.Contains(MixerRoleEnum.Banned))
             {
                 this.UnbanButton.Visibility = System.Windows.Visibility.Visible;
                 this.BanButton.Visibility = System.Windows.Visibility.Collapsed;

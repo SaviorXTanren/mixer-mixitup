@@ -2,11 +2,11 @@
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
 {
@@ -42,18 +42,7 @@ namespace MixItUp.WPF.Controls.Command
 
         public override async Task Initialize()
         {
-            foreach (var cooldownGroup in ChannelSession.Settings.InteractiveCooldownGroups.Keys.ToList())
-            {
-                if (!ChannelSession.Settings.InteractiveCommands.Any(c => cooldownGroup.Equals(c.CooldownGroup)))
-                {
-                    ChannelSession.Settings.InteractiveCooldownGroups.Remove(cooldownGroup);
-                    continue;
-                }
-            }
-
             this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandTriggerType>();
-            this.CooldownTypeComboBox.ItemsSource = new List<string>() { "Individual", "Group" };
-            this.CooldownGroupsComboBox.ItemsSource = ChannelSession.Settings.InteractiveCooldownGroups.Keys;
 
             if (this.Control != null && this.Control is InteractiveButtonControlModel)
             {
@@ -61,9 +50,6 @@ namespace MixItUp.WPF.Controls.Command
                 this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveButtonCommandTriggerType.MouseDown);
                 this.SparkCostTextBox.IsEnabled = true;
                 this.SparkCostTextBox.Text = ((InteractiveButtonControlModel)this.Control).cost.ToString();
-                this.CooldownGroupsComboBox.IsEnabled = true;
-                this.CooldownTypeComboBox.IsEnabled = true;
-                this.CooldownTextBox.IsEnabled = true;
             }
 
             if (this.command != null)
@@ -71,17 +57,8 @@ namespace MixItUp.WPF.Controls.Command
                 if (this.command.Button != null)
                 {
                     this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Trigger);
-                    if (!string.IsNullOrEmpty(this.command.CooldownGroup))
-                    {
-                        this.CooldownTypeComboBox.SelectedItem = "Group";
-                        this.CooldownGroupsComboBox.SelectedItem = this.command.CooldownGroup;
-                        this.CooldownTextBox.Text = ChannelSession.Settings.InteractiveCooldownGroups[this.command.CooldownGroup].ToString();
-                    }
-                    else
-                    {
-                        this.CooldownTypeComboBox.SelectedItem = "Individual";
-                        this.CooldownTextBox.Text = this.command.IndividualCooldown.ToString();
-                    }
+                    this.UnlockedControl.Unlocked = this.command.Unlocked;
+                    this.Requirements.SetRequirements(this.command.Requirements);
                 }
 
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
@@ -99,9 +76,6 @@ namespace MixItUp.WPF.Controls.Command
 
         public override async Task<bool> Validate()
         {
-            int sparkCost = 0;
-            int cooldown = 0;
-
             if (this.Control is InteractiveButtonControlModel)
             {
                 if (this.ButtonTriggerComboBox.SelectedIndex < 0)
@@ -110,32 +84,16 @@ namespace MixItUp.WPF.Controls.Command
                     return false;
                 }
 
-                if (!int.TryParse(this.SparkCostTextBox.Text, out sparkCost) || sparkCost < 0)
+                if (!int.TryParse(this.SparkCostTextBox.Text, out int sparkCost) || sparkCost < 0)
                 {
                     await MessageBoxHelper.ShowMessageDialog("A valid spark cost must be entered");
                     return false;
                 }
+            }
 
-                if (this.CooldownTypeComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A cooldown type must be selected");
-                    return false;
-                }
-
-                if (this.CooldownTypeComboBox.SelectedItem.Equals("Group") && this.CooldownGroupsComboBox.SelectedIndex < 0 && string.IsNullOrEmpty(this.CooldownGroupsComboBox.Text))
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A cooldown group must be selected or entered");
-                    return false;
-                }
-
-                if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
-                {
-                    if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
-                        return false;
-                    }
-                }
+            if (!await this.Requirements.Validate())
+            {
+                return false;
             }
 
             return true;
@@ -148,15 +106,18 @@ namespace MixItUp.WPF.Controls.Command
             if (await this.Validate())
             {
                 InteractiveButtonCommandTriggerType trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>((string)this.ButtonTriggerComboBox.SelectedItem);
+
+                RequirementViewModel requirements = this.Requirements.GetRequirements();
+
                 if (this.command == null)
                 {
                     if (this.Control is InteractiveButtonControlModel)
                     {                
-                        this.command = new InteractiveCommand(this.Game, this.Scene, (InteractiveButtonControlModel)this.Control, trigger);
+                        this.command = new InteractiveCommand(this.Game, this.Scene, (InteractiveButtonControlModel)this.Control, trigger, requirements);
                     }
                     else
                     {
-                        this.command = new InteractiveCommand(this.Game, this.Scene, (InteractiveJoystickControlModel)this.Control);
+                        this.command = new InteractiveCommand(this.Game, this.Scene, (InteractiveJoystickControlModel)this.Control, requirements);
                     }
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
@@ -165,25 +126,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     this.command.Trigger = trigger;
                     this.command.Button.cost = int.Parse(this.SparkCostTextBox.Text);
-                    if (this.CooldownTypeComboBox.SelectedItem.Equals("Group"))
-                    {
-                        string cooldownGroup = this.CooldownGroupsComboBox.Text;
-                        this.command.CooldownGroup = cooldownGroup;
-                        ChannelSession.Settings.InteractiveCooldownGroups[cooldownGroup] = int.Parse(this.CooldownTextBox.Text);
-
-                        this.command.IndividualCooldown = 0;
-                    }
-                    else
-                    {
-                        int cooldown = 0;
-                        if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
-                        {
-                            cooldown = int.Parse(this.CooldownTextBox.Text);
-                        }
-                        this.command.IndividualCooldown = cooldown;
-
-                        this.command.CooldownGroup = null;
-                    }
+                    this.command.Requirements = requirements;
 
                     await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
                 }
@@ -191,40 +134,6 @@ namespace MixItUp.WPF.Controls.Command
                 return this.command;
             }
             return null;
-        }
-
-        private void CooldownTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.CooldownTypeComboBox.SelectedIndex >= 0)
-            {
-                string selection = (string)this.CooldownTypeComboBox.SelectedItem;
-                if (selection.Equals("Group"))
-                {
-                    this.CooldownGroupsComboBox.Visibility = Visibility.Visible;
-                }
-                else if (selection.Equals("Individual"))
-                {
-                    this.CooldownGroupsComboBox.Visibility = Visibility.Collapsed;
-                }
-                this.CooldownGroupsComboBox.SelectedIndex = -1;
-                this.CooldownTextBox.Clear();
-            }
-        }
-
-        private void CooldownGroupsComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0)
-            {
-                string selection = (string)e.AddedItems[0];
-                if (ChannelSession.Settings.InteractiveCooldownGroups.ContainsKey(selection))
-                {
-                    this.CooldownTextBox.Text = ChannelSession.Settings.InteractiveCooldownGroups[selection].ToString();
-                }
-                else
-                {
-                    this.CooldownTextBox.Text = string.Empty;
-                }
-            }
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -38,5 +37,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private void SaviorXTanrenMixerButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://mixer.com/SaviorXTanren"); }
 
         private void VerbatimTMixerButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://mixer.com/VerbatimT"); }
+
+        private void TyrenDesMixerButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://mixer.com/TyrenDes"); }
     }
 }

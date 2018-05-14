@@ -30,7 +30,6 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserLeaveOccurred = delegate { };
 
-        public LockedDictionary<uint, UserViewModel> ChatUsers { get; private set; }
         public Dictionary<Guid, ChatMessageViewModel> Messages { get; private set; }
 
         public bool DisableChat { get; set; }
@@ -45,7 +44,6 @@ namespace MixItUp.Base.MixerAPI
 
         public ChatClientWrapper()
         {
-            this.ChatUsers = new LockedDictionary<uint, UserViewModel>();
             this.Messages = new Dictionary<Guid, ChatMessageViewModel>();
         }
 
@@ -189,7 +187,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction, bool includeBots = false)
         {
-            List<UserViewModel> users = this.ChatUsers.Values.ToList();
+            List<UserViewModel> users = ChannelSession.ChannelUsers.Values.ToList();
 
             if (!includeBots)
             {
@@ -240,7 +238,7 @@ namespace MixItUp.Base.MixerAPI
                     foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
                     {
                         UserViewModel user = new UserViewModel(chatUser);
-                        this.ChatUsers[user.ID] = user;
+                        ChannelSession.ChannelUsers[user.ID] = user;
                     }
 
                     if (ChannelSession.IsStreamer)
@@ -330,9 +328,9 @@ namespace MixItUp.Base.MixerAPI
             await user.SetDetails();
             lock (userUpdateLock)
             {
-                if (!this.ChatUsers.ContainsKey(user.ID))
+                if (!ChannelSession.ChannelUsers.ContainsKey(user.ID))
                 {
-                    this.ChatUsers[user.ID] = user;
+                    ChannelSession.ChannelUsers[user.ID] = user;
                 }
             }
 
@@ -350,7 +348,7 @@ namespace MixItUp.Base.MixerAPI
         {
             lock (userUpdateLock)
             {
-                this.ChatUsers.Remove(user.ID);
+                ChannelSession.ChannelUsers.Remove(user.ID);
             }
         }
 
@@ -362,7 +360,7 @@ namespace MixItUp.Base.MixerAPI
             }
             this.Messages[message.ID] = message;
 
-            if (!this.ChatUsers.ContainsKey(message.User.ID))
+            if (!ChannelSession.ChannelUsers.ContainsKey(message.User.ID))
             {
                 await this.AddUser(message.User);
             }
@@ -430,7 +428,7 @@ namespace MixItUp.Base.MixerAPI
                 return;
             }
 
-            if (ChannelSession.IsStreamer && !message.User.Roles.Contains(UserRole.Banned))
+            if (ChannelSession.IsStreamer && !message.User.MixerRoles.Contains(MixerRoleEnum.Banned))
             {
                 GlobalEvents.ChatCommandMessageReceived(message);
 
@@ -500,14 +498,20 @@ namespace MixItUp.Base.MixerAPI
         {
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
-                List<UserViewModel> users = this.ChatUsers.Values.ToList();
-                if (users.Count() > 0)
+                foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
                 {
-                    foreach (UserViewModel user in users)
+                    if (chatUser.userId.HasValue)
                     {
-                        await user.SetDetails();
+                        if (!ChannelSession.ChannelUsers.ContainsKey(chatUser.userId.Value))
+                        {
+                            ChannelSession.ChannelUsers[chatUser.userId.Value] = new UserViewModel(chatUser);
+                        }
+
+                        await ChannelSession.ChannelUsers[chatUser.userId.Value].SetChatDetails(chatUser);
                     }
                 }
+
+                await Task.Delay(30000);
             });
         }
 

@@ -60,9 +60,9 @@ namespace MixItUp.Base.ViewModel.Chat
             this.ChatMessageEvent = chatMessageEvent;
             this.ID = this.ChatMessageEvent.id;
 
-            if (ChannelSession.Chat.ChatUsers.ContainsKey(this.ChatMessageEvent.user_id))
+            if (ChannelSession.ChannelUsers.ContainsKey(this.ChatMessageEvent.user_id))
             {
-                this.User = ChannelSession.Chat.ChatUsers[this.ChatMessageEvent.user_id];
+                this.User = ChannelSession.ChannelUsers[this.ChatMessageEvent.user_id];
             }
             else
             {
@@ -126,10 +126,10 @@ namespace MixItUp.Base.ViewModel.Chat
             }
         }
 
-        public ChatMessageViewModel(string alertText, string foregroundBrush = null)
+        public ChatMessageViewModel(string alertText, UserViewModel user = null, string foregroundBrush = null)
         {
             this.ID = Guid.Empty;
-            this.User = null;
+            this.User = user;
             this.Timestamp = DateTimeOffset.Now;
             this.Message = alertText;
             this.AlertMessageBrush = ColorSchemes.GetColorCode(foregroundBrush);
@@ -199,7 +199,7 @@ namespace MixItUp.Base.ViewModel.Chat
                     if (Regex.IsMatch(lower, string.Format(BannedWordRegexFormat, word)))
                     {
                         reason = "The following word is banned: " + word;
-                        ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, this.User.GetModel(), new List<UserRole>() { UserRole.Banned }).Wait();
+                        ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, this.User.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned }).Wait();
                         return true;
                     }
                 }

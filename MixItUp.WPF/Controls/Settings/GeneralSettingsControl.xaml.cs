@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Settings
         protected override async Task InitializeInternal()
         {
             this.FeatureMeToggleButton.IsChecked = ChannelSession.Settings.FeatureMe;
-            this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.User.id);
+            this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.Channel.user.id);
 
             await base.InitializeInternal();
         }
@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void AutoLogInAccountToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
-            App.AppSettings.AutoLogInAccount = ChannelSession.User.id;
+            App.AppSettings.AutoLogInAccount = ChannelSession.Channel.user.id;
         }
 
         private void AutoLogInAccountToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)

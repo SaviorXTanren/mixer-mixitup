@@ -14,14 +14,23 @@
              
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        
-        <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Width="90" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <TextBox x:Name="CooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Width="90" SelectionChanged="CooldownTypeComboBox_SelectionChanged" />
+
+            <TextBox x:Name="CooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" Width="150" />
+        </Grid>
+
+        <ComboBox x:Name="CooldownGroupsComboBox" Grid.Row="1" Visibility="Collapsed" Margin="0,10,0,0" IsEditable="True" MaterialDesign:HintAssist.Hint="Cooldown Group" SelectionChanged="CooldownGroupsComboBox_SelectionChanged" HorizontalAlignment="Center" Width="200" />
     </Grid>
 </UserControl>

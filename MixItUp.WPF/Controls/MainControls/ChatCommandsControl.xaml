@@ -76,7 +76,7 @@
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                     <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="150" />
                     <DataGridTextColumn Header="Permission" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" Width="125" />
-                    <DataGridTextColumn Binding="{Binding Requirements.Cooldown.Amount}" IsReadOnly="True" Width="50">
+                    <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" Width="50">
                         <DataGridTextColumn.Header>
                             <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                 <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />

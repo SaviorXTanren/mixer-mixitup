@@ -40,7 +40,7 @@ namespace MixItUp.Base.Commands
     public class GameOutcomeGroup
     {
         [DataMember]
-        public UserRole Role { get; set; }
+        public MixerRoleEnum Role { get; set; }
 
         [DataMember]
         public CurrencyRequirementViewModel RankRequirement { get; set; }
@@ -50,7 +50,7 @@ namespace MixItUp.Base.Commands
 
         public GameOutcomeGroup() { this.Probabilities = new List<GameOutcomeProbability>(); }
 
-        public GameOutcomeGroup(UserRole role) : this() { this.Role = role; }
+        public GameOutcomeGroup(MixerRoleEnum role) : this() { this.Role = role; }
 
         public GameOutcomeGroup(CurrencyRequirementViewModel rankRequirement) : this() { this.RankRequirement = rankRequirement; }
 
@@ -64,7 +64,7 @@ namespace MixItUp.Base.Commands
             }
             else
             {
-                return (user.Roles.Any(r => r >= this.Role));
+                return (user.MixerRoles.Any(r => r >= this.Role));
             }
         }
     }
@@ -130,7 +130,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
-            List<UserViewModel> users = ChannelSession.Chat.ChatUsers.Values.ToList();
+            List<UserViewModel> users = ChannelSession.ChannelUsers.Values.ToList();
             users.Remove(user);
             if (ChannelSession.BotUser != null)
             {

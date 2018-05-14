@@ -54,7 +54,7 @@ namespace MixItUp.Base
         RequirementViewModel GiveawayRequirements { get; set; }
 
         bool ModerationUseCommunityFilteredWords { get; set; }
-        UserRole ModerationFilteredWordsExcempt { get; set; }
+        MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
 
         int ModerationCapsBlockCount { get; set; }
         bool ModerationCapsBlockIsPercentage { get; set; }
@@ -62,10 +62,10 @@ namespace MixItUp.Base
         bool ModerationPunctuationBlockIsPercentage { get; set; }
         int ModerationEmoteBlockCount { get; set; }
         bool ModerationEmoteBlockIsPercentage { get; set; }
-        UserRole ModerationChatTextExcempt { get; set; }
+        MixerRoleEnum ModerationChatTextExcempt { get; set; }
 
         bool ModerationBlockLinks { get; set; }
-        UserRole ModerationBlockLinksExcempt { get; set; }
+        MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
 
         int ModerationTimeout1MinuteOffenseCount { get; set; }
         int ModerationTimeout5MinuteOffenseCount { get; set; }
@@ -116,6 +116,8 @@ namespace MixItUp.Base
 
         LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; }
 
+        LockedDictionary<string, int> CooldownGroups { get; }
+
         LockedList<PreMadeChatCommandSettings> PreMadeChatCommandSettings { get; }
         LockedList<ChatCommand> ChatCommands { get; }
         LockedList<EventCommand> EventCommands { get; }
@@ -132,7 +134,6 @@ namespace MixItUp.Base
         LockedList<string> CommunityFilteredWords { get; }
 
         LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; }
-        LockedDictionary<string, int> InteractiveCooldownGroups { get; }
     }
 }
 

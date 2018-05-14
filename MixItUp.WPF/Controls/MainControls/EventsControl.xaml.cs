@@ -16,11 +16,15 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.OnFollowCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__followed);
-            this.OnHostCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__hosted);
-            this.OnSubscribeCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__subscribed);
-            this.OnResubscribeCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__resubscribed);
-            this.OnDonationCommandControl.Initialize(this, OtherEventTypeEnum.Donation);
+            this.MixerFollowEventCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__followed);
+            this.MixerHostEventCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__hosted);
+            this.MixerSubscribeEventCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__subscribed);
+            this.MixerResubscribeEventCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__resubscribed);
+
+            this.DonationEventCommandControl.Initialize(this, OtherEventTypeEnum.Donation);
+
+            this.GameWispSubscribeEventCommandControl.Initialize(this, OtherEventTypeEnum.GameWispSubscribed);
+            this.GameWispResubscribeEventCommandControl.Initialize(this, OtherEventTypeEnum.GameWispResubscribed);
 
             return Task.FromResult(0);
         }

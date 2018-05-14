@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.ViewModel.Import
@@ -51,7 +52,17 @@ namespace MixItUp.Base.ViewModel.Import
 
         public int GetIntSettingsValue(string key, string value)
         {
-            return int.Parse(this.GetSettingsValue(key, value, "0"));
+            BigInteger bigInt = BigInteger.Parse(this.GetSettingsValue(key, value, "0"));
+            if (bigInt > int.MaxValue)
+            {
+                return int.MaxValue;
+            }
+
+            if (bigInt < int.MinValue)
+            {
+                return int.MinValue;
+            }
+            return (int)bigInt;
         }
 
         public bool GetBoolSettingsValue(string key, string value)
@@ -59,17 +70,17 @@ namespace MixItUp.Base.ViewModel.Import
             return (this.GetIntSettingsValue(key, value) == 1);
         }
 
-        public UserRole GetUserRoleSettingsValue(string key, string value)
+        public MixerRoleEnum GetUserRoleSettingsValue(string key, string value)
         {
             switch (this.GetIntSettingsValue(key, value))
             {
-                case 0: return UserRole.User;
-                case 1: return UserRole.Subscriber;
-                case 2: return UserRole.Mod;
+                case 0: return MixerRoleEnum.User;
+                case 1: return MixerRoleEnum.Subscriber;
+                case 2: return MixerRoleEnum.Mod;
                 case 3:
                 case 4:
                 default:
-                    return UserRole.Streamer;
+                    return MixerRoleEnum.Streamer;
             }
         }
     }

@@ -66,7 +66,7 @@ namespace MixItUp.WPF.Controls.Games
             string groupName = null;
             if (this.RankGroupGrid.Visibility != Visibility.Visible)
             {
-                UserRole role = EnumHelper.GetEnumValueFromString<UserRole>((string)this.PreDefinedGroupNameTextBlock.Text);
+                MixerRoleEnum role = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.PreDefinedGroupNameTextBlock.Text);
                 groupName = EnumHelper.GetEnumName(role);
                 group = new GameOutcomeGroup(role);
             }

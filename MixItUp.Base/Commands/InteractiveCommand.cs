@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using Newtonsoft.Json;
 using System;
 using System.Threading;
@@ -18,7 +19,7 @@ namespace MixItUp.Base.Commands
         KeyDown,
     }
 
-    public class InteractiveCommand : CommandBase
+    public class InteractiveCommand : PermissionsCommandBase
     {
         public const string BasicCommandCooldownGroup = "All Buttons";
 
@@ -34,9 +35,11 @@ namespace MixItUp.Base.Commands
         public InteractiveControlModel Control { get; set; }
 
         [JsonProperty]
+        [Obsolete]
         public int IndividualCooldown { get; set; }
 
         [JsonProperty]
+        [Obsolete]
         public string CooldownGroup { get; set; }
 
         [JsonProperty]
@@ -44,8 +47,8 @@ namespace MixItUp.Base.Commands
 
         public InteractiveCommand() { }
 
-        public InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType)
-            : base(control.controlID, CommandTypeEnum.Interactive, EnumHelper.GetEnumName(eventType))
+        public InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
+            : base(control.controlID, CommandTypeEnum.Interactive, EnumHelper.GetEnumName(eventType), requirements)
         {
             this.GameID = game.id;
             this.SceneID = scene.sceneID;
@@ -53,8 +56,8 @@ namespace MixItUp.Base.Commands
             this.Trigger = eventType;
         }
 
-        public InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control)
-            : base(control.controlID, CommandTypeEnum.Interactive, string.Empty)
+        public InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control, RequirementViewModel requirements)
+            : base(control.controlID, CommandTypeEnum.Interactive, string.Empty, requirements)
         {
             this.GameID = game.id;
             this.SceneID = scene.sceneID;
@@ -66,11 +69,24 @@ namespace MixItUp.Base.Commands
         {
             get
             {
-                if (!string.IsNullOrEmpty(this.CooldownGroup) && ChannelSession.Settings.InteractiveCooldownGroups.ContainsKey(this.CooldownGroup))
+                if (this.Requirements.Cooldown != null)
                 {
-                    return ChannelSession.Settings.InteractiveCooldownGroups[this.CooldownGroup];
+                    return this.Requirements.Cooldown.CooldownAmount;
                 }
-                return this.IndividualCooldown;
+                return 0;
+            }
+        }
+
+        [JsonIgnore]
+        public string CooldownGroupName
+        {
+            get
+            {
+                if (this.Requirements.Cooldown != null)
+                {
+                    return this.Requirements.Cooldown.GroupName;
+                }
+                return string.Empty;
             }
         }
 
@@ -85,7 +101,14 @@ namespace MixItUp.Base.Commands
 
         public void UpdateWithLatestControl(InteractiveControlModel control) { this.Control = control; }
 
-        public long GetCooldownTimestamp() { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount)); }
+        public long GetCooldownTimestamp()
+        {
+            if (this.Requirements.Cooldown != null && (this.Requirements.Cooldown.Type == CooldownTypeEnum.Global || this.Requirements.Cooldown.Type == CooldownTypeEnum.Group))
+            {
+                return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount));
+            }
+            return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now);
+        }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveCommand.interactiveCommandPerformSemaphore; } }
     }

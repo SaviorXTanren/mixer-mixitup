@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Requirement.UserRoleRequirementControl"
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Requirement.RoleRequirementControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -15,6 +15,6 @@
              
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ComboBox x:Name="UserRoleComboBox" MaterialDesign:HintAssist.Hint="Permissions" SelectionChanged="UserRoleComboBox_SelectionChanged" Width="120" />
+        <ComboBox x:Name="RoleComboBox" MaterialDesign:HintAssist.Hint="Permissions" SelectionChanged="RoleComboBox_SelectionChanged" Width="120" />
     </Grid>
 </UserControl>

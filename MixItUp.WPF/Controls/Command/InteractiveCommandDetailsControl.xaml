@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              mc:Ignorable="d"
                                  
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -12,45 +13,33 @@
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="500" d:DesignWidth="600">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Trigger" />
+            <ComboBox x:Name="ButtonTriggerComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Trigger" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
 
             <TextBox x:Name="SparkCostTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
             <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="4" HorizontalAlignment="Center" />
         </Grid>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <ComboBox x:Name="CooldownTypeComboBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Type" SelectionChanged="CooldownTypeComboBox_SelectionChanged" />
-
-            <ComboBox x:Name="CooldownGroupsComboBox" Grid.Column="2" IsEditable="True" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown Group" SelectionChanged="CooldownGroupsComboBox_SelectionChanged" Visibility="Collapsed" />
-
-            <TextBox x:Name="CooldownTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cooldown (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <Grid Grid.Column="2">
+            <RequirementControls:RequirementControl x:Name="Requirements" />
         </Grid>
-        
+
     </Grid>
 </local:CommandDetailsControlBase>

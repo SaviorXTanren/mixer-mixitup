@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
@@ -72,7 +73,7 @@ namespace MixItUp.WPF.Controls.Command
             if (this.command != null)
             {
                 this.SparkCostTextBox.Text = this.command.Button.cost.ToString();
-                if (!string.IsNullOrEmpty(this.command.CooldownGroup))
+                if (this.command.Requirements.Cooldown != null && this.command.Requirements.Cooldown.IsGroup)
                 {
                     this.CooldownTypeComboBox.SelectedIndex = 1;
                 }
@@ -113,9 +114,16 @@ namespace MixItUp.WPF.Controls.Command
 
         private void CooldownTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (this.CooldownTypeComboBox.SelectedIndex == 1 && ChannelSession.Settings.InteractiveCooldownGroups.ContainsKey(InteractiveCommand.BasicCommandCooldownGroup))
+            if (this.CooldownTypeComboBox.SelectedIndex == 1)
             {
-                this.CooldownTextBox.Text = ChannelSession.Settings.InteractiveCooldownGroups[InteractiveCommand.BasicCommandCooldownGroup].ToString();
+                if (ChannelSession.Settings.CooldownGroups.ContainsKey(InteractiveCommand.BasicCommandCooldownGroup))
+                {
+                    this.CooldownTextBox.Text = ChannelSession.Settings.CooldownGroups[InteractiveCommand.BasicCommandCooldownGroup].ToString();
+                }
+                else
+                {
+                    this.CooldownTextBox.Text = "0";
+                }
             }
         }
 
@@ -160,25 +168,23 @@ namespace MixItUp.WPF.Controls.Command
                     return;
                 }
 
-                if (this.command == null)
-                {
-                    this.command = new InteractiveCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseDown);
-                    ChannelSession.Settings.InteractiveCommands.Add(this.command);
-                }
-
-                this.command.IndividualCooldown = 0;
-                this.command.CooldownGroup = null;
-
-                this.command.Button.cost = sparkCost;
+                RequirementViewModel requirements = new RequirementViewModel();
                 if (this.CooldownTypeComboBox.SelectedIndex == 0)
                 {
-                    this.command.IndividualCooldown = cooldown;
+                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Individual, cooldown);
                 }
                 else
                 {
-                    this.command.CooldownGroup = InteractiveCommand.BasicCommandCooldownGroup;
-                    ChannelSession.Settings.InteractiveCooldownGroups[InteractiveCommand.BasicCommandCooldownGroup] = cooldown;
+                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, InteractiveCommand.BasicCommandCooldownGroup, cooldown);
                 }
+
+                if (this.command == null)
+                {
+                    this.command = new InteractiveCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
+                    ChannelSession.Settings.InteractiveCommands.Add(this.command);
+                }
+
+                this.command.Button.cost = sparkCost;
                 await ChannelSession.Connection.UpdateInteractiveGameVersion(this.version);
 
                 this.command.IsBasic = true;
