@@ -506,6 +506,8 @@ namespace MixItUp.Base.MixerAPI
                         await user.SetDetails();
                     }
                 }
+
+                await Task.Delay(30000);
             });
         }
 
