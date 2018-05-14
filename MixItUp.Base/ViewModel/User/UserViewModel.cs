@@ -17,13 +17,25 @@ namespace MixItUp.Base.ViewModel.User
     public enum MixerRoleEnum
     {
         Banned,
-        User,
-        Pro,
-        Follower,
-        Subscriber,
-        Mod,
-        Staff,
-        Streamer,
+
+        User = 10,
+
+        Pro = 20,
+
+        Partner = 25,
+
+        Follower = 30,
+
+        Subscriber = 40,
+
+        Mod = 50,
+
+        [Name("Channel Editor")]
+        ChannelEditor = 55,
+
+        Staff = 60,
+
+        Streamer = 70,
 
         Custom = 99,
     }
@@ -429,8 +441,10 @@ namespace MixItUp.Base.ViewModel.User
             {
                 if (userRoles.Any(r => r.Equals("Owner"))) { this.MixerRoles.Add(MixerRoleEnum.Streamer); }
                 if (userRoles.Any(r => r.Equals("Staff"))) { this.MixerRoles.Add(MixerRoleEnum.Staff); }
+                if (userRoles.Any(r => r.Equals("ChannelEditor"))) { this.MixerRoles.Add(MixerRoleEnum.ChannelEditor); }
                 if (userRoles.Any(r => r.Equals("Mod"))) { this.MixerRoles.Add(MixerRoleEnum.Mod); }
                 if (userRoles.Any(r => r.Equals("Subscriber"))) { this.MixerRoles.Add(MixerRoleEnum.Subscriber); }
+                if (userRoles.Any(r => r.Equals("Partner"))) { this.MixerRoles.Add(MixerRoleEnum.Partner); }
                 if (userRoles.Any(r => r.Equals("Pro"))) { this.MixerRoles.Add(MixerRoleEnum.Pro); }
                 if (userRoles.Any(r => r.Equals("Banned"))) { this.MixerRoles.Add(MixerRoleEnum.Banned); }
             }

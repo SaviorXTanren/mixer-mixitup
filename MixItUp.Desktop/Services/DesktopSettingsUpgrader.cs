@@ -2,6 +2,7 @@
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
@@ -40,6 +41,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version11Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version12Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version13Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version14Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -196,6 +198,85 @@ namespace MixItUp.Desktop.Services
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }
+
+        private static async Task Version14Upgrade(int version, string filePath)
+        {
+            if (version < 14)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                List<PermissionsCommandBase> permissionCommands = new List<PermissionsCommandBase>();
+                permissionCommands.AddRange(settings.ChatCommands);
+                permissionCommands.AddRange(settings.GameCommands);
+                permissionCommands.AddRange(settings.InteractiveCommands);
+                foreach (PermissionsCommandBase command in permissionCommands)
+                {
+                    command.Requirements.Role.MixerRole = ConvertLegacyRoles(command.Requirements.Role.MixerRole);
+                }
+
+                List<CommandBase> commands = new List<CommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.EventCommands);
+                commands.AddRange(settings.InteractiveCommands);
+                commands.AddRange(settings.TimerCommands);
+                commands.AddRange(settings.ActionGroupCommands);
+                commands.AddRange(settings.GameCommands);
+                commands.AddRange(settings.RemoteCommands);
+                foreach (CommandBase command in commands)
+                {
+                    foreach (ActionBase action in command.Actions)
+                    {
+                        if (action is InteractiveAction)
+                        {
+                            InteractiveAction iAction = (InteractiveAction)action;
+                            iAction.RoleRequirement = ConvertLegacyRoles(iAction.RoleRequirement);
+                        }
+                    }
+                }
+
+                foreach (PreMadeChatCommandSettings preMadeCommandSettings in settings.PreMadeChatCommandSettings)
+                {
+                    preMadeCommandSettings.Permissions = ConvertLegacyRoles(preMadeCommandSettings.Permissions);
+                }
+
+                foreach (InteractiveUserGroupViewModel userGroup in settings.InteractiveUserGroups.Values.SelectMany(ug => ug))
+                {
+                    userGroup.AssociatedUserRole = ConvertLegacyRoles(userGroup.AssociatedUserRole);
+                }
+
+                foreach (GameCommandBase command in settings.GameCommands)
+                {
+                    if (command is OutcomeGameCommandBase)
+                    {
+                        OutcomeGameCommandBase outcomeGame = (OutcomeGameCommandBase)command;
+                        foreach (GameOutcomeGroup group in outcomeGame.Groups)
+                        {
+                            group.Role = ConvertLegacyRoles(group.Role);
+                        }
+                    }
+                }
+
+                settings.ModerationFilteredWordsExcempt = ConvertLegacyRoles(settings.ModerationFilteredWordsExcempt);
+                settings.ModerationChatTextExcempt = ConvertLegacyRoles(settings.ModerationChatTextExcempt);
+                settings.ModerationBlockLinksExcempt = ConvertLegacyRoles(settings.ModerationBlockLinksExcempt);
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static MixerRoleEnum ConvertLegacyRoles(MixerRoleEnum legacyRole)
+        {
+            int legacyRoleID = (int)legacyRole;
+            if ((int)MixerRoleEnum.Custom == legacyRoleID)
+            {
+                return MixerRoleEnum.Custom;
+            }
+            else
+            {
+                return (MixerRoleEnum)(legacyRoleID * 10);
+            }
+        }
     }
 
     [DataContract]
@@ -257,5 +338,19 @@ namespace MixItUp.Desktop.Services
         }
 
         protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments) { return Task.FromResult(0); }
+    }
+
+    public enum LegacyMixerRoleEnum
+    {
+        Banned = 0,
+        User = 1,
+        Pro = 2,
+        Follower = 3,
+        Subscriber = 4,
+        Mod = 5,
+        Staff = 6,
+        Streamer = 7,
+
+        Custom = 99,
     }
 }
