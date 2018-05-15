@@ -10,26 +10,64 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0">Click the "Record Keys" button and hold all keys you wish to use:</TextBlock>
-
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Recorded Keys:</TextBlock>
+            <TextBlock Grid.Column="0">Select input mode:</TextBlock>
 
-            <TextBlock Grid.Column="2" x:Name="RecordedKeysTextBlock" TextWrapping="Wrap" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2">Simple</TextBlock>
+            <ToggleButton x:Name="InputModeToggleButton" Grid.Column="4" Checked="InputModeToggleButton_Checked" Unchecked="InputModeToggleButton_Checked" />
+            <TextBlock Grid.Column="6">Advanced</TextBlock>
+        </Grid>
 
-            <Button Grid.Column="4" x:Name="RecordKeysButton" Width="110" Click="RecordKeysButton_Click">Record Keys</Button>
+        <Grid x:Name="SimpleModeGrid" Grid.Row="2" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="SimpleInputTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="80" SelectionChanged="SimpleInputTypeComboBox_SelectionChanged" />
+
+            <ComboBox x:Name="SimpleKeyboardKeyComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Keyboard Key" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" Visibility="Visible" />
+            <ComboBox x:Name="SimpleMouseButtonComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Mouse Button" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" Visibility="Collapsed" />
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Center">Shift:</TextBlock>
+            <CheckBox x:Name="SimpleShiftCheckBox" Grid.Column="6" />
+
+            <TextBlock Grid.Column="8" VerticalAlignment="Center">Control:</TextBlock>
+            <CheckBox x:Name="SimpleControlCheckBox" Grid.Column="10" />
+
+            <TextBlock Grid.Column="12" VerticalAlignment="Center">Alt:</TextBlock>
+            <CheckBox x:Name="SimpleAltCheckBox" Grid.Column="14" />
+        </Grid>
+
+        <Grid x:Name="AdvancedModeGrid" Grid.Row="2" Visibility="Collapsed">
+
         </Grid>
 
     </Grid>

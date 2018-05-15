@@ -1,464 +1,188 @@
 ﻿using Mixer.Base.Util;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public enum InputTypeEnum
+    public enum InputMouseEnum : uint
     {
-        [Name("Left Mouse")]
-        LeftMouse = 1,
-        [Name("Right Mouse")]
-        RightMouse = 2,
-        //
-        // Summary:
-        //     Middle mouse button (three-button mouse) - NOT contiguous with LBUTTON and RBUTTON
-        [Name("Middle Mouse")]
-        MiddleMouse = 4,
-        //
-        // Summary:
-        //     Windows 2000/XP: X1 mouse button - NOT contiguous with LBUTTON and RBUTTON
-        [Name("Side Mouse 1")]
-        SideMouse1 = 5,
-        //
-        // Summary:
-        //     Windows 2000/XP: X2 mouse button - NOT contiguous with LBUTTON and RBUTTON
-        [Name("Side Mouse 2")]
-        SideMouse2 = 6,
-        //
-        // Summary:
-        //     BACKSPACE key
-        Backspace = 8,
-        //
-        // Summary:
-        //     TAB key
-        Tab = 9,
-        //
-        // Summary:
-        //     CLEAR key
-        Clear = 12,
-        //
-        // Summary:
-        //     ENTER key
-        Enter = 13,
-        //
-        // Summary:
-        //     SHIFT key
-        Shift = 16,
-        //
-        // Summary:
-        //     CTRL key
-        Control = 17,
-        //
-        // Summary:
-        //     ALT key
-        Alt = 18,
-        //
-        // Summary:
-        //     PAUSE key
-        Pause = 19,
-        //
-        // Summary:
-        //     CAPS LOCK key
-        [Name("Caps Lock")]
-        CapsLock = 20,
-        //
-        // Summary:
-        //     ESC key
-        Escape = 27,
-        //
-        // Summary:
-        //     SPACEBAR
-        Space = 32,
-        //
-        // Summary:
-        //     PAGE UP key
-        [Name("Page Up")]
-        PageUp = 33,
-        //
-        // Summary:
-        //     PAGE DOWN key
-        [Name("Page Down")]
-        PageDown = 34,
-        //
-        // Summary:
-        //     END key
-        End = 35,
-        //
-        // Summary:
-        //     HOME key
-        Home = 36,
-        //
-        // Summary:
-        //     LEFT ARROW key
-        Left = 37,
-        //
-        // Summary:
-        //     UP ARROW key
-        Up = 38,
-        //
-        // Summary:
-        //     RIGHT ARROW key
-        Right = 39,
-        //
-        // Summary:
-        //     DOWN ARROW key
-        Down = 40,
-        //
-        // Summary:
-        //     INS key
-        Insert = 45,
-        //
-        // Summary:
-        //     DEL key
-        Delete = 46,
-        //
-        // Summary:
-        //     0 key
+        Move = 0x0001,
+
+        [Name("Left Mouse Down")]
+        LeftDown = 0x00000002,
+        [Name("Left Mouse Up")]
+        LeftUp = 0x0000004,
+
+        [Name("Right Mouse Down")]
+        RightDown = 0x00000008,
+        [Name("Right Mouse Up")]
+        RightUp = 0x00000010,
+
+        [Name("Middle Mouse Down")]
+        MiddleDown = 0x00000020,
+        [Name("Middle Mouse Up")]
+        MiddleUp = 0x00000040,
+
+        [Name("Extra Mouse Down")]
+        XDown = 0x00000080,
+        [Name("Extra Mouse Up")]
+        XUp = 0x00000100,
+
+        Wheel = 0x00000800,
+
+        Absolute = 0x00008000,
+    }
+
+    public enum InputMouseXButtonsEnum : uint
+    {
+        XButton1 = 0x00000001,
+        XButton2 = 0x00000002,
+    }
+
+    public enum InputKeyEnum
+    {
+        Backspace = 0x08,
+        Tab = 0x09,
+        Enter = 0x0D,
+        Escape = 0x1B,
+        Space = 0x20,
+
         [Name("0")]
-        Num0 = 48,
-        //
-        // Summary:
-        //     1 key
+        Digit0 = 0x30,
         [Name("1")]
-        Num1 = 49,
-        //
-        // Summary:
-        //     2 key
+        Digit1 = 0x31,
         [Name("2")]
-        Num2 = 50,
-        //
-        // Summary:
-        //     3 key
+        Digit2 = 0x32,
         [Name("3")]
-        Num3 = 51,
-        //
-        // Summary:
-        //     4 key
+        Digit3 = 0x33,
         [Name("4")]
-        Num4 = 52,
-        //
-        // Summary:
-        //     5 key
+        Digit4 = 0x34,
         [Name("5")]
-        Num5 = 53,
-        //
-        // Summary:
-        //     6 key
+        Digit5 = 0x35,
         [Name("6")]
-        Num6 = 54,
-        //
-        // Summary:
-        //     7 key
+        Digit6 = 0x36,
         [Name("7")]
-        Num7 = 55,
-        //
-        // Summary:
-        //     8 key
+        Digit7 = 0x37,
         [Name("8")]
-        Num8 = 56,
-        //
-        // Summary:
-        //     9 key
+        Digit8 = 0x38,
         [Name("9")]
-        Num9 = 57,
-        //
-        // Summary:
-        //     A key
-        A = 65,
-        //
-        // Summary:
-        //     B key
-        B = 66,
-        //
-        // Summary:
-        //     C key
-        C = 67,
-        //
-        // Summary:
-        //     D key
-        D = 68,
-        //
-        // Summary:
-        //     E key
-        E = 69,
-        //
-        // Summary:
-        //     F key
-        F = 70,
-        //
-        // Summary:
-        //     G key
-        G = 71,
-        //
-        // Summary:
-        //     H key
-        H = 72,
-        //
-        // Summary:
-        //     I key
-        I = 73,
-        //
-        // Summary:
-        //     J key
-        J = 74,
-        //
-        // Summary:
-        //     K key
-        K = 75,
-        //
-        // Summary:
-        //     L key
-        L = 76,
-        //
-        // Summary:
-        //     M key
-        M = 77,
-        //
-        // Summary:
-        //     N key
-        N = 78,
-        //
-        // Summary:
-        //     O key
-        O = 79,
-        //
-        // Summary:
-        //     P key
-        P = 80,
-        //
-        // Summary:
-        //     Q key
-        Q = 81,
-        //
-        // Summary:
-        //     R key
-        R = 82,
-        //
-        // Summary:
-        //     S key
-        S = 83,
-        //
-        // Summary:
-        //     T key
-        T = 84,
-        //
-        // Summary:
-        //     U key
-        U = 85,
-        //
-        // Summary:
-        //     V key
-        V = 86,
-        //
-        // Summary:
-        //     W key
-        W = 87,
-        //
-        // Summary:
-        //     X key
-        X = 88,
-        //
-        // Summary:
-        //     Y key
-        Y = 89,
-        //
-        // Summary:
-        //     Z key
-        Z = 90,
-        //
-        // Summary:
-        //     Left Windows key (Microsoft Natural keyboard)
-        [Name("Left Windows")]
-        LeftWindows = 91,
-        //
-        // Summary:
-        //     Right Windows key (Natural keyboard)
-        [Name("Right Window")]
-        RightWindow = 92,
-        //
-        // Summary:
-        //     Numeric keypad 0 key
+        Digit9 = 0x39,
+
+        A = 0x41,
+        B = 0x42,
+        C = 0x43,
+        D = 0x44,
+        E = 0x45,
+        F = 0x46,
+        G = 0x47,
+        H = 0x48,
+        I = 0x49,
+        J = 0x4A,
+        K = 0x4B,
+        L = 0x4C,
+        M = 0x4D,
+        N = 0x4E,
+        O = 0x4F,
+        P = 0x50,
+        Q = 0x51,
+        R = 0x52,
+        S = 0x53,
+        T = 0x54,
+        U = 0x55,
+        V = 0x56,
+        W = 0x57,
+        X = 0x58,
+        Y = 0x59,
+        Z = 0x5A,
+
         [Name("Num Pad 0")]
-        NUMPAD0 = 96,
-        //
-        // Summary:
-        //     Numeric keypad 1 key
+        NumPad0 = 0x60,
         [Name("Num Pad 1")]
-        NUMPAD1 = 97,
-        //
-        // Summary:
-        //     Numeric keypad 2 key
+        NumPad1 = 0x61,
         [Name("Num Pad 2")]
-        NUMPAD2 = 98,
-        //
-        // Summary:
-        //     Numeric keypad 3 key
+        NumPad2 = 0x62,
         [Name("Num Pad 3")]
-        NUMPAD3 = 99,
-        //
-        // Summary:
-        //     Numeric keypad 4 key
+        NumPad3 = 0x63,
         [Name("Num Pad 4")]
-        NUMPAD4 = 100,
-        //
-        // Summary:
-        //     Numeric keypad 5 key
+        NumPad4 = 0x64,
         [Name("Num Pad 5")]
-        NUMPAD5 = 101,
-        //
-        // Summary:
-        //     Numeric keypad 6 key
+        NumPad5 = 0x65,
         [Name("Num Pad 6")]
-        NUMPAD6 = 102,
-        //
-        // Summary:
-        //     Numeric keypad 7 key
+        NumPad6 = 0x66,
         [Name("Num Pad 7")]
-        NUMPAD7 = 103,
-        //
-        // Summary:
-        //     Numeric keypad 8 key
+        NumPad7 = 0x67,
         [Name("Num Pad 8")]
-        NUMPAD8 = 104,
-        //
-        // Summary:
-        //     Numeric keypad 9 key
+        NumPad8 = 0x68,
         [Name("Num Pad 9")]
-        NUMPAD9 = 105,
-        //
-        // Summary:
-        //     Multiply key
-        Multiply = 106,
-        //
-        // Summary:
-        //     Add key
-        Add = 107,
-        //
-        // Summary:
-        //     Separator key
-        Separator = 108,
-        //
-        // Summary:
-        //     Subtract key
-        Subtract = 109,
-        //
-        // Summary:
-        //     Decimal key
-        Decimal = 110,
-        //
-        // Summary:
-        //     Divide key
-        Divide = 111,
-        //
-        // Summary:
-        //     F1 key
-        F1 = 112,
-        //
-        // Summary:
-        //     F2 key
-        F2 = 113,
-        //
-        // Summary:
-        //     F3 key
-        F3 = 114,
-        //
-        // Summary:
-        //     F4 key
-        F4 = 115,
-        //
-        // Summary:
-        //     F5 key
-        F5 = 116,
-        //
-        // Summary:
-        //     F6 key
-        F6 = 117,
-        //
-        // Summary:
-        //     F7 key
-        F7 = 118,
-        //
-        // Summary:
-        //     F8 key
-        F8 = 119,
-        //
-        // Summary:
-        //     F9 key
-        F9 = 120,
-        //
-        // Summary:
-        //     F10 key
-        F10 = 121,
-        //
-        // Summary:
-        //     F11 key
-        F11 = 122,
-        //
-        // Summary:
-        //     F12 key
-        F12 = 123,
-        //
-        // Summary:
-        //     NUM LOCK key
-        [Name("Num Lock")]
-        NumLock = 144,
-        //
-        // Summary:
-        //     Left SHIFT key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+        NumPad9 = 0x69,
+
+        Multiply = 0x6A,
+        Add = 0x6B,
+        Separator = 0x6C,
+        Subtract = 0x6D,
+        Decimal = 0x6E,
+        Divide = 0x6F,
+
+        F1 = 0x70,
+        F2 = 0x71,
+        F3 = 0x72,
+        F4 = 0x73,
+        F5 = 0x74,
+        F6 = 0x75,
+        F7 = 0x76,
+        F8 = 0x77,
+        F9 = 0x78,
+        F10 = 0x79,
+        F11 = 0x7A,
+        F12 = 0x7B,
+
+        Insert = 0x2D,
+        Delete = 0x2E,
+        Home = 0x24,
+        End = 0x23,
+        [Name("Page Up")]
+        PageUp = 0x21,
+        [Name("Page Down")]
+        PageDown = 0x22,
+
+        Left = 0x25,
+        Up = 0x26,
+        Right = 0x27,
+        Down = 0x28,
+
+        Shift = 0x10,
+        Control = 0x11,
+        Alt = 0x12,
         [Name("Left Shift")]
-        LeftShift = 160,
-        //
-        // Summary:
-        //     Right SHIFT key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+        LeftShift = 0xA0,
         [Name("Right Shift")]
-        RightShift = 161,
-        //
-        // Summary:
-        //     Left CONTROL key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+        RightShift = 0xA1,
         [Name("Left Control")]
-        LeftControl = 162,
-        //
-        // Summary:
-        //     Right CONTROL key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+        LeftControl = 0xA2,
         [Name("Right Control")]
-        RightControl = 163,
-        //
-        // Summary:
-        //     Left MENU key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+        RightControl = 0xA3,
         [Name("Left Alt")]
-        LeftAlt = 164,
-        //
-        // Summary:
-        //     Right MENU key - Used only as parameters to GetAsyncKeyState() and GetKeyState()
+        LeftAlt = 0xA4,
         [Name("Right Alt")]
-        RightAlt = 165,
-        //
-        // Summary:
-        //     Windows 2000/XP: For any country/region, the '+' key
-        [Name("Plus")]
-        OEM_PLUS = 187,
-        //
-        // Summary:
-        //     Windows 2000/XP: For any country/region, the ',' key
-        [Name("Comma")]
-        OEM_COMMA = 188,
-        //
-        // Summary:
-        //     Windows 2000/XP: For any country/region, the '-' key
-        [Name("Dash")]
-        OEM_MINUS = 189,
-        //
-        // Summary:
-        //     Windows 2000/XP: For any country/region, the '.' key
-        [Name("Period")]
-        OEM_PERIOD = 190,
+        RightAlt = 0xA5,
+        [Name("Left Windows")]
+        LeftWindows = 0x5B,
+        [Name("Right Windows")]
+        RightWindows = 0x5C,
     }
 
     public interface IInputService
     {
-        Task SendInput(IEnumerable<InputTypeEnum> inputs);
+        void KeyDown(InputKeyEnum key);
+        void KeyUp(InputKeyEnum key);
+        Task KeyClick(InputKeyEnum key);
 
-        Task<IEnumerable<InputTypeEnum>> GetCurrentInputs();
+        void MouseEvent(InputMouseEnum mouse);
+        Task LeftMouseClick();
+        Task RightMouseClick();
+        Task MiddleMouseClick();
+
+        void MoveMouse(int xDelta, int yDelta);
+
+        Task WaitForKeyToRegister();
     }
 }
