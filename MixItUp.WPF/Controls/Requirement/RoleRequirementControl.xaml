@@ -15,6 +15,6 @@
              
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ComboBox x:Name="RoleComboBox" MaterialDesign:HintAssist.Hint="Permissions" SelectionChanged="RoleComboBox_SelectionChanged" Width="120" />
+        <ComboBox x:Name="RoleComboBox" MaterialDesign:HintAssist.Hint="Permissions" SelectionChanged="RoleComboBox_SelectionChanged" Width="120" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
     </Grid>
 </UserControl>
