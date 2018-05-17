@@ -120,7 +120,7 @@ namespace MixItUp.Base.Commands
                     List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
                     foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
                     {
-                        if (await command.Requirements.DoesMeetUserRoleRequirement(user))
+                        if (command.Requirements.DoesMeetUserRoleRequirement(user))
                         {
                             commands.Add(command);
                         }
@@ -302,7 +302,6 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    await user.SetFollowDate();
                     if (user.FollowDate != null)
                     {
                         await ChannelSession.Chat.SendMessage(this.GetFollowAge(user.GetModel(), user.FollowDate.GetValueOrDefault()));
@@ -325,11 +324,6 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    if (user.SubscribeDate == null)
-                    {
-                        await user.SetSubscribeDate();
-                    }
-
                     if (user.SubscribeDate != null)
                     {
                         await ChannelSession.Chat.SendMessage(this.GetSubscribeAge(user.GetModel(), user.SubscribeDate.GetValueOrDefault()));
@@ -590,15 +584,16 @@ namespace MixItUp.Base.Commands
                     if (arguments.Count() == 1)
                     {
                         string username = arguments.ElementAt(0);
-                        if (username.StartsWith("@"))
-                        {
-                            username = username.Substring(1);
-                        }
+                        username = username.Replace("@", "");
 
-                        UserViewModel bannedUser = ChannelSession.ChannelUsers.Values.FirstOrDefault(u => u.UserName.Equals(username));
-                        if (bannedUser != null)
+                        UserModel userModel = await ChannelSession.Connection.GetUser(username);
+                        if (userModel != null)
                         {
-                            await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, bannedUser.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                            await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, userModel, new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Could not find a user with the specified username");
                         }
                     }
                     else

@@ -55,20 +55,12 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public List<ChatMessageDataModel> MessageComponents = new List<ChatMessageDataModel>();
 
-        public ChatMessageViewModel(ChatMessageEventModel chatMessageEvent)
+        public ChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
         {
             this.ChatMessageEvent = chatMessageEvent;
             this.ID = this.ChatMessageEvent.id;
 
-            if (ChannelSession.ChannelUsers.ContainsKey(this.ChatMessageEvent.user_id))
-            {
-                this.User = ChannelSession.ChannelUsers[this.ChatMessageEvent.user_id];
-            }
-            else
-            {
-                this.User = new UserViewModel(this.ChatMessageEvent);
-            }
-
+            this.User = (user != null) ? user : new UserViewModel(this.ChatMessageEvent);
             this.IsInUsersChannel = ChannelSession.Channel.id.Equals(this.ChatMessageEvent.channel);
             
             this.TargetUsername = this.ChatMessageEvent.target;
@@ -134,15 +126,6 @@ namespace MixItUp.Base.ViewModel.Chat
             this.Message = alertText;
             this.AlertMessageBrush = ColorSchemes.GetColorCode(foregroundBrush);
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is ChatMessageViewModel)
-            {
-                return this.Equals((ChatMessageViewModel)obj);
-            }
-            return false;
         }
 
         public bool IsAlertMessage { get { return this.ID == Guid.Empty; } }
@@ -295,6 +278,15 @@ namespace MixItUp.Base.ViewModel.Chat
         public void AddToMessage(string text)
         {
             this.Message += text;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ChatMessageViewModel)
+            {
+                return this.Equals((ChatMessageViewModel)obj);
+            }
+            return false;
         }
 
         public bool Equals(ChatMessageViewModel other) { return this.ID.Equals(other.ID); }

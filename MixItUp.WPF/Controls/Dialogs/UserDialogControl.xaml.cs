@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Dialogs
@@ -22,7 +23,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            await this.user.SetDetails();
+            await this.user.RefreshDetails();
 
             this.UserAvatar.SetSize(100);
             this.UserAvatar.SetImageUrl(this.user.AvatarLink);

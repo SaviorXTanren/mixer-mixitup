@@ -46,11 +46,11 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.Rank = rank;
         }
 
-        public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
+        public bool DoesMeetUserRoleRequirement(UserViewModel user)
         {
             if (this.Role != null)
             {
-                return await this.Role.DoesMeetUserRoleRequirement(user);
+                return this.Role.DoesMeetUserRoleRequirement(user);
             }
             return true;
         }

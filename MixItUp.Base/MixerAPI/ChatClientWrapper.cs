@@ -37,7 +37,6 @@ namespace MixItUp.Base.MixerAPI
         public ChatClient Client { get; private set; }
         public ChatClient BotClient { get; private set; }
 
-        private object userUpdateLock = new object();
         private object messageUpdateLock = new object();
 
         private HashSet<uint> userJoins = new HashSet<uint>();
@@ -185,28 +184,6 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        public async Task UpdateEachUser(Func<UserViewModel, Task> userUpdateFunction, bool includeBots = false)
-        {
-            List<UserViewModel> users = ChannelSession.ChannelUsers.Values.ToList();
-
-            if (!includeBots)
-            {
-                users.RemoveAll(u => HypeBotUserName.Equals(u.UserName));
-                users.RemoveAll(u => BoomTVUserName.Equals(u.UserName));
-                if (ChannelSession.BotUser != null)
-                {
-                    users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
-                }
-            }
-
-            foreach (UserViewModel user in users)
-            {
-                await userUpdateFunction(user);
-            }
-
-            await ChannelSession.SaveSettings();
-        }
-
         protected override async Task<bool> ConnectInternal()
         {
             if (ChannelSession.Connection != null)
@@ -237,8 +214,7 @@ namespace MixItUp.Base.MixerAPI
 
                     foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
                     {
-                        UserViewModel user = new UserViewModel(chatUser);
-                        ChannelSession.ChannelUsers[user.ID] = user;
+                        await ChannelSession.ChannelUsers.AddOrUpdateUser(chatUser);
                     }
 
                     if (ChannelSession.IsStreamer)
@@ -314,65 +290,52 @@ namespace MixItUp.Base.MixerAPI
 
         #region Chat Update Methods
 
-        public async Task GetAndAddUser(uint userID)
+        private async Task<UserViewModel> AddUser(ChatUserEventModel chatUserEvent)
         {
-            ChatUserModel user = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, userID);
+            return await this.AddUser(new ChatUserModel() { userId = chatUserEvent.id, userName = chatUserEvent.username, userRoles = chatUserEvent.roles });
+        }
+
+        public async Task<UserViewModel> AddUser(ChatMessageEventModel chatMessageEvent)
+        {
+            return await this.AddUser(new ChatUserModel() { userId = chatMessageEvent.user_id, userName = chatMessageEvent.user_name, userRoles = chatMessageEvent.user_roles });
+        }
+
+        private async Task<UserViewModel> AddUser(ChatUserModel chatUser)
+        {
+            UserViewModel user = await ChannelSession.ChannelUsers.AddOrUpdateUser(chatUser);
             if (user != null)
             {
-                await this.AddUser(new UserViewModel(user));
-            }
-        }
-
-        private async Task AddUser(UserViewModel user)
-        {
-            await user.SetDetails();
-            lock (userUpdateLock)
-            {
-                if (!ChannelSession.ChannelUsers.ContainsKey(user.ID))
+                if (!this.userJoins.Contains(user.ID))
                 {
-                    ChannelSession.ChannelUsers[user.ID] = user;
+                    this.userJoins.Add(user.ID);
+                    if (user.Data.EntranceCommand != null)
+                    {
+                        await user.Data.EntranceCommand.Perform(user);
+                    }
                 }
             }
-
-            if (!this.userJoins.Contains(user.ID))
-            {
-                this.userJoins.Add(user.ID);
-                if (user.Data.EntranceCommand != null)
-                {
-                    await user.Data.EntranceCommand.Perform(user);
-                }
-            }
+            return user;
         }
 
-        private void RemoveUser(UserViewModel user)
+        private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
         {
-            lock (userUpdateLock)
-            {
-                ChannelSession.ChannelUsers.Remove(user.ID);
-            }
-        }
+            UserViewModel user = await this.AddUser(messageEvent);
 
-        private async Task<bool> AddMessage(ChatMessageViewModel message)
-        {
+            ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
+
             if (this.Messages.ContainsKey(message.ID))
             {
-                return false;
+                return null;
             }
             this.Messages[message.ID] = message;
-
-            if (!ChannelSession.ChannelUsers.ContainsKey(message.User.ID))
-            {
-                await this.AddUser(message.User);
-            }
 
             if (this.DisableChat && !message.ID.Equals(Guid.Empty))
             {
                 await this.DeleteMessage(message.ID);
-                return true;
+                return message;
             }
 
-            string moderationReason;
-            if (message.ShouldBeModerated(out moderationReason))
+            if (message.ShouldBeModerated(out string moderationReason))
             {
                 await this.DeleteMessage(message.ID);
 
@@ -393,7 +356,7 @@ namespace MixItUp.Base.MixerAPI
                 {
                     await this.Whisper(message.User.UserName, "Your message has been deleted" + whisperMessage);
                 }
-                return true;
+                return message;
             }
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatTaggedSoundFilePath) && message.IsUserTagged)
@@ -408,7 +371,7 @@ namespace MixItUp.Base.MixerAPI
 
             await this.CheckMessageForCommandAndRun(message);
 
-            return true;
+            return message;
         }
 
         private async Task CheckMessageForCommandAndRun(ChatMessageViewModel message)
@@ -471,22 +434,20 @@ namespace MixItUp.Base.MixerAPI
                     }
                 }
 
-                await this.UpdateEachUser((user) =>
+                List<UserViewModel> users = (await ChannelSession.ChannelUsers.GetAllUsers()).ToList();
+                users.RemoveAll(u => HypeBotUserName.Equals(u.UserName));
+                users.RemoveAll(u => BoomTVUserName.Equals(u.UserName));
+                if (ChannelSession.BotUser != null)
                 {
-                    user.Data.ViewingMinutes++;
-                    foreach (UserCurrencyViewModel currency in currenciesToUpdate)
-                    {
-                        if ((user.Data.ViewingMinutes % currency.AcquireInterval) == 0)
-                        {
-                            user.Data.AddCurrencyAmount(currency, currency.AcquireAmount);
-                            if (user.IsSubscriber)
-                            {
-                                user.Data.AddCurrencyAmount(currency, currency.SubscriberBonus);
-                            }
-                        }
-                    }
-                    return Task.FromResult(0);
-                });
+                    users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
+                }
+
+                foreach (UserViewModel user in users)
+                {
+                    user.UpdateMinuteUserData(currenciesToUpdate);
+                }
+
+                await ChannelSession.SaveSettings();
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
@@ -500,15 +461,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
                 {
-                    if (chatUser.userId.HasValue)
-                    {
-                        if (!ChannelSession.ChannelUsers.ContainsKey(chatUser.userId.Value))
-                        {
-                            ChannelSession.ChannelUsers[chatUser.userId.Value] = new UserViewModel(chatUser);
-                        }
-
-                        await ChannelSession.ChannelUsers[chatUser.userId.Value].SetChatDetails(chatUser);
-                    }
+                    await ChannelSession.ChannelUsers.AddOrUpdateUser(chatUser);
                 }
 
                 await Task.Delay(30000);
@@ -553,8 +506,8 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(e);
-            if (await this.AddMessage(message))
+            ChatMessageViewModel message = await this.AddMessage(e);
+            if (message != null)
             {
                 this.OnMessageOccurred(sender, message);
             }
@@ -565,7 +518,11 @@ namespace MixItUp.Base.MixerAPI
             ChatMessageViewModel message = new ChatMessageViewModel(e);
             if (message.IsWhisper)
             {
-                await this.CheckMessageForCommandAndRun(message);
+                message = await this.AddMessage(e);
+                if (message != null)
+                {
+                    this.OnMessageOccurred(sender, message);
+                }
             }
         }
 
@@ -592,33 +549,29 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel e)
         {
-            UserViewModel user = new UserViewModel(e);
-            await this.AddUser(user);
-
-            this.OnUserJoinOccurred(sender, user);
+            UserViewModel user = await this.AddUser(e);
+            if (user != null)
+            {
+                this.OnUserJoinOccurred(sender, user);
+            }
         }
 
-        private void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
         {
-            UserViewModel user = new UserViewModel(e);
-            this.RemoveUser(user);
-
-            this.OnUserLeaveOccurred(sender, user);
+            UserViewModel user = await ChannelSession.ChannelUsers.RemoveUser(e.id);
+            if (user != null)
+            {
+                this.OnUserLeaveOccurred(sender, user);
+            }
         }
 
         private void ChatClient_OnUserTimeoutOccurred(object sender, ChatUserEventModel e) { }
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
         {
-            UserViewModel user = new UserViewModel(e);
-            this.RemoveUser(user);
-
-            ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, user.ID);
-            if (chatUser != null)
+            UserViewModel user = await this.AddUser(e);
+            if (user != null)
             {
-                user = new UserViewModel(chatUser);
-                await this.AddUser(user);
-
                 this.OnUserUpdateOccurred(sender, user);
             }
         }

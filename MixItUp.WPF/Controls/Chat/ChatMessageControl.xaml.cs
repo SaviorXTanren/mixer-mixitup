@@ -98,18 +98,21 @@ namespace MixItUp.WPF.Controls.Chat
 
         public void DeleteMessage(string reason = null)
         {
-            this.messageHeader.DeleteMessage();
-            if (!string.IsNullOrEmpty(reason))
+            this.Dispatcher.Invoke(() =>
             {
-                this.Message.AddToMessage(" (Auto-Moderated: " + reason + ")");
-                this.DataContext = null;
-                this.DataContext = this.Message;
-            }
-            this.Message.IsDeleted = true;
-            foreach (TextBlock textBlock in this.textBlocks)
-            {
-                textBlock.TextDecorations = TextDecorations.Strikethrough;
-            }
+                this.messageHeader.DeleteMessage();
+                if (!string.IsNullOrEmpty(reason))
+                {
+                    this.Message.AddToMessage(" (Auto-Moderated: " + reason + ")");
+                    this.DataContext = null;
+                    this.DataContext = this.Message;
+                }
+                this.Message.IsDeleted = true;
+                foreach (TextBlock textBlock in this.textBlocks)
+                {
+                    textBlock.TextDecorations = TextDecorations.Strikethrough;
+                }
+            });
         }
 
         public void UpdateSizing()

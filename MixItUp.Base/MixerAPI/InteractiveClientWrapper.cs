@@ -343,23 +343,18 @@ namespace MixItUp.Base.MixerAPI
             List<InteractiveParticipantModel> participantsToUpdate = new List<InteractiveParticipantModel>();
             foreach (InteractiveParticipantModel participant in participants)
             {
-                if (!ChannelSession.ChannelUsers.ContainsKey(participant.userID))
+                UserViewModel user = await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
+                if (user != null)
                 {
-                    ChannelSession.ChannelUsers[participant.userID] = new UserViewModel(participant);
-                    await ChannelSession.ChannelUsers[participant.userID].SetDetails();
-                }
-
-                UserViewModel user = ChannelSession.ChannelUsers[participant.userID];
-                user.SetInteractiveDetails(participant);
-
-                InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == user.PrimaryRole);
-                if (group != null)
-                {
-                    bool updateParticipant = !user.InteractiveGroupID.Equals(group.DefaultScene);
-                    user.InteractiveGroupID = group.GroupName;
-                    if (updateParticipant)
+                    InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == user.PrimaryRole);
+                    if (group != null)
                     {
-                        participantsToUpdate.Add(user.GetParticipantModel());
+                        bool updateParticipant = !user.InteractiveGroupID.Equals(group.DefaultScene);
+                        user.InteractiveGroupID = group.GroupName;
+                        if (updateParticipant)
+                        {
+                            participantsToUpdate.Add(user.GetParticipantModel());
+                        }
                     }
                 }
             }
@@ -399,16 +394,13 @@ namespace MixItUp.Base.MixerAPI
 
         private void Client_OnControlUpdate(object sender, InteractiveConnectedSceneModel e) { this.OnControlUpdate(this, e); }
 
-        private void Client_OnParticipantLeave(object sender, InteractiveParticipantCollectionModel e)
+        private async void Client_OnParticipantLeave(object sender, InteractiveParticipantCollectionModel e)
         {
             if (e != null)
             {
                 foreach (InteractiveParticipantModel participant in e.participants)
                 {
-                    if (ChannelSession.ChannelUsers.ContainsKey(participant.userID))
-                    {
-                        ChannelSession.ChannelUsers[participant.userID].RemoveInteractiveDetails();
-                    }
+                    await ChannelSession.ChannelUsers.RemoveInteractiveUser(participant);
                 }
             }
             this.OnParticipantLeave(this, e);
@@ -452,7 +444,7 @@ namespace MixItUp.Base.MixerAPI
                             return;
                         }
 
-                        UserViewModel user = ChannelSession.ChannelUsers.Values.FirstOrDefault(u => e.participantID.Equals(u.InteractiveID));
+                        UserViewModel user = await ChannelSession.ChannelUsers.GetUser(e.participantID);
                         if (user == null)
                         {
                             user = ChannelSession.GetCurrentUser();

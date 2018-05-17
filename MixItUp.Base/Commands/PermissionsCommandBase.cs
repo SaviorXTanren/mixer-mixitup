@@ -59,7 +59,7 @@ namespace MixItUp.Base.Commands
 
         public async Task<bool> CheckUserRoleRequirement(UserViewModel user)
         {
-            if (!await this.Requirements.DoesMeetUserRoleRequirement(user))
+            if (!this.Requirements.DoesMeetUserRoleRequirement(user))
             {
                 await this.Requirements.Role.SendUserRoleNotMetWhisper(user);
                 return false;
