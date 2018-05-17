@@ -58,9 +58,7 @@
                                             <MaterialDesign:PackIcon Kind="LanDisconnect" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource AlertColor}" />
                                         </Button>
 
-                                        <Button x:Name="MixerStatusAlertButton" Style="{StaticResource MaterialDesignFlatButton}" Click="MixerStatusAlertButton_Click" Visibility="Collapsed" Width="40" HorizontalAlignment="Center" ToolTip="Mixer Status" Margin="5,0">
-                                            <MaterialDesign:PackIcon Kind="AlertOutline" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WarningColor}" />
-                                        </Button>
+                                        <Controls:MixerStatusAlertControl x:Name="MixerStatusAlertButton" />
 
                                         <Button x:Name="SectionHelpButton" Style="{StaticResource MaterialDesignFlatButton}" Click="SectionHelpButton_Click" Visibility="{Binding HelpLinkVisibility}" Width="40" HorizontalAlignment="Center" ToolTip="Help" Margin="5,0">
                                             <MaterialDesign:PackIcon Kind="Help" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />

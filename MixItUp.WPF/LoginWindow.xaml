@@ -40,16 +40,16 @@
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Margin="10,10" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="1" Header="Streamer" Margin="0,8,0,8">
+            <GroupBox Grid.Column="0" Header="Streamer" Margin="0,8,0,8" Width="160">
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -63,7 +63,9 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Grid.Column="3" Header="Moderator" Margin="0,8,0,8">
+            <Controls:MixerStatusAlertControl x:Name="MixerStatusAlertButton" Grid.Column="2" HorizontalAlignment="Center" />
+
+            <GroupBox Grid.Column="4" Header="Moderator" Margin="0,8,0,8" Width="160">
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
