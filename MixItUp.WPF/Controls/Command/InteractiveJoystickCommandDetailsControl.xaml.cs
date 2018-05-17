@@ -137,7 +137,6 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.Requirements = requirements;
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
 
-                await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
                 return this.command;
             }
             return null;
@@ -163,19 +162,12 @@ namespace MixItUp.WPF.Controls.Command
                         this.DownKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.S);
                         this.LeftKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.A);
                     }
-                    else if (setup == InteractiveJoystickSetupType.DirectionalArrows)
+                    else if (setup == InteractiveJoystickSetupType.DirectionalArrows || setup == InteractiveJoystickSetupType.MouseMovement)
                     {
                         this.UpKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.Up);
                         this.RightKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.Right);
                         this.DownKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.Down);
                         this.LeftKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.Left);
-                    }
-                    else if (setup == InteractiveJoystickSetupType.MouseMovement)
-                    {
-                        this.UpKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.Y);
-                        this.RightKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.X);
-                        this.DownKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.Y);
-                        this.LeftKeyComboBox.SelectedItem = EnumHelper.GetEnumName(InputKeyEnum.X);
                     }
                 }
 

@@ -143,9 +143,14 @@ namespace MixItUp.Base.Commands
 
             private InteractiveJoystickCommand command;
 
+            private SemaphoreSlim mouseMovementLock = new SemaphoreSlim(1);
+            private Task mouseMovementTask;
+            private double mouseMovementX = 0;
+            private double mouseMovementY = 0;
+
             public InteractiveJoystickAction(InteractiveJoystickCommand command) { this.command = command; }
 
-            protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+            protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
             {
                 if (double.TryParse(arguments.ElementAt(0), out double x) && double.TryParse(arguments.ElementAt(1), out double y))
                 {
@@ -154,7 +159,29 @@ namespace MixItUp.Base.Commands
                         if (!(x > command.DeadZone || x < -command.DeadZone)) { x = 0.0; }
                         if (!(y > command.DeadZone || y < -command.DeadZone)) { y = 0.0; }
 
-                        ChannelSession.Services.InputService.MoveMouse((int)(x * command.MouseMovementMultiplier), (int)(y * command.MouseMovementMultiplier));
+                        await this.mouseMovementLock.WaitAsync();
+
+                        this.mouseMovementX = x;
+                        this.mouseMovementY = y;
+
+                        if (this.mouseMovementTask == null || this.mouseMovementTask.IsCompleted)
+                        {
+                            this.mouseMovementTask = Task.Run(async () =>
+                            {
+                                while (this.mouseMovementX != 0.0 || this.mouseMovementY != 0.0)
+                                {
+                                    try
+                                    {
+                                        ChannelSession.Services.InputService.MoveMouse((int)(this.mouseMovementX * command.MouseMovementMultiplier), (int)(this.mouseMovementY * command.MouseMovementMultiplier));
+
+                                        await Task.Delay(50);
+                                    }
+                                    catch (Exception) { }
+                                }
+                            });
+                        }
+
+                        this.mouseMovementLock.Release();
                     }
                     else
                     {
@@ -227,7 +254,6 @@ namespace MixItUp.Base.Commands
                         }
                     }
                 }
-                return Task.FromResult(0);
             }
         }
 
@@ -272,7 +298,7 @@ namespace MixItUp.Base.Commands
         }
 
         [OnDeserialized]
-        internal void OnDeserialized()
+        internal void OnDeserialized(StreamingContext streamingContext)
         {
             this.InitializeAction();
         }
