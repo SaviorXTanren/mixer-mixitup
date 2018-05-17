@@ -43,9 +43,7 @@
         <Grid Grid.Row="0" Margin="10,10" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="30" />
-                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="50" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -63,9 +61,9 @@
                 </Grid>
             </GroupBox>
 
-            <Controls:MixerStatusAlertControl x:Name="MixerStatusAlertButton" Grid.Column="2" HorizontalAlignment="Center" />
+            <Controls:MixerStatusAlertControl x:Name="MixerStatusAlertButton" Grid.Column="1" HorizontalAlignment="Center" />
 
-            <GroupBox Grid.Column="4" Header="Moderator" Margin="0,8,0,8" Width="160">
+            <GroupBox Grid.Column="2" Header="Moderator" Margin="0,8,0,8" Width="160">
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
