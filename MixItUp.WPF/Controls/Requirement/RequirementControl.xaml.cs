@@ -16,6 +16,11 @@ namespace MixItUp.WPF.Controls.Requirement
             InitializeComponent();
         }
 
+        public void HideCooldownRequirement()
+        {
+            this.CooldownPopup.Visibility = Visibility.Collapsed;
+        }
+
         public void HideCurrencyRequirement()
         {
             this.CurrencyPopup.Visibility = Visibility.Collapsed;

@@ -258,10 +258,18 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
-
-            CommandWindow window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control));
-            window.Closed += Window_Closed;
-            window.Show();
+            if (command.Control is InteractiveButtonControlModel)
+            {
+                CommandWindow window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, (InteractiveButtonControlModel)command.Control));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
+            else if (command.Control is InteractiveJoystickControlModel)
+            {
+                CommandWindow window = new CommandWindow(new InteractiveJoystickCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, (InteractiveJoystickControlModel)command.Control));
+                window.Closed += Window_Closed;
+                window.Show();
+            }
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
@@ -273,6 +281,12 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (command is InteractiveButtonCommand)
                 {
                     CommandWindow window = new CommandWindow(new InteractiveButtonCommandDetailsControl((InteractiveButtonCommand)command));
+                    window.Closed += Window_Closed;
+                    window.Show();
+                }
+                else if (command is InteractiveJoystickCommand)
+                {
+                    CommandWindow window = new CommandWindow(new InteractiveJoystickCommandDetailsControl((InteractiveJoystickCommand)command));
                     window.Closed += Window_Closed;
                     window.Show();
                 }

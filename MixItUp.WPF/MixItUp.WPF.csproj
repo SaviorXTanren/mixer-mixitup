@@ -301,6 +301,12 @@
     <Compile Include="Controls\Command\CustomCommandDetailsControl.xaml.cs">
       <DependentUpon>CustomCommandDetailsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Command\EmptyCommandEditorControl.xaml.cs">
+      <DependentUpon>EmptyCommandEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Command\InteractiveJoystickCommandDetailsControl.xaml.cs">
+      <DependentUpon>InteractiveJoystickCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Command\UnlockedCommandControl.xaml.cs">
       <DependentUpon>UnlockedCommandControl.xaml</DependentUpon>
     </Compile>
@@ -309,6 +315,9 @@
     </Compile>
     <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
+      <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
@@ -687,6 +696,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\Command\EmptyCommandEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Command\InteractiveJoystickCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Command\UnlockedCommandControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -696,6 +713,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

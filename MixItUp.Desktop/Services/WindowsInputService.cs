@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Services;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,12 +18,62 @@ namespace MixItUp.Input
         }
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct InputContainer
+    {
+        public uint Type;
+        public GenericInput Data;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    internal struct GenericInput
+    {
+        [FieldOffset(0)]
+        public HardwareInput Hardware;
+        [FieldOffset(0)]
+        public KeyboardInput Keyboard;
+        [FieldOffset(0)]
+        public MouseInput Mouse;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct HardwareInput
+    {
+        public uint Msg;
+        public ushort ParamL;
+        public ushort ParamH;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct KeyboardInput
+    {
+        public ushort Vk;
+        public ushort Scan;
+        public uint Flags;
+        public uint Time;
+        public IntPtr ExtraInfo;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct MouseInput
+    {
+        public int X;
+        public int Y;
+        public uint MouseData;
+        public uint Flags;
+        public uint Time;
+        public IntPtr ExtraInfo;
+    }
+
     public class WindowsInputService : IInputService
     {
+        private const int INPUT_KEYBOARD = 1;
+
         private const int KEYEVENTF_KEYUP = 0x0002;
+        private const int KEYEVENTF_SCANCODE = 0x0008;
 
         [DllImport("user32.dll")]
-        private static extern uint keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+        private static extern uint SendInput(uint numberOfInputs, InputContainer[] inputs, int sizeOfInputStructure);
 
         [DllImport("user32.dll")]
         private static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
@@ -32,12 +83,18 @@ namespace MixItUp.Input
 
         public void KeyDown(InputKeyEnum key)
         {
-            keybd_event((byte)key, 0, 0, 0);
+            InputContainer input = new InputContainer { Type = INPUT_KEYBOARD };
+            input.Data.Keyboard = new KeyboardInput() { Scan = (ushort)key, Flags = KEYEVENTF_SCANCODE };
+            InputContainer[] inputs = new InputContainer[] { input };
+            uint result = SendInput(1, inputs, Marshal.SizeOf(typeof(InputContainer)));
         }
 
         public void KeyUp(InputKeyEnum key)
         {
-            keybd_event((byte)key, 0, KEYEVENTF_KEYUP, 0);
+            InputContainer input = new InputContainer { Type = INPUT_KEYBOARD };
+            input.Data.Keyboard = new KeyboardInput() { Scan = (ushort)key, Flags = KEYEVENTF_KEYUP | KEYEVENTF_SCANCODE };
+            InputContainer[] inputs = new InputContainer[] { input };
+            uint result = SendInput(1, inputs, Marshal.SizeOf(typeof(InputContainer)));
         }
 
         public async Task KeyClick(InputKeyEnum key)

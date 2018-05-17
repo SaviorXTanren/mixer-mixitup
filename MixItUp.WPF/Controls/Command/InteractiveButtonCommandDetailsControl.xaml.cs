@@ -18,19 +18,19 @@ namespace MixItUp.WPF.Controls.Command
         public InteractiveGameListingModel Game { get; private set; }
         public InteractiveGameVersionModel Version { get; private set; }
         public InteractiveSceneModel Scene { get; private set; }
-        public InteractiveControlModel Control { get; private set; }
+        public InteractiveButtonControlModel Control { get; private set; }
 
         private InteractiveButtonCommand command;
 
         public InteractiveButtonCommandDetailsControl(InteractiveButtonCommand command)
         {
             this.command = command;
-            this.Control = command.Control;
+            this.Control = command.Button;
 
             InitializeComponent();
         }
 
-        public InteractiveButtonCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveControlModel control)
+        public InteractiveButtonCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveButtonControlModel control)
         {
             this.Game = game;
             this.Version = version;
@@ -44,23 +44,19 @@ namespace MixItUp.WPF.Controls.Command
         {
             this.ButtonTriggerComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveButtonCommandTriggerType>();
 
-            if (this.Control != null && this.Control is InteractiveButtonControlModel)
+            if (this.Control != null)
             {
                 this.ButtonTriggerComboBox.IsEnabled = true;
                 this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveButtonCommandTriggerType.MouseDown);
                 this.SparkCostTextBox.IsEnabled = true;
-                this.SparkCostTextBox.Text = ((InteractiveButtonControlModel)this.Control).cost.ToString();
+                this.SparkCostTextBox.Text = this.Control.cost.ToString();
             }
 
             if (this.command != null)
             {
-                if (this.command.Button != null)
-                {
-                    this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Trigger);
-                    this.UnlockedControl.Unlocked = this.command.Unlocked;
-                    this.Requirements.SetRequirements(this.command.Requirements);
-                }
-
+                this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Trigger);
+                this.UnlockedControl.Unlocked = this.command.Unlocked;
+                this.Requirements.SetRequirements(this.command.Requirements);
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
 
                 IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
@@ -76,19 +72,16 @@ namespace MixItUp.WPF.Controls.Command
 
         public override async Task<bool> Validate()
         {
-            if (this.Control is InteractiveButtonControlModel)
+            if (this.ButtonTriggerComboBox.SelectedIndex < 0)
             {
-                if (this.ButtonTriggerComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("An trigger type must be selected");
-                    return false;
-                }
+                await MessageBoxHelper.ShowMessageDialog("An trigger type must be selected");
+                return false;
+            }
 
-                if (!int.TryParse(this.SparkCostTextBox.Text, out int sparkCost) || sparkCost < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A valid spark cost must be entered");
-                    return false;
-                }
+            if (!int.TryParse(this.SparkCostTextBox.Text, out int sparkCost) || sparkCost < 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("A valid spark cost must be entered");
+                return false;
             }
 
             if (!await this.Requirements.Validate())
@@ -111,18 +104,15 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    this.command = new InteractiveButtonCommand(this.Game, this.Scene, (InteractiveButtonControlModel)this.Control, trigger, requirements);
+                    this.command = new InteractiveButtonCommand(this.Game, this.Scene, this.Control, trigger, requirements);
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
 
-                if (this.Control is InteractiveButtonControlModel)
-                {
-                    this.command.Trigger = trigger;
-                    this.command.Button.cost = int.Parse(this.SparkCostTextBox.Text);
-                    this.command.Requirements = requirements;
+                this.command.Trigger = trigger;
+                this.command.Button.cost = int.Parse(this.SparkCostTextBox.Text);
+                this.command.Requirements = requirements;
 
-                    await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
-                }
+                await ChannelSession.Connection.UpdateInteractiveGameVersion(this.Version);
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 return this.command;
             }

@@ -1,0 +1,38 @@
+﻿<local:CommandEditorControlBase x:Class="MixItUp.WPF.Controls.Command.EmptyCommandEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Command"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:ActionControls="clr-namespace:MixItUp.WPF.Controls.Actions"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+                                        
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+
+             d:DesignHeight="500" d:DesignWidth="700">
+    <local:CommandEditorControlBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </local:CommandEditorControlBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ContentControl x:Name="MainContent" Grid.Row="0" />
+
+        <Button x:Name="SaveButton" Click="SaveButton_Click" Grid.Row="1" ToolTip="Save" Width="80">Save</Button>
+    </Grid>
+</local:CommandEditorControlBase>

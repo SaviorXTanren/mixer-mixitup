@@ -67,13 +67,11 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            await ChannelSession.Services.InitializeInputService();
-
             await Task.Delay(3000);
 
-            if (this.Shift) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.Shift); }
-            if (this.Control) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.Control); }
-            if (this.Alt) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.Alt); }
+            if (this.Shift) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftShift); }
+            if (this.Control) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftControl); }
+            if (this.Alt) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftAlt); }
 
             await ChannelSession.Services.InputService.WaitForKeyToRegister();
 
@@ -143,9 +141,9 @@ namespace MixItUp.Base.Actions
 
             await ChannelSession.Services.InputService.WaitForKeyToRegister();
 
-            if (this.Shift) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.Shift); }
-            if (this.Control) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.Control); }
-            if (this.Alt) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.Alt); }
+            if (this.Shift) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftShift); }
+            if (this.Control) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftControl); }
+            if (this.Alt) { ChannelSession.Services.InputService.KeyUp(InputKeyEnum.LeftAlt); }
         }
     }
 }

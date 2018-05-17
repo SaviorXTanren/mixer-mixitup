@@ -59,7 +59,7 @@
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox Grid.Column="2" ToggleContent="{StaticResource CooldownPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="CooldownPopup" Grid.Column="2" ToggleContent="{StaticResource CooldownPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
                     <RequirementControls:CooldownRequirementControl x:Name="CooldownRequirement" />
                 </Grid>

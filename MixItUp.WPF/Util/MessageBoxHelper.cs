@@ -104,6 +104,22 @@ namespace MixItUp.WPF.Util
             return MessageBoxHelper.lastCustomResult;
         }
 
+        public static async Task<string> ShowTimedCustomDialog(UserControl control, int timeout)
+        {
+            DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();
+            if (!isDialogShown)
+            {
+                MessageBoxHelper.isDialogShown = true;
+                await dialogHost.ShowDialog(control, async delegate(object sender, DialogOpenedEventArgs args)
+                {
+                    await Task.Delay(timeout);
+                    args.Session.Close(false);
+                });
+                MessageBoxHelper.isDialogShown = false;
+            }
+            return MessageBoxHelper.lastCustomResult;
+        }
+
         public static void CloseDialog()
         {
             DialogHost dialogHost = MessageBoxHelper.GetActiveWindowDialogHost();

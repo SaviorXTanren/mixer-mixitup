@@ -1,9 +1,16 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
+using MixItUp.Base.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Requirement;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
@@ -17,6 +24,17 @@ namespace MixItUp.Base.Commands
         KeyUp,
         [Name("Key Down")]
         KeyDown,
+    }
+
+    public enum InteractiveJoystickSetupType
+    {
+        [Name("Directional Arrows")]
+        DirectionalArrows,
+        WASD,
+        [Name("Mouse Movement")]
+        MouseMovement,
+        [Name("Map To Individual Keys")]
+        MapToIndividualKeys,
     }
 
     public class InteractiveCommand : PermissionsCommandBase
@@ -117,16 +135,146 @@ namespace MixItUp.Base.Commands
 
     public class InteractiveJoystickCommand : InteractiveCommand
     {
-        public InteractiveJoystickCommand() { }
+        private class InteractiveJoystickAction : ActionBase
+        {
+            private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
+
+            protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveJoystickAction.asyncSemaphore; } }
+
+            private InteractiveJoystickCommand command;
+
+            public InteractiveJoystickAction(InteractiveJoystickCommand command) { this.command = command; }
+
+            protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
+            {
+                if (double.TryParse(arguments.ElementAt(0), out double x) && double.TryParse(arguments.ElementAt(1), out double y))
+                {
+                    if (this.command.SetupType == InteractiveJoystickSetupType.MouseMovement)
+                    {
+                        if (!(x > command.DeadZone || x < -command.DeadZone)) { x = 0.0; }
+                        if (!(y > command.DeadZone || y < -command.DeadZone)) { y = 0.0; }
+
+                        ChannelSession.Services.InputService.MoveMouse((int)(x * command.MouseMovementMultiplier), (int)(y * command.MouseMovementMultiplier));
+                    }
+                    else
+                    {
+                        List<InputKeyEnum?> keysToUse = new List<InputKeyEnum?>();
+                        if (this.command.SetupType == InteractiveJoystickSetupType.DirectionalArrows)
+                        {
+                            keysToUse.Add(InputKeyEnum.Up);
+                            keysToUse.Add(InputKeyEnum.Right);
+                            keysToUse.Add(InputKeyEnum.Down);
+                            keysToUse.Add(InputKeyEnum.Left);
+                        }
+                        else if (this.command.SetupType == InteractiveJoystickSetupType.WASD)
+                        {
+                            keysToUse.Add(InputKeyEnum.W);
+                            keysToUse.Add(InputKeyEnum.A);
+                            keysToUse.Add(InputKeyEnum.S);
+                            keysToUse.Add(InputKeyEnum.D);
+                        }
+                        else
+                        {
+                            keysToUse = this.command.MappedKeys;
+                        }
+
+                        if (keysToUse[0] != null)
+                        {
+                            if (y < -command.DeadZone)
+                            {
+                                ChannelSession.Services.InputService.KeyDown(keysToUse[0].GetValueOrDefault());
+                            }
+                            else
+                            {
+                                ChannelSession.Services.InputService.KeyUp(keysToUse[0].GetValueOrDefault());
+                            }
+                        }
+
+                        if (keysToUse[2] != null)
+                        {
+                            if (y > command.DeadZone)
+                            {
+                                ChannelSession.Services.InputService.KeyDown(keysToUse[2].GetValueOrDefault());
+                            }
+                            else
+                            {
+                                ChannelSession.Services.InputService.KeyUp(keysToUse[2].GetValueOrDefault());
+                            }
+                        }
+
+                        if (keysToUse[1] != null)
+                        {
+                            if (x < -command.DeadZone)
+                            {
+                                ChannelSession.Services.InputService.KeyDown(keysToUse[1].GetValueOrDefault());
+                            }
+                            else
+                            {
+                                ChannelSession.Services.InputService.KeyUp(keysToUse[1].GetValueOrDefault());
+                            }
+                        }
+
+                        if (keysToUse[3] != null)
+                        {
+                            if (x > command.DeadZone)
+                            {
+                                ChannelSession.Services.InputService.KeyDown(keysToUse[3].GetValueOrDefault());
+                            }
+                            else
+                            {
+                                ChannelSession.Services.InputService.KeyUp(keysToUse[3].GetValueOrDefault());
+                            }
+                        }
+                    }
+                }
+                return Task.FromResult(0);
+            }
+        }
+
+        [JsonProperty]
+        public InteractiveJoystickSetupType SetupType { get; set; }
+
+        [JsonProperty]
+        public double DeadZone { get; set; }
+
+        [JsonProperty]
+        public List<InputKeyEnum?> MappedKeys { get; set; }
+
+        [JsonProperty]
+        public double MouseMovementMultiplier { get; set; }
+
+        public InteractiveJoystickCommand()
+        {
+            this.MappedKeys = new List<InputKeyEnum?>();
+        }
 
         public InteractiveJoystickCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control, RequirementViewModel requirements)
             : base(game, scene, control, string.Empty, requirements)
-        { }
+        {
+            this.MappedKeys = new List<InputKeyEnum?>();
+        }
 
         [JsonIgnore]
         public InteractiveJoystickControlModel Joystick { get { return (InteractiveJoystickControlModel)this.Control; } }
 
         [JsonIgnore]
         public override string EventTypeString { get { return "move"; } }
+
+        public void InitializeAction()
+        {
+            this.Actions.Clear();
+            this.Actions.Add(new InteractiveJoystickAction(this));
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        {
+            await base.PerformInternal(user, arguments, token);
+        }
+
+        [OnDeserialized]
+        internal void OnDeserialized()
+        {
+            this.InitializeAction();
+        }
     }
 }

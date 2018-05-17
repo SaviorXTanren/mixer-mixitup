@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Dialogs.InteractiveJoystickSetupTestDialogControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Dialogs"
+             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             xmlns:MaterialDesignWPF="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+             
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="400">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="16" Width="200" Height="100">
+        <TextBlock x:Name="StatusTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" />
+    </Grid>
+</UserControl>

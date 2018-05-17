@@ -35,7 +35,11 @@ namespace MixItUp.WPF.Windows.Command
         {
             if (this.commandDetailsControl != null)
             {
-                if (this.commandDetailsControl.GetExistingCommand() != null)
+                if (this.commandDetailsControl is InteractiveJoystickCommandDetailsControl)
+                {
+                    this.ShowCommandEditor(new EmptyCommandEditorControl(this, this.commandDetailsControl));
+                }
+                else if (this.commandDetailsControl.GetExistingCommand() != null)
                 {
                     CommandBase command = this.commandDetailsControl.GetExistingCommand();
                     if (command.IsBasic)

@@ -40,9 +40,9 @@ namespace MixItUp.Base.MixerAPI
             return this.EventTypeString.Equals(input.input.eventType);
         }
 
-        public virtual async Task ProcessCommand(UserViewModel user)
+        public virtual async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            await this.Command.Perform(user);
+            await this.Command.Perform(user, arguments);
         }
     }
 
@@ -57,7 +57,7 @@ namespace MixItUp.Base.MixerAPI
         public override int SparkCost { get { return this.Button.cost.GetValueOrDefault(); } }
         public override long CooldownTimestamp { get { return this.ButtonCommand.GetCooldownTimestamp(); } }
 
-        public override async Task ProcessCommand(UserViewModel user)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
             this.Button.cooldown = this.CooldownTimestamp;
 
@@ -79,7 +79,7 @@ namespace MixItUp.Base.MixerAPI
 
             await ChannelSession.Interactive.UpdateControls(this.Scene, buttons);
 
-            await base.ProcessCommand(user);
+            await base.Perform(user, arguments);
         }
     }
 
@@ -92,9 +92,9 @@ namespace MixItUp.Base.MixerAPI
         public override int SparkCost { get { return 0; } }
         public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
 
-        public override async Task ProcessCommand(UserViewModel user)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            await base.ProcessCommand(user);
+            await base.Perform(user, arguments);
         }
     }
 
@@ -477,7 +477,15 @@ namespace MixItUp.Base.MixerAPI
                             await this.CaptureSparkTransaction(e.transactionID);
                         }
 
-                        await connectedControl.ProcessCommand(user);
+                        List<string> arguments = new List<string>();
+
+                        if (connectedControl is InteractiveConnectedJoystickCommand)
+                        {
+                            arguments.Add(e.input.x.ToString());
+                            arguments.Add(e.input.y.ToString());
+                        }
+
+                        await connectedControl.Perform(user, arguments);
 
                         if (this.OnInteractiveControlUsed != null)
                         {
