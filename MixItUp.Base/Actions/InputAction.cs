@@ -18,44 +18,48 @@ namespace MixItUp.Base.Actions
         MiddleButton,
     }
 
-    [DataContract]
-    public abstract class InputAction : ActionBase
+    public enum InputActionTypeEnum
     {
-        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        protected override SemaphoreSlim AsyncSemaphore { get { return InputAction.asyncSemaphore; } }
-
-        public InputAction() : base(ActionTypeEnum.Input) { }
+        Click,
+        Press,
+        Release,
     }
 
     [DataContract]
-    public class SimpleInputAction : InputAction
+    public class InputAction : ActionBase
     {
         public InputKeyEnum? Key { get; set; }
 
         public SimpleInputMouseEnum? Mouse { get; set; }
 
+        public InputActionTypeEnum ActionType { get; set; }
+
         public bool Shift { get; set; }
         public bool Control { get; set; }
         public bool Alt { get; set; }
 
-        public SimpleInputAction() { }
+        private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        public SimpleInputAction(InputKeyEnum key, bool shift, bool control, bool alt)
-            : this(shift, control, alt)
+        protected override SemaphoreSlim AsyncSemaphore { get { return InputAction.asyncSemaphore; } }
+
+        public InputAction() : base(ActionTypeEnum.Input) { }
+
+        public InputAction(InputKeyEnum key, InputActionTypeEnum actionType, bool shift, bool control, bool alt)
+            : this(actionType, shift, control, alt)
         {
             this.Key = key;
         }
 
-        public SimpleInputAction(SimpleInputMouseEnum mouse, bool shift, bool control, bool alt)
-            : this(shift, control, alt)
+        public InputAction(SimpleInputMouseEnum mouse, InputActionTypeEnum actionType, bool shift, bool control, bool alt)
+            : this(actionType, shift, control, alt)
         {
             this.Mouse = mouse;
         }
 
-        private SimpleInputAction(bool shift, bool control, bool alt)
+        private InputAction(InputActionTypeEnum actionType, bool shift, bool control, bool alt)
             : this()
         {
+            this.ActionType = actionType;
             this.Shift = shift;
             this.Control = control;
             this.Alt = alt;
@@ -75,21 +79,65 @@ namespace MixItUp.Base.Actions
 
             if (this.Key != null)
             {
-                await ChannelSession.Services.InputService.KeyClick(this.Key.GetValueOrDefault());
+                if (this.ActionType == InputActionTypeEnum.Click)
+                {
+                    await ChannelSession.Services.InputService.KeyClick(this.Key.GetValueOrDefault());
+                }
+                else if (this.ActionType == InputActionTypeEnum.Press)
+                {
+                    ChannelSession.Services.InputService.KeyDown(this.Key.GetValueOrDefault());
+                }
+                else if (this.ActionType == InputActionTypeEnum.Release)
+                {
+                    ChannelSession.Services.InputService.KeyDown(this.Key.GetValueOrDefault());
+                }
             }
             else if (this.Mouse != null)
             {
-                if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.LeftButton)
+                if (this.ActionType == InputActionTypeEnum.Click)
                 {
-                    await ChannelSession.Services.InputService.LeftMouseClick();
+                    if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.LeftButton)
+                    {
+                        await ChannelSession.Services.InputService.LeftMouseClick();
+                    }
+                    else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.RightButton)
+                    {
+                        await ChannelSession.Services.InputService.RightMouseClick();
+                    }
+                    else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.MiddleButton)
+                    {
+                        await ChannelSession.Services.InputService.MiddleMouseClick();
+                    }
                 }
-                else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.RightButton)
+                else if (this.ActionType == InputActionTypeEnum.Press)
                 {
-                    await ChannelSession.Services.InputService.RightMouseClick();
+                    if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.LeftButton)
+                    {
+                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.LeftDown);
+                    }
+                    else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.RightButton)
+                    {
+                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.RightDown);
+                    }
+                    else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.MiddleButton)
+                    {
+                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.MiddleDown);
+                    }
                 }
-                else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.MiddleButton)
+                else if (this.ActionType == InputActionTypeEnum.Release)
                 {
-                    await ChannelSession.Services.InputService.MiddleMouseClick();
+                    if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.LeftButton)
+                    {
+                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.LeftUp);
+                    }
+                    else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.RightButton)
+                    {
+                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.RightUp);
+                    }
+                    else if (this.Mouse.GetValueOrDefault() == SimpleInputMouseEnum.MiddleButton)
+                    {
+                        ChannelSession.Services.InputService.MouseEvent(InputMouseEnum.MiddleUp);
+                    }
                 }
             }
 
