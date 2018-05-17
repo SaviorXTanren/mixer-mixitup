@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -78,10 +79,10 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsHoursInterval { get { return this.AcquireAmount == 1 && this.AcquireInterval == 60; } }
 
         [JsonIgnore]
-        public string UserAmountSpecialIdentifier { get { return string.Format("user{0}", this.SpecialIdentifier); } }
+        public string UserAmountSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string UserRankNameSpecialIdentifier { get { return string.Format("user{0}rank", this.SpecialIdentifier); } }
+        public string UserRankNameSpecialIdentifier { get { return string.Format("{0}{1}rank", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         public bool ShouldBeReset()
         {
