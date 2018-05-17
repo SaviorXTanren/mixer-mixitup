@@ -14,9 +14,9 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
-    /// Interaction logic for BasicInteractiveCommandEditorControl.xaml
+    /// Interaction logic for BasicInteractiveButtonCommandEditorControl.xaml
     /// </summary>
-    public partial class BasicInteractiveCommandEditorControl : CommandEditorControlBase
+    public partial class BasicInteractiveButtonCommandEditorControl : CommandEditorControlBase
     {
         private CommandWindow window;
 
@@ -26,11 +26,11 @@ namespace MixItUp.WPF.Controls.Command
         private InteractiveSceneModel scene;
         private InteractiveButtonControlModel button;
 
-        private InteractiveCommand command;
+        private InteractiveButtonCommand command;
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveCommandEditorControl(CommandWindow window, InteractiveCommand command)
+        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, InteractiveButtonCommand command)
         {
             this.window = window;
             this.command = command;
@@ -38,7 +38,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public BasicInteractiveCommandEditorControl(CommandWindow window, InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene,
+        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene,
             InteractiveButtonControlModel button, BasicCommandTypeEnum commandType)
         {
             this.window = window;
@@ -116,9 +116,9 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.CooldownTypeComboBox.SelectedIndex == 1)
             {
-                if (ChannelSession.Settings.CooldownGroups.ContainsKey(InteractiveCommand.BasicCommandCooldownGroup))
+                if (ChannelSession.Settings.CooldownGroups.ContainsKey(InteractiveButtonCommand.BasicCommandCooldownGroup))
                 {
-                    this.CooldownTextBox.Text = ChannelSession.Settings.CooldownGroups[InteractiveCommand.BasicCommandCooldownGroup].ToString();
+                    this.CooldownTextBox.Text = ChannelSession.Settings.CooldownGroups[InteractiveButtonCommand.BasicCommandCooldownGroup].ToString();
                 }
                 else
                 {
@@ -175,12 +175,12 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 else
                 {
-                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, InteractiveCommand.BasicCommandCooldownGroup, cooldown);
+                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, InteractiveButtonCommand.BasicCommandCooldownGroup, cooldown);
                 }
 
                 if (this.command == null)
                 {
-                    this.command = new InteractiveCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
+                    this.command = new InteractiveButtonCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
 

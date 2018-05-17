@@ -288,8 +288,8 @@
     <Compile Include="Controls\Command\BasicEventCommandEditorControl.xaml.cs">
       <DependentUpon>BasicEventCommandEditorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\BasicInteractiveCommandEditorControl.xaml.cs">
-      <DependentUpon>BasicInteractiveCommandEditorControl.xaml</DependentUpon>
+    <Compile Include="Controls\Command\BasicInteractiveButtonCommandEditorControl.xaml.cs">
+      <DependentUpon>BasicInteractiveButtonCommandEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\BasicTimerCommandEditorControl.xaml.cs">
       <DependentUpon>BasicTimerCommandEditorControl.xaml</DependentUpon>
@@ -397,8 +397,8 @@
     <Compile Include="Controls\Command\EventCommandDetailsControl.xaml.cs">
       <DependentUpon>EventCommandDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Command\InteractiveCommandDetailsControl.xaml.cs">
-      <DependentUpon>InteractiveCommandDetailsControl.xaml</DependentUpon>
+    <Compile Include="Controls\Command\InteractiveButtonCommandDetailsControl.xaml.cs">
+      <DependentUpon>InteractiveButtonCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\TimerCommandDetailsControl.xaml.cs">
       <DependentUpon>TimerCommandDetailsControl.xaml</DependentUpon>
@@ -671,7 +671,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\BasicInteractiveCommandEditorControl.xaml">
+    <Page Include="Controls\Command\BasicInteractiveButtonCommandEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -823,7 +823,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Command\InteractiveCommandDetailsControl.xaml">
+    <Page Include="Controls\Command\InteractiveButtonCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

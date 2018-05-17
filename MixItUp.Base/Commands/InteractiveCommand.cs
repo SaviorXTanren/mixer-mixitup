@@ -21,8 +21,6 @@ namespace MixItUp.Base.Commands
 
     public class InteractiveCommand : PermissionsCommandBase
     {
-        public const string BasicCommandCooldownGroup = "All Buttons";
-
         private static SemaphoreSlim interactiveCommandPerformSemaphore = new SemaphoreSlim(1);
 
         [JsonProperty]
@@ -42,27 +40,41 @@ namespace MixItUp.Base.Commands
         [Obsolete]
         public string CooldownGroup { get; set; }
 
-        [JsonProperty]
-        public InteractiveButtonCommandTriggerType Trigger { get; set; }
+        protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveCommand.interactiveCommandPerformSemaphore; } }
 
         public InteractiveCommand() { }
 
-        public InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
-            : base(control.controlID, CommandTypeEnum.Interactive, EnumHelper.GetEnumName(eventType), requirements)
+        protected InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveControlModel control, string command, RequirementViewModel requirements)
+            : base(control.controlID, CommandTypeEnum.Interactive, command, requirements)
         {
             this.GameID = game.id;
             this.SceneID = scene.sceneID;
             this.Control = control;
+        }
+
+        [JsonIgnore]
+        public virtual string EventTypeString { get { return string.Empty; } }
+
+        public void UpdateWithLatestControl(InteractiveControlModel control) { this.Control = control; }
+    }
+
+    public class InteractiveButtonCommand : InteractiveCommand
+    {
+        public const string BasicCommandCooldownGroup = "All Buttons";
+
+        [JsonProperty]
+        public InteractiveButtonCommandTriggerType Trigger { get; set; }
+
+        public InteractiveButtonCommand() { }
+
+        public InteractiveButtonCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
+            : base(game, scene, control, EnumHelper.GetEnumName(eventType), requirements)
+        {
             this.Trigger = eventType;
         }
 
-        public InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control, RequirementViewModel requirements)
-            : base(control.controlID, CommandTypeEnum.Interactive, string.Empty, requirements)
-        {
-            this.GameID = game.id;
-            this.SceneID = scene.sceneID;
-            this.Control = control;
-        }
+        [JsonIgnore]
+        public InteractiveButtonControlModel Button { get { return (InteractiveButtonControlModel)this.Control; } }
 
         [JsonIgnore]
         public int CooldownAmount
@@ -91,15 +103,7 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
-        public InteractiveButtonControlModel Button { get { return (this.Control is InteractiveButtonControlModel) ? (InteractiveButtonControlModel)this.Control : null; } }
-
-        [JsonIgnore]
-        public InteractiveJoystickControlModel Joystick { get { return (this.Control is InteractiveJoystickControlModel) ? (InteractiveJoystickControlModel)this.Control : null; } }
-
-        [JsonIgnore]
-        public string TriggerTransactionString { get { return this.Trigger.ToString().ToLower(); } }
-
-        public void UpdateWithLatestControl(InteractiveControlModel control) { this.Control = control; }
+        public override string EventTypeString { get { return this.Trigger.ToString().ToLower(); } }
 
         public long GetCooldownTimestamp()
         {
@@ -109,7 +113,20 @@ namespace MixItUp.Base.Commands
             }
             return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now);
         }
+    }
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveCommand.interactiveCommandPerformSemaphore; } }
+    public class InteractiveJoystickCommand : InteractiveCommand
+    {
+        public InteractiveJoystickCommand() { }
+
+        public InteractiveJoystickCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control, RequirementViewModel requirements)
+            : base(game, scene, control, string.Empty, requirements)
+        { }
+
+        [JsonIgnore]
+        public InteractiveJoystickControlModel Joystick { get { return (InteractiveJoystickControlModel)this.Control; } }
+
+        [JsonIgnore]
+        public override string EventTypeString { get { return "move"; } }
     }
 }

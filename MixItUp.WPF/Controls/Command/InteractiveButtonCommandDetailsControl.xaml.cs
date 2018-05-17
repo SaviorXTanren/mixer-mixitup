@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
-    /// Interaction logic for InteractiveCommandDetailsControl.xaml
+    /// Interaction logic for InteractiveButtonCommandDetailsControl.xaml
     /// </summary>
-    public partial class InteractiveCommandDetailsControl : CommandDetailsControlBase
+    public partial class InteractiveButtonCommandDetailsControl : CommandDetailsControlBase
     {
         public InteractiveGameListingModel Game { get; private set; }
         public InteractiveGameVersionModel Version { get; private set; }
         public InteractiveSceneModel Scene { get; private set; }
         public InteractiveControlModel Control { get; private set; }
 
-        private InteractiveCommand command;
+        private InteractiveButtonCommand command;
 
-        public InteractiveCommandDetailsControl(InteractiveCommand command)
+        public InteractiveButtonCommandDetailsControl(InteractiveButtonCommand command)
         {
             this.command = command;
             this.Control = command.Control;
@@ -30,7 +30,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public InteractiveCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveControlModel control)
+        public InteractiveButtonCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveControlModel control)
         {
             this.Game = game;
             this.Version = version;
@@ -111,14 +111,7 @@ namespace MixItUp.WPF.Controls.Command
 
                 if (this.command == null)
                 {
-                    if (this.Control is InteractiveButtonControlModel)
-                    {                
-                        this.command = new InteractiveCommand(this.Game, this.Scene, (InteractiveButtonControlModel)this.Control, trigger, requirements);
-                    }
-                    else
-                    {
-                        this.command = new InteractiveCommand(this.Game, this.Scene, (InteractiveJoystickControlModel)this.Control, requirements);
-                    }
+                    this.command = new InteractiveButtonCommand(this.Game, this.Scene, (InteractiveButtonControlModel)this.Control, trigger, requirements);
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
 

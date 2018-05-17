@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
@@ -6,6 +7,7 @@ using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -182,17 +184,22 @@ namespace MixItUp.Desktop.Services
 
                 foreach (InteractiveCommand command in settings.InteractiveCommands)
                 {
+                    if (command is InteractiveButtonCommand)
+                    {
+                        InteractiveButtonCommand bCommand = (InteractiveButtonCommand)command;
 #pragma warning disable CS0612 // Type or member is obsolete
-                    if (!string.IsNullOrEmpty(command.CooldownGroup) && settings.interactiveCooldownGroupsInternal.ContainsKey(command.CooldownGroup))
-                    {
-                        command.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, command.CooldownGroup, settings.interactiveCooldownGroupsInternal[command.CooldownGroup]);
-                        settings.CooldownGroups[command.CooldownGroup] = settings.interactiveCooldownGroupsInternal[command.CooldownGroup];
-                    }
-                    else
-                    {
-                        command.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Individual, command.IndividualCooldown);
-                    }
+                        if (!string.IsNullOrEmpty(bCommand.CooldownGroup) && settings.interactiveCooldownGroupsInternal.ContainsKey(bCommand.CooldownGroup))
+                        {
+                            bCommand.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, bCommand.CooldownGroup,
+                                settings.interactiveCooldownGroupsInternal[bCommand.CooldownGroup]);
+                            settings.CooldownGroups[bCommand.CooldownGroup] = settings.interactiveCooldownGroupsInternal[bCommand.CooldownGroup];
+                        }
+                        else
+                        {
+                            bCommand.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Individual, bCommand.IndividualCooldown);
+                        }
 #pragma warning restore CS0612 // Type or member is obsolete
+                    }
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);
@@ -203,7 +210,19 @@ namespace MixItUp.Desktop.Services
         {
             if (version < 14)
             {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
+                string data = File.ReadAllText(filePath);
+                JObject dataJObj = JObject.Parse(data);
+                if (dataJObj.ContainsKey("interactiveCommandsInternal"))
+                {
+                    JArray interactiveCommands = (JArray)dataJObj["interactiveCommandsInternal"];
+                    foreach (JToken interactiveCommand in interactiveCommands)
+                    {
+                        interactiveCommand["$type"] = "MixItUp.Base.Commands.InteractiveButtonCommand, MixItUp.Base";
+                    }
+                }
+                data = SerializerHelper.SerializeToString(dataJObj);
+
+                DesktopChannelSettings settings = SerializerHelper.DeserializeFromString<DesktopChannelSettings>(data);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 List<PermissionsCommandBase> permissionCommands = new List<PermissionsCommandBase>();
@@ -260,6 +279,30 @@ namespace MixItUp.Desktop.Services
                 settings.ModerationFilteredWordsExcempt = ConvertLegacyRoles(settings.ModerationFilteredWordsExcempt);
                 settings.ModerationChatTextExcempt = ConvertLegacyRoles(settings.ModerationChatTextExcempt);
                 settings.ModerationBlockLinksExcempt = ConvertLegacyRoles(settings.ModerationBlockLinksExcempt);
+
+                IEnumerable<InteractiveCommand> oldInteractiveCommand = settings.InteractiveCommands.ToList();
+                settings.InteractiveCommands.Clear();
+                foreach (InteractiveCommand command in oldInteractiveCommand)
+                {
+                    settings.InteractiveCommands.Add(new InteractiveButtonCommand()
+                    {
+                        ID = command.ID,
+                        Name = command.Name,
+                        Type = command.Type,
+                        Commands = command.Commands,
+                        Actions = command.Actions,
+                        IsEnabled = command.IsEnabled,
+                        IsBasic = command.IsBasic,
+                        Unlocked = command.Unlocked,
+
+                        Requirements = command.Requirements,
+
+                        GameID = command.GameID,
+                        SceneID = command.SceneID,
+                        Control = command.Control,
+                        Trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>(command.CommandsString),
+                    });
+                }
 
                 await ChannelSession.Services.Settings.Save(settings);
             }

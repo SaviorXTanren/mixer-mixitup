@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -13,73 +14,87 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
-    public class InteractiveConnectedControlCommand
+    public abstract class InteractiveConnectedControlCommand
     {
         public InteractiveConnectedSceneModel Scene { get; set; }
 
-        public InteractiveConnectedButtonControlModel Button { get; set; }
-        public InteractiveConnectedJoystickControlModel Joystick { get; set; }
-
-        public InteractiveControlModel Control { get { return (this.Button != null) ? (InteractiveControlModel)this.Button : (InteractiveControlModel)this.Joystick; } }
+        public InteractiveControlModel Control { get; set; }
 
         public InteractiveCommand Command { get; set; }
 
         public InteractiveConnectedControlCommand(InteractiveConnectedSceneModel scene, InteractiveControlModel control, InteractiveCommand command)
         {
             this.Scene = scene;
+            this.Control = control;
             this.Command = command;
-            if (control is InteractiveConnectedButtonControlModel)
-            {
-                this.Button = (InteractiveConnectedButtonControlModel)control;
-            }
-            else
-            {
-                this.Joystick = (InteractiveConnectedJoystickControlModel)control;
-            }
         }
 
         public string Name { get { return this.Control.controlID; } }
-        public int SparkCost { get { return (this.Button != null) ? this.Button.cost.GetValueOrDefault() : 0; } }
-        public long CooldownTimestamp { get { return this.Command.GetCooldownTimestamp(); } }
-        public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
+        public string EventTypeString { get { return (this.Command != null) ? this.Command.EventTypeString : string.Empty; } }
+
+        public abstract int SparkCost { get; }
+        public abstract long CooldownTimestamp { get; }
 
         public bool DoesInputMatchCommand(InteractiveGiveInputModel input)
         {
-            if (this.Button != null && !this.TriggerTransactionString.Equals(input.input.eventType))
-            {
-                return false;
-            }
-            return true;
+            return this.EventTypeString.Equals(input.input.eventType);
         }
 
-        public async Task ProcessCommand(UserViewModel user)
+        public virtual async Task ProcessCommand(UserViewModel user)
         {
-            if (this.Button != null)
-            {
-                this.Button.cooldown = this.Command.GetCooldownTimestamp();
-
-                List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
-                if (!string.IsNullOrEmpty(this.Command.CooldownGroupName))
-                {
-                    foreach (var otherItem in ChannelSession.Interactive.Controls.Values.Where(c => c.Button != null && this.Command.CooldownGroupName.Equals(c.Command.CooldownGroupName)))
-                    {
-                        otherItem.Button.cooldown = this.Button.cooldown;
-                        buttons.Add(otherItem.Button);
-                    }
-                }
-                else
-                {
-                    buttons.Add(this.Button);
-                }
-
-                await ChannelSession.Interactive.UpdateControls(this.Scene, buttons);
-            }
-            else if (this.Joystick != null)
-            {
-
-            }
-
             await this.Command.Perform(user);
+        }
+    }
+
+    public class InteractiveConnectedButtonCommand : InteractiveConnectedControlCommand
+    {
+        public InteractiveConnectedButtonCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedButtonControlModel button, InteractiveCommand command) : base(scene, button, command) { }
+
+        public InteractiveConnectedButtonControlModel Button { get { return (InteractiveConnectedButtonControlModel)this.Control; } set { this.Control = value; } }
+
+        public InteractiveButtonCommand ButtonCommand { get { return (InteractiveButtonCommand)this.Command; } }
+
+        public override int SparkCost { get { return this.Button.cost.GetValueOrDefault(); } }
+        public override long CooldownTimestamp { get { return this.ButtonCommand.GetCooldownTimestamp(); } }
+
+        public override async Task ProcessCommand(UserViewModel user)
+        {
+            this.Button.cooldown = this.CooldownTimestamp;
+
+            List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
+            if (!string.IsNullOrEmpty(this.ButtonCommand.CooldownGroupName))
+            {
+                var otherButtons = ChannelSession.Interactive.Controls.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
+                otherButtons = otherButtons.Where(c => this.ButtonCommand.CooldownGroupName.Equals(c.ButtonCommand.CooldownGroupName));
+                foreach (var otherItem in otherButtons)
+                {
+                    otherItem.Button.cooldown = this.Button.cooldown;
+                    buttons.Add(otherItem.Button);
+                }
+            }
+            else
+            {
+                buttons.Add(this.Button);
+            }
+
+            await ChannelSession.Interactive.UpdateControls(this.Scene, buttons);
+
+            await base.ProcessCommand(user);
+        }
+    }
+
+    public class InteractiveConnectedJoystickCommand : InteractiveConnectedControlCommand
+    {
+        public InteractiveConnectedJoystickCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedJoystickControlModel joystick, InteractiveCommand command) : base(scene, joystick, command) { }
+
+        public InteractiveConnectedJoystickControlModel Joystick { get { return (InteractiveConnectedJoystickControlModel)this.Control; } set { this.Control = value; } }
+
+        public override int SparkCost { get { return 0; } }
+        public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
+
+        public override async Task ProcessCommand(UserViewModel user)
+        {
+            await base.ProcessCommand(user);
         }
     }
 
@@ -334,7 +349,14 @@ namespace MixItUp.Base.MixerAPI
             if (command != null)
             {
                 command.UpdateWithLatestControl(control);
-                this.Controls[control.controlID] = new InteractiveConnectedControlCommand(scene, control, command);
+                if (command is InteractiveButtonCommand)
+                {
+                    this.Controls[control.controlID] = new InteractiveConnectedButtonCommand(scene, (InteractiveConnectedButtonControlModel)control, command);
+                }
+                else if (command is InteractiveJoystickCommand)
+                {
+                    this.Controls[control.controlID] = new InteractiveConnectedJoystickCommand(scene, (InteractiveConnectedJoystickControlModel)control, command);
+                }
             }
         }
 
@@ -465,7 +487,7 @@ namespace MixItUp.Base.MixerAPI
                 }
                 this.OnGiveInput(this, e);
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
         }
 
         private async void InteractiveClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

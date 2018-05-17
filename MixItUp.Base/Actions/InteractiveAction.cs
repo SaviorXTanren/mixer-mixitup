@@ -108,9 +108,9 @@ namespace MixItUp.Base.Actions
                     List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
                     if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton)
                     {
-                        if (ChannelSession.Interactive.Controls.ContainsKey(this.CooldownID) && ChannelSession.Interactive.Controls[this.CooldownID].Button != null)
+                        if (ChannelSession.Interactive.Controls.ContainsKey(this.CooldownID) && ChannelSession.Interactive.Controls[this.CooldownID] is InteractiveConnectedButtonCommand)
                         {
-                            InteractiveConnectedControlCommand command = ChannelSession.Interactive.Controls[this.CooldownID];
+                            InteractiveConnectedButtonCommand command = (InteractiveConnectedButtonCommand)ChannelSession.Interactive.Controls[this.CooldownID];
                             scene = command.Scene;
                             buttons.Add(command.Button);
                         }
@@ -118,23 +118,23 @@ namespace MixItUp.Base.Actions
 
                     if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
                     {
-                        IEnumerable<InteractiveConnectedControlCommand> commands = ChannelSession.Interactive.Controls.Values.Where(c => c.Button != null &&
-                            this.CooldownID.Equals(c.Command.CooldownGroupName));
-                        if (commands.Count() > 0)
+                        var allButtons = ChannelSession.Interactive.Controls.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
+                        allButtons = allButtons.Where(c => this.CooldownID.Equals(c.ButtonCommand.CooldownGroupName));
+                        if (allButtons.Count() > 0)
                         {
-                            scene = commands.FirstOrDefault().Scene;
-                            buttons.AddRange(commands.Select(c => c.Button));
+                            scene = allButtons.FirstOrDefault().Scene;
+                            buttons.AddRange(allButtons.Select(c => c.Button));
                         }
                     }
 
                     if (this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
                     {
-                        IEnumerable<InteractiveConnectedControlCommand> commands = ChannelSession.Interactive.Controls.Values.Where(c => c.Button != null &&
-                            this.CooldownID.Equals(c.Command.SceneID));
-                        if (commands.Count() > 0)
+                        var allButtons = ChannelSession.Interactive.Controls.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
+                        allButtons = allButtons.Where(c => this.CooldownID.Equals(c.ButtonCommand.SceneID));
+                        if (allButtons.Count() > 0)
                         {
-                            scene = commands.FirstOrDefault().Scene;
-                            buttons.AddRange(commands.Select(c => c.Button));
+                            scene = allButtons.FirstOrDefault().Scene;
+                            buttons.AddRange(allButtons.Select(c => c.Button));
                         }
                     }
 

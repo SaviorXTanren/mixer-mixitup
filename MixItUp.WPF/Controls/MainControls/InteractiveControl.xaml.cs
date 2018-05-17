@@ -67,7 +67,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 return string.Empty;
             }
         }
-        public string TriggerTransactionString { get { return (this.Command != null) ? this.Command.TriggerTransactionString : string.Empty; } }
+        public string EventTypeString { get { return (this.Command != null) ? this.Command.EventTypeString : string.Empty; } }
     }
 
     /// <summary>
@@ -259,7 +259,7 @@ namespace MixItUp.WPF.Controls.MainControls
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
 
-            CommandWindow window = new CommandWindow(new InteractiveCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control));
+            CommandWindow window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, command.Control));
             window.Closed += Window_Closed;
             window.Show();
         }
@@ -270,9 +270,12 @@ namespace MixItUp.WPF.Controls.MainControls
             InteractiveCommand command = commandButtonsControl.GetCommandFromCommandButtons<InteractiveCommand>(sender);
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new InteractiveCommandDetailsControl(command));
-                window.Closed += Window_Closed;
-                window.Show();
+                if (command is InteractiveButtonCommand)
+                {
+                    CommandWindow window = new CommandWindow(new InteractiveButtonCommandDetailsControl((InteractiveButtonCommand)command));
+                    window.Closed += Window_Closed;
+                    window.Show();
+                }
             }
         }
 
