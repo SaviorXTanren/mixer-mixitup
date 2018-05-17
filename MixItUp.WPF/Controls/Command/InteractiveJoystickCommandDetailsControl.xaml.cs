@@ -188,7 +188,7 @@ namespace MixItUp.WPF.Controls.Command
             CommandBase command = await this.GetNewCommand();
             if (command != null)
             {
-                await MessageBoxHelper.ShowTimedCustomDialog(new InteractiveJoystickSetupTestDialogControl((InteractiveJoystickCommand)command), 15000);
+                await MessageBoxHelper.ShowTimedCustomDialog(new InteractiveJoystickSetupTestDialogControl((InteractiveJoystickCommand)command), 16000);
             }
         }
     }

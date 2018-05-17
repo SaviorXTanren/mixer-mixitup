@@ -46,6 +46,9 @@ namespace MixItUp.WPF.Controls.Dialogs
             this.StatusTextBlock.Text = "Testing Joystick:" + Environment.NewLine + Environment.NewLine + "Right";
             await this.command.Perform(ChannelSession.GetCurrentUser(), new List<string>() { "1.0", "0.0" });
             await Task.Delay(2500);
+
+            this.StatusTextBlock.Text = "Testing Complete";
+            await this.command.Perform(ChannelSession.GetCurrentUser(), new List<string>() { "0.0", "0.0" });
         }
     }
 }
