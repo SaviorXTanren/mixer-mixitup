@@ -3,6 +3,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -383,14 +384,8 @@ namespace MixItUp.Base.Actions
             string name = typedName.ToString();
             if (name == "Random")
             {
-                List<T> values = new List<T>();
-                foreach(T value in Enum.GetValues(typeof(T)))
-                {
-                    if (value.ToString() != "None" && value.ToString() != "Random")
-                    {
-                        values.Add(value);
-                    }
-                }
+                List<T> values = EnumHelper.GetEnumList<T>().ToList();
+                values.RemoveAll(v => v.ToString().Equals("None") || v.ToString().Equals("Random"));
                 name = values[Random.Next(values.Count)].ToString();
             }
 
