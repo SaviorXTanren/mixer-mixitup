@@ -61,11 +61,10 @@ namespace MixItUp.Base.Statistics
                 return Task.FromResult(0);
             }));
 
-            this.Statistics.Add(new TrackedNumberStatisticDataTracker("Chatters", "MessageTextOutline", (StatisticDataTrackerBase stats) =>
+            this.Statistics.Add(new TrackedNumberStatisticDataTracker("Chatters", "MessageTextOutline", async (StatisticDataTrackerBase stats) =>
             {
                 TrackedNumberStatisticDataTracker numberStats = (TrackedNumberStatisticDataTracker)stats;
-                numberStats.AddValue(ChannelSession.ChannelUsers.Count);
-                return Task.FromResult(0);
+                numberStats.AddValue(await ChannelSession.ChannelUsers.Count());
             }));
 
             this.Statistics.Add(this.followTracker);

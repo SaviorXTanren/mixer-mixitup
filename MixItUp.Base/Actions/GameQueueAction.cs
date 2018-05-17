@@ -57,7 +57,7 @@ namespace MixItUp.Base.Actions
                     int position = ChannelSession.GameQueue.IndexOf(user);
                     if (position == -1)
                     {
-                        if (!await ChannelSession.Settings.GameQueueRequirements.DoesMeetUserRoleRequirement(user))
+                        if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetUserRoleRequirement(user))
                         {
                             await ChannelSession.Settings.GameQueueRequirements.Role.SendUserRoleNotMetWhisper(user);
                             return;
@@ -77,11 +77,6 @@ namespace MixItUp.Base.Actions
 
                         if (ChannelSession.Settings.GameQueueSubPriority)
                         {
-                            if (!user.IsSubscriber)
-                            {
-                                await user.SetSubscribeDate();
-                            }
-
                             if (user.IsSubscriber)
                             {
                                 int totalSubs = ChannelSession.GameQueue.Count(u => u.IsSubscriber);

@@ -62,7 +62,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
         }
 
-        public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
+        public bool DoesMeetUserRoleRequirement(UserViewModel user)
         {
             if (user.PrimaryRole == MixerRoleEnum.Streamer)
             {
@@ -70,18 +70,10 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
             else if (this.MixerRole == MixerRoleEnum.Follower)
             {
-                if (!user.IsFollower)
-                {
-                    await user.SetDetails();
-                }
                 return user.IsFollower;
             }
             else if (this.MixerRole == MixerRoleEnum.Subscriber)
             {
-                if (!user.IsSubscriber)
-                {
-                    await user.SetSubscribeDate();
-                }
                 return user.IsSubscriber;
             }
             else if (this.MixerRole == MixerRoleEnum.Custom && !string.IsNullOrEmpty(this.CustomRole))

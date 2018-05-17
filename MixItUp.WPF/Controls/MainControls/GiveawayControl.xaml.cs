@@ -202,7 +202,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         return;
                     }
 
-                    if (await ChannelSession.Settings.GiveawayRequirements.DoesMeetUserRoleRequirement(e.User))
+                    if (ChannelSession.Settings.GiveawayRequirements.DoesMeetUserRoleRequirement(e.User))
                     {
                         if (ChannelSession.Settings.GiveawayRequirements.Rank != null && ChannelSession.Settings.GiveawayRequirements.Rank.GetCurrency() != null)
                         {

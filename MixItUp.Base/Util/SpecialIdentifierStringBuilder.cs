@@ -154,44 +154,54 @@ namespace MixItUp.Base.Util
 
             await this.HandleUserSpecialIdentifiers(new UserViewModel(ChannelSession.Channel.user), StreamerSpecialIdentifierHeader);
 
-            await this.HandleUserSpecialIdentifiers(ChannelSession.ChannelUsers.PickRandom(), RandomSpecialIdentifierHeader);
-            if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
+            if (this.ContainsSpecialIdentifier(RandomSpecialIdentifierHeader))
             {
-                int startIndex = 0;
-                do
+                IEnumerable<UserViewModel> users = await ChannelSession.ChannelUsers.GetAllUsers();
+                if (users.Count() > 0)
                 {
-                    startIndex = this.GetFirstInstanceOfSpecialIdentifier(RandomNumberSpecialIdentifier, startIndex);
-                    if (startIndex >= 0)
-                    {
-                        int endIndex = 0;
-                        for (endIndex = startIndex + RandomNumberSpecialIdentifier.Length + 1; endIndex < this.text.Length; endIndex++)
-                        {
-                            if (!char.IsDigit(this.text[endIndex]))
-                            {
-                                break;
-                            }
-                        }
+                    Random random = new Random();
+                    int index = random.Next(users.Count());
+                    await this.HandleUserSpecialIdentifiers(users.ElementAt(index), RandomSpecialIdentifierHeader);
+                }
 
-                        if (endIndex < this.text.Length)
+                if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
+                {
+                    int startIndex = 0;
+                    do
+                    {
+                        startIndex = this.GetFirstInstanceOfSpecialIdentifier(RandomNumberSpecialIdentifier, startIndex);
+                        if (startIndex >= 0)
                         {
-                            string randomSI = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
-                            if (int.TryParse(randomSI.Replace(RandomNumberSpecialIdentifier, ""), out int randomNumberMax) && randomNumberMax > 0)
+                            int endIndex = 0;
+                            for (endIndex = startIndex + RandomNumberSpecialIdentifier.Length + 1; endIndex < this.text.Length; endIndex++)
                             {
-                                Random random = new Random();
-                                int randomNumber = (random.Next() % randomNumberMax) + 1;
-                                this.ReplaceSpecialIdentifier(randomSI, randomNumber.ToString());
+                                if (!char.IsDigit(this.text[endIndex]))
+                                {
+                                    break;
+                                }
+                            }
+
+                            if (endIndex < this.text.Length)
+                            {
+                                string randomSI = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
+                                if (int.TryParse(randomSI.Replace(RandomNumberSpecialIdentifier, ""), out int randomNumberMax) && randomNumberMax > 0)
+                                {
+                                    Random random = new Random();
+                                    int randomNumber = (random.Next() % randomNumberMax) + 1;
+                                    this.ReplaceSpecialIdentifier(randomSI, randomNumber.ToString());
+                                }
+                                else
+                                {
+                                    startIndex = endIndex;
+                                }
                             }
                             else
                             {
                                 startIndex = endIndex;
                             }
                         }
-                        else
-                        {
-                            startIndex = endIndex;
-                        }
-                    }
-                } while (startIndex > 0);
+                    } while (startIndex > 0);
+                }
             }
         }
 
@@ -217,7 +227,7 @@ namespace MixItUp.Base.Util
         {
             if (user != null)
             {
-                await user.SetDetails();
+                await user.RefreshDetails();
 
                 if (ChannelSession.Settings.UserData.ContainsKey(user.ID))
                 {
