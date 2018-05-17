@@ -3,6 +3,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -88,6 +89,8 @@ namespace MixItUp.Base.Actions
 
         [Name("Roll In")]
         RollIn,
+
+        Random,
     }
 
     public enum OverlayEffectVisibleAnimationTypeEnum
@@ -105,6 +108,8 @@ namespace MixItUp.Base.Actions
         Wobble,
         Jello,
         Flip,
+
+        Random,
     }
 
     public enum OverlayEffectExitAnimationTypeEnum
@@ -176,6 +181,8 @@ namespace MixItUp.Base.Actions
 
         [Name("Roll Out")]
         RollOut,
+
+        Random,
     }
 
     [DataContract]
@@ -327,21 +334,23 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class OverlayEffectBase
     {
+        private static readonly Random Random = new Random();
+
         [DataMember]
         public OverlayEffectTypeEnum EffectType { get; set; }
 
         [DataMember]
         public OverlayEffectEntranceAnimationTypeEnum EntranceAnimation { get; set; }
         [DataMember]
-        public string EntranceAnimationName { get { return this.GetAnimationClassName(this.EntranceAnimation.ToString()); } set { } }
+        public string EntranceAnimationName { get { return this.GetAnimationClassName(this.EntranceAnimation); } set { } }
         [DataMember]
         public OverlayEffectVisibleAnimationTypeEnum VisibleAnimation { get; set; }
         [DataMember]
-        public string VisibleAnimationName { get { return this.GetAnimationClassName(this.VisibleAnimation.ToString()); } set { } }
+        public string VisibleAnimationName { get { return this.GetAnimationClassName(this.VisibleAnimation); } set { } }
         [DataMember]
         public OverlayEffectExitAnimationTypeEnum ExitAnimation { get; set; }
         [DataMember]
-        public string ExitAnimationName { get { return this.GetAnimationClassName(this.ExitAnimation.ToString()); } set { } }
+        public string ExitAnimationName { get { return this.GetAnimationClassName(this.ExitAnimation); } set { } }
 
         [DataMember]
         public double Duration;
@@ -370,8 +379,16 @@ namespace MixItUp.Base.Actions
             return jobj.ToObject<T>();
         }
 
-        private string GetAnimationClassName(string name)
+        private string GetAnimationClassName<T>(T typedName)
         {
+            string name = typedName.ToString();
+            if (name == "Random")
+            {
+                List<T> values = EnumHelper.GetEnumList<T>().ToList();
+                values.RemoveAll(v => v.ToString().Equals("None") || v.ToString().Equals("Random"));
+                name = values[Random.Next(values.Count)].ToString();
+            }
+
             if (!string.IsNullOrEmpty(name) && !name.Equals("None"))
             {
                 return Char.ToLowerInvariant(name[0]) + name.Substring(1);
