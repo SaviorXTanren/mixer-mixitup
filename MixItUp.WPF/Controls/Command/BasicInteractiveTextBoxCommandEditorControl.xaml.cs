@@ -71,6 +71,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 this.SparkCostTextBox.Text = this.command.TextBox.cost.ToString();
+                this.UseChatModerationCheckBox.IsChecked = this.command.UseChatModeration;
 
                 if (this.command.Actions.First() is ChatAction)
                 {
@@ -136,6 +137,7 @@ namespace MixItUp.WPF.Controls.Command
                 this.command.TextBox.cost = sparkCost;
                 await ChannelSession.Connection.UpdateInteractiveGameVersion(this.version);
 
+                this.command.UseChatModeration = this.UseChatModerationCheckBox.IsChecked.GetValueOrDefault();
                 this.command.IsBasic = true;
                 this.command.Actions.Clear();
                 this.command.Actions.Add(action);

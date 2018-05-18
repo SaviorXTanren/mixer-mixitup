@@ -52,6 +52,7 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.command != null)
             {
+                this.UseChatModerationCheckBox.IsChecked = this.command.UseChatModeration;
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.Requirements.SetRequirements(this.command.Requirements);
 
@@ -97,6 +98,7 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 this.command.TextBox.cost = int.Parse(this.SparkCostTextBox.Text);
+                this.command.UseChatModeration = this.UseChatModerationCheckBox.IsChecked.GetValueOrDefault();
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
                 this.command.Requirements = requirements;
 

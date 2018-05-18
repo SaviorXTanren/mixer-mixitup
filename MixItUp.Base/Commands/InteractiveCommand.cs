@@ -2,6 +2,7 @@
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -338,6 +339,9 @@ namespace MixItUp.Base.Commands
             : base(game, scene, control, string.Empty, requirements)
         { }
 
+        [JsonProperty]
+        public bool UseChatModeration { get; set; }
+
         [JsonIgnore]
         public InteractiveTextBoxControlModel TextBox { get { return (InteractiveTextBoxControlModel)this.Control; } }
 
@@ -369,5 +373,19 @@ namespace MixItUp.Base.Commands
 
         [JsonIgnore]
         public override string EventTypeString { get { return "submit"; } }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        {
+            if (this.UseChatModeration && arguments.Count() > 0)
+            {
+                string moderationReason = await ModerationHelper.ShouldBeModerated(user, arguments.ElementAt(0));
+                if (!string.IsNullOrEmpty(moderationReason))
+                {
+                    await ModerationHelper.SendModerationWhisper(user, moderationReason);
+                    return;
+                }
+            }
+            await base.PerformInternal(user, arguments, token);
+        }
     }
 }

@@ -39,6 +39,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -49,7 +51,10 @@
             <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,5" VerticalAlignment="Bottom">How many Sparks should this button cost?:</TextBlock>
             <TextBox x:Name="SparkCostTextBox" Grid.Column="2" Grid.Row="0" MaterialDesign:HintAssist.Hint="Spark Cost (EX: 50)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBlock x:Name="TextValueSpecialIdentifierTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Grid.Row="2" Grid.ColumnSpan="3" />
+            <TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,5" VerticalAlignment="Center">Would you like to use Chat Moderation on all entered text?:</TextBlock>
+            <CheckBox x:Name="UseChatModerationCheckBox" Grid.Column="2" Grid.Row="2" Margin="0,-8,0,0" />
+
+            <TextBlock x:Name="TextValueSpecialIdentifierTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Grid.Row="4" Grid.ColumnSpan="3" />
             
         </Grid>
 

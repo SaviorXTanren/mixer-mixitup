@@ -59,7 +59,7 @@
 
                         <TextBox x:Name="BannedWordsTextBox" Grid.Row="8" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" LostFocus="TextBoxes_LostFocus" />
 
-                        <ComboBox x:Name="FilteredWordsExemptComboBox" Grid.Row="10" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Width="150" SelectionChanged="ComboBox_SelectionChanged" />
+                        <ComboBox x:Name="FilteredWordsExemptComboBox" Grid.Row="10" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                     </Grid>
                 </GroupBox>
 
@@ -101,7 +101,7 @@
 
                                     <Slider x:Name="MaxCapsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
 
-                                    <ComboBox x:Name="MaxCapsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Width="50" SelectionChanged="ComboBox_SelectionChanged" />
+                                    <ComboBox x:Name="MaxCapsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Width="50" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                                 </Grid>
                             </Grid>
 
@@ -122,7 +122,7 @@
 
                                     <Slider x:Name="MaxPunctuationSymbolsSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
 
-                                    <ComboBox x:Name="MaxPunctuationSymbolsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Width="50" SelectionChanged="ComboBox_SelectionChanged" />
+                                    <ComboBox x:Name="MaxPunctuationSymbolsTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Width="50" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                                 </Grid>
                             </Grid>
 
@@ -143,11 +143,11 @@
 
                                     <Slider x:Name="MaxEmotesSlider" Grid.Column="0" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" />
 
-                                    <ComboBox x:Name="MaxEmotesTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Width="50" LostFocus="Slider_LostFocus" />
+                                    <ComboBox x:Name="MaxEmotesTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Type" Width="50" LostFocus="Slider_LostFocus" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                                 </Grid>
                             </Grid>
 
-                            <ComboBox x:Name="ChatTextModerationExemptComboBox" Grid.Row="6" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Width="150" SelectionChanged="ComboBox_SelectionChanged" />
+                            <ComboBox x:Name="ChatTextModerationExemptComboBox" Grid.Row="6" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                         </Grid>
                     </GroupBox>
@@ -165,7 +165,7 @@
                             <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
                             <ToggleButton x:Name="BlockLinksToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
-                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Width="150" SelectionChanged="ComboBox_SelectionChanged" />
+                            <ComboBox x:Name="BlockLinksExemptComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                         </Grid>
                     </GroupBox>

@@ -197,12 +197,12 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
                 {
-                    await ChannelSession.Connection.AddUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                    await ChannelSession.Chat.BanUser(user);
                 }
             }
             else if (result == UserDialogResult.Unban)
             {
-                await ChannelSession.Connection.RemoveUserRoles(ChannelSession.Channel, user.GetModel(), new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                await ChannelSession.Chat.UnBanUser(user);
             }
         }
 
