@@ -21,8 +21,9 @@ namespace MixItUp.Base.Util
 
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
-        public const string RandomSpecialIdentifierHeader = "random";
         public const string StreamerSpecialIdentifierHeader = "streamer";
+        public const string TargetSpecialIdentifierHeader = "target";
+        public const string RandomSpecialIdentifierHeader = "random";
         public const string RandomNumberSpecialIdentifier = "randomnumber";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
@@ -149,13 +150,9 @@ namespace MixItUp.Base.Util
                     string currentArgumentSpecialIdentifierHeader = ArgSpecialIdentifierHeader + (i + 1);
                     if (this.ContainsSpecialIdentifier(currentArgumentSpecialIdentifierHeader))
                     {
-                        string username = arguments.ElementAt(i);
-                        username = username.Replace("@", "");
-
-                        UserModel argUserModel = await ChannelSession.Connection.GetUser(username);
-                        if (argUserModel != null)
+                        UserViewModel argUser = await this.GetUserFromArgument(arguments.ElementAt(i));
+                        if (argUser != null)
                         {
-                            UserViewModel argUser = new UserViewModel(argUserModel);
                             await this.HandleUserSpecialIdentifiers(argUser, currentArgumentSpecialIdentifierHeader);
                         }
 
@@ -164,6 +161,22 @@ namespace MixItUp.Base.Util
                 }
 
                 this.ReplaceSpecialIdentifier("allargs", string.Join(" ", arguments));
+            }
+
+            if (this.ContainsSpecialIdentifier(TargetSpecialIdentifierHeader))
+            {
+                UserViewModel targetUser = null;
+                if (arguments.Count() > 0)
+                {
+                    targetUser = await this.GetUserFromArgument(arguments.ElementAt(0));
+                }
+
+                if (targetUser == null)
+                {
+                    targetUser = user;
+                }
+
+                await this.HandleUserSpecialIdentifiers(targetUser, TargetSpecialIdentifierHeader);
             }
 
             if (this.ContainsSpecialIdentifier(StreamerSpecialIdentifierHeader))
@@ -291,6 +304,17 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");
                 }
             }
+        }
+
+        private async Task<UserViewModel> GetUserFromArgument(string argument)
+        {
+            string username = argument.Replace("@", "");
+            UserModel argUserModel = await ChannelSession.Connection.GetUser(username);
+            if (argUserModel != null)
+            {
+                return new UserViewModel(argUserModel);
+            }
+            return null;
         }
     }
 }
