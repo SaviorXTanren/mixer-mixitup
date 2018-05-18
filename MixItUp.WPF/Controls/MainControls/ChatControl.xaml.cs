@@ -118,9 +118,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 await this.Dispatcher.InvokeAsync<Task>(async () =>
                 {
                     await this.RefreshUserList();
-
-                    this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
-                    this.ChatCountTextBlock.Text = (await ChannelSession.ChannelUsers.Count()).ToString();
                 });
 
                 tokenSource.Token.ThrowIfCancellationRequested();
@@ -143,6 +140,9 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.UserControls.Add(new ChatUserControl(user));
             }
+
+            this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
+            this.ChatCountTextBlock.Text = (await ChannelSession.ChannelUsers.Count()).ToString();
 
             userUpdateLock.Release();
         }

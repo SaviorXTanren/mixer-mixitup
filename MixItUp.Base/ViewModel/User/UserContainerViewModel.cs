@@ -46,7 +46,7 @@ namespace MixItUp.Base.ViewModel.User
                     if (!this.users.ContainsKey(chatUser.userId.GetValueOrDefault()))
                     {
                         this.users[chatUser.userId.GetValueOrDefault()] = new UserViewModel(chatUser);
-                        await this.users[chatUser.userId.GetValueOrDefault()].RefreshDetails();
+                        await this.users[chatUser.userId.GetValueOrDefault()].RefreshDetails(getChatDetails: false);
                     }
                     this.users[chatUser.userId.GetValueOrDefault()].SetChatDetails(chatUser);
                 });
@@ -99,6 +99,15 @@ namespace MixItUp.Base.ViewModel.User
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
             return await this.LockWrapper(() => Task.FromResult(this.users.Values));
+        }
+
+        public async Task Clear()
+        {
+            await this.LockWrapper(() =>
+            {
+                this.users.Clear();
+                return Task.FromResult(0);
+            });
         }
 
         public async Task<int> Count()
