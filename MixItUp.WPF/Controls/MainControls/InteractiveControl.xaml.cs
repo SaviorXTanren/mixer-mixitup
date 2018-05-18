@@ -26,6 +26,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         public InteractiveButtonControlModel Button { get; set; }
         public InteractiveJoystickControlModel Joystick { get; set; }
+        public InteractiveTextBoxControlModel TextBox { get; set; }
 
         public InteractiveCommand Command { get; set; }
         public Visibility NewCommandButtonVisibility { get { return (this.Command == null) ? Visibility.Visible : Visibility.Collapsed; } }
@@ -33,6 +34,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         public InteractiveControlCommandItem(InteractiveButtonControlModel button) { this.Button = button; }
         public InteractiveControlCommandItem(InteractiveJoystickControlModel joystick) { this.Joystick = joystick; }
+        public InteractiveControlCommandItem(InteractiveTextBoxControlModel textBox) { this.TextBox = textBox; }
 
         public InteractiveControlCommandItem(InteractiveCommand command)
         {
@@ -41,17 +43,50 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.Button = (InteractiveButtonControlModel)command.Control;
             }
-            else
+            else if(command.Control is InteractiveJoystickControlModel)
             {
                 this.Joystick = (InteractiveJoystickControlModel)command.Control;
             }
+            else if (command.Control is InteractiveTextBoxControlModel)
+            {
+                this.TextBox = (InteractiveTextBoxControlModel)command.Control;
+            }
         }
 
-        public InteractiveControlModel Control { get { return (this.Button != null) ? (InteractiveControlModel)this.Button : (InteractiveControlModel)this.Joystick; } }
+        public InteractiveControlModel Control
+        {
+            get
+            {
+                if (this.Button != null) { return this.Button; }
+                if (this.Joystick != null) { return this.Joystick; }
+                if (this.TextBox != null) { return this.TextBox; }
+                return null;
+            }
+        }
 
         public string Name { get { return this.Control.controlID; } }
-        public string Type { get { return (this.Control is InteractiveButtonControlModel) ? "Button" : "Joystick"; } }
-        public string SparkCost { get { return (this.Button != null) ? this.Button.cost.ToString() : string.Empty; } }
+
+        public string Type
+        {
+            get
+            {
+                if (this.Control is InteractiveButtonControlModel) { return "Button"; }
+                if (this.Control is InteractiveJoystickControlModel) { return "Joystick"; }
+                if (this.Control is InteractiveTextBoxControlModel) { return "Text Box"; }
+                return "Unknown";
+            }
+        }
+
+        public string SparkCost
+        {
+            get
+            {
+                if (this.Control is InteractiveButtonControlModel) { return this.Button.cost.ToString(); }
+                if (this.Control is InteractiveTextBoxControlModel) { return this.TextBox.cost.ToString(); }
+                return string.Empty;
+            }
+        }
+
         public string Cooldown
         {
             get
@@ -67,6 +102,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 return string.Empty;
             }
         }
+
         public string EventTypeString { get { return (this.Command != null) ? this.Command.EventTypeString : string.Empty; } }
     }
 
@@ -169,32 +205,47 @@ namespace MixItUp.WPF.Controls.MainControls
             this.currentSceneControlItems.Clear();
             foreach (InteractiveButtonControlModel button in this.selectedScene.buttons.OrderBy(b => b.controlID))
             {
-                this.currentSceneControlItems.Add(this.CreateControlItem(this.selectedScene.sceneID, button));
+                this.AddControlItem(this.selectedScene.sceneID, button);
             }
 
             foreach (InteractiveJoystickControlModel joystick in this.selectedScene.joysticks.OrderBy(j => j.controlID))
             {
-                this.currentSceneControlItems.Add(this.CreateControlItem(this.selectedScene.sceneID, joystick));
+                this.AddControlItem(this.selectedScene.sceneID, joystick);
+            }
+
+            foreach (InteractiveTextBoxControlModel textBox in this.selectedScene.textBoxes.OrderBy(j => j.controlID))
+            {
+                this.AddControlItem(this.selectedScene.sceneID, textBox);
             }
         }
 
-        private InteractiveControlCommandItem CreateControlItem(string sceneID, InteractiveControlModel control)
+        private void AddControlItem(string sceneID, InteractiveControlModel control)
         {
             InteractiveCommand command = ChannelSession.Settings.InteractiveCommands.FirstOrDefault(c => c.GameID.Equals(this.selectedGame.id) &&
                 c.SceneID.Equals(sceneID) && c.Control.controlID.Equals(control.controlID));
 
+            InteractiveControlCommandItem item = null;
             if (command != null)
             {
                 command.UpdateWithLatestControl(control);
-                return new InteractiveControlCommandItem(command);
+                item = new InteractiveControlCommandItem(command);
             }
             else if (control is InteractiveButtonControlModel)
             {
-                return new InteractiveControlCommandItem((InteractiveButtonControlModel)control);
+                item = new InteractiveControlCommandItem((InteractiveButtonControlModel)control);
             }
-            else
+            else if (control is InteractiveJoystickControlModel)
             {
-                return new InteractiveControlCommandItem((InteractiveJoystickControlModel)control);
+                item = new InteractiveControlCommandItem((InteractiveJoystickControlModel)control);
+            }
+            else if (control is InteractiveTextBoxControlModel)
+            {
+                item = new InteractiveControlCommandItem((InteractiveTextBoxControlModel)control);
+            }
+
+            if (item != null)
+            {
+                this.currentSceneControlItems.Add(item);
             }
         }
 
@@ -258,15 +309,22 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             Button button = (Button)sender;
             InteractiveControlCommandItem command = (InteractiveControlCommandItem)button.DataContext;
+            CommandWindow window = null;
             if (command.Control is InteractiveButtonControlModel)
             {
-                CommandWindow window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, (InteractiveButtonControlModel)command.Control));
-                window.Closed += Window_Closed;
-                window.Show();
+                window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, (InteractiveButtonControlModel)command.Control));
             }
             else if (command.Control is InteractiveJoystickControlModel)
             {
-                CommandWindow window = new CommandWindow(new InteractiveJoystickCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, (InteractiveJoystickControlModel)command.Control));
+                window = new CommandWindow(new InteractiveJoystickCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, (InteractiveJoystickControlModel)command.Control));
+            }
+            else if (command.Control is InteractiveTextBoxControlModel)
+            {
+                window = new CommandWindow(new InteractiveTextBoxCommandDetailsControl(this.selectedGame, this.selectedGameVersion, this.selectedScene, (InteractiveTextBoxControlModel)command.Control));
+            }
+
+            if (window != null)
+            {
                 window.Closed += Window_Closed;
                 window.Show();
             }
@@ -278,15 +336,23 @@ namespace MixItUp.WPF.Controls.MainControls
             InteractiveCommand command = commandButtonsControl.GetCommandFromCommandButtons<InteractiveCommand>(sender);
             if (command != null)
             {
+                CommandWindow window = null;
                 if (command is InteractiveButtonCommand)
                 {
-                    CommandWindow window = new CommandWindow(new InteractiveButtonCommandDetailsControl((InteractiveButtonCommand)command));
-                    window.Closed += Window_Closed;
-                    window.Show();
+                    window = new CommandWindow(new InteractiveButtonCommandDetailsControl((InteractiveButtonCommand)command));
+
                 }
                 else if (command is InteractiveJoystickCommand)
                 {
-                    CommandWindow window = new CommandWindow(new InteractiveJoystickCommandDetailsControl((InteractiveJoystickCommand)command));
+                    window = new CommandWindow(new InteractiveJoystickCommandDetailsControl((InteractiveJoystickCommand)command));
+                }
+                else if (command is InteractiveTextBoxCommand)
+                {
+                    window = new CommandWindow(new InteractiveTextBoxCommandDetailsControl((InteractiveTextBoxCommand)command));
+                }
+
+                if (window != null)
+                {
                     window.Closed += Window_Closed;
                     window.Show();
                 }

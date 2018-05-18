@@ -134,8 +134,9 @@ namespace MixItUp.WPF.Controls.Command
                     if (this.DownKeyComboBox.SelectedIndex >= 0) { this.command.MappedKeys.Add(EnumHelper.GetEnumValueFromString<InputKeyEnum>((string)this.DownKeyComboBox.SelectedItem)); } else { this.command.MappedKeys.Add(null); }
                     if (this.LeftKeyComboBox.SelectedIndex >= 0) { this.command.MappedKeys.Add(EnumHelper.GetEnumValueFromString<InputKeyEnum>((string)this.LeftKeyComboBox.SelectedItem)); } else { this.command.MappedKeys.Add(null); }
                 }
-                this.command.Requirements = requirements;
+
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
+                this.command.Requirements = requirements;
 
                 return this.command;
             }

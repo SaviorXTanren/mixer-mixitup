@@ -98,6 +98,23 @@ namespace MixItUp.Base.MixerAPI
         }
     }
 
+    public class InteractiveConnectedTextBoxCommand : InteractiveConnectedControlCommand
+    {
+        public InteractiveConnectedTextBoxCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedTextBoxControlModel textBox, InteractiveCommand command) : base(scene, textBox, command) { }
+
+        public InteractiveConnectedTextBoxControlModel TextBox { get { return (InteractiveConnectedTextBoxControlModel)this.Control; } set { this.Control = value; } }
+
+        public InteractiveTextBoxCommand TextBoxCommand { get { return (InteractiveTextBoxCommand)this.Command; } }
+
+        public override int SparkCost { get { return this.TextBox.cost.GetValueOrDefault(); } }
+        public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
+
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            await base.Perform(user, arguments);
+        }
+    }
+
     public class InteractiveClientWrapper : MixerWebSocketWrapper
     {
         private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
@@ -314,6 +331,11 @@ namespace MixItUp.Base.MixerAPI
                 {
                     this.AddConnectedControl(scene, joystick);
                 }
+
+                foreach (InteractiveConnectedTextBoxControlModel textBox in scene.textBoxes)
+                {
+                    this.AddConnectedControl(scene, textBox);
+                }
             }
 
             // Initialize Groups
@@ -356,6 +378,10 @@ namespace MixItUp.Base.MixerAPI
                 else if (command is InteractiveJoystickCommand)
                 {
                     this.Controls[control.controlID] = new InteractiveConnectedJoystickCommand(scene, (InteractiveConnectedJoystickControlModel)control, command);
+                }
+                else if (command is InteractiveTextBoxCommand)
+                {
+                    this.Controls[control.controlID] = new InteractiveConnectedTextBoxCommand(scene, (InteractiveConnectedTextBoxControlModel)control, command);
                 }
             }
         }
@@ -483,6 +509,10 @@ namespace MixItUp.Base.MixerAPI
                         {
                             arguments.Add(e.input.x.ToString());
                             arguments.Add(e.input.y.ToString());
+                        }
+                        else if (connectedControl is InteractiveConnectedTextBoxCommand)
+                        {
+                            arguments.Add(e.input.value);
                         }
 
                         await connectedControl.Perform(user, arguments);

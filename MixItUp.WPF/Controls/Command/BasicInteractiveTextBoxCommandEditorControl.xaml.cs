@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
@@ -14,9 +15,9 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Command
 {
     /// <summary>
-    /// Interaction logic for BasicInteractiveButtonCommandEditorControl.xaml
+    /// Interaction logic for BasicInteractiveTextBoxCommandEditorControl.xaml
     /// </summary>
-    public partial class BasicInteractiveButtonCommandEditorControl : CommandEditorControlBase
+    public partial class BasicInteractiveTextBoxCommandEditorControl : CommandEditorControlBase
     {
         private CommandWindow window;
 
@@ -24,13 +25,13 @@ namespace MixItUp.WPF.Controls.Command
         private InteractiveGameListingModel game;
         private InteractiveGameVersionModel version;
         private InteractiveSceneModel scene;
-        private InteractiveButtonControlModel button;
+        private InteractiveTextBoxControlModel textBox;
 
-        private InteractiveButtonCommand command;
+        private InteractiveTextBoxCommand command;
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, InteractiveButtonCommand command)
+        public BasicInteractiveTextBoxCommandEditorControl(CommandWindow window, InteractiveTextBoxCommand command)
         {
             this.window = window;
             this.command = command;
@@ -38,14 +39,14 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene,
-            InteractiveButtonControlModel button, BasicCommandTypeEnum commandType)
+        public BasicInteractiveTextBoxCommandEditorControl(CommandWindow window, InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene,
+            InteractiveTextBoxControlModel textBox, BasicCommandTypeEnum commandType)
         {
             this.window = window;
             this.game = game;
             this.version = version;
             this.scene = scene;
-            this.button = button;
+            this.textBox = textBox;
             this.commandType = commandType;
 
             InitializeComponent();
@@ -55,7 +56,7 @@ namespace MixItUp.WPF.Controls.Command
 
         protected override async Task OnLoaded()
         {
-            this.CooldownTypeComboBox.ItemsSource = new List<string>() { "By Itself", "With All Buttons" };
+            this.TextValueSpecialIdentifierTextBlock.Text = SpecialIdentifierStringBuilder.InteractiveTextBoxTextEntrySpecialIdentifierHelpText;
 
             if (this.command != null)
             {
@@ -66,19 +67,10 @@ namespace MixItUp.WPF.Controls.Command
                     this.version = this.game.versions.First();
                     this.version = await ChannelSession.Connection.GetInteractiveGameVersion(this.version);
                     this.scene = this.version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
-                    this.button = this.command.Button;
+                    this.textBox = this.command.TextBox;
                 }
 
-                this.SparkCostTextBox.Text = this.command.Button.cost.ToString();
-                if (this.command.Requirements.Cooldown != null && this.command.Requirements.Cooldown.IsGroup)
-                {
-                    this.CooldownTypeComboBox.SelectedIndex = 1;
-                }
-                else
-                {
-                    this.CooldownTypeComboBox.SelectedIndex = 0;
-                    this.CooldownTextBox.Text = this.command.CooldownAmount.ToString();
-                }
+                this.SparkCostTextBox.Text = this.command.TextBox.cost.ToString();
 
                 if (this.command.Actions.First() is ChatAction)
                 {
@@ -91,8 +83,7 @@ namespace MixItUp.WPF.Controls.Command
             }
             else
             {
-                this.SparkCostTextBox.Text = this.button.cost.ToString();
-                this.CooldownTextBox.Text = "0";
+                this.SparkCostTextBox.Text = this.textBox.cost.ToString();
 
                 if (this.commandType == BasicCommandTypeEnum.Chat)
                 {
@@ -109,21 +100,6 @@ namespace MixItUp.WPF.Controls.Command
             await base.OnLoaded();
         }
 
-        private void CooldownTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.CooldownTypeComboBox.SelectedIndex == 1)
-            {
-                if (ChannelSession.Settings.CooldownGroups.ContainsKey(InteractiveButtonCommand.BasicCommandCooldownGroup))
-                {
-                    this.CooldownTextBox.Text = ChannelSession.Settings.CooldownGroups[InteractiveButtonCommand.BasicCommandCooldownGroup].ToString();
-                }
-                else
-                {
-                    this.CooldownTextBox.Text = "0";
-                }
-            }
-        }
-
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             await this.window.RunAsyncOperation(async () =>
@@ -133,22 +109,6 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     await MessageBoxHelper.ShowMessageDialog("Spark cost must be 0 or greater");
                     return;
-                }
-
-                if (this.CooldownTypeComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A cooldown type must be selected");
-                    return;
-                }
-
-                int cooldown = 0;
-                if (!string.IsNullOrEmpty(this.CooldownTextBox.Text))
-                {
-                    if (!int.TryParse(this.CooldownTextBox.Text, out cooldown) || cooldown < 0)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("Cooldown must be 0 or greater");
-                        return;
-                    }
                 }
 
                 ActionBase action = this.actionControl.GetAction();
@@ -166,22 +126,14 @@ namespace MixItUp.WPF.Controls.Command
                 }
 
                 RequirementViewModel requirements = new RequirementViewModel();
-                if (this.CooldownTypeComboBox.SelectedIndex == 0)
-                {
-                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Individual, cooldown);
-                }
-                else
-                {
-                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, InteractiveButtonCommand.BasicCommandCooldownGroup, cooldown);
-                }
 
                 if (this.command == null)
                 {
-                    this.command = new InteractiveButtonCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
+                    this.command = new InteractiveTextBoxCommand(this.game, this.scene, this.textBox, requirements);
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
                 }
 
-                this.command.Button.cost = sparkCost;
+                this.command.TextBox.cost = sparkCost;
                 await ChannelSession.Connection.UpdateInteractiveGameVersion(this.version);
 
                 this.command.IsBasic = true;

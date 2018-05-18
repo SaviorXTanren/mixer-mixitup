@@ -25,6 +25,9 @@ namespace MixItUp.Base.Util
         public const string StreamerSpecialIdentifierHeader = "streamer";
         public const string RandomNumberSpecialIdentifier = "randomnumber";
 
+        public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
+            SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
+
         private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
 
         public static void AddCustomSpecialIdentifier(string specialIdentifier, string replacement)

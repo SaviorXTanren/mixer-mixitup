@@ -284,6 +284,32 @@ namespace MixItUp.Base.Commands
         public InteractiveJoystickControlModel Joystick { get { return (InteractiveJoystickControlModel)this.Control; } }
 
         [JsonIgnore]
+        public int CooldownAmount
+        {
+            get
+            {
+                if (this.Requirements.Cooldown != null)
+                {
+                    return this.Requirements.Cooldown.CooldownAmount;
+                }
+                return 0;
+            }
+        }
+
+        [JsonIgnore]
+        public string CooldownGroupName
+        {
+            get
+            {
+                if (this.Requirements.Cooldown != null)
+                {
+                    return this.Requirements.Cooldown.GroupName;
+                }
+                return string.Empty;
+            }
+        }
+
+        [JsonIgnore]
         public override string EventTypeString { get { return "move"; } }
 
         public void InitializeAction()
@@ -302,5 +328,46 @@ namespace MixItUp.Base.Commands
         {
             this.InitializeAction();
         }
+    }
+
+    public class InteractiveTextBoxCommand : InteractiveCommand
+    {
+        public InteractiveTextBoxCommand() { }
+
+        public InteractiveTextBoxCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveTextBoxControlModel control, RequirementViewModel requirements)
+            : base(game, scene, control, string.Empty, requirements)
+        { }
+
+        [JsonIgnore]
+        public InteractiveTextBoxControlModel TextBox { get { return (InteractiveTextBoxControlModel)this.Control; } }
+
+        [JsonIgnore]
+        public int CooldownAmount
+        {
+            get
+            {
+                if (this.Requirements.Cooldown != null)
+                {
+                    return this.Requirements.Cooldown.CooldownAmount;
+                }
+                return 0;
+            }
+        }
+
+        [JsonIgnore]
+        public string CooldownGroupName
+        {
+            get
+            {
+                if (this.Requirements.Cooldown != null)
+                {
+                    return this.Requirements.Cooldown.GroupName;
+                }
+                return string.Empty;
+            }
+        }
+
+        [JsonIgnore]
+        public override string EventTypeString { get { return "submit"; } }
     }
 }
