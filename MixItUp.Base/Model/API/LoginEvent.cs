@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.API
@@ -14,5 +15,15 @@ namespace MixItUp.Base.Model.API
         public bool Feature { get; set; }
         [JsonProperty]
         public string Details { get; set; }
+
+        public LoginEvent() { }
+
+        public LoginEvent(string details)
+        {
+            this.MixerUserID = (int)ChannelSession.User.id;
+            this.AppVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
+            this.Feature = ChannelSession.Settings.FeatureMe;
+            this.Details = details;
+        }
     }
 }

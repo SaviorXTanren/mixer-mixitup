@@ -282,21 +282,7 @@ namespace MixItUp.WPF
 
         private async Task CheckForUpdates()
         {
-            MixItUpUpdateModel latestUpdate = null;
-            try
-            {
-                using (HttpClientWrapper client = new HttpClientWrapper("http://localhost:33901"))
-                {
-                    HttpResponseMessage response = await client.GetAsync("api/updates");
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        string content = await response.Content.ReadAsStringAsync();
-                        latestUpdate = SerializerHelper.DeserializeFromString<MixItUpUpdateModel>(content);
-                    }
-                }
-            }
-            catch (Exception) { }
-
+            MixItUpUpdateModel latestUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
             if (latestUpdate != null)
             {
                 AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
