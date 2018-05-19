@@ -51,7 +51,6 @@ namespace MixItUp.Base.MixerAPI
 
         public ConstellationClientWrapper()
         {
-            GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnGameWispSubscribedOccurred += GlobalEvents_OnGameWispSubscribedOccurred;
             GlobalEvents.OnGameWispResubscribedOccurred += GlobalEvents_OnGameWispResubscribedOccurred;
         }
@@ -247,27 +246,6 @@ namespace MixItUp.Base.MixerAPI
             if (this.OnEventOccurred != null)
             {
                 this.OnEventOccurred(this, e);
-            }
-        }
-
-        private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation)
-        {
-            UserViewModel user = new UserViewModel(0, donation.Username);
-
-            UserModel userModel = await ChannelSession.Connection.GetUser(donation.Username);
-            if (userModel != null)
-            {
-                user = new UserViewModel(userModel);
-            }
-
-            EventCommand command = this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.Donation));
-            if (command != null)
-            {
-                command.AddSpecialIdentifier("donationsource", donation.Source);
-                command.AddSpecialIdentifier("donationamount", donation.AmountText);
-                command.AddSpecialIdentifier("donationmessage", donation.Message);
-                command.AddSpecialIdentifier("donationimage", donation.ImageLink);
-                await this.RunEventCommand(command, user);
             }
         }
 

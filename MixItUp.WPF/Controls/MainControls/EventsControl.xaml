@@ -47,7 +47,17 @@
             </GroupBox>
 
             <GroupBox Header="Donation Events" Grid.Row="2" Grid.Column="1">
-                <EventControls:EventCommandControl x:Name="DonationEventCommandControl" HorizontalAlignment="Center" />
+                <Grid HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <EventControls:EventCommandControl x:Name="StreamlabsDonationEventCommandControl" Grid.Column="0" />
+
+                    <EventControls:EventCommandControl x:Name="GawkBoxDonationEventCommandControl" Grid.Column="2" />
+                </Grid>
             </GroupBox>
 
             <GroupBox Header="GameWisp Events" Grid.Row="4" Grid.Column="1">

@@ -1,9 +1,16 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.OAuth;
+using Mixer.Base.Model.User;
+using Mixer.Base.Util;
+using MixItUp.Base;
+using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -16,17 +23,35 @@ namespace MixItUp.Desktop.Services
 
         public async Task Reconnect() { await WebSocketClientBase.ReconnectionHelper(this); }
 
-        protected override Task ProcessReceivedPacket(string packetJSON)
+        protected override async Task ProcessReceivedPacket(string packetJSON)
         {
             if (!string.IsNullOrEmpty(packetJSON))
             {
                 GawkBoxAlert alert = JsonConvert.DeserializeObject<GawkBoxAlert>(packetJSON);
                 if (alert != null && alert.Gifts.Count > 0)
                 {
-                    GlobalEvents.DonationOccurred(alert.ToGenericDonation());
+                    UserDonationModel donation = alert.ToGenericDonation();
+                    GlobalEvents.DonationOccurred(donation);
+
+                    UserViewModel user = new UserViewModel(0, donation.Username);
+
+                    UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                    if (userModel != null)
+                    {
+                        user = new UserViewModel(userModel);
+                    }
+
+                    EventCommand command = ChannelSession.Settings.EventCommands.ToList().FirstOrDefault(c => c.MatchesEvent(EnumHelper.GetEnumName(OtherEventTypeEnum.GawkBoxDonation)));
+                    if (command != null)
+                    {
+                        command.AddSpecialIdentifier("donationsource", donation.Source);
+                        command.AddSpecialIdentifier("donationamount", donation.AmountText);
+                        command.AddSpecialIdentifier("donationmessage", donation.Message);
+                        command.AddSpecialIdentifier("donationimage", donation.ImageLink);
+                        await command.Perform(user);
+                    }
                 }
             }
-            return Task.FromResult(0);
         }
     }
 
@@ -52,7 +77,7 @@ namespace MixItUp.Desktop.Services
                     return true;
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             return false;
         }
 

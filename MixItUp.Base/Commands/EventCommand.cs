@@ -13,7 +13,13 @@ namespace MixItUp.Base.Commands
         None = 0,
 
         [Name("Donation Received")]
+        [Obsolete]
         Donation,
+
+        [Name("Streamlabs Donation")]
+        StreamlabsDonation,
+        [Name("GawkBox Donation")]
+        GawkBoxDonation,
 
         [Name("GameWisp Subscribed")]
         GameWispSubscribed,

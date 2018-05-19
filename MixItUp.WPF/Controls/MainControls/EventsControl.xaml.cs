@@ -21,7 +21,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.MixerSubscribeEventCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__subscribed);
             this.MixerResubscribeEventCommandControl.Initialize(this, ConstellationEventTypeEnum.channel__id__resubscribed);
 
-            this.DonationEventCommandControl.Initialize(this, OtherEventTypeEnum.Donation);
+            this.StreamlabsDonationEventCommandControl.Initialize(this, OtherEventTypeEnum.StreamlabsDonation);
+            this.GawkBoxDonationEventCommandControl.Initialize(this, OtherEventTypeEnum.GawkBoxDonation);
 
             this.GameWispSubscribeEventCommandControl.Initialize(this, OtherEventTypeEnum.GameWispSubscribed);
             this.GameWispResubscribeEventCommandControl.Initialize(this, OtherEventTypeEnum.GameWispResubscribed);

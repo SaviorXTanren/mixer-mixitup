@@ -1,13 +1,19 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
+using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -39,7 +45,7 @@ namespace MixItUp.Desktop.Services
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex);
+                    MixItUp.Base.Util.Logger.Log(ex);
                 }
             });
         }
@@ -78,7 +84,7 @@ namespace MixItUp.Desktop.Services
 
                     return true;
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
 
             string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamlabsService.AuthorizationUrl, StreamlabsService.ClientID));
@@ -125,7 +131,7 @@ namespace MixItUp.Desktop.Services
                     results.Add(donation.ToObject<StreamlabsDonation>());
                 }
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             return results;
         }
 
@@ -171,18 +177,36 @@ namespace MixItUp.Desktop.Services
             {
                 try
                 {
-                    foreach (StreamlabsDonation donation in await this.GetDonations())
+                    foreach (StreamlabsDonation slDonation in await this.GetDonations())
                     {
-                        if (!donationsReceived.ContainsKey(donation.ID))
+                        if (!donationsReceived.ContainsKey(slDonation.ID))
                         {
-                            donationsReceived[donation.ID] = donation;
-                            GlobalEvents.DonationOccurred(donation.ToGenericDonation());
+                            UserDonationModel donation = slDonation.ToGenericDonation();
+                            GlobalEvents.DonationOccurred(donation);
+
+                            UserViewModel user = new UserViewModel(0, donation.Username);
+
+                            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                            if (userModel != null)
+                            {
+                                user = new UserViewModel(userModel);
+                            }
+
+                            EventCommand command = ChannelSession.Settings.EventCommands.ToList().FirstOrDefault(c => c.MatchesEvent(EnumHelper.GetEnumName(OtherEventTypeEnum.GawkBoxDonation)));
+                            if (command != null)
+                            {
+                                command.AddSpecialIdentifier("donationsource", donation.Source);
+                                command.AddSpecialIdentifier("donationamount", donation.AmountText);
+                                command.AddSpecialIdentifier("donationmessage", donation.Message);
+                                command.AddSpecialIdentifier("donationimage", donation.ImageLink);
+                                await command.Perform(user);
+                            }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex);
+                    MixItUp.Base.Util.Logger.Log(ex);
                 }
                 await Task.Delay(10000);
             }

@@ -44,6 +44,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version12Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version13Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version14Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version15Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -302,6 +303,35 @@ namespace MixItUp.Desktop.Services
                         Control = command.Control,
                         Trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>(command.CommandsString),
                     });
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version15Upgrade(int version, string filePath)
+        {
+            if (version < 15)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                EventCommand donationCommand = settings.EventCommands.FirstOrDefault(c => c.MatchesEvent(EnumHelper.GetEnumName(OtherEventTypeEnum.Donation)));
+#pragma warning restore CS0612 // Type or member is obsolete
+                if (donationCommand != null)
+                {
+                    string donationCommandJson = SerializerHelper.SerializeToString(donationCommand);
+
+                    EventCommand streamlabsCommand = SerializerHelper.DeserializeFromString<EventCommand>(donationCommandJson);
+                    streamlabsCommand.OtherEventType = OtherEventTypeEnum.StreamlabsDonation;
+                    settings.EventCommands.Add(streamlabsCommand);
+
+                    EventCommand gawkBoxCommand = SerializerHelper.DeserializeFromString<EventCommand>(donationCommandJson);
+                    gawkBoxCommand.OtherEventType = OtherEventTypeEnum.GawkBoxDonation;
+                    settings.EventCommands.Add(gawkBoxCommand);
+
+                    settings.EventCommands.Remove(donationCommand);
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);
