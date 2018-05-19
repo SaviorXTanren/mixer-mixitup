@@ -94,9 +94,9 @@ namespace MixItUp.Base.Actions
 
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments)
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode);
             await siString.ReplaceCommonSpecialModifiers(user, arguments);
             foreach (var kvp in this.AdditiveSpecialIdentifiers)
             {

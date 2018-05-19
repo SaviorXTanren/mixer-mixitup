@@ -87,7 +87,7 @@ namespace MixItUp.Base.Actions
         {
             using (HttpClient httpClient = new HttpClient())
             {
-                using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, user, arguments)))
+                using (HttpResponseMessage response = await httpClient.GetAsync(await this.ReplaceStringWithSpecialModifiers(this.Url, user, arguments, encode: true)))
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
