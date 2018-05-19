@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Base.Util
 {
@@ -69,8 +70,13 @@ namespace MixItUp.Base.Util
         }
 
         private string text;
+        private bool encode;
 
-        public SpecialIdentifierStringBuilder(string text) { this.text = text; }
+        public SpecialIdentifierStringBuilder(string text, bool encode = false)
+        {
+            this.text = text;
+            this.encode = encode;
+        }
 
         public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments = null)
         {
@@ -238,6 +244,10 @@ namespace MixItUp.Base.Util
         public void ReplaceSpecialIdentifier(string identifier, string replacement)
         {
             replacement = (replacement == null) ? string.Empty : replacement;
+            if (encode)
+            {
+                replacement = HttpUtility.UrlEncode(replacement);
+            }
             this.text = this.text.Replace(SpecialIdentifierHeader + identifier, replacement);
         }
 
