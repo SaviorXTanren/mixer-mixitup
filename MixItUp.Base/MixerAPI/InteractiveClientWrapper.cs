@@ -235,6 +235,33 @@ namespace MixItUp.Base.MixerAPI
         public async Task DeleteGroup(InteractiveGroupModel groupToDelete, InteractiveGroupModel groupToReplace) { await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
 
         public async Task<InteractiveParticipantCollectionModel> GetAllParticipants() { return await this.RunAsync(this.Client.GetAllParticipants()); }
+
+        public async Task<IEnumerable<InteractiveParticipantModel>> GetRecentParticipants()
+        {
+            Dictionary<uint, InteractiveParticipantModel> participants = new Dictionary<uint, InteractiveParticipantModel>();
+
+            DateTimeOffset startTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(10));
+            InteractiveParticipantCollectionModel collection = null;
+            do
+            {
+                collection = await this.RunAsync(this.Client.GetAllParticipants(startTime));
+                if (collection != null)
+                {
+                    foreach (InteractiveParticipantModel participant in collection.participants)
+                    {
+                        participants[participant.userID] = participant;
+                    }
+
+                    if (collection.participants.Count() > 0)
+                    {
+                        startTime = DateTimeHelper.UnixTimestampToDateTimeOffset(collection.participants.Last().connectedAt);
+                    }
+                }
+            } while (collection != null && collection.hasMore);
+
+            return participants.Values;
+        }
+
         public async Task UpdateParticipant(InteractiveParticipantModel participant) { await this.UpdateParticipants(new List<InteractiveParticipantModel>() { participant }); }
         public async Task UpdateParticipants(IEnumerable<InteractiveParticipantModel> participants) { await this.RunAsync(this.Client.UpdateParticipantsWithResponse(participants)); }
 
@@ -358,7 +385,27 @@ namespace MixItUp.Base.MixerAPI
                 await this.AddParticipants(participants.participants);
             }
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () => { await this.RefreshInteractiveUsers(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
             return true;
+        }
+
+        private async Task RefreshInteractiveUsers()
+        {
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            {
+                foreach (InteractiveParticipantModel participant in await this.GetRecentParticipants())
+                {
+                    if (await ChannelSession.ChannelUsers.HasUser(participant.userID))
+                    {
+                        await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
+                    }
+                }
+
+                await Task.Delay(30000);
+            });
         }
 
         private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)

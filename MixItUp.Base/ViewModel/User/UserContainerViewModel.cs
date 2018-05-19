@@ -17,6 +17,14 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserContainerViewModel() { }
 
+        public async Task<bool> HasUser(uint userID)
+        {
+            return await this.LockWrapper(() =>
+            {
+                return Task.FromResult<bool>(this.users.ContainsKey(userID));
+            });
+        }
+
         public async Task<UserViewModel> GetUser(uint userID)
         {
             return await this.LockWrapper(() =>
