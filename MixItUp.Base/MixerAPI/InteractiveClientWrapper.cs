@@ -344,11 +344,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (!userGroup.DefaultScene.Equals(InteractiveUserGroupViewModel.DefaultName))
                 {
-                    if (await this.AddGroup(userGroup.GroupName, userGroup.DefaultScene))
-                    {
-                        
-                    }
-                    else
+                    if (!await this.AddGroup(userGroup.GroupName, userGroup.DefaultScene))
                     {
                         return false;
                     }
