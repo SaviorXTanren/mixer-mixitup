@@ -2,8 +2,10 @@
 using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
+using Mixer.Base.Web;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
@@ -11,12 +13,15 @@ using MixItUp.Installer;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -113,8 +118,7 @@ namespace MixItUp.WPF
                 }
             }
 
-            AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
-            AutoUpdater.Start("https://updates.mixitupapp.com/AutoUpdater.xml");
+            await this.CheckForUpdates();
 
             foreach (IChannelSettings setting in await ChannelSession.Services.Settings.GetAllSettings())
             {
@@ -274,6 +278,30 @@ namespace MixItUp.WPF
                     await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Mixer, please try again");
                 }
             });
+        }
+
+        private async Task CheckForUpdates()
+        {
+            MixItUpUpdateModel latestUpdate = null;
+            try
+            {
+                using (HttpClientWrapper client = new HttpClientWrapper("http://localhost:33901"))
+                {
+                    HttpResponseMessage response = await client.GetAsync("api/updates");
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        string content = await response.Content.ReadAsStringAsync();
+                        latestUpdate = SerializerHelper.DeserializeFromString<MixItUpUpdateModel>(content);
+                    }
+                }
+            }
+            catch (Exception) { }
+
+            if (latestUpdate != null)
+            {
+                AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
+                AutoUpdater.Start(latestUpdate.AutoUpdaterLink);
+            }
         }
 
         private async Task<bool> ExistingSettingLogin(IChannelSettings setting)
