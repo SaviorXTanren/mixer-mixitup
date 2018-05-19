@@ -20,7 +20,7 @@ namespace MixItUp.Base.Services
 
     public class MixItUpService : IMixItUpService
     {
-        public const string MixItUpAPIEndpoint = "http://localhost:33901/api/";
+        public const string MixItUpAPIEndpoint = "http://mixitupapi.azurewebsites.net/api/";
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
 
