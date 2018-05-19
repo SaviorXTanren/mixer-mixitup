@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -314,12 +315,13 @@ namespace MixItUp.WPF.Controls.MainControls
                 string message = this.ChatMessageTextBox.Text;
                 this.ChatMessageTextBox.Text = string.Empty;
 
-                Match whisperRegexMatch = ChatMessageViewModel.WhisperRegex.Match(message);
-                if (whisperRegexMatch != null && whisperRegexMatch.Success)
+                if (ChatAction.WhisperRegex.IsMatch(message))
                 {
+                    Match whisperRegexMatch = ChatAction.WhisperRegex.Match(message);
+
                     message = message.Substring(whisperRegexMatch.Value.Length);
 
-                    Match usernNameMatch = ChatMessageViewModel.UserNameTagRegex.Match(whisperRegexMatch.Value);
+                    Match usernNameMatch = ChatAction.UserNameTagRegex.Match(whisperRegexMatch.Value);
                     string username = usernNameMatch.Value;
                     username = username.Trim();
                     username = username.Replace("@", "");
@@ -328,6 +330,10 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         await ChannelSession.Chat.Whisper(username, message, (this.SendChatAsComboBox.SelectedIndex == 0));
                     }));
+                }
+                else if (ChatAction.ClearRegex.IsMatch(message))
+                {
+                    await ChannelSession.Chat.ClearMessages();
                 }
                 else
                 {

@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
@@ -196,7 +197,7 @@ namespace MixItUp.Base.Util
         private static string PrepareTextForChecking(string text)
         {
             string result = text.ToLower();
-            result = ChatMessageViewModel.UserNameTagRegex.Replace(result, "");
+            result = ChatAction.UserNameTagRegex.Replace(result, "");
             return result;
         }
 

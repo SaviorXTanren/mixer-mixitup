@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.Chat;
-using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -8,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Chat
@@ -23,9 +21,6 @@ namespace MixItUp.Base.ViewModel.Chat
     public class ChatMessageViewModel : IEquatable<ChatMessageViewModel>
     {
         private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
-
-        public static readonly Regex UserNameTagRegex = new Regex("@\\w+");
-        public static readonly Regex WhisperRegex = new Regex("/w @\\w+ ");
 
         public static Dictionary<string, EmoticonImage> EmoticonImages = new Dictionary<string, EmoticonImage>();
 
