@@ -6,6 +6,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Model.API;
 using MixItUp.Base.Services;
 using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
@@ -419,8 +420,12 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
-                    await Util.Logger.LogAnalyticsUsage("LogIn", "Desktop");
-                    await Util.Logger.LogAnalyticsUsage("FeatureMe", ChannelSession.Settings.FeatureMe.ToString());
+                    if (!Util.Logger.IsDebug)
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendLoginEvent(new LoginEvent(ChannelSession.Settings.IsStreamer.ToString())); });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
 
                     GlobalEvents.OnRankChanged += GlobalEvents_OnRankChanged;
 
