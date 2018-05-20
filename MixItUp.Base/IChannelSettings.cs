@@ -37,6 +37,7 @@ namespace MixItUp.Base
         bool FeatureMe { get; set; }
 
         bool LatestChatAtTop { get; set; }
+        bool HideViewerAndChatterNumbers { get; set; }
         bool AllowCommandWhispering { get; set; }
         bool IgnoreBotAccountCommands { get; set; }
         bool CommandsOnlyInYourStream { get; set; }

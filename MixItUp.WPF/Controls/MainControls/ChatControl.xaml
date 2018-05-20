@@ -70,7 +70,7 @@
 
                     </Grid>
 
-                    <Grid Grid.Column="2" HorizontalAlignment="Center" Height="20">
+                    <Grid x:Name="ViewerChatterNumbersGrid" Grid.Column="2" HorizontalAlignment="Center" Height="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="5" />

@@ -68,6 +68,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool LatestChatAtTop { get; set; }
         [JsonProperty]
+        public bool HideViewerAndChatterNumbers { get; set; }
+        [JsonProperty]
         public bool AllowCommandWhispering { get; set; }
         [JsonProperty]
         public bool IgnoreBotAccountCommands { get; set; }

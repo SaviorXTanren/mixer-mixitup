@@ -41,6 +41,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.InteractiveAlertsColorSchemeComboBox.SelectedItem = this.InteractiveAlertsColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
 
             this.LatestChatAtTopToggleButton.IsChecked = ChannelSession.Settings.LatestChatAtTop;
+            this.HideViewerAndChatterNumbersToggleButton.IsChecked = ChannelSession.Settings.HideViewerAndChatterNumbers;
             this.AllowCommandWhisperingToggleButton.IsChecked = ChannelSession.Settings.AllowCommandWhispering;
             this.IgnoreBotAccountCommandsToggleButton.IsChecked = ChannelSession.Settings.IgnoreBotAccountCommands;
             this.CommandsOnlyInYourStreamToggleButton.IsChecked = ChannelSession.Settings.CommandsOnlyInYourStream;
@@ -112,6 +113,11 @@ namespace MixItUp.WPF.Controls.Settings
         private void LatestChatAtTopToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.LatestChatAtTop = this.LatestChatAtTopToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void HideViewerAndChatterNumbersToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.HideViewerAndChatterNumbers = this.HideViewerAndChatterNumbersToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void AllowCommandWhisperingToggleButton_Checked(object sender, RoutedEventArgs e)

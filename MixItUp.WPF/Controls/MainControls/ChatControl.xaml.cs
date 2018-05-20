@@ -107,6 +107,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.SendChatAsComboBox.SelectedIndex = 0;
             }
 
+            this.ViewerChatterNumbersGrid.Visibility = (ChannelSession.Settings.HideViewerAndChatterNumbers) ? Visibility.Collapsed : Visibility.Visible;
+
             return Task.FromResult(0);
         }
 
