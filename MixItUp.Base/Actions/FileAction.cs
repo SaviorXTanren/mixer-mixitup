@@ -60,15 +60,14 @@ namespace MixItUp.Base.Actions
         {
             if (this.FileActionType == FileActionTypeEnum.SaveToFile || this.FileActionType == FileActionTypeEnum.AppendToFile)
             {
-                SpecialIdentifierStringBuilder stringBuilder = new SpecialIdentifierStringBuilder(this.TransferText);
-                await stringBuilder.ReplaceCommonSpecialModifiers(user, arguments);
+                string textToWrite = await this.ReplaceStringWithSpecialModifiers(this.TransferText, user, arguments);
                 if (this.FileActionType == FileActionTypeEnum.SaveToFile)
                 {
-                    await ChannelSession.Services.FileService.SaveFile(this.FilePath, stringBuilder.ToString());
+                    await ChannelSession.Services.FileService.SaveFile(this.FilePath, textToWrite);
                 }
                 else if (this.FileActionType == FileActionTypeEnum.AppendToFile)
                 {
-                    string dataToWrite = stringBuilder.ToString();
+                    string dataToWrite = textToWrite;
                     if (!string.IsNullOrEmpty(await ChannelSession.Services.FileService.ReadFile(this.FilePath)))
                     {
                         dataToWrite = Environment.NewLine + dataToWrite;
@@ -90,9 +89,7 @@ namespace MixItUp.Base.Actions
                             {
                                 if (!string.IsNullOrEmpty(this.LineIndexToRead))
                                 {
-                                    SpecialIdentifierStringBuilder stringBuilder = new SpecialIdentifierStringBuilder(this.LineIndexToRead);
-                                    await stringBuilder.ReplaceCommonSpecialModifiers(user, arguments);
-                                    string lineToRead = stringBuilder.ToString();
+                                    string lineToRead = await this.ReplaceStringWithSpecialModifiers(this.LineIndexToRead, user, arguments);
                                     if (int.TryParse(lineToRead, out int lineIndex))
                                     {
                                         lineIndex = lineIndex - 1;

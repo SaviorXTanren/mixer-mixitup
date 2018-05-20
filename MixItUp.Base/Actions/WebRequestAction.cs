@@ -120,10 +120,10 @@ namespace MixItUp.Base.Actions
                                 if (command != null)
                                 {
                                     string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
-                                    SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(argumentsText);
-                                    siString.ReplaceSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, webRequestResult);
+                                    string commandArguments = await this.ReplaceSpecialIdentifiers(argumentsText, user, arguments, webRequestResult);
+
                                     command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
-                                    await command.Perform(user, siString.ToString().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                                    await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                                 }
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
@@ -139,10 +139,8 @@ namespace MixItUp.Base.Actions
 
         private async Task<string> ReplaceSpecialIdentifiers(string text, UserViewModel user, IEnumerable<string> arguments, string webRequestResult)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(this.ResponseChatText);
-            await siString.ReplaceCommonSpecialModifiers(user, arguments);
-            siString.ReplaceSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, webRequestResult);
-            return siString.ToString();
+            this.AddSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, webRequestResult);
+            return await this.ReplaceStringWithSpecialModifiers(text, user, arguments);
         }
     }
 }

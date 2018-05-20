@@ -111,10 +111,10 @@ namespace MixItUp.Base.Actions
                         if (command != null)
                         {
                             string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
-                            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(argumentsText);
-                            siString.ReplaceSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, translationResult);
+                            string commandArguments = await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult);
+
                             command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
-                            await command.Perform(user, siString.ToString().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                            await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                         }
                     }
                     else if (this.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)
@@ -126,12 +126,10 @@ namespace MixItUp.Base.Actions
             }
         }
 
-        private async Task<string> ReplaceSpecialIdentifiers(string text, UserViewModel user, IEnumerable<string> arguments, string webRequestResult)
+        private async Task<string> ReplaceSpecialIdentifiers(string text, UserViewModel user, IEnumerable<string> arguments, string translationResult)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(this.ResponseChatText);
-            await siString.ReplaceCommonSpecialModifiers(user, arguments);
-            siString.ReplaceSpecialIdentifier(TranslationAction.ResponseSpecialIdentifier, webRequestResult);
-            return siString.ToString();
+            this.AddSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, translationResult);
+            return await this.ReplaceStringWithSpecialModifiers(text, user, arguments);
         }
     }
 }
