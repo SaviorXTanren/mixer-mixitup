@@ -64,7 +64,7 @@
                                 </Grid>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
-                        <DataGridTemplateColumn Header="Actions">
+                        <DataGridTemplateColumn Header="Actions" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
