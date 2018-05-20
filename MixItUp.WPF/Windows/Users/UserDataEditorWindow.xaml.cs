@@ -42,6 +42,9 @@ namespace MixItUp.WPF.Windows.Currency
 
             this.UserOnlyChatCommandsListView.ItemsSource = this.userOnlyCommands;
 
+            this.CurrencyRankExemptToggleButton.IsChecked = this.user.Data.IsCurrencyRankExempt;
+            this.SparkExemptToggleButton.IsChecked = this.user.Data.IsSparkExempt;
+
             await this.RefreshData();
         }
 
@@ -197,6 +200,16 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 await this.RefreshData();
             });
+        }
+
+        private void CurrencyRankExemptToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.user.Data.IsCurrencyRankExempt = this.CurrencyRankExemptToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void SparkExemptToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.user.Data.IsSparkExempt = this.SparkExemptToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }
