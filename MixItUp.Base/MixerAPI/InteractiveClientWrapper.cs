@@ -234,8 +234,6 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task DeleteGroup(InteractiveGroupModel groupToDelete, InteractiveGroupModel groupToReplace) { await this.RunAsync(this.Client.DeleteGroup(groupToDelete, groupToReplace)); }
 
-        public async Task<InteractiveParticipantCollectionModel> GetAllParticipants() { return await this.RunAsync(this.Client.GetAllParticipants()); }
-
         public async Task<IEnumerable<InteractiveParticipantModel>> GetRecentParticipants()
         {
             Dictionary<uint, InteractiveParticipantModel> participants = new Dictionary<uint, InteractiveParticipantModel>();
@@ -379,11 +377,7 @@ namespace MixItUp.Base.MixerAPI
             }
 
             // Initialize Participants
-            InteractiveParticipantCollectionModel participants = await this.GetAllParticipants();
-            if (participants != null)
-            {
-                await this.AddParticipants(participants.participants);
-            }
+            await this.AddParticipants(await this.GetRecentParticipants());
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () => { await this.RefreshInteractiveUsers(); }, this.backgroundThreadCancellationTokenSource.Token);
