@@ -44,6 +44,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.AllowCommandWhisperingToggleButton.IsChecked = ChannelSession.Settings.AllowCommandWhispering;
             this.IgnoreBotAccountCommandsToggleButton.IsChecked = ChannelSession.Settings.IgnoreBotAccountCommands;
             this.CommandsOnlyInYourStreamToggleButton.IsChecked = ChannelSession.Settings.CommandsOnlyInYourStream;
+            this.DeleteChatCommandsWhenRunToggleButton.IsChecked = ChannelSession.Settings.DeleteChatCommandsWhenRun;
 
             await base.InitializeInternal();
         }
@@ -126,6 +127,11 @@ namespace MixItUp.WPF.Controls.Settings
         private void CommandsOnlyInYourStreamToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.CommandsOnlyInYourStream = this.CommandsOnlyInYourStreamToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void DeleteChatCommandsWhenRunToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.DeleteChatCommandsWhenRun = this.DeleteChatCommandsWhenRunToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }

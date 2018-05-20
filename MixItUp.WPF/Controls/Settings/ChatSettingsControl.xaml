@@ -30,6 +30,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Font size:</TextBlock>
@@ -84,5 +86,8 @@
 
         <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Allow commands only in your channel during a Co-Stream:</TextBlock>
         <ToggleButton Grid.Row="16" Grid.Column="2" x:Name="CommandsOnlyInYourStreamToggleButton" Checked="CommandsOnlyInYourStreamToggleButton_Checked" Unchecked="CommandsOnlyInYourStreamToggleButton_Checked" />
+
+        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Delete chat commands when they are run:</TextBlock>
+        <ToggleButton Grid.Row="18" Grid.Column="2" x:Name="DeleteChatCommandsWhenRunToggleButton" Checked="DeleteChatCommandsWhenRunToggleButton_Checked" Unchecked="DeleteChatCommandsWhenRunToggleButton_Checked" />
     </Grid>
 </local:SettingsControlBase>

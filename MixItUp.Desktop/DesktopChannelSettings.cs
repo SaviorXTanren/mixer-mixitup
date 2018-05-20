@@ -73,6 +73,8 @@ namespace MixItUp.Desktop
         public bool IgnoreBotAccountCommands { get; set; }
         [JsonProperty]
         public bool CommandsOnlyInYourStream { get; set; }
+        [JsonProperty]
+        public bool DeleteChatCommandsWhenRun { get; set; }
 
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }

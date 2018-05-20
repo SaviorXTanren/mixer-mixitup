@@ -40,6 +40,7 @@ namespace MixItUp.Base
         bool AllowCommandWhispering { get; set; }
         bool IgnoreBotAccountCommands { get; set; }
         bool CommandsOnlyInYourStream { get; set; }
+        bool DeleteChatCommandsWhenRun { get; set; }
 
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }

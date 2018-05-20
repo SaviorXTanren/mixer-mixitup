@@ -405,6 +405,11 @@ namespace MixItUp.Base.MixerAPI
                 if (command != null)
                 {
                     await command.Perform(message.User, message.CommandArguments);
+
+                    if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+                    {
+                        await this.DeleteMessage(message.ID);
+                    }
                 }
             }
         }
