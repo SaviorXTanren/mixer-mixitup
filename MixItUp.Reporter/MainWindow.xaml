@@ -1,0 +1,66 @@
+﻿<Window x:Class="MixItUp.Reporter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.Reporter"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        
+        Icon="./Logo.ico"
+        Title="Mix It Up - Error Reporter" Height="300" Width="400">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ProgressBar.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <Grid Margin="10" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Width="330">Whoops! Looks like Mix It Up ran into an issue. Would you like to submit a bug to help us improve?</TextBlock>
+
+            <TextBox x:Name="IssueDescriptionTextBox" Grid.Row="2" AcceptsReturn="True" Width="320" Height="120" MaterialDesign:HintAssist.Hint="Issue Description (What Happened?)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="ReportIssueButton" Grid.Column="0" Click="ReportIssueButton_Click">Report Issue</Button>
+
+                <Button x:Name="CancelButton" Grid.Column="2" Click="CancelButton_Click">Cancel</Button>
+
+            </Grid>
+        </Grid>
+
+        <ProgressBar x:Name="StatusBar" Grid.Row="1" IsIndeterminate="True" Visibility="Hidden" />
+    </Grid>
+</Window>

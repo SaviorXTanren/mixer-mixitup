@@ -4,9 +4,11 @@ using MixItUp.Base.Util;
 using MixItUp.Desktop.Services;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -102,10 +104,11 @@ namespace MixItUp.WPF
                 Logger.Log("CRASH OCCURRED! CRASH EXCEPTION BELOW:");
                 Logger.Log(ex, isCrashing: true);
 
-                if (MessageBox.Show("Whoops! Looks like we ran into an issue and we'll have to close the program. Would you like to submit a bug to help us improve Mix It Up?", "Mix It Up - Crash", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/issues");
-                }
+                string reporterFilePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), "MixItUp.Reporter.exe");
+                ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", (ChannelSession.User != null) ? ChannelSession.User.id : 0, Logger.CurrentLogFilePath));
+                Process.Start(processStartInfo);
+
+                Task.Delay(1000).Wait();
             }
         }
     }

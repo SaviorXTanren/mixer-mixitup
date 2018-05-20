@@ -1151,6 +1151,10 @@
       <Project>{c58e9517-27e2-48a7-9043-3cd4a18e8a27}</Project>
       <Name>MixItUp.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MixItUp.Reporter\MixItUp.Reporter.csproj">
+      <Project>{ce3896dc-cc98-42ba-9bf7-4073dcc6a393}</Project>
+      <Name>MixItUp.Reporter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\obs-websocket-dotnet\obs-websocket-dotnet.csproj">
       <Project>{c8668815-f21e-49c0-8f1a-58bc698153af}</Project>
       <Name>obs-websocket-dotnet</Name>

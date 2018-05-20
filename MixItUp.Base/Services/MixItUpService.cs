@@ -16,6 +16,8 @@ namespace MixItUp.Base.Services
         Task SendLoginEvent(LoginEvent login);
 
         Task SendErrorEvent(ErrorEvent error);
+
+        Task SendIssueReport(IssueReportEvent report);
     }
 
     public class MixItUpService : IMixItUpService
@@ -27,6 +29,8 @@ namespace MixItUp.Base.Services
         public async Task SendLoginEvent(LoginEvent login) { await this.PostAsync("login", login); }
 
         public async Task SendErrorEvent(ErrorEvent error) { await this.PostAsync("error", error); }
+
+        public async Task SendIssueReport(IssueReportEvent report) { await this.PostAsync("issuereport", report); }
 
         private async Task<T> GetAsync<T>(string endpoint)
         {

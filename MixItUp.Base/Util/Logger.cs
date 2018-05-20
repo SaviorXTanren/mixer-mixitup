@@ -11,18 +11,18 @@ namespace MixItUp.Base.Util
     public static class Logger
     {
         public static bool IsDebug { get; private set; }
+        public static string CurrentLogFilePath { get; private set; }
 
         private const string LogsDirectoryName = "Logs";
         private const string LogFileNameFormat = "MixItUpLog-{0}.txt";
 
         private static IFileService fileService;
-        private static string CurrentLogFileName;
 
         public static void Initialize(IFileService fileService)
         {
             Logger.fileService = fileService;
             Logger.fileService.CreateDirectory(LogsDirectoryName);
-            Logger.CurrentLogFileName = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm", CultureInfo.InvariantCulture)));
+            Logger.CurrentLogFilePath = Path.Combine(LogsDirectoryName, string.Format(LogFileNameFormat, DateTime.Now.ToString("yyyy-MM-dd-HH-mm", CultureInfo.InvariantCulture)));
 
             Mixer.Base.Util.Logger.LogOccurred += Logger_LogOccurred;
 
@@ -35,7 +35,7 @@ namespace MixItUp.Base.Util
         {
             try
             {
-                Logger.fileService.AppendFile(Logger.CurrentLogFileName, DateTimeOffset.Now.ToString() + " - " + message + Environment.NewLine + Environment.NewLine);
+                Logger.fileService.AppendFile(Logger.CurrentLogFilePath, DateTimeOffset.Now.ToString() + " - " + message + Environment.NewLine + Environment.NewLine);
             }
             catch (Exception) { }
         }

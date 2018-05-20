@@ -61,7 +61,7 @@
                         </TextBlock>
 
                         <TextBlock Grid.Column="2" HorizontalAlignment="Center">
-                            <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/issues/new" RequestNavigate="Hyperlink_RequestNavigate">Submit a Bug</Hyperlink>
+                            <Hyperlink x:Name="IssueReportHyperlink" Click="IssueReportHyperlink_Click">Submit a Bug</Hyperlink>
                         </TextBlock>
                     </Grid>
                 </Grid>

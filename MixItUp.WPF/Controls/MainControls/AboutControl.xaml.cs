@@ -1,7 +1,11 @@
-﻿using System.Diagnostics;
+﻿using MixItUp.Base;
+using MixItUp.Base.Util;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -20,6 +24,13 @@ namespace MixItUp.WPF.Controls.MainControls
             this.VersionTextBlock.Text = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             return base.InitializeInternal();
+        }
+
+        private void IssueReportHyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            string reporterFilePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), "MixItUp.Reporter.exe");
+            ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", ChannelSession.User.id, Logger.CurrentLogFilePath));
+            Process.Start(processStartInfo);
         }
 
         private void TwitterButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://twitter.com/MixItUpApp"); }
