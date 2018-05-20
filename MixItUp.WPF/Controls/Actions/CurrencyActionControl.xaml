@@ -27,9 +27,9 @@
 
             <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank Type" Width="250" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
 
-            <TextBox Grid.Column="2" x:Name="CurrencyUsernameTextBox" IsEnabled="False" Width="150" MaterialDesign:HintAssist.Hint="Receiving User (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" x:Name="CurrencyUsernameTextBox" IsEnabled="False" Width="200" MaterialDesign:HintAssist.Hint="Receiving User (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             
-            <TextBox Grid.Column="4" x:Name="CurrencyAmountTextBox" IsEnabled="False" Width="100" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="4" x:Name="CurrencyAmountTextBox" IsEnabled="False" Width="150" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         </Grid>
 

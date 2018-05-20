@@ -217,7 +217,7 @@ namespace MixItUp.Base.Util
                                 }
                             }
 
-                            if (endIndex < this.text.Length)
+                            if (endIndex <= this.text.Length)
                             {
                                 string randomSI = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
                                 if (int.TryParse(randomSI.Replace(RandomNumberSpecialIdentifier, ""), out int randomNumberMax) && randomNumberMax > 0)
