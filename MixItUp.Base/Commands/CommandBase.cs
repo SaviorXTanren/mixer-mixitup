@@ -179,6 +179,14 @@ namespace MixItUp.Base.Commands
             }
         }
 
+        public void AddSpecialIdentifiers(IDictionary<string, string> specialIdentifierReplacements)
+        {
+            foreach (var kvp in specialIdentifierReplacements)
+            {
+                this.AddSpecialIdentifier(kvp.Key, kvp.Value);
+            }
+        }
+
         protected abstract SemaphoreSlim AsyncSemaphore { get; }
     }
 }

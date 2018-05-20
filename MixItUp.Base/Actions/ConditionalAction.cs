@@ -105,6 +105,7 @@ namespace MixItUp.Base.Actions
                 CommandBase command = this.GetCommand();
                 if (command != null)
                 {
+                    command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
                     await command.Perform(user, arguments);
                 }
             }

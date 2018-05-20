@@ -4,6 +4,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -62,7 +63,7 @@ namespace MixItUp.Base.Actions
         public ActionTypeEnum Type { get; set; }
 
         [JsonIgnore]
-        private Dictionary<string, string> AdditiveSpecialIdentifiers = new Dictionary<string, string>();
+        private Dictionary<string, string> additiveSpecialIdentifiers = new Dictionary<string, string>();
 
         public ActionBase()
         {
@@ -85,11 +86,13 @@ namespace MixItUp.Base.Actions
             }
             catch (Exception ex) { Util.Logger.Log(ex); }
             finally { this.AsyncSemaphore.Release(); }
+
+            this.additiveSpecialIdentifiers.Clear();
         }
 
         public void AddSpecialIdentifier(string specialIdentifier, string replacement)
         {
-            this.AdditiveSpecialIdentifiers[specialIdentifier] = replacement;
+            this.additiveSpecialIdentifiers[specialIdentifier] = replacement;
         }
 
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
@@ -98,12 +101,14 @@ namespace MixItUp.Base.Actions
         {
             SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode);
             await siString.ReplaceCommonSpecialModifiers(user, arguments);
-            foreach (var kvp in this.AdditiveSpecialIdentifiers)
+            foreach (var kvp in this.additiveSpecialIdentifiers)
             {
                 siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
             return siString.ToString();
         }
+
+        protected IDictionary<string, string> GetAdditiveSpecialIdentifiers() { return this.additiveSpecialIdentifiers.ToDictionary(kvp => kvp.Key, kvp => kvp.Value); }
 
         protected abstract SemaphoreSlim AsyncSemaphore { get; }
     }

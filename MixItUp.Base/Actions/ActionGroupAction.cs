@@ -31,6 +31,7 @@ namespace MixItUp.Base.Actions
             ActionGroupCommand command = ChannelSession.Settings.ActionGroupCommands.FirstOrDefault(c => c.Name.Equals(this.ActionGroupName));
             if (command != null)
             {
+                command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
                 await command.Perform(user, arguments);
             }
         }

@@ -122,6 +122,7 @@ namespace MixItUp.Base.Actions
                                     string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
                                     SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(argumentsText);
                                     siString.ReplaceSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, webRequestResult);
+                                    command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
                                     await command.Perform(user, siString.ToString().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
                                 }
                             }
