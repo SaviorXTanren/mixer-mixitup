@@ -112,7 +112,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.ID = Guid.Empty;
             this.User = user;
             this.Timestamp = DateTimeOffset.Now;
-            this.Message = alertText;
+            this.Message = "---  " + alertText + "  ---";
             this.AlertMessageBrush = ColorSchemes.GetColorCode(foregroundBrush);
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
         }

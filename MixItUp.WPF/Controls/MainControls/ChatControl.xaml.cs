@@ -438,11 +438,12 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
                 await this.RefreshUserList();
-                if (ChannelSession.Settings.ChatShowUserJoinLeave)
-                {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Joined Chat  ---", user.UserName), user, ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
-                }
             });
+
+            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            {
+                await this.AddAlertMessage(string.Format("{0} Joined Chat", user.UserName), user, ChannelSession.Settings.ChatUserJoinLeaveColorScheme);
+            }
         }
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, UserViewModel user)
@@ -458,21 +459,19 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
                 await this.RefreshUserList();
-                if (ChannelSession.Settings.ChatShowUserJoinLeave)
-                {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Left Chat  ---", user.UserName), user, ChannelSession.Settings.ChatUserJoinLeaveColorScheme));
-                }
             });
+
+            if (ChannelSession.Settings.ChatShowUserJoinLeave)
+            {
+                await this.AddAlertMessage(string.Format("{0} Left Chat", user.UserName), user, ChannelSession.Settings.ChatUserJoinLeaveColorScheme);
+            }
         }
 
         private async void Constellation_OnFollowOccurred(object sender, UserViewModel user)
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Followed  ---", user.UserName), user, ChannelSession.Settings.ChatEventAlertsColorScheme));
-                });
+                await this.AddAlertMessage(string.Format("{0} Followed", user.UserName), user, ChannelSession.Settings.ChatEventAlertsColorScheme);
             }
         }
 
@@ -480,10 +479,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Unfollowed  ---", user.UserName), user, ChannelSession.Settings.ChatEventAlertsColorScheme));
-                });
+                await this.AddAlertMessage(string.Format("{0} Unfollowed", user.UserName), user, ChannelSession.Settings.ChatEventAlertsColorScheme);
             }
         }
 
@@ -491,10 +487,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Hosted With {1} Viewers  ---", e.Item1.UserName, e.Item2), e.Item1, ChannelSession.Settings.ChatEventAlertsColorScheme));
-                });
+                await this.AddAlertMessage(string.Format("{0} Hosted With {1} Viewers", e.Item1.UserName, e.Item2), e.Item1, ChannelSession.Settings.ChatEventAlertsColorScheme);
             }
         }
 
@@ -502,10 +495,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Subscribed  ---", user.UserName), user, ChannelSession.Settings.ChatEventAlertsColorScheme));
-                });
+                await this.AddAlertMessage(string.Format("{0} Subscribed", user.UserName), user, ChannelSession.Settings.ChatEventAlertsColorScheme);
             }
         }
 
@@ -513,10 +503,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowEventAlerts)
             {
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Re-Subscribed For {1} Months  ---", e.Item1.UserName, e.Item2), e.Item1, ChannelSession.Settings.ChatEventAlertsColorScheme));
-                });
+                await this.AddAlertMessage(string.Format("{0} Re-Subscribed For {1} Months", e.Item1.UserName, e.Item2), e.Item1, ChannelSession.Settings.ChatEventAlertsColorScheme);
             }
         }
 
@@ -524,10 +511,20 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (ChannelSession.Settings.ChatShowInteractiveAlerts)
             {
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.AddMessage(new ChatMessageViewModel(string.Format("---  {0} Used The \"{1}\" Interactive Control  ---", e.Item1.UserName, e.Item2.Name), e.Item1, ChannelSession.Settings.ChatInteractiveAlertsColorScheme));
-                });
+                await this.AddAlertMessage(string.Format("{0} Used The \"{1}\" Interactive Control", e.Item1.UserName, e.Item2.Name), e.Item1, ChannelSession.Settings.ChatInteractiveAlertsColorScheme);
+            }
+        }
+
+        private async Task AddAlertMessage(string message, UserViewModel user = null, string colorScheme = null)
+        {
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
+            {
+                await this.AddMessage(new ChatMessageViewModel(message, user, colorScheme));
+            });
+
+            if (ChannelSession.Settings.WhisperAllAlerts)
+            {
+                await ChannelSession.Chat.Whisper(ChannelSession.User.username, message);
             }
         }
 

@@ -66,6 +66,8 @@ namespace MixItUp.Desktop
         public bool FeatureMe { get; set; }
 
         [JsonProperty]
+        public bool WhisperAllAlerts { get; set; }
+        [JsonProperty]
         public bool LatestChatAtTop { get; set; }
         [JsonProperty]
         public bool HideViewerAndChatterNumbers { get; set; }
