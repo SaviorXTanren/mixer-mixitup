@@ -5,74 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-             xmlns:EventControls="clr-namespace:MixItUp.WPF.Controls.Events"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="60" />
-            </Grid.ColumnDefinitions>
-
-            <GroupBox Header="Mixer Events" Grid.Row="0" Grid.Column="1">
-                <Grid HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <EventControls:EventCommandControl x:Name="MixerFollowEventCommandControl" Grid.Column="0" Grid.Row="0" />
-
-                    <EventControls:EventCommandControl x:Name="MixerHostEventCommandControl" Grid.Column="2" Grid.Row="0" />
-
-                    <EventControls:EventCommandControl x:Name="MixerSubscribeEventCommandControl" Grid.Column="0" Grid.Row="2" />
-
-                    <EventControls:EventCommandControl x:Name="MixerResubscribeEventCommandControl" Grid.Column="2" Grid.Row="2" />
-                </Grid>
-            </GroupBox>
-
-            <GroupBox Header="Donation Events" Grid.Row="2" Grid.Column="1">
-                <Grid HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <EventControls:EventCommandControl x:Name="StreamlabsDonationEventCommandControl" Grid.Column="0" />
-
-                    <EventControls:EventCommandControl x:Name="GawkBoxDonationEventCommandControl" Grid.Column="2" />
-                </Grid>
-            </GroupBox>
-
-            <GroupBox Header="GameWisp Events" Grid.Row="4" Grid.Column="1">
-                <Grid HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <EventControls:EventCommandControl x:Name="GameWispSubscribeEventCommandControl" Grid.Column="0" />
-
-                    <EventControls:EventCommandControl x:Name="GameWispResubscribeEventCommandControl" Grid.Column="2" />
-                </Grid>
-            </GroupBox>
-        </Grid>
-    </ScrollViewer>
+    <Grid Margin="10">
+        <DataGrid x:Name="EventsCommandsDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Service" Binding="{Binding Service}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTemplateColumn Header="Actions" Width="240">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Center">
+                                <Grid Visibility="{Binding NewCommandButtonVisibility}">
+                                    <Button x:Name="NewInteractiveCommandButton" Click="NewInteractiveCommandButton_Click">Add Command</Button>
+                                </Grid>
+                                <Grid Visibility="{Binding ExistingCommandButtonsVisibility}">
+                                    <CommandControls:CommandButtonsControl x:Name="CommandButtons" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </local:MainControlBase>

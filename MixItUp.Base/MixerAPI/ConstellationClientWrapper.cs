@@ -4,7 +4,6 @@ using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -46,8 +45,7 @@ namespace MixItUp.Base.MixerAPI
 
         public ConstellationClient Client { get; private set; }
 
-        private HashSet<uint> userFollows = new HashSet<uint>();
-        private HashSet<uint> userSubs = new HashSet<uint>();
+        private Dictionary<string, HashSet<uint>> userEventTracking = new Dictionary<string, HashSet<uint>>();
 
         public ConstellationClientWrapper()
         {
@@ -84,6 +82,47 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
+        public bool CanUserRunEvent(UserViewModel user, string eventName)
+        {
+            return (!this.userEventTracking.ContainsKey(eventName) || !this.userEventTracking[eventName].Contains(user.ID));
+        }
+
+        public void LogUserRunEvent(UserViewModel user, string eventName)
+        {
+            if (!this.userEventTracking.ContainsKey(eventName))
+            {
+                this.userEventTracking[eventName] = new HashSet<uint>();
+            }
+            this.userEventTracking[eventName].Add(user.ID);
+        }
+
+        public EventCommand FindMatchingEventCommand(string eventDetails)
+        {
+            foreach (EventCommand command in ChannelSession.Settings.EventCommands)
+            {
+                if (command.MatchesEvent(eventDetails))
+                {
+                    return command;
+                }
+            }
+            return null;
+        }
+
+        public async Task RunEventCommand(EventCommand command, UserViewModel user)
+        {
+            if (command != null)
+            {
+                if (user != null)
+                {
+                    await command.Perform(user);
+                }
+                else
+                {
+                    await command.Perform();
+                }
+            }
+        }
+
         protected override async Task<bool> ConnectInternal()
         {
             this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.Connection.Connection));
@@ -109,6 +148,34 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
             return false;
+        }
+
+        private async Task RunGameWispCommand(EventCommand command, GameWispSubscribeEvent subscribeEvent)
+        {
+            if (command != null)
+            {
+                UserViewModel user = new UserViewModel(0, subscribeEvent.Username);
+
+                UserModel userModel = await ChannelSession.Connection.GetUser(subscribeEvent.Username);
+                if (userModel != null)
+                {
+                    user = new UserViewModel(userModel);
+                }
+
+                GameWispTier tier = null;
+                if (ChannelSession.Services.GameWisp != null)
+                {
+                    tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscribeEvent.TierID));
+                }
+
+                command.AddSpecialIdentifier("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
+                command.AddSpecialIdentifier("subscribeamount", subscribeEvent.Amount);
+                if (tier != null)
+                {
+                    command.AddSpecialIdentifier("subscribetier", tier.Title);
+                }
+                await this.RunEventCommand(command, user);
+            }
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
@@ -147,9 +214,9 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (followed.GetValueOrDefault())
                 {
-                    if (!this.userFollows.Contains(user.ID))
+                    if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelFollowEvent)))
                     {
-                        this.userFollows.Add(user.ID);
+                        this.LogUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelFollowEvent));
 
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
@@ -166,6 +233,12 @@ namespace MixItUp.Base.MixerAPI
                 }
                 else
                 {
+                    if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
+                    {
+                        this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow));
+                        await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)), user);
+                    }
+
                     if (this.OnUnfollowOccurred != null)
                     {
                         this.OnUnfollowOccurred(this, user);
@@ -199,9 +272,9 @@ namespace MixItUp.Base.MixerAPI
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
             {
-                if (!this.userSubs.Contains(user.ID))
+                if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelSubscribedEvent)))
                 {
-                    this.userSubs.Add(user.ID);
+                    this.LogUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelSubscribedEvent));
 
                     user.SubscribeDate = DateTimeOffset.Now;
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
@@ -219,9 +292,9 @@ namespace MixItUp.Base.MixerAPI
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
             {
-                if (!this.userSubs.Contains(user.ID))
+                if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelSubscribedEvent)))
                 {
-                    this.userSubs.Add(user.ID);
+                    this.LogUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelSubscribedEvent));
 
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
@@ -257,61 +330,6 @@ namespace MixItUp.Base.MixerAPI
         private async void GlobalEvents_OnGameWispResubscribedOccurred(object sender, GameWispResubscribeEvent subscribeEvent)
         {
             await this.RunGameWispCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispResubscribed)), subscribeEvent);
-        }
-
-        private EventCommand FindMatchingEventCommand(string eventDetails)
-        {
-            foreach (EventCommand command in ChannelSession.Settings.EventCommands)
-            {
-                if (command.MatchesEvent(eventDetails))
-                {
-                    return command;
-                }
-            }
-            return null;
-        }
-
-        private async Task RunEventCommand(EventCommand command, UserViewModel user)
-        {
-            if (command != null)
-            {
-                if (user != null)
-                {
-                    await command.Perform(user);
-                }
-                else
-                {
-                    await command.Perform();
-                }
-            }
-        }
-
-        private async Task RunGameWispCommand(EventCommand command, GameWispSubscribeEvent subscribeEvent)
-        {
-            if (command != null)
-            {
-                UserViewModel user = new UserViewModel(0, subscribeEvent.Username);
-
-                UserModel userModel = await ChannelSession.Connection.GetUser(subscribeEvent.Username);
-                if (userModel != null)
-                {
-                    user = new UserViewModel(userModel);
-                }
-
-                GameWispTier tier = null;
-                if (ChannelSession.Services.GameWisp != null)
-                {
-                    tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscribeEvent.TierID));
-                }
-
-                command.AddSpecialIdentifier("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
-                command.AddSpecialIdentifier("subscribeamount", subscribeEvent.Amount);
-                if (tier != null)
-                {
-                    command.AddSpecialIdentifier("subscribetier", tier.Title);
-                }
-                await this.RunEventCommand(command, user);
-            }
         }
 
         private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
@@ -23,12 +24,13 @@ namespace MixItUp.Base.MixerAPI
 
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
-        public event EventHandler<uint> OnPurgeMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
 
         public event EventHandler<UserViewModel> OnUserJoinOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserLeaveOccurred = delegate { };
+        public event EventHandler<UserViewModel> OnUserPurgeOccurred = delegate { };
+        public event EventHandler<UserViewModel> OnUserTimeoutOccurred = delegate { };
 
         public Dictionary<Guid, ChatMessageViewModel> Messages { get; private set; }
 
@@ -280,7 +282,7 @@ namespace MixItUp.Base.MixerAPI
                 }
                 else
                 {
-                    Logger.Log("Failed to connect & authenticate Chat client");
+                    MixItUp.Base.Util.Logger.Log("Failed to connect & authenticate Chat client");
                 }
             }
             return null;
@@ -551,9 +553,19 @@ namespace MixItUp.Base.MixerAPI
             this.OnDeleteMessageOccurred(sender, e.id);
         }
 
-        private void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
+        private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
-            this.OnPurgeMessageOccurred(sender, e.user_id);
+            UserViewModel user = await ChannelSession.ChannelUsers.GetUser(e.user_id);
+            if (user != null)
+            {
+                this.OnUserPurgeOccurred(sender, user);
+
+                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
+                {
+                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge));
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)), user);
+                }
+            }
         }
 
         private void ChatClient_OnClearMessagesOccurred(object sender, ChatClearMessagesEventModel e)
@@ -571,6 +583,12 @@ namespace MixItUp.Base.MixerAPI
             if (user != null)
             {
                 this.OnUserJoinOccurred(sender, user);
+
+                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoin)))
+                {
+                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoin));
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoin)), user);
+                }
             }
         }
 
@@ -580,10 +598,29 @@ namespace MixItUp.Base.MixerAPI
             if (user != null)
             {
                 this.OnUserLeaveOccurred(sender, user);
+
+                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeave)))
+                {
+                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeave));
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeave)), user);
+                }
             }
         }
 
-        private void ChatClient_OnUserTimeoutOccurred(object sender, ChatUserEventModel e) { }
+        private async void ChatClient_OnUserTimeoutOccurred(object sender, ChatUserEventModel e)
+        {
+            UserViewModel user = await ChannelSession.ChannelUsers.GetUser(e.user);
+            if (user != null)
+            {
+                this.OnUserTimeoutOccurred(sender, user);
+
+                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserTimeout)))
+                {
+                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserTimeout));
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserTimeout)), user);
+                }
+            }
+        }
 
         private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
         {
@@ -591,6 +628,12 @@ namespace MixItUp.Base.MixerAPI
             if (user != null)
             {
                 this.OnUserUpdateOccurred(sender, user);
+
+                if (e.roles.Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)) && ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
+                {
+                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan));
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)), user);
+                }
             }
         }
 

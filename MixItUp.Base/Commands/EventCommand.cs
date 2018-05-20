@@ -16,15 +16,28 @@ namespace MixItUp.Base.Commands
         [Obsolete]
         Donation,
 
-        [Name("Streamlabs Donation")]
-        StreamlabsDonation,
-        [Name("GawkBox Donation")]
-        GawkBoxDonation,
-
         [Name("GameWisp Subscribed")]
-        GameWispSubscribed,
+        GameWispSubscribed = 2,
         [Name("GameWisp Resubscribed")]
-        GameWispResubscribed,
+        GameWispResubscribed = 3,
+
+        [Name("Streamlabs Donation")]
+        StreamlabsDonation = 10,
+        [Name("GawkBox Donation")]
+        GawkBoxDonation = 11,
+
+        [Name("User Joined")]
+        MixerUserJoin = 30,
+        [Name("User Left")]
+        MixerUserLeave = 31,
+        [Name("User Unfollowed")]
+        MixerUserUnfollow = 32,
+        [Name("User Purged")]
+        MixerUserPurge = 33,
+        [Name("User Timed Out")]
+        MixerUserTimeout = 34,
+        [Name("User Banned")]
+        MixerUserBan = 35,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>

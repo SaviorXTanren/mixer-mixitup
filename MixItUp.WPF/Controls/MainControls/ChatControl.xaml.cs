@@ -73,11 +73,11 @@ namespace MixItUp.WPF.Controls.MainControls
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-            ChannelSession.Chat.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
             ChannelSession.Chat.OnClearMessagesOccurred += Chat_OnClearMessagesOccurred;
             ChannelSession.Chat.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
             ChannelSession.Chat.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
             ChannelSession.Chat.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+            ChannelSession.Chat.OnUserPurgeOccurred += ChatClient_OnUserPurgeOccurred;
 
             if (ChannelSession.Channel.badge != null && ChannelSession.Channel.badge != null && !string.IsNullOrEmpty(ChannelSession.Channel.badge.url))
             {
@@ -414,9 +414,9 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void ChatClient_OnPurgeMessageOccurred(object sender, uint userID)
+        private void ChatClient_OnUserPurgeOccurred(object sender, UserViewModel user)
         {
-            IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(userID));
+            IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(user.ID));
             if (userMessages != null)
             {
                 foreach (ChatMessageControl message in userMessages)
