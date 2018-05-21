@@ -42,11 +42,11 @@ namespace MixItUp.Base.Util
 
         public static void Log(Exception ex, bool isCrashing = false)
         {
-            Logger.Log(ex.ToString());
             if (!Logger.IsDebug)
             {
                 Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendErrorEvent(new ErrorEvent(JsonConvert.SerializeObject(ex.ToString()), isCrashing)); });
             }
+            Logger.Log(ex.ToString());
         }
 
         private static void Logger_LogOccurred(object sender, string e)

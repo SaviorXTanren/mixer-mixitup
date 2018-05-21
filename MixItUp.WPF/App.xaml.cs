@@ -101,7 +101,10 @@ namespace MixItUp.WPF
 
                 this.crashObtained = true;
 
-                Logger.Log("CRASH OCCURRED! CRASH EXCEPTION BELOW:");
+                using (StreamWriter writer = File.AppendText(Logger.CurrentLogFilePath))
+                {
+                    writer.WriteLine(ex.ToString());
+                }
                 Logger.Log(ex, isCrashing: true);
 
                 string reporterFilePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), "MixItUp.Reporter.exe");
