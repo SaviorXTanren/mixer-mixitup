@@ -50,9 +50,10 @@ namespace MixItUp.Reporter
                 this.StatusBar.Visibility = Visibility.Hidden;
 
                 await this.ShowDialog("Thank you for reporting this issue!" + Environment.NewLine + Environment.NewLine + "We'll look into it as soon as we can.");
-                this.Close();
             }
-            catch (Exception) { }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
+            this.Close();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
