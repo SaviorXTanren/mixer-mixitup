@@ -64,6 +64,8 @@ namespace MixItUp.Base.Actions
 
         [JsonIgnore]
         private Dictionary<string, string> additiveSpecialIdentifiers = new Dictionary<string, string>();
+        [JsonIgnore]
+        private Guid randomUserSpecialIdentifierGroup = Guid.Empty;
 
         public ActionBase()
         {
@@ -95,11 +97,13 @@ namespace MixItUp.Base.Actions
             this.additiveSpecialIdentifiers[specialIdentifier] = replacement;
         }
 
+        public void AssignRandomUserSpecialIdentifierGroup(Guid id) { this.randomUserSpecialIdentifierGroup = id; }
+
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
 
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, encode);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.randomUserSpecialIdentifierGroup, encode);
             await siString.ReplaceCommonSpecialModifiers(user, arguments);
             foreach (var kvp in this.additiveSpecialIdentifiers)
             {

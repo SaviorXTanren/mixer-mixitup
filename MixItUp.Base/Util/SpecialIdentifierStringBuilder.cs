@@ -13,6 +13,13 @@ using System.Web;
 
 namespace MixItUp.Base.Util
 {
+    public class RandomUserSpecialIdentiferGroup
+    {
+        public UserViewModel RandomUser { get; set; }
+        public UserViewModel RandomFollower { get; set; }
+        public UserViewModel RandomSubscriber { get; set; }
+    }
+
     public class SpecialIdentifierStringBuilder
     {
         public const string SpecialIdentifierHeader = "$";
@@ -25,12 +32,16 @@ namespace MixItUp.Base.Util
         public const string StreamerSpecialIdentifierHeader = "streamer";
         public const string TargetSpecialIdentifierHeader = "target";
         public const string RandomSpecialIdentifierHeader = "random";
-        public const string RandomNumberSpecialIdentifier = "randomnumber";
+        public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
+        public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
+        public const string RandomNumberSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 
         private static Dictionary<string, string> CustomSpecialIdentifiers = new Dictionary<string, string>();
+
+        private static Dictionary<Guid, RandomUserSpecialIdentiferGroup> RandomUserSpecialIdentifierGroups = new Dictionary<Guid, RandomUserSpecialIdentiferGroup>();
 
         public static void AddCustomSpecialIdentifier(string specialIdentifier, string replacement)
         {
@@ -69,12 +80,38 @@ namespace MixItUp.Base.Util
             return specialIdentifier.ToString().ToLower();
         }
 
+        public static async Task AssignRandomUserSpecialIdentifierGroup(Guid id)
+        {
+            Random random = new Random();
+            SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id] = new RandomUserSpecialIdentiferGroup();
+            IEnumerable<UserViewModel> users = await ChannelSession.ChannelUsers.GetAllWorkableUsers();
+            users = users.Where(u => !u.ID.Equals(ChannelSession.User.id));
+            if (users.Count() > 0)
+            {
+                SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomUser = users.ElementAt(random.Next(users.Count()));
+                users = users.Where(u => u.IsFollower);
+                if (users.Count() > 0)
+                {
+                    SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomFollower = users.ElementAt(random.Next(users.Count()));
+                    users = users.Where(u => u.IsSubscriber);
+                    if (users.Count() > 0)
+                    {
+                        SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomSubscriber = users.ElementAt(random.Next(users.Count()));
+                    }
+                }
+            }
+        }
+
+        public static void ClearRandomUserSpecialIdentifierGroup(Guid id) { SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups.Remove(id); }
+
         private string text;
+        private Guid randomUserSpecialIdentifierGroupID;
         private bool encode;
 
-        public SpecialIdentifierStringBuilder(string text, bool encode = false)
+        public SpecialIdentifierStringBuilder(string text, Guid randomUserSpecialIdentifierGroupID, bool encode = false)
         {
             this.text = text;
+            this.randomUserSpecialIdentifierGroupID = randomUserSpecialIdentifierGroupID;
             this.encode = encode;
         }
 
@@ -192,12 +229,30 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(RandomSpecialIdentifierHeader))
             {
+                if (this.randomUserSpecialIdentifierGroupID != Guid.Empty && RandomUserSpecialIdentifierGroups.ContainsKey(this.randomUserSpecialIdentifierGroupID))
+                {
+                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomUser != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSpecialIdentifierHeader + "user"))
+                    {
+                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomUser, RandomSpecialIdentifierHeader);
+                    }
+
+                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomFollower != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomFollowerSpecialIdentifierHeader + "user"))
+                    {
+                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomFollower, RandomFollowerSpecialIdentifierHeader);
+                    }
+
+                    if (RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomSubscriber != null && this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.RandomSubscriberSpecialIdentifierHeader + "user"))
+                    {
+                        await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomSubscriber, RandomSubscriberSpecialIdentifierHeader);
+                    }
+                }
+
                 IEnumerable<UserViewModel> users = await ChannelSession.ChannelUsers.GetAllUsers();
                 if (users.Count() > 0)
                 {
                     Random random = new Random();
                     int index = random.Next(users.Count());
-                    await this.HandleUserSpecialIdentifiers(users.ElementAt(index), RandomSpecialIdentifierHeader);
+                    
                 }
 
                 if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))

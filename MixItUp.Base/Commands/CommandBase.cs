@@ -1,6 +1,8 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,13 +62,13 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public bool Unlocked { get; set; }
 
-        [XmlIgnore]
-        public string TypeName { get { return EnumHelper.GetEnumName(this.Type); } }
-
-        [XmlIgnore]
+        [JsonIgnore]
         private Task currentTaskRun;
-        [XmlIgnore]
+        [JsonIgnore]
         private CancellationTokenSource currentCancellationTokenSource;
+
+        [JsonIgnore]
+        private Guid randomUserSpecialIdentifierGroupID = Guid.Empty;
 
         public CommandBase()
         {
@@ -86,8 +88,13 @@ namespace MixItUp.Base.Commands
             this.Commands.AddRange(commands);
         }
 
+        [JsonIgnore]
+        public string TypeName { get { return EnumHelper.GetEnumName(this.Type); } }
+
+        [JsonIgnore]
         public virtual bool IsEditable { get { return true; } }
 
+        [JsonIgnore]
         public string CommandsString { get { return string.Join(" ", this.Commands); } }
 
         public virtual bool ContainsCommand(string command) { return this.Commands.Contains(command); }
@@ -115,7 +122,16 @@ namespace MixItUp.Base.Commands
                             await this.AsyncSemaphore.WaitAsync();
                         }
 
+                        this.randomUserSpecialIdentifierGroupID = Guid.NewGuid();
+                        await SpecialIdentifierStringBuilder.AssignRandomUserSpecialIdentifierGroup(this.randomUserSpecialIdentifierGroupID);
+                        foreach (ActionBase action in this.Actions)
+                        {
+                            action.AssignRandomUserSpecialIdentifierGroup(this.randomUserSpecialIdentifierGroupID);
+                        }
+
                         await this.PerformInternal(user, arguments, this.currentCancellationTokenSource.Token);
+
+                        SpecialIdentifierStringBuilder.ClearRandomUserSpecialIdentifierGroup(this.randomUserSpecialIdentifierGroupID);
                     }
                     catch (TaskCanceledException) { }
                     catch (Exception ex) { Util.Logger.Log(ex); }

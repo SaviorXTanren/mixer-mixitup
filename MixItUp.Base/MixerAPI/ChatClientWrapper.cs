@@ -19,9 +19,6 @@ namespace MixItUp.Base.MixerAPI
     {
         private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
 
-        private const string HypeBotUserName = "HypeBot";
-        private const string BoomTVUserName = "boomtvmod";
-
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
@@ -443,15 +440,7 @@ namespace MixItUp.Base.MixerAPI
                     }
                 }
 
-                List<UserViewModel> users = (await ChannelSession.ChannelUsers.GetAllUsers()).ToList();
-                users.RemoveAll(u => HypeBotUserName.Equals(u.UserName));
-                users.RemoveAll(u => BoomTVUserName.Equals(u.UserName));
-                if (ChannelSession.BotUser != null)
-                {
-                    users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
-                }
-
-                foreach (UserViewModel user in users)
+                foreach (UserViewModel user in await ChannelSession.ChannelUsers.GetAllWorkableUsers())
                 {
                     user.UpdateMinuteUserData(currenciesToUpdate);
                 }

@@ -11,6 +11,9 @@ namespace MixItUp.Base.ViewModel.User
 {
     public class UserContainerViewModel
     {
+        public const string HypeBotUserName = "HypeBot";
+        public const string BoomTVUserName = "boomtvmod";
+
         private Dictionary<uint, UserViewModel> users = new Dictionary<uint, UserViewModel>();
 
         private SemaphoreSlim semaphore = new SemaphoreSlim(1);
@@ -106,7 +109,22 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
-            return await this.LockWrapper(() => Task.FromResult(this.users.Values));
+            return await this.LockWrapper(() => Task.FromResult(this.users.Values.ToList()));
+        }
+
+        public async Task<IEnumerable<UserViewModel>> GetAllWorkableUsers()
+        {
+            return await this.LockWrapper(() =>
+            {
+                List<UserViewModel> users = this.users.Values.ToList();
+                users.RemoveAll(u => UserContainerViewModel.HypeBotUserName.Equals(u.UserName));
+                users.RemoveAll(u => UserContainerViewModel.BoomTVUserName.Equals(u.UserName));
+                if (ChannelSession.BotUser != null)
+                {
+                    users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
+                }
+                return Task.FromResult(users);
+            });
         }
 
         public async Task Clear()
