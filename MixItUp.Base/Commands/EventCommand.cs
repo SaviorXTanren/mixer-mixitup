@@ -26,18 +26,16 @@ namespace MixItUp.Base.Commands
         [Name("GawkBox Donation")]
         GawkBoxDonation = 11,
 
-        [Name("User Joined")]
-        MixerUserJoin = 30,
-        [Name("User Left")]
-        MixerUserLeave = 31,
+        [Name("User First Joined")]
+        MixerUserFirstJoin = 30,
         [Name("User Unfollowed")]
-        MixerUserUnfollow = 32,
+        MixerUserUnfollow = 31,
         [Name("User Purged")]
-        MixerUserPurge = 33,
+        MixerUserPurge = 32,
         [Name("User Timed Out")]
-        MixerUserTimeout = 34,
+        MixerUserTimeout = 33,
         [Name("User Banned")]
-        MixerUserBan = 35,
+        MixerUserBan = 34,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>

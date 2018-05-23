@@ -1,5 +1,7 @@
 ﻿using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
+using Mixer.Base.Util;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -54,12 +56,19 @@ namespace MixItUp.Base.ViewModel.User
             {
                 await this.LockWrapper(async () =>
                 {
+                    bool performFirstUserJoin = !ChannelSession.Settings.UserData.ContainsKey(chatUser.userId.GetValueOrDefault());
+
                     if (!this.users.ContainsKey(chatUser.userId.GetValueOrDefault()))
                     {
                         this.users[chatUser.userId.GetValueOrDefault()] = new UserViewModel(chatUser);
                         await this.users[chatUser.userId.GetValueOrDefault()].RefreshDetails(getChatDetails: false);
                     }
                     this.users[chatUser.userId.GetValueOrDefault()].SetChatDetails(chatUser);
+
+                    if (performFirstUserJoin)
+                    {
+                        await this.PerformUserFirstJoin(this.users[chatUser.userId.GetValueOrDefault()]);
+                    }
                 });
                 return await this.GetUser(chatUser.userId.GetValueOrDefault());
             }
@@ -70,12 +79,19 @@ namespace MixItUp.Base.ViewModel.User
         {
             await this.LockWrapper(async () =>
             {
+                bool performFirstUserJoin = !ChannelSession.Settings.UserData.ContainsKey(interactiveUser.userID);
+
                 if (!this.users.ContainsKey(interactiveUser.userID))
                 {
                     this.users[interactiveUser.userID] = new UserViewModel(interactiveUser);
                     await this.users[interactiveUser.userID].RefreshDetails();
                 }
                 this.users[interactiveUser.userID].SetInteractiveDetails(interactiveUser);
+
+                if (performFirstUserJoin)
+                {
+                    await this.PerformUserFirstJoin(this.users[interactiveUser.userID]);
+                }
             });
             return await this.GetUser(interactiveUser.userID);
         }
@@ -149,7 +165,7 @@ namespace MixItUp.Base.ViewModel.User
 
                 await function();
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             finally { this.semaphore.Release(); }
         }
 
@@ -161,9 +177,18 @@ namespace MixItUp.Base.ViewModel.User
 
                 return await function();
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             finally { this.semaphore.Release(); }
             return default(T);
+        }
+
+        private async Task PerformUserFirstJoin(UserViewModel user)
+        {
+            if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
+            {
+                ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
+                await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)), user);
+            }
         }
     }
 }

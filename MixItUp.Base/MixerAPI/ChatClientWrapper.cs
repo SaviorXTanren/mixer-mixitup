@@ -577,12 +577,6 @@ namespace MixItUp.Base.MixerAPI
             if (user != null)
             {
                 this.OnUserJoinOccurred(sender, user);
-
-                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoin)))
-                {
-                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoin));
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserJoin)), user);
-                }
             }
         }
 
@@ -592,12 +586,6 @@ namespace MixItUp.Base.MixerAPI
             if (user != null)
             {
                 this.OnUserLeaveOccurred(sender, user);
-
-                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeave)))
-                {
-                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeave));
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserLeave)), user);
-                }
             }
         }
 
