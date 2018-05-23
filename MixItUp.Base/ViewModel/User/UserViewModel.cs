@@ -286,7 +286,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (this.ID > 0)
             {
-                UserModel user = await ChannelSession.Connection.GetUser(this.ID);
+                UserWithChannelModel user = await ChannelSession.Connection.GetUser(this.ID);
                 if (user != null)
                 {
                     if (!string.IsNullOrEmpty(user.avatarUrl))
@@ -295,6 +295,8 @@ namespace MixItUp.Base.ViewModel.User
                     }
                     this.MixerAccountDate = user.createdAt;
                     this.Sparks = (int)user.sparks;
+
+                    this.GameTypeID = user.channel.typeId.GetValueOrDefault();
 
                     this.Data.UpdateData(user);
                 }
