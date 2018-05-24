@@ -214,9 +214,9 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (followed.GetValueOrDefault())
                 {
-                    if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelFollowEvent)))
+                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString()))
                     {
-                        this.LogUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelFollowEvent));
+                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString());
 
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
@@ -272,9 +272,9 @@ namespace MixItUp.Base.MixerAPI
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
             {
-                if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelSubscribedEvent)))
+                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
                 {
-                    this.LogUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelSubscribedEvent));
+                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString());
 
                     user.SubscribeDate = DateTimeOffset.Now;
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
@@ -292,9 +292,9 @@ namespace MixItUp.Base.MixerAPI
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
             {
-                if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelSubscribedEvent)))
+                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString()))
                 {
-                    this.LogUserRunEvent(user, EnumHelper.GetEnumName(ConstellationClientWrapper.ChannelSubscribedEvent));
+                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString());
 
                     foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                     {
