@@ -4,6 +4,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -147,6 +148,34 @@ namespace MixItUp.WPF.Controls.MainControls
                 new EventCommandDetailsControl(eventCommand.OtherEventType) : new EventCommandDetailsControl(eventCommand.EventType));
             window.Closed += Window_Closed;
             window.Show();
+        }
+
+        private async void CommandButtons_PlayClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is EventCommandItem)
+            {
+                EventCommandItem commandItem = (EventCommandItem)commandButtonsControl.DataContext;
+                if (commandItem != null && commandItem.Command != null)
+                {
+                    await commandItem.Command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
+                    commandButtonsControl.SwitchToPlay();
+                }
+            }
+        }
+
+        private void CommandButtons_StopClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            commandButtonsControl.SwitchToPlay();
+            if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is EventCommandItem)
+            {
+                EventCommandItem commandItem = (EventCommandItem)commandButtonsControl.DataContext;
+                if (commandItem != null && commandItem.Command != null)
+                {
+                    commandItem.Command.StopCurrentRun();
+                }
+            }
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
