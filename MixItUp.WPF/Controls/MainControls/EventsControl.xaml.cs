@@ -152,12 +152,15 @@ namespace MixItUp.WPF.Controls.MainControls
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)
         {
             CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            EventCommand command = commandButtonsControl.GetCommandFromCommandButtons<EventCommand>(sender);
-            if (command != null)
+            if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is EventCommandItem)
             {
-                CommandWindow window = new CommandWindow(new EventCommandDetailsControl(command));
-                window.Closed += Window_Closed;
-                window.Show();
+                EventCommandItem commandItem = (EventCommandItem)commandButtonsControl.DataContext;
+                if (commandItem != null && commandItem.Command != null)
+                {
+                    CommandWindow window = new CommandWindow(new EventCommandDetailsControl(commandItem.Command));
+                    window.Closed += Window_Closed;
+                    window.Show();
+                }
             }
         }
 
@@ -166,12 +169,15 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-                EventCommand command = commandButtonsControl.GetCommandFromCommandButtons<EventCommand>(sender);
-                if (command != null)
+                if (commandButtonsControl.DataContext != null && commandButtonsControl.DataContext is EventCommandItem)
                 {
-                    ChannelSession.Settings.EventCommands.Remove(command);
-                    await ChannelSession.SaveSettings();
-                    this.RefreshControls();
+                    EventCommandItem commandItem = (EventCommandItem)commandButtonsControl.DataContext;
+                    if (commandItem != null && commandItem.Command != null)
+                    {
+                        ChannelSession.Settings.EventCommands.Remove(commandItem.Command);
+                        await ChannelSession.SaveSettings();
+                        this.RefreshControls();
+                    }
                 }
             });
         }
