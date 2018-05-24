@@ -30,25 +30,35 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
-                <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Unchecked" ToolTip="Enable/Disable" />
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="4" VerticalAlignment="Center">Sub Priority:</TextBlock>
-                <ToggleButton  Grid.Column="6" x:Name="SubPriorityToggleButton" Checked="SubPriorityToggleButton_Checked" Unchecked="SubPriorityToggleButton_Checked" ToolTip="Subscribers Receive Priority" />
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Enable:</TextBlock>
+                    <ToggleButton Grid.Column="2" x:Name="EnableGameQueueToggleButton" Checked="EnableGameQueueToggleButton_Checked" Unchecked="EnableGameQueueToggleButton_Unchecked" ToolTip="Enable/Disable" />
 
-                <Button x:Name="ClearQueueButton" Grid.Column="8" Grid.ColumnSpan="3" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
+                    <TextBlock Grid.Column="4" VerticalAlignment="Center">Sub Priority:</TextBlock>
+                    <ToggleButton  Grid.Column="6" x:Name="SubPriorityToggleButton" Checked="SubPriorityToggleButton_Checked" Unchecked="SubPriorityToggleButton_Checked" ToolTip="Subscribers Receive Priority" />
+
+                    <Button x:Name="ClearQueueButton" Grid.Column="8" Grid.ColumnSpan="3" Click="ClearQueueButton_Click" IsEnabled="False">Clear Queue</Button>
+                </Grid>
+
+                <TextBlock Grid.Row="2" TextWrapping="Wrap">To use the Game Queue, create a command with a <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#game-queue" RequestNavigate="Hyperlink_RequestNavigate">Game Queue action</Hyperlink>.</TextBlock>
             </Grid>
 
             <Grid Grid.Column="2">

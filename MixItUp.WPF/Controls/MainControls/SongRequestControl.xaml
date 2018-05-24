@@ -53,6 +53,14 @@
             </Grid>
 
             <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="250">To use the Song Requests, create a command with a <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#song-request" RequestNavigate="Hyperlink_RequestNavigate">Song Request action</Hyperlink>.</TextBlock>
+
                 <Grid x:Name="SpotifyOptionsGrid" Grid.Row="2" Visibility="Collapsed" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
