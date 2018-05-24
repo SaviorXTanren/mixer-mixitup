@@ -21,7 +21,7 @@
                                     <Button x:Name="NewInteractiveCommandButton" Click="NewInteractiveCommandButton_Click">Add Command</Button>
                                 </Grid>
                                 <Grid Visibility="{Binding ExistingCommandButtonsVisibility}">
-                                    <CommandControls:CommandButtonsControl x:Name="CommandButtons" PlayClicked="CommandButtons_PlayClicked" StopClicked="CommandButtons_StopClicked" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
+                                    <CommandControls:CommandButtonsControl x:Name="CommandButtons" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" />
                                 </Grid>
                             </Grid>
                         </DataTemplate>

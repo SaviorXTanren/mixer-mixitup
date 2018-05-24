@@ -41,7 +41,7 @@
             <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
         </Button>
 
-        <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" IsChecked="{Binding IsEnabled}" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
+        <ToggleButton x:Name="EnableDisableToggleSwitch" Grid.Column="6" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Enable/Disable Command" Checked="EnableDisableToggleSwitch_Checked" Unchecked="EnableDisableToggleSwitch_Checked" />
 
     </Grid>
 </Controls:NotifyPropertyChangedUserControl>
