@@ -3,6 +3,7 @@ using System.Windows;
 using System.Threading.Tasks;
 using AutoUpdaterDotNET;
 using System;
+using System.Net.Http;
 
 namespace MixItUp.WPF
 {
@@ -22,12 +23,17 @@ namespace MixItUp.WPF
             this.Initialize(this.StatusBar);
         }
 
-        protected override Task OnLoaded()
+        protected override async Task OnLoaded()
         {
             this.NewVersionTextBlock.Text = updateArgs.CurrentVersion.ToString();
-            this.UpdateChangelogWebBrowser.Source = new Uri(updateArgs.ChangelogURL);
 
-            return base.OnLoaded();
+            using (HttpClient client = new HttpClient())
+            {
+                string changelogHTML = await client.GetStringAsync(updateArgs.ChangelogURL);
+                this.UpdateChangelogWebBrowser.NavigateToString(changelogHTML);
+            }
+
+            await base.OnLoaded();
         }
 
         private void DownloadUpdateButton_Click(object sender, RoutedEventArgs e)
