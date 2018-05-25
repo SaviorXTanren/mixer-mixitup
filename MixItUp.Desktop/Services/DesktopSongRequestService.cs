@@ -15,6 +15,7 @@ namespace MixItUp.Desktop.Services
         private const string MixItUpPlaylistName = "Mix It Up Request Playlist";
         private const string MixItUpPlaylistDescription = "This playlist contains songs that are requested by users through Mix It Up";
         private const string SpotifyLinkPrefix = "https://open.spotify.com/track/";
+        private const string SpotifyTrackPrefix = "spotify:track:";
 
         private SongRequestServiceTypeEnum serviceType;
 
@@ -243,16 +244,16 @@ namespace MixItUp.Desktop.Services
             if (ChannelSession.Services.Spotify != null)
             {
                 string songID = null;
-                if (identifier.StartsWith("spotify:track:"))
+                if (identifier.StartsWith(SpotifyTrackPrefix))
                 {
-                    songID = identifier.Replace("spotify:track:", "");
+                    songID = identifier.Replace(SpotifyTrackPrefix, "");
                 }
-                else if (identifier.StartsWith("https://open.spotify.com/track/"))
+                else if (identifier.StartsWith(SpotifyLinkPrefix))
                 {
-                    identifier = identifier.Replace(SpotifyLinkPrefix, "");
-                    if (identifier.Contains('?'))
+                    songID = identifier.Replace(SpotifyLinkPrefix, "");
+                    if (songID.Contains('?'))
                     {
-                        songID = identifier.Substring(0, identifier.IndexOf('?'));
+                        songID = songID.Substring(0, songID.IndexOf('?'));
                     }
                 }
                 else
