@@ -51,11 +51,11 @@
                             <ToggleButton x:Name="CommunityBannedWordsToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
                         </Grid>
 
-                        <TextBlock Grid.Row="2">Filtered Words (One Per Line):</TextBlock>
+                        <TextBlock Grid.Row="2">Filtered Words (One Per Line) ( * = Wild Card):</TextBlock>
 
                         <TextBox x:Name="FilteredWordsTextBox" Grid.Row="4" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" LostFocus="TextBoxes_LostFocus" />
 
-                        <TextBlock Grid.Row="6">Channel Ban Words (One Per Line):</TextBlock>
+                        <TextBlock Grid.Row="6">Channel Ban Words (One Per Line) ( * = Wild Card):</TextBlock>
 
                         <TextBox x:Name="BannedWordsTextBox" Grid.Row="8" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Style="{StaticResource MaterialDesignFloatingHintTextBox}" LostFocus="TextBoxes_LostFocus" />
 

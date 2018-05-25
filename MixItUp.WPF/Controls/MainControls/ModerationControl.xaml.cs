@@ -39,8 +39,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
 
-            this.FilteredWordsTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.FilteredWords);
-            this.BannedWordsTextBox.Text = string.Join(Environment.NewLine, ChannelSession.Settings.BannedWords);
+            this.FilteredWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.FilteredWords);
+            this.BannedWordsTextBox.Text = this.ConvertFilteredWordListToText(ChannelSession.Settings.BannedWords);
             this.FilteredWordsExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationFilteredWordsExcempt);
 
             this.MaxCapsSlider.Value = ChannelSession.Settings.ModerationCapsBlockCount;
@@ -70,8 +70,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     ChannelSession.Settings.ModerationUseCommunityFilteredWords = this.CommunityBannedWordsToggleButton.IsChecked.GetValueOrDefault();
 
-                    this.SetWordsFromTextBoxInList(this.FilteredWordsTextBox, ChannelSession.Settings.FilteredWords);
-                    this.SetWordsFromTextBoxInList(this.BannedWordsTextBox, ChannelSession.Settings.BannedWords);
+                    this.ConvertFilteredTextToWordList(this.FilteredWordsTextBox.Text, ChannelSession.Settings.FilteredWords);
+                    this.ConvertFilteredTextToWordList(this.BannedWordsTextBox.Text, ChannelSession.Settings.BannedWords);
                     ChannelSession.Settings.ModerationFilteredWordsExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.FilteredWordsExemptComboBox.SelectedItem);
 
                     ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
@@ -93,21 +93,6 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void SetWordsFromTextBoxInList(TextBox textBox, LockedList<string> list)
-        {
-            string bannedWords = textBox.Text;
-            if (string.IsNullOrEmpty(bannedWords))
-            {
-                bannedWords = "";
-            }
-
-            list.Clear();
-            foreach (string split in bannedWords.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                list.Add(split.ToLower());
-            }
-        }
-
         private async void TextBoxes_LostFocus(object sender, System.Windows.RoutedEventArgs e)
         {
             await this.SaveSettings();
@@ -126,6 +111,28 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void ToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
             await this.SaveSettings();
+        }
+
+        private string ConvertFilteredWordListToText(IEnumerable<string> words)
+        {
+            string text = string.Join(Environment.NewLine, ChannelSession.Settings.FilteredWords);
+            text = text.Replace(ModerationHelper.BannedWordWildcardRegexFormat, "*");
+            return text;
+        }
+
+        private void ConvertFilteredTextToWordList(string text, LockedList<string> list)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                text = "";
+            }
+            text = text.Replace("*", ModerationHelper.BannedWordWildcardRegexFormat);
+
+            list.Clear();
+            foreach (string split in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                list.Add(split);
+            }
         }
     }
 }

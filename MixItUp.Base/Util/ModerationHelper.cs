@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.Actions;
-using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +9,10 @@ namespace MixItUp.Base.Util
 {
     public static class ModerationHelper
     {
-        private const int MinimumMessageLengthForPercentageModeration = 5;
+        public static readonly string BannedWordRegexFormat = "(^|[^\\w]){0}([^\\w]|$)";
+        public static readonly string BannedWordWildcardRegexFormat = "\\S*";
 
-        private static readonly string BannedWordRegexFormat = "(^|\\s){0}(\\s|$)";
+        private static readonly int MinimumMessageLengthForPercentageModeration = 5;
 
         private static readonly Regex EmoteRegex = new Regex(":\\w+ ");
         private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
@@ -51,7 +51,7 @@ namespace MixItUp.Base.Util
                 {
                     foreach (string word in ChannelSession.Settings.CommunityFilteredWords)
                     {
-                        if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word)))
+                        if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word), RegexOptions.IgnoreCase))
                         {
                             return "Banned Word";
                         }
@@ -60,7 +60,7 @@ namespace MixItUp.Base.Util
 
                 foreach (string word in ChannelSession.Settings.FilteredWords)
                 {
-                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word)))
+                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word), RegexOptions.IgnoreCase))
                     {
                         return "The following word is not allowed: " + word;
                     }
@@ -68,7 +68,7 @@ namespace MixItUp.Base.Util
 
                 foreach (string word in ChannelSession.Settings.BannedWords)
                 {
-                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word)))
+                    if (Regex.IsMatch(text, string.Format(BannedWordRegexFormat, word), RegexOptions.IgnoreCase))
                     {
                         await ChannelSession.Chat.BanUser(user);
                         return "The following word is banned: " + word;
