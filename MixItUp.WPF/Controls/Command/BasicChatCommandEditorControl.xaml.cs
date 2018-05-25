@@ -24,19 +24,21 @@ namespace MixItUp.WPF.Controls.Command
 
         private BasicCommandTypeEnum commandType;
         private ChatCommand command;
+        private bool autoAddToChatCommands = false;
 
         private ActionControlBase actionControl;
 
-        public BasicChatCommandEditorControl(CommandWindow window, ChatCommand command)
-            : this(window, BasicCommandTypeEnum.None)
+        public BasicChatCommandEditorControl(CommandWindow window, ChatCommand command, bool autoAddToChatCommands = true)
+            : this(window, BasicCommandTypeEnum.None, autoAddToChatCommands)
         {
             this.command = command;
         }
 
-        public BasicChatCommandEditorControl(CommandWindow window, BasicCommandTypeEnum commandType)
+        public BasicChatCommandEditorControl(CommandWindow window, BasicCommandTypeEnum commandType, bool autoAddToChatCommands = true)
         {
             this.window = window;
             this.commandType = commandType;
+            this.autoAddToChatCommands = autoAddToChatCommands;
 
             InitializeComponent();
         }
@@ -151,11 +153,16 @@ namespace MixItUp.WPF.Controls.Command
                 newCommand.IsBasic = true;
                 newCommand.Actions.Add(action);
 
-                if (this.command != null)
+                if (this.autoAddToChatCommands)
                 {
-                    ChannelSession.Settings.ChatCommands.Remove(this.command);
+                    if (this.command != null)
+                    {
+                        ChannelSession.Settings.ChatCommands.Remove(this.command);
+                    }
+                    ChannelSession.Settings.ChatCommands.Add(newCommand);
                 }
-                ChannelSession.Settings.ChatCommands.Add(newCommand);
+
+                this.CommandSavedSuccessfully(newCommand);
 
                 await ChannelSession.SaveSettings();
 

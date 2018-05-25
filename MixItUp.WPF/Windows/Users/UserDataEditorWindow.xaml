@@ -126,7 +126,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Button x:Name="AddUserOnlyCommandButton" Grid.Row="2" HorizontalAlignment="Center" Click="AddUserOnlyCommandButton_Click">Add Command</Button>
+                        <Button x:Name="AddUserOnlyCommandButton" Grid.Row="1" HorizontalAlignment="Center" Click="AddUserOnlyCommandButton_Click">Add Command</Button>
                     </Grid>
                 </GroupBox>
 
