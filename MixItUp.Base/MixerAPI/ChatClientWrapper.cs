@@ -38,7 +38,7 @@ namespace MixItUp.Base.MixerAPI
 
         private object messageUpdateLock = new object();
 
-        private HashSet<uint> userJoins = new HashSet<uint>();
+        private HashSet<uint> userEntranceCommands = new HashSet<uint>();
 
         public ChatClientWrapper()
         {
@@ -317,24 +317,21 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task<UserViewModel> AddUser(ChatUserModel chatUser)
         {
-            UserViewModel user = await ChannelSession.ChannelUsers.AddOrUpdateUser(chatUser);
-            if (user != null)
-            {
-                if (!this.userJoins.Contains(user.ID))
-                {
-                    this.userJoins.Add(user.ID);
-                    if (user.Data.EntranceCommand != null)
-                    {
-                        await user.Data.EntranceCommand.Perform(user);
-                    }
-                }
-            }
-            return user;
+            return await ChannelSession.ChannelUsers.AddOrUpdateUser(chatUser);
         }
 
         private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
         {
             UserViewModel user = await this.AddUser(messageEvent);
+
+            if (user != null && !this.userEntranceCommands.Contains(user.ID))
+            {
+                this.userEntranceCommands.Add(user.ID);
+                if (user.Data.EntranceCommand != null)
+                {
+                    await user.Data.EntranceCommand.Perform(user);
+                }
+            }
 
             ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
 
