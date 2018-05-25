@@ -54,6 +54,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private ObservableCollection<FavoriteGroupViewModel> favoritedGroups = new ObservableCollection<FavoriteGroupViewModel>();
 
+        private ChannelModel channelToRaid;
+
         public ChannelControl()
         {
             InitializeComponent();
@@ -200,14 +202,14 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (channels != null && channels.Count() > 0)
                 {
                     Random random = new Random();
-                    ChannelModel channelToRaid = channels.ElementAt(random.Next(0, channels.Count()));
+                    this.channelToRaid = channels.ElementAt(random.Next(0, channels.Count()));
 
-                    UserModel user = await ChannelSession.Connection.GetUser(channelToRaid.userId);
-                    GameTypeModel game = await ChannelSession.Connection.GetGameType(channelToRaid.typeId.GetValueOrDefault());
+                    UserModel user = await ChannelSession.Connection.GetUser(this.channelToRaid.userId);
+                    GameTypeModel game = await ChannelSession.Connection.GetGameType(this.channelToRaid.typeId.GetValueOrDefault());
 
                     this.ChannelRaidNameTextBox.Text = user.username;
-                    this.ChannelRaidViewersTextBox.Text = channelToRaid.viewersCurrent.ToString();
-                    this.ChannelRaidAudienceTextBox.Text = EnumHelper.GetEnumName(EnumHelper.GetEnumValueFromString<AgeRatingEnum>(channelToRaid.audience));
+                    this.ChannelRaidViewersTextBox.Text = this.channelToRaid.viewersCurrent.ToString();
+                    this.ChannelRaidAudienceTextBox.Text = EnumHelper.GetEnumName(EnumHelper.GetEnumValueFromString<AgeRatingEnum>(this.channelToRaid.audience));
                     this.ChannelRaidGameTextBox.Text = (game != null) ? game.name : "Unknown";
                 }
                 else
@@ -360,6 +362,17 @@ namespace MixItUp.WPF.Controls.MainControls
                 FavoriteGroupViewModel groupViewModel = new FavoriteGroupViewModel(group);
                 await groupViewModel.RefreshGroup();
                 this.favoritedGroups.Add(groupViewModel);
+            }
+        }
+
+        private async void HostChannelButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.channelToRaid != null)
+            {
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await ChannelSession.Connection.SetHostChannel(ChannelSession.Channel, this.channelToRaid);
+                });
             }
         }
     }

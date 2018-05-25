@@ -39,11 +39,13 @@
                     <DataGridTextColumn Header="Live" Binding="{Binding Live}" IsReadOnly="True" Width="60" />
                     <DataGridTextColumn Header="Viewers" Binding="{Binding Viewers}" IsReadOnly="True" Width="80" />
                     <DataGridTextColumn Header="Game" Binding="{Binding Game}" IsReadOnly="True" Width="3*" />
-                    <DataGridTemplateColumn Header="Actions" Width="120">
+                    <DataGridTemplateColumn Header="Actions" Width="170">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="10" />
                                         <ColumnDefinition Width="Auto" />
@@ -53,7 +55,11 @@
                                         <MaterialDesign:PackIcon Kind="Television" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
 
-                                    <Button x:Name="RemoveUserButton" Grid.Column="2" Click="RemoveUserButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Remove User" IsEnabled="{Binding CanBeRemoved}">
+                                    <Button x:Name="HostChannelButton" Grid.Column="2" Click="HostChannelButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Host Channel">
+                                        <MaterialDesign:PackIcon Kind="Satellite" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                    </Button>
+
+                                    <Button x:Name="RemoveUserButton" Grid.Column="4" Click="RemoveUserButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Remove User" IsEnabled="{Binding CanBeRemoved}">
                                         <MaterialDesign:PackIcon Kind="AccountRemove" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
                                     </Button>
                                 </Grid>

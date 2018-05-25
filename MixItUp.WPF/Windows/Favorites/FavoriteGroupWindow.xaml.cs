@@ -72,6 +72,16 @@ namespace MixItUp.WPF.Windows.Favorites
             Process.Start(user.Link);
         }
 
+        private async void HostChannelButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            FavoriteUser user = (FavoriteUser)button.DataContext;
+            await this.RunAsyncOperation(async () =>
+            {
+                await ChannelSession.Connection.SetHostChannel(ChannelSession.Channel, user.User.channel);
+            });
+        }
+
         private async void RemoveUserButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
