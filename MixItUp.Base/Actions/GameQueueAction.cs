@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -21,7 +22,9 @@ namespace MixItUp.Base.Actions
         [Name("User Leave Queue")]
         LeaveQueue,
         [Name("Remove User in Front of Queue")]
-        RemoveFirst
+        RemoveFirst,
+        [Name("Remove Random User in Queue")]
+        RemoveRandom,
     }
 
     [DataContract]
@@ -124,14 +127,29 @@ namespace MixItUp.Base.Actions
                     ChannelSession.GameQueue.Remove(user);
                     await ChannelSession.Chat.Whisper(user.UserName, string.Format("You have left the queue to play with @{0}.", ChannelSession.Channel.user.username));
                 }
-                else if (this.GameQueueType == GameQueueActionType.RemoveFirst)
+                else if (this.GameQueueType == GameQueueActionType.RemoveFirst || this.GameQueueType == GameQueueActionType.RemoveRandom)
                 {
                     if (ChannelSession.GameQueue.Count() > 0)
                     {
-                        UserViewModel firstUser = ChannelSession.GameQueue.ElementAt(0);
-                        ChannelSession.GameQueue.RemoveAt(0);
-                        await ChannelSession.Chat.SendMessage(string.Format("it's time to play @{0}! Listen carefully for instructions on how to join @{1}", firstUser.UserName,
-                            ChannelSession.Channel.user.username));
+                        UserViewModel queueUser = null;
+                        if (this.GameQueueType == GameQueueActionType.RemoveFirst)
+                        {
+                            queueUser = ChannelSession.GameQueue.ElementAt(0);
+                            ChannelSession.GameQueue.RemoveAt(0);
+                        }
+                        else if (this.GameQueueType == GameQueueActionType.RemoveRandom)
+                        {
+                            Random random = new Random();
+                            int index = random.Next(0, ChannelSession.GameQueue.Count());
+                            queueUser = ChannelSession.GameQueue.ElementAt(index);
+                            ChannelSession.GameQueue.RemoveAt(index);
+                        }
+
+                        if (queueUser != null)
+                        {
+                            await ChannelSession.Chat.SendMessage(string.Format("it's time to play @{0}! Listen carefully for instructions on how to join @{1}", queueUser.UserName,
+                                ChannelSession.Channel.user.username));
+                        }
                     }
                 }
 
