@@ -47,7 +47,7 @@ namespace MixItUp.Base.Util
             DateTime currentDateTime = DateTimeOffset.Now.Date;
             DateTime tempDateTime = dt.Date;
 
-            int subMonths = 1;
+            int subMonths = 0;
             while (tempDateTime.Year < currentDateTime.Year || tempDateTime.Month < currentDateTime.Month)
             {
                 tempDateTime = tempDateTime.AddMonths(1);
