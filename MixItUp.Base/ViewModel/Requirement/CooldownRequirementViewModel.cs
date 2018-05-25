@@ -132,5 +132,21 @@ namespace MixItUp.Base.ViewModel.Requirement
                 CooldownRequirementViewModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now;
             }
         }
+
+        public void ResetCooldown(UserViewModel user)
+        {
+            if (this.Type == CooldownTypeEnum.Global)
+            {
+                this.globalCooldown = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
+            }
+            else if (this.Type == CooldownTypeEnum.Individual)
+            {
+                this.individualCooldowns[user.ID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
+            }
+            else if (this.IsGroup)
+            {
+                CooldownRequirementViewModel.groupCooldowns[this.GroupName] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
+            }
+        }
     }
 }

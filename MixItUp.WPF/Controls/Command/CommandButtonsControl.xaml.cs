@@ -89,6 +89,11 @@ namespace MixItUp.WPF.Controls.Command
             if (command != null)
             {
                 await command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
+                if (command is PermissionsCommandBase)
+                {
+                    PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;
+                    permissionCommand.ResetCooldown(ChannelSession.GetCurrentUser());
+                }
                 this.SwitchToPlay();
             }
 

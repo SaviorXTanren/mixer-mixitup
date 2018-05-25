@@ -93,6 +93,8 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
+        public void ResetCooldown(UserViewModel user) { this.Requirements.ResetCooldown(user); }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (!await this.CheckAllRequirements(user))
