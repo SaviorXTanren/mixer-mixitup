@@ -425,28 +425,31 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task AddParticipants(IEnumerable<InteractiveParticipantModel> participants)
         {
-            List<InteractiveParticipantModel> participantsToUpdate = new List<InteractiveParticipantModel>();
-            foreach (InteractiveParticipantModel participant in participants)
+            if (participants != null && participants.Count() > 0)
             {
-                UserViewModel user = await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
-                if (user != null)
+                List<InteractiveParticipantModel> participantsToUpdate = new List<InteractiveParticipantModel>();
+                foreach (InteractiveParticipantModel participant in participants)
                 {
-                    InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == user.PrimaryRole);
-                    if (group != null)
+                    UserViewModel user = await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
+                    if (user != null)
                     {
-                        bool updateParticipant = !user.InteractiveGroupID.Equals(group.DefaultScene);
-                        user.InteractiveGroupID = group.GroupName;
-                        if (updateParticipant)
+                        InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == user.PrimaryRole);
+                        if (group != null)
                         {
-                            participantsToUpdate.Add(user.GetParticipantModel());
+                            bool updateParticipant = !user.InteractiveGroupID.Equals(group.DefaultScene);
+                            user.InteractiveGroupID = group.GroupName;
+                            if (updateParticipant)
+                            {
+                                participantsToUpdate.Add(user.GetParticipantModel());
+                            }
                         }
                     }
                 }
-            }
 
-            if (participantsToUpdate.Count > 0)
-            {
-                await ChannelSession.Interactive.UpdateParticipants(participantsToUpdate);
+                if (participantsToUpdate.Count > 0)
+                {
+                    await ChannelSession.Interactive.UpdateParticipants(participantsToUpdate);
+                }
             }
         }
 
