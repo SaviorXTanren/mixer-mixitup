@@ -496,7 +496,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void Client_OnParticipantJoin(object sender, InteractiveParticipantCollectionModel e)
         {
-            if (e.participants != null)
+            if (e != null)
             {
                 await this.AddParticipants(e.participants);
             }
