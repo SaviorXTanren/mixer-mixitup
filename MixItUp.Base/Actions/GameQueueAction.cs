@@ -25,6 +25,8 @@ namespace MixItUp.Base.Actions
         RemoveFirst,
         [Name("Remove Random User in Queue")]
         RemoveRandom,
+        [Name("Enable/Disable Game Queue")]
+        EnableDisableQueue
     }
 
     [DataContract]
@@ -49,106 +51,116 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
-                if (!ChannelSession.GameQueueEnabled)
+                if (this.GameQueueType == GameQueueActionType.EnableDisableQueue)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
-                    return;
-                }
-
-                if (this.GameQueueType == GameQueueActionType.JoinQueue)
-                {
-                    int position = ChannelSession.GameQueue.IndexOf(user);
-                    if (position == -1)
+                    if (ChannelSession.Settings.GameQueueRequirements != null)
                     {
-                        if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetUserRoleRequirement(user))
-                        {
-                            await ChannelSession.Settings.GameQueueRequirements.Role.SendUserRoleNotMetWhisper(user);
-                            return;
-                        }
+                        ChannelSession.GameQueueEnabled = !ChannelSession.GameQueueEnabled;
+                    }
+                }
+                else
+                {
+                    if (!ChannelSession.GameQueueEnabled)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "The game queue is not currently enabled");
+                        return;
+                    }
 
-                        if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetRankRequirement(user))
+                    if (this.GameQueueType == GameQueueActionType.JoinQueue)
+                    {
+                        int position = ChannelSession.GameQueue.IndexOf(user);
+                        if (position == -1)
                         {
-                            await ChannelSession.Settings.GameQueueRequirements.Rank.SendRankNotMetWhisper(user);
-                            return;
-                        }
-
-                        if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetCurrencyRequirement(user) || !ChannelSession.Settings.GameQueueRequirements.TrySubtractCurrencyAmount(user))
-                        {
-                            await ChannelSession.Settings.GameQueueRequirements.Currency.SendCurrencyNotMetWhisper(user);
-                            return;
-                        }
-
-                        if (ChannelSession.Settings.GameQueueSubPriority)
-                        {
-                            if (user.IsSubscriber)
+                            if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetUserRoleRequirement(user))
                             {
-                                int totalSubs = ChannelSession.GameQueue.Count(u => u.IsSubscriber);
-                                ChannelSession.GameQueue.Insert(totalSubs, user);
+                                await ChannelSession.Settings.GameQueueRequirements.Role.SendUserRoleNotMetWhisper(user);
+                                return;
+                            }
+
+                            if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetRankRequirement(user))
+                            {
+                                await ChannelSession.Settings.GameQueueRequirements.Rank.SendRankNotMetWhisper(user);
+                                return;
+                            }
+
+                            if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetCurrencyRequirement(user) || !ChannelSession.Settings.GameQueueRequirements.TrySubtractCurrencyAmount(user))
+                            {
+                                await ChannelSession.Settings.GameQueueRequirements.Currency.SendCurrencyNotMetWhisper(user);
+                                return;
+                            }
+
+                            if (ChannelSession.Settings.GameQueueSubPriority)
+                            {
+                                if (user.IsSubscriber)
+                                {
+                                    int totalSubs = ChannelSession.GameQueue.Count(u => u.IsSubscriber);
+                                    ChannelSession.GameQueue.Insert(totalSubs, user);
+                                }
+                                else
+                                {
+                                    ChannelSession.GameQueue.Add(user);
+                                }
                             }
                             else
                             {
                                 ChannelSession.GameQueue.Add(user);
                             }
                         }
-                        else
-                        {
-                            ChannelSession.GameQueue.Add(user);
-                        } 
+                        await this.PrintUserPosition(user);
                     }
-                    await this.PrintUserPosition(user);
-                }
-                else if (this.GameQueueType == GameQueueActionType.QueuePosition)
-                {
-                    await this.PrintUserPosition(user);
-                }
-                else if (this.GameQueueType == GameQueueActionType.QueueStatus)
-                {
-                    StringBuilder message = new StringBuilder();
-                    message.Append(string.Format("There are currently {0} waiting to play with @{1}.", ChannelSession.GameQueue.Count(), ChannelSession.Channel.user.username));
-
-                    if (ChannelSession.GameQueue.Count() > 0)
+                    else if (this.GameQueueType == GameQueueActionType.QueuePosition)
                     {
-                        message.Append(" The following users are next up to play: ");
-
-                        List<string> users = new List<string>();
-                        for (int i = 0; i < ChannelSession.GameQueue.Count() && i < 5; i++)
-                        {
-                            users.Add("@" + ChannelSession.GameQueue[i].UserName);
-                        }
-
-                        message.Append(string.Join(", ", users));
-                        message.Append(".");
+                        await this.PrintUserPosition(user);
                     }
-
-                    await ChannelSession.Chat.SendMessage(message.ToString());
-                }
-                else if (this.GameQueueType == GameQueueActionType.LeaveQueue)
-                {
-                    ChannelSession.GameQueue.Remove(user);
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You have left the queue to play with @{0}.", ChannelSession.Channel.user.username));
-                }
-                else if (this.GameQueueType == GameQueueActionType.RemoveFirst || this.GameQueueType == GameQueueActionType.RemoveRandom)
-                {
-                    if (ChannelSession.GameQueue.Count() > 0)
+                    else if (this.GameQueueType == GameQueueActionType.QueueStatus)
                     {
-                        UserViewModel queueUser = null;
-                        if (this.GameQueueType == GameQueueActionType.RemoveFirst)
+                        StringBuilder message = new StringBuilder();
+                        message.Append(string.Format("There are currently {0} waiting to play with @{1}.", ChannelSession.GameQueue.Count(), ChannelSession.Channel.user.username));
+
+                        if (ChannelSession.GameQueue.Count() > 0)
                         {
-                            queueUser = ChannelSession.GameQueue.ElementAt(0);
-                            ChannelSession.GameQueue.RemoveAt(0);
-                        }
-                        else if (this.GameQueueType == GameQueueActionType.RemoveRandom)
-                        {
-                            Random random = new Random();
-                            int index = random.Next(0, ChannelSession.GameQueue.Count());
-                            queueUser = ChannelSession.GameQueue.ElementAt(index);
-                            ChannelSession.GameQueue.RemoveAt(index);
+                            message.Append(" The following users are next up to play: ");
+
+                            List<string> users = new List<string>();
+                            for (int i = 0; i < ChannelSession.GameQueue.Count() && i < 5; i++)
+                            {
+                                users.Add("@" + ChannelSession.GameQueue[i].UserName);
+                            }
+
+                            message.Append(string.Join(", ", users));
+                            message.Append(".");
                         }
 
-                        if (queueUser != null)
+                        await ChannelSession.Chat.SendMessage(message.ToString());
+                    }
+                    else if (this.GameQueueType == GameQueueActionType.LeaveQueue)
+                    {
+                        ChannelSession.GameQueue.Remove(user);
+                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("You have left the queue to play with @{0}.", ChannelSession.Channel.user.username));
+                    }
+                    else if (this.GameQueueType == GameQueueActionType.RemoveFirst || this.GameQueueType == GameQueueActionType.RemoveRandom)
+                    {
+                        if (ChannelSession.GameQueue.Count() > 0)
                         {
-                            await ChannelSession.Chat.SendMessage(string.Format("it's time to play @{0}! Listen carefully for instructions on how to join @{1}", queueUser.UserName,
-                                ChannelSession.Channel.user.username));
+                            UserViewModel queueUser = null;
+                            if (this.GameQueueType == GameQueueActionType.RemoveFirst)
+                            {
+                                queueUser = ChannelSession.GameQueue.ElementAt(0);
+                                ChannelSession.GameQueue.RemoveAt(0);
+                            }
+                            else if (this.GameQueueType == GameQueueActionType.RemoveRandom)
+                            {
+                                Random random = new Random();
+                                int index = random.Next(0, ChannelSession.GameQueue.Count());
+                                queueUser = ChannelSession.GameQueue.ElementAt(index);
+                                ChannelSession.GameQueue.RemoveAt(index);
+                            }
+
+                            if (queueUser != null)
+                            {
+                                await ChannelSession.Chat.SendMessage(string.Format("it's time to play @{0}! Listen carefully for instructions on how to join @{1}", queueUser.UserName,
+                                    ChannelSession.Channel.user.username));
+                            }
                         }
                     }
                 }
