@@ -105,7 +105,7 @@ namespace MixItUp.WPF
                 {
                     using (StreamWriter writer = File.AppendText(Logger.CurrentLogFilePath))
                     {
-                        writer.WriteLine(ex.ToString());
+                        writer.WriteLine("CRASHING EXCEPTION: " + Environment.NewLine + ex.ToString());
                     }
                 }
                 catch (Exception) { }
