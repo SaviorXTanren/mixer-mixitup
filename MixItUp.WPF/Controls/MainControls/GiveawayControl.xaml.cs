@@ -129,17 +129,20 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.TimeLeftTextBlock.Text = this.timeLeft.ToString();
                 }));
 
-                if (this.timeLeft == 60)
+                string timeLeftText = null;
+                if (this.timeLeft > 60 && this.timeLeft % 300 == 0)
                 {
-                    await ChannelSession.Chat.SendMessage("The giveaway will end in 60 seconds");
+                    int minutesLeft = this.timeLeft / 60;
+                    timeLeftText = minutesLeft + " minutes";
                 }
-                else if (this.timeLeft == 30)
+                else if (this.timeLeft == 60 || this.timeLeft == 30 || this.timeLeft == 10)
                 {
-                    await ChannelSession.Chat.SendMessage("The giveaway will end in 30 seconds");
+                    timeLeftText = this.timeLeft + " seconds";
                 }
-                else if (this.timeLeft == 10)
+
+                if (!string.IsNullOrEmpty(timeLeftText))
                 {
-                    await ChannelSession.Chat.SendMessage("The giveaway will end in 10 seconds");
+                    await ChannelSession.Chat.SendMessage(string.Format("The giveaway will end in {0}. Type \"!{1}\" in chat to enter!", timeLeftText, ChannelSession.Settings.GiveawayCommand));
                 }
 
                 if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
