@@ -59,7 +59,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && ChannelSession.Services.Spotify == null)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area.");
+                    await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area");
+                    this.EnableSongRequestsToggleButton.IsChecked = false;
+                    return;
+                }
+
+                if (this.YouTubeToggleButton.IsChecked.GetValueOrDefault() && ChannelSession.Services.OverlayServer == null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("You must enable & use the Mix It Up Overlay for YouTube song requests");
                     this.EnableSongRequestsToggleButton.IsChecked = false;
                     return;
                 }
