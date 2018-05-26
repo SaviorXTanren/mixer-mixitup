@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Mixer.Base.Util;
+using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
@@ -17,7 +19,7 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static async Task<T> RunAsync<T>(Task<T> task)
+        public static async Task<T> RunAsync<T>(Task<T> task, bool logNotFoundException = true)
         {
             try
             {
@@ -26,6 +28,14 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
+                if (!logNotFoundException && ex is RestServiceRequestException)
+                {
+                    RestServiceRequestException restEx = (RestServiceRequestException)ex;
+                    if (restEx.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        return default(T);
+                    }
+                }
                 Logger.Log(ex);
             }
             return default(T);
