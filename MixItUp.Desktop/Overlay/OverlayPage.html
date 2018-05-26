@@ -5,6 +5,14 @@
         <title>Mix It Up - Overlay</title>
         <link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Wiki/Images/LogoSmall.png" />
         <link rel="stylesheet" type="text/css" href="animate.min.css">
+
+        <script src="jquery.min.js"></script>
+
+        <script src="webSocketWrapper.js"></script>
+
+        <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+
+        <script src="https://w.soundcloud.com/player/api.js"></script>
     </head>
     <body style="background-color: transparent; overflow: hidden;">
         <div id="mainOverlay" />
@@ -22,16 +30,12 @@
 
         <div id="youtubePlayerDiv" style="position: relative; left: -1000px"></div>
 
-        <script src="jquery.min.js"></script>
-
-        <script src="webSocketWrapper.js"></script>
-
-        <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+        <iframe id="soundcloudPlayerIFrame" width="300" height="166" style="position: absolute; left: 0%; top: 0%;" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1848538"></iframe>
 
         <script>
             $.fn.extend({
-                animateCss: function(animationName, callback) {
-                    var animationEnd = (function(el) {
+                animateCss: function (animationName, callback) {
+                    var animationEnd = (function (el) {
                         var animations = {
                             animation: 'animationend',
                             OAnimation: 'oAnimationEnd',
@@ -45,13 +49,13 @@
                             }
                         }
                     })(document.createElement('div'));
-                
+
                     if (animationName) {
-                        this.addClass('animated ' + animationName).one(animationEnd, function() {
+                        this.addClass('animated ' + animationName).one(animationEnd, function () {
                             $(this).removeClass('animated ' + animationName);
 
                             if (typeof callback === 'function') callback();
-                        });               
+                        });
                     }
                     else if (typeof callback === 'function') callback();
 
@@ -62,8 +66,10 @@
             var mainOverlayDiv = document.getElementById('mainOverlay');
             var noConnectionDiv = document.getElementById('noConnectionDiv');
             var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
-            var youtubePlayerDiv = document.getElementById('youtubePlayerDiv');
 
+            // YouTube player
+
+            var youtubePlayerDiv = document.getElementById('youtubePlayerDiv');
             var youtubePlayer;
             var youtubePlayerReady = false;
             var youtubeSongPlaying = false;
@@ -72,6 +78,31 @@
             youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);
+
+            // SoundCloud player
+
+            var soundCloudPlayer = SC.Widget(document.getElementById('soundcloudPlayerIFrame'));
+            var soundCloudPlayerReady = false;
+            var soundCloudPlayerSongPlaying = false;
+            var soundCloudPlayerSongIsPaused = false;
+
+            soundCloudPlayer.bind(SC.Widget.Events.READY, function () {
+                soundCloudPlayerReady = true;
+            });
+
+            soundCloudPlayer.bind(SC.Widget.Events.PLAY, function () {
+                soundCloudPlayerSongPlaying = true;
+                soundCloudPlayerSongIsPaused = false;
+            });
+
+            soundCloudPlayer.bind(SC.Widget.Events.PAUSE, function () {
+                soundCloudPlayerSongIsPaused = true;
+            });
+
+            soundCloudPlayer.bind(SC.Widget.Events.FINISH, function () {
+                soundCloudPlayerSongPlaying = false;
+                soundCloudPlayerSongIsPaused = false;
+            });
 
             function connectionOpened() {
                 noConnectionDiv.style.visibility = 'hidden';
@@ -118,8 +149,10 @@
             }
 
             function testPacket() {
-                var data = { Text: 'Connection Test!', Size: 100, Color: 'red', EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut',
-                    Horizontal: 50, Vertical: 50, Duration: 3 };
+                var data = {
+                    Text: 'Connection Test!', Size: 100, Color: 'red', EntranceAnimationName: 'fadeIn', VisibleAnimationName: '', ExitAnimationName: 'fadeOut',
+                    Horizontal: 50, Vertical: 50, Duration: 3
+                };
                 textPacket(data);
             }
 
@@ -209,6 +242,22 @@
                         youtubePlayer.loadVideoById(data.Source);
                     }
                 }
+                else if (data.Type == 'SoundCloud' && soundCloudPlayerReady) {
+                    if (data.Action == 'playpause' && soundCloudSongPlaying) {
+                        if (ssoundCloudSongIsPaused) {
+                            soundCloudPlayer.play();
+                        }
+                        else {
+                            soundCloudPlayer.pause();
+                        }
+                    }
+                    else if (data.Action == 'stop') {
+                        soundCloudPlayer.next();
+                    }
+                    else if (data.Action == 'song') {
+                        soundCloudPlayer.load(data.Source, { auto_play: true });
+                    }
+                }
             }
 
             function addWaitRemoveElement(data, addedElement) {
@@ -219,7 +268,7 @@
                     divContainer.style.cssText += 'position: absolute; width: 1920px; height: 1080px; max-width: 1920px; max-height: 1080px; min-width: 1920px; min-height: 1080px;';
                     divContainer.appendChild(addedElement);
 
-                    $(divContainer).animateCss(data.EntranceAnimationName, function() {
+                    $(divContainer).animateCss(data.EntranceAnimationName, function () {
 
                         setTimeout(function () {
 
@@ -232,13 +281,13 @@
                                     elementToAnimate = addedElement;
                                 }
 
-                                $(elementToAnimate).animateCss(data.ExitAnimationName, function() {
+                                $(elementToAnimate).animateCss(data.ExitAnimationName, function () {
 
                                     mainOverlayDiv.removeChild(divContainer);
                                 });
- 
+
                             }, (data.Duration * 1000 * 2) / 3);
- 
+
                         }, (data.Duration * 1000) / 3);
 
                     });
@@ -256,7 +305,7 @@
                     height: '390',
                     width: '640',
                     videoId: 'RvCVgu_MQpU',
-                    playerVars: { 'controls': 0, 'showinfo' : 0 },
+                    playerVars: { 'controls': 0, 'showinfo': 0 },
                     events: {
                         'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange
