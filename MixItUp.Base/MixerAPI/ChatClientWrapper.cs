@@ -455,7 +455,12 @@ namespace MixItUp.Base.MixerAPI
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
                 IEnumerable<ChatUserModel> cu = await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1));
-                Dictionary<uint, ChatUserModel> chatUsers = cu.Where(u => u.userId.HasValue).ToDictionary(u => u.userId.GetValueOrDefault(), u => u);
+                cu = cu.Where(u => u.userId.HasValue);
+                Dictionary<uint, ChatUserModel> chatUsers = new Dictionary<uint, ChatUserModel>();
+                foreach (ChatUserModel u in cu)
+                {
+                    chatUsers[u.userId.GetValueOrDefault()] = u;
+                }
 
                 foreach (UserViewModel user in await ChannelSession.ChannelUsers.GetAllUsers())
                 {
