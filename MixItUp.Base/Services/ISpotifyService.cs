@@ -138,10 +138,6 @@ namespace MixItUp.Base.Services
 
         public override string ToString()
         {
-            if (!string.IsNullOrEmpty(this.Link))
-            {
-                return string.Format("\"{0}\" by {1} - {2}", this.Name, this.Artist.Name, this.Link);
-            }
             return string.Format("\"{0}\" by {1}", this.Name, this.Artist.Name);
         }
     }
