@@ -1,6 +1,9 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
+using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -55,12 +58,12 @@ namespace MixItUp.Desktop.Services
 
             this.SocketReceiveWrapper("unauthorized", (errorData) =>
             {
-                Logger.Log(errorData.ToString());
+                MixItUp.Base.Util.Logger.Log(errorData.ToString());
             });
 
             this.SocketReceiveWrapper("disconnect", (errorData) =>
             {
-                Logger.Log(errorData.ToString());
+                MixItUp.Base.Util.Logger.Log(errorData.ToString());
                 this.service.WebSocketDisconnectedOccurred();
             });
 
@@ -101,14 +104,14 @@ namespace MixItUp.Desktop.Services
             {
                 GameWispSubscribeEvent subscribeEvent = new GameWispSubscribeEvent(eventData.Data);
                 this.service.SubscribeOccurred(subscribeEvent);
-                GlobalEvents.GameWispSubscribedOccurred(subscribeEvent);
+                Task.Run(async () => { await this.RunGameWispCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispSubscribed)), subscribeEvent); });
             });
 
             this.SocketEventReceiverWrapper("subscriber-renewed", (eventData) =>
             {
                 GameWispResubscribeEvent resubscribeEvent = new GameWispResubscribeEvent(eventData.Data);
                 this.service.ResubscribeOccurred(resubscribeEvent);
-                GlobalEvents.GameWispResubscribedOccurred(resubscribeEvent);
+                Task.Run(async () => { await this.RunGameWispCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispResubscribed)), resubscribeEvent); });
             });
 
             this.SocketEventReceiverWrapper("subscriber-benefits-change", (eventData) =>
@@ -120,7 +123,7 @@ namespace MixItUp.Desktop.Services
             {
                 GameWispSubscribeEvent subscribeEvent = new GameWispSubscribeEvent(eventData.Data);
                 this.service.SubscriberStatusChangeOccurred(subscribeEvent);
-                GlobalEvents.GameWispSubscribedOccurred(subscribeEvent);
+                Task.Run(async () => { await this.RunGameWispCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispSubscribed)), subscribeEvent); });
             });
 
             this.SocketEventReceiverWrapper("subscriber-anniversary", (eventData) =>
@@ -162,7 +165,7 @@ namespace MixItUp.Desktop.Services
                 {
                     processEvent(eventData);
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             });
         }
 
@@ -187,7 +190,36 @@ namespace MixItUp.Desktop.Services
             {
                 this.socket.Emit(eventString, data);
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+        }
+
+        private async Task RunGameWispCommand(EventCommand command, GameWispSubscribeEvent subscribeEvent)
+        {
+            if (command != null)
+            {
+                UserViewModel user = new UserViewModel(0, subscribeEvent.Username);
+
+                UserModel userModel = await ChannelSession.Connection.GetUser(subscribeEvent.Username);
+                if (userModel != null)
+                {
+                    user = new UserViewModel(userModel);
+                }
+
+                GameWispTier tier = null;
+                if (ChannelSession.Services.GameWisp != null)
+                {
+                    tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscribeEvent.TierID));
+                }
+
+                command.AddSpecialIdentifier("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
+                command.AddSpecialIdentifier("subscribeamount", subscribeEvent.Amount);
+                if (tier != null)
+                {
+                    command.AddSpecialIdentifier("subscribetier", tier.Title);
+                }
+
+                await command.Perform(user);
+            }
         }
     }
 
@@ -238,7 +270,7 @@ namespace MixItUp.Desktop.Services
 
                     return true;
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
 
             string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(GameWispService.AuthorizationUrl, GameWispService.ClientID, GameWispService.StateKey));
@@ -463,7 +495,7 @@ namespace MixItUp.Desktop.Services
             {
                 return await this.GetAsync<T>(requestUri + (requestUri.Contains("?") ? "&" : "?") + string.Format("access_token={0}", this.token.accessToken));
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             return default(T);
         }
     }

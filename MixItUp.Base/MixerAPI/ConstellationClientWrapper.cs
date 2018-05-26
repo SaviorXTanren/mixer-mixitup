@@ -47,11 +47,7 @@ namespace MixItUp.Base.MixerAPI
 
         private Dictionary<string, HashSet<uint>> userEventTracking = new Dictionary<string, HashSet<uint>>();
 
-        public ConstellationClientWrapper()
-        {
-            GlobalEvents.OnGameWispSubscribedOccurred += GlobalEvents_OnGameWispSubscribedOccurred;
-            GlobalEvents.OnGameWispResubscribedOccurred += GlobalEvents_OnGameWispResubscribedOccurred;
-        }
+        public ConstellationClientWrapper() { }
 
         public async Task<bool> Connect()
         {
@@ -148,34 +144,6 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
             return false;
-        }
-
-        private async Task RunGameWispCommand(EventCommand command, GameWispSubscribeEvent subscribeEvent)
-        {
-            if (command != null)
-            {
-                UserViewModel user = new UserViewModel(0, subscribeEvent.Username);
-
-                UserModel userModel = await ChannelSession.Connection.GetUser(subscribeEvent.Username);
-                if (userModel != null)
-                {
-                    user = new UserViewModel(userModel);
-                }
-
-                GameWispTier tier = null;
-                if (ChannelSession.Services.GameWisp != null)
-                {
-                    tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscribeEvent.TierID));
-                }
-
-                command.AddSpecialIdentifier("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
-                command.AddSpecialIdentifier("subscribeamount", subscribeEvent.Amount);
-                if (tier != null)
-                {
-                    command.AddSpecialIdentifier("subscribetier", tier.Title);
-                }
-                await this.RunEventCommand(command, user);
-            }
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
@@ -320,16 +288,6 @@ namespace MixItUp.Base.MixerAPI
             {
                 this.OnEventOccurred(this, e);
             }
-        }
-
-        private async void GlobalEvents_OnGameWispSubscribedOccurred(object sender, GameWispSubscribeEvent subscribeEvent)
-        {
-            await this.RunGameWispCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispSubscribed)), subscribeEvent);
-        }
-
-        private async void GlobalEvents_OnGameWispResubscribedOccurred(object sender, GameWispResubscribeEvent subscribeEvent)
-        {
-            await this.RunGameWispCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispResubscribed)), subscribeEvent);
         }
 
         private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

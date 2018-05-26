@@ -41,7 +41,7 @@ namespace MixItUp.Desktop.Services
                         user = new UserViewModel(userModel);
                     }
 
-                    EventCommand command = ChannelSession.Settings.EventCommands.ToList().FirstOrDefault(c => c.MatchesEvent(EnumHelper.GetEnumName(OtherEventTypeEnum.GawkBoxDonation)));
+                    EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GawkBoxDonation));
                     if (command != null)
                     {
                         command.AddSpecialIdentifier("donationsource", donation.Source);
