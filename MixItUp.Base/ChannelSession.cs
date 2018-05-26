@@ -119,6 +119,8 @@ namespace MixItUp.Base
         public static bool GameQueueEnabled { get; set; }
         public static LockedList<UserViewModel> GameQueue { get; private set; }
 
+        public static bool SongRequestsEnabled { get; set; }
+
         public static LockedDictionary<string, int> Counters { get; private set; }
 
         public static IEnumerable<PermissionsCommandBase> AllChatCommands

@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Actions
@@ -17,7 +18,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.SongRequestActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<SongRequestActionTypeEnum>();
+            this.SongRequestActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<SongRequestActionTypeEnum>().OrderBy(s => s);
             if (this.action != null)
             {
                 this.SongRequestActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(action.SongRequestType);

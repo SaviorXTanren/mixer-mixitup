@@ -1,6 +1,4 @@
-﻿using Mixer.Base.Clients;
-using Mixer.Base.Util;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI

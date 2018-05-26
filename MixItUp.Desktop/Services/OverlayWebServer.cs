@@ -126,6 +126,8 @@ namespace MixItUp.Overlay
 
         public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket("textToSpeech", textToSpeech); }
 
+        public async Task SendSongRequest(OverlaySongRequest songRequest) { await this.SendPacket("songRequest", songRequest); }
+
         private async Task SendPacket(string type, object contents)
         {
             OverlayPacket packet = new OverlayPacket(type, JObject.FromObject(contents));
@@ -239,6 +241,16 @@ namespace MixItUp.Overlay
             if (!string.IsNullOrEmpty(packetJSON))
             {
                 JObject packetObj = JObject.Parse(packetJSON);
+                if (packetObj["type"] != null)
+                {
+                    if (packetObj["type"].ToString().Equals("songRequestComplete"))
+                    {
+                        if (ChannelSession.Services.SongRequestService != null)
+                        {
+                            ChannelSession.Services.SongRequestService.OverlaySongFinished();
+                        }
+                    }
+                }
             }
             await base.ProcessReceivedPacket(packetJSON);
         }

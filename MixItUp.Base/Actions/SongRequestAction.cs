@@ -16,6 +16,10 @@ namespace MixItUp.Base.Actions
         DisplayCurrentlyPlaying,
         [Name("Display Next Song")]
         DisplayNextSong,
+        [Name("Play/Pause Current Song")]
+        PlayPauseCurrentSong,
+        [Name("Skip To Next Song")]
+        SkipToNextSong,
     }
 
     public class SongRequestAction : ActionBase
@@ -66,6 +70,14 @@ namespace MixItUp.Base.Actions
                     {
                         await ChannelSession.Chat.SendMessage("There are currently no Song Requests left in the queue");
                     }
+                }
+                else if (this.SongRequestType == SongRequestActionTypeEnum.PlayPauseCurrentSong)
+                {
+                    await ChannelSession.Services.SongRequestService.PlayPauseCurrentSong();
+                }
+                else if (this.SongRequestType == SongRequestActionTypeEnum.SkipToNextSong)
+                {
+                    await ChannelSession.Services.SongRequestService.SkipToNextSong();
                 }
             }
         }

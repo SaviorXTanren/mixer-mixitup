@@ -36,9 +36,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.SongRequestsQueueListView.ItemsSource = this.requests;
 
-            this.SongServiceTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<SongRequestServiceTypeEnum>(new List<SongRequestServiceTypeEnum>() { SongRequestServiceTypeEnum.Spotify });
+            this.SpotifyToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify);
+            this.YouTubeToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Youtube);
 
-            this.SongServiceTypeComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.SongRequestServiceType);
             this.SpotifyAllowExplicitSongToggleButton.IsChecked = ChannelSession.Settings.SpotifyAllowExplicit;
 
             await this.RefreshRequestsList();
@@ -50,46 +50,38 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (this.SongServiceTypeComboBox.SelectedIndex < 0)
+                if (!this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && !this.YouTubeToggleButton.IsChecked.GetValueOrDefault())
                 {
-                    await MessageBoxHelper.ShowMessageDialog("You must select a song service type.");
+                    await MessageBoxHelper.ShowMessageDialog("At least 1 song request service must be set");
                     this.EnableSongRequestsToggleButton.IsChecked = false;
                     return;
                 }
 
-                SongRequestServiceTypeEnum service = EnumHelper.GetEnumValueFromString<SongRequestServiceTypeEnum>((string)this.SongServiceTypeComboBox.SelectedItem);
-                if (service == SongRequestServiceTypeEnum.Youtube)
+                if (this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && ChannelSession.Services.Spotify == null)
                 {
-
-                }
-                else if (service == SongRequestServiceTypeEnum.Spotify)
-                {
-                    if (ChannelSession.Services.Spotify == null)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area.");
-                        this.EnableSongRequestsToggleButton.IsChecked = false;
-                        return;
-                    }
+                    await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area.");
+                    this.EnableSongRequestsToggleButton.IsChecked = false;
+                    return;
                 }
 
-                ChannelSession.Settings.SongRequestServiceType = service;
+                if (this.SpotifyToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.Spotify); }
+                if (this.YouTubeToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.Youtube); }
+
                 ChannelSession.Settings.SpotifyAllowExplicit = this.SpotifyAllowExplicitSongToggleButton.IsChecked.GetValueOrDefault();
 
-                if (await ChannelSession.Services.SongRequestService.Initialize(ChannelSession.Settings.SongRequestServiceType))
-                {
-                    this.SongServiceTypeComboBox.IsEnabled = this.SpotifyOptionsGrid.IsEnabled = false;
-                    this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = true;
+                await ChannelSession.SaveSettings();
 
-                    await ChannelSession.SaveSettings();
+                if (await ChannelSession.Services.SongRequestService.Initialize())
+                {
+                    ChannelSession.SongRequestsEnabled = true;
+                    this.SongRequestServicesGrid.IsEnabled = false;
+                    this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = true;
 
                     await this.RefreshRequestsList();
                 }
                 else
                 {
-                    if (ChannelSession.Settings.SongRequestServiceType == SongRequestServiceTypeEnum.Spotify)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("We were unable to get your Spotify information, please try again.");
-                    }
+                    await MessageBoxHelper.ShowMessageDialog("We were unable to initialize the Song Request service, please try again.");
                 }
             });
         }
@@ -98,58 +90,24 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             ChannelSession.Services.SongRequestService.Disable();
 
-            this.SongServiceTypeComboBox.IsEnabled = this.SpotifyOptionsGrid.IsEnabled = true;
+            ChannelSession.SongRequestsEnabled = false;
+
+            this.SongRequestServicesGrid.IsEnabled = true;
             this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = false;
         }
 
-        private void SongServiceTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void SpotifyToggleButton_Checked(object sender, RoutedEventArgs e)
         {
-            this.SpotifyOptionsGrid.Visibility = Visibility.Collapsed;
-
-            if (this.SongServiceTypeComboBox.SelectedIndex >= 0)
-            {
-                SongRequestServiceTypeEnum service = EnumHelper.GetEnumValueFromString<SongRequestServiceTypeEnum>((string)this.SongServiceTypeComboBox.SelectedItem);
-                if (service == SongRequestServiceTypeEnum.Youtube)
-                {
-
-                }
-                else if (service == SongRequestServiceTypeEnum.Spotify)
-                {
-                    this.SpotifyOptionsGrid.Visibility = Visibility.Visible;
-                }
-            }
+            this.SpotifyOptionsGrid.IsEnabled = this.SpotifyToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private async void PlayPauseButton_Click(object sender, RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (ChannelSession.Services.SongRequestService.GetRequestService() == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
+                if (ChannelSession.Services.SongRequestService != null)
                 {
-                    DesktopSongRequestService songRequestService = (DesktopSongRequestService)ChannelSession.Services.SongRequestService;
-                    SpotifyPlaylist playlist = await songRequestService.GetSpotifySongRequestPlaylist();
-
-                    SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
-
-                    if (currentlyPlaying != null && currentlyPlaying.ID != null && playlist != null && playlist.Uri.Equals(currentlyPlaying.ContextUri))
-                    {
-                        if (currentlyPlaying.IsPlaying)
-                        {
-                            await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
-                        }
-                        else
-                        {
-                            await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
-                        }
-                        return;
-                    }
-
-                    if (playlist != null && await ChannelSession.Services.Spotify.PlayPlaylist(playlist))
-                    {
-                        return;
-                    }
-
-                    await MessageBoxHelper.ShowMessageDialog("We could not play the Mix It Up playlist in Spotify. Please ensure Spotify is launched and you have played a song to let Spotify know what device you are on.");
+                    await ChannelSession.Services.SongRequestService.PlayPauseCurrentSong();
                 }
             });
         }
@@ -158,9 +116,9 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (ChannelSession.Services.SongRequestService.GetRequestService() == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
+                if (ChannelSession.Services.SongRequestService != null)
                 {
-                    await ChannelSession.Services.Spotify.NextCurrentlyPlaying();
+                    await ChannelSession.Services.SongRequestService.SkipToNextSong();
                 }
             });
         }

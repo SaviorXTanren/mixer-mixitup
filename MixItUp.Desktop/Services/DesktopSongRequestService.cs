@@ -2,255 +2,318 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Mixer.Base.Web;
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 
 namespace MixItUp.Desktop.Services
 {
+    public class SongRequestItemSearch
+    {
+        public SongRequestItem SongRequest { get; set; }
+
+        public SongRequestServiceTypeEnum Type { get; set; }
+        public List<string> ErrorMessages { get; set; }
+
+        public SongRequestItemSearch(SongRequestServiceTypeEnum type, SongRequestItem songRequest)
+        {
+            this.Type = type;
+            this.SongRequest = songRequest;
+        }
+
+        public SongRequestItemSearch(SongRequestServiceTypeEnum type, string errorMessage) : this(type, new string[] { errorMessage }) { }
+
+        public SongRequestItemSearch(SongRequestServiceTypeEnum type, IEnumerable<string> errorMessages)
+        {
+            this.Type = type;
+            this.ErrorMessages = new List<string>(errorMessages);
+        }
+    }
+
     public class DesktopSongRequestService : ISongRequestService
     {
-        private const string MixItUpPlaylistName = "Mix It Up Request Playlist";
-        private const string MixItUpPlaylistDescription = "This playlist contains songs that are requested by users through Mix It Up";
         private const string SpotifyLinkPrefix = "https://open.spotify.com/track/";
         private const string SpotifyTrackPrefix = "spotify:track:";
 
-        private SongRequestServiceTypeEnum serviceType;
+        private const string YouTubeLongLinkPrefix = "https://www.youtube.com/watch?v=";
+        private const string YouTubeShortLinkPrefix = "https://youtu.be/";
 
-        private List<SongRequestItem> youtubeRequests;
+        private CancellationTokenSource backgroundThreadCancellationTokenSource;
 
-        private SpotifyPlaylist playlist;
+        private List<SongRequestItem> allRequests;
+
+        private Dictionary<UserViewModel, List<SpotifySong>> lastUserSongSearches = new Dictionary<UserViewModel, List<SpotifySong>>();
+        private bool overlaySongFinished = false;
 
         public DesktopSongRequestService()
         {
-            this.youtubeRequests = new List<SongRequestItem>();
+            this.allRequests = new List<SongRequestItem>();
         }
 
-        public SongRequestServiceTypeEnum GetRequestService() { return this.serviceType; }
-
-        public async Task<bool> Initialize(SongRequestServiceTypeEnum serviceType)
+        public async Task<bool> Initialize()
         {
-            this.serviceType = serviceType;
-
-            if (this.serviceType == SongRequestServiceTypeEnum.Youtube)
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify) && ChannelSession.Services.Spotify == null)
             {
-                this.youtubeRequests.Clear();
+                return false;
             }
-            else if (this.serviceType == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
-            {
-                this.playlist = await this.GetSpotifySongRequestPlaylist();
+            await this.ClearAllRequests();
 
-                if (this.playlist == null)
-                {
-                    this.playlist = await ChannelSession.Services.Spotify.CreatePlaylist(DesktopSongRequestService.MixItUpPlaylistName, DesktopSongRequestService.MixItUpPlaylistDescription);
-                    if (this.playlist == null)
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    await this.ClearAllRequests();
-                }
-            }
+            this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () => { await this.PlayerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
             return true;
         }
 
         public void Disable()
         {
-            this.serviceType = SongRequestServiceTypeEnum.None;
-            this.youtubeRequests.Clear();
+            this.ClearAllRequests();
+
+            if (this.backgroundThreadCancellationTokenSource != null)
+            {
+                this.backgroundThreadCancellationTokenSource.Cancel();
+            }
         }
 
         public async Task AddSongRequest(UserViewModel user, string identifier)
         {
-            if (this.serviceType == SongRequestServiceTypeEnum.Youtube)
-            {
-                if (string.IsNullOrEmpty(identifier))
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "You must specify a Youtube link or ID to add a Song Request");
-                    return;
-                }
-
-                await this.AddYoutubeSongRequest(user, identifier);
-            }
-            else if (this.serviceType == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
-            {
-                if (string.IsNullOrEmpty(identifier))
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "You must specify a Spotify song ID, link, or song name to add a Song Request");
-                    return;
-                }
-
-                await this.AddSpotifySongRequest(user, identifier);
-            }
-            else
+            if (!ChannelSession.SongRequestsEnabled)
             {
                 await ChannelSession.Chat.Whisper(user.UserName, "Song Requests are not currently enabled");
+                return;
             }
-            GlobalEvents.SongRequestsChangedOccurred();
-        }
 
-        public async Task RemoveSongRequest(SongRequestItem song)
-        {
-            if (this.serviceType == SongRequestServiceTypeEnum.Youtube)
+            if (string.IsNullOrEmpty(identifier))
             {
-                this.youtubeRequests.Remove(song);
+                await ChannelSession.Chat.Whisper(user.UserName, "You must specify your request with the command. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+                return;
             }
-            else if (this.serviceType == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
-            {
-                await ChannelSession.Services.Spotify.RemoveSongFromPlaylist(this.playlist, new SpotifySong() { ID = song.ID });
-            }
-            GlobalEvents.SongRequestsChangedOccurred();
-        }
 
-        public async Task<SongRequestItem> GetCurrentlyPlaying()
-        {
-            if (this.serviceType == SongRequestServiceTypeEnum.Youtube)
+            List<Task<SongRequestItemSearch>> allRequests = new List<Task<SongRequestItemSearch>>();
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Youtube)) { allRequests.Add(this.GetYouTubeSongRequest(identifier)); }
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify)) { allRequests.Add(this.GetSpotifySongRequest(user, identifier)); }
+
+            SongRequestItemSearch requestSearch = null;
+            foreach (SongRequestItemSearch search in await Task.WhenAll(allRequests))
             {
-                if (this.youtubeRequests.Count > 0)
+                requestSearch = search;
+                if (requestSearch.SongRequest != null)
                 {
-                    return this.youtubeRequests.FirstOrDefault();
+                    break;
                 }
             }
-            else if (this.serviceType == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
-            {
-                SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
-                if (currentlyPlaying != null)
-                {
-                    return this.GetSpotifySongRequest(currentlyPlaying);
-                }
-            }
-            return null;
-        }
 
-        public async Task<SongRequestItem> GetNextTrack()
-        {
-            if (this.serviceType == SongRequestServiceTypeEnum.Youtube)
+            if (requestSearch != null)
             {
-                if (this.youtubeRequests.Count > 1)
+                if (requestSearch.SongRequest != null)
                 {
-                    return this.youtubeRequests.Skip(1).FirstOrDefault();
-                }
-            }
-            else if (this.serviceType == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
-            {
-                IEnumerable<SpotifySong> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(this.playlist);
-                if (songs != null)
-                {
-                    SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
-                    if (currentlyPlaying != null)
+                    if (this.allRequests.Count == 0)
                     {
-                        int indexOfCurrentlyPlaying = songs.ToList().IndexOf(currentlyPlaying);
-                        if (indexOfCurrentlyPlaying >= 0 && (indexOfCurrentlyPlaying + 1) < songs.Count())
+                        await this.PlaySong(requestSearch.SongRequest);
+                    }
+                    this.allRequests.Add(requestSearch.SongRequest);
+                    await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue", requestSearch.SongRequest.Name));
+                    GlobalEvents.SongRequestsChangedOccurred();
+                    return;
+                }
+                else
+                {
+                    foreach (string errorMessage in requestSearch.ErrorMessages)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, errorMessage);
+                    }
+                    return;
+                }
+            }
+
+            await ChannelSession.Chat.Whisper(user.UserName, "We were unable to find a song that matched you request. For details on how to request songs, check out: https://github.com/SaviorXTanren/mixer-mixitup/wiki/Song-Requests#requesting-songs");
+            return;
+        }
+
+        public Task RemoveSongRequest(SongRequestItem song)
+        {
+            this.allRequests.Remove(song);
+            GlobalEvents.SongRequestsChangedOccurred();
+            return Task.FromResult(0);
+        }
+
+        public async Task PlayPauseCurrentSong()
+        {
+            if (this.allRequests.Count > 0)
+            {
+                SongRequestItem request = this.allRequests.FirstOrDefault();
+                if (request.Type == SongRequestServiceTypeEnum.Spotify)
+                {
+                    if (ChannelSession.Services.Spotify != null)
+                    {
+                        SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                        if (currentlyPlaying != null && currentlyPlaying.ID != null)
                         {
-                            SpotifySong nextSong = songs.ElementAt(indexOfCurrentlyPlaying + 1);
-                            return this.GetSpotifySongRequest(nextSong);
+                            if (currentlyPlaying.IsPlaying)
+                            {
+                                await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
+                            }
+                            else
+                            {
+                                await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
+                            }
                         }
                     }
                 }
-            }
-            return null;
-        }
-
-        public async Task<IEnumerable<SongRequestItem>> GetAllRequests()
-        {
-            List<SongRequestItem> requests = new List<SongRequestItem>();
-            if (this.serviceType == SongRequestServiceTypeEnum.Youtube)
-            {
-                foreach (SongRequestItem youtubeSong in this.youtubeRequests)
+                if (ChannelSession.Services.OverlayServer != null)
                 {
-                    requests.Add(youtubeSong);
+                    await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = "YouTube", Action = "playpause" });
                 }
             }
-            else if (this.serviceType == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
+        }
+
+        public async Task SkipToNextSong()
+        {
+            if (this.allRequests.Count > 0)
             {
-                IEnumerable<SpotifySong> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(this.playlist);
-                if (songs != null)
+                this.allRequests.RemoveAt(0);
+            }
+
+            if (this.allRequests.Count > 0)
+            {
+                await this.PlaySong(this.allRequests.FirstOrDefault());
+            }
+
+            GlobalEvents.SongRequestsChangedOccurred();
+        }
+
+        public Task<SongRequestItem> GetCurrentlyPlaying()
+        {
+            return Task.FromResult(this.allRequests.FirstOrDefault());
+        }
+
+        public Task<SongRequestItem> GetNextTrack()
+        {
+            SongRequestItem result = null;
+            if (this.allRequests.Count > 1)
+            {
+                result = this.allRequests.Skip(1).FirstOrDefault();
+            }
+            return Task.FromResult(result);
+        }
+
+        public Task<IEnumerable<SongRequestItem>> GetAllRequests()
+        {
+            return Task.FromResult<IEnumerable<SongRequestItem>>(this.allRequests.ToList());
+        }
+
+        public Task ClearAllRequests()
+        {
+            this.allRequests.Clear();
+            GlobalEvents.SongRequestsChangedOccurred();
+            return Task.FromResult(0);
+        }
+
+        public void OverlaySongFinished() { this.overlaySongFinished = true; }
+
+        private async Task PlayerBackground()
+        {
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            {
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                SongRequestItem current = this.allRequests.FirstOrDefault();
+                if (current != null)
                 {
-                    foreach (SpotifySong song in songs)
+                    if (current.Type == SongRequestServiceTypeEnum.Spotify)
                     {
-                        requests.Add(this.GetSpotifySongRequest(song));
+                        if (ChannelSession.Services.Spotify != null)
+                        {
+                            SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
+                            if (currentlyPlaying == null || !currentlyPlaying.IsPlaying || currentlyPlaying.ID == null || !currentlyPlaying.ID.Equals(current.ID))
+                            {
+                                await this.SkipToNextSong();
+                            }
+                        }
+                    }
+                    else if (current.Type == SongRequestServiceTypeEnum.Youtube)
+                    {
+                        if (this.overlaySongFinished)
+                        {
+                            this.overlaySongFinished = false;
+                            await this.SkipToNextSong();
+                        }
                     }
                 }
-            }
-            return requests;
+                await Task.Delay(2000);
+            });
         }
 
-        public async Task ClearAllRequests()
+        private async Task PlaySong(SongRequestItem request)
         {
-            if (this.serviceType == SongRequestServiceTypeEnum.Youtube)
+            if (request != null)
             {
-                this.youtubeRequests.Clear();
-            }
-            else if (this.serviceType == SongRequestServiceTypeEnum.Spotify && ChannelSession.Services.Spotify != null)
-            {
-                IEnumerable<SpotifySong> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(this.playlist);
-                if (songs != null)
+                if (request.Type == SongRequestServiceTypeEnum.Spotify)
                 {
-                    await ChannelSession.Services.Spotify.RemoveSongsFromPlaylist(this.playlist, songs);
+                    if (ChannelSession.Services.Spotify != null)
+                    {
+                        SpotifySong song = await ChannelSession.Services.Spotify.GetSong(request.ID);
+                        if (song != null)
+                        {
+                            await ChannelSession.Services.Spotify.PlaySong(song);
+                        }
+                    }
+                }
+                else if (request.Type == SongRequestServiceTypeEnum.Youtube)
+                {
+                    await this.PlayYouTubeSong(request.ID);
                 }
             }
         }
 
-        public async Task<SpotifyPlaylist> GetSpotifySongRequestPlaylist()
+        private async Task<SongRequestItemSearch> GetYouTubeSongRequest(string identifier)
         {
-            foreach (SpotifyPlaylist playlist in await ChannelSession.Services.Spotify.GetCurrentPlaylists())
-            {
-                if (playlist.Name.Equals(DesktopSongRequestService.MixItUpPlaylistName))
-                {
-                    return playlist;
-                }
-            }
-            return null;
-        }
-
-        private async Task AddYoutubeSongRequest(UserViewModel user, string identifier)
-        {
-            identifier = identifier.Replace("https://www.youtube.com/watch?v=", "");
-            identifier = identifier.Replace("https://youtu.be/", "");
+            identifier = identifier.Replace(YouTubeLongLinkPrefix, "");
+            identifier = identifier.Replace(YouTubeShortLinkPrefix, "");
             if (identifier.Contains("&"))
             {
                 identifier = identifier.Substring(0, identifier.IndexOf("&"));
             }
 
-            bool pageExists = false;
-
             try
             {
-                HttpWebRequest request = WebRequest.Create("https://youtu.be/" + identifier) as HttpWebRequest;
-                request.Method = "HEAD";
-                HttpWebResponse response = await request.GetResponseAsync() as HttpWebResponse;
-                response.Close();
-                pageExists = (response.StatusCode == HttpStatusCode.OK);
+                using (HttpClientWrapper client = new HttpClientWrapper("https://www.youtube.com/"))
+                {
+                    HttpResponseMessage response = await client.GetAsync(string.Format("oembed?url=http://www.youtube.com/watch?v={0}&format=json", identifier));
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        string content = await response.Content.ReadAsStringAsync();
+                        JObject jobj = JObject.Parse(content);
+                        if (jobj["title"] != null)
+                        {
+                            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, new SongRequestItem() { ID = identifier, Name = jobj["title"].ToString(), Type = SongRequestServiceTypeEnum.Youtube });
+                        }
+                    }
+                }
             }
-            catch (Exception ex) { Logger.Log(ex); }
+            catch (Exception) { }
 
-            if (pageExists)
-            {
-                this.youtubeRequests.Add(new SongRequestItem() { ID = identifier });
-                await ChannelSession.Chat.SendMessage(" was added to the queue");
-            }
-            else
-            {
-                await ChannelSession.Chat.Whisper(user.UserName, "The YouTube link/video ID you entered was not valid");
-            }
+            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Youtube, "The link you specified is not a valid YouTube video");
         }
 
-        private async Task AddSpotifySongRequest(UserViewModel user, string identifier)
+        private async Task<SongRequestItemSearch> GetSpotifySongRequest(UserViewModel user, string identifier)
         {
             if (ChannelSession.Services.Spotify != null)
             {
                 string songID = null;
-                if (identifier.StartsWith(SpotifyTrackPrefix))
+
+                if (identifier.StartsWith(SpotifyTrackPrefix) || identifier.StartsWith(SpotifyLinkPrefix))
                 {
-                    songID = identifier.Replace(SpotifyTrackPrefix, "");
-                }
-                else if (identifier.StartsWith(SpotifyLinkPrefix))
-                {
-                    songID = identifier.Replace(SpotifyLinkPrefix, "");
+                    songID = identifier;
+                    songID = songID.Replace(SpotifyTrackPrefix, "");
+                    songID = songID.Replace(SpotifyLinkPrefix, "");
                     if (songID.Contains('?'))
                     {
                         songID = songID.Substring(0, songID.IndexOf('?'));
@@ -258,50 +321,54 @@ namespace MixItUp.Desktop.Services
                 }
                 else
                 {
-                    int artistIndex = 0;
-                    if (identifier.StartsWith("/") && identifier.Contains(' '))
-                    {
-                        string artistIndexString = identifier.Substring(0, identifier.IndexOf(' '));
-                        identifier = identifier.Substring(identifier.IndexOf(' ') + 1);
+                    Dictionary<string, SpotifySong> artistToSong = new Dictionary<string, SpotifySong>();
 
-                        artistIndexString = artistIndexString.Replace("/", "");
-                        int.TryParse(artistIndexString, out artistIndex);
-                    }
-
-                    Dictionary<string, string> artistToSongID = new Dictionary<string, string>();
-                    foreach (SpotifySong song in await ChannelSession.Services.Spotify.SearchSongs(identifier))
+                    if (this.lastUserSongSearches.ContainsKey(user) && int.TryParse(identifier, out int artistIndex))
                     {
-                        if (!artistToSongID.ContainsKey(song.Artist.Name))
+                        if (artistIndex > 0 && this.lastUserSongSearches.ContainsKey(user) && this.lastUserSongSearches[user].Count > 0 && artistIndex <= this.lastUserSongSearches[user].Count)
                         {
-                            artistToSongID[song.Artist.Name] = song.ID;
-                        }
-                    }
-
-                    if (artistToSongID.Count == 0)
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find any songs with the name specified. You can visit https://open.spotify.com/search and search for the song you want. Once you have found it, right click on the song and select \"Copy Song Link\" and run this command with that link.");
-                        return;
-                    }
-                    else if (artistToSongID.Count == 1)
-                    {
-                        songID = artistToSongID.First().Value;
-                    }
-                    else if (artistToSongID.Count > 1)
-                    {
-                        if (artistIndex > 0 && artistIndex <= artistToSongID.Count())
-                        {
-                            songID = artistToSongID.ElementAt(artistIndex - 1).Value;
+                            songID = this.lastUserSongSearches[user][artistIndex - 1].ID;
                         }
                         else
                         {
-                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("There are multiple artists with this song, please re-run the command with \"/# {0}\" where the # is the number of the following artists:", identifier));
-                            List<string> artistsStrings = new List<string>();
-                            for (int i = 0; i < artistToSongID.Count; i++)
+                            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, "The artist index you specified was not valid, please try your search again");
+                        }
+                    }
+                    else
+                    {
+                        foreach (SpotifySong song in await ChannelSession.Services.Spotify.SearchSongs(identifier))
+                        {
+                            if (!artistToSong.ContainsKey(song.Artist.Name))
                             {
-                                artistsStrings.Add((i + 1) + ". " + artistToSongID.ElementAt(i).Key);
+                                artistToSong[song.Artist.Name] = song;
                             }
-                            await ChannelSession.Chat.Whisper(user.UserName, string.Join(", ", artistsStrings));
-                            return;
+                        }
+
+                        this.lastUserSongSearches[user] = new List<SpotifySong>();
+                        foreach (var kvp in artistToSong)
+                        {
+                            this.lastUserSongSearches[user].Add(kvp.Value);
+                        }
+
+                        if (artistToSong.Count == 0)
+                        {
+                            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify,
+                                "We could not find any songs with the name specified. You can visit https://open.spotify.com/search and search for the song you want. Once you have found it, right click on the song and select \"Copy Song Link\" and run this command with that link.");
+                        }
+                        else if (artistToSong.Count == 1)
+                        {
+                            songID = artistToSong.First().Value.ID;
+                        }
+                        else
+                        {
+                            List<string> artistsStrings = new List<string>();
+                            for (int i = 0; i < artistToSong.Count; i++)
+                            {
+                                artistsStrings.Add((i + 1) + ". " + artistToSong.ElementAt(i).Key);
+                            }
+                            string artistsText = string.Join(",  ", artistsStrings);
+                            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify,
+                                new List<string>() { "Multiple results came back, please re-run this command with a space & the number of the artist:", artistsText });
                         }
                     }
                 }
@@ -313,54 +380,28 @@ namespace MixItUp.Desktop.Services
                     {
                         if (song.Explicit && !ChannelSession.Settings.SpotifyAllowExplicit)
                         {
-                            await ChannelSession.Chat.Whisper(user.UserName, "Explicit content is currently blocked for song requests");
-                            return;
+                            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, "Explicit content is currently blocked for song requests");
                         }
                         else
                         {
-                            if (await ChannelSession.Services.Spotify.AddSongToPlaylist(this.playlist, song))
-                            {
-                                SongRequestItem request = this.GetSpotifySongRequest(song);
-                                await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue", request.Name));
-                                return;
-                            }
-                            else
-                            {
-                                await ChannelSession.Chat.Whisper(user.UserName, "We were unable to add the song to the playlist, please try again in a little bit.");
-                                return;
-                            }
+                            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, new SongRequestItem() { ID = song.ID, Name = song.ToString(), Type = SongRequestServiceTypeEnum.Spotify });
                         }
                     }
                     else
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "We could not find a valid song for your request. If this is valid song, please try again in a little bit.");
-                        return;
+                        return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, "We could not find a valid song for your request. If this is valid song, please try again in a little bit.");
                     }
                 }
-                else
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "This was not a valid request");
-                    return;
-                }
             }
+            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, "Spotify is not currently enabled. Please inform the Streamer that re-enable it.");
         }
 
-        private SongRequestItem GetSpotifySongRequest(SpotifySong song)
+        private async Task PlayYouTubeSong(string identifier)
         {
-            return new SongRequestItem() { ID = song.ID, Name = song.ToString() };
-        }
-
-        private async Task<SongRequestItem> GetYoutubeSongRequest(string youtubeID)
-        {
-            try
+            if (ChannelSession.Services.OverlayServer != null)
             {
-                HttpWebRequest request = WebRequest.Create("https://youtu.be/" + youtubeID) as HttpWebRequest;
-                request.Method = "HEAD";
-                HttpWebResponse response = await request.GetResponseAsync() as HttpWebResponse;
-                response.Close();
+                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = "YouTube", Action = "song", Source = identifier });
             }
-            catch (Exception ex) { Logger.Log(ex); }
-            return null;
         }
     }
 }
