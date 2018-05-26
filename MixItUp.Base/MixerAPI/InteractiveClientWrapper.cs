@@ -433,14 +433,17 @@ namespace MixItUp.Base.MixerAPI
                     UserViewModel user = await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
                     if (user != null)
                     {
-                        InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == user.PrimaryRole);
-                        if (group != null)
+                        if (this.Client.InteractiveGame != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.InteractiveGame.id))
                         {
-                            bool updateParticipant = !user.InteractiveGroupID.Equals(group.DefaultScene);
-                            user.InteractiveGroupID = group.GroupName;
-                            if (updateParticipant)
+                            InteractiveUserGroupViewModel group = ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id].FirstOrDefault(g => g.AssociatedUserRole == user.PrimaryRole);
+                            if (group != null && !string.IsNullOrEmpty(group.DefaultScene))
                             {
-                                participantsToUpdate.Add(user.GetParticipantModel());
+                                bool updateParticipant = !group.DefaultScene.Equals(user.InteractiveGroupID);
+                                user.InteractiveGroupID = group.GroupName;
+                                if (updateParticipant)
+                                {
+                                    participantsToUpdate.Add(user.GetParticipantModel());
+                                }
                             }
                         }
                     }
