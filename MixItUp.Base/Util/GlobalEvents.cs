@@ -89,24 +89,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<GameWispSubscribeEvent> OnGameWispSubscribedOccurred;
-        public static void GameWispSubscribedOccurred(GameWispSubscribeEvent subscriber)
-        {
-            if (GlobalEvents.OnGameWispSubscribedOccurred != null)
-            {
-                GlobalEvents.OnGameWispSubscribedOccurred(null, subscriber);
-            }
-        }
-
-        public static event EventHandler<GameWispResubscribeEvent> OnGameWispResubscribedOccurred;
-        public static void GameWispResubscribedOccurred(GameWispResubscribeEvent subscriber)
-        {
-            if (GlobalEvents.OnGameWispResubscribedOccurred != null)
-            {
-                GlobalEvents.OnGameWispResubscribedOccurred(null, subscriber);
-            }
-        }
-
         public static event EventHandler OnSongRequestsChangedOccurred;
         public static void SongRequestsChangedOccurred()
         {
