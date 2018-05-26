@@ -44,6 +44,10 @@ namespace MixItUp.Desktop.Services
         private const string YouTubeLongLinkPrefix = "https://www.youtube.com/watch?v=";
         private const string YouTubeShortLinkPrefix = "https://youtu.be/";
 
+        private static SemaphoreSlim songRequestLock = new SemaphoreSlim(1);
+
+        public bool IsEnabled { get; private set; }
+
         private CancellationTokenSource backgroundThreadCancellationTokenSource;
 
         private List<SongRequestItem> allRequests;
@@ -58,16 +62,29 @@ namespace MixItUp.Desktop.Services
 
         public async Task<bool> Initialize()
         {
+            if (ChannelSession.Settings.SongRequestServiceTypes.Count == 0)
+            {
+                return false;
+            }
+
             if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify) && ChannelSession.Services.Spotify == null)
             {
                 return false;
             }
+
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Youtube) && ChannelSession.Services.OverlayServer == null)
+            {
+                return false;
+            }
+
             await this.ClearAllRequests();
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () => { await this.PlayerBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            this.IsEnabled = true;
 
             return true;
         }
@@ -80,11 +97,13 @@ namespace MixItUp.Desktop.Services
             {
                 this.backgroundThreadCancellationTokenSource.Cancel();
             }
+
+            this.IsEnabled = false;
         }
 
         public async Task AddSongRequest(UserViewModel user, string identifier)
         {
-            if (!ChannelSession.SongRequestsEnabled)
+            if (!this.IsEnabled)
             {
                 await ChannelSession.Chat.Whisper(user.UserName, "Song Requests are not currently enabled");
                 return;
@@ -114,13 +133,17 @@ namespace MixItUp.Desktop.Services
             {
                 if (requestSearch.SongRequest != null)
                 {
+                    await DesktopSongRequestService.songRequestLock.WaitAsync();
                     if (this.allRequests.Count == 0)
                     {
                         await this.PlaySong(requestSearch.SongRequest);
                     }
                     this.allRequests.Add(requestSearch.SongRequest);
+                    DesktopSongRequestService.songRequestLock.Release();
+
                     await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue", requestSearch.SongRequest.Name));
                     GlobalEvents.SongRequestsChangedOccurred();
+
                     return;
                 }
                 else
@@ -137,17 +160,21 @@ namespace MixItUp.Desktop.Services
             return;
         }
 
-        public Task RemoveSongRequest(SongRequestItem song)
+        public async Task RemoveSongRequest(SongRequestItem song)
         {
+            await DesktopSongRequestService.songRequestLock.WaitAsync();
             this.allRequests.Remove(song);
+            DesktopSongRequestService.songRequestLock.Release();
+
             GlobalEvents.SongRequestsChangedOccurred();
-            return Task.FromResult(0);
         }
 
         public async Task PlayPauseCurrentSong()
         {
             if (this.allRequests.Count > 0)
             {
+                await DesktopSongRequestService.songRequestLock.WaitAsync();
+
                 SongRequestItem request = this.allRequests.FirstOrDefault();
                 if (request.Type == SongRequestServiceTypeEnum.Spotify)
                 {
@@ -167,17 +194,37 @@ namespace MixItUp.Desktop.Services
                         }
                     }
                 }
-                if (ChannelSession.Services.OverlayServer != null)
+                else if (request.Type == SongRequestServiceTypeEnum.Youtube)
                 {
-                    await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = "YouTube", Action = "playpause" });
+                    if (ChannelSession.Services.OverlayServer != null)
+                    {
+                        await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = "YouTube", Action = "playpause" });
+                    }
                 }
+
+                DesktopSongRequestService.songRequestLock.Release();
             }
         }
 
         public async Task SkipToNextSong()
         {
+            await DesktopSongRequestService.songRequestLock.WaitAsync();
+
             if (this.allRequests.Count > 0)
             {
+                SongRequestItem request = this.allRequests.FirstOrDefault();
+                if (request.Type == SongRequestServiceTypeEnum.Spotify)
+                {
+                    await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
+                }
+                else if (request.Type == SongRequestServiceTypeEnum.Youtube)
+                {
+                    if (ChannelSession.Services.OverlayServer != null)
+                    {
+                        await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = "YouTube", Action = "stop" });
+                    }
+                }
+
                 this.allRequests.RemoveAt(0);
             }
 
@@ -185,6 +232,8 @@ namespace MixItUp.Desktop.Services
             {
                 await this.PlaySong(this.allRequests.FirstOrDefault());
             }
+
+            DesktopSongRequestService.songRequestLock.Release();
 
             GlobalEvents.SongRequestsChangedOccurred();
         }
@@ -224,6 +273,10 @@ namespace MixItUp.Desktop.Services
             {
                 tokenSource.Token.ThrowIfCancellationRequested();
 
+                bool shouldSkip = false;
+
+                await DesktopSongRequestService.songRequestLock.WaitAsync();
+
                 SongRequestItem current = this.allRequests.FirstOrDefault();
                 if (current != null)
                 {
@@ -232,9 +285,9 @@ namespace MixItUp.Desktop.Services
                         if (ChannelSession.Services.Spotify != null)
                         {
                             SpotifyCurrentlyPlaying currentlyPlaying = await ChannelSession.Services.Spotify.GetCurrentlyPlaying();
-                            if (currentlyPlaying == null || !currentlyPlaying.IsPlaying || currentlyPlaying.ID == null || !currentlyPlaying.ID.Equals(current.ID))
+                            if (currentlyPlaying == null || currentlyPlaying.ID == null || !currentlyPlaying.ID.Equals(current.ID) || (!currentlyPlaying.IsPlaying && currentlyPlaying.CurrentProgress == 0))
                             {
-                                await this.SkipToNextSong();
+                                shouldSkip = true;
                             }
                         }
                     }
@@ -243,10 +296,18 @@ namespace MixItUp.Desktop.Services
                         if (this.overlaySongFinished)
                         {
                             this.overlaySongFinished = false;
-                            await this.SkipToNextSong();
+                            shouldSkip = true;
                         }
                     }
                 }
+
+                DesktopSongRequestService.songRequestLock.Release();
+
+                if (shouldSkip)
+                {
+                    await this.SkipToNextSong();
+                }
+
                 await Task.Delay(2000);
             });
         }

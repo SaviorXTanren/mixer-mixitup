@@ -20,6 +20,8 @@ namespace MixItUp.Base.Services
 
     public interface ISongRequestService
     {
+        bool IsEnabled { get; }
+
         Task<bool> Initialize();
 
         void Disable();

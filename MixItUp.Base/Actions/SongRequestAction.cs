@@ -20,6 +20,8 @@ namespace MixItUp.Base.Actions
         PlayPauseCurrentSong,
         [Name("Skip To Next Song")]
         SkipToNextSong,
+        [Name("Enable/Disable Song Requests")]
+        EnableDisableSongRequests,
     }
 
     public class SongRequestAction : ActionBase
@@ -43,41 +45,66 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
-                if (this.SongRequestType == SongRequestActionTypeEnum.AddSongToQueue)
+                if (this.SongRequestType == SongRequestActionTypeEnum.EnableDisableSongRequests)
                 {
-                    await ChannelSession.Services.SongRequestService.AddSongRequest(user, string.Join(" ", arguments));
-                }
-                else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayCurrentlyPlaying)
-                {
-                    SongRequestItem currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
-                    if (currentlyPlaying != null)
+                    if (!ChannelSession.Services.SongRequestService.IsEnabled)
                     {
-                        await ChannelSession.Chat.SendMessage("Currently Playing: " + currentlyPlaying.Name);
+                        if (!await ChannelSession.Services.SongRequestService.Initialize())
+                        {
+                            ChannelSession.Services.SongRequestService.Disable();
+                            await ChannelSession.Chat.Whisper(user.UserName, "Song Requests were not able to enabled, please try manually enabling it.");
+                            return;
+                        }
                     }
                     else
                     {
-                        await ChannelSession.Chat.SendMessage("There is currently no song playing for the Song Request queue");
+                        ChannelSession.Services.SongRequestService.Disable();
                     }
                 }
-                else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayNextSong)
+                else
                 {
-                    SongRequestItem nextTrack = await ChannelSession.Services.SongRequestService.GetNextTrack();
-                    if (nextTrack != null)
+                    if (ChannelSession.Services.SongRequestService == null || !ChannelSession.Services.SongRequestService.IsEnabled)
                     {
-                        await ChannelSession.Chat.SendMessage("Coming Up Next: " + nextTrack.Name);
+                        await ChannelSession.Chat.Whisper(user.UserName, "Song Requests are not currently enabled");
+                        return;
                     }
-                    else
+
+                    if (this.SongRequestType == SongRequestActionTypeEnum.AddSongToQueue)
                     {
-                        await ChannelSession.Chat.SendMessage("There are currently no Song Requests left in the queue");
+                        await ChannelSession.Services.SongRequestService.AddSongRequest(user, string.Join(" ", arguments));
                     }
-                }
-                else if (this.SongRequestType == SongRequestActionTypeEnum.PlayPauseCurrentSong)
-                {
-                    await ChannelSession.Services.SongRequestService.PlayPauseCurrentSong();
-                }
-                else if (this.SongRequestType == SongRequestActionTypeEnum.SkipToNextSong)
-                {
-                    await ChannelSession.Services.SongRequestService.SkipToNextSong();
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayCurrentlyPlaying)
+                    {
+                        SongRequestItem currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                        if (currentlyPlaying != null)
+                        {
+                            await ChannelSession.Chat.SendMessage("Currently Playing: " + currentlyPlaying.Name);
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.SendMessage("There is currently no song playing for the Song Request queue");
+                        }
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayNextSong)
+                    {
+                        SongRequestItem nextTrack = await ChannelSession.Services.SongRequestService.GetNextTrack();
+                        if (nextTrack != null)
+                        {
+                            await ChannelSession.Chat.SendMessage("Coming Up Next: " + nextTrack.Name);
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.SendMessage("There are currently no Song Requests left in the queue");
+                        }
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.PlayPauseCurrentSong)
+                    {
+                        await ChannelSession.Services.SongRequestService.PlayPauseCurrentSong();
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.SkipToNextSong)
+                    {
+                        await ChannelSession.Services.SongRequestService.SkipToNextSong();
+                    }
                 }
             }
         }

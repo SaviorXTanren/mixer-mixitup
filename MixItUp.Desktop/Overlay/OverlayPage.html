@@ -20,15 +20,13 @@
             <h1 style="font-size: 100px; color: red; text-align: center">To Speech!</h1>
         </div>
 
-        <div id="youtubePlayerDiv" style="visibility: hidden"></div>
+        <div id="youtubePlayerDiv" style="position: relative; left: -1000px"></div>
 
         <script src="jquery.min.js"></script>
 
         <script src="webSocketWrapper.js"></script>
 
         <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
-
-        <script src="https://www.youtube.com/iframe_api"></script>
 
         <script>
             $.fn.extend({
@@ -68,6 +66,12 @@
 
             var youtubePlayer;
             var youtubePlayerReady = false;
+            var youtubeSongPlaying = false;
+
+            var youtubePlayerScript = document.createElement('script');
+            youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);
 
             function connectionOpened() {
                 noConnectionDiv.style.visibility = 'hidden';
@@ -188,15 +192,20 @@
 
             function songRequestPacket(data) {
                 if (data.Type == 'YouTube' && youtubePlayerReady) {
-                    if (data.Action == 'playpause') {
-                        if (player.getPlayerState() == YT.PlayerState.PLAYING) {
-                            player.pauseVideo();
+                    if (data.Action == 'playpause' && youtubeSongPlaying) {
+                        if (youtubePlayer.getPlayerState() == YT.PlayerState.PLAYING) {
+                            youtubePlayer.pauseVideo();
                         }
-                        else if (player.getPlayerState() == YT.PlayerState.PAUSED) {
-                            player.playVideo();
+                        else if (youtubePlayer.getPlayerState() == YT.PlayerState.PAUSED) {
+                            youtubePlayer.playVideo();
                         }
                     }
-                    else if (data.Action = 'song') {
+                    else if (data.Action == 'stop') {
+                        youtubeSongPlaying = false;
+                        youtubePlayer.stopVideo();
+                    }
+                    else if (data.Action == 'song') {
+                        youtubeSongPlaying = true;
                         youtubePlayer.loadVideoById(data.Source);
                     }
                 }
@@ -246,6 +255,7 @@
                 youtubePlayer = new YT.Player('youtubePlayerDiv', {
                     height: '390',
                     width: '640',
+                    videoId: 'RvCVgu_MQpU',
                     playerVars: { 'controls': 0, 'showinfo' : 0 },
                     events: {
                         'onReady': onPlayerReady,
@@ -259,8 +269,9 @@
             }
 
             function onPlayerStateChange(event) {
-                if (event.data == YT.PlayerState.ENDED) {
+                if (event.data == YT.PlayerState.ENDED && youtubeSongPlaying) {
                     sendPacket('songRequestComplete', '');
+                    youtubeSongPlaying = false;
                 }
             }
 

@@ -80,10 +80,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (await ChannelSession.Services.SongRequestService.Initialize())
                 {
-                    ChannelSession.SongRequestsEnabled = true;
-                    this.SongRequestServicesGrid.IsEnabled = false;
-                    this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = true;
-
                     await this.RefreshRequestsList();
                 }
                 else
@@ -93,14 +89,11 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private void EnableSongRequestsToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
+        private async void EnableSongRequestsToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.Services.SongRequestService.Disable();
 
-            ChannelSession.SongRequestsEnabled = false;
-
-            this.SongRequestServicesGrid.IsEnabled = true;
-            this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = false;
+            await this.RefreshRequestsList();
         }
 
         private void SpotifyToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -164,6 +157,10 @@ namespace MixItUp.WPF.Controls.MainControls
         private async Task RefreshRequestsList()
         {
             await SongRequestControl.songListLock.WaitAsync();
+
+            this.EnableSongRequestsToggleButton.IsChecked = ChannelSession.Services.SongRequestService.IsEnabled;
+            this.SongRequestServicesGrid.IsEnabled = !ChannelSession.Services.SongRequestService.IsEnabled;
+            this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
 
             this.requests.Clear();
             foreach (SongRequestItem item in await ChannelSession.Services.SongRequestService.GetAllRequests())
