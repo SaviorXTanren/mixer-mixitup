@@ -10,7 +10,7 @@ namespace MixItUp.Base.MixerAPI
     {
         public async Task RunAsync(Task task) { await AsyncRunner.RunAsync(task); }
 
-        public async Task<T> RunAsync<T>(Task<T> task) { return await AsyncRunner.RunAsync(task); }
+        public async Task<T> RunAsync<T>(Task<T> task, bool logNotFoundException = true) { return await AsyncRunner.RunAsync(task, logNotFoundException); }
 
         public async Task RunAsync(Func<Task> task) { await AsyncRunner.RunAsync(task); }
 
