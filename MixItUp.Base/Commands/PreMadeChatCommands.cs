@@ -120,7 +120,7 @@ namespace MixItUp.Base.Commands
                     List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
                     foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
                     {
-                        if (command.Requirements.DoesMeetUserRoleRequirement(user))
+                        if (await command.Requirements.DoesMeetUserRoleRequirement(user))
                         {
                             commands.Add(command);
                         }

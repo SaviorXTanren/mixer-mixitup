@@ -71,7 +71,7 @@ namespace MixItUp.Base.Actions
                         int position = ChannelSession.GameQueue.IndexOf(user);
                         if (position == -1)
                         {
-                            if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetUserRoleRequirement(user))
+                            if (!await ChannelSession.Settings.GameQueueRequirements.DoesMeetUserRoleRequirement(user))
                             {
                                 await ChannelSession.Settings.GameQueueRequirements.Role.SendUserRoleNotMetWhisper(user);
                                 return;
