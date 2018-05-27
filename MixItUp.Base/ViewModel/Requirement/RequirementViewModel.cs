@@ -46,11 +46,18 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.Rank = rank;
         }
 
-        public bool DoesMeetUserRoleRequirement(UserViewModel user)
+        public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
         {
             if (this.Role != null)
             {
-                return this.Role.DoesMeetUserRoleRequirement(user);
+                bool doesMeetRoleRequirements = this.Role.DoesMeetUserRoleRequirement(user);
+                if (!doesMeetRoleRequirements)
+                {
+                    // Force a refresh to get updated roles, just in case they recently changed
+                    await user.RefreshDetails(true);
+                    doesMeetRoleRequirements = this.Role.DoesMeetUserRoleRequirement(user);
+                }
+                return doesMeetRoleRequirements;
             }
             return true;
         }
