@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -28,14 +29,20 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class InputAction : ActionBase
     {
+        [JsonProperty]
         public InputKeyEnum? Key { get; set; }
 
+        [JsonProperty]
         public SimpleInputMouseEnum? Mouse { get; set; }
 
+        [JsonProperty]
         public InputActionTypeEnum ActionType { get; set; }
 
+        [JsonProperty]
         public bool Shift { get; set; }
+        [JsonProperty]
         public bool Control { get; set; }
+        [JsonProperty]
         public bool Alt { get; set; }
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
