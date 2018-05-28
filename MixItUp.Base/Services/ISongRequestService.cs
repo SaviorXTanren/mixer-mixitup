@@ -8,7 +8,8 @@ namespace MixItUp.Base.Services
     public enum SongRequestServiceTypeEnum
     {
         Spotify,
-        Youtube,
+        YouTube,
+        SoundCloud,
     }
 
     public class SongRequestItem

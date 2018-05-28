@@ -30,7 +30,7 @@
 
         <div id="youtubePlayerDiv" style="position: relative; left: -1000px"></div>
 
-        <iframe id="soundcloudPlayerIFrame" width="300" height="166" style="position: absolute; left: 0%; top: 0%;" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1848538"></iframe>
+        <iframe id="soundcloudPlayerIFrame" width="300" height="166" style="position: relative; left: -1000px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true"></iframe>
 
         <script>
             $.fn.extend({
@@ -85,24 +85,6 @@
             var soundCloudPlayerReady = false;
             var soundCloudPlayerSongPlaying = false;
             var soundCloudPlayerSongIsPaused = false;
-
-            soundCloudPlayer.bind(SC.Widget.Events.READY, function () {
-                soundCloudPlayerReady = true;
-            });
-
-            soundCloudPlayer.bind(SC.Widget.Events.PLAY, function () {
-                soundCloudPlayerSongPlaying = true;
-                soundCloudPlayerSongIsPaused = false;
-            });
-
-            soundCloudPlayer.bind(SC.Widget.Events.PAUSE, function () {
-                soundCloudPlayerSongIsPaused = true;
-            });
-
-            soundCloudPlayer.bind(SC.Widget.Events.FINISH, function () {
-                soundCloudPlayerSongPlaying = false;
-                soundCloudPlayerSongIsPaused = false;
-            });
 
             function connectionOpened() {
                 noConnectionDiv.style.visibility = 'hidden';
@@ -323,6 +305,25 @@
                     youtubeSongPlaying = false;
                 }
             }
+
+            soundCloudPlayer.bind(SC.Widget.Events.READY, function () {
+                soundCloudPlayerReady = true;
+            });
+
+            soundCloudPlayer.bind(SC.Widget.Events.PLAY, function () {
+                soundCloudPlayerSongPlaying = true;
+                soundCloudPlayerSongIsPaused = false;
+            });
+
+            soundCloudPlayer.bind(SC.Widget.Events.PAUSE, function () {
+                soundCloudPlayerSongIsPaused = true;
+            });
+
+            soundCloudPlayer.bind(SC.Widget.Events.FINISH, function () {
+                soundCloudPlayerSongPlaying = false;
+                soundCloudPlayerSongIsPaused = false;
+                sendPacket('songRequestComplete', '');
+            });
 
             openWebsocketConnection("8111");
         </script>

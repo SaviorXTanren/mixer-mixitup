@@ -37,7 +37,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.SongRequestsQueueListView.ItemsSource = this.requests;
 
             this.SpotifyToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify);
-            this.YouTubeToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Youtube);
+            this.YouTubeToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube);
+            this.SoundCloudToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.SoundCloud);
 
             this.SpotifyAllowExplicitSongToggleButton.IsChecked = ChannelSession.Settings.SpotifyAllowExplicit;
 
@@ -50,7 +51,8 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (!this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && !this.YouTubeToggleButton.IsChecked.GetValueOrDefault())
+                if (!this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && !this.YouTubeToggleButton.IsChecked.GetValueOrDefault() &&
+                    !this.SoundCloudToggleButton.IsChecked.GetValueOrDefault())
                 {
                     await MessageBoxHelper.ShowMessageDialog("At least 1 song request service must be set");
                     this.EnableSongRequestsToggleButton.IsChecked = false;
@@ -71,8 +73,16 @@ namespace MixItUp.WPF.Controls.MainControls
                     return;
                 }
 
+                if (this.SoundCloudToggleButton.IsChecked.GetValueOrDefault() && ChannelSession.Services.OverlayServer == null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("You must enable & use the Mix It Up Overlay for SoundCloud song requests");
+                    this.EnableSongRequestsToggleButton.IsChecked = false;
+                    return;
+                }
+
                 if (this.SpotifyToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.Spotify); }
-                if (this.YouTubeToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.Youtube); }
+                if (this.YouTubeToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.YouTube); }
+                if (this.SoundCloudToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.SoundCloud); }
 
                 ChannelSession.Settings.SpotifyAllowExplicit = this.SpotifyAllowExplicitSongToggleButton.IsChecked.GetValueOrDefault();
 

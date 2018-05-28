@@ -72,6 +72,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Column="0" Grid.Row="0">Spotify:</TextBlock>
@@ -89,6 +91,9 @@
 
                     <TextBlock Grid.Column="0" Grid.Row="2">YouTube*:</TextBlock>
                     <ToggleButton x:Name="YouTubeToggleButton" Grid.Column="2" Grid.Row="2" />
+
+                    <TextBlock Grid.Column="0" Grid.Row="4">SoundCloud*:</TextBlock>
+                    <ToggleButton x:Name="SoundCloudToggleButton" Grid.Column="2" Grid.Row="4" />
                 </Grid>
 
                 <TextBlock HorizontalAlignment="Center" Grid.Row="4" Style="{StaticResource HeaderTextBlock}">* = Requires Overlay</TextBlock>

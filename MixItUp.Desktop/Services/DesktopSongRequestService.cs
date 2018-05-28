@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Mixer.Base.Web;
 using MixItUp.Base;
 using MixItUp.Base.Services;
@@ -21,10 +23,10 @@ namespace MixItUp.Desktop.Services
         public SongRequestServiceTypeEnum Type { get; set; }
         public List<string> ErrorMessages { get; set; }
 
-        public SongRequestItemSearch(SongRequestServiceTypeEnum type, SongRequestItem songRequest)
+        public SongRequestItemSearch(SongRequestItem songRequest)
         {
-            this.Type = type;
             this.SongRequest = songRequest;
+            this.Type = this.SongRequest.Type;
         }
 
         public SongRequestItemSearch(SongRequestServiceTypeEnum type, string errorMessage) : this(type, new string[] { errorMessage }) { }
@@ -43,6 +45,8 @@ namespace MixItUp.Desktop.Services
 
         private const string YouTubeLongLinkPrefix = "https://www.youtube.com/watch?v=";
         private const string YouTubeShortLinkPrefix = "https://youtu.be/";
+
+        private const string SoundCloudPublicLinkFormat = "https://soundcloud.com/.+/.+";
 
         private static SemaphoreSlim songRequestLock = new SemaphoreSlim(1);
 
@@ -72,7 +76,7 @@ namespace MixItUp.Desktop.Services
                 return false;
             }
 
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Youtube) && ChannelSession.Services.OverlayServer == null)
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube) && ChannelSession.Services.OverlayServer == null)
             {
                 return false;
             }
@@ -116,7 +120,8 @@ namespace MixItUp.Desktop.Services
             }
 
             List<Task<SongRequestItemSearch>> allRequests = new List<Task<SongRequestItemSearch>>();
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Youtube)) { allRequests.Add(this.GetYouTubeSongRequest(identifier)); }
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube)) { allRequests.Add(this.GetYouTubeSongRequest(identifier)); }
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.SoundCloud)) { allRequests.Add(this.GetSoundCloudSongRequest(identifier)); }
             if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify)) { allRequests.Add(this.GetSpotifySongRequest(user, identifier)); }
 
             SongRequestItemSearch requestSearch = null;
@@ -194,12 +199,9 @@ namespace MixItUp.Desktop.Services
                         }
                     }
                 }
-                else if (request.Type == SongRequestServiceTypeEnum.Youtube)
+                else if (request.Type == SongRequestServiceTypeEnum.YouTube || request.Type == SongRequestServiceTypeEnum.SoundCloud)
                 {
-                    if (ChannelSession.Services.OverlayServer != null)
-                    {
-                        await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = "YouTube", Action = "playpause" });
-                    }
+                    await this.PlayPauseOverlaySong(request.Type);
                 }
 
                 DesktopSongRequestService.songRequestLock.Release();
@@ -217,12 +219,9 @@ namespace MixItUp.Desktop.Services
                 {
                     await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
                 }
-                else if (request.Type == SongRequestServiceTypeEnum.Youtube)
+                else if (request.Type == SongRequestServiceTypeEnum.YouTube || request.Type == SongRequestServiceTypeEnum.SoundCloud)
                 {
-                    if (ChannelSession.Services.OverlayServer != null)
-                    {
-                        await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = "YouTube", Action = "stop" });
-                    }
+                    await this.StopOverlaySong(request.Type);
                 }
 
                 this.allRequests.RemoveAt(0);
@@ -291,7 +290,7 @@ namespace MixItUp.Desktop.Services
                             }
                         }
                     }
-                    else if (current.Type == SongRequestServiceTypeEnum.Youtube)
+                    else if (current.Type == SongRequestServiceTypeEnum.YouTube || current.Type == SongRequestServiceTypeEnum.SoundCloud)
                     {
                         if (this.overlaySongFinished)
                         {
@@ -327,9 +326,9 @@ namespace MixItUp.Desktop.Services
                         }
                     }
                 }
-                else if (request.Type == SongRequestServiceTypeEnum.Youtube)
+                else if (request.Type == SongRequestServiceTypeEnum.YouTube || request.Type == SongRequestServiceTypeEnum.SoundCloud)
                 {
-                    await this.PlayYouTubeSong(request.ID);
+                    await this.PlayOverlaySong(request);
                 }
             }
         }
@@ -354,14 +353,41 @@ namespace MixItUp.Desktop.Services
                         JObject jobj = JObject.Parse(content);
                         if (jobj["title"] != null)
                         {
-                            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, new SongRequestItem() { ID = identifier, Name = jobj["title"].ToString(), Type = SongRequestServiceTypeEnum.Youtube });
+                            return new SongRequestItemSearch(new SongRequestItem() { ID = identifier, Name = jobj["title"].ToString(), Type = SongRequestServiceTypeEnum.YouTube });
                         }
                     }
                 }
             }
             catch (Exception) { }
 
-            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Youtube, "The link you specified is not a valid YouTube video");
+            return new SongRequestItemSearch(SongRequestServiceTypeEnum.YouTube, "The link you specified is not a valid YouTube video");
+        }
+
+
+        private async Task<SongRequestItemSearch> GetSoundCloudSongRequest(string identifier)
+        {
+            if (Regex.IsMatch(identifier, SoundCloudPublicLinkFormat))
+            {
+                try
+                {
+                    using (HttpClientWrapper client = new HttpClientWrapper("https://soundcloud.com"))
+                    {
+                        HttpResponseMessage response = await client.GetAsync("http://soundcloud.com/oembed?format=js&url=" + HttpUtility.UrlEncode(identifier) + "&iframe=true");
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            string content = await response.Content.ReadAsStringAsync();
+                            content = content.Trim(new char[] { '(', ')', ';' });
+                            JObject jobj = JObject.Parse(content);
+                            if (jobj["title"] != null)
+                            {
+                                return new SongRequestItemSearch(new SongRequestItem() { ID = identifier, Name = jobj["title"].ToString(), Type = SongRequestServiceTypeEnum.SoundCloud });
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex) { Logger.Log(ex); }
+            }
+            return new SongRequestItemSearch(SongRequestServiceTypeEnum.SoundCloud, "The link you specified is not a valid SoundCloud song");
         }
 
         private async Task<SongRequestItemSearch> GetSpotifySongRequest(UserViewModel user, string identifier)
@@ -445,7 +471,7 @@ namespace MixItUp.Desktop.Services
                         }
                         else
                         {
-                            return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, new SongRequestItem() { ID = song.ID, Name = song.ToString(), Type = SongRequestServiceTypeEnum.Spotify });
+                            return new SongRequestItemSearch(new SongRequestItem() { ID = song.ID, Name = song.ToString(), Type = SongRequestServiceTypeEnum.Spotify });
                         }
                     }
                     else
@@ -457,11 +483,27 @@ namespace MixItUp.Desktop.Services
             return new SongRequestItemSearch(SongRequestServiceTypeEnum.Spotify, "Spotify is not currently enabled. Please inform the Streamer that re-enable it.");
         }
 
-        private async Task PlayYouTubeSong(string identifier)
+        private async Task PlayOverlaySong(SongRequestItem request)
         {
             if (ChannelSession.Services.OverlayServer != null)
             {
-                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = "YouTube", Action = "song", Source = identifier });
+                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = request.Type.ToString(), Action = "song", Source = request.ID });
+            }
+        }
+
+        private async Task PlayPauseOverlaySong(SongRequestServiceTypeEnum type)
+        {
+            if (ChannelSession.Services.OverlayServer != null)
+            {
+                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = type.ToString(), Action = "playpause" });
+            }
+        }
+
+        private async Task StopOverlaySong(SongRequestServiceTypeEnum type)
+        {
+            if (ChannelSession.Services.OverlayServer != null)
+            {
+                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = type.ToString(), Action = "stop" });
             }
         }
     }
