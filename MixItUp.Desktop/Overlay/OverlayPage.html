@@ -15,7 +15,7 @@
         <script src="https://w.soundcloud.com/player/api.js"></script>
     </head>
     <body style="background-color: transparent; overflow: hidden;">
-        <div id="mainOverlay" />
+        <div id="mainOverlay"></div>
 
         <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: visible">
             <h1 style="font-size: 100px; color: red; text-align: center">No Connection To</h1>
@@ -30,7 +30,7 @@
 
         <div id="youtubePlayerDiv" style="position: relative; left: -1000px"></div>
 
-        <iframe id="soundcloudPlayerIFrame" width="300" height="166" style="position: relative; left: -1000px" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true"></iframe>
+        <iframe id="soundcloudPlayerIFrame" width="300" height="166" style="position: relative; left: -1000px" scrolling="no" frameborder="0" src="https://w.soundcloud.com/player/?visual=true"></iframe>
 
         <script>
             $.fn.extend({
@@ -225,8 +225,8 @@
                     }
                 }
                 else if (data.Type == 'SoundCloud' && soundCloudPlayerReady) {
-                    if (data.Action == 'playpause' && soundCloudSongPlaying) {
-                        if (ssoundCloudSongIsPaused) {
+                    if (data.Action == 'playpause' && soundCloudPlayerSongPlaying) {
+                        if (soundCloudPlayerSongIsPaused) {
                             soundCloudPlayer.play();
                         }
                         else {
@@ -234,7 +234,8 @@
                         }
                     }
                     else if (data.Action == 'stop') {
-                        soundCloudPlayer.next();
+                        soundCloudPlayerSongPlaying = false;
+                        soundCloudPlayer.seekTo(3600000);
                     }
                     else if (data.Action == 'song') {
                         soundCloudPlayer.load(data.Source, { auto_play: true });
@@ -320,9 +321,11 @@
             });
 
             soundCloudPlayer.bind(SC.Widget.Events.FINISH, function () {
+                if (soundCloudPlayerSongPlaying) {
+                    sendPacket('songRequestComplete', '');
+                }
                 soundCloudPlayerSongPlaying = false;
                 soundCloudPlayerSongIsPaused = false;
-                sendPacket('songRequestComplete', '');
             });
 
             openWebsocketConnection("8111");
