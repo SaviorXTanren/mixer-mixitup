@@ -126,7 +126,8 @@
 
             <DataGrid x:Name="SongRequestsQueueListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Song Request" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="Source" Binding="{Binding Type}" IsReadOnly="True" Width="200" />
                     <DataGridTemplateColumn Width="65">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
