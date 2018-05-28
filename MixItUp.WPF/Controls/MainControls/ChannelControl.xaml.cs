@@ -117,7 +117,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(this.GameNameComboBox.Text) || this.GameNameComboBox.SelectedIndex < 0)
+            if (string.IsNullOrWhiteSpace(this.GameNameComboBox.Text))
             {
                 await MessageBoxHelper.ShowMessageDialog("A valid & existing game name must be selected");
                 return;
@@ -132,7 +132,10 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 ChannelSession.Channel.name = this.StreamTitleTextBox.Text;
-                ChannelSession.Channel.type = (GameTypeModel)this.GameNameComboBox.SelectedItem;
+                if (this.GameNameComboBox.SelectedIndex >= 0)
+                {
+                    ChannelSession.Channel.type = (GameTypeModel)this.GameNameComboBox.SelectedItem;
+                }
                 ChannelSession.Channel.typeId = ChannelSession.Channel.type.id;
                 ChannelSession.Channel.audience = ((string)this.AgeRatingComboBox.SelectedItem).ToLower();
 
