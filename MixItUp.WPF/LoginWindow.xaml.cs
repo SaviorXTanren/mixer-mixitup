@@ -120,7 +120,7 @@ namespace MixItUp.WPF
 
             await this.CheckForUpdates();
 
-            foreach (IChannelSettings setting in await ChannelSession.Services.Settings.GetAllSettings())
+            foreach (IChannelSettings setting in (await ChannelSession.Services.Settings.GetAllSettings()).OrderBy(s => s.Channel.user.username))
             {
                 if (setting.IsStreamer)
                 {
