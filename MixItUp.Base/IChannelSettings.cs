@@ -72,6 +72,7 @@ namespace MixItUp.Base
 
         int ModerationTimeout1MinuteOffenseCount { get; set; }
         int ModerationTimeout5MinuteOffenseCount { get; set; }
+        MixerRoleEnum ModerationTimeoutExempt { get; set; }
 
         bool EnableOverlay { get; set; }
         string OverlaySourceName { get; set; }

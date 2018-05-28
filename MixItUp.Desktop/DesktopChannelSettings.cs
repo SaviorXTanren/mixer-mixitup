@@ -138,6 +138,8 @@ namespace MixItUp.Desktop
         public int ModerationTimeout1MinuteOffenseCount { get; set; }
         [JsonProperty]
         public int ModerationTimeout5MinuteOffenseCount { get; set; }
+        [JsonProperty]
+        public MixerRoleEnum ModerationTimeoutExempt { get; set; }
 
         [JsonProperty]
         public bool EnableOverlay { get; set; }
@@ -349,6 +351,7 @@ namespace MixItUp.Desktop
             this.ModerationFilteredWordsExcempt = MixerRoleEnum.Mod;
             this.ModerationChatTextExcempt = MixerRoleEnum.Mod;
             this.ModerationBlockLinksExcempt = MixerRoleEnum.Mod;
+            this.ModerationTimeoutExempt = MixerRoleEnum.Mod;
 
             this.ModerationCapsBlockIsPercentage = true;
             this.ModerationPunctuationBlockIsPercentage = true;

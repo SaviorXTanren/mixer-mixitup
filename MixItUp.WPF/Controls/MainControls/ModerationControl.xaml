@@ -176,6 +176,8 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="10" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <Grid Grid.Row="0">
@@ -201,6 +203,8 @@
 
                                 <Slider x:Name="ModerationTimeout5MinAfterSlider" Grid.Column="2" Minimum="0" Maximum="10" Style="{StaticResource MaterialDesignDiscreteSlider}" LostFocus="Slider_LostFocus" />
                             </Grid>
+
+                            <ComboBox x:Name="ModerationTimeoutExemptComboBox" Grid.Row="4" MaterialDesign:HintAssist.Hint="Exempt Or Higher" Width="150" SelectionChanged="ComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
                         </Grid>
                     </GroupBox>
                 </Grid>
