@@ -43,7 +43,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ActionContainerControl_Loaded(object sender, RoutedEventArgs e)
         {
-            this.GroupBoxHeaderTextBox.Text = EnumHelper.GetEnumName(this.type);
+            this.GroupBoxHeaderTextBlock.Text = this.GroupBoxHeaderTextBox.Text = EnumHelper.GetEnumName(this.type);
 
             if (this.actionControl == null)
             {
@@ -122,6 +122,11 @@ namespace MixItUp.WPF.Controls.Actions
                         this.actionControl = (this.action != null) ? new StreamlabsOBSActionControl(this, (StreamlabsOBSAction)this.action) : new StreamlabsOBSActionControl(this);
                         break;
                 }
+
+                if (this.action != null && !string.IsNullOrEmpty(this.action.Label))
+                {
+                    this.GroupBoxHeaderTextBlock.Text = this.GroupBoxHeaderTextBox.Text = this.action.Label;
+                }
             }
 
             if (this.actionControl != null)
@@ -132,26 +137,43 @@ namespace MixItUp.WPF.Controls.Actions
 
         public ActionBase GetAction()
         {
+            ActionBase action = null;
             if (this.actionControl != null)
             {
-                return this.actionControl.GetAction();
+                action = this.actionControl.GetAction();
+                if (action != null && !string.IsNullOrEmpty(this.GroupBoxHeaderTextBox.Text))
+                {
+                    action.Label = this.GroupBoxHeaderTextBox.Text;
+                }
             }
-            return null;
+            return action;
         }
 
         public async Task RunAsyncOperation(Func<Task> function) { await this.Window.RunAsyncOperation(function); }
 
-        public void Minimize() { this.GroupBox.Height = MinimizedGroupBoxHeight; }
+        public void Minimize()
+        {
+            this.GroupBoxHeaderTextBlock.Visibility = Visibility.Visible;
+            this.GroupBoxHeaderTextBox.Visibility = Visibility.Collapsed;
+            this.GroupBox.Height = MinimizedGroupBoxHeight;
+        }
 
         public void OnWindowSizeChanged(Size size)
         {
             this.GroupBox.MaxWidth = size.Width - 38;
         }
 
+        private void GroupBoxHeaderTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.GroupBoxHeaderTextBlock.Text = this.GroupBoxHeaderTextBox.Text;
+        }
+
         public void GroupBoxHeader_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (this.GroupBox.Height == MinimizedGroupBoxHeight)
             {
+                this.GroupBoxHeaderTextBlock.Visibility = Visibility.Collapsed;
+                this.GroupBoxHeaderTextBox.Visibility = Visibility.Visible;
                 this.GroupBox.Height = Double.NaN;
             }
             else

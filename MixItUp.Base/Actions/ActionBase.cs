@@ -62,6 +62,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public ActionTypeEnum Type { get; set; }
 
+        [DataMember]
+        public string Label { get; set; }
+
         [JsonIgnore]
         private Dictionary<string, string> additiveSpecialIdentifiers = new Dictionary<string, string>();
         [JsonIgnore]
@@ -76,6 +79,7 @@ namespace MixItUp.Base.Actions
             : this()
         {
             this.Type = type;
+            this.Label = EnumHelper.GetEnumName(this.Type);
         }
 
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments)
