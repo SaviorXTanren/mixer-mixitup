@@ -96,5 +96,17 @@ namespace MixItUp.Base.Util
                 return default(T);
             });
         }
+
+        public static void RunAsyncAsSync(Task task)
+        {
+            try
+            {
+                task.Wait();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
     }
 }

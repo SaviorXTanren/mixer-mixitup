@@ -70,12 +70,6 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Wait:
                         this.actionControl = (this.action != null) ? new WaitActionControl(this, (WaitAction)this.action) : new WaitActionControl(this);
                         break;
-                    case ActionTypeEnum.OBSStudio:
-                        this.actionControl = (this.action != null) ? new OBSStudioActionControl(this, (OBSStudioAction)this.action) : new OBSStudioActionControl(this);
-                        break;
-                    case ActionTypeEnum.XSplit:
-                        this.actionControl = (this.action != null) ? new XSplitActionControl(this, (XSplitAction)this.action) : new XSplitActionControl(this);
-                        break;
                     case ActionTypeEnum.Counter:
                         this.actionControl = (this.action != null) ? new CounterActionControl(this, (CounterAction)this.action) : new CounterActionControl(this);
                         break;
@@ -118,8 +112,8 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Conditional:
                         this.actionControl = (this.action != null) ? new ConditionalActionControl(this, (ConditionalAction)this.action) : new ConditionalActionControl(this);
                         break;
-                    case ActionTypeEnum.StreamlabsOBS:
-                        this.actionControl = (this.action != null) ? new StreamlabsOBSActionControl(this, (StreamlabsOBSAction)this.action) : new StreamlabsOBSActionControl(this);
+                    case ActionTypeEnum.Streaming:
+                        this.actionControl = (this.action != null) ? new StreamingActionControl(this, (StreamingAction)this.action) : new StreamingActionControl(this);
                         break;
                 }
 

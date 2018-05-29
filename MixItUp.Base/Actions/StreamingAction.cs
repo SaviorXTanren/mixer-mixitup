@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
-    public enum StreamingTypeEnum
+    public enum StreamingSoftwareTypeEnum
     {
         [Name("OBS Studio")]
-        OBSStudio,
+        OBSStudio = 1,
         [Name("XSplit")]
-        XSplit,
+        XSplit = 2,
         [Name("Streamlabs OBS")]
-        StreamlabsOBS
+        StreamlabsOBS = 3
     }
 
     public class StreamingSourceDimensions
@@ -33,38 +33,40 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class StreamingAction : ActionBase
     {
+        public const string SourceTextFilesDirectoryName = "SourceTextFiles";
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return StreamingAction.asyncSemaphore; } }
 
-        public static StreamingAction CreateSceneAction(StreamingTypeEnum streamingType, string sceneName)
+        public static StreamingAction CreateSceneAction(StreamingSoftwareTypeEnum softwareType, string sceneName)
         {
-            StreamingAction action = new StreamingAction(streamingType);
+            StreamingAction action = new StreamingAction(softwareType);
             action.SceneName = sceneName;
             return action;
         }
 
-        public static StreamingAction CreateSourceVisibilityAction(StreamingTypeEnum streamingType, string sourceName, bool sourceVisible)
+        public static StreamingAction CreateSourceVisibilityAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible)
         {
-            StreamingAction action = new StreamingAction(streamingType);
+            StreamingAction action = new StreamingAction(softwareType);
             action.SourceName = sourceName;
             action.SourceVisible = sourceVisible;
             return action;
         }
 
-        public static StreamingAction CreateSourceTextAction(StreamingTypeEnum streamingType, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
+        public static StreamingAction CreateSourceTextAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
         {
-            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(streamingType, sourceName, sourceVisible);
+            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
             action.SourceText = sourceText;
             action.SourceTextFilePath = sourceTextFilePath;
             return action;
         }
 
-        public static StreamingAction CreateSourceURLAction(StreamingTypeEnum streamingType, string sourceName, bool sourceVisible, string sourceURL)
+        public static StreamingAction CreateSourceURLAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceURL)
         {
-            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(streamingType, sourceName, sourceVisible);
+            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
             action.SourceURL = sourceURL;
-            if (streamingType == StreamingTypeEnum.XSplit)
+            if (softwareType == StreamingSoftwareTypeEnum.XSplit)
             {
                 if (!File.Exists(action.SourceURL) && !action.SourceURL.Contains("://"))
                 {
@@ -74,15 +76,15 @@ namespace MixItUp.Base.Actions
             return action;
         }
 
-        public static StreamingAction CreateSourceDimensionsAction(StreamingTypeEnum streamingType, string sourceName, bool sourceVisible, StreamingSourceDimensions sourceDimensions)
+        public static StreamingAction CreateSourceDimensionsAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, StreamingSourceDimensions sourceDimensions)
         {
-            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(streamingType, sourceName, sourceVisible);
+            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
             action.SourceDimensions = sourceDimensions;
             return action;
         }
 
         [DataMember]
-        public StreamingTypeEnum StreamingType { get; set; }
+        public StreamingSoftwareTypeEnum SoftwareType { get; set; }
 
         [DataMember]
         public string SceneName { get; set; }
@@ -105,9 +107,9 @@ namespace MixItUp.Base.Actions
 
         public StreamingAction() : base(ActionTypeEnum.Streaming) { }
 
-        public StreamingAction(StreamingTypeEnum streamingType) : this() { this.StreamingType = streamingType; }
+        public StreamingAction(StreamingSoftwareTypeEnum softwareType) : this() { this.SoftwareType = softwareType; }
 
-        public async Task UpdateReferenceTextFile(string textToWrite)
+        public void UpdateReferenceTextFile(string textToWrite)
         {
             if (!string.IsNullOrEmpty(this.SourceText) && !string.IsNullOrEmpty(this.SourceTextFilePath))
             {
@@ -120,8 +122,8 @@ namespace MixItUp.Base.Actions
 
                     using (StreamWriter writer = new StreamWriter(File.Open(this.SourceTextFilePath, FileMode.Create)))
                     {
-                        await writer.WriteAsync(textToWrite);
-                        await writer.FlushAsync();
+                        writer.Write(textToWrite);
+                        writer.Flush();
                     }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
@@ -132,7 +134,7 @@ namespace MixItUp.Base.Actions
         {
             if (!string.IsNullOrEmpty(this.SourceText))
             {
-                await this.UpdateReferenceTextFile(await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments));
+                this.UpdateReferenceTextFile(await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments));
             }
 
             string url = string.Empty;
@@ -141,7 +143,7 @@ namespace MixItUp.Base.Actions
                 url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
             }
 
-            if (this.StreamingType == StreamingTypeEnum.OBSStudio)
+            if (this.SoftwareType == StreamingSoftwareTypeEnum.OBSStudio)
             {
                 if (ChannelSession.Services.OBSWebsocket == null)
                 {
@@ -169,7 +171,7 @@ namespace MixItUp.Base.Actions
                     }
                 }
             }
-            else if (this.StreamingType == StreamingTypeEnum.XSplit)
+            else if (this.SoftwareType == StreamingSoftwareTypeEnum.XSplit)
             {
                 if (ChannelSession.Services.XSplitServer == null)
                 {
@@ -193,7 +195,7 @@ namespace MixItUp.Base.Actions
                     }
                 }
             }
-            else if (this.StreamingType == StreamingTypeEnum.StreamlabsOBS)
+            else if (this.SoftwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
             {
                 if (ChannelSession.Services.StreamlabsOBSService == null)
                 {
