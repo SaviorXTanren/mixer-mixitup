@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -39,6 +38,8 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.StreamingSoftwareComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingSoftwareTypeEnum>();
+
+            this.StreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(StreamingSoftwareTypeEnum.DefaultSetting);
             this.SourceVisibleCheckBox.IsChecked = true;
             this.SourceDimensionsXScaleTextBox.Text = "1";
             this.SourceDimensionsYScaleTextBox.Text = "1";
@@ -144,7 +145,7 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.StreamingSoftwareComboBox.SelectedIndex >= 0)
             {
-                StreamingSoftwareTypeEnum software = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.StreamingSoftwareComboBox.SelectedItem);
+                StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
                 if (software == StreamingSoftwareTypeEnum.OBSStudio)
                 {
                     this.OBSStudioNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.OBSWebsocket == null) ? Visibility.Visible : Visibility.Collapsed;
@@ -218,7 +219,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.StreamingSoftwareComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.SourceNameTextBox.Text))
             {
-                StreamingSoftwareTypeEnum software = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.StreamingSoftwareComboBox.SelectedItem);
+                StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
                 if (software == StreamingSoftwareTypeEnum.OBSStudio)
                 {
                     await this.containerControl.RunAsyncOperation(async () =>
@@ -239,6 +240,16 @@ namespace MixItUp.WPF.Controls.Actions
                     });
                 }
             }
+        }
+
+        private StreamingSoftwareTypeEnum GetSelectedSoftware()
+        {
+            StreamingSoftwareTypeEnum software = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.StreamingSoftwareComboBox.SelectedItem);
+            if (software == StreamingSoftwareTypeEnum.DefaultSetting)
+            {
+                software = ChannelSession.Settings.DefaultStreamingSoftware;
+            }
+            return software;
         }
     }
 }

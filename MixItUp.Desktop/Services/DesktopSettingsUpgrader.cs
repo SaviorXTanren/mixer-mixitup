@@ -372,7 +372,7 @@ namespace MixItUp.Desktop.Services
 #pragma warning disable CS0612 // Type or member is obsolete
                         if (action is OBSStudioAction || action is XSplitAction || action is StreamlabsOBSAction)
                         {
-                            StreamingSoftwareTypeEnum type = StreamingSoftwareTypeEnum.Default;
+                            StreamingSoftwareTypeEnum type = StreamingSoftwareTypeEnum.OBSStudio;
                             string scene = null;
                             string source = null;
                             bool visible = false;

@@ -2,6 +2,7 @@
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using MixItUp.Base;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Remote;
@@ -64,6 +65,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public bool FeatureMe { get; set; }
+        [JsonProperty]
+        public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
 
         [JsonProperty]
         public bool WhisperAllAlerts { get; set; }
@@ -335,6 +338,8 @@ namespace MixItUp.Desktop
         public DesktopChannelSettings()
             : base()
         {
+            this.DefaultStreamingSoftware = StreamingSoftwareTypeEnum.OBSStudio;
+
             this.TimerCommandsInterval = 10;
             this.TimerCommandsMinimumMessages = 10;
 

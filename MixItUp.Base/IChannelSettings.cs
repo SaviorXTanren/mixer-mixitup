@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.OAuth;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Remote;
@@ -35,6 +36,7 @@ namespace MixItUp.Base
         ExpandedChannelModel Channel { get; set; }
 
         bool FeatureMe { get; set; }
+        StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
 
         bool WhisperAllAlerts { get; set; }
         bool LatestChatAtTop { get; set; }

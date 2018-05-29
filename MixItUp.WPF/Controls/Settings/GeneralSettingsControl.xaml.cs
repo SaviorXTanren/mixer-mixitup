@@ -1,5 +1,8 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
+using MixItUp.Base.Actions;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Settings
@@ -22,12 +25,16 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.AutoLogInAccountTextBlock.ToolTip = AutoLogInTooltip;
             this.AutoLogInAccountToggleButton.ToolTip = AutoLogInTooltip;
+
+            this.DefaultStreamingSoftwareComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingSoftwareTypeEnum>(
+                new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS });
         }
 
         protected override async Task InitializeInternal()
         {
             this.FeatureMeToggleButton.IsChecked = ChannelSession.Settings.FeatureMe;
             this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.Channel.user.id);
+            this.DefaultStreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.DefaultStreamingSoftware);
 
             await base.InitializeInternal();
         }
@@ -50,6 +57,11 @@ namespace MixItUp.WPF.Controls.Settings
         private void AutoLogInAccountToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
             App.AppSettings.AutoLogInAccount = 0;
+        }
+
+        private void DefaultStreamingSoftwareComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            ChannelSession.Settings.DefaultStreamingSoftware = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.DefaultStreamingSoftwareComboBox.SelectedItem);
         }
     }
 }

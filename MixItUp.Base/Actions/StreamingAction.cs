@@ -13,12 +13,15 @@ namespace MixItUp.Base.Actions
 {
     public enum StreamingSoftwareTypeEnum
     {
+        [Name("Default Setting")]
+        DefaultSetting,
+
         [Name("OBS Studio")]
-        OBSStudio = 1,
+        OBSStudio,
         [Name("XSplit")]
-        XSplit = 2,
+        XSplit,
         [Name("Streamlabs OBS")]
-        StreamlabsOBS = 3
+        StreamlabsOBS,
     }
 
     public class StreamingSourceDimensions
@@ -109,6 +112,8 @@ namespace MixItUp.Base.Actions
 
         public StreamingAction(StreamingSoftwareTypeEnum softwareType) : this() { this.SoftwareType = softwareType; }
 
+        public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.SoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.SoftwareType; } }
+
         public void UpdateReferenceTextFile(string textToWrite)
         {
             if (!string.IsNullOrEmpty(this.SourceText) && !string.IsNullOrEmpty(this.SourceTextFilePath))
@@ -143,7 +148,7 @@ namespace MixItUp.Base.Actions
                 url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
             }
 
-            if (this.SoftwareType == StreamingSoftwareTypeEnum.OBSStudio)
+            if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
                 if (ChannelSession.Services.OBSWebsocket == null)
                 {
@@ -171,7 +176,7 @@ namespace MixItUp.Base.Actions
                     }
                 }
             }
-            else if (this.SoftwareType == StreamingSoftwareTypeEnum.XSplit)
+            else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.XSplit)
             {
                 if (ChannelSession.Services.XSplitServer == null)
                 {
@@ -195,7 +200,7 @@ namespace MixItUp.Base.Actions
                     }
                 }
             }
-            else if (this.SoftwareType == StreamingSoftwareTypeEnum.StreamlabsOBS)
+            else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
             {
                 if (ChannelSession.Services.StreamlabsOBSService == null)
                 {
