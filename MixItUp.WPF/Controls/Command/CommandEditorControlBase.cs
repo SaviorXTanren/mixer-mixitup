@@ -32,6 +32,8 @@ namespace MixItUp.WPF.Controls.Command
 
         public virtual void MoveActionDown(ActionContainerControl actionContainer) { }
 
+        public virtual void DuplicateAction(ActionContainerControl actionContainer) { }
+
         public virtual void DeleteAction(ActionContainerControl actionContainer) { }
     }
 }

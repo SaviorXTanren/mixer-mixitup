@@ -202,8 +202,6 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void MoveDownActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.MoveActionDown(this); }
 
-        private void DeleteActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.DeleteAction(this); }
-
         private void ActionHelpButton_Click(object sender, RoutedEventArgs e)
         {
             string actionName = EnumHelper.GetEnumName(this.type);
@@ -212,5 +210,23 @@ namespace MixItUp.WPF.Controls.Actions
             actionName = actionName.Replace("/", "");
             Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Actions#" + actionName);
         }
+
+        private async void ActionDuplicateButton_Click(object sender, RoutedEventArgs e)
+        {
+            ActionBase action = this.GetAction();
+            if (action == null)
+            {
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Required action information is missing");
+                });
+            }
+            else
+            {
+                this.EditorControl.DuplicateAction(this);
+            }
+        }
+
+        private void DeleteActionButton_Click(object sender, RoutedEventArgs e) { this.EditorControl.DeleteAction(this); }
     }
 }

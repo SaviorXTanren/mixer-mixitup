@@ -7,7 +7,7 @@
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -37,6 +37,8 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" x:Name="GroupBoxHeaderTextBlock" Foreground="{StaticResource WhiteColor}" Style="{StaticResource HeaderTextBlock}" Visibility="Collapsed" />
@@ -44,14 +46,16 @@
                 
                 <Rectangle Grid.Column="1" Fill="{StaticResource PrimaryHueMidBrush}" Margin="0,-10" />
 
-                <Button Grid.Column="2" x:Name="PlayActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Play}" Click="PlayActionButton_Click" />
+                <Button Grid.Column="2" x:Name="PlayActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Play}" Click="PlayActionButton_Click" ToolTip="Play" />
                 
-                <Button Grid.Column="4" x:Name="MoveUpActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowUpBold}" Click="MoveUpActionButton_Click" />
-                <Button Grid.Column="6" x:Name="MoveDownActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowDownBold}" Click="MoveDownActionButton_Click" />
+                <Button Grid.Column="4" x:Name="MoveUpActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowUpBold}" Click="MoveUpActionButton_Click" ToolTip="Move Up" />
+                <Button Grid.Column="6" x:Name="MoveDownActionButton" Margin="-10" Content="{MaterialDesign:PackIcon ArrowDownBold}" Click="MoveDownActionButton_Click" ToolTip="Move Down" />
 
-                <Button Grid.Column="8" x:Name="ActionHelpButton" Margin="-10" Content="{MaterialDesign:PackIcon Help}" Click="ActionHelpButton_Click" />
+                <Button Grid.Column="8" x:Name="ActionDuplicateButton" Margin="-10" Content="{MaterialDesign:PackIcon ContentCopy}" Click="ActionDuplicateButton_Click" ToolTip="Duplicate" />
 
-                <Button Grid.Column="10" x:Name="DeleteActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" />
+                <Button Grid.Column="10" x:Name="ActionHelpButton" Margin="-10" Content="{MaterialDesign:PackIcon Help}" Click="ActionHelpButton_Click" ToolTip="Help" />
+
+                <Button Grid.Column="12" x:Name="DeleteActionButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteActionButton_Click" ToolTip="Delete" />
             </Grid>
         </GroupBox.Header>
 

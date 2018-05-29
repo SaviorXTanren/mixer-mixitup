@@ -65,6 +65,11 @@ namespace MixItUp.WPF.Controls.Command
             this.actionControls.Insert(index, control);
         }
 
+        public override void DuplicateAction(ActionContainerControl actionContainer)
+        {
+            this.AddActionControlContainer(new ActionContainerControl(this.window, this, actionContainer.GetAction()));
+        }
+
         public override void DeleteAction(ActionContainerControl control)
         {
             this.actionControls.Remove(control);
@@ -101,16 +106,9 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
-                foreach (ActionContainerControl control in this.actionControls)
-                {
-                    control.Minimize();
-                }
-
                 ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
                 ActionContainerControl actionControl = new ActionContainerControl(this.window, this, type);
-                this.actionControls.Add(actionControl);
-                actionControl.OnWindowSizeChanged(this.window.RenderSize);
-
+                this.AddActionControlContainer(actionControl);
                 this.TypeComboBox.SelectedIndex = -1;
             }
         }
@@ -183,6 +181,16 @@ namespace MixItUp.WPF.Controls.Command
                     catch (Exception ex) { Base.Util.Logger.Log(ex); }
                 }
             });
+        }
+
+        private void AddActionControlContainer(ActionContainerControl actionControl)
+        {
+            foreach (ActionContainerControl control in this.actionControls)
+            {
+                control.Minimize();
+            }
+            this.actionControls.Add(actionControl);
+            actionControl.OnWindowSizeChanged(this.window.RenderSize);
         }
 
         private async Task<CommandBase> GetNewCommand()
