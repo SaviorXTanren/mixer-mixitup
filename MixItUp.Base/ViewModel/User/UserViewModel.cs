@@ -65,7 +65,7 @@ namespace MixItUp.Base.ViewModel.User
                         roles.Add(tier.MIURoleName);
                     }
                 }
-                catch (Exception ex) { Logger.Log(ex); }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
             return roles;
         }
