@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using OBSWebsocketDotNet;
 using System;
@@ -53,7 +54,7 @@ namespace MixItUp.OBS
             return false;
         }
 
-        public OBSSourceDimensions GetSourceDimensions(string source)
+        public StreamingSourceDimensions GetSourceDimensions(string source)
         {
             try
             {
@@ -62,7 +63,7 @@ namespace MixItUp.OBS
                 {
                     if (item.SourceName.Equals(source))
                     {
-                        return new OBSSourceDimensions() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) };
+                        return new StreamingSourceDimensions() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) };
                     }
                 }
             }
@@ -111,7 +112,7 @@ namespace MixItUp.OBS
             catch (Exception ex) { Logger.Log(ex); }
         }
 
-        public void SetSourceDimensions(string source, OBSSourceDimensions dimensions)
+        public void SetSourceDimensions(string source, StreamingSourceDimensions dimensions)
         {
             try
             {

@@ -94,12 +94,6 @@ namespace MixItUp.WPF
                             await ChannelSession.Services.FileService.CopyDirectory(Path.Combine(currentInstallDirectory, "Settings"),
                                 Path.Combine(InstallerHelpers.InstallDirectory, "Settings"));
 
-                            await ChannelSession.Services.FileService.CopyDirectory(Path.Combine(currentInstallDirectory, OBSStudioAction.OBSStudioReferenceTextFilesDirectory),
-                                Path.Combine(InstallerHelpers.InstallDirectory, OBSStudioAction.OBSStudioReferenceTextFilesDirectory));
-
-                            await ChannelSession.Services.FileService.CopyDirectory(Path.Combine(currentInstallDirectory, XSplitAction.XSplitReferenceTextFilesDirectory),
-                                Path.Combine(InstallerHelpers.InstallDirectory, XSplitAction.XSplitReferenceTextFilesDirectory));
-
                             await ChannelSession.Services.FileService.CopyDirectory(Path.Combine(currentInstallDirectory, "Counters"),
                                 Path.Combine(InstallerHelpers.InstallDirectory, "Counters"));
 

@@ -237,9 +237,6 @@
     <Compile Include="Controls\Actions\InteractiveActionControl.xaml.cs">
       <DependentUpon>InteractiveActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\OBSStudioActionControl.xaml.cs">
-      <DependentUpon>OBSStudioActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\OverlayActionControl.xaml.cs">
       <DependentUpon>OverlayActionControl.xaml</DependentUpon>
     </Compile>
@@ -255,8 +252,8 @@
     <Compile Include="Controls\Actions\SpotifyActionControl.xaml.cs">
       <DependentUpon>SpotifyActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\StreamlabsOBSActionControl.xaml.cs">
-      <DependentUpon>StreamlabsOBSActionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Actions\StreamingActionControl.xaml.cs">
+      <DependentUpon>StreamingActionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
       <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
@@ -523,9 +520,6 @@
     <Compile Include="Controls\Users\UserProfileAvatarControl.xaml.cs">
       <DependentUpon>UserProfileAvatarControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\XSplitActionControl.xaml.cs">
-      <DependentUpon>XSplitActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -615,10 +609,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\OBSStudioActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Actions\OverlayActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -639,7 +629,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\StreamlabsOBSActionControl.xaml">
+    <Page Include="Controls\Actions\StreamingActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -996,10 +986,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Users\UserProfileAvatarControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Actions\XSplitActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
