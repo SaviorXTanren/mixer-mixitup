@@ -252,8 +252,8 @@
     <Compile Include="Controls\Actions\SpotifyActionControl.xaml.cs">
       <DependentUpon>SpotifyActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\StreamingActionControl.xaml.cs">
-      <DependentUpon>StreamingActionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Actions\StreamingSoftwareActionControl.xaml.cs">
+      <DependentUpon>StreamingSoftwareActionControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Actions\TextToSpeechActionControl.xaml.cs">
       <DependentUpon>TextToSpeechActionControl.xaml</DependentUpon>
@@ -629,7 +629,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Actions\StreamingActionControl.xaml">
+    <Page Include="Controls\Actions\StreamingSoftwareActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

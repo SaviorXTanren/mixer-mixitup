@@ -34,40 +34,40 @@ namespace MixItUp.Base.Actions
     }
 
     [DataContract]
-    public class StreamingAction : ActionBase
+    public class StreamingSoftwareAction : ActionBase
     {
         public const string SourceTextFilesDirectoryName = "SourceTextFiles";
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
-        protected override SemaphoreSlim AsyncSemaphore { get { return StreamingAction.asyncSemaphore; } }
+        protected override SemaphoreSlim AsyncSemaphore { get { return StreamingSoftwareAction.asyncSemaphore; } }
 
-        public static StreamingAction CreateSceneAction(StreamingSoftwareTypeEnum softwareType, string sceneName)
+        public static StreamingSoftwareAction CreateSceneAction(StreamingSoftwareTypeEnum softwareType, string sceneName)
         {
-            StreamingAction action = new StreamingAction(softwareType);
+            StreamingSoftwareAction action = new StreamingSoftwareAction(softwareType);
             action.SceneName = sceneName;
             return action;
         }
 
-        public static StreamingAction CreateSourceVisibilityAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible)
+        public static StreamingSoftwareAction CreateSourceVisibilityAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible)
         {
-            StreamingAction action = new StreamingAction(softwareType);
+            StreamingSoftwareAction action = new StreamingSoftwareAction(softwareType);
             action.SourceName = sourceName;
             action.SourceVisible = sourceVisible;
             return action;
         }
 
-        public static StreamingAction CreateSourceTextAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
+        public static StreamingSoftwareAction CreateSourceTextAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
         {
-            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
             action.SourceText = sourceText;
             action.SourceTextFilePath = sourceTextFilePath;
             return action;
         }
 
-        public static StreamingAction CreateSourceURLAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceURL)
+        public static StreamingSoftwareAction CreateSourceURLAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceURL)
         {
-            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
             action.SourceURL = sourceURL;
             if (softwareType == StreamingSoftwareTypeEnum.XSplit)
             {
@@ -79,9 +79,9 @@ namespace MixItUp.Base.Actions
             return action;
         }
 
-        public static StreamingAction CreateSourceDimensionsAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, StreamingSourceDimensions sourceDimensions)
+        public static StreamingSoftwareAction CreateSourceDimensionsAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, StreamingSourceDimensions sourceDimensions)
         {
-            StreamingAction action = StreamingAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
             action.SourceDimensions = sourceDimensions;
             return action;
         }
@@ -108,9 +108,9 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public StreamingSourceDimensions SourceDimensions { get; set; }
 
-        public StreamingAction() : base(ActionTypeEnum.Streaming) { }
+        public StreamingSoftwareAction() : base(ActionTypeEnum.StreamingSoftware) { }
 
-        public StreamingAction(StreamingSoftwareTypeEnum softwareType) : this() { this.SoftwareType = softwareType; }
+        public StreamingSoftwareAction(StreamingSoftwareTypeEnum softwareType) : this() { this.SoftwareType = softwareType; }
 
         public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.SoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.SoftwareType; } }
 

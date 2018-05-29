@@ -52,7 +52,8 @@ namespace MixItUp.Base.Actions
         [Name("Streamlabs OBS")]
         [Obsolete]
         StreamlabsOBS,
-        Streaming,
+        [Name("Streaming Software")]
+        StreamingSoftware,
 
         Custom = 99,
     }

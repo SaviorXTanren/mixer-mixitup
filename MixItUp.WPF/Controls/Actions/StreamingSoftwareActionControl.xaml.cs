@@ -24,16 +24,16 @@ namespace MixItUp.WPF.Controls.Actions
     }
 
     /// <summary>
-    /// Interaction logic for StreamingActionControl.xaml
+    /// Interaction logic for StreamingSoftwareActionControl.xaml
     /// </summary>
-    public partial class StreamingActionControl : ActionControlBase
+    public partial class StreamingSoftwareActionControl : ActionControlBase
     {
-        private StreamingAction action;
+        private StreamingSoftwareAction action;
         private ObservableCollection<string> actionTypes = new ObservableCollection<string>();
 
-        public StreamingActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
+        public StreamingSoftwareActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
 
-        public StreamingActionControl(ActionContainerControl containerControl, StreamingAction action) : this(containerControl) { this.action = action; }
+        public StreamingSoftwareActionControl(ActionContainerControl containerControl, StreamingSoftwareAction action) : this(containerControl) { this.action = action; }
 
         public override Task OnLoaded()
         {
@@ -96,7 +96,7 @@ namespace MixItUp.WPF.Controls.Actions
 
                 if (type == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneNameTextBox.Text))
                 {
-                    return StreamingAction.CreateSceneAction(software, this.SceneNameTextBox.Text);
+                    return StreamingSoftwareAction.CreateSceneAction(software, this.SceneNameTextBox.Text);
                 }
                 else if (!string.IsNullOrEmpty(this.SourceNameTextBox.Text))
                 {
@@ -104,7 +104,7 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (!string.IsNullOrEmpty(this.SourceTextTextBox.Text) && !string.IsNullOrEmpty(this.SourceLoadTextFromTextBox.Text))
                         {
-                            StreamingAction action = StreamingAction.CreateSourceTextAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceTextTextBox.Text, this.SourceLoadTextFromTextBox.Text);
+                            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceTextAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceTextTextBox.Text, this.SourceLoadTextFromTextBox.Text);
                             action.UpdateReferenceTextFile(string.Empty);
                             return action;
                         }
@@ -113,7 +113,7 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (!string.IsNullOrEmpty(this.SourceWebPageTextBox.Text))
                         {
-                            return StreamingAction.CreateSourceURLAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceWebPageTextBox.Text);
+                            return StreamingSoftwareAction.CreateSourceURLAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceWebPageTextBox.Text);
                         }
                     }
                     else if (type == StreamingActionTypeEnum.SourceDimensions)
@@ -124,13 +124,13 @@ namespace MixItUp.WPF.Controls.Actions
                             int.TryParse(this.SourceDimensionsRotationTextBox.Text, out rotation) && float.TryParse(this.SourceDimensionsXScaleTextBox.Text, out xScale) &&
                             float.TryParse(this.SourceDimensionsYScaleTextBox.Text, out yScale))
                         {
-                            return StreamingAction.CreateSourceDimensionsAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(),
+                            return StreamingSoftwareAction.CreateSourceDimensionsAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(),
                                 new StreamingSourceDimensions() { X = x, Y = y, Rotation = rotation, XScale = xScale, YScale = yScale });
                         }
                     }
                     else
                     {
-                        return StreamingAction.CreateSourceVisibilityAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault());
+                        return StreamingSoftwareAction.CreateSourceVisibilityAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault());
                     }
                 }
             }

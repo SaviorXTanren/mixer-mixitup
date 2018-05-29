@@ -112,8 +112,8 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Conditional:
                         this.actionControl = (this.action != null) ? new ConditionalActionControl(this, (ConditionalAction)this.action) : new ConditionalActionControl(this);
                         break;
-                    case ActionTypeEnum.Streaming:
-                        this.actionControl = (this.action != null) ? new StreamingActionControl(this, (StreamingAction)this.action) : new StreamingActionControl(this);
+                    case ActionTypeEnum.StreamingSoftware:
+                        this.actionControl = (this.action != null) ? new StreamingSoftwareActionControl(this, (StreamingSoftwareAction)this.action) : new StreamingSoftwareActionControl(this);
                         break;
                 }
 

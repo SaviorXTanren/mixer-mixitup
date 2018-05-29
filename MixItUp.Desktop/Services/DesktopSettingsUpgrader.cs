@@ -27,7 +27,7 @@ namespace MixItUp.Desktop.Services
 
         private static string GetDefaultReferenceFilePath(string software, string source)
         {
-            return Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), software, StreamingAction.SourceTextFilesDirectoryName, source + ".txt");
+            return Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), software, StreamingSoftwareAction.SourceTextFilesDirectoryName, source + ".txt");
         }
 
         private class LegacyUserDataViewModel : UserDataViewModel
@@ -416,26 +416,26 @@ namespace MixItUp.Desktop.Services
                             }
 #pragma warning restore CS0612 // Type or member is obsolete
 
-                            StreamingAction sAction = null;
+                            StreamingSoftwareAction sAction = null;
                             if (!string.IsNullOrEmpty(scene))
                             {
-                                sAction = StreamingAction.CreateSceneAction(type, scene);
+                                sAction = StreamingSoftwareAction.CreateSceneAction(type, scene);
                             }
                             else if (!string.IsNullOrEmpty(text))
                             {
-                                sAction = StreamingAction.CreateSourceTextAction(type, source, visible, text, textPath);
+                                sAction = StreamingSoftwareAction.CreateSourceTextAction(type, source, visible, text, textPath);
                             }
                             else if (!string.IsNullOrEmpty(url))
                             {
-                                sAction = StreamingAction.CreateSourceURLAction(type, source, visible, url);
+                                sAction = StreamingSoftwareAction.CreateSourceURLAction(type, source, visible, url);
                             }
                             else if (dimensions != null)
                             {
-                                sAction = StreamingAction.CreateSourceDimensionsAction(type, source, visible, dimensions);
+                                sAction = StreamingSoftwareAction.CreateSourceDimensionsAction(type, source, visible, dimensions);
                             }
                             else
                             {
-                                sAction = StreamingAction.CreateSourceVisibilityAction(type, source, visible);
+                                sAction = StreamingSoftwareAction.CreateSourceVisibilityAction(type, source, visible);
                             }
 
                             command.Actions[i] = sAction;
