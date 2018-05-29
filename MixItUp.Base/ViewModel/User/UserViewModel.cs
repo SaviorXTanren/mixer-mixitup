@@ -56,12 +56,16 @@ namespace MixItUp.Base.ViewModel.User
         public static IEnumerable<string> SelectableAdvancedUserRoles()
         {
             List<string> roles = new List<string>(UserViewModel.SelectableBasicUserRoles().Select(r => EnumHelper.GetEnumName(r)));
-            if (ChannelSession.Services != null && ChannelSession.Services.GameWisp != null)
+            if (ChannelSession.Services != null && ChannelSession.Services.GameWisp != null && ChannelSession.Services.GameWisp.ChannelInfo != null)
             {
-                foreach (GameWispTier tier in ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers())
+                try
                 {
-                    roles.Add(tier.MIURoleName);
+                    foreach (GameWispTier tier in ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers())
+                    {
+                        roles.Add(tier.MIURoleName);
+                    }
                 }
+                catch (Exception ex) { Logger.Log(ex); }
             }
             return roles;
         }
