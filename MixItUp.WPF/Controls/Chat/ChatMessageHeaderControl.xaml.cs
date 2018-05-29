@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Controls.MainControls;
+using MixItUp.WPF.Controls.Settings;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -51,10 +53,13 @@ namespace MixItUp.WPF.Controls.Chat
 
         public void UpdateSizing()
         {
-            this.UserAvatar.SetSize(ChannelSession.Settings.ChatFontSize + 2);
-            this.SubscriberImage.Height = this.SubscriberImage.Width = ChannelSession.Settings.ChatFontSize + 2;
-            this.UserTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
-            this.TargetUserTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
+            int fontSize = this.GetChatFontSize();
+            this.UserAvatar.SetSize(fontSize + 2);
+            this.SubscriberImage.Height = this.SubscriberImage.Width = fontSize + 2;
+            this.UserTextBlock.FontSize = fontSize;
+            this.TargetUserTextBlock.FontSize = fontSize;
         }
+
+        private int GetChatFontSize() { return Math.Max(ChannelSession.Settings.ChatFontSize, ChatSettingsControl.ChatDefaultFontSize); }
     }
 }
