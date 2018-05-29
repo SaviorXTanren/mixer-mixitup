@@ -13,7 +13,9 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class ChatSettingsControl : SettingsControlBase
     {
-        private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", 13 }, { "Large", 16 }, { "X-Large", 20 }, { "XX-Large", 24 }, };
+        public const int ChatDefaultFontSize = 13;
+
+        private Dictionary<string, int> fontSizes = new Dictionary<string, int>() { { "Normal", ChatDefaultFontSize }, { "Large", 16 }, { "X-Large", 20 }, { "XX-Large", 24 }, };
 
         public ChatSettingsControl()
         {
