@@ -23,7 +23,9 @@ namespace MixItUp.Base.Actions
         Sound,
         Wait,
         [Name("OBS Studio")]
+        [Obsolete]
         OBSStudio,
+        [Obsolete]
         XSplit,
         Counter,
         [Name("Game Queue")]
@@ -48,7 +50,9 @@ namespace MixItUp.Base.Actions
         Twitter,
         Conditional,
         [Name("Streamlabs OBS")]
+        [Obsolete]
         StreamlabsOBS,
+        Streaming,
 
         Custom = 99,
     }
