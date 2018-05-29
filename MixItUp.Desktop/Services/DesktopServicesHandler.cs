@@ -258,7 +258,7 @@ namespace MixItUp.Desktop.Services
         public override async Task<bool> InitializeGameWisp()
         {
             this.GameWisp = (ChannelSession.Settings.GameWispOAuthToken != null) ? new GameWispService(ChannelSession.Settings.GameWispOAuthToken) : new GameWispService();
-            if (await this.GameWisp.Connect())
+            if (await this.GameWisp.Connect() && this.GameWisp.ChannelInfo != null)
             {
                 return true;
             }
@@ -356,7 +356,7 @@ namespace MixItUp.Desktop.Services
         public override async Task<bool> InitializeDiscord()
         {
             this.Discord = (ChannelSession.Settings.DiscordOAuthToken != null) ? new DiscordService(ChannelSession.Settings.DiscordOAuthToken) : new DiscordService();
-            if (await this.Discord.Connect())
+            if (await this.Discord.Connect() && this.Discord.Server != null && this.Discord.User != null)
             {
                 return true;
             }
