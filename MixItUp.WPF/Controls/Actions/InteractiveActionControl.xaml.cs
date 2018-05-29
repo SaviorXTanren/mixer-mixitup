@@ -1,7 +1,11 @@
-﻿using Mixer.Base.Util;
+﻿using Mixer.Base.Model.Interactive;
+using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,18 +19,27 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private InteractiveAction action;
 
+        private ObservableCollection<InteractiveGameListingModel> games = new ObservableCollection<InteractiveGameListingModel>();
+
         public InteractiveActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
 
         public InteractiveActionControl(ActionContainerControl containerControl, InteractiveAction action) : this(containerControl) { this.action = action; }
 
-        public override Task OnLoaded()
+        public override async Task OnLoaded()
         {
-            this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionTypeEnum>();
+            this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionTypeEnum>().OrderBy(s => s);
             this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
             this.InteractiveMoveUserToScenePermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
 
             this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedIndex = 0;
             this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedIndex = 0;
+
+            this.InteractiveGameComboBox.ItemsSource = games;
+
+            foreach (InteractiveGameListingModel game in await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel))
+            {
+                this.games.Add(game);
+            }
 
             if (this.action != null)
             {
@@ -52,8 +65,11 @@ namespace MixItUp.WPF.Controls.Actions
                     this.InteractiveCooldownNameTextBox.Text = this.action.CooldownID;
                     this.InteractiveCooldownAmountTextBox.Text = this.action.CooldownAmount.ToString();
                 }
+                else if (this.action.InteractiveType == InteractiveActionTypeEnum.Connect)
+                {
+                    this.InteractiveGameComboBox.SelectedItem = this.games.FirstOrDefault(g => g.id.Equals(this.action.InteractiveGameID));
+                }
             }
-            return Task.FromResult(0);
         }
 
         public override ActionBase GetAction()
@@ -87,16 +103,29 @@ namespace MixItUp.WPF.Controls.Actions
                         return new InteractiveAction(interactiveType, this.InteractiveCooldownNameTextBox.Text, cooldownAmount);
                     }
                 }
+                else if (interactiveType == InteractiveActionTypeEnum.Connect)
+                {
+                    if (this.InteractiveGameComboBox.SelectedIndex >= 0)
+                    {
+                        InteractiveGameListingModel game = (InteractiveGameListingModel)this.InteractiveGameComboBox.SelectedItem;
+                        return new InteractiveAction(interactiveType, game.id);
+                    }
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.Disconnect)
+                {
+                    return new InteractiveAction(interactiveType, 0);
+                }
             }
             return null;
         }
 
         private void InteractiveTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.InteractiveMoveUserToGroupGrid.Visibility = Visibility.Hidden;
-            this.InteractiveMoveGroupToSceneGrid.Visibility = Visibility.Hidden;
-            this.InteractiveMoveUserToSceneGrid.Visibility = Visibility.Hidden;
-            this.InteractiveCooldownGrid.Visibility = Visibility.Hidden;
+            this.InteractiveMoveUserToGroupGrid.Visibility = Visibility.Collapsed;
+            this.InteractiveMoveGroupToSceneGrid.Visibility = Visibility.Collapsed;
+            this.InteractiveMoveUserToSceneGrid.Visibility = Visibility.Collapsed;
+            this.InteractiveCooldownGrid.Visibility = Visibility.Collapsed;
+            this.InteractiveConnectGrid.Visibility = Visibility.Collapsed;
             if (this.InteractiveTypeComboBox.SelectedIndex >= 0)
             {
                 InteractiveActionTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveActionTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
@@ -116,6 +145,10 @@ namespace MixItUp.WPF.Controls.Actions
                     interactiveType == InteractiveActionTypeEnum.CooldownScene)
                 {
                     this.InteractiveCooldownGrid.Visibility = Visibility.Visible;
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.Connect)
+                {
+                    this.InteractiveConnectGrid.Visibility = Visibility.Visible;
                 }
             }
         }

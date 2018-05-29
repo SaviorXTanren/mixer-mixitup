@@ -21,10 +21,10 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="InteractiveTypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+            <ComboBox x:Name="InteractiveTypeComboBox" Grid.Column="0" SelectionChanged="InteractiveTypeComboBox_SelectionChanged" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Type" />
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="InteractiveMoveUserToGroupGrid" Visibility="Hidden">
+        <Grid Grid.Row="2" x:Name="InteractiveMoveUserToGroupGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
@@ -36,7 +36,7 @@
             <TextBox x:Name="InteractiveMoveUserToGroupGroupNameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="InteractiveMoveGroupToSceneGrid" Visibility="Hidden">
+        <Grid Grid.Row="2" x:Name="InteractiveMoveGroupToSceneGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
@@ -48,7 +48,7 @@
             <TextBox x:Name="InteractiveMoveGroupToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="InteractiveMoveUserToSceneGrid" Visibility="Hidden">
+        <Grid Grid.Row="2" x:Name="InteractiveMoveUserToSceneGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
@@ -60,7 +60,7 @@
             <TextBox x:Name="InteractiveMoveUserToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="InteractiveCooldownGrid" Visibility="Hidden">
+        <Grid Grid.Row="2" x:Name="InteractiveCooldownGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
@@ -70,6 +70,10 @@
             <TextBox x:Name="InteractiveCooldownNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" />
 
             <TextBox x:Name="InteractiveCooldownAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Cooldown Amount" />
+        </Grid>
+
+        <Grid Grid.Row="2" x:Name="InteractiveConnectGrid" Visibility="Collapsed">
+            <ComboBox x:Name="InteractiveGameComboBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Game" DisplayMemberPath="name" />
         </Grid>
 
     </Grid>

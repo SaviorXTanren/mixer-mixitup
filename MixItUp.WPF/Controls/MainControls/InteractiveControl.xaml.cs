@@ -123,6 +123,9 @@ namespace MixItUp.WPF.Controls.MainControls
         public InteractiveControl()
         {
             InitializeComponent();
+
+            GlobalEvents.OnInteractiveConnected += GlobalEvents_OnInteractiveConnected;
+            GlobalEvents.OnInteractiveDisconnected += GlobalEvents_OnInteractiveDisconnected;
         }
 
         protected override async Task InitializeInternal()
@@ -392,12 +395,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (result)
                 {
-                    this.InteractiveGamesComboBox.IsEnabled = false;
-                    this.GroupsButton.IsEnabled = false;
-                    this.RefreshButton.IsEnabled = false;
-
-                    this.ConnectButton.Visibility = Visibility.Collapsed;
-                    this.DisconnectButton.Visibility = Visibility.Visible;
+                    this.InteractiveGameConnected();
                     return;
                 }
                 else
@@ -423,12 +421,17 @@ namespace MixItUp.WPF.Controls.MainControls
                 await ChannelSession.Interactive.Disconnect();
             });
 
-            this.InteractiveGamesComboBox.IsEnabled = true;
-            this.GroupsButton.IsEnabled = true;
-            this.RefreshButton.IsEnabled = true;
+            this.InteractiveGameDisconnected();
+        }
 
-            this.ConnectButton.Visibility = Visibility.Visible;
-            this.DisconnectButton.Visibility = Visibility.Collapsed;
+        private void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameListingModel e)
+        {
+            this.Dispatcher.Invoke(() => this.InteractiveGameConnected());
+        }
+
+        private void GlobalEvents_OnInteractiveDisconnected(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(() => this.InteractiveGameDisconnected());
         }
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -437,6 +440,26 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.RefreshSelectedGame();
             });
+        }
+
+        private void InteractiveGameConnected()
+        {
+            this.InteractiveGamesComboBox.IsEnabled = false;
+            this.GroupsButton.IsEnabled = false;
+            this.RefreshButton.IsEnabled = false;
+
+            this.ConnectButton.Visibility = Visibility.Collapsed;
+            this.DisconnectButton.Visibility = Visibility.Visible;
+        }
+
+        private void InteractiveGameDisconnected()
+        {
+            this.InteractiveGamesComboBox.IsEnabled = true;
+            this.GroupsButton.IsEnabled = true;
+            this.RefreshButton.IsEnabled = true;
+
+            this.ConnectButton.Visibility = Visibility.Visible;
+            this.DisconnectButton.Visibility = Visibility.Collapsed;
         }
     }
 }

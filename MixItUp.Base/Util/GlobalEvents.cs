@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using Mixer.Base.Model.Interactive;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -50,6 +51,24 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnChatCommandMessageReceived != null)
             {
                 GlobalEvents.OnChatCommandMessageReceived(null, chatMessage);
+            }
+        }
+
+        public static event EventHandler<InteractiveGameListingModel> OnInteractiveConnected;
+        public static void InteractiveConnected(InteractiveGameListingModel game)
+        {
+            if (GlobalEvents.OnInteractiveConnected != null)
+            {
+                GlobalEvents.OnInteractiveConnected(null, game);
+            }
+        }
+
+        public static event EventHandler OnInteractiveDisconnected;
+        public static void InteractiveDisconnected()
+        {
+            if (GlobalEvents.OnInteractiveDisconnected != null)
+            {
+                GlobalEvents.OnInteractiveDisconnected(null, new EventArgs());
             }
         }
 
