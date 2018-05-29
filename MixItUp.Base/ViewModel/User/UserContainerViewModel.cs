@@ -2,7 +2,6 @@
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;

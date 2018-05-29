@@ -466,7 +466,10 @@ namespace MixItUp.Base.ViewModel.User
 
         private void SetMixerRoles(string[] userRoles)
         {
-            this.chatRoles = new List<string>(userRoles);
+            if (userRoles != null && userRoles.Count() > 0)
+            {
+                this.chatRoles = new List<string>(userRoles);
+            }
         }
     }
 }
