@@ -50,6 +50,11 @@ namespace MixItUp.Desktop.Services
             await this.SendAndReceive(request);
         }
 
+        public async Task StartStopStream()
+        {
+            string status = await this.GetResult<string>(new StreamlabsOBSRequest("toggleStreaming", "StreamingService"));
+        }
+
         private async Task<T> GetResult<T>(StreamlabsOBSRequest request)
         {
             JObject responseJObj = await this.SendAndReceive(request);

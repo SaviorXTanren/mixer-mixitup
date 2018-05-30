@@ -10,19 +10,6 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Actions
 {
-    public enum StreamingActionTypeEnum
-    {
-        Scene,
-        [Name("Source Visibility")]
-        SourceVisibility,
-        [Name("Text Source")]
-        TextSource,
-        [Name("Web Browser Source")]
-        WebBrowserSource,
-        [Name("Source Dimensions")]
-        SourceDimensions,
-    }
-
     /// <summary>
     /// Interaction logic for StreamingSoftwareActionControl.xaml
     /// </summary>
@@ -47,39 +34,36 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.StreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.SoftwareType);
+                this.StreamingActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.ActionType);
 
-                if (!string.IsNullOrEmpty(this.action.SceneName))
+                if (this.action.ActionType == StreamingActionTypeEnum.Scene)
                 {
-                    this.StreamingActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(StreamingActionTypeEnum.Scene);
                     this.SceneNameTextBox.Text = this.action.SceneName;
+                }
+                else if (this.action.ActionType == StreamingActionTypeEnum.StartStopStream)
+                {
+                    // Do nothing...
                 }
                 else
                 {
                     this.SourceNameTextBox.Text = this.action.SourceName;
                     this.SourceVisibleCheckBox.IsChecked = this.action.SourceVisible;
-                    if (!string.IsNullOrEmpty(this.action.SourceText))
+                    if (this.action.ActionType == StreamingActionTypeEnum.TextSource)
                     {
                         this.SourceTextTextBox.Text = this.action.SourceText;
                         this.SourceLoadTextFromTextBox.Text = this.action.SourceTextFilePath;
-                        this.StreamingActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(StreamingActionTypeEnum.TextSource);
                     }
-                    else if (!string.IsNullOrEmpty(this.action.SourceURL))
+                    else if (this.action.ActionType == StreamingActionTypeEnum.WebBrowserSource)
                     {
                         this.SourceWebPageTextBox.Text = this.action.SourceURL;
-                        this.StreamingActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(StreamingActionTypeEnum.WebBrowserSource);
                     }
-                    else if (this.action.SourceDimensions != null)
+                    else if (this.action.ActionType == StreamingActionTypeEnum.SourceDimensions)
                     {
-                        this.StreamingActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(StreamingActionTypeEnum.SourceDimensions);
                         this.SourceDimensionsXPositionTextBox.Text = this.action.SourceDimensions.X.ToString();
                         this.SourceDimensionsYPositionTextBox.Text = this.action.SourceDimensions.Y.ToString();
                         this.SourceDimensionsRotationTextBox.Text = this.action.SourceDimensions.Rotation.ToString();
                         this.SourceDimensionsXScaleTextBox.Text = this.action.SourceDimensions.XScale.ToString();
                         this.SourceDimensionsYScaleTextBox.Text = this.action.SourceDimensions.YScale.ToString();
-                    }
-                    else
-                    {
-                        this.StreamingActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(StreamingActionTypeEnum.SourceVisibility);
                     }
                 }
             }
@@ -98,13 +82,17 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     return StreamingSoftwareAction.CreateSceneAction(software, this.SceneNameTextBox.Text);
                 }
+                else if (type == StreamingActionTypeEnum.StartStopStream)
+                {
+                    return StreamingSoftwareAction.CreateStartStopStreamAction(software);
+                }
                 else if (!string.IsNullOrEmpty(this.SourceNameTextBox.Text))
                 {
                     if (type == StreamingActionTypeEnum.TextSource)
                     {
                         if (!string.IsNullOrEmpty(this.SourceTextTextBox.Text) && !string.IsNullOrEmpty(this.SourceLoadTextFromTextBox.Text))
                         {
-                            StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceTextAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceTextTextBox.Text, this.SourceLoadTextFromTextBox.Text);
+                            StreamingSoftwareAction action = StreamingSoftwareAction.CreateTextSourceAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceTextTextBox.Text, this.SourceLoadTextFromTextBox.Text);
                             action.UpdateReferenceTextFile(string.Empty);
                             return action;
                         }
@@ -113,7 +101,7 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (!string.IsNullOrEmpty(this.SourceWebPageTextBox.Text))
                         {
-                            return StreamingSoftwareAction.CreateSourceURLAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceWebPageTextBox.Text);
+                            return StreamingSoftwareAction.CreateWebBrowserSourceAction(software, this.SourceNameTextBox.Text, this.SourceVisibleCheckBox.IsChecked.GetValueOrDefault(), this.SourceWebPageTextBox.Text);
                         }
                     }
                     else if (type == StreamingActionTypeEnum.SourceDimensions)
@@ -154,12 +142,14 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (software == StreamingSoftwareTypeEnum.XSplit)
                 {
                     this.XSplitNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.XSplitServer == null) ? Visibility.Visible : Visibility.Collapsed;
-                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>(new List<StreamingActionTypeEnum>() { StreamingActionTypeEnum.Scene, StreamingActionTypeEnum.SourceVisibility, StreamingActionTypeEnum.TextSource, StreamingActionTypeEnum.WebBrowserSource });
+                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>(new List<StreamingActionTypeEnum>()
+                        { StreamingActionTypeEnum.Scene, StreamingActionTypeEnum.SourceVisibility, StreamingActionTypeEnum.TextSource, StreamingActionTypeEnum.WebBrowserSource });
                 }
                 else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
                 {
                     this.StreamlabsOBSNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.StreamlabsOBSService == null) ? Visibility.Visible : Visibility.Collapsed;
-                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>(new List<StreamingActionTypeEnum>() { StreamingActionTypeEnum.Scene, StreamingActionTypeEnum.SourceVisibility, StreamingActionTypeEnum.TextSource });
+                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>(new List<StreamingActionTypeEnum>()
+                        { StreamingActionTypeEnum.Scene, StreamingActionTypeEnum.SourceVisibility, StreamingActionTypeEnum.TextSource, StreamingActionTypeEnum.StartStopStream });
                 }
             }
         }
@@ -172,6 +162,10 @@ namespace MixItUp.WPF.Controls.Actions
                 if (type == StreamingActionTypeEnum.Scene)
                 {
                     this.SceneGrid.Visibility = Visibility.Visible;
+                }
+                else if (type == StreamingActionTypeEnum.StartStopStream)
+                {
+                    // Do nothing...
                 }
                 else
                 {

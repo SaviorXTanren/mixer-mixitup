@@ -23,6 +23,8 @@ namespace MixItUp.Base.Services
 
         void SetSourceDimensions(string source, StreamingSourceDimensions dimensions);
 
+        void StartEndStream();
+
         Task Close();
     }
 }

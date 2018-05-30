@@ -101,5 +101,7 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<StreamlabsOBSSceneItem>> GetSceneItems(StreamlabsOBSScene scene);
 
         Task SetSceneItemVisibility(StreamlabsOBSSceneItem sceneItem, bool visibility);
+
+        Task StartStopStream();
     }
 }

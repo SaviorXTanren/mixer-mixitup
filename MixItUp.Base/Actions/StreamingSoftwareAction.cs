@@ -24,6 +24,23 @@ namespace MixItUp.Base.Actions
         StreamlabsOBS,
     }
 
+    public enum StreamingActionTypeEnum
+    {
+        Scene,
+
+        [Name("Source Visibility")]
+        SourceVisibility,
+        [Name("Text Source")]
+        TextSource,
+        [Name("Web Browser Source")]
+        WebBrowserSource,
+        [Name("Source Dimensions")]
+        SourceDimensions,
+
+        [Name("Start/Stop Stream")]
+        StartStopStream,
+    }
+
     public class StreamingSourceDimensions
     {
         public int X;
@@ -44,30 +61,32 @@ namespace MixItUp.Base.Actions
 
         public static StreamingSoftwareAction CreateSceneAction(StreamingSoftwareTypeEnum softwareType, string sceneName)
         {
-            StreamingSoftwareAction action = new StreamingSoftwareAction(softwareType);
+            StreamingSoftwareAction action = new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.Scene);
             action.SceneName = sceneName;
             return action;
         }
 
         public static StreamingSoftwareAction CreateSourceVisibilityAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible)
         {
-            StreamingSoftwareAction action = new StreamingSoftwareAction(softwareType);
+            StreamingSoftwareAction action = new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.SourceVisibility);
             action.SourceName = sourceName;
             action.SourceVisible = sourceVisible;
             return action;
         }
 
-        public static StreamingSoftwareAction CreateSourceTextAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
+        public static StreamingSoftwareAction CreateTextSourceAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceText, string sourceTextFilePath)
         {
             StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            action.ActionType = StreamingActionTypeEnum.TextSource;
             action.SourceText = sourceText;
             action.SourceTextFilePath = sourceTextFilePath;
             return action;
         }
 
-        public static StreamingSoftwareAction CreateSourceURLAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceURL)
+        public static StreamingSoftwareAction CreateWebBrowserSourceAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, string sourceURL)
         {
             StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            action.ActionType = StreamingActionTypeEnum.WebBrowserSource;
             action.SourceURL = sourceURL;
             if (softwareType == StreamingSoftwareTypeEnum.XSplit)
             {
@@ -82,12 +101,20 @@ namespace MixItUp.Base.Actions
         public static StreamingSoftwareAction CreateSourceDimensionsAction(StreamingSoftwareTypeEnum softwareType, string sourceName, bool sourceVisible, StreamingSourceDimensions sourceDimensions)
         {
             StreamingSoftwareAction action = StreamingSoftwareAction.CreateSourceVisibilityAction(softwareType, sourceName, sourceVisible);
+            action.ActionType = StreamingActionTypeEnum.SourceDimensions;
             action.SourceDimensions = sourceDimensions;
             return action;
         }
 
+        public static StreamingSoftwareAction CreateStartStopStreamAction(StreamingSoftwareTypeEnum softwareType)
+        {
+            return new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.StartStopStream);
+        }
+
         [DataMember]
         public StreamingSoftwareTypeEnum SoftwareType { get; set; }
+        [DataMember]
+        public StreamingActionTypeEnum ActionType { get; set; }
 
         [DataMember]
         public string SceneName { get; set; }
@@ -110,7 +137,12 @@ namespace MixItUp.Base.Actions
 
         public StreamingSoftwareAction() : base(ActionTypeEnum.StreamingSoftware) { }
 
-        public StreamingSoftwareAction(StreamingSoftwareTypeEnum softwareType) : this() { this.SoftwareType = softwareType; }
+        public StreamingSoftwareAction(StreamingSoftwareTypeEnum softwareType, StreamingActionTypeEnum actionType)
+            : this()
+        {
+            this.SoftwareType = softwareType;
+            this.ActionType = actionType;
+        }
 
         public StreamingSoftwareTypeEnum SelectedStreamingSoftware { get { return (this.SoftwareType == StreamingSoftwareTypeEnum.DefaultSetting) ? ChannelSession.Settings.DefaultStreamingSoftware : this.SoftwareType; } }
 
@@ -137,13 +169,13 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (!string.IsNullOrEmpty(this.SourceText))
+            if (this.ActionType == StreamingActionTypeEnum.TextSource && !string.IsNullOrEmpty(this.SourceText))
             {
                 this.UpdateReferenceTextFile(await this.ReplaceStringWithSpecialModifiers(this.SourceText, user, arguments));
             }
 
             string url = string.Empty;
-            if (!string.IsNullOrEmpty(this.SourceURL))
+            if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
             {
                 url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
             }
@@ -157,18 +189,21 @@ namespace MixItUp.Base.Actions
 
                 if (ChannelSession.Services.OBSWebsocket != null)
                 {
-                    if (!string.IsNullOrEmpty(this.SceneName))
+                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
+                    {
+                        ChannelSession.Services.OBSWebsocket.StartEndStream();
+                    }
+                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
                     {
                         ChannelSession.Services.OBSWebsocket.SetCurrentScene(this.SceneName);
                     }
-
-                    if (!string.IsNullOrEmpty(this.SourceName))
+                    else if (!string.IsNullOrEmpty(this.SourceName))
                     {
-                        if (!string.IsNullOrEmpty(this.SourceURL))
+                        if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                         {
                             ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(this.SourceName, url);
                         }
-                        else if (this.SourceDimensions != null)
+                        else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                         {
                             ChannelSession.Services.OBSWebsocket.SetSourceDimensions(this.SourceName, this.SourceDimensions);
                         }
@@ -185,14 +220,17 @@ namespace MixItUp.Base.Actions
 
                 if (ChannelSession.Services.XSplitServer != null)
                 {
-                    if (!string.IsNullOrEmpty(this.SceneName))
+                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
+                    {
+                        // Do nothing...
+                    }
+                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
                     {
                         await ChannelSession.Services.XSplitServer.SetCurrentScene(new XSplitScene() { sceneName = this.SceneName });
                     }
-
-                    if (!string.IsNullOrEmpty(this.SourceName))
+                    else if (!string.IsNullOrEmpty(this.SourceName))
                     {
-                        if (!string.IsNullOrEmpty(this.SourceURL))
+                        if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                         {
                             await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible, webBrowserUrl = url });
                         }
@@ -209,7 +247,11 @@ namespace MixItUp.Base.Actions
 
                 if (ChannelSession.Services.StreamlabsOBSService != null)
                 {
-                    if (!string.IsNullOrEmpty(this.SceneName))
+                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
+                    {
+                        await ChannelSession.Services.StreamlabsOBSService.StartStopStream();
+                    }
+                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
                     {
                         IEnumerable<StreamlabsOBSScene> scenes = await ChannelSession.Services.StreamlabsOBSService.GetScenes();
                         StreamlabsOBSScene selectedScene = scenes.FirstOrDefault(s => s.Name.Equals(this.SceneName));
@@ -218,8 +260,7 @@ namespace MixItUp.Base.Actions
                             await ChannelSession.Services.StreamlabsOBSService.MakeSceneActive(selectedScene);
                         }
                     }
-
-                    if (!string.IsNullOrEmpty(this.SourceName))
+                    else if (!string.IsNullOrEmpty(this.SourceName))
                     {
                         StreamlabsOBSScene activeScene = await ChannelSession.Services.StreamlabsOBSService.GetActiveScene();
                         if (activeScene != null)

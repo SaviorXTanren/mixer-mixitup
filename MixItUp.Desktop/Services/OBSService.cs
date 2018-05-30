@@ -122,6 +122,23 @@ namespace MixItUp.OBS
             catch (Exception ex) { Logger.Log(ex); }
         }
 
+        public void StartEndStream()
+        {
+            try
+            {
+                OutputStatus status = this.OBSWebsocket.GetStreamingStatus();
+                if (status.IsStreaming)
+                {
+                    this.OBSWebsocket.StopStreaming();
+                }
+                else
+                {
+                    this.OBSWebsocket.StartStreaming();
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
         public Task Close()
         {
             if (this.OBSWebsocket != null)

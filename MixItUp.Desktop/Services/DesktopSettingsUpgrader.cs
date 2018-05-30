@@ -423,11 +423,11 @@ namespace MixItUp.Desktop.Services
                             }
                             else if (!string.IsNullOrEmpty(text))
                             {
-                                sAction = StreamingSoftwareAction.CreateSourceTextAction(type, source, visible, text, textPath);
+                                sAction = StreamingSoftwareAction.CreateTextSourceAction(type, source, visible, text, textPath);
                             }
                             else if (!string.IsNullOrEmpty(url))
                             {
-                                sAction = StreamingSoftwareAction.CreateSourceURLAction(type, source, visible, url);
+                                sAction = StreamingSoftwareAction.CreateWebBrowserSourceAction(type, source, visible, url);
                             }
                             else if (dimensions != null)
                             {
