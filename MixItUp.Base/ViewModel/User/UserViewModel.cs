@@ -138,6 +138,11 @@ namespace MixItUp.Base.ViewModel.User
             {
                 lock (this.mixerRoles)
                 {
+                    if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue && !this.mixerRoles.Contains(MixerRoleEnum.Follower))
+                    {
+                        this.mixerRoles.Add(MixerRoleEnum.Follower);
+                    }
+
                     return new HashSet<MixerRoleEnum>(mixerRoles);
                 }
             }
@@ -424,11 +429,6 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     this.mixerRoles.Add(MixerRoleEnum.Subscriber);
                     this.mixerRoles.Add(MixerRoleEnum.Mod);
-                    this.mixerRoles.Add(MixerRoleEnum.Follower);
-                }
-
-                if (this.FollowDate != null && this.FollowDate.GetValueOrDefault() > DateTimeOffset.MinValue)
-                {
                     this.mixerRoles.Add(MixerRoleEnum.Follower);
                 }
 
