@@ -1,9 +1,11 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Services;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -149,7 +151,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.StreamlabsOBSNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.StreamlabsOBSService == null) ? Visibility.Visible : Visibility.Collapsed;
                     this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>(new List<StreamingActionTypeEnum>()
-                        { StreamingActionTypeEnum.Scene, StreamingActionTypeEnum.SourceVisibility, StreamingActionTypeEnum.TextSource, StreamingActionTypeEnum.StartStopStream });
+                        { StreamingActionTypeEnum.Scene, StreamingActionTypeEnum.SourceVisibility, StreamingActionTypeEnum.TextSource, StreamingActionTypeEnum.SourceDimensions, StreamingActionTypeEnum.StartStopStream });
                 }
             }
         }
@@ -213,26 +215,52 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.StreamingSoftwareComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.SourceNameTextBox.Text))
             {
-                StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
-                if (software == StreamingSoftwareTypeEnum.OBSStudio)
+                await this.containerControl.RunAsyncOperation(async () =>
                 {
-                    await this.containerControl.RunAsyncOperation(async () =>
+                    StreamingSourceDimensions dimensions = null;
+
+                    StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
+                    if (software == StreamingSoftwareTypeEnum.OBSStudio)
                     {
                         if (ChannelSession.Services.OBSWebsocket != null || await ChannelSession.Services.InitializeOBSWebsocket())
                         {
-                            StreamingSourceDimensions dimensions = ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceNameTextBox.Text);
-                            this.SourceDimensionsXPositionTextBox.Text = dimensions.X.ToString();
-                            this.SourceDimensionsYPositionTextBox.Text = dimensions.Y.ToString();
-                            this.SourceDimensionsRotationTextBox.Text = dimensions.Rotation.ToString();
-                            this.SourceDimensionsXScaleTextBox.Text = dimensions.XScale.ToString();
-                            this.SourceDimensionsYScaleTextBox.Text = dimensions.YScale.ToString();
+                            dimensions = ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceNameTextBox.Text);
                         }
                         else
                         {
                             await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
                         }
-                    });
-                }
+                    }
+                    else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
+                    {
+                        StreamlabsOBSScene activeScene = await ChannelSession.Services.StreamlabsOBSService.GetActiveScene();
+                        if (activeScene != null)
+                        {
+                            IEnumerable<StreamlabsOBSSceneItem> sceneItems = await ChannelSession.Services.StreamlabsOBSService.GetSceneItems(activeScene);
+                            StreamlabsOBSSceneItem selectedSceneItem = sceneItems.FirstOrDefault(s => s.Name.Equals(this.SourceNameTextBox.Text));
+                            if (selectedSceneItem != null)
+                            {
+                                dimensions = new StreamingSourceDimensions()
+                                {
+                                    X = (int)selectedSceneItem.Transform.Position.X,
+                                    Y = (int)selectedSceneItem.Transform.Position.Y,
+                                    XScale = (int)selectedSceneItem.Transform.Scale.X,
+                                    YScale = (int)selectedSceneItem.Transform.Scale.X,
+                                    Rotation = (int)selectedSceneItem.Transform.Rotation
+                                };
+                            }
+                        }
+                    }
+
+                    if (dimensions != null)
+                    {
+                        this.SourceDimensionsXPositionTextBox.Text = dimensions.X.ToString();
+                        this.SourceDimensionsYPositionTextBox.Text = dimensions.Y.ToString();
+                        this.SourceDimensionsRotationTextBox.Text = dimensions.Rotation.ToString();
+                        this.SourceDimensionsXScaleTextBox.Text = dimensions.XScale.ToString();
+                        this.SourceDimensionsYScaleTextBox.Text = dimensions.YScale.ToString();
+                    }
+                });
             }
         }
 

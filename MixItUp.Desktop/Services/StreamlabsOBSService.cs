@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Services;
+﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -47,6 +48,27 @@ namespace MixItUp.Desktop.Services
         {
             StreamlabsOBSRequest request = new StreamlabsOBSRequest("setVisibility", sceneItem.ResourceID);
             request.Arguments.Add(visibility);
+            await this.SendAndReceive(request);
+        }
+
+        public async Task SetSceneItemDimensions(StreamlabsOBSSceneItem sceneItem, StreamingSourceDimensions dimensions)
+        {
+            StreamlabsOBSRequest request = new StreamlabsOBSRequest("setTransform", sceneItem.ResourceID);
+
+            JObject positionJObj = new JObject();
+            positionJObj["x"] = dimensions.X;
+            positionJObj["y"] = dimensions.Y;
+
+            JObject scaleObj = new JObject();
+            scaleObj["x"] = dimensions.XScale;
+            scaleObj["y"] = dimensions.YScale;
+
+            JObject jobj = new JObject();
+            jobj["position"] = positionJObj;
+            jobj["scale"] = scaleObj;
+            jobj["rotation"] = dimensions.Rotation;
+
+            request.Arguments.Add(jobj);
             await this.SendAndReceive(request);
         }
 

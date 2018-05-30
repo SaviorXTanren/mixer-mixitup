@@ -269,6 +269,10 @@ namespace MixItUp.Base.Actions
                             StreamlabsOBSSceneItem selectedSceneItem = sceneItems.FirstOrDefault(s => s.Name.Equals(this.SourceName));
                             if (selectedSceneItem != null)
                             {
+                                if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
+                                {
+                                    await ChannelSession.Services.StreamlabsOBSService.SetSceneItemDimensions(selectedSceneItem, this.SourceDimensions);
+                                }
                                 await ChannelSession.Services.StreamlabsOBSService.SetSceneItemVisibility(selectedSceneItem, this.SourceVisible);
                             }
                         }

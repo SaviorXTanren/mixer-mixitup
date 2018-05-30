@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MixItUp.Base.Actions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -31,8 +32,34 @@ namespace MixItUp.Base.Services
         [JsonProperty("muted")]
         public bool Muted { get; set; }
 
+        [JsonProperty("transform")]
+        public StreamlabsOBSSceneItemTransform Transform { get; set; }
+
         [JsonProperty("visible")]
         public bool Visible { get; set; }
+    }
+
+    [DataContract]
+    public class StreamlabsOBSSceneItemTransform
+    {
+        [JsonProperty("position")]
+        public StreamlabsOBSSceneItemTransformXY Position { get; set; }
+
+        [JsonProperty("scale")]
+        public StreamlabsOBSSceneItemTransformXY Scale { get; set; }
+
+        [JsonProperty("rotation")]
+        public double Rotation { get; set; }
+    }
+
+    [DataContract]
+    public class StreamlabsOBSSceneItemTransformXY
+    {
+        [JsonProperty("x")]
+        public double X { get; set; }
+
+        [JsonProperty("y")]
+        public double Y { get; set; }
     }
 
     [DataContract]
@@ -101,6 +128,8 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<StreamlabsOBSSceneItem>> GetSceneItems(StreamlabsOBSScene scene);
 
         Task SetSceneItemVisibility(StreamlabsOBSSceneItem sceneItem, bool visibility);
+
+        Task SetSceneItemDimensions(StreamlabsOBSSceneItem sceneItem, StreamingSourceDimensions dimensions);
 
         Task StartStopStream();
     }
