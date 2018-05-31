@@ -43,6 +43,10 @@
 
         </Grid>
 
+        <Grid x:Name="FeatureNotSupportedGrid" Grid.Row="2" Visibility="Collapsed">
+            <TextBlock Foreground="Red" HorizontalAlignment="Center">This feature is not currently supported for this Streaming Software</TextBlock>
+        </Grid>
+
         <Grid x:Name="SourceGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

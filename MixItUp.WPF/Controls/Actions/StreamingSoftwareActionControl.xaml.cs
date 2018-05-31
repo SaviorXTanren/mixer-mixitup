@@ -27,6 +27,7 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.StreamingSoftwareComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingSoftwareTypeEnum>();
+            this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>();
 
             this.StreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(StreamingSoftwareTypeEnum.DefaultSetting);
             this.SourceVisibleCheckBox.IsChecked = true;
@@ -139,24 +140,22 @@ namespace MixItUp.WPF.Controls.Actions
                 if (software == StreamingSoftwareTypeEnum.OBSStudio)
                 {
                     this.OBSStudioNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.OBSWebsocket == null) ? Visibility.Visible : Visibility.Collapsed;
-                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>();
                 }
                 else if (software == StreamingSoftwareTypeEnum.XSplit)
                 {
                     this.XSplitNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.XSplitServer == null) ? Visibility.Visible : Visibility.Collapsed;
-                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>(new List<StreamingActionTypeEnum>()
-                        { StreamingActionTypeEnum.Scene, StreamingActionTypeEnum.SourceVisibility, StreamingActionTypeEnum.TextSource, StreamingActionTypeEnum.WebBrowserSource });
                 }
                 else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
                 {
                     this.StreamlabsOBSNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.StreamlabsOBSService == null) ? Visibility.Visible : Visibility.Collapsed;
-                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>();
                 }
+                this.StreamingActionTypeComboBox.SelectedIndex = -1;
             }
         }
 
         private void StreamingActionTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.FeatureNotSupportedGrid.Visibility = Visibility.Collapsed;
             this.SceneGrid.Visibility = Visibility.Collapsed;
             this.SourceGrid.Visibility = Visibility.Collapsed;
             this.SourceTextGrid.Visibility = Visibility.Collapsed;
@@ -165,6 +164,7 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.StreamingActionTypeComboBox.SelectedIndex >= 0)
             {
+                StreamingSoftwareTypeEnum software = this.GetSelectedSoftware();
                 StreamingActionTypeEnum type = EnumHelper.GetEnumValueFromString<StreamingActionTypeEnum>((string)this.StreamingActionTypeComboBox.SelectedItem);
                 if (type == StreamingActionTypeEnum.Scene)
                 {
@@ -172,11 +172,18 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (type == StreamingActionTypeEnum.StartStopStream)
                 {
-                    // Do nothing...
+                    if (software == StreamingSoftwareTypeEnum.XSplit)
+                    {
+                        this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
+                        return;
+                    }
+                    else
+                    {
+                        // Do nothing...
+                    }
                 }
                 else
                 {
-                    this.SourceGrid.Visibility = Visibility.Visible;
                     if (type == StreamingActionTypeEnum.TextSource)
                     {
                         this.SourceTextGrid.Visibility = Visibility.Visible;
@@ -187,8 +194,17 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     else if (type == StreamingActionTypeEnum.SourceDimensions)
                     {
-                        this.SourceDimensionsGrid.Visibility = Visibility.Visible;
+                        if (software == StreamingSoftwareTypeEnum.XSplit)
+                        {
+                            this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
+                            return;
+                        }
+                        else
+                        {
+                            this.SourceDimensionsGrid.Visibility = Visibility.Visible;
+                        }
                     }
+                    this.SourceGrid.Visibility = Visibility.Visible;
                 }
             }
         }

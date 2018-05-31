@@ -235,6 +235,10 @@ namespace MixItUp.Base.Actions
                         {
                             await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible, webBrowserUrl = url });
                         }
+                        else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
+                        {
+                            // Do nothing...
+                        }
                         await ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
                     }
                 }
