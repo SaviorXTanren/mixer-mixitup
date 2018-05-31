@@ -119,6 +119,8 @@ namespace MixItUp.Base.MixerAPI
     {
         private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
 
+        private static UserViewModel defaultInteractiveUser = new UserViewModel(0, "Unknown User");
+
         public event EventHandler<InteractiveGiveInputModel> OnGiveInput = delegate { };
         public event EventHandler<InteractiveConnectedSceneModel> OnControlDelete = delegate { };
         public event EventHandler<InteractiveConnectedSceneModel> OnControlCreate = delegate { };
@@ -243,7 +245,7 @@ namespace MixItUp.Base.MixerAPI
             do
             {
                 collection = await this.RunAsync(this.Client.GetAllParticipants(startTime));
-                if (collection != null)
+                if (collection != null && collection.participants != null)
                 {
                     foreach (InteractiveParticipantModel participant in collection.participants)
                     {
@@ -535,10 +537,24 @@ namespace MixItUp.Base.MixerAPI
                             return;
                         }
 
-                        UserViewModel user = await ChannelSession.ChannelUsers.GetUser(e.participantID);
+                        UserViewModel user = null;
+                        if (!string.IsNullOrEmpty(e.participantID))
+                        {
+                            user = await ChannelSession.ChannelUsers.GetUser(e.participantID);
+                            if (user == null)
+                            {
+                                IEnumerable<InteractiveParticipantModel> recentParticipants = await this.GetRecentParticipants();
+                                InteractiveParticipantModel participant = recentParticipants.FirstOrDefault(p => p.sessionID.Equals(e.participantID));
+                                if (participant != null)
+                                {
+                                    user = await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
+                                }
+                            }
+                        }
+
                         if (user == null)
                         {
-                            user = ChannelSession.GetCurrentUser();
+                            user = InteractiveClientWrapper.defaultInteractiveUser;
                         }
 
                         if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
