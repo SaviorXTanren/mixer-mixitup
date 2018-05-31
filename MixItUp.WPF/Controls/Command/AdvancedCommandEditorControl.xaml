@@ -34,7 +34,9 @@
 
         <Grid Grid.Row="0" x:Name="CommandDetailsGrid" Margin="0,0,0,10" />
 
-        <ListView x:Name="ActionsListView" Grid.Row="1" Visibility="Visible" ItemContainerStyle="{StaticResource BorderedListViewItem}" HorizontalContentAlignment="Stretch" />
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+            <ListView x:Name="ActionsListView" ItemContainerStyle="{StaticResource BorderedListViewItem}" HorizontalContentAlignment="Stretch" />
+        </ScrollViewer>
 
         <Grid Grid.Row="4" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
