@@ -30,7 +30,7 @@
 
         <div id="youtubePlayerDiv" style="position: relative; left: -1000px"></div>
 
-        <iframe id="soundcloudPlayerIFrame" width="300" height="166" style="position: relative; left: -1000px" scrolling="no" frameborder="0" src="https://w.soundcloud.com/player/?visual=true"></iframe>
+        <iframe id="soundcloudPlayerIFrame" width="300" height="166" style="position: relative; left: -1000px" scrolling="no" frameBorder="0" src="https://w.soundcloud.com/player/?visual=true"></iframe>
 
         <script>
             $.fn.extend({
@@ -114,6 +114,9 @@
                         else if (packet.type === "htmlText") {
                             htmlTextPacket(packet.data);
                         }
+                        else if (packet.type === "webPage") {
+                            webPagePacket(packet.data);
+                        }
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
@@ -158,7 +161,7 @@
                 var addedElement = document.createElement('iframe');
                 addedElement.width = data.Width;
                 addedElement.height = data.Height;
-                addedElement.frameborder = 0;
+                addedElement.frameBorder = 0;
                 addedElement.allow = "autoplay; encrypted-media";
                 addedElement.setAttribute('allowFullScreen', '');
                 addedElement.setAttribute('autoplay', '');
@@ -171,7 +174,7 @@
                 var addedElement = document.createElement('video');
                 addedElement.width = data.Width;
                 addedElement.height = data.Height;
-                addedElement.frameborder = 0;
+                addedElement.frameBorder = 0;
                 addedElement.allow = "autoplay; encrypted-media";
                 addedElement.setAttribute('autoplay', '');
 
@@ -191,6 +194,16 @@
             function htmlTextPacket(data) {
                 var addedElement = document.createElement('div');
                 addedElement.innerHTML = data.HTMLText;
+
+                addWaitRemoveElement(data, addedElement);
+            }
+
+            function webPagePacket(data) {
+                var addedElement = document.createElement('iframe');
+                addedElement.src = data.URL;
+                addedElement.width = data.Width;
+                addedElement.height = data.Height;
+                addedElement.frameBorder = 0;
 
                 addWaitRemoveElement(data, addedElement);
             }

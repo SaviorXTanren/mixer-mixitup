@@ -15,8 +15,10 @@ namespace MixItUp.Base.Actions
         Text,
         Image,
         Video,
-        Youtube,
+        YouTube,
         HTML,
+        [Name("Web Page")]
+        WebPage
     }
 
     public enum OverlayEffectEntranceAnimationTypeEnum
@@ -306,7 +308,7 @@ namespace MixItUp.Base.Actions
 
         public OverlayYoutubeEffect(string id, int startTime, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
             OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.Youtube, entrance, visible, exit, duration, horizontal, vertical)
+            : base(OverlayEffectTypeEnum.YouTube, entrance, visible, exit, duration, horizontal, vertical)
         {
             this.ID = id;
             this.StartTime = startTime;
@@ -328,6 +330,28 @@ namespace MixItUp.Base.Actions
             : base(OverlayEffectTypeEnum.HTML, entrance, visible, exit, duration, horizontal, vertical)
         {
             this.HTMLText = htmlText;
+        }
+    }
+
+    [DataContract]
+    public class OverlayWebPageEffect : OverlayEffectBase
+    {
+        [DataMember]
+        public string URL { get; set; }
+        [DataMember]
+        public int Width { get; set; }
+        [DataMember]
+        public int Height { get; set; }
+
+        public OverlayWebPageEffect() { }
+
+        public OverlayWebPageEffect(string url, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
+            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.WebPage, entrance, visible, exit, duration, horizontal, vertical)
+        {
+            this.URL = url;
+            this.Width = width;
+            this.Height = height;
         }
     }
 
@@ -452,7 +476,15 @@ namespace MixItUp.Base.Actions
                     string htmlText = await this.ReplaceStringWithSpecialModifiers(htmlEffect.HTMLText, user, arguments);
                     OverlayHTMLEffect copy = htmlEffect.Copy<OverlayHTMLEffect>();
                     copy.HTMLText = htmlText;
-                    await ChannelSession.Services.OverlayServer.SendHTMLText(copy);
+                    await ChannelSession.Services.OverlayServer.SendHTML(copy);
+                }
+                else if (this.Effect is OverlayWebPageEffect)
+                {
+                    OverlayWebPageEffect webPageEffect = (OverlayWebPageEffect)this.Effect;
+                    string url = await this.ReplaceStringWithSpecialModifiers(webPageEffect.URL, user, arguments);
+                    OverlayWebPageEffect copy = webPageEffect.Copy<OverlayWebPageEffect>();
+                    copy.URL = url;
+                    await ChannelSession.Services.OverlayServer.SendWebPage(copy);
                 }
             }
         }

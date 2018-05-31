@@ -11,24 +11,34 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Column="0" Foreground="Red" HorizontalAlignment="Center" Visibility="Collapsed" Margin="0,0,0,10">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
-
-        <Grid Grid.Row="1" Margin="0,0,0,10">
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="OverlayTypeComboBox" Grid.Column="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+            <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
 
-            <Grid Grid.Column="2" x:Name="OverlayTextGrid1" Visibility="Collapsed" HorizontalAlignment="Center">
+            <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" HorizontalAlignment="Right" Visibility="Hidden">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
+        </Grid>
+
+        <Grid x:Name="TextGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="20" />
@@ -37,28 +47,57 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="OverlayFontSizeTextBox" MaterialDesign:HintAssist.Hint="Font Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" x:Name="FontSizeTextBox" MaterialDesign:HintAssist.Hint="Font Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <ComboBox Grid.Column="2" x:Name="OverlayFontColorComboBox" MaterialDesign:HintAssist.Hint="Color Name" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                <ComboBox Grid.Column="2" x:Name="FontColorComboBox" MaterialDesign:HintAssist.Hint="Color Name" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
                 <TextBlock Grid.Column="4" VerticalAlignment="Center">
                     <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
                 </TextBlock>
             </Grid>
 
-            <Grid Grid.Column="2" x:Name="OverlayImageGrid1" Visibility="Collapsed" HorizontalAlignment="Center">
+            <TextBox x:Name="TextTextBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid x:Name="ImageGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="OverlayImageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+                <TextBox Grid.Column="0" x:Name="ImageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
 
-                <TextBox Grid.Column="2" x:Name="OverlayImageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+                <TextBox Grid.Column="2" x:Name="ImageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
             </Grid>
 
-            <Grid Grid.Column="2" x:Name="OverlayYoutubeGrid1" Visibility="Collapsed" HorizontalAlignment="Center">
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="ImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path / URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Column="2" x:Name="ImageFileBrowseButton" Click="ImageFileBrowseButton_Click">Browse</Button>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="YouTubeGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="30" />
@@ -67,61 +106,83 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="OverlayYoutubeStartTimeTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Start Time (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+                <TextBox x:Name="YoutubeStartTimeTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Start Time (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
-                <TextBox x:Name="OverlayYoutubeWidthTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+                <TextBox x:Name="YoutubeWidthTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
-                <TextBox x:Name="OverlayYoutubeHeightTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+                <TextBox x:Name="YoutubeHeightTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
             </Grid>
 
-            <Grid Grid.Column="2" x:Name="OverlayVideoGrid1" Visibility="Collapsed" HorizontalAlignment="Center">
+            <TextBox x:Name="YoutubeVideoIDTextBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="Youtube Video URL/ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid x:Name="VideoGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="OverlayVideoWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+                <TextBox Grid.Column="0" x:Name="VideoWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
 
-                <TextBox Grid.Column="2" x:Name="OverlayVideoHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150"/>
+                <TextBox Grid.Column="2" x:Name="VideoHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150"/>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="VideoFilePathTextBox" MaterialDesign:HintAssist.Hint="Video File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Column="2" x:Name="VideoFileBrowseButton" Click="VideoFileBrowseButton_Click">Browse</Button>
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="OverlayImageGrid2" Margin="0,10,0,10" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <Grid x:Name="WebPageGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="OverlayImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path / URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            <Button Grid.Column="2" x:Name="OverlayImageFileBrowseButton" Click="OverlayImageFileBrowseButton_Click">Browse</Button>
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="30" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="WebPageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+
+                <TextBox Grid.Column="2" x:Name="WebPageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150"/>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="WebPageFilePathTextBox" MaterialDesign:HintAssist.Hint="Web Page (URL or Local File)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <Button Grid.Column="2" x:Name="WebPageFileBrowseButton" Click="WebPageFileBrowseButton_Click">Browse</Button>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="OverlayTextGrid2" Margin="0,10,0,10" Visibility="Collapsed">
-            <TextBox x:Name="OverlayTextTextBox" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <Grid Grid.Row="2" x:Name="HTMLGrid" Margin="0,10,0,10" Visibility="Collapsed">
+            <TextBox x:Name="HTMLTextBox" MaterialDesign:HintAssist.Hint="HTML Text" Style="{StaticResource MultiLineTextBox}" Height="150" />
         </Grid>
 
-        <Grid Grid.Row="2" x:Name="OverlayYoutubeGrid2" Margin="0,10,0,10" Visibility="Collapsed">
-            <TextBox x:Name="OverlayYoutubeVideoIDTextBox" MaterialDesign:HintAssist.Hint="Youtube Video URL/ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        </Grid>
-
-        <Grid Grid.Row="2" x:Name="OverlayVideoGrid2" Margin="0,10,0,10" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBox Grid.Column="0" x:Name="OverlayVideoFilePathTextBox" MaterialDesign:HintAssist.Hint="Video File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            <Button Grid.Column="2" x:Name="OverlayVideoFileBrowseButton" Click="OverlayVideoFileBrowseButton_Click">Browse</Button>
-        </Grid>
-
-        <Grid Grid.Row="2" x:Name="OverlayHTMLGrid" Margin="0,10,0,10" Visibility="Collapsed">
-            <TextBox x:Name="OverlayHTMLTextBox" MaterialDesign:HintAssist.Hint="HTML Text" Style="{StaticResource MultiLineTextBox}" Height="150" />
-        </Grid>
-
-        <Grid Grid.Row="3" x:Name="OverlayDurationAndAnimationsGrid" Visibility="Collapsed" Margin="0,10,0,10" HorizontalAlignment="Center">
+        <Grid Grid.Row="4" x:Name="DurationAndAnimationsGrid" Visibility="Collapsed" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="30" />
@@ -132,26 +193,26 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="OverlayDurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+            <TextBox Grid.Column="0" x:Name="DurationTextBox" MaterialDesign:HintAssist.Hint="Duration (Sec)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-            <ComboBox x:Name="OverlayEntranceAnimationComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Entrance Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+            <ComboBox x:Name="EntranceAnimationComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Entrance Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <ComboBox x:Name="OverlayVisibleAnimationComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Visible Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+            <ComboBox x:Name="VisibleAnimationComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Visible Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <ComboBox x:Name="OverlayExitAnimationComboBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Exit Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+            <ComboBox x:Name="ExitAnimationComboBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Exit Animation" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
         </Grid>
 
-        <Grid Grid.Row="4" x:Name="OverlayPositionGrid" Visibility="Collapsed" Margin="0,10,0,0">
+        <Grid Grid.Row="6" x:Name="PositionGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Controls:SliderWithHeaderControl Grid.Column="0" x:Name="OverlayHorizontalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Position % From Left:" />
+            <Controls:SliderWithHeaderControl Grid.Column="0" x:Name="HorizontalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Position % From Left:" />
 
-            <Controls:SliderWithHeaderControl Grid.Column="2" x:Name="OverlayVerticalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Position % From Top:" />
+            <Controls:SliderWithHeaderControl Grid.Column="2" x:Name="VerticalSlider" Grid.Row="0" Minimum="0" Maximum="100" Text="Position % From Top:" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

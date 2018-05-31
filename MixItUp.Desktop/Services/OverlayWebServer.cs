@@ -122,7 +122,9 @@ namespace MixItUp.Overlay
             await this.SendPacket("video", effect);
         }
 
-        public async Task SendHTMLText(OverlayHTMLEffect effect) { await this.SendPacket("htmlText", effect); }
+        public async Task SendHTML(OverlayHTMLEffect effect) { await this.SendPacket("htmlText", effect); }
+
+        public async Task SendWebPage(OverlayWebPageEffect effect) { await this.SendPacket("webPage", effect); }
 
         public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket("textToSpeech", textToSpeech); }
 

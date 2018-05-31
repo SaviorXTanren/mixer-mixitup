@@ -53,7 +53,9 @@ namespace MixItUp.Base.Services
 
         Task SendLocalVideo(OverlayVideoEffect effect);
 
-        Task SendHTMLText(OverlayHTMLEffect effect);
+        Task SendHTML(OverlayHTMLEffect effect);
+
+        Task SendWebPage(OverlayWebPageEffect effect);
 
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
 
