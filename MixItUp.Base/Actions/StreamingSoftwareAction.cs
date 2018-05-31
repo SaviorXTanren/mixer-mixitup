@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -269,7 +270,26 @@ namespace MixItUp.Base.Actions
                             StreamlabsOBSSceneItem selectedSceneItem = sceneItems.FirstOrDefault(s => s.Name.Equals(this.SourceName));
                             if (selectedSceneItem != null)
                             {
-                                if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
+                                if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
+                                {
+                                    StreamlabsOBSSource source = await ChannelSession.Services.StreamlabsOBSService.GetSource(selectedSceneItem);
+                                    if (source != null && source.Type.Equals("browser_source"))
+                                    {
+                                        IEnumerable<JObject> sourceProperties = await ChannelSession.Services.StreamlabsOBSService.GetSourceProperties(source);
+                                        if (sourceProperties != null)
+                                        {
+                                            foreach (JObject sourceProperty in sourceProperties)
+                                            {
+                                                if (sourceProperty["name"] != null && sourceProperty["name"].ToString().Equals("url"))
+                                                {
+                                                    sourceProperty["value"] = url;
+                                                }
+                                            }
+                                            await ChannelSession.Services.StreamlabsOBSService.SetSourceProperties(source, sourceProperties);
+                                        }
+                                    }
+                                }
+                                else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                                 {
                                     await ChannelSession.Services.StreamlabsOBSService.SetSceneItemDimensions(selectedSceneItem, this.SourceDimensions);
                                 }

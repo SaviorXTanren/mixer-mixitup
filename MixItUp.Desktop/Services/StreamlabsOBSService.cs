@@ -72,9 +72,33 @@ namespace MixItUp.Desktop.Services
             await this.SendAndReceive(request);
         }
 
+        public async Task<StreamlabsOBSSource> GetSource(StreamlabsOBSSceneItem sceneItem)
+        {
+            StreamlabsOBSRequest request = new StreamlabsOBSRequest("getSource", sceneItem.ResourceID);
+            request.Arguments.Add(sceneItem.SourceID);
+            return await this.GetResult<StreamlabsOBSSource>(request);
+        }
+
+        public async Task<IEnumerable<JObject>> GetSourceProperties(StreamlabsOBSSource source)
+        {
+            return await this.GetArrayResult<JObject>(new StreamlabsOBSRequest("getPropertiesFormData", source.ResourceID));
+        }
+
+        public async Task SetSourceProperties(StreamlabsOBSSource source, IEnumerable<JObject> properties)
+        {
+            StreamlabsOBSRequest request = new StreamlabsOBSRequest("setPropertiesFormData", source.ResourceID);
+            JArray array = new JArray();
+            foreach (JObject property in properties)
+            {
+                array.Add(property);
+            }
+            request.Arguments.Add(array);
+            await this.SendAndReceive(request);
+        }
+
         public async Task StartStopStream()
         {
-            string status = await this.GetResult<string>(new StreamlabsOBSRequest("toggleStreaming", "StreamingService"));
+            await this.SendAndReceive(new StreamlabsOBSRequest("toggleStreaming", "StreamingService"));
         }
 
         private async Task<T> GetResult<T>(StreamlabsOBSRequest request)

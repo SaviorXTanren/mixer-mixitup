@@ -150,14 +150,19 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
                 {
                     this.StreamlabsOBSNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.StreamlabsOBSService == null) ? Visibility.Visible : Visibility.Collapsed;
-                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>(new List<StreamingActionTypeEnum>()
-                        { StreamingActionTypeEnum.Scene, StreamingActionTypeEnum.SourceVisibility, StreamingActionTypeEnum.TextSource, StreamingActionTypeEnum.SourceDimensions, StreamingActionTypeEnum.StartStopStream });
+                    this.StreamingActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingActionTypeEnum>();
                 }
             }
         }
 
         private void StreamingActionTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.SceneGrid.Visibility = Visibility.Collapsed;
+            this.SourceGrid.Visibility = Visibility.Collapsed;
+            this.SourceTextGrid.Visibility = Visibility.Collapsed;
+            this.SourceWebBrowserGrid.Visibility = Visibility.Collapsed;
+            this.SourceDimensionsGrid.Visibility = Visibility.Collapsed;
+
             if (this.StreamingActionTypeComboBox.SelectedIndex >= 0)
             {
                 StreamingActionTypeEnum type = EnumHelper.GetEnumValueFromString<StreamingActionTypeEnum>((string)this.StreamingActionTypeComboBox.SelectedItem);

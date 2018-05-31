@@ -26,11 +26,17 @@ namespace MixItUp.Base.Services
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
         [JsonProperty("resourceId")]
         public string ResourceID { get; set; }
 
         [JsonProperty("muted")]
         public bool Muted { get; set; }
+
+        [JsonProperty("sourceId")]
+        public string SourceID { get; set; }
 
         [JsonProperty("transform")]
         public StreamlabsOBSSceneItemTransform Transform { get; set; }
@@ -60,6 +66,22 @@ namespace MixItUp.Base.Services
 
         [JsonProperty("y")]
         public double Y { get; set; }
+    }
+
+    [DataContract]
+    public class StreamlabsOBSSource
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("resourceId")]
+        public string ResourceID { get; set; }
+
+        [JsonProperty("sourceId")]
+        public string SourceID { get; set; }
+
+        [JsonProperty("type")]
+        public string Type { get; set; }
     }
 
     [DataContract]
@@ -119,17 +141,27 @@ namespace MixItUp.Base.Services
     {
         Task<bool> TestConnection();
 
+
         Task<IEnumerable<StreamlabsOBSScene>> GetScenes();
 
         Task<StreamlabsOBSScene> GetActiveScene();
 
         Task MakeSceneActive(StreamlabsOBSScene scene);
 
+
         Task<IEnumerable<StreamlabsOBSSceneItem>> GetSceneItems(StreamlabsOBSScene scene);
 
         Task SetSceneItemVisibility(StreamlabsOBSSceneItem sceneItem, bool visibility);
 
         Task SetSceneItemDimensions(StreamlabsOBSSceneItem sceneItem, StreamingSourceDimensions dimensions);
+
+        Task<StreamlabsOBSSource> GetSource(StreamlabsOBSSceneItem sceneItem);
+
+
+        Task<IEnumerable<JObject>> GetSourceProperties(StreamlabsOBSSource source);
+
+        Task SetSourceProperties(StreamlabsOBSSource source, IEnumerable<JObject> properties);
+
 
         Task StartStopStream();
     }
