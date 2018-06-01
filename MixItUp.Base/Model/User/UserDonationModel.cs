@@ -3,11 +3,17 @@ using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
 {
+    public enum UserDonationSourceEnum
+    {
+        GawkBox,
+        Streamlabs
+    }
+
     [DataContract]
     public class UserDonationModel
     {
         [DataMember]
-        public string Source { get; set; }
+        public UserDonationSourceEnum Source { get; set; }
 
         [DataMember]
         public string ID { get; set; }

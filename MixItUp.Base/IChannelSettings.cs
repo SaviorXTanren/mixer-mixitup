@@ -55,6 +55,10 @@ namespace MixItUp.Base
         int TimerCommandsMinimumMessages { get; set; }
 
         string GiveawayCommand { get; set; }
+        bool GiveawayGawkBoxTrigger { get; set; }
+        bool GiveawayStreamlabsTrigger { get; set; }
+        bool GiveawayDonationRequiredAmount { get; set; }
+        double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }
         RequirementViewModel GiveawayRequirements { get; set; }
 

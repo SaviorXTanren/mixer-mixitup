@@ -45,7 +45,7 @@ namespace MixItUp.Base.Services
         {
             return new UserDonationModel()
             {
-                Source = "Streamlabs",
+                Source = UserDonationSourceEnum.Streamlabs,
 
                 ID = this.ID.ToString(),
                 Username = this.Name,

@@ -99,6 +99,14 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public string GiveawayCommand { get; set; }
         [JsonProperty]
+        public bool GiveawayGawkBoxTrigger { get; set; }
+        [JsonProperty]
+        public bool GiveawayStreamlabsTrigger { get; set; }
+        [JsonProperty]
+        public bool GiveawayDonationRequiredAmount { get; set; }
+        [JsonProperty]
+        public double GiveawayDonationAmount { get; set; }
+        [JsonProperty]
         public int GiveawayTimer { get; set; }
         [JsonProperty]
         public RequirementViewModel GiveawayRequirements { get; set; }

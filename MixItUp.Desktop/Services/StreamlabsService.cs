@@ -193,7 +193,7 @@ namespace MixItUp.Desktop.Services
                             EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlabsDonation));
                             if (command != null)
                             {
-                                command.AddSpecialIdentifier("donationsource", donation.Source);
+                                command.AddSpecialIdentifier("donationsource", EnumHelper.GetEnumName(donation.Source));
                                 command.AddSpecialIdentifier("donationamount", donation.AmountText);
                                 command.AddSpecialIdentifier("donationmessage", donation.Message);
                                 command.AddSpecialIdentifier("donationimage", donation.ImageLink);
