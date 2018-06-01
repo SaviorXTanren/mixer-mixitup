@@ -78,7 +78,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
         }
 
-        public bool DoesMeetCooldownRequirement(UserViewModel user)
+        public bool DoesMeetRequirement(UserViewModel user)
         {
             if (this.Type == CooldownTypeEnum.Global && this.globalCooldown.AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
             {
@@ -99,7 +99,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public async Task SendCooldownNotMetWhisper(UserViewModel user)
+        public async Task SendNotMetWhisper(UserViewModel user)
         {
             TimeSpan timeLeft = new TimeSpan();
             if (this.Type == CooldownTypeEnum.Global)

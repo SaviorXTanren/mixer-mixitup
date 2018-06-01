@@ -446,6 +446,9 @@
     <Compile Include="Controls\Requirement\RoleRequirementControl.xaml.cs">
       <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Requirement\ThresholdRequirementControl.xaml.cs">
+      <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\DeveloperAPIServiceControl.xaml.cs">
       <DependentUpon>DeveloperAPIServiceControl.xaml</DependentUpon>
     </Compile>
@@ -890,6 +893,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirement\RoleRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirement\ThresholdRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

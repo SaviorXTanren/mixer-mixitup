@@ -16,13 +16,15 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
 
-        <MaterialDesign:PackIcon Kind="AccountSettingsVariant" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="AccountSettingsVariant" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
 
-        <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
 
-        <MaterialDesign:PackIcon Kind="Coin" x:Key="CurrencyPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="Coin" x:Key="CurrencyPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
 
-        <MaterialDesign:PackIcon Kind="Wunderlist" x:Key="RankPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Margin="4 0 4 0" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="Wunderlist" x:Key="RankPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
+
+        <MaterialDesign:PackIcon Kind="AccountMultiple" x:Key="ThresholdPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
 
     </UserControl.Resources>
 
@@ -44,6 +46,8 @@
         
         <Grid Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
@@ -74,6 +78,12 @@
             <MaterialDesign:PopupBox Grid.Column="6" ToggleContent="{StaticResource RankPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
                     <RequirementControls:RankRequirementControl x:Name="RankRequirement" />
+                </Grid>
+            </MaterialDesign:PopupBox>
+
+            <MaterialDesign:PopupBox Grid.Column="8" ToggleContent="{StaticResource ThresholdPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+                <Grid Margin="10">
+                    <RequirementControls:ThresholdRequirementControl x:Name="ThresholdRequirement" />
                 </Grid>
             </MaterialDesign:PopupBox>
         </Grid>

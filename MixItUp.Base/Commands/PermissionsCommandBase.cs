@@ -44,14 +44,15 @@ namespace MixItUp.Base.Commands
 
         public async Task<bool> CheckAllRequirements(UserViewModel user)
         {
-            return (await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user) && await this.CheckCurrencyRequirement(user));
+            return (await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)
+                && await this.CheckCurrencyRequirement(user) && await this.CheckThresholdRequirement(user));
         }
 
         public async Task<bool> CheckCooldownRequirement(UserViewModel user)
         {
             if (!this.Requirements.DoesMeetCooldownRequirement(user))
             {
-                await this.Requirements.Cooldown.SendCooldownNotMetWhisper(user);
+                await this.Requirements.Cooldown.SendNotMetWhisper(user);
                 return false;
             }
             return true;
@@ -61,7 +62,7 @@ namespace MixItUp.Base.Commands
         {
             if (!await this.Requirements.DoesMeetUserRoleRequirement(user))
             {
-                await this.Requirements.Role.SendUserRoleNotMetWhisper(user);
+                await this.Requirements.Role.SendNotMetWhisper(user);
                 return false;
             }
             return true;
@@ -89,6 +90,16 @@ namespace MixItUp.Base.Commands
                     await this.Requirements.Currency.SendCurrencyNotMetWhisper(user);
                     return false;
                 }
+            }
+            return true;
+        }
+
+        public async Task<bool> CheckThresholdRequirement(UserViewModel user)
+        {
+            if (!this.Requirements.DoesMeetThresholdRequirement(user))
+            {
+                await this.Requirements.Threshold.SendNotMetWhisper(user);
+                return false;
             }
             return true;
         }

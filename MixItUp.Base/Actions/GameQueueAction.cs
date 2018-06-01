@@ -73,7 +73,7 @@ namespace MixItUp.Base.Actions
                         {
                             if (!await ChannelSession.Settings.GameQueueRequirements.DoesMeetUserRoleRequirement(user))
                             {
-                                await ChannelSession.Settings.GameQueueRequirements.Role.SendUserRoleNotMetWhisper(user);
+                                await ChannelSession.Settings.GameQueueRequirements.Role.SendNotMetWhisper(user);
                                 return;
                             }
 

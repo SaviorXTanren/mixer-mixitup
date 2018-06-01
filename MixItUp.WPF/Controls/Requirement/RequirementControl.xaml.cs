@@ -30,11 +30,11 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             if (this.CurrencyPopup.Visibility == Visibility.Visible)
             {
-                return await this.CooldownRequirement.Validate() && await this.CurrencyRequirement.Validate() && await this.RankRequirement.Validate();
+                return await this.CooldownRequirement.Validate() && await this.CurrencyRequirement.Validate() && await this.RankRequirement.Validate() && await this.ThresholdRequirement.Validate();
             }
             else
             {
-                return await this.CooldownRequirement.Validate() && await this.RankRequirement.Validate();
+                return await this.CooldownRequirement.Validate() && await this.RankRequirement.Validate() && await this.ThresholdRequirement.Validate();
             }
         }
 
@@ -48,6 +48,7 @@ namespace MixItUp.WPF.Controls.Requirement
                 requirement.Currency = this.CurrencyRequirement.GetCurrencyRequirement();
             }
             requirement.Rank = this.RankRequirement.GetCurrencyRequirement();
+            requirement.Threshold = this.ThresholdRequirement.GetThresholdRequirement();
             return requirement;
         }
 
@@ -60,6 +61,7 @@ namespace MixItUp.WPF.Controls.Requirement
                 this.CurrencyRequirement.SetCurrencyRequirement(requirement.Currency);
             }
             this.RankRequirement.SetCurrencyRequirement(requirement.Rank);
+            this.ThresholdRequirement.SetThresholdRequirement(requirement.Threshold);
         }
 
         private void UsageRequirementsHelpButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements"); }

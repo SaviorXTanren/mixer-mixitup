@@ -25,10 +25,14 @@ namespace MixItUp.Base.ViewModel.Requirement
         [JsonProperty]
         public CurrencyRequirementViewModel Rank { get; set; }
 
+        [JsonProperty]
+        public ThresholdRequirementViewModel Threshold { get; set; }
+
         public RequirementViewModel()
         {
             this.Role = new RoleRequirementViewModel();
             this.Cooldown = new CooldownRequirementViewModel();
+            this.Threshold = new ThresholdRequirementViewModel();
         }
 
         public RequirementViewModel(MixerRoleEnum userRole, int cooldown)
@@ -38,24 +42,26 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.Cooldown.Amount = cooldown;
         }
 
-        public RequirementViewModel(RoleRequirementViewModel role, CooldownRequirementViewModel cooldown = null, CurrencyRequirementViewModel currency = null, CurrencyRequirementViewModel rank = null)
+        public RequirementViewModel(RoleRequirementViewModel role, CooldownRequirementViewModel cooldown = null, CurrencyRequirementViewModel currency = null,
+            CurrencyRequirementViewModel rank = null, ThresholdRequirementViewModel threshold = null)
         {
             this.Role = role;
             this.Cooldown = (cooldown != null) ? cooldown : new CooldownRequirementViewModel();
             this.Currency = currency;
             this.Rank = rank;
+            this.Threshold = (threshold != null) ? threshold : new ThresholdRequirementViewModel();
         }
 
         public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
         {
             if (this.Role != null)
             {
-                bool doesMeetRoleRequirements = this.Role.DoesMeetUserRoleRequirement(user);
+                bool doesMeetRoleRequirements = this.Role.DoesMeetRequirement(user);
                 if (!doesMeetRoleRequirements)
                 {
                     // Force a refresh to get updated roles, just in case they recently changed
                     await user.RefreshDetails(true);
-                    doesMeetRoleRequirements = this.Role.DoesMeetUserRoleRequirement(user);
+                    doesMeetRoleRequirements = this.Role.DoesMeetRequirement(user);
                 }
                 return doesMeetRoleRequirements;
             }
@@ -66,7 +72,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (this.Cooldown != null)
             {
-                return this.Cooldown.DoesMeetCooldownRequirement(user);
+                return this.Cooldown.DoesMeetRequirement(user);
             }
             return true;
         }
@@ -94,6 +100,15 @@ namespace MixItUp.Base.ViewModel.Requirement
             if (this.Rank != null)
             {
                 return this.Rank.DoesMeetRankRequirement(user.Data);
+            }
+            return true;
+        }
+
+        public bool DoesMeetThresholdRequirement(UserViewModel user)
+        {
+            if (this.Threshold != null)
+            {
+                return this.Threshold.DoesMeetRequirement(user);
             }
             return true;
         }

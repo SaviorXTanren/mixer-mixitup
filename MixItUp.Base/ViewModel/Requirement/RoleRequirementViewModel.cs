@@ -62,7 +62,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
         }
 
-        public bool DoesMeetUserRoleRequirement(UserViewModel user)
+        public bool DoesMeetRequirement(UserViewModel user)
         {
             if (user.PrimaryRole == MixerRoleEnum.Streamer)
             {
@@ -80,7 +80,12 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 if (this.CustomRole.StartsWith(GameWispTier.MIURolePrefix))
                 {
-                    return this.DoesUserMeetGameWispRequirement(user);
+                    if (ChannelSession.Services.GameWisp != null && user.GameWispTier != null)
+                    {
+                        GameWispTier requirementTier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.MIURoleName.Equals(this.CustomRole));
+                        return (requirementTier != null && user.GameWispTier.Level >= requirementTier.Level);
+                    }
+                    return false;
                 }
                 return false;
             }
@@ -90,23 +95,13 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
         }
 
-        public async Task SendUserRoleNotMetWhisper(UserViewModel user)
+        public async Task SendNotMetWhisper(UserViewModel user)
         {
             if (ChannelSession.Chat != null)
             {
                 await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must be a {0} to do this", (this.MixerRole != MixerRoleEnum.Custom) ?
                     EnumHelper.GetEnumName(this.MixerRole) : this.CustomRole));
             }
-        }
-
-        private bool DoesUserMeetGameWispRequirement(UserViewModel user)
-        {
-            if (ChannelSession.Services.GameWisp != null && user.GameWispTier != null)
-            {
-                GameWispTier requirementTier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.MIURoleName.Equals(this.CustomRole));
-                return (requirementTier != null && user.GameWispTier.Level >= requirementTier.Level);
-            }
-            return false;
         }
     }
 }
