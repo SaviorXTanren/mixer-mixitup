@@ -8,14 +8,22 @@ using System.Threading.Tasks;
 
 namespace MixItUp.OBS
 {
-    public class OBSService : IOBSService
+    public class OBSService : IStreamingSoftwareService
     {
-        public event EventHandler Connected;
-        public event EventHandler Disconnected;
+        public event EventHandler Connected = delegate { };
+        public event EventHandler Disconnected = delegate { };
 
+        private string serverIP;
+        private string password;
         private OBSWebsocket OBSWebsocket;
 
-        public async Task<bool> Initialize(string serverIP, string password)
+        public OBSService(string serverIP, string password)
+        {
+            this.serverIP = serverIP;
+            this.password = password;
+        }
+
+        public async Task<bool> Connect()
         {
             if (this.OBSWebsocket == null)
             {
@@ -28,7 +36,7 @@ namespace MixItUp.OBS
                 {
                     try
                     {
-                        this.OBSWebsocket.Connect(serverIP, password);
+                        this.OBSWebsocket.Connect(this.serverIP, this.password);
                         this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
                         connected = true;
                     }
@@ -40,10 +48,7 @@ namespace MixItUp.OBS
 
                 if (connected)
                 {
-                    if (this.Connected != null)
-                    {
-                        this.Connected(this, new EventArgs());
-                    }
+                    this.Connected(this, new EventArgs());
                 }
                 else
                 {
@@ -54,75 +59,83 @@ namespace MixItUp.OBS
             return false;
         }
 
-        public StreamingSourceDimensions GetSourceDimensions(string source)
+        public Task Disconnect()
+        {
+            if (this.OBSWebsocket != null)
+            {
+                this.Disconnected(this, new EventArgs());
+                this.OBSWebsocket.Disconnect();
+                this.OBSWebsocket = null;
+            }
+            return Task.FromResult(0);
+        }
+
+        public Task<bool> TestConnection() { return Task.FromResult(true); }
+
+        public Task ShowScene(string sceneName)
+        {
+            try
+            {
+                this.OBSWebsocket.SetCurrentScene(sceneName);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return Task.FromResult(0);
+        }
+
+        public Task SetSourceVisibility(string sourceName, bool visibility)
+        {
+            try
+            {
+                this.OBSWebsocket.SetSourceRender(sourceName, visibility);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return Task.FromResult(0);
+        }
+
+        public Task SetWebBrowserSourceURL(string sourceName, string url)
+        {
+            try
+            {
+                this.SetSourceVisibility(sourceName, visibility: false);
+
+                BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(sourceName);
+                properties.IsLocalFile = false;
+                properties.URL = url;
+                this.OBSWebsocket.SetBrowserSourceProperties(sourceName, properties);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return Task.FromResult(0);
+        }
+
+        public Task SetSourceDimensions(string sourceName, StreamingSourceDimensions dimensions)
+        {
+            try
+            {
+                this.OBSWebsocket.SetSceneItemPosition(sourceName, dimensions.X, dimensions.Y);
+                this.OBSWebsocket.SetSceneItemTransform(sourceName, dimensions.Rotation, dimensions.XScale, dimensions.YScale);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return Task.FromResult(0);
+        }
+
+        public Task<StreamingSourceDimensions> GetSourceDimensions(string sourceName)
         {
             try
             {
                 OBSScene scene = this.OBSWebsocket.GetCurrentScene();
                 foreach (SceneItem item in scene.Items)
                 {
-                    if (item.SourceName.Equals(source))
+                    if (item.SourceName.Equals(sourceName))
                     {
-                        return new StreamingSourceDimensions() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) };
+                        return Task.FromResult(new StreamingSourceDimensions() { X = (int)item.XPos, Y = (int)item.YPos, XScale = (item.Width / item.SourceWidth), YScale = (item.Height / item.SourceHeight) });
                     }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-            return null;
+            return Task.FromResult<StreamingSourceDimensions>(null);
         }
 
-        public void SetCurrentSceneCollection(string sceneCollection)
-        {
-            try
-            {
-                this.OBSWebsocket.SetCurrentSceneCollection(sceneCollection);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        public void SetCurrentScene(string scene)
-        {
-            try
-            {
-                this.OBSWebsocket.SetCurrentScene(scene);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        public void SetSourceRender(string source, bool isVisible)
-        {
-            try
-            {
-                this.OBSWebsocket.SetSourceRender(source, isVisible);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        public void SetWebBrowserSource(string source, string url)
-        {
-            try
-            {
-                this.OBSWebsocket.SetSourceRender(source, false);
-
-                BrowserSourceProperties properties = this.OBSWebsocket.GetBrowserSourceProperties(source);
-                properties.IsLocalFile = false;
-                properties.URL = url;
-                this.OBSWebsocket.SetBrowserSourceProperties(source, properties);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        public void SetSourceDimensions(string source, StreamingSourceDimensions dimensions)
-        {
-            try
-            {
-                this.OBSWebsocket.SetSceneItemPosition(source, dimensions.X, dimensions.Y);
-                this.OBSWebsocket.SetSceneItemTransform(source, dimensions.Rotation, dimensions.XScale, dimensions.YScale);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        public void StartEndStream()
+        public Task StartStopStream()
         {
             try
             {
@@ -137,21 +150,12 @@ namespace MixItUp.OBS
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
-        }
-
-        public Task Close()
-        {
-            if (this.OBSWebsocket != null)
-            {
-                this.OBSWebsocket.Disconnect();
-                this.OBSWebsocket = null;
-            }
             return Task.FromResult(0);
         }
 
         private void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
-            this.Close();
+            this.Disconnect();
             if (this.Disconnected != null)
             {
                 this.Disconnected(this, new EventArgs());

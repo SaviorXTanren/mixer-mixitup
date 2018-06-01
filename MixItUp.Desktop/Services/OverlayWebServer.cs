@@ -66,15 +66,23 @@ namespace MixItUp.Overlay
                     {
                         if (ChannelSession.Services.OBSWebsocket != null)
                         {
-                            ChannelSession.Services.OBSWebsocket.SetSourceRender(ChannelSession.Settings.OverlaySourceName, isVisible: false);
-                            ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
-                            ChannelSession.Services.OBSWebsocket.SetSourceRender(ChannelSession.Settings.OverlaySourceName, isVisible: true);
+                            await ChannelSession.Services.OBSWebsocket.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
+                            await ChannelSession.Services.OBSWebsocket.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.OBSWebsocket.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
                         if (ChannelSession.Services.XSplitServer != null)
                         {
-                            await ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = ChannelSession.Settings.OverlaySourceName, sourceVisible = false });
-                            await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = ChannelSession.Settings.OverlaySourceName, webBrowserUrl = OverlayHttpListenerServerAddress, sourceVisible = true });
+                            await ChannelSession.Services.XSplitServer.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
+                            await ChannelSession.Services.XSplitServer.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.XSplitServer.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
+                        }
+
+                        if (ChannelSession.Services.StreamlabsOBSService != null)
+                        {
+                            await ChannelSession.Services.StreamlabsOBSService.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
+                            await ChannelSession.Services.StreamlabsOBSService.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.StreamlabsOBSService.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
                     }
                     return true;

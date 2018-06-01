@@ -245,7 +245,7 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (ChannelSession.Services.OBSWebsocket != null || await ChannelSession.Services.InitializeOBSWebsocket())
                         {
-                            dimensions = ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceNameTextBox.Text);
+                            dimensions = await ChannelSession.Services.OBSWebsocket.GetSourceDimensions(this.SourceNameTextBox.Text);
                         }
                         else
                         {
@@ -254,22 +254,13 @@ namespace MixItUp.WPF.Controls.Actions
                     }
                     else if (software == StreamingSoftwareTypeEnum.StreamlabsOBS)
                     {
-                        StreamlabsOBSScene activeScene = await ChannelSession.Services.StreamlabsOBSService.GetActiveScene();
-                        if (activeScene != null)
+                        if (ChannelSession.Services.StreamlabsOBSService != null || await ChannelSession.Services.InitializeStreamlabsOBSService())
                         {
-                            IEnumerable<StreamlabsOBSSceneItem> sceneItems = await ChannelSession.Services.StreamlabsOBSService.GetSceneItems(activeScene);
-                            StreamlabsOBSSceneItem selectedSceneItem = sceneItems.FirstOrDefault(s => s.Name.Equals(this.SourceNameTextBox.Text));
-                            if (selectedSceneItem != null)
-                            {
-                                dimensions = new StreamingSourceDimensions()
-                                {
-                                    X = (int)selectedSceneItem.Transform.Position.X,
-                                    Y = (int)selectedSceneItem.Transform.Position.Y,
-                                    XScale = (int)selectedSceneItem.Transform.Scale.X,
-                                    YScale = (int)selectedSceneItem.Transform.Scale.X,
-                                    Rotation = (int)selectedSceneItem.Transform.Rotation
-                                };
-                            }
+                            dimensions = await ChannelSession.Services.StreamlabsOBSService.GetSourceDimensions(this.SourceNameTextBox.Text);
+                        }
+                        else
+                        {
+                            await MessageBoxHelper.ShowMessageDialog("Could not connect to OBS Studio. Please try establishing connection with it in the Services area.");
                         }
                     }
 

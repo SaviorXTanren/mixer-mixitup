@@ -1,11 +1,9 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -181,36 +179,14 @@ namespace MixItUp.Base.Actions
                 url = await this.ReplaceStringWithSpecialModifiers(this.SourceURL, user, arguments);
             }
 
+            IStreamingSoftwareService ssService = null;
             if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.OBSStudio)
             {
                 if (ChannelSession.Services.OBSWebsocket == null)
                 {
                     await ChannelSession.Services.InitializeOBSWebsocket();
                 }
-
-                if (ChannelSession.Services.OBSWebsocket != null)
-                {
-                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
-                    {
-                        ChannelSession.Services.OBSWebsocket.StartEndStream();
-                    }
-                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
-                    {
-                        ChannelSession.Services.OBSWebsocket.SetCurrentScene(this.SceneName);
-                    }
-                    else if (!string.IsNullOrEmpty(this.SourceName))
-                    {
-                        if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
-                        {
-                            ChannelSession.Services.OBSWebsocket.SetWebBrowserSource(this.SourceName, url);
-                        }
-                        else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
-                        {
-                            ChannelSession.Services.OBSWebsocket.SetSourceDimensions(this.SourceName, this.SourceDimensions);
-                        }
-                        ChannelSession.Services.OBSWebsocket.SetSourceRender(this.SourceName, this.SourceVisible);
-                    }
-                }
+                ssService = ChannelSession.Services.OBSWebsocket;
             }
             else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.XSplit)
             {
@@ -218,30 +194,7 @@ namespace MixItUp.Base.Actions
                 {
                     await ChannelSession.Services.InitializeXSplitServer();
                 }
-
-                if (ChannelSession.Services.XSplitServer != null)
-                {
-                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
-                    {
-                        // Do nothing...
-                    }
-                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
-                    {
-                        await ChannelSession.Services.XSplitServer.SetCurrentScene(new XSplitScene() { sceneName = this.SceneName });
-                    }
-                    else if (!string.IsNullOrEmpty(this.SourceName))
-                    {
-                        if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
-                        {
-                            await ChannelSession.Services.XSplitServer.SetWebBrowserSource(new XSplitWebBrowserSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible, webBrowserUrl = url });
-                        }
-                        else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
-                        {
-                            // Do nothing...
-                        }
-                        await ChannelSession.Services.XSplitServer.SetSourceVisibility(new XSplitSource() { sourceName = this.SourceName, sourceVisible = this.SourceVisible });
-                    }
-                }
+                ssService = ChannelSession.Services.XSplitServer;
             }
             else if (this.SelectedStreamingSoftware == StreamingSoftwareTypeEnum.StreamlabsOBS)
             {
@@ -249,58 +202,30 @@ namespace MixItUp.Base.Actions
                 {
                     await ChannelSession.Services.InitializeStreamlabsOBSService();
                 }
+                ssService = ChannelSession.Services.StreamlabsOBSService;
+            }
 
-                if (ChannelSession.Services.StreamlabsOBSService != null)
+            if (ssService != null)
+            {
+                if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
                 {
-                    if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
+                    await ssService.StartStopStream();
+                }
+                else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
+                {
+                    await ssService.ShowScene(this.SceneName);
+                }
+                else if (!string.IsNullOrEmpty(this.SourceName))
+                {
+                    if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
                     {
-                        await ChannelSession.Services.StreamlabsOBSService.StartStopStream();
+                        await ssService.SetWebBrowserSourceURL(this.SourceName, url);
                     }
-                    else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
+                    else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
                     {
-                        IEnumerable<StreamlabsOBSScene> scenes = await ChannelSession.Services.StreamlabsOBSService.GetScenes();
-                        StreamlabsOBSScene selectedScene = scenes.FirstOrDefault(s => s.Name.Equals(this.SceneName));
-                        if (selectedScene != null)
-                        {
-                            await ChannelSession.Services.StreamlabsOBSService.MakeSceneActive(selectedScene);
-                        }
+                        await ssService.SetSourceDimensions(this.SourceName, this.SourceDimensions);
                     }
-                    else if (!string.IsNullOrEmpty(this.SourceName))
-                    {
-                        StreamlabsOBSScene activeScene = await ChannelSession.Services.StreamlabsOBSService.GetActiveScene();
-                        if (activeScene != null)
-                        {
-                            IEnumerable<StreamlabsOBSSceneItem> sceneItems = await ChannelSession.Services.StreamlabsOBSService.GetSceneItems(activeScene);
-                            StreamlabsOBSSceneItem selectedSceneItem = sceneItems.FirstOrDefault(s => s.Name.Equals(this.SourceName));
-                            if (selectedSceneItem != null)
-                            {
-                                if (this.ActionType == StreamingActionTypeEnum.WebBrowserSource && !string.IsNullOrEmpty(this.SourceURL))
-                                {
-                                    StreamlabsOBSSource source = await ChannelSession.Services.StreamlabsOBSService.GetSource(selectedSceneItem);
-                                    if (source != null && source.Type.Equals("browser_source"))
-                                    {
-                                        IEnumerable<JObject> sourceProperties = await ChannelSession.Services.StreamlabsOBSService.GetSourceProperties(source);
-                                        if (sourceProperties != null)
-                                        {
-                                            foreach (JObject sourceProperty in sourceProperties)
-                                            {
-                                                if (sourceProperty["name"] != null && sourceProperty["name"].ToString().Equals("url"))
-                                                {
-                                                    sourceProperty["value"] = url;
-                                                }
-                                            }
-                                            await ChannelSession.Services.StreamlabsOBSService.SetSourceProperties(source, sourceProperties);
-                                        }
-                                    }
-                                }
-                                else if (this.ActionType == StreamingActionTypeEnum.SourceDimensions && this.SourceDimensions != null)
-                                {
-                                    await ChannelSession.Services.StreamlabsOBSService.SetSceneItemDimensions(selectedSceneItem, this.SourceDimensions);
-                                }
-                                await ChannelSession.Services.StreamlabsOBSService.SetSceneItemVisibility(selectedSceneItem, this.SourceVisible);
-                            }
-                        }
-                    }
+                    await ssService.SetSourceVisibility(this.SourceName, this.SourceVisible);
                 }
             }
         }

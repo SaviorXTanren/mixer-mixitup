@@ -52,9 +52,9 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap">If you have OBS Studio or XSplit connectivity setup, we can auto-refresh the web browser source that contains the Mix It Up Overlay. Simply type the name of the source below:</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap">If you have OBS Studio, XSplit, or Streamlabs OBS connectivity setup, we can auto-refresh the web browser source that contains the Mix It Up Overlay when Mix It Up starts. Simply type the name of the source below:</TextBlock>
 
-            <TextBox Grid.Row="2" x:Name="OverlaySourceRefreshTextBox" MaterialDesign:HintAssist.Hint="OBS Studio/XSplit Overlay Source" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="OverlaySourceRefreshTextBox_TextChanged" />
+            <TextBox Grid.Row="2" x:Name="OverlaySourceRefreshTextBox" MaterialDesign:HintAssist.Hint="Streaming Software Source Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="OverlaySourceRefreshTextBox_TextChanged" />
 
         </Grid>
     </Grid>

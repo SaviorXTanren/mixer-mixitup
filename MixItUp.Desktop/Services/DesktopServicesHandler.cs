@@ -6,6 +6,7 @@ using MixItUp.Input;
 using MixItUp.OBS;
 using MixItUp.Overlay;
 using MixItUp.XSplit;
+using System;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
@@ -18,92 +19,22 @@ namespace MixItUp.Desktop.Services
             this.MixItUpService = new MixItUpService();
             this.MixerStatus = new MixerStatusService();
 
-            this.InitializeSettingsService();
-            this.InitializeAudioService();
-            this.InitializeFileService();
-            this.InitializeInputService();
-            this.InitializeTextToSpeechService();
-            this.InitializeSongRequestService();
-            this.InitializeTranslationService();
+            this.Settings = new DesktopSettingsService();
+            this.FileService = new WindowsFileService();
+            this.InputService = new WindowsInputService();
+            this.AudioService = new WindowsAudioService();
+            this.TextToSpeechService = new WindowsTextToSpeechService();
+            this.SongRequestService = new DesktopSongRequestService();
+            this.TranslationService = new TranslationService();
         }
 
         public override async Task Close()
         {
             await this.DisconnectOverlayServer();
-
             await this.DisconnectOBSStudio();
-
+            await this.DisconnectStreamlabsOBSService();
             await this.DisconnectXSplitServer();
-        }
-
-        public override Task<bool> InitializeSettingsService()
-        {
-            if (this.Settings == null)
-            {
-                this.Settings = new DesktopSettingsService();
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
-
-        public override Task<bool> InitializeFileService()
-        {
-            if (this.FileService == null)
-            {
-                this.FileService = new WindowsFileService();
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
-
-        public override Task<bool> InitializeInputService()
-        {
-            if (this.InputService == null)
-            {
-                this.InputService = new WindowsInputService();
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
-
-        public override Task<bool> InitializeAudioService()
-        {
-            if (this.AudioService == null)
-            {
-                this.AudioService = new WindowsAudioService();
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
-
-        public override Task<bool> InitializeTextToSpeechService()
-        {
-            if (this.TextToSpeechService == null)
-            {
-                this.TextToSpeechService = new WindowsTextToSpeechService();
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
-
-        public override Task<bool> InitializeTranslationService()
-        {
-            if (this.TranslationService == null)
-            {
-                this.TranslationService = new TranslationService();
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
-
-        public override Task<bool> InitializeSongRequestService()
-        {
-            if (this.SongRequestService == null)
-            {
-                this.SongRequestService = new DesktopSongRequestService();
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
+            await this.DisconnectDeveloperAPI();
         }
 
         public override async Task<bool> InitializeOverlayServer()
@@ -138,8 +69,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.OBSWebsocket == null)
             {
-                this.OBSWebsocket = new OBSService();
-                if (await this.OBSWebsocket.Initialize(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword))
+                this.OBSWebsocket = new OBSService(ChannelSession.Settings.OBSStudioServerIP, ChannelSession.Settings.OBSStudioServerPassword);
+                if (await this.OBSWebsocket.Connect())
                 {
                     this.OBSWebsocket.Connected += OBSWebsocket_Connected;
                     this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
@@ -154,29 +85,38 @@ namespace MixItUp.Desktop.Services
         {
             if (this.OBSWebsocket != null)
             {
+                this.OBSWebsocket.Connected -= OBSWebsocket_Connected;
                 this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
-                await this.OBSWebsocket.Close();
+                await this.OBSWebsocket.Disconnect();
                 this.OBSWebsocket = null;
             }
         }
 
-        public override Task<bool> InitializeStreamlabsOBSService()
+        public override async Task<bool> InitializeStreamlabsOBSService()
         {
             if (this.StreamlabsOBSService == null)
             {
                 this.StreamlabsOBSService = new StreamlabsOBSService();
-                return Task.FromResult(true);
+                if (await this.StreamlabsOBSService.Connect())
+                {
+                    this.StreamlabsOBSService.Connected += StreamlabsOBSService_Connected;
+                    this.StreamlabsOBSService.Disconnected += StreamlabsOBSService_Disconnected;
+                    return true;
+                }
+                this.StreamlabsOBSService = null;
             }
-            return Task.FromResult(false);
+            return false;
         }
 
-        public override Task DisconnectStreamlabsOBSService()
+        public override async Task DisconnectStreamlabsOBSService()
         {
             if (this.StreamlabsOBSService != null)
             {
+                this.StreamlabsOBSService.Connected -= StreamlabsOBSService_Connected;
+                this.StreamlabsOBSService.Disconnected -= StreamlabsOBSService_Disconnected;
+                await this.StreamlabsOBSService.Disconnect();
                 this.StreamlabsOBSService = null;
             }
-            return Task.FromResult(0);
         }
 
         public override async Task<bool> InitializeXSplitServer()
@@ -184,10 +124,10 @@ namespace MixItUp.Desktop.Services
             if (this.XSplitServer == null)
             {
                 this.XSplitServer = new XSplitWebServer("http://localhost:8211/");
-                if (await this.XSplitServer.Initialize())
+                if (await this.XSplitServer.Connect())
                 {
-                    this.XSplitServer.OnWebSocketConnectedOccurred += XSplitServer_OnWebSocketConnectedOccurred;
-                    this.XSplitServer.OnWebSocketDisconnectedOccurred += XSplitServer_OnWebSocketDisconnectedOccurred;
+                    this.XSplitServer.Connected += XSplitServer_Connected;
+                    this.XSplitServer.Disconnected += XSplitServer_Disconnected;
                     return true;
                 }
             }
@@ -199,9 +139,9 @@ namespace MixItUp.Desktop.Services
         {
             if (this.XSplitServer != null)
             {
-                this.XSplitServer.OnWebSocketConnectedOccurred -= XSplitServer_OnWebSocketConnectedOccurred;
-                this.XSplitServer.OnWebSocketDisconnectedOccurred -= XSplitServer_OnWebSocketDisconnectedOccurred;
-                await this.XSplitServer.DisconnectServer();
+                this.XSplitServer.Connected -= XSplitServer_Connected;
+                this.XSplitServer.Disconnected -= XSplitServer_Disconnected;
+                await this.XSplitServer.Disconnect();
                 this.XSplitServer = null;
             }
         }
@@ -260,6 +200,8 @@ namespace MixItUp.Desktop.Services
             this.GameWisp = (ChannelSession.Settings.GameWispOAuthToken != null) ? new GameWispService(ChannelSession.Settings.GameWispOAuthToken) : new GameWispService();
             if (await this.GameWisp.Connect() && this.GameWisp.ChannelInfo != null)
             {
+                this.GameWisp.OnWebSocketConnectedOccurred += GameWisp_OnWebSocketConnectedOccurred;
+                this.GameWisp.OnWebSocketDisconnectedOccurred += GameWisp_OnWebSocketDisconnectedOccurred;
                 return true;
             }
             else
@@ -377,7 +319,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
+        private void OverlayServer_OnWebSocketConnectedOccurred(object sender, EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");
         }
@@ -387,33 +329,43 @@ namespace MixItUp.Desktop.Services
             ChannelSession.DisconnectionOccurred("Overlay");
         }
 
-        private void OBSWebsocket_Connected(object sender, System.EventArgs e)
+        private void OBSWebsocket_Connected(object sender, EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("OBS");
         }
 
-        private async void OBSWebsocket_Disconnected(object sender, System.EventArgs e)
+        private async void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("OBS");
             await this.DisconnectOBSStudio();
         }
 
-        private void XSplitServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
+        private void XSplitServer_Connected(object sender, EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("XSplit");
         }
 
-        private void XSplitServer_OnWebSocketDisconnectedOccurred(object sender, WebSocketCloseStatus e)
+        private void XSplitServer_Disconnected(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("XSplit");
         }
 
-        private void GameWisp_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
+        private void StreamlabsOBSService_Connected(object sender, EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("Streamlabs OBS");
+        }
+
+        private void StreamlabsOBSService_Disconnected(object sender, EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("Streamlabs OBS");
+        }
+
+        private void GameWisp_OnWebSocketConnectedOccurred(object sender, EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("GameWisp");
         }
 
-        private void GameWisp_OnWebSocketDisconnectedOccurred(object sender, System.EventArgs e)
+        private void GameWisp_OnWebSocketDisconnectedOccurred(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("GameWisp");
         }
