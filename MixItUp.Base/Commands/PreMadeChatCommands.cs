@@ -17,6 +17,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Base.Commands
 {
@@ -158,6 +159,18 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    public class GameInformation
+    {
+        public string Name { get; set; }
+        public double Price { get; set; }
+        public string Uri { get; set; }
+
+        public override string ToString()
+        {
+            return $"Game: {Name} - {Price} - {Uri}";
+        }
+    }
+
     public class GameChatCommand : PreMadeChatCommand
     {
         public GameChatCommand()
@@ -169,10 +182,15 @@ namespace MixItUp.Base.Commands
                 {
                     await ChannelSession.RefreshChannel();
 
-                    string details = await SteamGameChatCommand.GetSteamGameInfo(ChannelSession.Channel.type.name);
-                    if (!string.IsNullOrEmpty(details))
+                    GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(ChannelSession.Channel.type.name);
+                    if (details == null)
                     {
-                        await ChannelSession.Chat.SendMessage(details);
+                        details = await SteamGameChatCommand.GetSteamGameInfo(ChannelSession.Channel.type.name);
+                    }
+
+                    if (details != null)
+                    {
+                        await ChannelSession.Chat.SendMessage(details.ToString());
                     }
                     else
                     {
@@ -652,11 +670,80 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    public class XboxGameChatCommand : PreMadeChatCommand
+    {
+        public static async Task<GameInformation> GetXboxGameInfo(string gameName)
+        {
+            gameName = gameName.ToLower();
+
+            string cv = Convert.ToBase64String(Guid.NewGuid().ToByteArray(), 0, 12);
+
+            using (HttpClientWrapper client = new HttpClientWrapper("https://displaycatalog.mp.microsoft.com"))
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("MixItUp");
+                client.DefaultRequestHeaders.Add("MS-CV", cv);
+
+                HttpResponseMessage response = await client.GetAsync($"v7.0/productFamilies/Games/products?query={HttpUtility.UrlEncode(gameName)}&$top=1&market=US&languages=en-US&fieldsTemplate=StoreSDK&isAddon=False&isDemo=False&actionFilter=Browse");
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    string result = await response.Content.ReadAsStringAsync();
+                    JObject jobj = JObject.Parse(result);
+                    JArray products = jobj["Products"] as JArray;
+                    if (products?.First() is JObject product)
+                    {
+                        string productId = product["ProductId"]?.Value<string>();
+                        string name = product["LocalizedProperties"]?.First()?["ProductTitle"]?.Value<string>();
+                        double price = product["DisplaySkuAvailabilities"]?.First()?["Availabilities"]?.First()?["OrderManagementData"]?["Price"]?["ListPrice"]?.Value<double>() ?? 0.0;
+                        string uri = $"https://www.microsoft.com/store/apps/{productId}";
+
+                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(productId))
+                        {
+                            return new GameInformation { Name = name, Price = price, Uri = uri };
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public XboxGameChatCommand()
+            : base("Xbox Game", new List<string>() { "xboxgame", "xbox" }, 5, MixerRoleEnum.User)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    string gameName;
+                    if (arguments.Count() > 0)
+                    {
+                        gameName = string.Join(" ", arguments);
+                    }
+                    else
+                    {
+                        await ChannelSession.RefreshChannel();
+                        gameName = ChannelSession.Channel.type.name;
+                    }
+
+                    GameInformation details = await XboxGameChatCommand.GetXboxGameInfo(gameName);
+                    if (details != null)
+                    {
+                        await ChannelSession.Chat.SendMessage(details.ToString());
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.SendMessage(string.Format("Could not find the game \"{0}\" on Xbox", gameName));
+                    }
+                }
+            }));
+        }
+    }
+
     public class SteamGameChatCommand : PreMadeChatCommand
     {
         private static Dictionary<string, int> steamGameList = new Dictionary<string, int>();
 
-        public static async Task<string> GetSteamGameInfo(string gameName)
+        public static async Task<GameInformation> GetSteamGameInfo(string gameName)
         {
             gameName = gameName.ToLower();
 
@@ -709,7 +796,7 @@ namespace MixItUp.Base.Commands
 
                         string url = string.Format("http://store.steampowered.com/app/{0}", gameID);
 
-                        return string.Format("Game: {0} - ${1} - {2}", jobj["name"], price, url);
+                        return new GameInformation { Name = jobj["name"].Value<string>(), Price = price, Uri = url };
                     }
                 }
             }
@@ -734,10 +821,10 @@ namespace MixItUp.Base.Commands
                         gameName = ChannelSession.Channel.type.name;
                     }
 
-                    string details = await SteamGameChatCommand.GetSteamGameInfo(gameName);
-                    if (!string.IsNullOrEmpty(details))
+                    GameInformation details = await SteamGameChatCommand.GetSteamGameInfo(gameName);
+                    if (details != null)
                     {
-                        await ChannelSession.Chat.SendMessage(details);
+                        await ChannelSession.Chat.SendMessage(details.ToString());
                     }
                     else
                     {
