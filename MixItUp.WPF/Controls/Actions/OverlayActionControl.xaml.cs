@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Themes;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,8 @@ namespace MixItUp.WPF.Controls.Actions
     /// </summary>
     public partial class OverlayActionControl : ActionControlBase
     {
+        private static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
+
         private OverlayAction action;
 
         public OverlayActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
@@ -28,10 +31,13 @@ namespace MixItUp.WPF.Controls.Actions
             }
 
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectTypeEnum>();
+            this.FontSizeComboBox.ItemsSource = OverlayActionControl.sampleFontSize.Select(f => f.ToString());
             this.FontColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
             this.YoutubeStartTimeTextBox.Text = "0";
             this.YoutubeWidthTextBox.Text = this.VideoWidthTextBox.Text = OverlayVideoEffect.DefaultWidth.ToString();
             this.YoutubeHeightTextBox.Text = this.VideoHeightTextBox.Text = OverlayVideoEffect.DefaultHeight.ToString();
+
+            this.CenterPositionButton_Click(this, new RoutedEventArgs());
 
             this.EntranceAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
             this.EntranceAnimationComboBox.SelectedIndex = 0;
@@ -55,7 +61,7 @@ namespace MixItUp.WPF.Controls.Actions
                     OverlayTextEffect textEffect = (OverlayTextEffect)this.action.Effect;
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Text);
                     this.TextTextBox.Text = textEffect.Text;
-                    this.FontSizeTextBox.Text = textEffect.Size.ToString();
+                    this.FontSizeComboBox.Text = textEffect.Size.ToString();
                     string color = textEffect.Color;
                     if (ColorSchemes.ColorSchemeDictionary.ContainsValue(color))
                     {
@@ -94,12 +100,28 @@ namespace MixItUp.WPF.Controls.Actions
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.HTML);
                     this.HTMLTextBox.Text = htmlEffect.HTMLText;
                 }
+
+                this.HorizontalSlider.Value = this.action.Effect.Horizontal;
+                this.VerticalSlider.Value = this.action.Effect.Vertical;
+
+                if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 25) { this.TopLeftPositionButton_Click(this, new RoutedEventArgs()); }
+                else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 25) { this.TopPositionButton_Click(this, new RoutedEventArgs()); }
+                else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 25) { this.TopRightPositionButton_Click(this, new RoutedEventArgs()); }
+                else if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 50) { this.LeftPositionButton_Click(this, new RoutedEventArgs()); }
+                else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 50) { this.CenterPositionButton_Click(this, new RoutedEventArgs()); }
+                else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 50) { this.RightPositionButton_Click(this, new RoutedEventArgs()); }
+                else if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 75) { this.BottomLeftPositionButton_Click(this, new RoutedEventArgs()); }
+                else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 75) { this.BottomPositionButton_Click(this, new RoutedEventArgs()); }
+                else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 75) { this.BottomRightPositionButton_Click(this, new RoutedEventArgs()); }
+                else
+                {
+                    this.PositionSimpleAdvancedToggleButton.IsChecked = true;
+                }
+
                 this.DurationTextBox.Text = this.action.Effect.Duration.ToString();
                 this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.EntranceAnimation);
                 this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.VisibleAnimation);
                 this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.ExitAnimation);
-                this.HorizontalSlider.Value = this.action.Effect.Horizontal;
-                this.VerticalSlider.Value = this.action.Effect.Vertical;
             }
             return Task.FromResult(0);
         }
@@ -113,8 +135,62 @@ namespace MixItUp.WPF.Controls.Actions
                 OverlayEffectEntranceAnimationTypeEnum entrance = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.EntranceAnimationComboBox.SelectedItem);
                 OverlayEffectVisibleAnimationTypeEnum animation = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>((string)this.VisibleAnimationComboBox.SelectedItem);
                 OverlayEffectExitAnimationTypeEnum exit = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.ExitAnimationComboBox.SelectedItem);
-                int horizontal = (int)this.HorizontalSlider.Value;
-                int vertical = (int)this.VerticalSlider.Value;
+
+                int horizontal = 0;
+                int vertical = 0;
+                if (this.PositionSimpleAdvancedToggleButton.IsChecked.GetValueOrDefault())
+                {
+                    horizontal = (int)this.HorizontalSlider.Value;
+                    vertical = (int)this.VerticalSlider.Value;
+                }
+                else
+                {
+                    if (this.IsSimplePositionButtonSelected(this.TopLeftPositionButton))
+                    {
+                        horizontal = 25;
+                        vertical = 25;
+                    }
+                    else if (this.IsSimplePositionButtonSelected(this.TopPositionButton))
+                    {
+                        horizontal = 50;
+                        vertical = 25;
+                    }
+                    else if (this.IsSimplePositionButtonSelected(this.TopRightPositionButton))
+                    {
+                        horizontal = 75;
+                        vertical = 25;
+                    }
+                    else if (this.IsSimplePositionButtonSelected(this.LeftPositionButton))
+                    {
+                        horizontal = 25;
+                        vertical = 50;
+                    }
+                    else if (this.IsSimplePositionButtonSelected(this.CenterPositionButton))
+                    {
+                        horizontal = 50;
+                        vertical = 50;
+                    }
+                    else if (this.IsSimplePositionButtonSelected(this.RightPositionButton))
+                    {
+                        horizontal = 75;
+                        vertical = 50;
+                    }
+                    else if (this.IsSimplePositionButtonSelected(this.BottomLeftPositionButton))
+                    {
+                        horizontal = 25;
+                        vertical = 75;
+                    }
+                    else if (this.IsSimplePositionButtonSelected(this.BottomPositionButton))
+                    {
+                        horizontal = 50;
+                        vertical = 75;
+                    }
+                    else if (this.IsSimplePositionButtonSelected(this.BottomRightPositionButton))
+                    {
+                        horizontal = 75;
+                        vertical = 75;
+                    }
+                }
 
                 OverlayEffectTypeEnum type = EnumHelper.GetEnumValueFromString<OverlayEffectTypeEnum>((string)this.TypeComboBox.SelectedItem);
                 if (type == OverlayEffectTypeEnum.Image)
@@ -140,7 +216,7 @@ namespace MixItUp.WPF.Controls.Actions
                             color = ColorSchemes.ColorSchemeDictionary[color];
                         }
 
-                        if (int.TryParse(this.FontSizeTextBox.Text, out int size) && size > 0)
+                        if (int.TryParse(this.FontSizeComboBox.Text, out int size) && size > 0)
                         {
                             return new OverlayAction(new OverlayTextEffect(this.TextTextBox.Text, color, size, entrance, animation, exit, duration, horizontal, vertical));
                         }
@@ -215,8 +291,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.VideoGrid.Visibility = Visibility.Collapsed;
             this.WebPageGrid.Visibility = Visibility.Collapsed;
             this.HTMLGrid.Visibility = Visibility.Collapsed;
-            this.DurationAndAnimationsGrid.Visibility = Visibility.Collapsed;
-            this.PositionGrid.Visibility = Visibility.Collapsed;
+            this.AdditionalOptionsGrid.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 OverlayEffectTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayEffectTypeEnum>((string)this.TypeComboBox.SelectedItem);
@@ -244,8 +319,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.HTMLGrid.Visibility = Visibility.Visible;
                 }
-                this.DurationAndAnimationsGrid.Visibility = Visibility.Visible;
-                this.PositionGrid.Visibility = Visibility.Visible;
+                this.AdditionalOptionsGrid.Visibility = Visibility.Visible;
             }
         }
 
@@ -275,5 +349,46 @@ namespace MixItUp.WPF.Controls.Actions
                 this.WebPageFilePathTextBox.Text = filePath;
             }
         }
+
+        private void PositionSimpleAdvancedToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.SimplePositionGrid.Visibility = (this.PositionSimpleAdvancedToggleButton.IsChecked.GetValueOrDefault()) ? Visibility.Hidden : Visibility.Visible;
+            this.AdvancedPositionGrid.Visibility = (this.PositionSimpleAdvancedToggleButton.IsChecked.GetValueOrDefault()) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void TopLeftPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.TopLeftPositionButton); }
+
+        private void TopPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.TopPositionButton); }
+
+        private void TopRightPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.TopRightPositionButton); }
+
+        private void LeftPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.LeftPositionButton); }
+
+        private void CenterPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.CenterPositionButton); }
+
+        private void RightPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.RightPositionButton); }
+
+        private void BottomLeftPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.BottomLeftPositionButton); }
+
+        private void BottomPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.BottomPositionButton); }
+
+        private void BottomRightPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.BottomRightPositionButton); }
+
+        private void HandleSimplePositionChange(Button button)
+        {
+            this.TopLeftPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+            this.TopPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+            this.TopRightPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+            this.LeftPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+            this.CenterPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+            this.RightPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+            this.BottomLeftPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+            this.BottomPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+            this.BottomRightPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
+
+            button.Style = (Style)this.FindResource("MaterialDesignRaisedLightButton");
+        }
+
+        private bool IsSimplePositionButtonSelected(Button button) { return button.Style.Equals((Style)this.FindResource("MaterialDesignRaisedLightButton")); }
     }
 }
