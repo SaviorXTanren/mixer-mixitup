@@ -3,7 +3,6 @@ using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Themes;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.WPF.Properties;
 using System;
 using System.Collections.Generic;
 using System.Windows;

@@ -274,7 +274,7 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveConnectedButtonControlModel> controls) { await this.RunAsync(this.Client.UpdateControls(scene, controls)); }
+        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveControlModel> controls) { await this.RunAsync(this.Client.UpdateControls(scene, controls)); }
 
         public async Task CaptureSparkTransaction(string transactionID) { await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
 
@@ -362,6 +362,35 @@ namespace MixItUp.Base.MixerAPI
                 foreach (InteractiveConnectedTextBoxControlModel textBox in scene.textBoxes)
                 {
                     this.AddConnectedControl(scene, textBox);
+                }
+            }
+
+            InteractiveGameVersionModel gameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(this.Game.versions.OrderByDescending(v => v.createdAt.GetValueOrDefault()).First());
+            foreach (InteractiveSceneModel scene in gameVersion.controls.scenes)
+            {
+                InteractiveConnectedSceneModel connectedScene = this.Scenes.FirstOrDefault(s => s.sceneID.EndsWith(scene.sceneID));
+                if (connectedScene != null)
+                {
+                    foreach (InteractiveButtonControlModel button in scene.buttons)
+                    {
+                        if (this.Controls.ContainsKey(button.controlID) && this.Controls[button.controlID] is InteractiveConnectedButtonCommand)
+                        {
+                            InteractiveConnectedButtonCommand command = (InteractiveConnectedButtonCommand)this.Controls[button.controlID];
+                            command.Button.text = button.text;
+                        }
+                    }
+
+                    foreach (InteractiveTextBoxControlModel textBox in scene.textBoxes)
+                    {
+                        if (this.Controls.ContainsKey(textBox.controlID) && this.Controls[textBox.controlID] is InteractiveConnectedTextBoxCommand)
+                        {
+                            InteractiveConnectedTextBoxCommand command = (InteractiveConnectedTextBoxCommand)this.Controls[textBox.controlID];
+                            command.TextBox.placeholder = textBox.placeholder;
+                            command.TextBox.submitText = textBox.submitText;
+                        }
+                    }
+
+                    await this.UpdateControls(connectedScene, connectedScene.allControls);
                 }
             }
 

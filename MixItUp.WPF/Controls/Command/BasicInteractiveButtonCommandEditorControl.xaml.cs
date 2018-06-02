@@ -56,6 +56,7 @@ namespace MixItUp.WPF.Controls.Command
         protected override async Task OnLoaded()
         {
             this.CooldownTypeComboBox.ItemsSource = new List<string>() { "By Itself", "With All Buttons" };
+            this.CooldownTypeComboBox.SelectedIndex = 0;
 
             if (this.command != null)
             {
@@ -102,6 +103,11 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     this.actionControl = new SoundActionControl(null);
                 }
+            }
+
+            if (string.IsNullOrEmpty(this.SparkCostTextBox.Text))
+            {
+                this.SparkCostTextBox.Text = "0";
             }
 
             this.ActionControlControl.Content = this.actionControl;

@@ -160,7 +160,6 @@ namespace MixItUp.Base.Commands
             List<ActionBase> actionsToRun = new List<ActionBase>();
             if (this.IsRandomized)
             {
-
                 actionsToRun.Add(this.Actions[this.random.Next(this.Actions.Count)]);
             }
             else
