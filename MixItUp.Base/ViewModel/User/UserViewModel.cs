@@ -427,9 +427,14 @@ namespace MixItUp.Base.ViewModel.User
 
                 if (this.mixerRoles.Contains(MixerRoleEnum.Streamer))
                 {
+                    this.mixerRoles.Add(MixerRoleEnum.ChannelEditor);
                     this.mixerRoles.Add(MixerRoleEnum.Subscriber);
-                    this.mixerRoles.Add(MixerRoleEnum.Mod);
                     this.mixerRoles.Add(MixerRoleEnum.Follower);
+                }
+                
+                if (this.mixerRoles.Contains(MixerRoleEnum.ChannelEditor))
+                {
+                    this.mixerRoles.Add(MixerRoleEnum.Mod);
                 }
 
                 List<MixerRoleEnum> mixerDisplayRoles = this.mixerRoles.ToList();
@@ -445,6 +450,11 @@ namespace MixItUp.Base.ViewModel.User
                         mixerDisplayRoles.Remove(MixerRoleEnum.User);
                     }
 
+                    if (mixerDisplayRoles.Contains(MixerRoleEnum.ChannelEditor))
+                    {
+                        mixerDisplayRoles.Remove(MixerRoleEnum.Mod);
+                    }
+
                     if (this.mixerRoles.Contains(MixerRoleEnum.Subscriber) || this.mixerRoles.Contains(MixerRoleEnum.Streamer))
                     {
                         mixerDisplayRoles.Remove(MixerRoleEnum.Follower);
@@ -452,8 +462,8 @@ namespace MixItUp.Base.ViewModel.User
 
                     if (this.mixerRoles.Contains(MixerRoleEnum.Streamer))
                     {
+                        mixerDisplayRoles.Remove(MixerRoleEnum.ChannelEditor);
                         mixerDisplayRoles.Remove(MixerRoleEnum.Subscriber);
-                        mixerDisplayRoles.Remove(MixerRoleEnum.Mod);
                     }
                 }
 
