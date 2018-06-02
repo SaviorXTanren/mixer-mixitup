@@ -194,11 +194,17 @@ namespace MixItUp.Base.ViewModel.User
             {
                 switch (this.PrimaryRole)
                 {
-                    case MixerRoleEnum.Streamer: return "UserStreamerRoleColor";
-                    case MixerRoleEnum.Staff: return "UserStaffRoleColor";
-                    case MixerRoleEnum.Mod: return "UserModRoleColor";
-                    case MixerRoleEnum.Pro: return "UserProRoleColor";
-                    default: return "UserDefaultRoleColor";
+                    case MixerRoleEnum.Streamer:
+                        return "UserStreamerRoleColor";
+                    case MixerRoleEnum.Staff:
+                        return "UserStaffRoleColor";
+                    case MixerRoleEnum.ChannelEditor:
+                    case MixerRoleEnum.Mod:
+                        return "UserModRoleColor";
+                    case MixerRoleEnum.Pro:
+                        return "UserProRoleColor";
+                    default:
+                        return "UserDefaultRoleColor";
                 }
             }
         }
