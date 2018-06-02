@@ -25,6 +25,8 @@ namespace MixItUp.Base.Commands
         StreamlabsDonation = 10,
         [Name("GawkBox Donation")]
         GawkBoxDonation = 11,
+        [Name("Tiltify Donation")]
+        TiltifyDonation = 12,
 
         [Name("User First Joined")]
         MixerUserFirstJoin = 30,

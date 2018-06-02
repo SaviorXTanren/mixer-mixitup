@@ -6,7 +6,8 @@ namespace MixItUp.Base.Model.User
     public enum UserDonationSourceEnum
     {
         GawkBox,
-        Streamlabs
+        Streamlabs,
+        Tiltify,
     }
 
     [DataContract]

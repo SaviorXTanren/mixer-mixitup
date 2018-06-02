@@ -59,6 +59,8 @@ namespace MixItUp.Desktop
         public OAuthTokenModel SpotifyOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel DiscordOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel TiltifyOAuthToken { get; set; }
 
         [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
@@ -172,6 +174,9 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public bool EnableDeveloperAPI { get; set; }
+
+        [JsonProperty]
+        public int TiltifyCampaign { get; set; }
 
         [JsonProperty]
         public bool UnlockAllCommands { get; set; }
@@ -464,6 +469,10 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.Discord != null)
             {
                 this.DiscordOAuthToken = ChannelSession.Services.Discord.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.Tiltify != null)
+            {
+                this.TiltifyOAuthToken = ChannelSession.Services.Tiltify.GetOAuthTokenCopy();
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();

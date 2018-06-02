@@ -106,8 +106,6 @@ namespace MixItUp.Desktop.Services
         public event EventHandler OnWebSocketConnectedOccurred;
         public event EventHandler OnWebSocketDisconnectedOccurred;
 
-        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
         private StreamlabsWebSocketService websocketService;
 
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
@@ -160,7 +158,6 @@ namespace MixItUp.Desktop.Services
             {
                 await this.websocketService.Disconnect();
             }
-            this.cancellationTokenSource.Cancel();
         }
 
         public void WebSocketConnectedOccurred()

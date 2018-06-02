@@ -27,6 +27,7 @@ namespace MixItUp.Base.Services
         public ITwitterService Twitter { get; protected set; }
         public ISpotifyService Spotify { get; protected set; }
         public IDiscordService Discord { get; protected set; }
+        public ITiltifyService Tiltify { get; protected set; }
 
         public abstract Task Close();
 
@@ -62,5 +63,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeDiscord();
         public abstract Task DisconnectDiscord();
+
+        public abstract Task<bool> InitializeTiltify(string authorizationCode = null);
+        public abstract Task DisconnectTiltify();
     }
 }

@@ -323,6 +323,31 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeTiltify(string authorizationCode = null)
+        {
+            this.Tiltify = (ChannelSession.Settings.TiltifyOAuthToken != null) ? new TiltifyService(ChannelSession.Settings.TiltifyOAuthToken) : new TiltifyService(authorizationCode);
+            if (await this.Tiltify.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectTiltify();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectTiltify()
+        {
+            if (this.Tiltify != null)
+            {
+                await this.Tiltify.Disconnect();
+                this.Tiltify = null;
+                ChannelSession.Settings.TiltifyOAuthToken = null;
+                ChannelSession.Settings.TiltifyCampaign = 0;
+            }
+        }
+
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");

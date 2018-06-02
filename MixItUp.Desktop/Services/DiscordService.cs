@@ -29,7 +29,7 @@ namespace MixItUp.Desktop.Services
         public string ServerID { get; private set; }
         public string BotPermissions { get; private set; }
 
-        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, loginSuccessHtmlPageFilePath: "LoginRedirectPage.html") { }
+        public DiscordOAuthServer() : base(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName) { }
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
@@ -443,7 +443,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task DeafenServerMember(DiscordServer server, DiscordUser user, bool deaf = true) { await this.botService.DeafenServerMember(server, user, deaf); }
 
-        protected override async Task<string> ConnectViaOAuthRedirect(string oauthPageURL)
+        protected override async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningURL)
         {
             DiscordOAuthServer oauthServer = new DiscordOAuthServer();
             oauthServer.Start();

@@ -196,7 +196,7 @@ namespace MixItUp.Base
         {
             try
             {
-                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, scopes, false, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
@@ -404,6 +404,10 @@ namespace MixItUp.Base
                     if (ChannelSession.Settings.DiscordOAuthToken != null)
                     {
                         await ChannelSession.Services.InitializeDiscord();
+                    }
+                    if (ChannelSession.Settings.TiltifyOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeTiltify();
                     }
 
                     foreach (CommandBase command in ChannelSession.AllCommands)

@@ -13,6 +13,8 @@ namespace MixItUp.Base.Services
 {
     public abstract class OAuthServiceBase : RestServiceBase
     {
+        public const string LoginRedirectPageFileName = "LoginRedirectPage.html";
+
         protected OAuthTokenModel token;
 
         protected string baseAddress;
@@ -37,9 +39,11 @@ namespace MixItUp.Base.Services
             return null;
         }
 
-        protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL)
+        protected async Task<string> ConnectViaOAuthRedirect(string oauthPageURL) { return await this.ConnectViaOAuthRedirect(oauthPageURL, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL); }
+
+        protected virtual async Task<string> ConnectViaOAuthRedirect(string oauthPageURL, string listeningAddress)
         {
-            OAuthHttpListenerServer oauthServer = new OAuthHttpListenerServer(MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL, loginSuccessHtmlPageFilePath: "LoginRedirectPage.html");
+            OAuthHttpListenerServer oauthServer = new OAuthHttpListenerServer(listeningAddress, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
             oauthServer.Start();
 
             ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = oauthPageURL, UseShellExecute = true };

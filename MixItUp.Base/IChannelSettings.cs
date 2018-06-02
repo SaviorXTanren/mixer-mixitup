@@ -32,6 +32,7 @@ namespace MixItUp.Base
         OAuthTokenModel TwitterOAuthToken { get; set; }
         OAuthTokenModel SpotifyOAuthToken { get; set; }
         OAuthTokenModel DiscordOAuthToken { get; set; }
+        OAuthTokenModel TiltifyOAuthToken { get; set; }
 
         ExpandedChannelModel Channel { get; set; }
 
@@ -92,6 +93,8 @@ namespace MixItUp.Base
         bool EnableXSplitConnection { get; set; }
 
         bool EnableDeveloperAPI { get; set; }
+
+        int TiltifyCampaign { get; set; }
 
         bool UnlockAllCommands { get; set; }
 
