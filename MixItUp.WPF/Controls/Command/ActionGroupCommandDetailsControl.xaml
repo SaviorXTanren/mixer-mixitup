@@ -29,7 +29,7 @@
 
         <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="2" HorizontalAlignment="Center" />
         
-        <TextBlock Grid.Column="4" VerticalAlignment="Center">Run One Randomly</TextBlock>
+        <TextBlock Grid.Column="4" x:Name="RunOneRandomlyTextBlock" VerticalAlignment="Center">Run One Randomly</TextBlock>
         <ToggleButton Grid.Column="6" x:Name="RunOneRandomlyToggleButton" />
     </Grid>
 </local:CommandDetailsControlBase>

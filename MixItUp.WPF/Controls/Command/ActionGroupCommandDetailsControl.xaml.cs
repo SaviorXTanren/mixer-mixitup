@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.WPF.Util;
+using System;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Command
@@ -10,6 +11,9 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class ActionGroupCommandDetailsControl : CommandDetailsControlBase
     {
+        private static readonly string RunOneRandomlyTooltip = "This option will randomly perform one AND ONLY ONE of" +
+            Environment.NewLine + "the actions below when this Action Group is performed";
+
         private ActionGroupCommand command;
 
         public ActionGroupCommandDetailsControl(ActionGroupCommand command)
@@ -22,6 +26,8 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
+            this.RunOneRandomlyTextBlock.ToolTip = this.RunOneRandomlyToggleButton.ToolTip = RunOneRandomlyTooltip;
+
             if (this.command != null)
             {
                 this.NameTextBox.Text = this.command.Name;
