@@ -407,30 +407,51 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
+        private async void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
         {
-            ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(messageID));
-            if (message != null)
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                message.DeleteMessage();
-            }
-        }
+                await this.messageUpdateLock.WaitAsync();
 
-        private void ChatClient_OnUserPurgeOccurred(object sender, UserViewModel user)
-        {
-            IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(user.ID));
-            if (userMessages != null)
-            {
-                foreach (ChatMessageControl message in userMessages)
+                ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(messageID));
+                if (message != null)
                 {
                     message.DeleteMessage();
                 }
-            }
+
+                this.messageUpdateLock.Release();
+            });
         }
 
-        private void Chat_OnClearMessagesOccurred(object sender, EventArgs e)
+        private async void ChatClient_OnUserPurgeOccurred(object sender, UserViewModel user)
         {
-            this.Dispatcher.Invoke(() => this.MessageControls.Clear());
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
+            {
+                await this.messageUpdateLock.WaitAsync();
+
+                IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(user.ID));
+                if (userMessages != null)
+                {
+                    foreach (ChatMessageControl message in userMessages)
+                    {
+                        message.DeleteMessage();
+                    }
+                }
+
+                this.messageUpdateLock.Release();
+            });
+        }
+
+        private async void Chat_OnClearMessagesOccurred(object sender, EventArgs e)
+        {
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
+            {
+                await this.messageUpdateLock.WaitAsync();
+
+                this.MessageControls.Clear();
+
+                this.messageUpdateLock.Release();
+            });
         }
 
         private async void ChatClient_OnUserJoinOccurred(object sender, UserViewModel user)
