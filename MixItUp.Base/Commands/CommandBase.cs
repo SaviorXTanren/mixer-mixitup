@@ -67,9 +67,6 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         private CancellationTokenSource currentCancellationTokenSource;
 
-        [JsonIgnore]
-        private Guid randomUserSpecialIdentifierGroupID = Guid.Empty;
-
         public CommandBase()
         {
             this.ID = Guid.NewGuid();
@@ -122,16 +119,13 @@ namespace MixItUp.Base.Commands
                             await this.AsyncSemaphore.WaitAsync();
                         }
 
-                        this.randomUserSpecialIdentifierGroupID = Guid.NewGuid();
-                        await SpecialIdentifierStringBuilder.AssignRandomUserSpecialIdentifierGroup(this.randomUserSpecialIdentifierGroupID);
+                        await SpecialIdentifierStringBuilder.AssignRandomUserSpecialIdentifierGroup(this.ID);
                         foreach (ActionBase action in this.Actions)
                         {
-                            action.AssignRandomUserSpecialIdentifierGroup(this.randomUserSpecialIdentifierGroupID);
+                            action.AssignRandomUserSpecialIdentifierGroup(this.ID);
                         }
 
                         await this.PerformInternal(user, arguments, this.currentCancellationTokenSource.Token);
-
-                        SpecialIdentifierStringBuilder.ClearRandomUserSpecialIdentifierGroup(this.randomUserSpecialIdentifierGroupID);
                     }
                     catch (TaskCanceledException) { }
                     catch (Exception ex) { Util.Logger.Log(ex); }
