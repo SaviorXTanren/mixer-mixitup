@@ -37,6 +37,7 @@ namespace MixItUp.Base
 
         bool FeatureMe { get; set; }
         StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
+        string DefaultAudioOutput { get; set; }
 
         bool WhisperAllAlerts { get; set; }
         bool LatestChatAtTop { get; set; }

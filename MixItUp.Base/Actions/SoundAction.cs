@@ -10,6 +10,8 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class SoundAction : ActionBase
     {
+        public const string DefaultAudioDevice = "Default Output";
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return SoundAction.asyncSemaphore; } }
@@ -20,20 +22,29 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public int VolumeScale { get; set; }
 
-        public SoundAction() : base(ActionTypeEnum.Sound) { }
+        [DataMember]
+        public string OutputDevice { get; set; }
 
-        public SoundAction(string filePath, int volumeScale)
+        public SoundAction() : base(ActionTypeEnum.Sound) { this.OutputDevice = null; }
+
+        public SoundAction(string filePath, int volumeScale, string outputDevice = null)
             : this()
         {
             this.FilePath = filePath;
             this.VolumeScale = volumeScale;
+            this.OutputDevice = outputDevice;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (File.Exists(this.FilePath))
             {
-                await ChannelSession.Services.AudioService.Play(this.FilePath, this.VolumeScale);
+                int audioDevice = -1;
+                if (!string.IsNullOrEmpty(this.OutputDevice))
+                {
+                    audioDevice = await ChannelSession.Services.AudioService.GetOutputDevice(this.OutputDevice);
+                }
+                await ChannelSession.Services.AudioService.Play(this.FilePath, this.VolumeScale, audioDevice);
             }
         }
     }

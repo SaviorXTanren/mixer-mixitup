@@ -67,6 +67,8 @@ namespace MixItUp.Desktop
         public bool FeatureMe { get; set; }
         [JsonProperty]
         public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
+        [JsonProperty]
+        public string DefaultAudioOutput { get; set; }
 
         [JsonProperty]
         public bool WhisperAllAlerts { get; set; }

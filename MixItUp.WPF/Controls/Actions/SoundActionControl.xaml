@@ -9,20 +9,37 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="30" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <TextBox Grid.Column="0" Grid.Row="0" x:Name="SoundFilePathTextBox" MaterialDesign:HintAssist.Hint="Sound File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-        <Button Grid.Column="2" Grid.Row="0" x:Name="SoundFileBrowseButton" VerticalAlignment="Bottom" Click="SoundFileBrowseButton_Click">Browse</Button>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="4" VerticalAlignment="Bottom">Volume:</TextBlock>
-        <Slider x:Name="SoundVolumeSlider" VerticalAlignment="Center" Grid.Column="6" Width="200" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
+            <TextBox Grid.Column="0" Grid.Row="0" x:Name="SoundFilePathTextBox" MaterialDesign:HintAssist.Hint="Sound File Path" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <Button Grid.Column="2" Grid.Row="0" x:Name="SoundFileBrowseButton" VerticalAlignment="Bottom" Click="SoundFileBrowseButton_Click">Browse</Button>
+        </Grid>
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="AudioOutputComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Audio Output Device" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" Margin="0,20,0,0" />
+
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,35,0,0">Volume:</TextBlock>
+            <Slider x:Name="SoundVolumeSlider" VerticalAlignment="Center" Grid.Column="4" Width="200" Minimum="0" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
+        </Grid>
+
     </Grid>
 </local:ActionControlBase>

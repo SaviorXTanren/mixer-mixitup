@@ -19,6 +19,8 @@ namespace MixItUp.WPF.Controls.Settings
             "to re-authenticate any of your services accounts, you will" + Environment.NewLine +
             "need to manually log in when this occurs.";
 
+        private Dictionary<int, string> audioOutputDevices = new Dictionary<int, string>();
+
         public GeneralSettingsControl()
         {
             InitializeComponent();
@@ -32,9 +34,24 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
+            this.audioOutputDevices = await ChannelSession.Services.AudioService.GetOutputDevices();
+
+            List<string> audioOutputDevicesNames = new List<string>();
+            audioOutputDevicesNames.Add(SoundAction.DefaultAudioDevice);
+            audioOutputDevicesNames.AddRange(this.audioOutputDevices.Values);
+            this.DefaultAudioOutputComboBox.ItemsSource = audioOutputDevicesNames;
+
             this.FeatureMeToggleButton.IsChecked = ChannelSession.Settings.FeatureMe;
             this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.Channel.user.id);
             this.DefaultStreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.DefaultStreamingSoftware);
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
+            {
+                this.DefaultAudioOutputComboBox.SelectedItem = ChannelSession.Settings.DefaultAudioOutput;
+            }
+            else
+            {
+                this.DefaultAudioOutputComboBox.SelectedItem = SoundAction.DefaultAudioDevice;
+            }
 
             await base.InitializeInternal();
         }
@@ -61,7 +78,26 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void DefaultStreamingSoftwareComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            ChannelSession.Settings.DefaultStreamingSoftware = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.DefaultStreamingSoftwareComboBox.SelectedItem);
+            if (this.DefaultStreamingSoftwareComboBox.SelectedIndex >= 0)
+            {
+                ChannelSession.Settings.DefaultStreamingSoftware = EnumHelper.GetEnumValueFromString<StreamingSoftwareTypeEnum>((string)this.DefaultStreamingSoftwareComboBox.SelectedItem);
+            }
+        }
+
+        private void DefaultAudioOutputComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.DefaultAudioOutputComboBox.SelectedIndex >= 0)
+            {
+                string audioDeviceName = (string)this.DefaultAudioOutputComboBox.SelectedItem;
+                if (audioDeviceName.Equals(SoundAction.DefaultAudioDevice))
+                {
+                    ChannelSession.Settings.DefaultAudioOutput = null;
+                }
+                else
+                {
+                    ChannelSession.Settings.DefaultAudioOutput = audioDeviceName;
+                }
+            }
         }
     }
 }
