@@ -170,6 +170,7 @@ namespace MixItUp.Desktop.Services
                         {
                             if (!donationsReceived.ContainsKey(tDonation.ID))
                             {
+                                donationsReceived[tDonation.ID] = tDonation;
                                 UserDonationModel donation = tDonation.ToGenericDonation();
                                 GlobalEvents.DonationOccurred(donation);
 
@@ -191,7 +192,6 @@ namespace MixItUp.Desktop.Services
                                     await command.Perform(user);
                                 }
                             }
-                            donationsReceived[tDonation.ID] = tDonation;
                         }
                     }
                 }
