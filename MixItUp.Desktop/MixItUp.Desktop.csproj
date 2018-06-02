@@ -50,6 +50,9 @@
     <Reference Include="Mixer.Base, Version=0.6.2.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\mixer-client-csharp.0.6.2.1-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -162,7 +165,7 @@
     <Compile Include="Services\StreamlabsService.cs" />
     <Compile Include="Services\TranslationService.cs" />
     <Compile Include="Services\TwitterService.cs" />
-    <Compile Include="Services\WindowsAudioService.cs" />
+    <Compile Include="Services\AudioService.cs" />
     <Compile Include="Services\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsFileService.cs" />
     <Compile Include="Services\WindowsInputService.cs" />
