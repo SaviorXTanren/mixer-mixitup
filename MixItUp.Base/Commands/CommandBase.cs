@@ -62,6 +62,11 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public bool Unlocked { get; set; }
 
+        [DataMember]
+        public bool IsRandomized { get; set; }
+
+        [JsonIgnore]
+        private Random random = new Random();
         [JsonIgnore]
         private Task currentTaskRun;
         [JsonIgnore]
@@ -152,20 +157,31 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
-            for (int i = 0; i < this.Actions.Count; i++)
+            List<ActionBase> actionsToRun = new List<ActionBase>();
+            if (this.IsRandomized)
+            {
+
+                actionsToRun.Add(this.Actions[this.random.Next(this.Actions.Count)]);
+            }
+            else
+            {
+                actionsToRun.AddRange(this.Actions);
+            }
+
+            for (int i = 0; i < actionsToRun.Count; i++)
             {
                 token.ThrowIfCancellationRequested();
 
-                if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
                 {
                     ChannelSession.Services.OverlayServer.StartBatching();
                 }
 
-                await this.Actions[i].Perform(user, arguments);
+                await actionsToRun[i].Perform(user, arguments);
 
-                if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
                 {
-                    if (i == (this.Actions.Count - 1) || !(this.Actions[i + 1] is OverlayAction))
+                    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
                     {
                         await ChannelSession.Services.OverlayServer.EndBatching();
                     }
