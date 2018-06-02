@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.Command
         private CommandWindow window;
 
         private CommandDetailsControlBase commandDetailsControl;
-        private ObservableCollection<ActionContainerControl> actionControls;
+        private ObservableCollection<ActionContainerControl> actionControls = new ObservableCollection<ActionContainerControl>();
 
         private CommandBase newCommand = null;
 
@@ -33,8 +33,6 @@ namespace MixItUp.WPF.Controls.Command
             this.commandDetailsControl = commandDetailsControl;
 
             InitializeComponent();
-
-            this.actionControls = new ObservableCollection<ActionContainerControl>();
         }
 
         public override void OnWindowSizeChanged(Size size)
@@ -77,10 +75,36 @@ namespace MixItUp.WPF.Controls.Command
 
         protected override async Task OnLoaded()
         {
-            List<string> actionTypes = EnumHelper.GetEnumNames<ActionTypeEnum>().ToList();
-            actionTypes.Remove(EnumHelper.GetEnumName(ActionTypeEnum.Custom));
-            this.TypeComboBox.ItemsSource = actionTypes.OrderBy(s => s);
+            List<string> actionTypes = new List<string>();
+            foreach (ActionTypeEnum actionType in EnumHelper.GetEnumList<ActionTypeEnum>())
+            {
+                string actionTypeName = EnumHelper.GetEnumName(actionType);
+                switch (actionType)
+                {
+                    case ActionTypeEnum.Custom:
+                        continue;
+                    case ActionTypeEnum.Chat:
+                        actionTypeName += " Message";
+                        break;
+                    case ActionTypeEnum.Counter:
+                        actionTypeName += " (Create & Update)";
+                        break;
+                    case ActionTypeEnum.Input:
+                        actionTypeName += " (Keyboard & Mouse)";
+                        break;
+                    case ActionTypeEnum.Overlay:
+                        actionTypeName += " (Images & Videos)";
+                        break;
+                    case ActionTypeEnum.File:
+                        actionTypeName += " (Read & Write)";
+                        break;
+                    default:
+                        break;
+                }
+                actionTypes.Add(actionTypeName);
+            }
 
+            this.TypeComboBox.ItemsSource = actionTypes.OrderBy(s => s);
             this.ActionsListView.ItemsSource = this.actionControls;
 
             this.CommandDetailsGrid.Visibility = Visibility.Visible;
