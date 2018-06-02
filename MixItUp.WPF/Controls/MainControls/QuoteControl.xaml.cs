@@ -3,19 +3,24 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
+    public class QuoteListing
+    {
+        public int Index { get; set; }
+        public UserQuoteViewModel Quote { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for QuoteControl.xaml
     /// </summary>
     public partial class QuoteControl : MainControlBase
     {
-        private ObservableCollection<UserQuoteViewModel> quotes = new ObservableCollection<UserQuoteViewModel>();
+        private ObservableCollection<QuoteListing> quotes = new ObservableCollection<QuoteListing>();
 
         public QuoteControl()
         {
@@ -65,10 +70,10 @@ namespace MixItUp.WPF.Controls.MainControls
             Button button = (Button)sender;
             if (button.DataContext != null)
             {
-                UserQuoteViewModel quote = (UserQuoteViewModel)button.DataContext;
+                QuoteListing quote = (QuoteListing)button.DataContext;
                 await this.Window.RunAsyncOperation(async () =>
                 {
-                    ChannelSession.Settings.UserQuotes.Remove(quote);
+                    ChannelSession.Settings.UserQuotes.Remove(quote.Quote);
                     await ChannelSession.SaveSettings();
                     this.RefreshList();
                 });
@@ -78,9 +83,9 @@ namespace MixItUp.WPF.Controls.MainControls
         private void RefreshList()
         {
             this.quotes.Clear();
-            foreach (UserQuoteViewModel quote in ChannelSession.Settings.UserQuotes)
+            for (int i = 0; i < ChannelSession.Settings.UserQuotes.Count; i++)
             {
-                this.quotes.Add(quote);
+                this.quotes.Add(new QuoteListing() { Index = (i + 1), Quote = ChannelSession.Settings.UserQuotes[i] });
             }
         }
 
@@ -88,8 +93,22 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                this.quotes.Add(quote);
+                this.RefreshList();
             }));
+        }
+
+        private void QuoteTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            QuoteListing quote = (QuoteListing)textBox.DataContext;
+            quote.Quote.Quote = textBox.Text;
+        }
+
+        private void QuoteGameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            QuoteListing quote = (QuoteListing)textBox.DataContext;
+            quote.Quote.GameName = textBox.Text;
         }
     }
 }
