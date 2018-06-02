@@ -23,6 +23,8 @@ namespace MixItUp.WPF.Controls.MainControls
         GawkBox,
         [Name("Streamlabs Tip")]
         Streamlabs,
+        [Name("Tiltify Donations")]
+        Tiltify,
     }
 
     public enum GiveawayDonationEntryQualificationTypeEnum
@@ -90,6 +92,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 else if (ChannelSession.Settings.GiveawayStreamlabsTrigger)
                 {
                     this.EntryMethodTypeComboBox.SelectedItem = EnumHelper.GetEnumName(GiveawayEntryTypeEnum.Streamlabs);
+                }
+                else if (ChannelSession.Settings.GiveawayTiltifyTrigger)
+                {
+                    this.EntryMethodTypeComboBox.SelectedItem = EnumHelper.GetEnumName(GiveawayEntryTypeEnum.Tiltify);
                 }
 
                 if (ChannelSession.Settings.GiveawayDonationAmount > 0.0)
@@ -217,6 +223,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChannelSession.Settings.GiveawayCommand = null;
                 ChannelSession.Settings.GiveawayGawkBoxTrigger = (entryType == GiveawayEntryTypeEnum.GawkBox);
                 ChannelSession.Settings.GiveawayStreamlabsTrigger = (entryType == GiveawayEntryTypeEnum.Streamlabs);
+                ChannelSession.Settings.GiveawayTiltifyTrigger = (entryType == GiveawayEntryTypeEnum.Tiltify);
                 ChannelSession.Settings.GiveawayDonationRequiredAmount = (qualificationType == GiveawayDonationEntryQualificationTypeEnum.MinimumAmountRequired);
                 ChannelSession.Settings.GiveawayDonationAmount = donationAmount;
             }
@@ -427,7 +434,8 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.giveawayEnabled && this.selectedWinner == null)
             {
                 if  ((ChannelSession.Settings.GiveawayGawkBoxTrigger && e.Source == UserDonationSourceEnum.GawkBox) ||
-                    (ChannelSession.Settings.GiveawayStreamlabsTrigger && e.Source == UserDonationSourceEnum.Streamlabs))
+                    (ChannelSession.Settings.GiveawayStreamlabsTrigger && e.Source == UserDonationSourceEnum.Streamlabs) ||
+                    (ChannelSession.Settings.GiveawayTiltifyTrigger && e.Source == UserDonationSourceEnum.Tiltify))
                 {
                     UserModel userModel = await ChannelSession.Connection.GetUser(e.UserName);
                     if (userModel != null)

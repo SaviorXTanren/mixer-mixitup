@@ -59,6 +59,7 @@ namespace MixItUp.Base
         string GiveawayCommand { get; set; }
         bool GiveawayGawkBoxTrigger { get; set; }
         bool GiveawayStreamlabsTrigger { get; set; }
+        bool GiveawayTiltifyTrigger { get; set; }
         bool GiveawayDonationRequiredAmount { get; set; }
         double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }

@@ -107,6 +107,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool GiveawayStreamlabsTrigger { get; set; }
         [JsonProperty]
+        public bool GiveawayTiltifyTrigger { get; set; }
+        [JsonProperty]
         public bool GiveawayDonationRequiredAmount { get; set; }
         [JsonProperty]
         public double GiveawayDonationAmount { get; set; }
