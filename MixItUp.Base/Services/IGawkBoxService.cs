@@ -41,7 +41,7 @@ namespace MixItUp.Base.Services
                 Source = UserDonationSourceEnum.GawkBox,
 
                 ID = this.CreatorID.ToString(),
-                Username = this.UserName,
+                UserName = this.UserName,
                 Message = this.Message,
                 ImageLink = this.Gifts.FirstOrDefault().ImageLink,
 

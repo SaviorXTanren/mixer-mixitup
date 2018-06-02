@@ -33,7 +33,7 @@ namespace MixItUp.Desktop.Services
                     UserDonationModel donation = alert.ToGenericDonation();
                     GlobalEvents.DonationOccurred(donation);
 
-                    UserViewModel user = new UserViewModel(0, donation.Username);
+                    UserViewModel user = new UserViewModel(0, donation.UserName);
 
                     UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
                     if (userModel != null)

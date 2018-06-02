@@ -18,7 +18,7 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string ID { get; set; }
         [DataMember]
-        public string Username { get; set; }
+        public string UserName { get; set; }
         [DataMember]
         public string Message { get; set; }
         [DataMember]

@@ -176,6 +176,8 @@ namespace MixItUp.Desktop.Services
             this.Streamlabs = (ChannelSession.Settings.StreamlabsOAuthToken != null) ? new StreamlabsService(ChannelSession.Settings.StreamlabsOAuthToken) : new StreamlabsService();
             if (await this.Streamlabs.Connect())
             {
+                this.Streamlabs.OnWebSocketConnectedOccurred += Streamlabs_OnWebSocketConnectedOccurred;
+                this.Streamlabs.OnWebSocketDisconnectedOccurred += Streamlabs_OnWebSocketDisconnectedOccurred;
                 return true;
             }
             else
@@ -189,6 +191,8 @@ namespace MixItUp.Desktop.Services
         {
             if (this.Streamlabs != null)
             {
+                this.Streamlabs.OnWebSocketConnectedOccurred -= Streamlabs_OnWebSocketConnectedOccurred;
+                this.Streamlabs.OnWebSocketDisconnectedOccurred -= Streamlabs_OnWebSocketDisconnectedOccurred;
                 await this.Streamlabs.Disconnect();
                 this.Streamlabs = null;
                 ChannelSession.Settings.StreamlabsOAuthToken = null;
@@ -358,6 +362,16 @@ namespace MixItUp.Desktop.Services
         private void StreamlabsOBSService_Disconnected(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("Streamlabs OBS");
+        }
+
+        private void Streamlabs_OnWebSocketConnectedOccurred(object sender, EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("Streamlabs");
+        }
+
+        private void Streamlabs_OnWebSocketDisconnectedOccurred(object sender, EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("Streamlabs");
         }
 
         private void GameWisp_OnWebSocketConnectedOccurred(object sender, EventArgs e)

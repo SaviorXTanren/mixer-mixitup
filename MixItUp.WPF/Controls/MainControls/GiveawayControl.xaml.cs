@@ -429,7 +429,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if  ((ChannelSession.Settings.GiveawayGawkBoxTrigger && e.Source == UserDonationSourceEnum.GawkBox) ||
                     (ChannelSession.Settings.GiveawayStreamlabsTrigger && e.Source == UserDonationSourceEnum.Streamlabs))
                 {
-                    UserModel userModel = await ChannelSession.Connection.GetUser(e.Username);
+                    UserModel userModel = await ChannelSession.Connection.GetUser(e.UserName);
                     if (userModel != null)
                     {
                         UserViewModel user = new UserViewModel(userModel);

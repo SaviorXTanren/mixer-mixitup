@@ -172,6 +172,7 @@
     <Compile Include="Services\DesktopSettingsService.cs" />
     <Compile Include="Services\WindowsTextToSpeechService.cs" />
     <Compile Include="Services\XSplitWebServer.cs" />
+    <Compile Include="Util\SocketIOService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\CommunityBannedWords.txt">

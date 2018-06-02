@@ -2,41 +2,31 @@
 using Mixer.Base.Util;
 using MixItUp.Base.Model.User;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public class StreamlabsEventPacket
+    public class StreamlabsDonationEvent
     {
-        [JsonProperty("for")]
-        public string forType { get; set; }
-        public string type { get; set; }
-        public string event_id { get; set; }
-        public JArray message { get; set; }
-    }
-
-    public class StreamlabsDonation
-    {
-        [JsonProperty("donation_id")]
+        [JsonProperty("id")]
         public int ID { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("from")]
+        public string UserName { get; set; }
         [JsonProperty("message")]
         public string Message { get; set; }
 
         [JsonProperty("amount")]
-        public double Amount { get; set; }
-        [JsonProperty("currency")]
-        public string Currency { get; set; }
+        public string Amount { get; set; }
 
         [JsonProperty("created_at")]
         public long CreatedAt { get; set; }
 
-        public StreamlabsDonation()
+        [JsonIgnore]
+        public double AmountValue { get { return double.Parse(this.Amount); } }
+
+        public StreamlabsDonationEvent()
         {
             this.CreatedAt = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now);
         }
@@ -48,10 +38,10 @@ namespace MixItUp.Base.Services
                 Source = UserDonationSourceEnum.Streamlabs,
 
                 ID = this.ID.ToString(),
-                Username = this.Name,
+                UserName = this.UserName,
                 Message = this.Message,
 
-                Amount = this.Amount,
+                Amount = this.AmountValue,
                 AmountText = string.Format("{0:C}", this.Amount),
 
                 DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.CreatedAt),
@@ -61,11 +51,12 @@ namespace MixItUp.Base.Services
 
     public interface IStreamlabsService
     {
+        event EventHandler OnWebSocketConnectedOccurred;
+        event EventHandler OnWebSocketDisconnectedOccurred;
+
         Task<bool> Connect();
 
         Task Disconnect();
-
-        Task<IEnumerable<StreamlabsDonation>> GetDonations();
 
         OAuthTokenModel GetOAuthTokenCopy();
     }

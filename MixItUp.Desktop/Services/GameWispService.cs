@@ -6,6 +6,7 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
 {
-    public class GameWispWebSocketService
+    public class GameWispWebSocketService : SocketIOService
     {
         [DataContract]
         private class GameWispWebSocketEvent
@@ -39,11 +40,10 @@ namespace MixItUp.Desktop.Services
         private GameWispService service;
         private OAuthTokenModel oauthToken;
 
-        private Socket socket;
-
         private string channelID;
 
         public GameWispWebSocketService(GameWispService service, OAuthTokenModel oauthToken)
+            : base("https://singularity.gamewisp.com")
         {
             this.service = service;
             this.oauthToken = oauthToken;
@@ -51,9 +51,9 @@ namespace MixItUp.Desktop.Services
 
         public bool ConnectedAndAuthenticated { get { return !string.IsNullOrEmpty(this.channelID); } }
 
-        public async Task Connect()
+        public override async Task Connect()
         {
-            this.socket = IO.Socket("https://singularity.gamewisp.com");
+            await base.Connect();
 
             this.SocketReceiveWrapper("unauthorized", (errorData) =>
             {
@@ -99,33 +99,33 @@ namespace MixItUp.Desktop.Services
                 }
             });
 
-            this.SocketEventReceiverWrapper("subscriber-new", (eventData) =>
+            this.SocketEventReceiverWrapper<GameWispWebSocketEvent>("subscriber-new", (eventData) =>
             {
                 GameWispSubscribeEvent subscribeEvent = new GameWispSubscribeEvent(eventData.Data);
                 this.service.SubscribeOccurred(subscribeEvent);
                 Task.Run(async () => { await this.RunGameWispCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispSubscribed)), subscribeEvent); });
             });
 
-            this.SocketEventReceiverWrapper("subscriber-renewed", (eventData) =>
+            this.SocketEventReceiverWrapper<GameWispWebSocketEvent>("subscriber-renewed", (eventData) =>
             {
                 GameWispResubscribeEvent resubscribeEvent = new GameWispResubscribeEvent(eventData.Data);
                 this.service.ResubscribeOccurred(resubscribeEvent);
                 Task.Run(async () => { await this.RunGameWispCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispResubscribed)), resubscribeEvent); });
             });
 
-            this.SocketEventReceiverWrapper("subscriber-benefits-change", (eventData) =>
+            this.SocketEventReceiverWrapper<GameWispWebSocketEvent>("subscriber-benefits-change", (eventData) =>
             {
                 this.service.SubscriberBenefitsChangeOccurred(new GameWispBenefitsChangeEvent(eventData.Data));
             });
 
-            this.SocketEventReceiverWrapper("subscriber-status-change", (eventData) =>
+            this.SocketEventReceiverWrapper<GameWispWebSocketEvent>("subscriber-status-change", (eventData) =>
             {
                 GameWispSubscribeEvent subscribeEvent = new GameWispSubscribeEvent(eventData.Data);
                 this.service.SubscriberStatusChangeOccurred(subscribeEvent);
                 Task.Run(async () => { await this.RunGameWispCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GameWispSubscribed)), subscribeEvent); });
             });
 
-            this.SocketEventReceiverWrapper("subscriber-anniversary", (eventData) =>
+            this.SocketEventReceiverWrapper<GameWispWebSocketEvent>("subscriber-anniversary", (eventData) =>
             {
                 this.service.SubscriberAnniversaryOccurred(new GameWispAnniversaryEvent(eventData.Data));
             });
@@ -141,55 +141,18 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public Task Disconnect()
+        public override async Task Disconnect()
         {
             if (this.socket != null)
             {
                 JObject channelDisconnectJObject = new JObject();
                 channelDisconnectJObject["access_token"] = this.oauthToken.accessToken;
                 this.SocketSendWrapper("channel-disconnect", channelDisconnectJObject);
-                this.socket.Close();
             }
-            this.socket = null;
+
+            await base.Disconnect();
+
             this.channelID = null;
-
-            return Task.FromResult(0);
-        }
-
-        private void SocketReceiveWrapper(string eventString, Action<object> processEvent)
-        {
-            this.socket.On(eventString, (eventData) =>
-            {
-                try
-                {
-                    processEvent(eventData);
-                }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
-            });
-        }
-
-        private void SocketEventReceiverWrapper(string eventString, Action<GameWispWebSocketEvent> processEvent)
-        {
-            this.SocketReceiveWrapper(eventString, (eventData) =>
-            {
-                if (this.ConnectedAndAuthenticated)
-                {
-                    JObject jobj = JObject.Parse(eventData.ToString());
-                    if (jobj != null)
-                    {
-                        processEvent(jobj.ToObject<GameWispWebSocketEvent>());
-                    }
-                }
-            });
-        }
-
-        private void SocketSendWrapper(string eventString, object data)
-        {
-            try
-            {
-                this.socket.Emit(eventString, data);
-            }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
         }
 
         private async Task RunGameWispCommand(EventCommand command, GameWispSubscribeEvent subscribeEvent)
