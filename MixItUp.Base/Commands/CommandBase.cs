@@ -157,32 +157,33 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
+            List<ActionBase> actionsToRun = new List<ActionBase>();
             if (this.IsRandomized)
             {
-                int selectedAction = this.random.Next(this.Actions.Count);
-                token.ThrowIfCancellationRequested();
 
-                await this.Actions[selectedAction].Perform(user, arguments);
+                actionsToRun.Add(this.Actions[this.random.Next(this.Actions.Count)]);
             }
             else
             {
-                for (int i = 0; i < this.Actions.Count; i++)
+                actionsToRun.AddRange(this.Actions);
+            }
+
+            for (int i = 0; i < actionsToRun.Count; i++)
+            {
+                token.ThrowIfCancellationRequested();
+
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
                 {
-                    token.ThrowIfCancellationRequested();
+                    ChannelSession.Services.OverlayServer.StartBatching();
+                }
 
-                    if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                await actionsToRun[i].Perform(user, arguments);
+
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                {
+                    if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
                     {
-                        ChannelSession.Services.OverlayServer.StartBatching();
-                    }
-
-                    await this.Actions[i].Perform(user, arguments);
-
-                    if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
-                    {
-                        if (i == (this.Actions.Count - 1) || !(this.Actions[i + 1] is OverlayAction))
-                        {
-                            await ChannelSession.Services.OverlayServer.EndBatching();
-                        }
+                        await ChannelSession.Services.OverlayServer.EndBatching();
                     }
                 }
             }

@@ -59,7 +59,7 @@ namespace MixItUp.WPF.Controls.Command
                     this.command.Name = this.NameTextBox.Text;
                 }
                 this.command.Unlocked = this.UnlockedControl.Unlocked;
-                this.command.IsRandomized = this.RunOneRandomlyToggleButton.IsChecked ?? false;
+                this.command.IsRandomized = this.RunOneRandomlyToggleButton.IsChecked.GetValueOrDefault();
                 return this.command;
             }
             return null;
