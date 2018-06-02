@@ -62,6 +62,11 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public bool Unlocked { get; set; }
 
+        [DataMember]
+        public bool IsRandomized { get; set; }
+
+        [JsonIgnore]
+        private Random random = new Random();
         [JsonIgnore]
         private Task currentTaskRun;
         [JsonIgnore]
@@ -152,22 +157,32 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
-            for (int i = 0; i < this.Actions.Count; i++)
+            if (this.IsRandomized)
             {
+                int selectedAction = this.random.Next(this.Actions.Count);
                 token.ThrowIfCancellationRequested();
 
-                if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                await this.Actions[selectedAction].Perform(user, arguments);
+            }
+            else
+            {
+                for (int i = 0; i < this.Actions.Count; i++)
                 {
-                    ChannelSession.Services.OverlayServer.StartBatching();
-                }
+                    token.ThrowIfCancellationRequested();
 
-                await this.Actions[i].Perform(user, arguments);
-
-                if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
-                {
-                    if (i == (this.Actions.Count - 1) || !(this.Actions[i + 1] is OverlayAction))
+                    if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
                     {
-                        await ChannelSession.Services.OverlayServer.EndBatching();
+                        ChannelSession.Services.OverlayServer.StartBatching();
+                    }
+
+                    await this.Actions[i].Perform(user, arguments);
+
+                    if (this.Actions[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                    {
+                        if (i == (this.Actions.Count - 1) || !(this.Actions[i + 1] is OverlayAction))
+                        {
+                            await ChannelSession.Services.OverlayServer.EndBatching();
+                        }
                     }
                 }
             }

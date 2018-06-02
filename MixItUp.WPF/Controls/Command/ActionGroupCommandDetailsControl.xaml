@@ -17,6 +17,10 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
@@ -24,5 +28,8 @@
         <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="2" HorizontalAlignment="Center" />
+        
+        <TextBlock Grid.Column="4" VerticalAlignment="Center">Run One Randomly</TextBlock>
+        <ToggleButton Grid.Column="6" x:Name="RunOneRandomlyToggleButton" />
     </Grid>
 </local:CommandDetailsControlBase>
