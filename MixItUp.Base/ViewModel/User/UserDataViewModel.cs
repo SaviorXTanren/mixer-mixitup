@@ -66,7 +66,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool Equals(UserCurrencyDataViewModel other)
         {
-            return this.Currency.Equals(other.Currency);
+            return this.User.Equals(other.User) && this.Currency.Equals(other.Currency);
         }
 
         public override int GetHashCode()

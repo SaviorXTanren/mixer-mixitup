@@ -21,7 +21,7 @@ namespace MixItUp.Base.ViewModel.Requirement
     }
 
     [DataContract]
-    public class CurrencyRequirementViewModel
+    public class CurrencyRequirementViewModel : IEquatable<CurrencyRequirementViewModel>
     {
         [DataMember]
         public Guid CurrencyID { get; set; }
@@ -197,5 +197,18 @@ namespace MixItUp.Base.ViewModel.Requirement
                     this.RequiredRank.Name, this.RequiredRank.MinimumPoints, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is CurrencyRequirementViewModel)
+            {
+                return this.Equals((CurrencyRequirementViewModel)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(CurrencyRequirementViewModel other) { return this.CurrencyID.Equals(other.CurrencyID); }
+
+        public override int GetHashCode() { return this.CurrencyID.GetHashCode(); }
     }
 }

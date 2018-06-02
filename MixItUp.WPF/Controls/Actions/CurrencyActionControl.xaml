@@ -10,7 +10,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="*" />
@@ -23,14 +23,17 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank Type" Width="250" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
 
-            <TextBox Grid.Column="2" x:Name="CurrencyUsernameTextBox" IsEnabled="False" Width="200" MaterialDesign:HintAssist.Hint="Receiving User (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-            
-            <TextBox Grid.Column="4" x:Name="CurrencyAmountTextBox" IsEnabled="False" Width="150" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox Grid.Column="2" x:Name="CurrencyAmountTextBox" Width="100" MaterialDesign:HintAssist.Hint="Amount (+/-)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
+            <ComboBox x:Name="GiveToComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Give To..." Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" SelectionChanged="GiveToComboBox_SelectionChanged" />
+
+            <TextBox Grid.Column="6" x:Name="CurrencyUsernameTextBox" Width="200" MaterialDesign:HintAssist.Hint="Receiving User" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2">
@@ -38,14 +41,21 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0">Whisper:</TextBlock>
-            <ToggleButton Grid.Column="2" x:Name="CurrencyWhisperToggleButton" />
+            <TextBlock Grid.Column="0">Deduct From User:</TextBlock>
+            <ToggleButton Grid.Column="2" x:Name="DeductFromUserToggleButton" />
 
-            <TextBlock Grid.Column="4">
+            <TextBlock Grid.Column="4">Whisper:</TextBlock>
+            <ToggleButton Grid.Column="6" x:Name="CurrencyWhisperToggleButton" />
+
+            <TextBlock Grid.Column="8">
                 <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Chat Special Identifiers Reference</Hyperlink>
             </TextBlock>
         </Grid>
