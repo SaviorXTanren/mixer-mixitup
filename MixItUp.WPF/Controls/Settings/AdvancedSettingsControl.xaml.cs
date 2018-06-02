@@ -1,9 +1,10 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Model.User;
+using MixItUp.Base;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
-using MixItUp.WPF.Controls.Command;
-using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -133,6 +134,27 @@ namespace MixItUp.WPF.Controls.Settings
                 });
                 ((MainWindow)this.Window).Restart();
             }
+        }
+
+        private async void UnbanAllUsersButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (ChannelSession.IsStreamer)
+                {
+                    if (await MessageBoxHelper.ShowConfirmationDialog("This will unban all currently banned users from your channel. This will take some time to complete, are you sure you wish to do this?"))
+                    {
+                        foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Banned))
+                        {
+                            await ChannelSession.Connection.RemoveUserRoles(ChannelSession.Channel, user, new List<MixerRoleEnum>() { MixerRoleEnum.Banned });
+                        }
+                    }
+                }
+                else
+                {
+                    await MessageBoxHelper.ShowMessageDialog("This can only be run by the channel owner");
+                }
+            });
         }
     }
 }
