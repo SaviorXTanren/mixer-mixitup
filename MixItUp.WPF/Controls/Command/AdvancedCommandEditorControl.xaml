@@ -54,7 +54,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center">Action:</TextBlock>
-            <ComboBox Grid.Column="2" x:Name="TypeComboBox" Width="200" />
+            <ComboBox Grid.Column="2" x:Name="TypeComboBox" Width="200" DisplayMemberPath="Name" />
 
             <Button x:Name="AddActionButton" Content="{MaterialDesign:PackIcon Plus}" Click="AddActionButton_Click" Grid.Column="4" ToolTip="Add Action" />
 

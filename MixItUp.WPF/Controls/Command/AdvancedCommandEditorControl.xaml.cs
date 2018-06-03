@@ -15,6 +15,27 @@ using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
 {
+    public class ActionTypeEntry : IEquatable<ActionTypeEntry>, IComparable<ActionTypeEntry>
+    {
+        public string Name { get; set; }
+        public ActionTypeEnum Type { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ActionTypeEntry)
+            {
+                return this.Equals((ActionTypeEntry)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(ActionTypeEntry other) { return this.Type.Equals(other.Type); }
+
+        public int CompareTo(ActionTypeEntry other) { return this.Type.CompareTo(other.Type); }
+
+        public override int GetHashCode() { return this.Type.GetHashCode(); }
+    }
+
     /// <summary>
     /// Interaction logic for AdvancedCommandEditorControl.xaml
     /// </summary>
@@ -75,36 +96,36 @@ namespace MixItUp.WPF.Controls.Command
 
         protected override async Task OnLoaded()
         {
-            List<string> actionTypes = new List<string>();
+            List<ActionTypeEntry> actionTypes = new List<ActionTypeEntry>();
             foreach (ActionTypeEnum actionType in EnumHelper.GetEnumList<ActionTypeEnum>())
             {
-                string actionTypeName = EnumHelper.GetEnumName(actionType);
-                switch (actionType)
+                ActionTypeEntry entry = new ActionTypeEntry() { Name = EnumHelper.GetEnumName(actionType), Type = actionType };
+                switch (entry.Type)
                 {
                     case ActionTypeEnum.Custom:
                         continue;
                     case ActionTypeEnum.Chat:
-                        actionTypeName += " Message";
+                        entry.Name += " Message";
                         break;
                     case ActionTypeEnum.Counter:
-                        actionTypeName += " (Create & Update)";
+                        entry.Name += " (Create & Update)";
                         break;
                     case ActionTypeEnum.Input:
-                        actionTypeName += " (Keyboard & Mouse)";
+                        entry.Name += " (Keyboard & Mouse)";
                         break;
                     case ActionTypeEnum.Overlay:
-                        actionTypeName += " (Images & Videos)";
+                        entry.Name += " (Images & Videos)";
                         break;
                     case ActionTypeEnum.File:
-                        actionTypeName += " (Read & Write)";
+                        entry.Name += " (Read & Write)";
                         break;
                     default:
                         break;
                 }
-                actionTypes.Add(actionTypeName);
+                actionTypes.Add(entry);
             }
 
-            this.TypeComboBox.ItemsSource = actionTypes.OrderBy(s => s);
+            this.TypeComboBox.ItemsSource = actionTypes.OrderBy(at => at.Name);
             this.ActionsListView.ItemsSource = this.actionControls;
 
             this.CommandDetailsGrid.Visibility = Visibility.Visible;
@@ -130,8 +151,8 @@ namespace MixItUp.WPF.Controls.Command
         {
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
-                ActionTypeEnum type = EnumHelper.GetEnumValueFromString<ActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                ActionContainerControl actionControl = new ActionContainerControl(this.window, this, type);
+                ActionTypeEntry type = (ActionTypeEntry)this.TypeComboBox.SelectedItem;
+                ActionContainerControl actionControl = new ActionContainerControl(this.window, this, type.Type);
                 this.AddActionControlContainer(actionControl);
                 this.TypeComboBox.SelectedIndex = -1;
             }
