@@ -45,6 +45,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.WhisperAllAlertsToggleButton.IsChecked = ChannelSession.Settings.WhisperAllAlerts;
             this.LatestChatAtTopToggleButton.IsChecked = ChannelSession.Settings.LatestChatAtTop;
             this.HideViewerAndChatterNumbersToggleButton.IsChecked = ChannelSession.Settings.HideViewerAndChatterNumbers;
+            this.TrackWhispererNumberToggleButton.IsChecked = ChannelSession.Settings.TrackWhispererNumber;
             this.AllowCommandWhisperingToggleButton.IsChecked = ChannelSession.Settings.AllowCommandWhispering;
             this.IgnoreBotAccountCommandsToggleButton.IsChecked = ChannelSession.Settings.IgnoreBotAccountCommands;
             this.CommandsOnlyInYourStreamToggleButton.IsChecked = ChannelSession.Settings.CommandsOnlyInYourStream;
@@ -126,6 +127,11 @@ namespace MixItUp.WPF.Controls.Settings
         private void HideViewerAndChatterNumbersToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.HideViewerAndChatterNumbers = this.HideViewerAndChatterNumbersToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void TrackWhispererNumberToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.TrackWhispererNumber = this.TrackWhispererNumberToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void AllowCommandWhisperingToggleButton_Checked(object sender, RoutedEventArgs e)

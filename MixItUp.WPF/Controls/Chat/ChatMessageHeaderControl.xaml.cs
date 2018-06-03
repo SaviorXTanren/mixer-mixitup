@@ -3,6 +3,9 @@ using MixItUp.Base.ViewModel.Chat;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Controls.Settings;
 using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -27,6 +30,7 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatMessageHeaderControl_Loaded(object sender, RoutedEventArgs e)
         {
+            WhispererNumber.Visibility = ChannelSession.Settings.TrackWhispererNumber ? Visibility.Visible : Visibility.Collapsed;
             if (!this.Message.IsAlertMessage)
             {
                 this.UserTextBlock.Foreground = Application.Current.FindResource(this.Message.User.PrimaryRoleColorName) as SolidColorBrush;

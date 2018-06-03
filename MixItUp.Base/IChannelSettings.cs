@@ -43,6 +43,7 @@ namespace MixItUp.Base
         bool WhisperAllAlerts { get; set; }
         bool LatestChatAtTop { get; set; }
         bool HideViewerAndChatterNumbers { get; set; }
+        bool TrackWhispererNumber { get; set; }
         bool AllowCommandWhispering { get; set; }
         bool IgnoreBotAccountCommands { get; set; }
         bool CommandsOnlyInYourStream { get; set; }

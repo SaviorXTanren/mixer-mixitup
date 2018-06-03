@@ -36,6 +36,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Font size:</TextBlock>
@@ -85,19 +87,22 @@
 
         <TextBlock Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Hide viewer &amp; chatter numbers:</TextBlock>
         <ToggleButton Grid.Row="12" Grid.Column="2" x:Name="HideViewerAndChatterNumbersToggleButton" Checked="HideViewerAndChatterNumbersToggleButton_Checked" Unchecked="HideViewerAndChatterNumbersToggleButton_Checked" />
-        
-        <Separator Grid.Row="14" Grid.ColumnSpan="2" Margin="10" />
 
-        <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Allow commands to be whispered:</TextBlock>
-        <ToggleButton Grid.Row="16" Grid.Column="2" x:Name="AllowCommandWhisperingToggleButton" Checked="AllowCommandWhisperingToggleButton_Checked" Unchecked="AllowCommandWhisperingToggleButton_Checked" />
+        <TextBlock Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Track Whisperer Numbers:</TextBlock>
+        <ToggleButton Grid.Row="14" Grid.Column="2" x:Name="TrackWhispererNumberToggleButton" Checked="TrackWhispererNumberToggleButton_Checked" Unchecked="TrackWhispererNumberToggleButton_Checked" />
 
-        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Ignore your Bot account for commands:</TextBlock>
-        <ToggleButton Grid.Row="18" Grid.Column="2" x:Name="IgnoreBotAccountCommandsToggleButton" Checked="IgnoreBotAccountCommandsToggleButton_Checked" Unchecked="IgnoreBotAccountCommandsToggleButton_Checked" />
+        <Separator Grid.Row="16" Grid.ColumnSpan="2" Margin="10" />
 
-        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Allow commands only in your channel during a Co-Stream:</TextBlock>
-        <ToggleButton Grid.Row="20" Grid.Column="2" x:Name="CommandsOnlyInYourStreamToggleButton" Checked="CommandsOnlyInYourStreamToggleButton_Checked" Unchecked="CommandsOnlyInYourStreamToggleButton_Checked" />
+        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Allow commands to be whispered:</TextBlock>
+        <ToggleButton Grid.Row="18" Grid.Column="2" x:Name="AllowCommandWhisperingToggleButton" Checked="AllowCommandWhisperingToggleButton_Checked" Unchecked="AllowCommandWhisperingToggleButton_Checked" />
 
-        <TextBlock Grid.Row="22" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Delete chat commands when they are run:</TextBlock>
-        <ToggleButton Grid.Row="22" Grid.Column="2" x:Name="DeleteChatCommandsWhenRunToggleButton" Checked="DeleteChatCommandsWhenRunToggleButton_Checked" Unchecked="DeleteChatCommandsWhenRunToggleButton_Checked" />
+        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Ignore your Bot account for commands:</TextBlock>
+        <ToggleButton Grid.Row="20" Grid.Column="2" x:Name="IgnoreBotAccountCommandsToggleButton" Checked="IgnoreBotAccountCommandsToggleButton_Checked" Unchecked="IgnoreBotAccountCommandsToggleButton_Checked" />
+
+        <TextBlock Grid.Row="22" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Allow commands only in your channel during a Co-Stream:</TextBlock>
+        <ToggleButton Grid.Row="22" Grid.Column="2" x:Name="CommandsOnlyInYourStreamToggleButton" Checked="CommandsOnlyInYourStreamToggleButton_Checked" Unchecked="CommandsOnlyInYourStreamToggleButton_Checked" />
+
+        <TextBlock Grid.Row="24" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Delete chat commands when they are run:</TextBlock>
+        <ToggleButton Grid.Row="24" Grid.Column="2" x:Name="DeleteChatCommandsWhenRunToggleButton" Checked="DeleteChatCommandsWhenRunToggleButton_Checked" Unchecked="DeleteChatCommandsWhenRunToggleButton_Checked" />
     </Grid>
 </local:SettingsControlBase>

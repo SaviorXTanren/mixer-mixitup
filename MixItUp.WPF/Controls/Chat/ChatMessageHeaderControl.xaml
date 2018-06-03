@@ -27,17 +27,21 @@
 
         <TextBlock x:Name="UserTextBlock" Grid.Column="3" Text="{Binding User.UserName}" VerticalAlignment="Center" />
 
-        <Grid x:Name="WhisperTargetGrid" Grid.Column="4" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
+        <Grid x:Name="WhisperTargetGrid" Grid.Column="4" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="1" Text="&#x2794;" VerticalAlignment="Center" />
+            <TextBlock x:Name="WhispererNumber" Grid.Column="1" Text="{Binding User.WhispererNumber, StringFormat=[Whisperer #{0}]}" VerticalAlignment="Center" />
+            
+            <TextBlock Grid.Column="3" Text="&#x2794;" VerticalAlignment="Center" />
 
-            <TextBlock Grid.Column="3" x:Name="TargetUserTextBlock" Text="{Binding TargetUsername}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="5" x:Name="TargetUserTextBlock" Text="{Binding TargetUsername}" VerticalAlignment="Center" />
 
         </Grid>
 

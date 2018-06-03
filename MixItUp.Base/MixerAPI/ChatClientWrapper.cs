@@ -19,6 +19,9 @@ namespace MixItUp.Base.MixerAPI
     {
         private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
 
+        private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
+        private Dictionary<uint, int> whisperMap = new Dictionary<uint, int>();
+
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
         public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
@@ -35,8 +38,6 @@ namespace MixItUp.Base.MixerAPI
 
         public ChatClient Client { get; private set; }
         public ChatClient BotClient { get; private set; }
-
-        private object messageUpdateLock = new object();
 
         private HashSet<uint> userEntranceCommands = new HashSet<uint>();
 
@@ -367,26 +368,42 @@ namespace MixItUp.Base.MixerAPI
                 await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, 100);
             }
 
-            await this.CheckMessageForCommandAndRun(message);
+            if (!await this.CheckMessageForCommandAndRun(message))
+            {
+                if (ChannelSession.Settings.TrackWhispererNumber && !message.User.ID.Equals(ChannelSession.User.id))
+                {
+                    await this.whisperNumberLock.WaitAsync();
+
+                    if (!whisperMap.ContainsKey(message.User.ID))
+                    {
+                        whisperMap[message.User.ID] = whisperMap.Count + 1;
+                    }
+                    message.User.WhispererNumber = whisperMap[message.User.ID];
+
+                    this.whisperNumberLock.Release();
+
+                    await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{message.User.WhispererNumber}.", false);
+                }
+            }
 
             return message;
         }
 
-        private async Task CheckMessageForCommandAndRun(ChatMessageViewModel message)
+        private async Task<bool> CheckMessageForCommandAndRun(ChatMessageViewModel message)
         {
             if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
             {
-                return;
+                return false;
             }
 
             if (ChannelSession.BotUser != null && ChannelSession.Settings.IgnoreBotAccountCommands && message.User != null && message.User.ID.Equals(ChannelSession.BotUser.id))
             {
-                return;
+                return false;
             }
 
             if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
             {
-                return;
+                return false;
             }
 
             if (ChannelSession.IsStreamer && !message.User.MixerRoles.Contains(MixerRoleEnum.Banned))
@@ -404,8 +421,12 @@ namespace MixItUp.Base.MixerAPI
                     {
                         await this.DeleteMessage(message.ID);
                     }
+
+                    return true;
                 }
             }
+
+            return false;
         }
 
         #endregion Chat Update Methods
