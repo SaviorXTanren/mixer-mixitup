@@ -696,7 +696,7 @@ namespace MixItUp.Base.Commands
                         double price = product["DisplaySkuAvailabilities"]?.First()?["Availabilities"]?.First()?["OrderManagementData"]?["Price"]?["ListPrice"]?.Value<double>() ?? 0.0;
                         string uri = $"https://www.microsoft.com/store/apps/{productId}";
 
-                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(productId))
+                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(productId) && name.Contains(gameName))
                         {
                             return new GameInformation { Name = name, Price = price, Uri = uri };
                         }
@@ -789,14 +789,21 @@ namespace MixItUp.Base.Commands
                     {
                         string result = await response.Content.ReadAsStringAsync();
                         JObject jobj = JObject.Parse(result);
-                        jobj = (JObject)jobj[gameID.ToString()]["data"];
+                        if (jobj[gameID.ToString()] != null && jobj[gameID.ToString()]["data"] != null)
+                        {
+                            jobj = (JObject)jobj[gameID.ToString()]["data"];
 
-                        double price = (int)jobj["price_overview"]["final"];
-                        price = price / 100.0;
+                            double price = 0.0;
+                            if (jobj["price_overview"] != null && jobj["price_overview"]["final"] != null)
+                            {
+                                price = (int)jobj["price_overview"]["final"];
+                                price = price / 100.0;
+                            }
 
-                        string url = string.Format("http://store.steampowered.com/app/{0}", gameID);
+                            string url = string.Format("http://store.steampowered.com/app/{0}", gameID);
 
-                        return new GameInformation { Name = jobj["name"].Value<string>(), Price = price, Uri = url };
+                            return new GameInformation { Name = jobj["name"].Value<string>(), Price = price, Uri = url };
+                        }
                     }
                 }
             }
