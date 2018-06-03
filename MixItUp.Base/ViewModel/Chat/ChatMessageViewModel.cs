@@ -141,6 +141,11 @@ namespace MixItUp.Base.ViewModel.Chat
             return await ModerationHelper.ShouldBeModerated(this.User, this.Message, this.ContainsLink);
         }
 
+        public bool IsStreamerOrBot()
+        {
+            return this.User.ID.Equals(ChannelSession.User.id) || (ChannelSession.BotUser != null && this.User.ID.Equals(ChannelSession.BotUser.id));
+        }
+
         public void AddToMessage(string text)
         {
             this.Message += text;

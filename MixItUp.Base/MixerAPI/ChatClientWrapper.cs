@@ -370,7 +370,7 @@ namespace MixItUp.Base.MixerAPI
 
             if (!await this.CheckMessageForCommandAndRun(message))
             {
-                if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.User.ID.Equals(ChannelSession.User.id))
+                if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot())
                 {
                     await this.whisperNumberLock.WaitAsync();
 

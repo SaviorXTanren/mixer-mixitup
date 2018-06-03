@@ -696,7 +696,7 @@ namespace MixItUp.Base.Commands
                         double price = product["DisplaySkuAvailabilities"]?.First()?["Availabilities"]?.First()?["OrderManagementData"]?["Price"]?["ListPrice"]?.Value<double>() ?? 0.0;
                         string uri = $"https://www.microsoft.com/store/apps/{productId}";
 
-                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(productId) && name.Contains(gameName))
+                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(productId) && name.ToLower().Contains(gameName))
                         {
                             return new GameInformation { Name = name, Price = price, Uri = uri };
                         }
