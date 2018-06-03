@@ -23,6 +23,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         public UserQuoteViewModel(string quote)
+            : this()
         {
             this.Quote = quote;
         }
@@ -45,7 +46,7 @@ namespace MixItUp.Base.ViewModel.User
                 result.Append(string.Format(" [{0}]", this.GameName));
             }
 
-            if (this.DateTime > DateTimeOffset.MinValue)
+            if (this.DateTime > DateTimeOffset.MinValue.AddYears(2))
             {
                 result.Append(string.Format(" [{0}]", this.DateTime.ToString("d")));
             }
