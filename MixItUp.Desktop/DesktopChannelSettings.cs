@@ -79,6 +79,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool HideViewerAndChatterNumbers { get; set; }
         [JsonProperty]
+        public bool TrackWhispererNumber { get; set; }
+        [JsonProperty]
         public bool AllowCommandWhispering { get; set; }
         [JsonProperty]
         public bool IgnoreBotAccountCommands { get; set; }

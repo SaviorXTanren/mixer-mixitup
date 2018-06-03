@@ -175,6 +175,9 @@ namespace MixItUp.Base.ViewModel.User
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
 
         [JsonIgnore]
+        public int WhispererNumber { get; set; }
+
+        [JsonIgnore]
         public int SubscribeMonths
         {
             get
