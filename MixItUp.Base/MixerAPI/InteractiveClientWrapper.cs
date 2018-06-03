@@ -355,8 +355,20 @@ namespace MixItUp.Base.MixerAPI
             {
                 this.Scenes.Add(scene);
 
+                InteractiveSceneModel dataScene = gameVersion.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(scene.sceneID));
+
                 foreach (InteractiveConnectedButtonControlModel button in scene.buttons)
                 {
+                    if (dataScene != null)
+                    {
+                        InteractiveButtonControlModel dataButton = dataScene.buttons.FirstOrDefault(b => b.controlID.Equals(button.controlID));
+                        if (dataButton != null)
+                        {
+                            button.text = dataButton.text;
+                            button.tooltip = dataButton.tooltip;
+                        }
+                    }
+
                     this.AddConnectedControl(scene, button);
                 }
 
@@ -367,6 +379,16 @@ namespace MixItUp.Base.MixerAPI
 
                 foreach (InteractiveConnectedTextBoxControlModel textBox in scene.textBoxes)
                 {
+                    if (dataScene != null)
+                    {
+                        InteractiveTextBoxControlModel dataTextBox = dataScene.textBoxes.FirstOrDefault(b => b.controlID.Equals(textBox.controlID));
+                        if (dataTextBox != null)
+                        {
+                            textBox.placeholder = dataTextBox.placeholder;
+                            textBox.submitText = dataTextBox.submitText;
+                        }
+                    }
+
                     this.AddConnectedControl(scene, textBox);
                 }
             }
