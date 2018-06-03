@@ -70,30 +70,43 @@ namespace MixItUp.Base.ViewModel.User
             return roles;
         }
 
+        [DataMember]
         public uint ID { get; set; }
 
+        [DataMember]
         public string UserName { get; set; }
 
+        [DataMember]
         public string AvatarLink { get; set; }
 
+        [DataMember]
         public uint GameTypeID { get; set; }
 
+        [DataMember]
         public DateTimeOffset? MixerAccountDate { get; set; }
 
+        [DataMember]
         public DateTimeOffset? FollowDate { get; set; }
 
+        [DataMember]
         public DateTimeOffset? SubscribeDate { get; set; }
 
+        [DataMember]
         public HashSet<string> CustomRoles { get; set; }
 
+        [DataMember]
         public int ChatOffenses { get; set; }
 
+        [DataMember]
         public int Sparks { get; set; }
 
+        [DataMember]
         public string InteractiveID { get; set; }
 
+        [DataMember]
         public string InteractiveGroupID { get; set; }
 
+        [DataMember]
         public GameWispSubscriber GameWispUser { get; set; }
 
         public UserViewModel()
@@ -148,6 +161,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
         public UserDataViewModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.ID, new UserDataViewModel(this)); } }
 
         [JsonIgnore]
