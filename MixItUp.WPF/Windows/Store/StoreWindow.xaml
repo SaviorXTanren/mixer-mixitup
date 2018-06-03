@@ -1,0 +1,70 @@
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Store.StoreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        
+        Icon="./../../Logo.ico"
+        Title="Mix It Up Store" Height="600" Width="600">
+    <Grid>
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <Grid Margin="10">
+            <Grid x:Name="LandingGrid" Margin="0,10,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Source="../../Logo.png" Grid.Column="0" Width="50" />
+
+                    <TextBlock Style="{StaticResource HeaderTextBlock}" Grid.Column="2" VerticalAlignment="Center" FontSize="40">Mix It Up Store</TextBlock>
+                </Grid>
+
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="LandingSearchTextBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Search Terms" Width="250" />
+
+                    <Button x:Name="LandingSearchButton" Grid.Column="2">Search</Button>
+                </Grid>
+
+                <Grid x:Name="PromotedGrid" Grid.Row="4">
+                    
+                </Grid>
+
+                <Grid x:Name="CategoriesGrid" Grid.Row="6" />
+            </Grid>
+
+            <Grid x:Name="SearchGrid">
+
+            </Grid>
+
+            <Grid x:Name="DetailsGrid">
+
+            </Grid>
+        </Grid>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
+    </Grid>
+</Windows:LoadingWindowBase>
