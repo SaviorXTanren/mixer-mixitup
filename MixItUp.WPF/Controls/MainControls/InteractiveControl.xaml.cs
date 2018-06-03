@@ -135,6 +135,20 @@ namespace MixItUp.WPF.Controls.MainControls
             this.InteractiveControlsGridView.ItemsSource = this.currentSceneControlItems;
 
             await this.RefreshAllInteractiveGames();
+
+            if (ChannelSession.Settings.DefaultInteractiveGame > 0)
+            {
+                InteractiveGameListingModel game = this.interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+                if (game != null)
+                {
+                    this.InteractiveGamesComboBox.SelectedItem = game;
+                }
+            }
+
+            if (ChannelSession.Interactive.IsConnected())
+            {
+                this.InteractiveGameConnected();
+            }
         }
 
         private async Task RefreshAllInteractiveGames()
