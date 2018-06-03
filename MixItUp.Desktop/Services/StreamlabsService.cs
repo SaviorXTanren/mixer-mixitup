@@ -6,9 +6,8 @@ using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop.Util;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -17,84 +16,9 @@ using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace MixItUp.Desktop.Services
 {
-    public class StreamlabsWebSocketService : SocketIOService
-    {
-        [DataContract]
-        private class StreamlabsWebSocketEvent
-        {
-            [JsonProperty("type")]
-            public string Type { get; set; }
-
-            [JsonProperty("message")]
-            public JArray Data { get; set; }
-
-            [JsonProperty("for")]
-            public string For { get; set; }
-        }
-
-        private StreamlabsService service;
-        private string socketToken;
-
-        public StreamlabsWebSocketService(StreamlabsService service, string socketToken)
-            : base(string.Format("https://sockets.streamlabs.com?token={0}", socketToken))
-        {
-            this.service = service;
-            this.socketToken = socketToken;
-        }
-
-        public override async Task Connect()
-        {
-            await base.Connect();
-
-            this.SocketReceiveWrapper("disconnect", (errorData) =>
-            {
-                MixItUp.Base.Util.Logger.Log(errorData.ToString());
-                this.service.WebSocketDisconnectedOccurred();
-            });
-
-            this.SocketEventReceiverWrapper<StreamlabsWebSocketEvent>("event", (eventData) =>
-            {
-                if (eventData.Type.Equals("donation"))
-                {
-                    Task.Run(async () =>
-                    {
-                        EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlabsDonation));
-                        if (command != null)
-                        {
-                            foreach (JToken token in eventData.Data)
-                            {
-                                StreamlabsDonationEvent slDonation = token.ToObject<StreamlabsDonationEvent>();
-                                UserDonationModel donation = slDonation.ToGenericDonation();
-
-                                UserViewModel user = new UserViewModel(0, donation.UserName);
-                                UserModel userModel = await ChannelSession.Connection.GetUser(donation.UserName);
-                                if (userModel != null)
-                                {
-                                    user = new UserViewModel(userModel);
-                                }
-
-                                command.AddSpecialIdentifier("donationsource", EnumHelper.GetEnumName(donation.Source));
-                                command.AddSpecialIdentifier("donationamount", donation.AmountText);
-                                command.AddSpecialIdentifier("donationmessage", donation.Message);
-                                await command.Perform(user);
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        public override async Task Disconnect()
-        {
-            await base.Disconnect();
-            this.socketToken = null;
-        }
-    }
-
     [DataContract]
     public class StreamlabsService : OAuthServiceBase, IStreamlabsService
     {
@@ -106,7 +30,7 @@ namespace MixItUp.Desktop.Services
         public event EventHandler OnWebSocketConnectedOccurred;
         public event EventHandler OnWebSocketDisconnectedOccurred;
 
-        private StreamlabsWebSocketService websocketService;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
 
@@ -151,30 +75,27 @@ namespace MixItUp.Desktop.Services
             return false;
         }
 
-        public async Task Disconnect()
+        public Task Disconnect()
         {
+            this.cancellationTokenSource.Cancel();
             this.token = null;
-            if (this.websocketService != null)
-            {
-                await this.websocketService.Disconnect();
-            }
+            return Task.FromResult(0);
         }
 
-        public void WebSocketConnectedOccurred()
+        public async Task<IEnumerable<StreamlabsDonation>> GetDonations()
         {
-            if (this.OnWebSocketConnectedOccurred != null)
+            List<StreamlabsDonation> results = new List<StreamlabsDonation>();
+            try
             {
-                this.OnWebSocketConnectedOccurred(this, new EventArgs());
+                HttpResponseMessage response = await this.GetAsync("donations");
+                JObject jobj = await this.ProcessJObjectResponse(response);
+                foreach (var donation in (JArray)jobj["data"])
+                {
+                    results.Add(donation.ToObject<StreamlabsDonation>());
+                }
             }
-        }
-
-        public async void WebSocketDisconnectedOccurred()
-        {
-            if (this.OnWebSocketDisconnectedOccurred != null)
-            {
-                this.OnWebSocketDisconnectedOccurred(this, new EventArgs());
-            }
-            await this.ReconnectWebSocket();
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            return results;
         }
 
         protected override async Task RefreshOAuthToken()
@@ -194,21 +115,62 @@ namespace MixItUp.Desktop.Services
 
         private async Task InitializeInternal()
         {
+            this.cancellationTokenSource = new CancellationTokenSource();
+
             HttpResponseMessage result = await this.GetAsync("socket/token");
             string resultJson = await result.Content.ReadAsStringAsync();
             JObject jobj = JObject.Parse(resultJson);
 
-            this.websocketService = new StreamlabsWebSocketService(this, jobj["socket_token"].ToString());
-            await this.websocketService.Connect();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
-        private async Task ReconnectWebSocket()
+        private async Task BackgroundDonationCheck()
         {
-            await this.websocketService.Disconnect();
+            Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
 
-            await Task.Delay(1000);
+            foreach (StreamlabsDonation donation in await this.GetDonations())
+            {
+                donationsReceived.Add(donation.ID, donation);
+            }
 
-            await this.websocketService.Connect();
+            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
+            {
+                try
+                {
+                    foreach (StreamlabsDonation slDonation in await this.GetDonations())
+                    {
+                        if (!donationsReceived.ContainsKey(slDonation.ID))
+                        {
+                            donationsReceived[slDonation.ID] = slDonation;
+                            UserDonationModel donation = slDonation.ToGenericDonation();
+                            GlobalEvents.DonationOccurred(donation);
+
+                            UserViewModel user = new UserViewModel(0, donation.UserName);
+
+                            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                            if (userModel != null)
+                            {
+                                user = new UserViewModel(userModel);
+                            }
+
+                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlabsDonation));
+                            if (command != null)
+                            {
+                                command.AddSpecialIdentifier("donationsource", EnumHelper.GetEnumName(donation.Source));
+                                command.AddSpecialIdentifier("donationamount", donation.AmountText);
+                                command.AddSpecialIdentifier("donationmessage", donation.Message);
+                                command.AddSpecialIdentifier("donationimage", donation.ImageLink);
+                                await command.Perform(user);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+
+                await Task.Delay(10000);
+            }
         }
     }
 }

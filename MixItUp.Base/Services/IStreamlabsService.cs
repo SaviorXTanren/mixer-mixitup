@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    public class StreamlabsDonationEvent
+    public class StreamlabsDonation
     {
-        [JsonProperty("id")]
+        [JsonProperty("donation_id")]
         public int ID { get; set; }
 
-        [JsonProperty("from")]
+        [JsonProperty("name")]
         public string UserName { get; set; }
         [JsonProperty("message")]
         public string Message { get; set; }
@@ -24,9 +24,9 @@ namespace MixItUp.Base.Services
         public long CreatedAt { get; set; }
 
         [JsonIgnore]
-        public double AmountValue { get { return double.Parse(this.Amount); } }
+        public double AmountValue { get { return Math.Round(double.Parse(this.Amount), 2); } }
 
-        public StreamlabsDonationEvent()
+        public StreamlabsDonation()
         {
             this.CreatedAt = DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now);
         }
