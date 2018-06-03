@@ -18,7 +18,7 @@ namespace MixItUp.WPF.Controls.Chat
     public partial class ChatMessageHeaderControl : UserControl
     {
         private static int whisperCount = 0;
-        private Dictionary<string, int> whisperMap = new Dictionary<string, int>();
+        private static Dictionary<string, int> whisperMap = new Dictionary<string, int>();
 
         public ChatMessageViewModel Message { get; private set; }
 
@@ -26,10 +26,13 @@ namespace MixItUp.WPF.Controls.Chat
         {
             if (ChannelSession.Settings.TrackWhispererNumber && message.IsWhisper && message.User.WhispererNumber == 0)
             {
-                if (!whisperMap.ContainsKey(message.User.UserName))
+                lock (whisperMap)
                 {
-                    whisperMap[message.User.UserName] = Interlocked.Increment(ref whisperCount);
-                    Task.Run(async () => { await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{whisperMap[message.User.UserName]}.", false); });
+                    if (!whisperMap.ContainsKey(message.User.UserName))
+                    {
+                        whisperMap[message.User.UserName] = Interlocked.Increment(ref whisperCount);
+                        Task.Run(async () => { await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{whisperMap[message.User.UserName]}.", false); });
+                    }
                 }
 
                 message.User.WhispererNumber = whisperMap[message.User.UserName];
