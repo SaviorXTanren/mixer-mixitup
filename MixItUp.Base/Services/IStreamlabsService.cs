@@ -51,9 +51,6 @@ namespace MixItUp.Base.Services
 
     public interface IStreamlabsService
     {
-        event EventHandler OnWebSocketConnectedOccurred;
-        event EventHandler OnWebSocketDisconnectedOccurred;
-
         Task<bool> Connect();
 
         Task Disconnect();

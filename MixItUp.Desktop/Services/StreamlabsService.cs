@@ -11,7 +11,6 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -26,9 +25,6 @@ namespace MixItUp.Desktop.Services
 
         private const string ClientID = "ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX";
         private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write";
-
-        public event EventHandler OnWebSocketConnectedOccurred;
-        public event EventHandler OnWebSocketDisconnectedOccurred;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
