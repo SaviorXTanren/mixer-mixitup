@@ -1,4 +1,6 @@
-﻿namespace MixItUp.WPF.Controls.Store
+﻿using MaterialDesignThemes.Wpf;
+
+namespace MixItUp.WPF.Controls.Store
 {
     /// <summary>
     /// Interaction logic for SmallCommandListingControl.xaml

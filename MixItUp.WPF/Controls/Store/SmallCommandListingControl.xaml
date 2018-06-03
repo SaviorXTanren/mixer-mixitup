@@ -4,27 +4,44 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Store"
+                           
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                           
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="250">
-    <Grid MaxWidth="250" Margin="10">
+    <Grid Width="250" MaxWidth="250" Height="90" MaxHeight="90" Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Image Grid.Column="0" x:Name="ListingImage" VerticalAlignment="Center" Width="75" Height="75" />
+        <Image Grid.Column="0" x:Name="ListingImage" VerticalAlignment="Center" Width="70" Height="70" />
 
         <Grid Grid.Column="2" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="40" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock x:Name="ListingName" Grid.Row="0" Width="100" />
-            
-            
+            <TextBlock x:Name="ListingName" Grid.Row="0" Width="130" MaxWidth="130" HorizontalAlignment="Left" Margin="2,0,0,0" />
+
+            <Grid Grid.Row="2" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <MaterialDesign:PackIcon x:Name="Star1" Grid.Column="0" Kind="StarOutline" />
+                <MaterialDesign:PackIcon x:Name="Star2" Grid.Column="1" Kind="StarOutline" />
+                <MaterialDesign:PackIcon x:Name="Star3" Grid.Column="2" Kind="StarOutline" />
+                <MaterialDesign:PackIcon x:Name="Star4" Grid.Column="3" Kind="StarOutline" />
+                <MaterialDesign:PackIcon x:Name="Star5" Grid.Column="4" Kind="StarOutline" />
+            </Grid>
         </Grid>
     </Grid>
 </local:StoreListingControl>
