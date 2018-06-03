@@ -48,6 +48,8 @@ namespace MixItUp.Base
         bool CommandsOnlyInYourStream { get; set; }
         bool DeleteChatCommandsWhenRun { get; set; }
 
+        uint DefaultInteractiveGame { get; set; }
+
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }
 

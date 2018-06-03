@@ -507,6 +507,9 @@
     <Compile Include="Controls\Settings\GeneralSettingsControl.xaml.cs">
       <DependentUpon>GeneralSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\InteractiveSettingsControl.xaml.cs">
+      <DependentUpon>InteractiveSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\MainSettingsContainerControl.xaml.cs">
       <DependentUpon>MainSettingsContainerControl.xaml</DependentUpon>
     </Compile>
@@ -988,6 +991,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Settings\GeneralSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\InteractiveSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

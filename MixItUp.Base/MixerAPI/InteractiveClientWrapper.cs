@@ -396,13 +396,16 @@ namespace MixItUp.Base.MixerAPI
 
             // Initialize Groups
             List<InteractiveGroupModel> groupsToAdd = new List<InteractiveGroupModel>();
-            foreach (InteractiveUserGroupViewModel userGroup in ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id])
+            if (ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.InteractiveGame.id))
             {
-                if (!userGroup.DefaultScene.Equals(InteractiveUserGroupViewModel.DefaultName))
+                foreach (InteractiveUserGroupViewModel userGroup in ChannelSession.Settings.InteractiveUserGroups[this.Client.InteractiveGame.id])
                 {
-                    if (!await this.AddGroup(userGroup.GroupName, userGroup.DefaultScene))
+                    if (!userGroup.DefaultScene.Equals(InteractiveUserGroupViewModel.DefaultName))
                     {
-                        return false;
+                        if (!await this.AddGroup(userGroup.GroupName, userGroup.DefaultScene))
+                        {
+                            return false;
+                        }
                     }
                 }
             }

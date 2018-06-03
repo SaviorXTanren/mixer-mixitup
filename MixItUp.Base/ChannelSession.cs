@@ -1,5 +1,6 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
@@ -418,6 +419,23 @@ namespace MixItUp.Base
                             {
                                 await ((CounterAction)action).SetCounterValue();
                             }
+                        }
+                    }
+
+                    if (ChannelSession.Settings.DefaultInteractiveGame > 0)
+                    {
+                        IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
+                        InteractiveGameListingModel game = games.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+                        if (game != null)
+                        {
+                            if (!await ChannelSession.Interactive.Connect(game))
+                            {
+                                await ChannelSession.Interactive.Disconnect();
+                            }
+                        }
+                        else
+                        {
+                            ChannelSession.Settings.DefaultInteractiveGame = 0;
                         }
                     }
 

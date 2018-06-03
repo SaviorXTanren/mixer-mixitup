@@ -1,0 +1,23 @@
+﻿<local:SettingsControlBase x:Class="MixItUp.WPF.Controls.Settings.InteractiveSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
+             xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Default Interactive Game To Connect:</TextBlock>
+        <ComboBox x:Name="DefaultInteractiveGameComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="DefaultInteractiveGameComboBox_SelectionChanged" DisplayMemberPath="name" />
+
+    </Grid>
+</local:SettingsControlBase>

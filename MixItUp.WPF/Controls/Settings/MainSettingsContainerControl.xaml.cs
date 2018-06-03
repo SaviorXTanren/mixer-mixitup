@@ -29,18 +29,17 @@ namespace MixItUp.WPF.Controls.Settings
             InitializeComponent();
 
             this.SettingsItemsListBox.ItemsSource = this.settingsGroups;
-        }
-
-        protected override async Task InitializeInternal()
-        {
-            this.settingsGroups.Clear();
 
             this.settingsGroups.Add(new SettingsOption("General", new GeneralSettingsControl()));
             this.settingsGroups.Add(new SettingsOption("Themes & Colors", new ThemeSettingsControl()));
             this.settingsGroups.Add(new SettingsOption("Notifications", new NotificationsSettingsControl()));
             this.settingsGroups.Add(new SettingsOption("Chat", new ChatSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption("Interactive", new InteractiveSettingsControl()));
             this.settingsGroups.Add(new SettingsOption("Advanced", new AdvancedSettingsControl()));
+        }
 
+        protected override async Task InitializeInternal()
+        {
             foreach (SettingsOption settings in this.settingsGroups)
             {
                 await settings.Control.Initialize(this.Window);

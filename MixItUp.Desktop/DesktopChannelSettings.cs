@@ -88,6 +88,9 @@ namespace MixItUp.Desktop
         public bool DeleteChatCommandsWhenRun { get; set; }
 
         [JsonProperty]
+        public uint DefaultInteractiveGame { get; set; }
+
+        [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
         public RequirementViewModel GameQueueRequirements { get; set; }
