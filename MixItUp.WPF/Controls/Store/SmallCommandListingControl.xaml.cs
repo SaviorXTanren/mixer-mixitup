@@ -1,4 +1,5 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using System.Threading.Tasks;
+using MixItUp.Base.Model.Store;
 
 namespace MixItUp.WPF.Controls.Store
 {
@@ -7,9 +8,17 @@ namespace MixItUp.WPF.Controls.Store
     /// </summary>
     public partial class SmallCommandListingControl : StoreListingControl
     {
-        public SmallCommandListingControl()
+        public SmallCommandListingControl(StoreListingModel listing)
+            : base(listing)
         {
             InitializeComponent();
+        }
+
+        protected override Task OnLoaded()
+        {
+            this.ListingImage.Source = this.DisplayImage;
+
+            return base.OnLoaded();
         }
     }
 }

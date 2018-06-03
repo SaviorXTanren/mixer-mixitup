@@ -6,6 +6,7 @@
         mc:Ignorable="d"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:StoreControls="clr-namespace:MixItUp.WPF.Controls.Store"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         
         Icon="./../../Logo.ico"
@@ -50,10 +51,12 @@
                 </Grid>
 
                 <Grid x:Name="PromotedGrid" Grid.Row="4">
-                    
+                    <ContentControl x:Name="Blah" />
                 </Grid>
 
-                <Grid x:Name="CategoriesGrid" Grid.Row="6" />
+                <Grid x:Name="CategoriesGrid" Grid.Row="6">
+                    <ContentControl x:Name="Blah2" />
+                </Grid>
             </Grid>
 
             <Grid x:Name="SearchGrid">

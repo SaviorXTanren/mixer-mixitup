@@ -9,6 +9,8 @@ namespace MixItUp.Base.Model.Store
     [DataContract]
     public class StoreListingModel
     {
+        public const string DefaultDisplayImage = "https://uploads.beam.pro/avatar/6442tw1b-7207866.jpg";
+
         [DataMember]
         public Guid ID { get; set; }
         [DataMember]
@@ -27,7 +29,7 @@ namespace MixItUp.Base.Model.Store
         public int TotalDownloads { get; set; }
 
         [DataMember]
-        public byte[] MainImage { get; set; }
+        public string DisplayImage { get; set; }
 
         [DataMember]
         public DateTimeOffset CreatedDate { get; set; }
@@ -37,62 +39,9 @@ namespace MixItUp.Base.Model.Store
         public StoreListingModel()
         {
             this.Tags = new List<string>();
-            this.MainImage = null;
         }
 
         [JsonIgnore]
-        public string Star1
-        {
-            get
-            {
-                if (this.AverageRating >= 1.0) { return "Star"; }
-                else if (this.AverageRating >= 0.5) { return "StarHalf"; }
-                return "StarOutline";
-            }
-        }
-
-        [JsonIgnore]
-        public string Star2
-        {
-            get
-            {
-                if (this.AverageRating >= 2.0) { return "Star"; }
-                else if (this.AverageRating >= 1.5) { return "StarHalf"; }
-                return "StarOutline";
-            }
-        }
-
-        [JsonIgnore]
-        public string Star3
-        {
-            get
-            {
-                if (this.AverageRating >= 3.0) { return "Star"; }
-                else if (this.AverageRating >= 2.5) { return "StarHalf"; }
-                return "StarOutline";
-            }
-        }
-
-        [JsonIgnore]
-        public string Star4
-        {
-            get
-            {
-                if (this.AverageRating >= 4.0) { return "Star"; }
-                else if (this.AverageRating >= 3.5) { return "StarHalf"; }
-                return "StarOutline";
-            }
-        }
-
-        [JsonIgnore]
-        public string Star5
-        {
-            get
-            {
-                if (this.AverageRating >= 5.0) { return "Star"; }
-                else if (this.AverageRating >= 4.5) { return "StarHalf"; }
-                return "StarOutline";
-            }
-        }
+        public string AverageRatingDisplayString { get { return Math.Round(this.AverageRating, 1).ToString(); } }
     }
 }
