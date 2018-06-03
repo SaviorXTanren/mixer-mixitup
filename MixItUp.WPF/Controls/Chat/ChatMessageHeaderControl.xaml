@@ -27,7 +27,7 @@
 
         <TextBlock x:Name="UserTextBlock" Grid.Column="3" Text="{Binding User.UserName}" VerticalAlignment="Center" />
 
-        <Grid x:Name="WhisperTargetGrid" Grid.Column="4" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
+        <Grid x:Name="WhisperTargetGrid" Grid.Column="4" Visibility="{Binding IsWhisper, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3" />
                 <ColumnDefinition Width="Auto" />

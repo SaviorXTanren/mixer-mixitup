@@ -17,24 +17,10 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatMessageHeaderControl : UserControl
     {
-        private static int whisperCount = 0;
-        private Dictionary<string, int> whisperMap = new Dictionary<string, int>();
-
         public ChatMessageViewModel Message { get; private set; }
 
         public ChatMessageHeaderControl(ChatMessageViewModel message)
         {
-            if (ChannelSession.Settings.TrackWhispererNumber && message.IsWhisper && message.User.WhispererNumber == 0)
-            {
-                if (!whisperMap.ContainsKey(message.User.UserName))
-                {
-                    whisperMap[message.User.UserName] = Interlocked.Increment(ref whisperCount);
-                    Task.Run(async () => { await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{whisperMap[message.User.UserName]}.", false); });
-                }
-
-                message.User.WhispererNumber = whisperMap[message.User.UserName];
-            }
-
             this.Loaded += ChatMessageHeaderControl_Loaded;
 
             InitializeComponent();
