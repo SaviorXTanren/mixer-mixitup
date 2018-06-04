@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
             IEnumerable<PermissionsCommandBase> permissionCommands = ChannelSession.AllCommands.Where(c => c is PermissionsCommandBase).Select(c => (PermissionsCommandBase)c);
             permissionCommands = permissionCommands.Where(c => c.Requirements.Cooldown != null && c.Requirements.Cooldown.IsGroup);
-            this.CooldownGroupsComboBox.ItemsSource = permissionCommands.Select(c => c.Requirements.Cooldown.GroupName);
+            this.CooldownGroupsComboBox.ItemsSource = permissionCommands.Select(c => c.Requirements.Cooldown.GroupName).Distinct();
         }
 
         public int GetCooldownAmount()
