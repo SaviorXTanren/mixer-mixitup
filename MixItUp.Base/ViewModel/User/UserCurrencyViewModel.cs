@@ -84,6 +84,9 @@ namespace MixItUp.Base.ViewModel.User
         [JsonIgnore]
         public string UserRankNameSpecialIdentifier { get { return string.Format("{0}{1}rank", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
+        [JsonIgnore]
+        public string Top10SpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader, this.SpecialIdentifier); } }
+
         public bool ShouldBeReset()
         {
             if (!this.ResetInterval.Equals("Never"))

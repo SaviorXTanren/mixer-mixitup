@@ -27,6 +27,7 @@ namespace MixItUp.Base.Util
         public const string UptimeSpecialIdentifierHeader = "uptime";
         public const string StartSpecialIdentifierHeader = "start";
 
+        public const string Top10SpecialIdentifierHeader = "top10";
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
         public const string StreamerSpecialIdentifierHeader = "streamer";
@@ -131,7 +132,7 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
 
-            if (ContainsSpecialIdentifier("top10"))
+            if (ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
             {
                 // Select all workable users, exclude the streamer, then grab their UserData
                 UserDataViewModel[] allUsers = (await ChannelSession.ChannelUsers.GetAllWorkableUsers())
@@ -140,7 +141,7 @@ namespace MixItUp.Base.Util
 
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    if (ContainsSpecialIdentifier("top10" + currency.SpecialIdentifier))
+                    if (ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
                     {
                         List<string> currencyUserList = new List<string>();
                         int currencyPosition = 1;
@@ -151,16 +152,16 @@ namespace MixItUp.Base.Util
 
                         if (currencyUserList.Count > 0)
                         {
-                            this.ReplaceSpecialIdentifier("top10" + currency.SpecialIdentifier, string.Join(", ", currencyUserList));
+                            this.ReplaceSpecialIdentifier(currency.Top10SpecialIdentifier, string.Join(", ", currencyUserList));
                         }
                         else
                         {
-                            this.ReplaceSpecialIdentifier("top10" + currency.SpecialIdentifier, "No users found.");
+                            this.ReplaceSpecialIdentifier(currency.Top10SpecialIdentifier, "No users found.");
                         }
                     }
                 }
 
-                if (ContainsSpecialIdentifier("top10time"))
+                if (ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time"))
                 {
                     List<string> timeUserList = new List<string>();
                     int timePosition = 1;
@@ -170,11 +171,11 @@ namespace MixItUp.Base.Util
                     }
                     if (timeUserList.Count > 0)
                     {
-                        this.ReplaceSpecialIdentifier("top10time", string.Join(", ", timeUserList));
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time", string.Join(", ", timeUserList));
                     }
                     else
                     {
-                        this.ReplaceSpecialIdentifier("top10time", "No users found.");
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time", "No users found.");
                     }
                 }
             }
