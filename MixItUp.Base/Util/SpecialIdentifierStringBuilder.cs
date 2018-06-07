@@ -27,6 +27,7 @@ namespace MixItUp.Base.Util
         public const string UptimeSpecialIdentifierHeader = "uptime";
         public const string StartSpecialIdentifierHeader = "start";
 
+        public const string Top10SpecialIdentifierHeader = "top10";
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
         public const string StreamerSpecialIdentifierHeader = "streamer";
@@ -130,6 +131,54 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
+
+            if (ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
+            {
+                // Select all workable users, exclude the streamer, then grab their UserData
+                UserDataViewModel[] allUsers = (await ChannelSession.ChannelUsers.GetAllWorkableUsers())
+                    .Where(u => u.PrimaryRole != MixerRoleEnum.Streamer)
+                    .Select(u => ChannelSession.Settings.UserData[u.ID]).ToArray();
+
+                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                {
+                    if (ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
+                    {
+                        List<string> currencyUserList = new List<string>();
+                        int currencyPosition = 1;
+                        foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(10))
+                        {
+                            currencyUserList.Add($"{currencyPosition}) @{currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                        }
+
+                        if (currencyUserList.Count > 0)
+                        {
+                            this.ReplaceSpecialIdentifier(currency.Top10SpecialIdentifier, string.Join(", ", currencyUserList));
+                        }
+                        else
+                        {
+                            this.ReplaceSpecialIdentifier(currency.Top10SpecialIdentifier, "No users found.");
+                        }
+                    }
+                }
+
+                if (ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time"))
+                {
+                    List<string> timeUserList = new List<string>();
+                    int timePosition = 1;
+                    foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(10))
+                    {
+                        timeUserList.Add($"{timePosition}) @{timeUser.UserName} - {timeUser.ViewingTimeString}");
+                    }
+                    if (timeUserList.Count > 0)
+                    {
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time", string.Join(", ", timeUserList));
+                    }
+                    else
+                    {
+                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time", "No users found.");
+                    }
+                }
+            }
 
             if (this.ContainsSpecialIdentifier(UptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StartSpecialIdentifierHeader))
             {

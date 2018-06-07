@@ -50,6 +50,10 @@
                                             <TextBlock>$target</TextBlock>
                                             <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
                                         </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock>$</TextBlock>
+                                            <TextBlock Text="{Binding Top10SpecialIdentifier}" />
+                                        </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -110,6 +114,10 @@
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock>$target</TextBlock>
                                             <TextBlock Text="{Binding UserAmountSpecialIdentifier}" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock>$</TextBlock>
+                                            <TextBlock Text="{Binding Top10SpecialIdentifier}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </DataTemplate>
