@@ -131,42 +131,52 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
 
-            // Select all workable users, exclude the streamer, then grab their UserData
-            UserDataViewModel[] allUsers = (await ChannelSession.ChannelUsers.GetAllWorkableUsers())
-                .Where(u => u.PrimaryRole != MixerRoleEnum.Streamer)
-                .Select(u => ChannelSession.Settings.UserData[u.ID]).ToArray();
-            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+            if (ContainsSpecialIdentifier("top10"))
             {
-                List<string> currencyUserList = new List<string>();
-                int currencyPosition = 1;
-                foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(10))
+                // Select all workable users, exclude the streamer, then grab their UserData
+                UserDataViewModel[] allUsers = (await ChannelSession.ChannelUsers.GetAllWorkableUsers())
+                    .Where(u => u.PrimaryRole != MixerRoleEnum.Streamer)
+                    .Select(u => ChannelSession.Settings.UserData[u.ID]).ToArray();
+
+                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    currencyUserList.Add($"{currencyPosition}) @{currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                    if (ContainsSpecialIdentifier("top10" + currency.SpecialIdentifier))
+                    {
+                        List<string> currencyUserList = new List<string>();
+                        int currencyPosition = 1;
+                        foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(10))
+                        {
+                            currencyUserList.Add($"{currencyPosition}) @{currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                        }
+
+                        if (currencyUserList.Count > 0)
+                        {
+                            this.ReplaceSpecialIdentifier("top10" + currency.SpecialIdentifier, string.Join(", ", currencyUserList));
+                        }
+                        else
+                        {
+                            this.ReplaceSpecialIdentifier("top10" + currency.SpecialIdentifier, "No users found.");
+                        }
+                    }
                 }
 
-                if (currencyUserList.Count > 0)
+                if (ContainsSpecialIdentifier("top10time"))
                 {
-                    this.ReplaceSpecialIdentifier("top10" + currency.SpecialIdentifier, string.Join(", ", currencyUserList));
+                    List<string> timeUserList = new List<string>();
+                    int timePosition = 1;
+                    foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(10))
+                    {
+                        timeUserList.Add($"{timePosition}) @{timeUser.UserName} - {timeUser.ViewingTimeString}");
+                    }
+                    if (timeUserList.Count > 0)
+                    {
+                        this.ReplaceSpecialIdentifier("top10time", string.Join(", ", timeUserList));
+                    }
+                    else
+                    {
+                        this.ReplaceSpecialIdentifier("top10time", "No users found.");
+                    }
                 }
-                else
-                {
-                    this.ReplaceSpecialIdentifier("top10" + currency.SpecialIdentifier, "No users found.");
-                }
-            }
-
-            List<string> timeUserList = new List<string>();
-            int timePosition = 1;
-            foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(10))
-            {
-                timeUserList.Add($"{timePosition}) @{timeUser.UserName} - {timeUser.ViewingTimeString}");
-            }
-            if (timeUserList.Count > 0)
-            {
-                this.ReplaceSpecialIdentifier("top10time", string.Join(", ", timeUserList));
-            }
-            else
-            {
-                this.ReplaceSpecialIdentifier("top10time", "No users found.");
             }
 
             if (this.ContainsSpecialIdentifier(UptimeSpecialIdentifierHeader) || this.ContainsSpecialIdentifier(StartSpecialIdentifierHeader))
