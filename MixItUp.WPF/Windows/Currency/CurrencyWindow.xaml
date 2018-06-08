@@ -55,6 +55,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="30" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -89,7 +91,7 @@
                         <TextBox Grid.Column="5" x:Name="CurrencyMaxAmountTextBox" MaterialDesign:HintAssist.Hint="Max Amount" Width="120" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                     </Grid>
-
+                    
                     <Grid Grid.Row="2" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -114,6 +116,34 @@
                     <Grid Grid.Row="4" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Offline Acquire Rate:" VerticalAlignment="Bottom"/>
+
+                        <ComboBox Grid.Column="2" x:Name="OfflineCurrencyAcquireRateComboBox" Width="150" MaterialDesign:HintAssist.Hint="Offline Acquire Rate" SelectionChanged="OfflineCurrencyAcquireRateComboBox_SelectionChanged" />
+
+                        <Grid x:Name="OfflineCustomRateGrid" Grid.Column="3" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="1" x:Name="OfflineCurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                            <TextBlock Grid.Column="3" VerticalAlignment="Bottom">/</TextBlock>
+                            <TextBox Grid.Column="5" x:Name="OfflineCurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Row="6" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
@@ -123,7 +153,7 @@
                         <Button Grid.Column="2" x:Name="ResetCurrencyManuallyButton" Click="ResetCurrencyManuallyButton_Click">Manual Reset</Button>
                     </Grid>
 
-                    <Grid Grid.Row="6" HorizontalAlignment="Center">
+                    <Grid Grid.Row="8" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="10" />
@@ -155,7 +185,7 @@
 
                     </Grid>
 
-                    <Grid x:Name="RankGrid" Grid.Row="8" Visibility="Collapsed">
+                    <Grid x:Name="RankGrid" Grid.Row="10" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="20" />

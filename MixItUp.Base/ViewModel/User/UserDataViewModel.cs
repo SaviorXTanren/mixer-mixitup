@@ -94,6 +94,9 @@ namespace MixItUp.Base.ViewModel.User
         public int ViewingMinutes { get; set; }
 
         [DataMember]
+        public int OfflineViewingMinutes { get; set; }
+
+        [DataMember]
         public LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel> CurrencyAmounts { get; set; }
 
         [DataMember]

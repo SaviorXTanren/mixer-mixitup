@@ -82,6 +82,7 @@ namespace MixItUp.WPF.Windows.Currency
             }
 
             this.CurrencyAcquireRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>();
+            this.OfflineCurrencyAcquireRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>();
 
             this.ResetCurrencyComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
 
@@ -103,6 +104,21 @@ namespace MixItUp.WPF.Windows.Currency
                 }
                 this.CurrencyAmountTextBox.Text = this.currency.AcquireAmount.ToString();
                 this.CurrencyTimeTextBox.Text = this.currency.AcquireInterval.ToString();
+
+                if (this.currency.IsMinutesOfflineInterval)
+                {
+                    this.OfflineCurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
+                }
+                else if (this.currency.IsHoursOfflineInterval)
+                {
+                    this.OfflineCurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Hours);
+                }
+                else
+                {
+                    this.OfflineCurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
+                }
+                this.OfflineCurrencyAmountTextBox.Text = this.currency.OfflineAcquireAmount.ToString();
+                this.OfflineCurrencyTimeTextBox.Text = this.currency.OfflineAcquireInterval.ToString();
 
                 if (this.currency.MaxAmount != int.MaxValue)
                 {
@@ -133,6 +149,9 @@ namespace MixItUp.WPF.Windows.Currency
                 this.CurrencyOnSubscribeBonusTextBox.Text = "0";
 
                 this.ResetCurrencyComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
+                this.OfflineCurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
+                this.OfflineCurrencyAmountTextBox.Text = "0";
+                this.OfflineCurrencyTimeTextBox.Text = "0";
             }
 
             await base.OnLoaded();
@@ -459,6 +478,40 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                if (this.OfflineCurrencyAcquireRateComboBox.SelectedIndex < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The offline currency rate must be selected");
+                    return;
+                }
+                CurrencyAcquireRateTypeEnum offlineAcquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OfflineCurrencyAcquireRateComboBox.SelectedItem);
+
+                int offlineCurrencyAmount = 1;
+                int offlineCurrencyTime = 1;
+                if (offlineAcquireRate == CurrencyAcquireRateTypeEnum.Hours)
+                {
+                    offlineCurrencyTime = 60;
+                }
+                else if (offlineAcquireRate == CurrencyAcquireRateTypeEnum.Custom)
+                {
+                    if (string.IsNullOrEmpty(this.OfflineCurrencyAmountTextBox.Text) || !int.TryParse(this.OfflineCurrencyAmountTextBox.Text, out offlineCurrencyAmount) || offlineCurrencyAmount < 0)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The offline currency rate must be 0 or greater");
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(this.OfflineCurrencyTimeTextBox.Text) || !int.TryParse(this.OfflineCurrencyTimeTextBox.Text, out offlineCurrencyTime) || offlineCurrencyTime < 0)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The offline currency interval must be 0 or greater");
+                        return;
+                    }
+
+                    if ((offlineCurrencyAmount == 0 && offlineCurrencyTime != 0) || (offlineCurrencyAmount != 0 && offlineCurrencyTime == 0))
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The offline currency rate and interval must be both greater than 0 or both equal to 0");
+                        return;
+                    }
+                }
+
                 if (this.ResetCurrencyComboBox.SelectedIndex < 0)
                 {
                     await MessageBoxHelper.ShowMessageDialog("A reset frequency must be selected");
@@ -496,6 +549,9 @@ namespace MixItUp.WPF.Windows.Currency
                 this.currency.OnFollowBonus = onFollowBonus;
                 this.currency.OnHostBonus = onHostBonus;
                 this.currency.OnSubscribeBonus = onSubscribeBonus;
+
+                this.currency.OfflineAcquireAmount = offlineCurrencyAmount;
+                this.currency.OfflineAcquireInterval = offlineCurrencyTime;
 
                 this.currency.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.ResetCurrencyComboBox.SelectedItem);
 
@@ -572,6 +628,15 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.CurrencyAcquireRateComboBox.SelectedItem);
                 this.CustomRateGrid.Visibility = (acquireRate == CurrencyAcquireRateTypeEnum.Custom) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private void OfflineCurrencyAcquireRateComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.OfflineCurrencyAcquireRateComboBox.SelectedIndex >= 0)
+            {
+                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OfflineCurrencyAcquireRateComboBox.SelectedItem);
+                this.OfflineCustomRateGrid.Visibility = (acquireRate == CurrencyAcquireRateTypeEnum.Custom) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
     }
