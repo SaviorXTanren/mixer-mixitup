@@ -47,6 +47,7 @@ namespace MixItUp.WPF.Controls.Command
         private ObservableCollection<ActionContainerControl> actionControls = new ObservableCollection<ActionContainerControl>();
 
         private CommandBase newCommand = null;
+        private bool hasLoaded = false;
 
         public AdvancedCommandEditorControl(CommandWindow window, CommandDetailsControlBase commandDetailsControl)
         {
@@ -96,54 +97,58 @@ namespace MixItUp.WPF.Controls.Command
 
         protected override async Task OnLoaded()
         {
-            List<ActionTypeEntry> actionTypes = new List<ActionTypeEntry>();
-            foreach (ActionTypeEnum actionType in EnumHelper.GetEnumList<ActionTypeEnum>())
+            if (!hasLoaded)
             {
-                ActionTypeEntry entry = new ActionTypeEntry() { Name = EnumHelper.GetEnumName(actionType), Type = actionType };
-                switch (entry.Type)
+                List<ActionTypeEntry> actionTypes = new List<ActionTypeEntry>();
+                foreach (ActionTypeEnum actionType in EnumHelper.GetEnumList<ActionTypeEnum>())
                 {
-                    case ActionTypeEnum.Custom:
-                        continue;
-                    case ActionTypeEnum.Chat:
-                        entry.Name += " Message";
-                        break;
-                    case ActionTypeEnum.Counter:
-                        entry.Name += " (Create & Update)";
-                        break;
-                    case ActionTypeEnum.Input:
-                        entry.Name += " (Keyboard & Mouse)";
-                        break;
-                    case ActionTypeEnum.Overlay:
-                        entry.Name += " (Images & Videos)";
-                        break;
-                    case ActionTypeEnum.File:
-                        entry.Name += " (Read & Write)";
-                        break;
-                    default:
-                        break;
+                    ActionTypeEntry entry = new ActionTypeEntry() { Name = EnumHelper.GetEnumName(actionType), Type = actionType };
+                    switch (entry.Type)
+                    {
+                        case ActionTypeEnum.Custom:
+                            continue;
+                        case ActionTypeEnum.Chat:
+                            entry.Name += " Message";
+                            break;
+                        case ActionTypeEnum.Counter:
+                            entry.Name += " (Create & Update)";
+                            break;
+                        case ActionTypeEnum.Input:
+                            entry.Name += " (Keyboard & Mouse)";
+                            break;
+                        case ActionTypeEnum.Overlay:
+                            entry.Name += " (Images & Videos)";
+                            break;
+                        case ActionTypeEnum.File:
+                            entry.Name += " (Read & Write)";
+                            break;
+                        default:
+                            break;
+                    }
+                    actionTypes.Add(entry);
                 }
-                actionTypes.Add(entry);
+
+                this.TypeComboBox.ItemsSource = actionTypes.OrderBy(at => at.Name);
+                this.ActionsListView.ItemsSource = this.actionControls;
+
+                this.CommandDetailsGrid.Visibility = Visibility.Visible;
+                this.CommandDetailsGrid.Children.Add(this.commandDetailsControl);
+                await this.commandDetailsControl.Initialize();
+
+                CommandBase command = this.commandDetailsControl.GetExistingCommand();
+                if (command != null)
+                {
+                    foreach (ActionBase action in command.Actions)
+                    {
+                        ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);
+                        actionControl.Minimize();
+                        this.actionControls.Add(actionControl);
+                        actionControl.OnWindowSizeChanged(this.window.RenderSize);
+                    }
+                }
             }
 
-            this.TypeComboBox.ItemsSource = actionTypes.OrderBy(at => at.Name);
-            this.ActionsListView.ItemsSource = this.actionControls;
-
-            this.CommandDetailsGrid.Visibility = Visibility.Visible;
-            this.CommandDetailsGrid.Children.Add(this.commandDetailsControl);
-            await this.commandDetailsControl.Initialize();
-
-            CommandBase command = this.commandDetailsControl.GetExistingCommand();
-            if (command != null)
-            {
-                foreach (ActionBase action in command.Actions)
-                {
-                    ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);
-                    actionControl.Minimize();
-                    this.actionControls.Add(actionControl);
-                    actionControl.OnWindowSizeChanged(this.window.RenderSize);
-                }
-            }
-
+            hasLoaded = true;
             await base.OnLoaded();
         }
 
