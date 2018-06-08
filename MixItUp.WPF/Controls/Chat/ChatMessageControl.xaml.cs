@@ -61,6 +61,7 @@ namespace MixItUp.WPF.Controls.Chat
 
                             Image image = new Image();
                             image.Source = bitmap;
+                            image.ToolTip = messageData.text;
                             image.VerticalAlignment = VerticalAlignment.Center;
                             this.MessageWrapPanel.Children.Add(image);
                         }

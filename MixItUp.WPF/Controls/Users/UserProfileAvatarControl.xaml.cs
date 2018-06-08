@@ -23,14 +23,14 @@ namespace MixItUp.WPF.Controls.Users
                 bitmap.UriSource = new Uri(url, UriKind.Absolute);
                 bitmap.EndInit();
 
-                this.ProfileAvatarImage.Source = bitmap;
+                this.ProfileAvatarImage.ImageSource = bitmap;
             }
         }
 
         public void SetSize(int size)
         {
-            this.ProfileAvatarImage.Width = size;
-            this.ProfileAvatarImage.Height = size;
+            this.ProfileAvatarContainer.Width = size;
+            this.ProfileAvatarContainer.Height = size;
         }
     }
 }
