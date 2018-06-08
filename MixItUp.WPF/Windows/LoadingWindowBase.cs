@@ -47,6 +47,12 @@ namespace MixItUp.WPF.Windows
 
         protected virtual Task OnLoaded() { return Task.FromResult(0); }
 
+        protected void ShowMainWindow(Window window)
+        {
+            Application.Current.MainWindow = window;
+            window.Show();
+        }
+
         private async void LoadingWindowBase_Loaded(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>

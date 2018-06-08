@@ -164,8 +164,8 @@ namespace MixItUp.WPF
                             {
                                 newWindow = new MainWindow();
                             }
+                            ShowMainWindow(newWindow);
                             this.Hide();
-                            newWindow.Show();
                             this.Close();
                             return;
                         }
@@ -204,8 +204,8 @@ namespace MixItUp.WPF
                                 {
                                     newWindow = new MainWindow();
                                 }
+                                ShowMainWindow(newWindow);
                                 this.Hide();
-                                newWindow.Show();
                                 this.Close();
                                 return;
                             }
@@ -257,9 +257,8 @@ namespace MixItUp.WPF
                     IEnumerable<UserWithGroupsModel> users = await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Mod);
                     if (users.Any(uwg => uwg.id.Equals(ChannelSession.User.id)))
                     {
-                        MainWindow window = new MainWindow();
+                        ShowMainWindow(new MainWindow());
                         this.Hide();
-                        window.Show();
                         this.Close();
                     }
                     else
@@ -305,8 +304,8 @@ namespace MixItUp.WPF
         {
             if (await this.EstablishConnection(ChannelSession.StreamerScopes, channelName: null))
             {
-                NewUserWizardWindow window = new NewUserWizardWindow();
-                window.Show();
+                ShowMainWindow(new NewUserWizardWindow());
+                this.Hide();
                 this.Close();
                 return true;
             }

@@ -77,8 +77,7 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             ChannelSession.Settings.ReRunWizard = false;
 
-            MainWindow window = new MainWindow();
-            window.Show();
+            ShowMainWindow(new MainWindow());
 
             base.OnClosing(e);
         }
