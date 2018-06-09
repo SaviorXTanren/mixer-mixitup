@@ -121,6 +121,8 @@ namespace MixItUp.Desktop
         public int GiveawayTimer { get; set; }
         [JsonProperty]
         public RequirementViewModel GiveawayRequirements { get; set; }
+        [JsonProperty]
+        public int GiveawayReminderInterval { get; set; }
 
         [JsonProperty]
         public bool ModerationUseCommunityFilteredWords { get; set; }
@@ -368,8 +370,9 @@ namespace MixItUp.Desktop
             this.GameQueueRequirements = new RequirementViewModel();
 
             this.GiveawayCommand = "giveaway";
-            this.GiveawayTimer = 60;
+            this.GiveawayTimer = 1;
             this.GiveawayRequirements = new RequirementViewModel();
+            this.GiveawayReminderInterval = 5;
 
             this.MaxMessagesInChat = 100;
             this.ChatFontSize = 13;

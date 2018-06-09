@@ -27,9 +27,9 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
@@ -46,10 +46,20 @@
 
                 <TextBox Grid.Column="0" HorizontalAlignment="Center" x:Name="ItemTextBox" Width="200" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="2" x:Name="TimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <ComboBox x:Name="EntryMethodTypeComboBox" Grid.Column="2" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Entry Method" Width="150" SelectionChanged="EntryMethodTypeComboBox_SelectionChanged" />
             </Grid>
 
-            <ComboBox x:Name="EntryMethodTypeComboBox" Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Entry Method" Width="150" SelectionChanged="EntryMethodTypeComboBox_SelectionChanged" />
+            <Grid x:Name="GiveawayTimersGrid" Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="TimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="2" x:Name="ReminderTextBox" Width="175" MaterialDesign:HintAssist.Hint="Reminder Message (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            </Grid>
 
             <Grid x:Name="CommandEntryGrid" Grid.Row="4" HorizontalAlignment="Center" Visibility="Collapsed">
                 <Grid.RowDefinitions>

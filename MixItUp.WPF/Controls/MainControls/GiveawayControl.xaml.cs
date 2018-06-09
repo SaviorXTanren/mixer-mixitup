@@ -57,7 +57,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private UserViewModel selectedWinner = null;
 
-        private int timeLeft = 120;
+        private int timeLeft = 2;
+        private int reminder = 5;
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         public GiveawayControl()
@@ -76,6 +77,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.EnteredUsersListView.ItemsSource = this.enteredUsers;
 
             this.TimerTextBox.Text = ChannelSession.Settings.GiveawayTimer.ToString();
+            this.ReminderTextBox.Text = ChannelSession.Settings.GiveawayReminderInterval.ToString();
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.GiveawayCommand))
             {
@@ -166,6 +168,13 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
+            this.reminder = 0;
+            if (string.IsNullOrEmpty(this.ReminderTextBox.Text) || !int.TryParse(this.ReminderTextBox.Text, out this.reminder) || this.reminder <= 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("Reminder must be greater than 0");
+                return;
+            }
+
             if (this.EntryMethodTypeComboBox.SelectedIndex < 0)
             {
                 await MessageBoxHelper.ShowMessageDialog("An entry method must be selected");
@@ -229,11 +238,14 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             ChannelSession.Settings.GiveawayTimer = this.timeLeft;
+            ChannelSession.Settings.GiveawayReminderInterval = this.reminder;
             await ChannelSession.SaveSettings();
+
+            this.timeLeft = this.timeLeft * 60;
+            this.reminder = this.reminder * 60;
 
             this.giveawayEnabled = true;
             this.giveawayItem = this.ItemTextBox.Text;
-            this.TimeLeftTextBlock.Text = this.timeLeft.ToString();
 
             this.enteredUsersDictionary.Clear();
             this.enteredUsers.Clear();
@@ -244,7 +256,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.GiveawayBasicsGrid.IsEnabled = this.EntryMethodTypeComboBox.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = false;
 
-            await ChannelSession.Chat.SendMessage(string.Format("A giveaway for {0} has started! {1} in the next {2} seconds", this.giveawayItem, this.GetEntryInstructions(), ChannelSession.Settings.GiveawayTimer));
+            await ChannelSession.Chat.SendMessage(string.Format("A giveaway for {0} has started! {1} in the next {2} minute(s)", this.giveawayItem, this.GetEntryInstructions(), ChannelSession.Settings.GiveawayTimer));
 
             this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -285,11 +297,16 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.timeLeft--;
                 await this.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    this.TimeLeftTextBlock.Text = this.timeLeft.ToString();
+                    string timeLeftUIText = (this.timeLeft % 60).ToString() + " Seconds";
+                    if (this.timeLeft > 60)
+                    {
+                        timeLeftUIText = (this.timeLeft / 60).ToString() + " Minutes " + timeLeftUIText;
+                    }
+                    this.TimeLeftTextBlock.Text = timeLeftUIText;
                 }));
 
                 string timeLeftText = null;
-                if (this.timeLeft > 60 && this.timeLeft % 300 == 0)
+                if (this.timeLeft > 60 && (this.timeLeft % this.reminder) == 0)
                 {
                     int minutesLeft = this.timeLeft / 60;
                     timeLeftText = minutesLeft + " minutes";
