@@ -55,6 +55,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version14Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version15Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version16Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version17Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -443,6 +444,16 @@ namespace MixItUp.Desktop.Services
                     }
                 }
 
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version17Upgrade(int version, string filePath)
+        {
+            if (version < 17)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                settings.GiveawayTimer = Math.Max(settings.GiveawayTimer / 60, 1);
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }
