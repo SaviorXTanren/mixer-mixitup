@@ -57,7 +57,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.Window.Closing += Window_Closing;
             GlobalEvents.OnChatFontSizeChanged += GlobalEvents_OnChatFontSizeChanged;
 
             ChannelSession.Constellation.OnFollowOccurred += Constellation_OnFollowOccurred;
@@ -345,11 +344,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     }));
                 }
             }
-        }
-
-        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            await ChannelSession.Chat.Disconnect();
         }
 
         private async void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
