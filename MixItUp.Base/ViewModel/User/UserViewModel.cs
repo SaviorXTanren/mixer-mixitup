@@ -355,13 +355,23 @@ namespace MixItUp.Base.ViewModel.User
 
         public void UpdateMinuteUserData(IEnumerable<UserCurrencyViewModel> currenciesToUpdate)
         {
-            this.Data.ViewingMinutes++;
+            if (ChannelSession.Channel.online)
+            {
+                this.Data.ViewingMinutes++;
+            }
+            else
+            {
+                this.Data.OfflineViewingMinutes++;
+            }
+
             foreach (UserCurrencyViewModel currency in currenciesToUpdate)
             {
-                if ((this.Data.ViewingMinutes % currency.AcquireInterval) == 0)
+                int minutes = ChannelSession.Channel.online ? this.Data.ViewingMinutes : this.Data.OfflineViewingMinutes;
+                int interval = ChannelSession.Channel.online ? currency.AcquireInterval : currency.OfflineAcquireInterval;
+                if ((minutes % interval) == 0)
                 {
-                    this.Data.AddCurrencyAmount(currency, currency.AcquireAmount);
-                    if (this.IsSubscriber)
+                    this.Data.AddCurrencyAmount(currency, ChannelSession.Channel.online ? currency.AcquireAmount : currency.OfflineAcquireAmount);
+                    if (this.IsSubscriber && (ChannelSession.Channel.online || (currency.OfflineAcquireAmount > 0)))
                     {
                         this.Data.AddCurrencyAmount(currency, currency.SubscriberBonus);
                     }

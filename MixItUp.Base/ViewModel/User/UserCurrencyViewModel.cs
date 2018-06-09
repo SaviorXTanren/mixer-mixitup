@@ -32,6 +32,10 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public int AcquireInterval { get; set; }
         [DataMember]
+        public int OfflineAcquireAmount { get; set; }
+        [DataMember]
+        public int OfflineAcquireInterval { get; set; }
+        [DataMember]
         public int MaxAmount { get; set; }
         [DataMember]
         public string SpecialIdentifier { get; set; }
@@ -77,6 +81,12 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public bool IsHoursInterval { get { return this.AcquireAmount == 1 && this.AcquireInterval == 60; } }
+
+        [JsonIgnore]
+        public bool IsMinutesOfflineInterval { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 1; } }
+
+        [JsonIgnore]
+        public bool IsHoursOfflineInterval { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 60; } }
 
         [JsonIgnore]
         public string UserAmountSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
