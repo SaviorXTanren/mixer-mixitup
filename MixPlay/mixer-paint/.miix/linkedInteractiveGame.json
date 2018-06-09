@@ -1,0 +1,25 @@
+{
+  "coverUrl": null,
+  "createdAt": "2018-06-08T04:26:59.000Z",
+  "deletedAt": null,
+  "description": null,
+  "hasPublishedVersions": false,
+  "id": 250261,
+  "installation": null,
+  "name": "Mixer Paint",
+  "ownerId": 7207866,
+  "typeId": 130909,
+  "updatedAt": "2018-06-08T04:26:59.000Z",
+  "versions": [
+    {
+      "changelog": "Initial release",
+      "createdAt": "2018-06-08T04:26:59.000Z",
+      "id": 255100,
+      "installation": null,
+      "state": "draft",
+      "updatedAt": "2018-06-08T04:27:03.000Z",
+      "version": "0.1.0",
+      "versionOrder": 256
+    }
+  ]
+}

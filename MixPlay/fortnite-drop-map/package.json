@@ -1,0 +1,27 @@
+{
+  "name": "fortnite-drop-map",
+  "version": "0.1.0",
+  "description": "A viewer-selectable heatmap for choosing where player should drop",
+  "scripts": {
+    "fmt:style": "prettier --single-quote --trailing-comma all --print-width 100 --write \"src/**/*.js\""
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@mixer/cdk-webpack-plugin": "^0.1.4",
+    "clean-webpack-plugin": "^0.1.17",
+    "copy-webpack-plugin": "^4.4.0",
+    "prettier": "^1.11.1",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14",
+    "webpack-dev-server": "^3.1.1",
+    "@mcph/miix-webpack-plugin": "^0.1.0"
+  },
+  "dependencies": {},
+  "author": "SaviorXTanren",
+  "keywords": [
+    "fortnite",
+    "map",
+    "drop",
+    "heatmap"
+  ]
+}

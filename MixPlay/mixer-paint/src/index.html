@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mixer Paint</title>
+  <script src="https://mixercc.azureedge.net/lib/std-v0.2.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+  <style>
+      div.mainDiv {
+        position: absolute;
+        top: 5%;
+        left: 5%;
+        width: 90%;
+        height: 90%;
+        z-index: 0;
+      }
+
+      canvas.drawingCanvas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 2px solid;
+        z-index: 0;
+      }
+
+      table.paintSwatchTable {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 3;
+      }
+
+      button.clearButton {
+        display: block;
+        margin: auto;
+        width: 50px;
+      }
+      </style>
+</head>
+<body>
+  <script src="./scripts.js"></script>
+
+  <div id="mainDiv" class="mainDiv">
+    <canvas id="drawingCanvas" class="drawingCanvas"></canvas>
+
+    <table id="paintSwatchTable" class="paintSwatchTable" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><div style="width:25px;height:25px;background:blue;" id="blue"></div></td>
+        <td><div style="width:25px;height:25px;background:red;" id="red"></div></td>
+      </tr>
+      <tr>
+        <td><div style="width:25px;height:25px;background:green;" id="green"></div></td>
+        <td><div style="width:25px;height:25px;background:yellow;" id="yellow"></div></td>
+      </tr>
+      <tr>
+        <td><div style="width:25px;height:25px;background:orange;" id="orange"></div></td>
+        <td><div style="width:25px;height:25px;background:purple;" id="purple"></div></td>
+      </tr>
+      <tr>
+        <td><div style="width:25px;height:25px;background:white;" id="white"></div></td>
+        <td><div style="width:25px;height:25px;background:black;" id="black"></div></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button id="clearButton" class="clearButton">Clear</button></td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

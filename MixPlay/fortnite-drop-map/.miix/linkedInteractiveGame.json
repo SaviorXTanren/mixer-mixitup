@@ -1,0 +1,25 @@
+{
+  "coverUrl": null,
+  "createdAt": "2018-06-07T06:34:40.000Z",
+  "deletedAt": null,
+  "description": null,
+  "hasPublishedVersions": false,
+  "id": 249946,
+  "installation": null,
+  "name": "Fortnite Drop map",
+  "ownerId": 7207866,
+  "typeId": 70323,
+  "updatedAt": "2018-06-07T06:34:40.000Z",
+  "versions": [
+    {
+      "changelog": "Initial release",
+      "createdAt": "2018-06-07T06:34:40.000Z",
+      "id": 254785,
+      "installation": null,
+      "state": "draft",
+      "updatedAt": "2018-06-07T06:34:45.000Z",
+      "version": "0.1.0",
+      "versionOrder": 256
+    }
+  ]
+}

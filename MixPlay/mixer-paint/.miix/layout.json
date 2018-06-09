@@ -1,0 +1,53 @@
+[
+  {
+    "content": [
+      {
+        "activeItemIndex": 0,
+        "content": [
+          {
+            "componentName": "ControlSchema",
+            "isClosable": true,
+            "reorderEnabled": true,
+            "title": "Control Schema",
+            "type": "component",
+            "width": 0.25
+          }
+        ],
+        "isClosable": true,
+        "reorderEnabled": true,
+        "title": "",
+        "type": "stack",
+        "width": 25
+      },
+      {
+        "activeItemIndex": 0,
+        "content": [
+          {
+            "componentName": "Controls",
+            "isClosable": true,
+            "reorderEnabled": true,
+            "title": "Controls",
+            "type": "component",
+            "width": 0.75
+          },
+          {
+            "componentName": "ControlsConsole",
+            "isClosable": true,
+            "reorderEnabled": true,
+            "title": "Control Output Console",
+            "type": "component"
+          }
+        ],
+        "isClosable": true,
+        "reorderEnabled": true,
+        "title": "",
+        "type": "stack",
+        "width": 75
+      }
+    ],
+    "isClosable": true,
+    "reorderEnabled": true,
+    "title": "",
+    "type": "row"
+  }
+]
