@@ -79,6 +79,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.TimerTextBox.Text = ChannelSession.Settings.GiveawayTimer.ToString();
             this.ReminderTextBox.Text = ChannelSession.Settings.GiveawayReminderInterval.ToString();
 
+            this.RequireClaimCheckBox.IsChecked = ChannelSession.Settings.GiveawayRequireClaim;
+
             if (!string.IsNullOrEmpty(ChannelSession.Settings.GiveawayCommand))
             {
                 this.EntryMethodTypeComboBox.SelectedItem = EnumHelper.GetEnumName(GiveawayEntryTypeEnum.Command);
@@ -239,6 +241,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             ChannelSession.Settings.GiveawayTimer = this.timeLeft;
             ChannelSession.Settings.GiveawayReminderInterval = this.reminder;
+            ChannelSession.Settings.GiveawayRequireClaim = this.RequireClaimCheckBox.IsChecked.GetValueOrDefault();
             await ChannelSession.SaveSettings();
 
             this.timeLeft = this.timeLeft * 60;
@@ -254,7 +257,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.EnableGiveawayButton.Visibility = Visibility.Collapsed;
             this.DisableGiveawayButton.Visibility = Visibility.Visible;
 
-            this.GiveawayBasicsGrid.IsEnabled = this.EntryMethodTypeComboBox.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = false;
+            this.GiveawayBasicsGrid.IsEnabled = this.GiveawayTimersGrid.IsEnabled = this.GiveawayRequireClaimGrid.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = false;
 
             await ChannelSession.Chat.SendMessage(string.Format("A giveaway for {0} has started! {1} in the next {2} minute(s)", this.giveawayItem, this.GetEntryInstructions(), ChannelSession.Settings.GiveawayTimer));
 
@@ -279,7 +282,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.selectedWinner = null;
                 this.TimeLeftTextBlock.Text = "";
 
-                this.GiveawayBasicsGrid.IsEnabled = this.EntryMethodTypeComboBox.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = true;
+                this.GiveawayBasicsGrid.IsEnabled = this.GiveawayTimersGrid.IsEnabled = this.GiveawayRequireClaimGrid.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = true;
 
                 this.DisableGiveawayButton.Visibility = Visibility.Collapsed;
                 this.EnableGiveawayButton.Visibility = Visibility.Visible;
@@ -363,6 +366,13 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         this.WinnerTextBlock.Text = this.selectedWinner.UserName;
                     }));
+
+                    if (!ChannelSession.Settings.GiveawayRequireClaim)
+                    {
+                        await ChannelSession.Chat.SendMessage(string.Format("Congratulations @{0}, you won {1}!", this.selectedWinner.UserName, this.giveawayItem));
+                        await this.EndGiveaway();
+                        return;
+                    }
 
                     await ChannelSession.Chat.SendMessage(string.Format("Congratulations @{0}, you won {1}! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", this.selectedWinner.UserName, this.giveawayItem));
 

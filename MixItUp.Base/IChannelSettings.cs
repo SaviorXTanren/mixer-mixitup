@@ -68,6 +68,7 @@ namespace MixItUp.Base
         int GiveawayTimer { get; set; }
         RequirementViewModel GiveawayRequirements { get; set; }
         int GiveawayReminderInterval { get; set; }
+        bool GiveawayRequireClaim { get; set; }
 
         bool ModerationUseCommunityFilteredWords { get; set; }
         MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
