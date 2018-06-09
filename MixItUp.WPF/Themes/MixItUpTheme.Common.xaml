@@ -60,6 +60,10 @@
         <Setter Property="Foreground" Value="{StaticResource MaterialDesignBody}" />
     </Style>
 
+    <Style x:Key="MaterialDesignFlatButtonDefaultColor" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+    </Style>
+
     <Style TargetType="{x:Type MaterialDesign:DialogHost}">
         <Setter Property="DialogMargin" Value="22" />
         <Setter Property="MaterialDesign:ShadowAssist.ShadowDepth" Value="Depth5" />

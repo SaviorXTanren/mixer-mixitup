@@ -44,10 +44,18 @@ namespace MixItUp.WPF.Controls.Command
         private CommandWindow window;
 
         private CommandDetailsControlBase commandDetailsControl;
+        private IEnumerable<ActionBase> initialActions;
+
         private ObservableCollection<ActionContainerControl> actionControls = new ObservableCollection<ActionContainerControl>();
 
         private CommandBase newCommand = null;
         private bool hasLoaded = false;
+
+        public AdvancedCommandEditorControl(CommandWindow window, CommandDetailsControlBase commandDetailsControl, IEnumerable<ActionBase> initialActions)
+            : this(window, commandDetailsControl)
+        {
+            this.initialActions = initialActions;
+        }
 
         public AdvancedCommandEditorControl(CommandWindow window, CommandDetailsControlBase commandDetailsControl)
         {
@@ -135,16 +143,24 @@ namespace MixItUp.WPF.Controls.Command
                 this.CommandDetailsGrid.Children.Add(this.commandDetailsControl);
                 await this.commandDetailsControl.Initialize();
 
+                List<ActionBase> actions = new List<ActionBase>();
+
                 CommandBase command = this.commandDetailsControl.GetExistingCommand();
                 if (command != null)
                 {
-                    foreach (ActionBase action in command.Actions)
-                    {
-                        ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);
-                        actionControl.Minimize();
-                        this.actionControls.Add(actionControl);
-                        actionControl.OnWindowSizeChanged(this.window.RenderSize);
-                    }
+                    actions.AddRange(command.Actions);
+                }
+                else if (initialActions != null)
+                {
+                    actions.AddRange(initialActions);
+                }
+
+                foreach (ActionBase action in actions)
+                {
+                    ActionContainerControl actionControl = new ActionContainerControl(this.window, this, action);
+                    actionControl.Minimize();
+                    this.actionControls.Add(actionControl);
+                    actionControl.OnWindowSizeChanged(this.window.RenderSize);
                 }
             }
 

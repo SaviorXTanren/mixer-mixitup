@@ -46,6 +46,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" TextWrapping="Wrap" Width="200" TextAlignment="Center">Select the type of command you would like to build:</TextBlock>
@@ -56,6 +58,21 @@
 
             <Button x:Name="AdvancedCommandButton" Grid.Row="6" Click="AdvancedCommandButton_Click">Advanced Command</Button>
 
+            <Button x:Name="DownloadFromStoreButton" Grid.Row="8" Click="DownloadFromStoreButton_Click" Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Download From</TextBlock>
+                    <Image Grid.Column="2" Source="..\..\Logo.png" />
+                    <TextBlock Grid.Column="4" VerticalAlignment="Center">Store</TextBlock>
+                </Grid>
+            </Button>
         </Grid>
         
         <ContentControl Margin="10" x:Name="MainContentControl" Visibility="Collapsed" Grid.Row="0" />

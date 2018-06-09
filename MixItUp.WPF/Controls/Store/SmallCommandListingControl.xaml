@@ -8,30 +8,32 @@
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                            
              mc:Ignorable="d" 
-             d:DesignHeight="80" d:DesignWidth="100">
-    <Border Style="{StaticResource DefaultBorder}" Width="100" MaxWidth="100" Height="160" MaxHeight="160">
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="7" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="2" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+             d:DesignHeight="160" d:DesignWidth="100">
+    <Button Style="{StaticResource MaterialDesignFlatButtonDefaultColor}" Width="115" MaxWidth="115" Height="170" MaxHeight="170" Click="Button_Click" ToolTip="{Binding TooltipDescription}">
+        <Border Style="{StaticResource DefaultBorder}" Margin="-10,0">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="7" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <Image Grid.Column="0" x:Name="ListingImage" Width="80" Height="80" />
+                <Image Grid.Column="0" x:Name="ListingImage" Width="80" Height="80" Source="{Binding DisplayImage}" />
 
-            <TextBlock x:Name="ListingName" Grid.Row="2" Width="80" MaxWidth="80" Height="35" HorizontalAlignment="Left" Text="{Binding Name}" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
+                <TextBlock x:Name="ListingName" Grid.Row="2" Width="80" MaxWidth="80" Height="35" HorizontalAlignment="Left" Text="{Binding Name}" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
 
-            <Grid Grid.Row="4" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="4" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" x:Name="RatingTextBlock" Text="{Binding AverageRatingDisplayString}" />
-                <MaterialDesign:PackIcon Grid.Column="1" Kind="Star" />
+                    <TextBlock Grid.Column="0" x:Name="RatingTextBlock" Text="{Binding AverageRatingDisplayString}" VerticalAlignment="Center" />
+                    <MaterialDesign:PackIcon Grid.Column="1" Kind="Star" VerticalAlignment="Center" />
+                </Grid>
             </Grid>
-        </Grid>
-    </Border>
+        </Border>
+    </Button>
 </local:StoreListingControl>

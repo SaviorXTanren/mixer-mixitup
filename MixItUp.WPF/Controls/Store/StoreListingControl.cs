@@ -1,7 +1,6 @@
-﻿using MaterialDesignThemes.Wpf;
-using Mixer.Base.Util;
-using MixItUp.Base.Model.Store;
+﻿using MixItUp.Base.Model.Store;
 using System;
+using System.Text;
 using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Store
@@ -10,10 +9,13 @@ namespace MixItUp.WPF.Controls.Store
     {
         public static BitmapImage DefaultDisplayImage { get; private set; }
 
-        private StoreListingModel listing;
+        protected MainStoreControl mainStoreControl { get; private set; }
 
-        public StoreListingControl(StoreListingModel listing)
+        protected StoreListingModel listing { get; private set; }
+
+        public StoreListingControl(MainStoreControl mainStoreControl, StoreListingModel listing)
         {
+            this.mainStoreControl = mainStoreControl;
             this.DataContext = this.listing = listing;
 
             if (StoreListingControl.DefaultDisplayImage == null)
@@ -23,6 +25,40 @@ namespace MixItUp.WPF.Controls.Store
         }
 
         public BitmapImage DisplayImage { get { return (!string.IsNullOrEmpty(this.listing.DisplayImage)) ? this.CreateImage(this.listing.DisplayImage) : StoreListingControl.DefaultDisplayImage; } }
+
+        public string TooltipDescription
+        {
+            get
+            {
+                StringBuilder tooltipDescription = new StringBuilder();
+
+                string currentLine = string.Empty;
+                foreach (string split in this.listing.Description.Split(new char[] { ' ' }))
+                {
+                    currentLine += split;
+                    if (currentLine.Length > 70)
+                    {
+                        tooltipDescription.AppendLine(currentLine);
+                        currentLine = string.Empty;
+                    }
+                    else
+                    {
+                        currentLine += " ";
+                    }
+                }
+                
+                if (!string.IsNullOrEmpty(currentLine))
+                {
+                    tooltipDescription.Append(currentLine);
+                }
+                else
+                {
+                    tooltipDescription.Remove(tooltipDescription.Length - 2, 2);
+                }
+
+                return tooltipDescription.ToString();
+            }
+        }
 
         private BitmapImage CreateImage(string url)
         {
