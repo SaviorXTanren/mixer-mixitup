@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace MixItUp.Base.Model.API
 {
     [DataContract]
-    public class IssueReportEvent
+    public class IssueReportModel
     {
         [JsonProperty]
         public uint MixerUserID { get; set; }
@@ -13,6 +13,6 @@ namespace MixItUp.Base.Model.API
         [JsonProperty]
         public string LogContents { get; set; }
 
-        public IssueReportEvent() { }
+        public IssueReportModel() { }
     }
 }

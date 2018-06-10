@@ -1,5 +1,4 @@
-﻿using Mixer.Base.Model.User;
-using MixItUp.Base.Actions;
+﻿using MixItUp.Base;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
@@ -15,30 +14,6 @@ namespace MixItUp.WPF.Controls.Store
     /// </summary>
     public partial class MainStoreControl : LoadingControlBase
     {
-        private static StoreListingReviewModel review = new StoreListingReviewModel()
-        {
-            ID = Guid.NewGuid(),
-            User = new UserModel() { id = 1, username = "Joe Smoe" },
-            Rating = 4,
-            Review = "It's not that bad honestly. Could use a bit more work here and there, but was super helpful to get me started. Thanks!"
-        };
-
-        private static StoreDetailListingModel testListing = new StoreDetailListingModel()
-        {
-            ID = Guid.NewGuid(),
-            Name = "Really cool command!",
-            Description = "This is a really cool comamnd that I designed that you are sure to love! It has all the coolest things in the world you could ever want in a command. So why have you not downloaded it already? Seriously, what is wrong with you? What were you even thinking not doing something like that, come on!",
-            AverageRating = 3.8,
-            TotalDownloads = 123,
-            User = new UserModel() { id = 1, username = "Joe Smoe" },
-            DisplayImage = "https://mixitupapp.com/img/bg-img/logo-sm.png",
-            Tags = new List<string>() { "Chat", "Overlay", "Host", "Donation", "Sound" },
-            Actions = new List<ActionBase>() { new ChatAction("Look at me!") },
-            Reviews = new List<StoreListingReviewModel>() { review, review, review, review },
-            CreatedDate = DateTimeOffset.Now,
-            LastUpdatedDate = DateTimeOffset.Now
-        };
-
         private CommandWindow window;
 
         private StoreDetailListingModel currentListing = null;
@@ -50,7 +25,7 @@ namespace MixItUp.WPF.Controls.Store
             InitializeComponent();
         }
 
-        public Task StoreListingSelected(StoreListingModel storeListing)
+        public async Task StoreListingSelected(StoreListingModel storeListing)
         {
             this.LandingGrid.Visibility = Visibility.Collapsed;
             this.DetailsGrid.Visibility = Visibility.Visible;
@@ -59,22 +34,18 @@ namespace MixItUp.WPF.Controls.Store
             this.ReportButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;
             this.RemoveButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Visible : Visibility.Collapsed;
 
-            this.DetailsGrid.DataContext = this.currentListing = (StoreDetailListingModel)storeListing;
-
-            return Task.FromResult(0);
+            this.DetailsGrid.DataContext = this.currentListing = await ChannelSession.Services.MixItUpService.GetStoreListing(storeListing.ID);
         }
 
-        protected override Task OnLoaded()
+        protected override async Task OnLoaded()
         {
-            this.PromotedCommandControl.Content = new LargeCommandLisingControl(this, testListing);
+            this.PromotedCommandControl.Content = new LargeCommandLisingControl(this, await ChannelSession.Services.MixItUpService.GetTopRandomStoreListings());
 
-            List<StoreListingModel> storeListings = new List<StoreListingModel>() { testListing, testListing, testListing, testListing, testListing };
+            this.CreateAndAddCategory("Chat", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Chat"));
+            this.CreateAndAddCategory("Donations", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Donations"));
+            this.CreateAndAddCategory("Overlay", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Overlay"));
 
-            this.CreateAndAddCategory("Chat", storeListings);
-            this.CreateAndAddCategory("Donations", storeListings);
-            this.CreateAndAddCategory("Overlay", storeListings);
-
-            return base.OnLoaded();
+            await base.OnLoaded();
         }
 
         private void CreateAndAddCategory(string categoryName, IEnumerable<StoreListingModel> storeListings)
@@ -109,8 +80,9 @@ namespace MixItUp.WPF.Controls.Store
             {
                 if (await MessageBoxHelper.ShowConfirmationDialog("This will remove your command from the Mix It Up store." + Environment.NewLine + "Are you sure you wish to do this?"))
                 {
+                    await ChannelSession.Services.MixItUpService.DeleteStoreListing(this.currentListing);
                     this.window.Close();
-                }
+                };
             });
         }
     }

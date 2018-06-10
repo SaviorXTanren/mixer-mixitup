@@ -15,7 +15,9 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public Guid ID { get; set; }
         [DataMember]
-        public UserModel User { get; set; }
+        public int UserID { get; set; }
+        [DataMember]
+        public string AppVersion { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -25,17 +27,19 @@ namespace MixItUp.Base.Model.Store
         public List<string> Tags { get; set; }
 
         [DataMember]
-        public double AverageRating { get; set; }
+        public string DisplayImageLink { get; set; }
+
         [DataMember]
         public int TotalDownloads { get; set; }
 
         [DataMember]
-        public string DisplayImage { get; set; }
+        public DateTimeOffset LastUpdatedDate { get; set; }
 
         [DataMember]
-        public DateTimeOffset CreatedDate { get; set; }
+        public double AverageRating { get; set; }
+
         [DataMember]
-        public DateTimeOffset LastUpdatedDate { get; set; }
+        public UserModel User { get; set; }
 
         public StoreListingModel()
         {
@@ -54,10 +58,11 @@ namespace MixItUp.Base.Model.Store
         public string AverageRatingDisplayString { get { return Math.Round(this.AverageRating, 1).ToString(); } }
 
         [JsonIgnore]
-        public string TagsString { get { return string.Join(", ", this.Tags); } }
-
-        [JsonIgnore]
-        public string CreateDateString { get { return this.CreatedDate.ToString("G"); } }
+        public string TagsString
+        {
+            get { return string.Join(", ", this.Tags); }
+            set { this.Tags = (!string.IsNullOrEmpty(value)) ? new List<string>(value.Split(new char[] { ' ' })) : new List<string>(); }
+        }
 
         [JsonIgnore]
         public string LastUpdatedString { get { return this.LastUpdatedDate.ToString("G"); } }

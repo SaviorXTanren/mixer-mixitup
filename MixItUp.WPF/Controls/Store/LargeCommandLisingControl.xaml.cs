@@ -20,6 +20,12 @@ namespace MixItUp.WPF.Controls.Store
             return base.OnLoaded();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e) { await this.mainStoreControl.StoreListingSelected(this.listing); }
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.listing != null)
+            {
+                await this.mainStoreControl.StoreListingSelected(this.listing);
+            }
+        }
     }
 }

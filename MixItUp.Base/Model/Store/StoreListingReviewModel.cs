@@ -10,9 +10,10 @@ namespace MixItUp.Base.Model.Store
     {
         [DataMember]
         public Guid ID { get; set; }
-
         [DataMember]
-        public UserModel User { get; set; }
+        public Guid ListingID { get; set; }
+        [DataMember]
+        public int UserID { get; set; }
 
         [DataMember]
         public int Rating { get; set; }
@@ -20,12 +21,15 @@ namespace MixItUp.Base.Model.Store
         public string Review { get; set; }
 
         [DataMember]
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset LastUpdatedDate { get; set; }
+
+        [DataMember]
+        public UserModel User { get; set; }
 
         [JsonIgnore]
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
 
         [JsonIgnore]
-        public string CreateDateString { get { return this.CreatedDate.ToString("G"); } }
+        public string LastUpdatedDateString { get { return this.LastUpdatedDate.ToString("G"); } }
     }
 }

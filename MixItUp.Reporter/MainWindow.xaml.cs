@@ -39,7 +39,7 @@ namespace MixItUp.Reporter
                     logContents = File.ReadAllText(App.LogFilePath);
                 }
 
-                await this.service.SendIssueReport(new IssueReportEvent()
+                await this.service.SendIssueReport(new IssueReportModel()
                 {
                     MixerUserID = App.MixerUserID,
                     Description = this.IssueDescriptionTextBox.Text,
