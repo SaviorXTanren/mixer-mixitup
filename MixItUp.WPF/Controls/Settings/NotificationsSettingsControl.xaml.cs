@@ -77,7 +77,7 @@ namespace MixItUp.WPF.Controls.Settings
                         return currentValue;
                     }
 
-                    selectedSound = ChannelSession.Services.FileService.ShowOpenFileDialog("MP3 files (*.mp3)|*.mp3|All files (*.*)|*.*");
+                    selectedSound = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.MusicFileFilter());
                     if (!string.IsNullOrEmpty(selectedSound))
                     {
                         return selectedSound;

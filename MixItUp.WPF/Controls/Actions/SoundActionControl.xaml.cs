@@ -58,7 +58,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void SoundFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("MP3 Files (*.mp3)|*.mp3|All files (*.*)|*.*");
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.MusicFileFilter());
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.SoundFilePathTextBox.Text = filePath;

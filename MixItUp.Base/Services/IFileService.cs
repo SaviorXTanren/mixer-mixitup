@@ -4,6 +4,11 @@ namespace MixItUp.Base.Services
 {
     public interface IFileService
     {
+        string ImageFileFilter();
+        string MusicFileFilter();
+        string VideoFileFilter();
+        string HTMLFileFilter();
+
         Task CopyFile(string sourcePath, string destinationPath);
 
         Task CreateDirectory(string path);

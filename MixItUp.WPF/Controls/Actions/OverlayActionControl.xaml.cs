@@ -325,7 +325,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ImageFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.ImageFilePathTextBox.Text = filePath;
@@ -334,7 +334,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void VideoFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("MP4 Files (*.mp4)|*.mp4|WEBM Files (*.webm)|*.webm|All files (*.*)|*.*");
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.VideoFileFilter());
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.VideoFilePathTextBox.Text = filePath;
@@ -343,7 +343,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void WebPageFileBrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.HTMLFileFilter());
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.WebPageFilePathTextBox.Text = filePath;

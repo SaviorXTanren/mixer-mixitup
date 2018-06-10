@@ -225,7 +225,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void SourceWebPageBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog();
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.HTMLFileFilter());
             if (!string.IsNullOrEmpty(filePath))
             {
                 this.SourceWebPageTextBox.Text = filePath;
