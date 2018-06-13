@@ -1,11 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Services;
 using MixItUp.WPF.Util;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +14,6 @@ namespace MixItUp.WPF.Controls.Actions
     public partial class StreamingSoftwareActionControl : ActionControlBase
     {
         private StreamingSoftwareAction action;
-        private ObservableCollection<string> actionTypes = new ObservableCollection<string>();
 
         public StreamingSoftwareActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
 
