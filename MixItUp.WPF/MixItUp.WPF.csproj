@@ -583,6 +583,9 @@
     <Compile Include="Windows\PopOut\PopOutWindow.xaml.cs">
       <DependentUpon>PopOutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Store\UploadStoreListingWindow.xaml.cs">
+      <DependentUpon>UploadStoreListingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Users\UserDataEditorWindow.xaml.cs">
       <DependentUpon>UserDataEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -1119,6 +1122,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\PopOut\PopOutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Store\UploadStoreListingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

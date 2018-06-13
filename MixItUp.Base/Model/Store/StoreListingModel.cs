@@ -1,8 +1,12 @@
 ﻿using Mixer.Base.Model.User;
+using Mixer.Base.Util;
+using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Store
@@ -10,6 +14,25 @@ namespace MixItUp.Base.Model.Store
     [DataContract]
     public class StoreListingModel
     {
+        public static IEnumerable<string> ValidTags
+        {
+            get
+            {
+                List<string> tags = new List<string>();
+                tags.AddRange(EnumHelper.GetEnumNames<ActionTypeEnum>());
+                tags.Add("Host");
+                tags.Add("Follow");
+                tags.Add("Donation");
+                tags.Add("Subscribe");
+                tags.Add("Resubscribe");
+                tags.Add("Raid");
+                tags.Add("Shoutout");
+                tags.Add("Social Media");
+                tags.Add("Host");
+                return tags.OrderBy(s => s);
+            }
+        }
+
         public const string DefaultDisplayImage = "https://mixitupapp.com/img/bg-img/logo-sm.png";
 
         [DataMember]
@@ -31,6 +54,12 @@ namespace MixItUp.Base.Model.Store
 
         [DataMember]
         public int TotalDownloads { get; set; }
+
+        [DataMember]
+        public bool AssetsIncluded { get; set; }
+
+        [DataMember]
+        public string MetadataString { get; set; }
 
         [DataMember]
         public DateTimeOffset LastUpdatedDate { get; set; }

@@ -13,6 +13,12 @@ namespace MixItUp.Base.Model.Store
         public string Data { get; set; }
 
         [DataMember]
+        public byte[] AssetData { get; set; }
+
+        [DataMember]
+        public byte[] DisplayImageData { get; set; }
+
+        [DataMember]
         public List<StoreListingReviewModel> Reviews { get; set; }
 
         public StoreDetailListingModel()
@@ -30,6 +36,10 @@ namespace MixItUp.Base.Model.Store
                     return SerializerHelper.DeserializeFromString<List<ActionBase>>(this.Data);
                 }
                 return new List<ActionBase>();
+            }
+            set
+            {
+                this.Data = SerializerHelper.SerializeToString(value);
             }
         }
     }
