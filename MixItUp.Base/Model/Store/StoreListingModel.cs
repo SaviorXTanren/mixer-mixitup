@@ -3,7 +3,6 @@ using Mixer.Base.Util;
 using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,21 +13,29 @@ namespace MixItUp.Base.Model.Store
     [DataContract]
     public class StoreListingModel
     {
+        public const string FollowTag = "Follow";
+        public const string HostTag = "Host";
+        public const string DonationTag = "Donation";
+        public const string SubscribeTag = "Subscribe";
+        public const string ResubscribeTag = "Resubscribe";
+        public const string RaidTag = "Raid";
+        public const string ShoutoutTag = "Shoutout";
+        public const string SocialMediaTag = "Social Media";
+
         public static IEnumerable<string> ValidTags
         {
             get
             {
                 List<string> tags = new List<string>();
                 tags.AddRange(EnumHelper.GetEnumNames<ActionTypeEnum>());
-                tags.Add("Host");
-                tags.Add("Follow");
-                tags.Add("Donation");
-                tags.Add("Subscribe");
-                tags.Add("Resubscribe");
-                tags.Add("Raid");
-                tags.Add("Shoutout");
-                tags.Add("Social Media");
-                tags.Add("Host");
+                tags.Add(StoreListingModel.FollowTag);
+                tags.Add(StoreListingModel.HostTag);
+                tags.Add(StoreListingModel.DonationTag);
+                tags.Add(StoreListingModel.SubscribeTag);
+                tags.Add(StoreListingModel.ResubscribeTag);
+                tags.Add(StoreListingModel.RaidTag);
+                tags.Add(StoreListingModel.ShoutoutTag);
+                tags.Add(StoreListingModel.SocialMediaTag);
                 return tags.OrderBy(s => s);
             }
         }
@@ -67,13 +74,13 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public double AverageRating { get; set; }
 
-        [DataMember]
-        public UserModel User { get; set; }
-
         public StoreListingModel()
         {
             this.Tags = new List<string>();
         }
+
+        [JsonIgnore]
+        public UserModel User { get; set; }
 
         [JsonIgnore]
         public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.User.id)); } }

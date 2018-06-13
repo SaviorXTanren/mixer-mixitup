@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -26,21 +27,29 @@ namespace MixItUp.Base.Model.Store
             this.Reviews = new List<StoreListingReviewModel>();
         }
 
-        [JsonIgnore]
-        public List<ActionBase> Actions
+        public StoreDetailListingModel(CommandBase command, string name, string description, IEnumerable<string> tags, byte[] displayImageData, byte[] assetData)
+            : this()
         {
-            get
+            this.ID = command.ID;
+            this.UserID = (int)ChannelSession.User.id;
+            this.AppVersion = ChannelSession.Services.FileService.GetApplicationVersion();
+            this.Name = name;
+            this.Description = description;
+            this.Tags.AddRange(tags);
+            this.AssetsIncluded = (assetData != null);
+
+            this.DisplayImageData = displayImageData;
+            this.AssetData = assetData;
+            this.Data = SerializerHelper.SerializeToString(command.Actions);
+        }
+
+        public List<ActionBase> GetActions()
+        {
+            if (!string.IsNullOrEmpty(this.Data))
             {
-                if (!string.IsNullOrEmpty(this.Data))
-                {
-                    return SerializerHelper.DeserializeFromString<List<ActionBase>>(this.Data);
-                }
-                return new List<ActionBase>();
+                return SerializerHelper.DeserializeFromString<List<ActionBase>>(this.Data);
             }
-            set
-            {
-                this.Data = SerializerHelper.SerializeToString(value);
-            }
+            return new List<ActionBase>();
         }
     }
 }

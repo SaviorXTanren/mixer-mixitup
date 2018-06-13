@@ -2,7 +2,10 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,6 +59,21 @@ namespace MixItUp.Desktop.Files
                 using (StreamReader reader = new StreamReader(File.OpenRead(filePath)))
                 {
                     return await reader.ReadToEndAsync();
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return null;
+        }
+
+        public async Task<byte[]> ReadFileAsBytes(string filePath)
+        {
+            try
+            {
+                using (FileStream reader = File.OpenRead(filePath))
+                {
+                    byte[] data = new byte[reader.Length];
+                    await reader.ReadAsync(data, 0, data.Length);
+                    return data;
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -142,9 +160,32 @@ namespace MixItUp.Desktop.Files
             return null;
         }
 
-        public string GetApplicationDirectory()
+        public async Task ZipFiles(string destinationFilePath, IEnumerable<string> filePathsToBeAdded)
         {
-            return Path.GetDirectoryName(typeof(IFileService).Assembly.Location);
+            string tempDirectory = Path.Combine(this.GetTempFolder(), Path.GetRandomFileName());
+            if (Directory.Exists(tempDirectory))
+            {
+                Directory.Delete(tempDirectory, recursive: true);
+            }
+            Directory.CreateDirectory(tempDirectory);
+
+            foreach (string filePathToBeAdded in filePathsToBeAdded)
+            {
+                await this.CopyFile(filePathToBeAdded, Path.Combine(tempDirectory, Path.GetFileName(filePathToBeAdded)));
+            }
+
+            ZipFile.CreateFromDirectory(tempDirectory, destinationFilePath);
         }
+
+        public async Task UnzipFiles(string zipFilePath, string destinationFolderPath)
+        {
+            await Task.Run(() => { ZipFile.ExtractToDirectory(zipFilePath, destinationFolderPath); });
+        }
+
+        public string GetTempFolder() { return Path.GetTempPath(); }
+
+        public string GetApplicationDirectory() { return Path.GetDirectoryName(typeof(IFileService).Assembly.Location); }
+
+        public string GetApplicationVersion() { return Assembly.GetEntryAssembly().GetName().Version.ToString(); }
     }
 }

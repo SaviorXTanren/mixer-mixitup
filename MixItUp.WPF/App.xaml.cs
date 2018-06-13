@@ -82,7 +82,7 @@ namespace MixItUp.WPF
 
             ChannelSession.Initialize(desktopServicesHandler);
 
-            Logger.Log("Application Version: " + Assembly.GetEntryAssembly().GetName().Version.ToString());
+            Logger.Log("Application Version: " + ChannelSession.Services.FileService.GetApplicationVersion());
 
             base.OnStartup(e);
         }

@@ -1,10 +1,14 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Clients;
+using Mixer.Base.Util;
+using MixItUp.Base;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Windows.Store
@@ -42,6 +46,49 @@ namespace MixItUp.WPF.Windows.Store
             this.IncludeAssetsTextBlock.ToolTip = this.IncludeAssetsToggleButton.ToolTip = IncludeAssetsTooltip;
 
             this.NameTextBox.Text = this.command.Name;
+
+            Dictionary<ActionTypeEnum, int> actionsInCommand = new Dictionary<ActionTypeEnum, int>();
+            foreach (ActionBase action in this.command.Actions)
+            {
+                if (!actionsInCommand.ContainsKey(action.Type))
+                {
+                    actionsInCommand[action.Type] = 0;
+                }
+                actionsInCommand[action.Type]++;
+            }
+
+            IEnumerable<ActionTypeEnum> actionTypesInCommand = actionsInCommand.OrderBy(a => Guid.NewGuid()).OrderByDescending(a => a.Value).Select(a => a.Key);
+            for (int i = 0; i < 3 && i < actionTypesInCommand.Count(); i++)
+            {
+                string tag = EnumHelper.GetEnumName(actionTypesInCommand.ElementAt(i));
+                switch (i)
+                {
+                    case 0: this.Tag1ComboBox.SelectedItem = tag; break;
+                    case 1: this.Tag2ComboBox.SelectedItem = tag; break;
+                    case 2: this.Tag3ComboBox.SelectedItem = tag; break;
+                }
+            }
+
+            if (this.command is EventCommand)
+            {
+                EventCommand eCommand = (EventCommand)this.command;
+                switch (eCommand.EventType)
+                {
+                    case ConstellationEventTypeEnum.channel__id__followed: this.Tag4ComboBox.SelectedItem = StoreListingModel.FollowTag; break;
+                    case ConstellationEventTypeEnum.channel__id__hosted: this.Tag4ComboBox.SelectedItem = StoreListingModel.HostTag; break;
+                    case ConstellationEventTypeEnum.channel__id__subscribed: this.Tag4ComboBox.SelectedItem = StoreListingModel.SubscribeTag; break;
+                    case ConstellationEventTypeEnum.channel__id__resubscribed: this.Tag4ComboBox.SelectedItem = StoreListingModel.ResubscribeTag; break;
+                }
+
+                switch (eCommand.OtherEventType)
+                {
+                    case OtherEventTypeEnum.StreamlabsDonation:
+                    case OtherEventTypeEnum.GawkBoxDonation:
+                    case OtherEventTypeEnum.TiltifyDonation:
+                        this.Tag4ComboBox.SelectedItem = StoreListingModel.DonationTag;
+                        break;
+                }
+            }
 
             return base.OnLoaded();
         }
@@ -88,6 +135,47 @@ namespace MixItUp.WPF.Windows.Store
                 await MessageBoxHelper.ShowMessageDialog("At least 1 tag must be selected");
                 return;
             }
+
+            byte[] displayImageData = null;
+            if (!string.IsNullOrEmpty(this.DisplayImagePathTextBox.Text))
+            {
+                displayImageData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.DisplayImagePathTextBox.Text);
+            }
+
+            byte[] assetData = null;
+            if (this.IncludeAssetsToggleButton.IsChecked.GetValueOrDefault())
+            {
+                List<string> assetFiles = new List<string>();
+                foreach (ActionBase action in this.command.Actions)
+                {
+                    if (action.Type == ActionTypeEnum.Overlay)
+                    {
+                        OverlayAction oAction = (OverlayAction)action;
+                        if (oAction.Effect is OverlayImageEffect)
+                        {
+                            OverlayImageEffect iEffect = (OverlayImageEffect)oAction.Effect;
+                            assetFiles.Add(iEffect.FilePath);
+                        }
+                    }
+                    else if (action.Type == ActionTypeEnum.Sound)
+                    {
+                        SoundAction sAction = (SoundAction)action;
+                        assetFiles.Add(sAction.FilePath);
+                    }
+                }
+
+                if (assetFiles.Count > 0)
+                {
+                    string zipFilePath = Path.Combine(ChannelSession.Services.FileService.GetTempFolder(), this.command.ID.ToString() + ".zip");
+                    await ChannelSession.Services.FileService.ZipFiles(zipFilePath, assetFiles);
+                    assetData = await ChannelSession.Services.FileService.ReadFileAsBytes(zipFilePath);
+                }
+            }
+
+            await ChannelSession.Services.MixItUpService.AddStoreListing(new StoreDetailListingModel(this.command, this.NameTextBox.Text, this.DescriptionTextBox.Text, tags,
+                displayImageData, assetData));
+
+            this.Close();
         }
     }
 }

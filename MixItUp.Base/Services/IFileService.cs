@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
@@ -15,6 +16,7 @@ namespace MixItUp.Base.Services
         Task CopyDirectory(string sourcePath, string destinationPath);
 
         Task<string> ReadFile(string filePath);
+        Task<byte[]> ReadFileAsBytes(string filePath);
         Task SaveFile(string filePath, string data);
         Task AppendFile(string filePath, string data);
 
@@ -26,6 +28,11 @@ namespace MixItUp.Base.Services
         string ShowSaveFileDialog(string fileName);
         string ShowSaveFileDialog(string fileName, string filter);
 
+        Task ZipFiles(string destinationFilePath, IEnumerable<string> filePathsToBeAdded);
+        Task UnzipFiles(string zipFilePath, string destinationFolderPath);
+
+        string GetTempFolder();
         string GetApplicationDirectory();
+        string GetApplicationVersion();
     }
 }
