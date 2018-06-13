@@ -51,6 +51,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" VerticalAlignment="Center">Action:</TextBlock>
@@ -63,6 +65,22 @@
             <Button x:Name="ExportButton" Click="ExportButton_Click" Grid.Column="8" ToolTip="Export Actions To File" Content="{MaterialDesign:PackIcon Export}" />
 
             <Button x:Name="ImportButton" Click="ImportButton_Click" Grid.Column="10" ToolTip="Import Actions From File" Content="{MaterialDesign:PackIcon Import}" />
+
+            <Button x:Name="UploadToMixItUpStoreButton" Click="UploadToMixItUpStoreButton_Click" Grid.Column="12" ToolTip="Upload to Mix It Up Store" Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">Upload To</TextBlock>
+                    <Image Grid.Column="2" Source="..\..\Logo.png" />
+                    <MaterialDesign:PackIcon Grid.Column="4" Kind="Store" VerticalAlignment="Center" Width="24" Height="24" />
+                </Grid>
+            </Button>
 
         </Grid>
     </Grid>

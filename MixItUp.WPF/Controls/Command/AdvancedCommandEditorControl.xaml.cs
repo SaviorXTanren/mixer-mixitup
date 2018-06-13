@@ -6,6 +6,7 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Controls.Actions;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
+using MixItUp.WPF.Windows.Store;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -192,36 +193,20 @@ namespace MixItUp.WPF.Controls.Command
             }
         }
 
-        private async Task<List<ActionBase>> GetActions()
-        {
-            List<ActionBase> actions = new List<ActionBase>();
-            foreach (ActionContainerControl control in this.actionControls)
-            {
-                ActionBase action = control.GetAction();
-                if (action == null)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("Required action information is missing");
-                    return new List<ActionBase>();
-                }
-                actions.Add(action);
-            }
-            return actions;
-        }
-
         private async void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            CommandBase command = await this.GetNewCommand();
-            if (command != null)
+            await this.window.RunAsyncOperation(async () =>
             {
-                await this.window.RunAsyncOperation(async () =>
+                CommandBase command = await this.GetNewCommand();
+                if (command != null)
                 {
                     string fileName = ChannelSession.Services.FileService.ShowSaveFileDialog(command.Name + ".mixitupc");
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         await SerializerHelper.SerializeToFile(fileName, command);
                     }
-                });
-            }
+                }
+            });
         }
 
         private async void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -247,6 +232,35 @@ namespace MixItUp.WPF.Controls.Command
                     catch (Exception ex) { Base.Util.Logger.Log(ex); }
                 }
             });
+        }
+
+        private async void UploadToMixItUpStoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.window.RunAsyncOperation(async () =>
+            {
+                CommandBase command = await this.GetNewCommand();
+                if (command != null)
+                {
+                    UploadStoreListingWindow window = new UploadStoreListingWindow(command);
+                    window.Show();
+                }
+            });
+        }
+
+        private async Task<List<ActionBase>> GetActions()
+        {
+            List<ActionBase> actions = new List<ActionBase>();
+            foreach (ActionContainerControl control in this.actionControls)
+            {
+                ActionBase action = control.GetAction();
+                if (action == null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Required action information is missing");
+                    return new List<ActionBase>();
+                }
+                actions.Add(action);
+            }
+            return actions;
         }
 
         private void AddActionControlContainer(ActionContainerControl actionControl)
