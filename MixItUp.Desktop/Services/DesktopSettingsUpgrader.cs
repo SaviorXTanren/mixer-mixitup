@@ -90,7 +90,7 @@ namespace MixItUp.Desktop.Services
                     {
                         if (action is LegacyOverlayAction)
                         {
-                            legacyOverlayActions.Add(action.ID, (LegacyOverlayAction)action);
+                            legacyOverlayActions[action.ID] = (LegacyOverlayAction)action;
                         }
                     }
                 }

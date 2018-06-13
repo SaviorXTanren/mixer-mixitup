@@ -128,7 +128,7 @@ namespace MixItUp.Desktop.Services
 
             foreach (StreamlabsDonation donation in await this.GetDonations())
             {
-                donationsReceived.Add(donation.ID, donation);
+                donationsReceived[donation.ID] = donation;
             }
 
             while (!this.cancellationTokenSource.Token.IsCancellationRequested)

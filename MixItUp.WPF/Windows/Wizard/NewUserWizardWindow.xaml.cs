@@ -281,13 +281,13 @@ namespace MixItUp.WPF.Windows.Wizard
                             string[] splits = line.Split(new string[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
                             if (splits.Count() == 2)
                             {
-                                scorpBotData.Settings[currentGroup].Add(splits[0], splits[1]);
+                                scorpBotData.Settings[currentGroup][splits[0]] = splits[1];
                             }
                         }
                         else
                         {
                             currentGroup = line.Replace("[", "").Replace("]", "").ToLower();
-                            scorpBotData.Settings.Add(currentGroup, new Dictionary<string, string>());
+                            scorpBotData.Settings[currentGroup] = new Dictionary<string, string>();
                         }
                     }
 

@@ -16,7 +16,7 @@ namespace MixItUp.Base.Util
         {
             foreach (var kvp in items)
             {
-                this.items.Add(kvp.Key, kvp.Value);
+                this.items[kvp.Key] = kvp.Value;
             }
         }
 
@@ -36,7 +36,7 @@ namespace MixItUp.Base.Util
 
         public void Add(KeyValuePair<K, V> item) { this.Add(item.Key, item.Value); }
 
-        public virtual void Add(K key, V value) { lock (objLock) { this.items.Add(key, value); } }
+        public virtual void Add(K key, V value) { lock (objLock) { this.items[key] = value; } }
 
         public void Clear() { lock (objLock) { this.items.Clear(); } }
 

@@ -40,13 +40,13 @@ namespace MixItUp.Base.ViewModel.Import
             foreach (JToken sound in soundArray)
             {
                 SoundwaveButton button = sound.ToObject<SoundwaveButton>();
-                buttons.Add(button.id, button);
+                buttons[button.id] = button;
             }
 
             JArray profileArray = (JArray)profiles["profiles"];
             foreach (JToken profile in profileArray)
             {
-                this.Profiles.Add(profile["name"].ToString(), new List<SoundwaveButton>());
+                this.Profiles[profile["name"].ToString()] = new List<SoundwaveButton>();
                 JArray profileSoundArray = (JArray)profile["sounds"];
                 foreach (JToken sound in profileSoundArray)
                 {

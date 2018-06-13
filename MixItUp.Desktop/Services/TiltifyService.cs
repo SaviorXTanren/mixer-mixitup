@@ -161,7 +161,7 @@ namespace MixItUp.Desktop.Services
                         {
                             foreach (TiltifyDonation donation in await this.GetCampaignDonations(campaign))
                             {
-                                donationsReceived.Add(donation.ID, donation);
+                                donationsReceived[donation.ID] = donation;
                             }
                         }
                     }
