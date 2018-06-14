@@ -453,6 +453,7 @@ namespace MixItUp.Desktop.Services
             if (version < 17)
             {
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
                 settings.GiveawayTimer = Math.Max(settings.GiveawayTimer / 60, 1);
                 await ChannelSession.Services.Settings.Save(settings);
             }
