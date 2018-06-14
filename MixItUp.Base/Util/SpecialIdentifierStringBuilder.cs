@@ -132,7 +132,7 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
 
-            if (ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
             {
                 // Select all workable users, exclude the streamer, then grab their UserData
                 Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
@@ -141,7 +141,7 @@ namespace MixItUp.Base.Util
                 IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    if (ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
+                    if (this.ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
                     {
                         List<string> currencyUserList = new List<string>();
                         int userPosition = 1;
@@ -162,13 +162,13 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time"))
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time"))
                 {
                     List<string> timeUserList = new List<string>();
                     int userPosition = 1;
                     foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(10))
                     {
-                        timeUserList.Add($"#{userPosition}) @{timeUser.UserName} - {timeUser.ViewingTimeString}");
+                        timeUserList.Add($"#{userPosition}) @{timeUser.UserName} - {timeUser.ViewingTimeShortString}");
                         userPosition++;
                     }
 

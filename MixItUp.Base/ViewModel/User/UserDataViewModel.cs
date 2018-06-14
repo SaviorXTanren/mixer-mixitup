@@ -182,6 +182,9 @@ namespace MixItUp.Base.ViewModel.User
         public string ViewingTimeString { get { return string.Format("{0} Hours & {1} Mins", this.ViewingHoursString, this.ViewingMinutesString); } }
 
         [JsonIgnore]
+        public string ViewingTimeShortString { get { return string.Format("{0}H & {1}M", this.ViewingHoursString, this.ViewingMinutesString); } }
+
+        [JsonIgnore]
         public int PrimaryCurrency
         {
             get
