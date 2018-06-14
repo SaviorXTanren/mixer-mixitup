@@ -17,7 +17,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for SongRequestControl.xaml
     /// </summary>
-    public partial class SongRequestControl : MainControlBase
+    public partial class SongRequestControl : MainControlBase, IDisposable
     {
         private static SemaphoreSlim songListLock = new SemaphoreSlim(1);
 
@@ -180,5 +180,33 @@ namespace MixItUp.WPF.Controls.MainControls
 
             SongRequestControl.songListLock.Release();
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Dispose managed state (managed objects).
+                    this.backgroundThreadCancellationTokenSource.Dispose();
+                }
+
+                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // Set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

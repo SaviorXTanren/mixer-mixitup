@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
 {
-    public class TiltifyService : OAuthServiceBase, ITiltifyService
+    public class TiltifyService : OAuthServiceBase, ITiltifyService, IDisposable
     {
         private const string BaseAddress = "https://tiltify.com/api/v3/";
 
@@ -202,5 +202,33 @@ namespace MixItUp.Desktop.Services
                 await Task.Delay(10000);
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Dispose managed state (managed objects).
+                    this.cancellationTokenSource.Dispose();
+                }
+
+                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // Set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

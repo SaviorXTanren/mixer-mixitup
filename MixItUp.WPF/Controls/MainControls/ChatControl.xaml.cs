@@ -24,7 +24,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for ChatControl.xaml
     /// </summary>
-    public partial class ChatControl : MainControlBase
+    public partial class ChatControl : MainControlBase, IDisposable
     {
         public static BitmapImage SubscriberBadgeBitmap { get; private set; }
 
@@ -544,5 +544,35 @@ namespace MixItUp.WPF.Controls.MainControls
         }
 
         #endregion Chat Event Handlers
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Dispose managed state (managed objects).
+                    this.backgroundThreadCancellationTokenSource.Dispose();
+                    this.userUpdateLock.Dispose();
+                    this.messageUpdateLock.Dispose();
+                }
+
+                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // Set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }
