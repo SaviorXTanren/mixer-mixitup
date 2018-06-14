@@ -58,7 +58,7 @@
 
             <Button x:Name="AdvancedCommandButton" Grid.Row="6" Click="AdvancedCommandButton_Click">Advanced Command</Button>
 
-            <Button x:Name="DownloadFromStoreButton" Grid.Row="8" Click="DownloadFromStoreButton_Click" Visibility="Collapsed">
+            <Button x:Name="DownloadFromStoreButton" Grid.Row="8" Click="DownloadFromStoreButton_Click">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -70,7 +70,7 @@
 
                     <TextBlock Grid.Column="0" VerticalAlignment="Center">Download From</TextBlock>
                     <Image Grid.Column="2" Source="..\..\Logo.png" />
-                    <TextBlock Grid.Column="4" VerticalAlignment="Center">Store</TextBlock>
+                    <MaterialDesign:PackIcon Grid.Column="4" Kind="Store" VerticalAlignment="Center" Width="24" Height="24" />
                 </Grid>
             </Button>
         </Grid>
