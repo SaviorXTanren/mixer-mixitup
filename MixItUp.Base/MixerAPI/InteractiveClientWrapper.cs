@@ -117,8 +117,6 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveClientWrapper : MixerWebSocketWrapper
     {
-        private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
-
         private static UserViewModel defaultInteractiveUser = new UserViewModel(0, "Unknown User");
 
         public event EventHandler<InteractiveGiveInputModel> OnGiveInput = delegate { };
@@ -624,8 +622,9 @@ namespace MixItUp.Base.MixerAPI
 
             do
             {
-                await InteractiveClient.Reconnect(this.Client);
-            } while (!await this.RunAsync(this.Client.Ready()));
+                await Task.Delay(2500);
+            }
+            while (!await this.Connect(this.Game));
 
             ChannelSession.ReconnectionOccurred("Interactive");
         }

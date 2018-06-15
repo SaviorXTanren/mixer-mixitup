@@ -21,8 +21,6 @@ namespace MixItUp.Desktop.Services
 
         public GawkBoxWebSocketClient(IGawkBoxService service) { this.service = service; }
 
-        public async Task Reconnect() { await WebSocketClientBase.ReconnectionHelper(this); }
-
         protected override async Task ProcessReceivedPacket(string packetJSON)
         {
             if (!string.IsNullOrEmpty(packetJSON))
@@ -84,7 +82,13 @@ namespace MixItUp.Desktop.Services
         private async void WebSocket_OnDisconnectOccurred(object sender, System.Net.WebSockets.WebSocketCloseStatus e)
         {
             GlobalEvents.ServiceDisconnect("GawkBox");
-            await this.webSocket.Reconnect();
+
+            do
+            {
+                await Task.Delay(2500);
+            }
+            while (!await this.Connect());
+
             GlobalEvents.ServiceReconnect("GawkBox");
         }
 
