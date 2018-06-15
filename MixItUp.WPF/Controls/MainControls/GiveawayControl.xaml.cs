@@ -47,7 +47,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// <summary>
     /// Interaction logic for GiveawayControl.xaml
     /// </summary>
-    public partial class GiveawayControl : MainControlBase
+    public partial class GiveawayControl : MainControlBase, IDisposable
     {
         public bool giveawayEnabled;
         public string giveawayItem;
@@ -549,5 +549,33 @@ namespace MixItUp.WPF.Controls.MainControls
             }
             return entryInstructions;
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Dispose managed state (managed objects).
+                    this.backgroundThreadCancellationTokenSource.Dispose();
+                }
+
+                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // Set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

@@ -709,6 +709,7 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Thrown if authentication fails
     /// </summary>
+    [Serializable]
     public class AuthFailureException : Exception
     {
     }
@@ -716,6 +717,7 @@ namespace OBSWebsocketDotNet
     /// <summary>
     /// Thrown when the server responds with an error
     /// </summary>
+    [Serializable]
     public class ErrorResponseException : Exception
     {
         /// <summary>

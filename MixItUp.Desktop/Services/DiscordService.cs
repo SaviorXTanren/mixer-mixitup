@@ -319,7 +319,7 @@ namespace MixItUp.Desktop.Services
         }
     }
 
-    public class DiscordService : OAuthServiceBase, IDiscordService
+    public class DiscordService : OAuthServiceBase, IDiscordService, IDisposable
     {
         public const string ClientBotPermissions = "8";
 
@@ -491,5 +491,33 @@ namespace MixItUp.Desktop.Services
             //    await webSocket.Connect(gateway.WebSocketURL, gateway.Shards);
             //}
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Dispose managed state (managed objects).
+                    this.cancellationTokenSource.Dispose();
+                }
+
+                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // Set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }
