@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -27,15 +26,16 @@ namespace MixItUp.Base.Model.Store
             this.Reviews = new List<StoreListingReviewModel>();
         }
 
-        public StoreDetailListingModel(CommandBase command, string name, string description, IEnumerable<string> tags, byte[] displayImageData, byte[] assetData)
+        public StoreDetailListingModel(CommandBase command, string name, string description, IEnumerable<string> tags, string displayImagePath, byte[] displayImageData, byte[] assetData)
             : this()
         {
             this.ID = command.ID;
-            this.UserID = (int)ChannelSession.User.id;
+            this.UserID = ChannelSession.User.id;
             this.AppVersion = ChannelSession.Services.FileService.GetApplicationVersion();
             this.Name = name;
             this.Description = description;
             this.Tags.AddRange(tags);
+            this.DisplayImageLink = displayImagePath;
             this.AssetsIncluded = (assetData != null);
 
             this.DisplayImageData = displayImageData;

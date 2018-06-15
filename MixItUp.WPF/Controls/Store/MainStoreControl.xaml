@@ -79,14 +79,14 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0">
+                <Grid Grid.Row="0" Margin="40,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="60" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" x:Name="DetailsImage" Width="200" Height="200" Source="{Binding DisplayImageLink}" />
+                    <Image Grid.Column="0" x:Name="DetailsImage" Width="200" Height="200" Source="{Binding DisplayImage}" />
 
                     <Grid Grid.Column="2" VerticalAlignment="Center">
                         <Grid.RowDefinitions>
@@ -101,38 +101,44 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" HorizontalAlignment="Left">
+                        <TextBlock Grid.Row="0" Text="{Binding Name}" Style="{StaticResource HeaderTextBlock}" />
+
+                        <Grid Grid.Row="2" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="40" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" Style="{StaticResource HeaderTextBlock}" />
+                            <TextBlock Grid.Column="0" Text="{Binding AverageRatingDisplayString}" VerticalAlignment="Top" />
+                            <MaterialDesign:PackIcon Grid.Column="1" Kind="Star" VerticalAlignment="Top" Margin="5,0,0,0" />
 
-                            <TextBlock Grid.Column="2" Text="{Binding AverageRatingDisplayString}" VerticalAlignment="Top" />
-                            <MaterialDesign:PackIcon Grid.Column="3" Kind="Star" VerticalAlignment="Top" Margin="5,0,0,0" />
+                            <TextBlock Grid.Column="3" Text="{Binding TotalDownloads}" VerticalAlignment="Top" />
+                            <MaterialDesign:PackIcon Grid.Column="4" Kind="Download" VerticalAlignment="Center" Margin="5,0,0,0" />
 
-                            <TextBlock Grid.Column="5" Text="{Binding TotalDownloads}" VerticalAlignment="Top" />
-                            <MaterialDesign:PackIcon Grid.Column="6" Kind="Download" VerticalAlignment="Center" Margin="5,0,0,0" />
+                            <TextBlock Grid.Column="6" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Tags:</TextBlock>
+                            <TextBlock Grid.Column="8" Text="{Binding TagsDisplayString}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
                         </Grid>
 
-                        <Grid Grid.Row="2" HorizontalAlignment="Left">
+                        <Grid Grid.Row="4" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="0" Width="25" Height="25" Source="{Binding UserAvatar}" VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="2" Text="{Binding UserName}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Created By:</TextBlock>
+                            <Image Grid.Column="2" Width="25" Height="25" Source="{Binding UserAvatar}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="4" Text="{Binding UserName}" VerticalAlignment="Center" />
                         </Grid>
-
-                        <TextBlock Grid.Row="4" Text="{Binding TagsString}" Style="{StaticResource HeaderTextBlock}"  />
 
                         <Grid Grid.Row="6" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>

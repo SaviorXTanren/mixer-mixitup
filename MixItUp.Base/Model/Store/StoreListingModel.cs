@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Store
 {
@@ -45,7 +46,7 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public Guid ID { get; set; }
         [DataMember]
-        public int UserID { get; set; }
+        public uint UserID { get; set; }
         [DataMember]
         public string AppVersion { get; set; }
 
@@ -91,16 +92,30 @@ namespace MixItUp.Base.Model.Store
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
 
         [JsonIgnore]
+        public string DisplayImage { get { return (!string.IsNullOrEmpty(this.DisplayImageLink)) ? this.DisplayImageLink : StoreListingModel.DefaultDisplayImage; } }
+
+        [JsonIgnore]
         public string AverageRatingDisplayString { get { return Math.Round(this.AverageRating, 1).ToString(); } }
 
         [JsonIgnore]
         public string TagsString
         {
-            get { return string.Join(", ", this.Tags); }
-            set { this.Tags = (!string.IsNullOrEmpty(value)) ? new List<string>(value.Split(new char[] { ' ' })) : new List<string>(); }
+            get { return string.Join(",", this.Tags); }
+            set { this.Tags = (!string.IsNullOrEmpty(value)) ? new List<string>(value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) : new List<string>(); }
         }
 
         [JsonIgnore]
+        public string TagsDisplayString { get { return string.Join(", ", this.Tags); } }
+
+        [JsonIgnore]
         public string LastUpdatedString { get { return this.LastUpdatedDate.ToString("G"); } }
+
+        public async Task SetUser()
+        {
+            if (this.UserID > 0)
+            {
+                this.User = await ChannelSession.Connection.GetUser(this.UserID);
+            }
+        }
     }
 }

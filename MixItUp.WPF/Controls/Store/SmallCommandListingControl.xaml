@@ -20,7 +20,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Image Grid.Column="0" x:Name="ListingImage" Width="80" Height="80" Source="{Binding DisplayImageLink}" />
+                <Image Grid.Column="0" x:Name="ListingImage" Width="80" Height="80" Source="{Binding DisplayImage}" />
 
                 <TextBlock x:Name="ListingName" Grid.Row="2" Width="80" MaxWidth="80" Height="35" HorizontalAlignment="Left" Text="{Binding Name}" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
 

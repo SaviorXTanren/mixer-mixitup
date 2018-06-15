@@ -16,7 +16,7 @@ namespace MixItUp.WPF.Controls.Store
     {
         private CommandWindow window;
 
-        private StoreDetailListingModel currentListing = null;
+        private StoreListingModel currentListing = null;
 
         public MainStoreControl(CommandWindow window)
         {
@@ -27,51 +27,79 @@ namespace MixItUp.WPF.Controls.Store
 
         public async Task StoreListingSelected(StoreListingModel storeListing)
         {
-            this.LandingGrid.Visibility = Visibility.Collapsed;
-            this.DetailsGrid.Visibility = Visibility.Visible;
+            await this.window.RunAsyncOperation(async () =>
+            {
+                this.LandingGrid.Visibility = Visibility.Collapsed;
+                this.DetailsGrid.Visibility = Visibility.Visible;
 
-            this.RateReviewButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;
-            this.ReportButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;
-            this.RemoveButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Visible : Visibility.Collapsed;
+                this.RateReviewButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;
+                this.ReportButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;
+                this.RemoveButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Visible : Visibility.Collapsed;
 
-            this.DetailsGrid.DataContext = this.currentListing = await ChannelSession.Services.MixItUpService.GetStoreListing(storeListing.ID);
+                this.DetailsGrid.DataContext = this.currentListing = await ChannelSession.Services.MixItUpService.GetStoreListing(storeListing.ID);
+            });
         }
 
         protected override async Task OnLoaded()
         {
-            this.PromotedCommandControl.Content = new LargeCommandLisingControl(this, await ChannelSession.Services.MixItUpService.GetTopRandomStoreListings());
+            await this.window.RunAsyncOperation(async () =>
+            {
+                this.PromotedCommandControl.Content = new LargeCommandLisingControl(this, await ChannelSession.Services.MixItUpService.GetTopRandomStoreListings());
 
-            this.CreateAndAddCategory("Chat", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Chat"));
-            this.CreateAndAddCategory("Donations", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Donations"));
-            this.CreateAndAddCategory("Overlay", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Overlay"));
+                this.CreateAndAddCategory("Chat", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Chat"));
+                this.CreateAndAddCategory("Donations", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Donations"));
+                this.CreateAndAddCategory("Overlay", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Overlay"));
 
-            await base.OnLoaded();
+                await base.OnLoaded();
+            });
         }
 
         private void CreateAndAddCategory(string categoryName, IEnumerable<StoreListingModel> storeListings)
         {
-            List<StoreListingControl> storeListingControls = new List<StoreListingControl>();
-            foreach (StoreListingModel storeListing in storeListings)
+            if (storeListings != null)
             {
-                storeListingControls.Add(new SmallCommandListingControl(this, storeListing));
+                List<StoreListingControl> storeListingControls = new List<StoreListingControl>();
+                foreach (StoreListingModel storeListing in storeListings)
+                {
+                    storeListingControls.Add(new SmallCommandListingControl(this, storeListing));
+                }
+                CategoryCommandListingControl category = new CategoryCommandListingControl(this, categoryName, storeListingControls);
+                this.CategoriesStackPanel.Children.Add(category);
             }
-            CategoryCommandListingControl category1 = new CategoryCommandListingControl(this, categoryName, storeListingControls);
-            this.CategoriesStackPanel.Children.Add(category1);
         }
 
-        private void DownloadButton_Click(object sender, RoutedEventArgs e)
+        private async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            this.window.DownloadCommandFromStore(this.currentListing);
+            await this.window.RunAsyncOperation(async () =>
+            {
+                StoreDetailListingModel listingDetails = await ChannelSession.Services.MixItUpService.GetStoreListing(this.currentListing.ID);
+                await ChannelSession.Services.MixItUpService.AddStoreListingDownload(this.currentListing);
+                this.window.DownloadCommandFromStore(listingDetails);
+            });
         }
 
-        private void RateReviewButton_Click(object sender, RoutedEventArgs e)
+        private async void RateReviewButton_Click(object sender, RoutedEventArgs e)
         {
-
+            await this.window.RunAsyncOperation(async () =>
+            {
+                StoreDetailListingModel listingDetails = await ChannelSession.Services.MixItUpService.GetStoreListing(this.currentListing.ID);
+                await ChannelSession.Services.MixItUpService.AddStoreListingDownload(this.currentListing);
+                this.window.DownloadCommandFromStore(listingDetails);
+            });
         }
 
-        private void ReportButton_Click(object sender, RoutedEventArgs e)
+        private async void ReportButton_Click(object sender, RoutedEventArgs e)
         {
+            await this.window.RunAsyncOperation(async () =>
+            {
+                string report = await MessageBoxHelper.ShowTextEntryDialog("Please provide a description for why you are reporting this command");
+                if (!string.IsNullOrEmpty(report))
+                {
+                    await ChannelSession.Services.MixItUpService.AddStoreListingReport(new StoreListingReportModel(this.currentListing, report));
 
+                    await MessageBoxHelper.ShowMessageDialog("Thank you for submitting this report." + Environment.NewLine + "We will review it shortly.");
+                }
+            });
         }
 
         private async void RemoveButton_Click(object sender, RoutedEventArgs e)
@@ -80,7 +108,7 @@ namespace MixItUp.WPF.Controls.Store
             {
                 if (await MessageBoxHelper.ShowConfirmationDialog("This will remove your command from the Mix It Up store." + Environment.NewLine + "Are you sure you wish to do this?"))
                 {
-                    await ChannelSession.Services.MixItUpService.DeleteStoreListing(this.currentListing);
+                    await ChannelSession.Services.MixItUpService.DeleteStoreListing(this.currentListing.ID);
                     this.window.Close();
                 };
             });

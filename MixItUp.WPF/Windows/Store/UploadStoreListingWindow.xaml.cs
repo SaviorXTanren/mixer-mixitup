@@ -104,78 +104,91 @@ namespace MixItUp.WPF.Windows.Store
 
         private async void UploadButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(this.NameTextBox.Text))
+            await this.RunAsyncOperation(async () =>
             {
-                await MessageBoxHelper.ShowMessageDialog("A name must be specified");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(this.DescriptionTextBox.Text))
-            {
-                await MessageBoxHelper.ShowMessageDialog("A description must be specified");
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(this.DisplayImagePathTextBox.Text) && File.Exists(this.DisplayImagePathTextBox.Text))
-            {
-                await MessageBoxHelper.ShowMessageDialog("The specified display image does not exist");
-                return;
-            }
-
-            List<string> tags = new List<string>();
-            if (this.Tag1ComboBox.SelectedIndex >= 0) { tags.Add(this.Tag1ComboBox.Text); }
-            if (this.Tag2ComboBox.SelectedIndex >= 0) { tags.Add(this.Tag2ComboBox.Text); }
-            if (this.Tag3ComboBox.SelectedIndex >= 0) { tags.Add(this.Tag3ComboBox.Text); }
-            if (this.Tag4ComboBox.SelectedIndex >= 0) { tags.Add(this.Tag4ComboBox.Text); }
-            if (this.Tag5ComboBox.SelectedIndex >= 0) { tags.Add(this.Tag5ComboBox.Text); }
-            if (this.Tag6ComboBox.SelectedIndex >= 0) { tags.Add(this.Tag6ComboBox.Text); }
-
-            if (tags.Count == 0)
-            {
-                await MessageBoxHelper.ShowMessageDialog("At least 1 tag must be selected");
-                return;
-            }
-
-            byte[] displayImageData = null;
-            if (!string.IsNullOrEmpty(this.DisplayImagePathTextBox.Text))
-            {
-                displayImageData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.DisplayImagePathTextBox.Text);
-            }
-
-            byte[] assetData = null;
-            if (this.IncludeAssetsToggleButton.IsChecked.GetValueOrDefault())
-            {
-                List<string> assetFiles = new List<string>();
-                foreach (ActionBase action in this.command.Actions)
+                if (string.IsNullOrEmpty(this.NameTextBox.Text))
                 {
-                    if (action.Type == ActionTypeEnum.Overlay)
+                    await MessageBoxHelper.ShowMessageDialog("A name must be specified");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(this.DescriptionTextBox.Text))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A description must be specified");
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(this.DisplayImagePathTextBox.Text))
+                {
+                    if (!File.Exists(this.DisplayImagePathTextBox.Text))
                     {
-                        OverlayAction oAction = (OverlayAction)action;
-                        if (oAction.Effect is OverlayImageEffect)
+                        await MessageBoxHelper.ShowMessageDialog("The specified display image does not exist");
+                        return;
+                    }
+
+                    FileInfo info = new FileInfo(this.DisplayImagePathTextBox.Text);
+                    if (info.Length >= 1000000)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("Display image must be smaller than 1 MB");
+                        return;
+                    }
+                }
+
+                HashSet<string> tags = new HashSet<string>();
+                if (this.Tag1ComboBox.SelectedIndex > 0) { tags.Add(this.Tag1ComboBox.Text); }
+                if (this.Tag2ComboBox.SelectedIndex > 0) { tags.Add(this.Tag2ComboBox.Text); }
+                if (this.Tag3ComboBox.SelectedIndex > 0) { tags.Add(this.Tag3ComboBox.Text); }
+                if (this.Tag4ComboBox.SelectedIndex > 0) { tags.Add(this.Tag4ComboBox.Text); }
+                if (this.Tag5ComboBox.SelectedIndex > 0) { tags.Add(this.Tag5ComboBox.Text); }
+                if (this.Tag6ComboBox.SelectedIndex > 0) { tags.Add(this.Tag6ComboBox.Text); }
+
+                if (tags.Count == 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("At least 1 tag must be selected");
+                    return;
+                }
+
+                byte[] displayImageData = null;
+                if (!string.IsNullOrEmpty(this.DisplayImagePathTextBox.Text))
+                {
+                    displayImageData = await ChannelSession.Services.FileService.ReadFileAsBytes(this.DisplayImagePathTextBox.Text);
+                }
+
+                byte[] assetData = null;
+                if (this.IncludeAssetsToggleButton.IsChecked.GetValueOrDefault())
+                {
+                    List<string> assetFiles = new List<string>();
+                    foreach (ActionBase action in this.command.Actions)
+                    {
+                        if (action.Type == ActionTypeEnum.Overlay)
                         {
-                            OverlayImageEffect iEffect = (OverlayImageEffect)oAction.Effect;
-                            assetFiles.Add(iEffect.FilePath);
+                            OverlayAction oAction = (OverlayAction)action;
+                            if (oAction.Effect is OverlayImageEffect)
+                            {
+                                OverlayImageEffect iEffect = (OverlayImageEffect)oAction.Effect;
+                                assetFiles.Add(iEffect.FilePath);
+                            }
+                        }
+                        else if (action.Type == ActionTypeEnum.Sound)
+                        {
+                            SoundAction sAction = (SoundAction)action;
+                            assetFiles.Add(sAction.FilePath);
                         }
                     }
-                    else if (action.Type == ActionTypeEnum.Sound)
+
+                    if (assetFiles.Count > 0)
                     {
-                        SoundAction sAction = (SoundAction)action;
-                        assetFiles.Add(sAction.FilePath);
+                        string zipFilePath = Path.Combine(ChannelSession.Services.FileService.GetTempFolder(), this.command.ID.ToString() + ".zip");
+                        await ChannelSession.Services.FileService.ZipFiles(zipFilePath, assetFiles);
+                        assetData = await ChannelSession.Services.FileService.ReadFileAsBytes(zipFilePath);
                     }
                 }
 
-                if (assetFiles.Count > 0)
-                {
-                    string zipFilePath = Path.Combine(ChannelSession.Services.FileService.GetTempFolder(), this.command.ID.ToString() + ".zip");
-                    await ChannelSession.Services.FileService.ZipFiles(zipFilePath, assetFiles);
-                    assetData = await ChannelSession.Services.FileService.ReadFileAsBytes(zipFilePath);
-                }
-            }
+                await ChannelSession.Services.MixItUpService.AddStoreListing(new StoreDetailListingModel(this.command, this.NameTextBox.Text, this.DescriptionTextBox.Text, tags,
+                    this.DisplayImagePathTextBox.Text, displayImageData, assetData));
 
-            await ChannelSession.Services.MixItUpService.AddStoreListing(new StoreDetailListingModel(this.command, this.NameTextBox.Text, this.DescriptionTextBox.Text, tags,
-                displayImageData, assetData));
-
-            this.Close();
+                this.Close();
+            });
         }
     }
 }

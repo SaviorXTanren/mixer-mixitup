@@ -18,7 +18,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" x:Name="ListingImage" Width="90" Height="90" Source="{Binding DisplayImageLink}" />
+                <Image Grid.Column="0" x:Name="ListingImage" Width="90" Height="90" Source="{Binding DisplayImage}" />
 
                 <Grid Grid.Column="2" VerticalAlignment="Center">
                     <Grid.RowDefinitions>

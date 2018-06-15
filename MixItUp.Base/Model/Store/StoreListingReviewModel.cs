@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Store
 {
@@ -13,7 +14,7 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public Guid ListingID { get; set; }
         [DataMember]
-        public int UserID { get; set; }
+        public uint UserID { get; set; }
 
         [DataMember]
         public int Rating { get; set; }
@@ -31,5 +32,23 @@ namespace MixItUp.Base.Model.Store
 
         [JsonIgnore]
         public string LastUpdatedDateString { get { return this.LastUpdatedDate.ToString("G"); } }
+
+        public StoreListingReviewModel() { }
+
+        public StoreListingReviewModel(StoreListingModel listing, int rating, string review)
+        {
+            this.ListingID = listing.ID;
+            this.UserID = ChannelSession.User.id;
+            this.Rating = rating;
+            this.Review = review;
+        }
+
+        public async Task SetUser()
+        {
+            if (this.UserID > 0)
+            {
+                this.User = await ChannelSession.Connection.GetUser(this.UserID);
+            }
+        }
     }
 }

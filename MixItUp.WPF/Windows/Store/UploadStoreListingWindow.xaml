@@ -28,6 +28,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
         <Grid Margin="10" Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

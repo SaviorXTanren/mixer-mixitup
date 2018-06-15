@@ -7,7 +7,7 @@ namespace MixItUp.Base.Model.Store
     public class StoreListingReportModel
     {
         [DataMember]
-        public Guid ID { get; set; }
+        public Guid ListingID { get; set; }
         [DataMember]
         public uint UserID { get; set; }
 
@@ -16,5 +16,14 @@ namespace MixItUp.Base.Model.Store
 
         [DataMember]
         public StoreListingModel Listing { get; set; }
+
+        public StoreListingReportModel() { }
+
+        public StoreListingReportModel(StoreListingModel listing, string report)
+        {
+            this.ListingID = listing.ID;
+            this.UserID = ChannelSession.User.id;
+            this.Report = report;
+        }
     }
 }

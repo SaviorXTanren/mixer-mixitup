@@ -23,7 +23,7 @@ namespace MixItUp.Base.Services
         Task<StoreDetailListingModel> GetStoreListing(Guid ID);
         Task AddStoreListing(StoreDetailListingModel listing);
         Task UpdateStoreListing(StoreDetailListingModel listing);
-        Task DeleteStoreListing(StoreDetailListingModel listing);
+        Task DeleteStoreListing(Guid ID);
 
         Task<IEnumerable<StoreListingModel>> GetTopStoreListingsForTag(string tag);
         Task<StoreListingModel> GetTopRandomStoreListings();
@@ -47,15 +47,41 @@ namespace MixItUp.Base.Services
 
         public async Task SendIssueReport(IssueReportModel report) { await this.PostAsync("issuereport", report); }
 
-        public async Task<StoreDetailListingModel> GetStoreListing(Guid ID) { return await this.GetAsync<StoreDetailListingModel>("store/details?id=" + ID); }
+        public async Task<StoreDetailListingModel> GetStoreListing(Guid ID)
+        {
+            StoreDetailListingModel listing = await this.GetAsync<StoreDetailListingModel>("store/details?id=" + ID);
+            if (listing != null)
+            {
+                await listing.SetUser();
+            }
+            return listing;
+        }
         public async Task AddStoreListing(StoreDetailListingModel listing) { await this.PostAsync("store/details", listing); }
         public async Task UpdateStoreListing(StoreDetailListingModel listing) { await this.PutAsync("store/details", listing); }
-        public async Task DeleteStoreListing(StoreDetailListingModel listing) { await this.DeleteAsync("store/details" + listing.ID); }
+        public async Task DeleteStoreListing(Guid ID) { await this.DeleteAsync("store/details?id=" + ID); }
 
-        public async Task<IEnumerable<StoreListingModel>> GetTopStoreListingsForTag(string tag) { return await this.GetAsync<IEnumerable<StoreListingModel>>("store/top?tag=" + tag); }
-        public async Task<StoreListingModel> GetTopRandomStoreListings() { return await this.GetAsync<StoreListingModel>("store/top"); }
+        public async Task<IEnumerable<StoreListingModel>> GetTopStoreListingsForTag(string tag)
+        {
+            IEnumerable<StoreListingModel> listings = await this.GetAsync<IEnumerable<StoreListingModel>>("store/top?tag=" + tag);
+            await this.SetStoreListingUsers(listings);
+            return listings;
+        }
+        public async Task<StoreListingModel> GetTopRandomStoreListings()
+        {
+            StoreListingModel listing = await this.GetAsync<StoreListingModel>("store/top");
+            if (listing != null)
+            {
+                await listing.SetUser();
+            }
+            return listing;
+        }
 
-        public async Task<IEnumerable<StoreListingModel>> SearchStoreListings(string search) { return await this.PostAsyncWithResult<IEnumerable<StoreListingModel>>("store/search?search=", search); }
+        public async Task<IEnumerable<StoreListingModel>> SearchStoreListings(string search)
+        {
+            IEnumerable<StoreListingModel> listings = await this.PostAsyncWithResult<IEnumerable<StoreListingModel>>("store/search?search=", search);
+            await this.SetStoreListingUsers(listings);
+            return listings;
+        }
 
         public async Task AddStoreReview(StoreListingReviewModel review) { await this.PostAsync("store/reviews", review); }
 
@@ -150,6 +176,17 @@ namespace MixItUp.Base.Services
                 }
             }
             catch (Exception) { }
+        }
+
+        private async Task SetStoreListingUsers(IEnumerable<StoreListingModel> listings)
+        {
+            if (listings != null)
+            {
+                foreach (StoreListingModel listing in listings)
+                {
+                    await listing.SetUser();
+                }
+            }
         }
     }
 }
