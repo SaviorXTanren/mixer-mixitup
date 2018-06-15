@@ -76,7 +76,7 @@ namespace MixItUp.Input
         private static extern uint SendInput(uint numberOfInputs, InputContainer[] inputs, int sizeOfInputStructure);
 
         [DllImport("user32.dll")]
-        private static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
+        private static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, IntPtr dwExtraInfo);
 
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(out MousePoint lpPoint);
@@ -106,7 +106,7 @@ namespace MixItUp.Input
 
         public void MouseEvent(InputMouseEnum mouse)
         {
-            mouse_event((int)mouse, 0, 0, 0, 0);
+            mouse_event((int)mouse, 0, 0, 0, (IntPtr)0);
         }
 
         public async Task LeftMouseClick()
@@ -132,7 +132,7 @@ namespace MixItUp.Input
 
         public void MoveMouse(int xDelta, int yDelta)
         {
-            mouse_event((int)InputMouseEnum.Move, xDelta, yDelta, 0, 0);
+            mouse_event((int)InputMouseEnum.Move, xDelta, yDelta, 0, (IntPtr)0);
         }
 
         public async Task WaitForKeyToRegister()

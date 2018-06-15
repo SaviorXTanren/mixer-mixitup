@@ -17,8 +17,6 @@ namespace MixItUp.Base.MixerAPI
 {
     public class ChatClientWrapper : MixerWebSocketWrapper
     {
-        private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
-
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
         private Dictionary<uint, int> whisperMap = new Dictionary<uint, int>();
 
@@ -652,8 +650,9 @@ namespace MixItUp.Base.MixerAPI
 
             do
             {
-                await ChatClient.Reconnect(this.Client);
-            } while (!await this.RunAsync(this.Client.Authenticate()));
+                await Task.Delay(2500);
+            }
+            while (!await this.Connect());
 
             ChannelSession.ReconnectionOccurred("Streamer Chat");
         }
@@ -664,8 +663,9 @@ namespace MixItUp.Base.MixerAPI
 
             do
             {
-                await ChatClient.Reconnect(this.BotClient);
-            } while (!await this.RunAsync(this.BotClient.Authenticate()));
+                await Task.Delay(2500);
+            }
+            while (!await this.ConnectBot());
 
             ChannelSession.ReconnectionOccurred("Bot Chat");
         }

@@ -19,8 +19,6 @@ namespace MixItUp.Base.MixerAPI
 {
     public class ConstellationClientWrapper : MixerWebSocketWrapper
     {
-        private static SemaphoreSlim reconnectionLock = new SemaphoreSlim(1);
-
         public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.Channel.id); } }
 
         public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel.id); } }
@@ -76,6 +74,7 @@ namespace MixItUp.Base.MixerAPI
 
                 this.backgroundThreadCancellationTokenSource.Cancel();
             }
+            this.Client = null;
         }
 
         public bool CanUserRunEvent(UserViewModel user, string eventName)
@@ -294,7 +293,11 @@ namespace MixItUp.Base.MixerAPI
         {
             ChannelSession.DisconnectionOccurred("Constellation");
 
-            await ConstellationClient.Reconnect(this.Client);
+            do
+            {
+                await Task.Delay(2500);
+            }
+            while (!await this.Connect());
 
             ChannelSession.ReconnectionOccurred("Constellation");
         }

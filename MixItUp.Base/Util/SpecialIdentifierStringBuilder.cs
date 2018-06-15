@@ -132,22 +132,23 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
 
-            if (ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
             {
                 // Select all workable users, exclude the streamer, then grab their UserData
-                UserDataViewModel[] allUsers = (await ChannelSession.ChannelUsers.GetAllWorkableUsers())
-                    .Where(u => u.PrimaryRole != MixerRoleEnum.Streamer)
-                    .Select(u => ChannelSession.Settings.UserData[u.ID]).ToArray();
+                Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+                allUsersDictionary.Remove(ChannelSession.Channel.user.id);
 
+                IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    if (ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
+                    if (this.ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
                     {
                         List<string> currencyUserList = new List<string>();
-                        int currencyPosition = 1;
+                        int userPosition = 1;
                         foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(10))
                         {
-                            currencyUserList.Add($"{currencyPosition}) @{currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                            currencyUserList.Add($"#{userPosition}) @{currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                            userPosition++;
                         }
 
                         if (currencyUserList.Count > 0)
@@ -161,14 +162,16 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time"))
+                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time"))
                 {
                     List<string> timeUserList = new List<string>();
-                    int timePosition = 1;
+                    int userPosition = 1;
                     foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(10))
                     {
-                        timeUserList.Add($"{timePosition}) @{timeUser.UserName} - {timeUser.ViewingTimeString}");
+                        timeUserList.Add($"#{userPosition}) @{timeUser.UserName} - {timeUser.ViewingTimeShortString}");
+                        userPosition++;
                     }
+
                     if (timeUserList.Count > 0)
                     {
                         this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time", string.Join(", ", timeUserList));
