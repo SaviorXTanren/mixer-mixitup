@@ -18,14 +18,16 @@
     
     <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="10">
-            <Grid x:Name="LandingGrid" Margin="0,10,0,0" Visibility="Visible">
+            <Button x:Name="BackButton" Visibility="Collapsed" Style="{StaticResource MaterialDesignFlatButtonDefaultColor}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="35" Height="35" Click="BackButton_Click">
+                <MaterialDesign:PackIcon Kind="ArrowLeftBoldCircleOutline" Width="30" Height="30" Margin="-13,-2" Foreground="{StaticResource PrimaryHueMidBrush}" />
+            </Button>
+
+            <Grid x:Name="LandingSearchGrid" Margin="0,10,0,0" Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -48,24 +50,39 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="LandingSearchTextBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Search Terms" Width="250" />
+                    <TextBox x:Name="LandingSearchTextBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Search Terms" Width="250" KeyDown="LandingSearchTextBox_KeyDown" />
 
-                    <Button x:Name="LandingSearchButton" Grid.Column="2">Search</Button>
+                    <Button x:Name="LandingSearchButton" Grid.Column="2" Click="LandingSearchButton_Click">Search</Button>
                 </Grid>
 
-                <ContentControl x:Name="PromotedCommandControl" Grid.Row="4" />
+                <Grid x:Name="LandingGrid" Grid.Row="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <StackPanel x:Name="CategoriesStackPanel" Grid.Row="6" Margin="20,0,20,0" HorizontalAlignment="Center">
-                    <StackPanel.Resources>
-                        <Style TargetType="{x:Type local:CategoryCommandListingControl}">
-                            <Setter Property="Margin" Value="0,10,0,10"/>
-                        </Style>
-                    </StackPanel.Resources>
-                </StackPanel>
-            </Grid>
+                    <ContentControl x:Name="PromotedCommandControl" Grid.Row="0" />
 
-            <Grid x:Name="SearchGrid" Visibility="Collapsed">
+                    <StackPanel x:Name="CategoriesStackPanel" Grid.Row="2" Margin="20,0,20,0" HorizontalAlignment="Left">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type local:CategoryCommandListingControl}">
+                                <Setter Property="Margin" Value="0,10,0,10"/>
+                            </Style>
+                        </StackPanel.Resources>
+                    </StackPanel>
+                </Grid>
 
+                <Grid x:Name="SearchGrid" Grid.Row="4" Visibility="Collapsed">
+                    <TextBlock x:Name="NoResultsFoundTextBlock" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" Margin="0,30,0,0" Visibility="Collapsed">No Results Found</TextBlock>
+                    <StackPanel x:Name="SearchStackPanel" Margin="20,0,20,0" HorizontalAlignment="Stretch">
+                        <StackPanel.Resources>
+                            <Style TargetType="{x:Type local:LargeCommandListingControl}">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </StackPanel.Resources>
+                    </StackPanel>
+                </Grid>
             </Grid>
 
             <Grid x:Name="DetailsGrid" Visibility="Collapsed" Margin="30,10">
@@ -106,24 +123,16 @@
                         <Grid Grid.Row="2" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="30" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="5" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Text="{Binding AverageRatingDisplayString}" VerticalAlignment="Top" />
-                            <MaterialDesign:PackIcon Grid.Column="1" Kind="Star" VerticalAlignment="Top" Margin="5,0,0,0" />
+                            <local:CommandListingRatingDownloadsControl Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,2,0" DataContext="{Binding}" />
 
-                            <TextBlock Grid.Column="3" Text="{Binding TotalDownloads}" VerticalAlignment="Top" />
-                            <MaterialDesign:PackIcon Grid.Column="4" Kind="Download" VerticalAlignment="Center" Margin="5,0,0,0" />
-
-                            <TextBlock Grid.Column="6" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Tags:</TextBlock>
-                            <TextBlock Grid.Column="8" Text="{Binding TagsDisplayString}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Tags:</TextBlock>
+                            <TextBlock Grid.Column="4" Text="{Binding TagsDisplayString}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
                         </Grid>
 
                         <Grid Grid.Row="4" HorizontalAlignment="Left">
@@ -191,6 +200,8 @@
                                     <Grid Grid.Row="0">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="5" />
+                                            <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="10" />
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="10" />
@@ -202,12 +213,13 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Column="0" Text="{Binding UserName}" VerticalAlignment="Center"  />
-                                        <TextBlock Grid.Column="2" VerticalAlignment="Center" >-</TextBlock>
-                                        <TextBlock Grid.Column="4" Text="{Binding Rating}" VerticalAlignment="Center"  />
-                                        <MaterialDesign:PackIcon Grid.Column="5" Kind="Star" VerticalAlignment="Center" />
-                                        <TextBlock Grid.Column="7" VerticalAlignment="Center" >-</TextBlock>
-                                        <TextBlock Grid.Column="9" Text="{Binding LastUpdatedDateString}" VerticalAlignment="Center"  />
+                                        <Image Grid.Column="0" Width="20" Height="20" Source="{Binding UserAvatar}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="2" Text="{Binding UserName}" VerticalAlignment="Center"  />
+                                        <TextBlock Grid.Column="4" VerticalAlignment="Center" >-</TextBlock>
+                                        <TextBlock Grid.Column="6" Text="{Binding Rating}" VerticalAlignment="Center"  />
+                                        <MaterialDesign:PackIcon Grid.Column="7" Kind="Star" VerticalAlignment="Center" Margin="0,0,0,1" />
+                                        <TextBlock Grid.Column="9" VerticalAlignment="Center" >-</TextBlock>
+                                        <TextBlock Grid.Column="11" Text="{Binding LastUpdatedDateString}" VerticalAlignment="Center"  />
                                     </Grid>
 
                                     <TextBlock Grid.Row="2" Text="{Binding Review}" TextWrapping="Wrap" />

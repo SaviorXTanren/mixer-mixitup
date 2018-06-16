@@ -4,6 +4,7 @@ using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -31,6 +32,7 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<StoreListingModel>> SearchStoreListings(string search);
 
         Task AddStoreReview(StoreListingReviewModel review);
+        Task UpdateStoreReview(StoreListingReviewModel review);
 
         Task AddStoreListingDownload(StoreListingModel listing);
         Task AddStoreListingReport(StoreListingReportModel report);
@@ -53,6 +55,7 @@ namespace MixItUp.Base.Services
             if (listing != null)
             {
                 await listing.SetUser();
+                await listing.SetReviewUsers();
             }
             return listing;
         }
@@ -68,12 +71,14 @@ namespace MixItUp.Base.Services
         }
         public async Task<StoreListingModel> GetTopRandomStoreListings()
         {
-            StoreListingModel listing = await this.GetAsync<StoreListingModel>("store/top");
-            if (listing != null)
+            IEnumerable<StoreListingModel> listings = await this.GetAsync<IEnumerable<StoreListingModel>>("store/top");
+            if (listings != null && listings.Count() > 0)
             {
+                StoreListingModel listing = listings.FirstOrDefault();
                 await listing.SetUser();
+                return listing;
             }
-            return listing;
+            return null;
         }
 
         public async Task<IEnumerable<StoreListingModel>> SearchStoreListings(string search)
@@ -84,6 +89,7 @@ namespace MixItUp.Base.Services
         }
 
         public async Task AddStoreReview(StoreListingReviewModel review) { await this.PostAsync("store/reviews", review); }
+        public async Task UpdateStoreReview(StoreListingReviewModel review) { await this.PutAsync("store/reviews", review); }
 
         public async Task AddStoreListingDownload(StoreListingModel listing) { await this.PatchAsync("store/metadata", listing.ID); }
         public async Task AddStoreListingReport(StoreListingReportModel report) { await this.PostAsync("store/metadata", report); }

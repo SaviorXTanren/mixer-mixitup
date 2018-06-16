@@ -3,6 +3,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Store
 {
@@ -50,6 +51,14 @@ namespace MixItUp.Base.Model.Store
                 return SerializerHelper.DeserializeFromString<List<ActionBase>>(this.Data);
             }
             return new List<ActionBase>();
+        }
+
+        public async Task SetReviewUsers()
+        {
+            foreach (StoreListingReviewModel review in this.Reviews)
+            {
+                await review.SetUser();
+            }
         }
     }
 }

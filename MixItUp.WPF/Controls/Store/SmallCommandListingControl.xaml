@@ -24,15 +24,7 @@
 
                 <TextBlock x:Name="ListingName" Grid.Row="2" Width="80" MaxWidth="80" Height="35" HorizontalAlignment="Left" Text="{Binding Name}" TextWrapping="Wrap" TextTrimming="WordEllipsis" />
 
-                <Grid Grid.Row="4" HorizontalAlignment="Left">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" x:Name="RatingTextBlock" Text="{Binding AverageRatingDisplayString}" VerticalAlignment="Center" />
-                    <MaterialDesign:PackIcon Grid.Column="1" Kind="Star" VerticalAlignment="Center" />
-                </Grid>
+                <local:CommandListingRatingDownloadsControl Grid.Row="4" HorizontalAlignment="Left" DataContext="{Binding}" />
             </Grid>
         </Border>
     </Button>

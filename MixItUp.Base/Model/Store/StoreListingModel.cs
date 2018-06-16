@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Store
@@ -87,9 +88,9 @@ namespace MixItUp.Base.Model.Store
         public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.User.id)); } }
 
         [JsonIgnore]
-        public string UserAvatar { get { return (this.User != null && !string.IsNullOrEmpty(this.User.avatarUrl)) ? this.User.avatarUrl : UserViewModel.DefaultAvatarLink; } }
-        [JsonIgnore]
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
+        [JsonIgnore]
+        public string UserAvatar { get { return (this.User != null && !string.IsNullOrEmpty(this.User.avatarUrl)) ? this.User.avatarUrl : UserViewModel.DefaultAvatarLink; } }
 
         [JsonIgnore]
         public string DisplayImage { get { return (!string.IsNullOrEmpty(this.DisplayImageLink)) ? this.DisplayImageLink : StoreListingModel.DefaultDisplayImage; } }
@@ -108,7 +109,23 @@ namespace MixItUp.Base.Model.Store
         public string TagsDisplayString { get { return string.Join(", ", this.Tags); } }
 
         [JsonIgnore]
-        public string LastUpdatedString { get { return this.LastUpdatedDate.ToString("G"); } }
+        public string SearchText
+        {
+            get
+            {
+                StringBuilder searchText = new StringBuilder();
+                searchText.Append(this.Name + " ");
+                searchText.Append(this.Description + " ");
+                foreach (string tag in this.Tags)
+                {
+                    searchText.Append(tag + " ");
+                }
+                return searchText.ToString().Trim();
+            }
+        }
+
+        [JsonIgnore]
+        public string LastUpdatedString { get { return this.LastUpdatedDate.ToLocalTime().ToString("G"); } }
 
         public async Task SetUser()
         {

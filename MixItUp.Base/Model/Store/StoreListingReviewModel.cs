@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.User;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Runtime.Serialization;
@@ -24,15 +25,6 @@ namespace MixItUp.Base.Model.Store
         [DataMember]
         public DateTimeOffset LastUpdatedDate { get; set; }
 
-        [DataMember]
-        public UserModel User { get; set; }
-
-        [JsonIgnore]
-        public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
-
-        [JsonIgnore]
-        public string LastUpdatedDateString { get { return this.LastUpdatedDate.ToString("G"); } }
-
         public StoreListingReviewModel() { }
 
         public StoreListingReviewModel(StoreListingModel listing, int rating, string review)
@@ -42,6 +34,17 @@ namespace MixItUp.Base.Model.Store
             this.Rating = rating;
             this.Review = review;
         }
+
+        [JsonIgnore]
+        public UserModel User { get; set; }
+
+        [JsonIgnore]
+        public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
+        [JsonIgnore]
+        public string UserAvatar { get { return (this.User != null && !string.IsNullOrEmpty(this.User.avatarUrl)) ? this.User.avatarUrl : UserViewModel.DefaultAvatarLink; } }
+
+        [JsonIgnore]
+        public string LastUpdatedDateString { get { return this.LastUpdatedDate.ToLocalTime().ToString("G"); } }
 
         public async Task SetUser()
         {

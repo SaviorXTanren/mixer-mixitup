@@ -5,11 +5,11 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Store
 {
     /// <summary>
-    /// Interaction logic for LargeCommandLisingControl.xaml
+    /// Interaction logic for LargeCommandListingControl.xaml
     /// </summary>
-    public partial class LargeCommandLisingControl : StoreListingControl
+    public partial class LargeCommandListingControl : StoreListingControl
     {
-        public LargeCommandLisingControl(MainStoreControl mainStoreControl, StoreListingModel listing)
+        public LargeCommandListingControl(MainStoreControl mainStoreControl, StoreListingModel listing)
             : base(mainStoreControl, listing)
         {
             InitializeComponent();

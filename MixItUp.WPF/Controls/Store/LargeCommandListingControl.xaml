@@ -1,0 +1,41 @@
+﻿<local:StoreListingControl x:Class="MixItUp.WPF.Controls.Store.LargeCommandListingControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Store"
+                           
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                           
+             mc:Ignorable="d" 
+             d:DesignHeight="130" d:DesignWidth="500">
+    <Button Style="{StaticResource MaterialDesignFlatButtonDefaultColor}" Height="120" MaxHeight="120" Width="500" MaxWidth="500" Click="Button_Click" ToolTip="{Binding TooltipDescription}">
+        <Border Style="{StaticResource DefaultBorder}" Margin="-15,0" Width="490">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" x:Name="ListingImage" Width="90" Height="90" Source="{Binding DisplayImage}" />
+
+                <Grid Grid.Column="2" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <TextBlock x:Name="ListingName" Grid.Row="0" Width="250" HorizontalAlignment="Left" Margin="2,0,0,0" Text="{Binding Name}" />
+
+                        <local:CommandListingRatingDownloadsControl Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,2,0" DataContext="{Binding}" />
+                    </Grid>
+
+                    <TextBlock x:Name="ListingDescription" Grid.Row="2" HorizontalAlignment="Left" Margin="2,0,0,0" Text="{Binding Description}" TextWrapping="Wrap" Height="35" TextTrimming="WordEllipsis" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Button>
+</local:StoreListingControl>

@@ -537,11 +537,20 @@
     <Compile Include="Controls\Store\CategoryCommandListingControl.xaml.cs">
       <DependentUpon>CategoryCommandListingControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Store\LargeCommandLisingControl.xaml.cs">
-      <DependentUpon>LargeCommandLisingControl.xaml</DependentUpon>
+    <Compile Include="Controls\Store\CommandListingRatingDownloadsControl.xaml.cs">
+      <DependentUpon>CommandListingRatingDownloadsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Store\LargeCommandListingControl.xaml.cs">
+      <DependentUpon>LargeCommandListingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Store\ListingReviewDialogControl.xaml.cs">
+      <DependentUpon>ListingReviewDialogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Store\MainStoreControl.xaml.cs">
       <DependentUpon>MainStoreControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Store\SearchCommandListingControl.xaml.cs">
+      <DependentUpon>SearchCommandListingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Store\SmallCommandListingControl.xaml.cs">
       <DependentUpon>SmallCommandListingControl.xaml</DependentUpon>
@@ -1037,11 +1046,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Store\LargeCommandLisingControl.xaml">
+    <Page Include="Controls\Store\CommandListingRatingDownloadsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Store\LargeCommandListingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Store\ListingReviewDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Store\MainStoreControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Store\SearchCommandListingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
