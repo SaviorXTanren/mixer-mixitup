@@ -5,6 +5,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,9 +20,9 @@ namespace MixItUp.WPF.Windows.Store
     public partial class UploadStoreListingWindow : LoadingWindowBase
     {
         private static readonly string IncludeAssetsTooltip =
-            "This option will upload the additional files used in" + Environment.NewLine +
-            "the actions for this command (Images, Sounds, etc)." + Environment.NewLine +
-            "Some files are not support by this (Videos, HTML, etc).";
+            "This option will upload the additional files used" + Environment.NewLine +
+            "in the actions for this command (Images, Sounds)." + Environment.NewLine +
+            "Some files are not support by this (Videos, HTML).";
 
         private CommandBase command;
 
@@ -57,17 +58,15 @@ namespace MixItUp.WPF.Windows.Store
                 actionsInCommand[action.Type]++;
             }
 
-            IEnumerable<ActionTypeEnum> actionTypesInCommand = actionsInCommand.OrderBy(a => Guid.NewGuid()).OrderByDescending(a => a.Value).Select(a => a.Key);
-            for (int i = 0; i < 3 && i < actionTypesInCommand.Count(); i++)
+            HashSet<string> actionTypeNames = new HashSet<string>();
+            foreach (var kvp in actionsInCommand.OrderByDescending(a => a.Value).ThenBy(a => Guid.NewGuid()))
             {
-                string tag = EnumHelper.GetEnumName(actionTypesInCommand.ElementAt(i));
-                switch (i)
-                {
-                    case 0: this.Tag1ComboBox.SelectedItem = tag; break;
-                    case 1: this.Tag2ComboBox.SelectedItem = tag; break;
-                    case 2: this.Tag3ComboBox.SelectedItem = tag; break;
-                }
+                actionTypeNames.Add(EnumHelper.GetEnumName(kvp.Key));
             }
+
+            if (actionTypeNames.Count() > 0) { this.Tag1ComboBox.SelectedItem = actionTypeNames.ElementAt(0); }
+            if (actionTypeNames.Count() > 1) { this.Tag2ComboBox.SelectedItem = actionTypeNames.ElementAt(1); }
+            if (actionTypeNames.Count() > 2) { this.Tag3ComboBox.SelectedItem = actionTypeNames.ElementAt(2); }
 
             if (this.command is EventCommand)
             {
@@ -148,6 +147,8 @@ namespace MixItUp.WPF.Windows.Store
                     return;
                 }
 
+                JObject metadata = new JObject();
+
                 byte[] displayImageData = null;
                 if (!string.IsNullOrEmpty(this.DisplayImagePathTextBox.Text))
                 {
@@ -166,26 +167,46 @@ namespace MixItUp.WPF.Windows.Store
                             if (oAction.Effect is OverlayImageEffect)
                             {
                                 OverlayImageEffect iEffect = (OverlayImageEffect)oAction.Effect;
-                                assetFiles.Add(iEffect.FilePath);
+                                if (File.Exists(iEffect.FilePath))
+                                {
+                                    assetFiles.Add(iEffect.FilePath);
+                                }
                             }
                         }
                         else if (action.Type == ActionTypeEnum.Sound)
                         {
                             SoundAction sAction = (SoundAction)action;
-                            assetFiles.Add(sAction.FilePath);
+                            if (File.Exists(sAction.FilePath))
+                            {
+                                assetFiles.Add(sAction.FilePath);
+                            }
                         }
                     }
 
                     if (assetFiles.Count > 0)
                     {
+                        foreach (string assetFile in assetFiles)
+                        {
+                            FileInfo info = new FileInfo(assetFile);
+                            if (info.Length >= 1000000)
+                            {
+                                await MessageBoxHelper.ShowMessageDialog("All asset files must be smaller than 1 MB");
+                                return;
+                            }
+                        }
+
                         string zipFilePath = Path.Combine(ChannelSession.Services.FileService.GetTempFolder(), this.command.ID.ToString() + ".zip");
+                        if (File.Exists(zipFilePath))
+                        {
+                            File.Delete(zipFilePath);
+                        }
                         await ChannelSession.Services.FileService.ZipFiles(zipFilePath, assetFiles);
                         assetData = await ChannelSession.Services.FileService.ReadFileAsBytes(zipFilePath);
                     }
                 }
 
                 await ChannelSession.Services.MixItUpService.AddStoreListing(new StoreDetailListingModel(this.command, this.NameTextBox.Text, this.DescriptionTextBox.Text, tags,
-                    this.DisplayImagePathTextBox.Text, displayImageData, assetData));
+                    this.DisplayImagePathTextBox.Text, displayImageData, assetData, metadata));
 
                 this.Close();
             });

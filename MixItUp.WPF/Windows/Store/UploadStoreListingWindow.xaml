@@ -61,7 +61,7 @@
 
             <TextBox x:Name="NameTextBox" Grid.Row="2" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Name" Width="400" />
 
-            <TextBox x:Name="DescriptionTextBox" Grid.Row="4" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Description" Width="400" Height="150" />
+            <TextBox x:Name="DescriptionTextBox" Grid.Row="4" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaterialDesign:HintAssist.Hint="Description" Width="400" Height="150" TextWrapping="Wrap" AcceptsReturn="True" />
 
             <Grid Grid.Row="6" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>

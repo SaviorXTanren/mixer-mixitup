@@ -52,6 +52,15 @@ namespace MixItUp.Desktop.Files
             }
         }
 
+        public Task<IEnumerable<string>> GetFilesInDirectory(string directoryPath)
+        {
+            if (Directory.Exists(directoryPath))
+            {
+                return Task.FromResult<IEnumerable<string>>(Directory.GetFiles(directoryPath));
+            }
+            return Task.FromResult<IEnumerable<string>>(new List<string>());
+        }
+
         public async Task<string> ReadFile(string filePath)
         {
             try
@@ -97,6 +106,18 @@ namespace MixItUp.Desktop.Files
                 WindowsFileService.createLock.Release();
                 Logger.Log(ex);
             }
+        }
+
+        public async Task SaveFileAsBytes(string filePath, byte[] data)
+        {
+            try
+            {
+                using (FileStream reader = File.OpenWrite(filePath))
+                {
+                    await reader.WriteAsync(data, 0, data.Length);
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         public async Task AppendFile(string filePath, string data)

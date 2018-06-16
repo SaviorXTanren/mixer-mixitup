@@ -1,8 +1,10 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,6 +84,13 @@ namespace MixItUp.Base.Model.Store
         }
 
         [JsonIgnore]
+        public JObject Metadata
+        {
+            get { return (!string.IsNullOrEmpty(this.MetadataString)) ? JObject.Parse(this.MetadataString) : new JObject(); }
+            set { this.MetadataString = (value != null) ? SerializerHelper.SerializeToString(value) : null; }
+        }
+
+        [JsonIgnore]
         public UserModel User { get; set; }
 
         [JsonIgnore]
@@ -97,6 +106,9 @@ namespace MixItUp.Base.Model.Store
 
         [JsonIgnore]
         public string AverageRatingDisplayString { get { return Math.Round(this.AverageRating, 1).ToString(); } }
+
+        [JsonIgnore]
+        public string AssetsIncludedString { get { return (this.AssetsIncluded) ? "Yes" : "No"; } }
 
         [JsonIgnore]
         public string TagsString

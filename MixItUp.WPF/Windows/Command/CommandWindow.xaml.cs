@@ -1,9 +1,11 @@
 ﻿using Mixer.Base.Model.Interactive;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Store;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -33,9 +35,9 @@ namespace MixItUp.WPF.Windows.Command
             this.Initialize(this.StatusBar);
         }
 
-        public void DownloadCommandFromStore(StoreDetailListingModel listing)
+        public void DownloadCommandFromStore(IEnumerable<ActionBase> actions)
         {
-            this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl, listing.GetActions()));
+            this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl, actions));
         }
 
         protected override async Task OnLoaded()

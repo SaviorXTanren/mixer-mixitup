@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -27,7 +28,8 @@ namespace MixItUp.Base.Model.Store
             this.Reviews = new List<StoreListingReviewModel>();
         }
 
-        public StoreDetailListingModel(CommandBase command, string name, string description, IEnumerable<string> tags, string displayImagePath, byte[] displayImageData, byte[] assetData)
+        public StoreDetailListingModel(CommandBase command, string name, string description, IEnumerable<string> tags, string displayImagePath, byte[] displayImageData,
+            byte[] assetData, JObject metadata)
             : this()
         {
             this.ID = command.ID;
@@ -42,6 +44,8 @@ namespace MixItUp.Base.Model.Store
             this.DisplayImageData = displayImageData;
             this.AssetData = assetData;
             this.Data = SerializerHelper.SerializeToString(command.Actions);
+
+            this.Metadata = metadata;
         }
 
         public List<ActionBase> GetActions()

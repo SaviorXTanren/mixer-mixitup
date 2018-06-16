@@ -15,9 +15,12 @@ namespace MixItUp.Base.Services
         Task CreateDirectory(string path);
         Task CopyDirectory(string sourcePath, string destinationPath);
 
+        Task<IEnumerable<string>> GetFilesInDirectory(string directoryPath);
+
         Task<string> ReadFile(string filePath);
         Task<byte[]> ReadFileAsBytes(string filePath);
         Task SaveFile(string filePath, string data);
+        Task SaveFileAsBytes(string filePath, byte[] data);
         Task AppendFile(string filePath, string data);
 
         string ShowOpenFolderDialog();

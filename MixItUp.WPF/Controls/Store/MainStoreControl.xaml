@@ -94,6 +94,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
+
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="40,0">
@@ -107,6 +108,8 @@
 
                     <Grid Grid.Column="2" VerticalAlignment="Center">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="20" />
                             <RowDefinition Height="Auto" />
@@ -131,11 +134,22 @@
 
                             <local:CommandListingRatingDownloadsControl Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,2,0" DataContext="{Binding}" />
 
-                            <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Tags:</TextBlock>
-                            <TextBlock Grid.Column="4" Text="{Binding TagsDisplayString}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Assets:</TextBlock>
+                            <TextBlock Grid.Column="4" Text="{Binding AssetsIncludedString}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
                         </Grid>
 
                         <Grid Grid.Row="4" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Tags:</TextBlock>
+                            <TextBlock Grid.Column="2" Text="{Binding TagsDisplayString}" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Grid Grid.Row="6" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="10" />
@@ -149,7 +163,7 @@
                             <TextBlock Grid.Column="4" Text="{Binding UserName}" VerticalAlignment="Center" />
                         </Grid>
 
-                        <Grid Grid.Row="6" HorizontalAlignment="Left">
+                        <Grid Grid.Row="8" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="5" />
@@ -160,7 +174,7 @@
                             <TextBlock Grid.Column="2" Text="{Binding LastUpdatedString}" />
                         </Grid>
 
-                        <Grid Grid.Row="8">
+                        <Grid Grid.Row="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="20" />
@@ -183,8 +197,8 @@
 
                 <TextBlock Grid.Row="4" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center" FontSize="20">Reviews:</TextBlock>
 
-                <ListView Grid.Row="6" ItemsSource="{Binding Reviews}" HorizontalAlignment="Center">
-                    <ListView.ItemTemplate>
+                <ItemsControl Grid.Row="6" ItemsSource="{Binding Reviews}" HorizontalAlignment="Center">
+                    <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource DefaultBorder}" Margin="-5">
                                 <Grid Margin="10">
@@ -226,8 +240,8 @@
                                 </Grid>
                             </Border>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
         </Grid>
     </ScrollViewer>

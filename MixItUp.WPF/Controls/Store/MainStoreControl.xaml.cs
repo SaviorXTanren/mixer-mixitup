@@ -1,9 +1,11 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Actions;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -73,7 +75,49 @@ namespace MixItUp.WPF.Controls.Store
             {
                 StoreDetailListingModel listingDetails = await ChannelSession.Services.MixItUpService.GetStoreListing(this.currentListing.ID);
                 await ChannelSession.Services.MixItUpService.AddStoreListingDownload(this.currentListing);
-                this.window.DownloadCommandFromStore(listingDetails);
+
+                IEnumerable<ActionBase> actions = listingDetails.GetActions();
+
+                if (listingDetails.AssetsIncluded && listingDetails.AssetData != null && listingDetails.AssetData.Length > 0)
+                {
+                    if (await MessageBoxHelper.ShowConfirmationDialog("This command contains included assets." + Environment.NewLine + "Would you like to download them?"))
+                    {
+                        string folderLocation = ChannelSession.Services.FileService.ShowOpenFolderDialog();
+                        if (!string.IsNullOrEmpty(folderLocation))
+                        {
+                            string zipFilePath = Path.Combine(ChannelSession.Services.FileService.GetTempFolder(), listingDetails.ID.ToString() + ".zip");
+                            await ChannelSession.Services.FileService.SaveFileAsBytes(zipFilePath, listingDetails.AssetData);
+                            await ChannelSession.Services.FileService.UnzipFiles(zipFilePath, folderLocation);
+
+                            IEnumerable<string> assetFileNames = (await ChannelSession.Services.FileService.GetFilesInDirectory(folderLocation)).Select(s => Path.GetFileName(s));
+                            foreach (ActionBase action in actions)
+                            {
+                                if (action.Type == ActionTypeEnum.Overlay)
+                                {
+                                    OverlayAction oAction = (OverlayAction)action;
+                                    if (oAction.Effect is OverlayImageEffect)
+                                    {
+                                        OverlayImageEffect iEffect = (OverlayImageEffect)oAction.Effect;
+                                        if (assetFileNames.Contains(Path.GetFileName(iEffect.FilePath)))
+                                        {
+                                            iEffect.FilePath = Path.Combine(folderLocation, Path.GetFileName(iEffect.FilePath));
+                                        }
+                                    }
+                                }
+                                else if (action.Type == ActionTypeEnum.Sound)
+                                {
+                                    SoundAction sAction = (SoundAction)action;
+                                    if (assetFileNames.Contains(Path.GetFileName(sAction.FilePath)))
+                                    {
+                                        sAction.FilePath = Path.Combine(folderLocation, Path.GetFileName(sAction.FilePath));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                this.window.DownloadCommandFromStore(actions);
             });
         }
 
@@ -197,6 +241,7 @@ namespace MixItUp.WPF.Controls.Store
 
             this.PromotedCommandControl.Content = new LargeCommandListingControl(this, await ChannelSession.Services.MixItUpService.GetTopRandomStoreListings());
 
+            this.CategoriesStackPanel.Children.Clear();
             this.CreateAndAddCategory("Chat", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Chat"));
             this.CreateAndAddCategory("Donations", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Donations"));
             this.CreateAndAddCategory("Overlay", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Overlay"));
