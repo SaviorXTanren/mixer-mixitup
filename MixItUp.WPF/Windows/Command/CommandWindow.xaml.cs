@@ -35,9 +35,9 @@ namespace MixItUp.WPF.Windows.Command
             this.Initialize(this.StatusBar);
         }
 
-        public void DownloadCommandFromStore(IEnumerable<ActionBase> actions)
+        public void DownloadCommandFromStore(Guid storeListingID, IEnumerable<ActionBase> actions)
         {
-            this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl, actions));
+            this.ShowCommandEditor(new AdvancedCommandEditorControl(this, this.commandDetailsControl, storeListingID, actions));
         }
 
         protected override async Task OnLoaded()

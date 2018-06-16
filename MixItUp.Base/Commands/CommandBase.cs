@@ -9,7 +9,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace MixItUp.Base.Commands
 {
@@ -29,6 +28,26 @@ namespace MixItUp.Base.Commands
     [DataContract]
     public abstract class CommandBase
     {
+        private static Dictionary<Guid, long> commandUses = new Dictionary<Guid, long>();
+        private static SemaphoreSlim commandUsesSemaphore = new SemaphoreSlim(1);
+
+        public static async Task<Dictionary<Guid, long>> GetCommandUses()
+        {
+            Dictionary<Guid, long> results = new Dictionary<Guid, long>();
+
+            await CommandBase.commandUsesSemaphore.WaitAsync();
+
+            foreach (Guid key in CommandBase.commandUses.Keys.ToList())
+            {
+                results[key] = CommandBase.commandUses[key];
+                CommandBase.commandUses[key] = 0;
+            }
+
+            CommandBase.commandUsesSemaphore.Release();
+
+            return results;
+        }
+
         public static bool IsValidCommandString(string command)
         {
             if (!string.IsNullOrEmpty(command))
@@ -40,6 +59,9 @@ namespace MixItUp.Base.Commands
 
         [DataMember]
         public Guid ID { get; set; }
+
+        [DataMember]
+        public Guid StoreID { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -119,6 +141,14 @@ namespace MixItUp.Base.Commands
                 {
                     try
                     {
+                        await CommandBase.commandUsesSemaphore.WaitAsync();
+                        if (this.StoreID != Guid.Empty && !CommandBase.commandUses.ContainsKey(this.StoreID))
+                        {
+                            CommandBase.commandUses[this.StoreID] = 0;
+                        }
+                        CommandBase.commandUses[this.StoreID]++;
+                        CommandBase.commandUsesSemaphore.Release();
+
                         if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
                         {
                             await this.AsyncSemaphore.WaitAsync();

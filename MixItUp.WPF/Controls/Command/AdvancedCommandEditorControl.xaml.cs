@@ -45,6 +45,8 @@ namespace MixItUp.WPF.Controls.Command
         private CommandWindow window;
 
         private CommandDetailsControlBase commandDetailsControl;
+
+        private Guid storeListingID;
         private IEnumerable<ActionBase> initialActions;
 
         private ObservableCollection<ActionContainerControl> actionControls = new ObservableCollection<ActionContainerControl>();
@@ -52,9 +54,10 @@ namespace MixItUp.WPF.Controls.Command
         private CommandBase newCommand = null;
         private bool hasLoaded = false;
 
-        public AdvancedCommandEditorControl(CommandWindow window, CommandDetailsControlBase commandDetailsControl, IEnumerable<ActionBase> initialActions)
+        public AdvancedCommandEditorControl(CommandWindow window, CommandDetailsControlBase commandDetailsControl, Guid storeListingID, IEnumerable<ActionBase> initialActions)
             : this(window, commandDetailsControl)
         {
+            this.storeListingID = storeListingID;
             this.initialActions = initialActions;
         }
 
@@ -297,6 +300,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 this.newCommand.Actions.Clear();
                 this.newCommand.Actions = actions;
+                this.newCommand.StoreID = this.storeListingID;
             }
             return this.newCommand;
         }

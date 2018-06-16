@@ -67,6 +67,9 @@ namespace MixItUp.Base.Model.Store
         public int TotalDownloads { get; set; }
 
         [DataMember]
+        public long TotalUses { get; set; }
+
+        [DataMember]
         public bool AssetsIncluded { get; set; }
 
         [DataMember]

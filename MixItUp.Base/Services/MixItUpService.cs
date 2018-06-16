@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Web;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Store;
 using MixItUp.Base.Util;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -35,12 +37,22 @@ namespace MixItUp.Base.Services
         Task UpdateStoreReview(StoreListingReviewModel review);
 
         Task AddStoreListingDownload(StoreListingModel listing);
+        Task AddStoreListingUses(StoreListingUsesModel uses);
         Task AddStoreListingReport(StoreListingReportModel report);
     }
 
-    public class MixItUpService : IMixItUpService
+    public class MixItUpService : IMixItUpService, IDisposable
     {
         public const string MixItUpAPIEndpoint = "http://localhost:33901/api/";
+
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+        public MixItUpService()
+        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(this.BackgroundCommandUsesUpload, this.cancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
 
@@ -91,8 +103,9 @@ namespace MixItUp.Base.Services
         public async Task AddStoreReview(StoreListingReviewModel review) { await this.PostAsync("store/reviews", review); }
         public async Task UpdateStoreReview(StoreListingReviewModel review) { await this.PutAsync("store/reviews", review); }
 
-        public async Task AddStoreListingDownload(StoreListingModel listing) { await this.PatchAsync("store/metadata", listing.ID); }
-        public async Task AddStoreListingReport(StoreListingReportModel report) { await this.PostAsync("store/metadata", report); }
+        public async Task AddStoreListingDownload(StoreListingModel listing) { await this.PostAsync("store/metadata/downloads", listing.ID); }
+        public async Task AddStoreListingUses(StoreListingUsesModel uses) { await this.PostAsync("store/metadata/uses", uses); }
+        public async Task AddStoreListingReport(StoreListingReportModel report) { await this.PostAsync("store/metadata/reports", report); }
 
         private async Task<T> GetAsync<T>(string endpoint)
         {
@@ -194,5 +207,52 @@ namespace MixItUp.Base.Services
                 }
             }
         }
+
+        private async Task BackgroundCommandUsesUpload()
+        {
+            while (!this.cancellationTokenSource.Token.IsCancellationRequested)
+            {
+                try
+                {
+                    Dictionary<Guid, long> commandUses = await CommandBase.GetCommandUses();
+                    foreach (var kvp in commandUses)
+                    {
+                        await this.AddStoreListingUses(new StoreListingUsesModel() { ID = kvp.Key, Uses = kvp.Value });
+                        await Task.Delay(2000);
+                    }
+                }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+
+                await Task.Delay(60000);
+            }
+        }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Dispose managed state (managed objects).
+                    this.cancellationTokenSource.Dispose();
+                }
+
+                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // Set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

@@ -208,6 +208,8 @@ namespace MixItUp.WPF.Windows.Store
                 await ChannelSession.Services.MixItUpService.AddStoreListing(new StoreDetailListingModel(this.command, this.NameTextBox.Text, this.DescriptionTextBox.Text, tags,
                     this.DisplayImagePathTextBox.Text, displayImageData, assetData, metadata));
 
+                this.command.StoreID = this.command.ID;
+
                 this.Close();
             });
         }

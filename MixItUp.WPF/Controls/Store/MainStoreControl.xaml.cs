@@ -117,7 +117,7 @@ namespace MixItUp.WPF.Controls.Store
                     }
                 }
 
-                this.window.DownloadCommandFromStore(actions);
+                this.window.DownloadCommandFromStore(listingDetails.ID, actions);
             });
         }
 

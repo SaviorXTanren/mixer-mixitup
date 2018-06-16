@@ -9,19 +9,25 @@
              mc:Ignorable="d" 
              d:DesignHeight="60" d:DesignWidth="100">
     
-    <Grid Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,2,0">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="15" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="15" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" Text="{Binding AverageRatingDisplayString}" VerticalAlignment="Center" />
-        <MaterialDesign:PackIcon Grid.Column="1" Kind="Star" VerticalAlignment="Center" Margin="3,0,0,1" />
+        <TextBlock Grid.Column="0" Text="{Binding AverageRatingDisplayString}" VerticalAlignment="Center" ToolTip="Rating" />
+        <MaterialDesign:PackIcon Grid.Column="1" Kind="Star" VerticalAlignment="Center" Margin="3,0,0,1" ToolTip="Rating" />
 
-        <TextBlock Grid.Column="3" Text="{Binding TotalDownloads}" VerticalAlignment="Center" />
-        <MaterialDesign:PackIcon Grid.Column="4" Kind="Download" VerticalAlignment="Center" Margin="3,0,0,0" />
+        <TextBlock Grid.Column="3" Text="{Binding TotalDownloads}" VerticalAlignment="Center" ToolTip="Downloads" />
+        <MaterialDesign:PackIcon Grid.Column="4" Kind="Download" VerticalAlignment="Center" Margin="3,0,0,0" ToolTip="Downloads" />
+
+        <TextBlock Grid.Column="6" Text="{Binding TotalUses}" VerticalAlignment="Center" ToolTip="Uses" />
+        <MaterialDesign:PackIcon Grid.Column="7" Kind="ChartAreaspline" VerticalAlignment="Center" Margin="4,0,0,1" ToolTip="Uses" />
     </Grid>
 </UserControl>
