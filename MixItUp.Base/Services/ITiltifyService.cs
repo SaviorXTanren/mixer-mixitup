@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Model.User;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -87,7 +88,7 @@ namespace MixItUp.Base.Services
                 UserName = this.Name,
                 Message = this.Comment,
 
-                Amount = this.Amount,
+                Amount = Math.Round(this.Amount, 2),
                 AmountText = string.Format("{0:C}", this.Amount),
 
                 DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.CompletedAtTimestamp),

@@ -41,7 +41,7 @@ namespace MixItUp.Base.Services
                 UserName = this.UserName,
                 Message = this.Message,
 
-                Amount = this.AmountValue,
+                Amount = Math.Round(this.AmountValue, 2),
                 AmountText = string.Format("{0:C}", this.Amount),
 
                 DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.CreatedAt),

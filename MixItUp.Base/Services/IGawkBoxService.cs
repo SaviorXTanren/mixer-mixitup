@@ -45,7 +45,7 @@ namespace MixItUp.Base.Services
                 Message = this.Message,
                 ImageLink = this.Gifts.FirstOrDefault().ImageLink,
 
-                Amount = this.TotalAmount,
+                Amount = Math.Round(this.TotalAmount, 2),
                 AmountText = string.Format("{0:C}", this.TotalAmount),
 
                 DateTime = DateTimeOffset.Now,
