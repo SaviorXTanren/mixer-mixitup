@@ -1,4 +1,5 @@
-﻿using Mixer.Base.Web;
+﻿using Mixer.Base.Model.OAuth;
+using Mixer.Base.Web;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Model.Store;
@@ -16,6 +17,8 @@ namespace MixItUp.Base.Services
 {
     public interface IMixItUpService
     {
+        Task RefreshOAuthToken();
+
         Task<MixItUpUpdateModel> GetLatestUpdate();
 
         Task SendLoginEvent(LoginEvent login);
@@ -45,13 +48,22 @@ namespace MixItUp.Base.Services
     {
         public const string MixItUpAPIEndpoint = "http://localhost:33901/api/";
 
+        private OAuthTokenModel token = null;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public MixItUpService()
         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(this.BackgroundCommandUsesUpload, this.cancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed            
+        }
+
+        public async Task RefreshOAuthToken()
+        {
+            if (ChannelSession.User != null)
+            {
+                this.token = await this.GetAsync<OAuthTokenModel>("authentication?userID=" + ChannelSession.User.id);
+            }
         }
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
