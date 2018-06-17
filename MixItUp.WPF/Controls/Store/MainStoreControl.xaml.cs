@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
@@ -55,8 +56,9 @@ namespace MixItUp.WPF.Controls.Store
             });
         }
 
-        private void CreateAndAddCategory(string categoryName, IEnumerable<StoreListingModel> storeListings)
+        private async Task CreateAndAddCategory(string categoryName)
         {
+            IEnumerable<StoreListingModel> storeListings = await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag(categoryName);
             if (storeListings != null)
             {
                 List<StoreListingControl> storeListingControls = new List<StoreListingControl>();
@@ -242,9 +244,9 @@ namespace MixItUp.WPF.Controls.Store
             this.PromotedCommandControl.Content = new LargeCommandListingControl(this, await ChannelSession.Services.MixItUpService.GetTopRandomStoreListings());
 
             this.CategoriesStackPanel.Children.Clear();
-            this.CreateAndAddCategory("Chat", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Chat"));
-            this.CreateAndAddCategory("Donations", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Donations"));
-            this.CreateAndAddCategory("Overlay", await ChannelSession.Services.MixItUpService.GetTopStoreListingsForTag("Overlay"));
+            await this.CreateAndAddCategory(EnumHelper.GetEnumName(ActionTypeEnum.Chat));
+            await this.CreateAndAddCategory(StoreListingModel.DonationTag);
+            await this.CreateAndAddCategory(EnumHelper.GetEnumName(ActionTypeEnum.Overlay));
         }
     }
 }
