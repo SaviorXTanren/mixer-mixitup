@@ -207,6 +207,6 @@ namespace MixItUp.Desktop.Files
 
         public string GetApplicationDirectory() { return Path.GetDirectoryName(typeof(IFileService).Assembly.Location); }
 
-        public string GetApplicationVersion() { return Assembly.GetEntryAssembly().GetName().Version.ToString(); }
+        public string GetApplicationVersion() { return Assembly.GetEntryAssembly().GetName().Version.ToString().Trim(); }
     }
 }

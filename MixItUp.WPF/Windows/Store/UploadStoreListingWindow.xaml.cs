@@ -111,6 +111,12 @@ namespace MixItUp.WPF.Windows.Store
                     return;
                 }
 
+                if (this.NameTextBox.Text.Length >= 50)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A name must be 50 characters or less");
+                    return;
+                }
+
                 if (string.IsNullOrEmpty(this.DescriptionTextBox.Text))
                 {
                     await MessageBoxHelper.ShowMessageDialog("A description must be specified");

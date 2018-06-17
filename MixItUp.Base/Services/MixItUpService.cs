@@ -46,7 +46,7 @@ namespace MixItUp.Base.Services
 
     public class MixItUpService : IMixItUpService, IDisposable
     {
-        public const string MixItUpAPIEndpoint = "http://localhost:33901/api/";
+        public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
 
         private OAuthTokenModel token = null;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
