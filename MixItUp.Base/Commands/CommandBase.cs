@@ -29,21 +29,20 @@ namespace MixItUp.Base.Commands
     public abstract class CommandBase
     {
         private static Dictionary<Guid, long> commandUses = new Dictionary<Guid, long>();
-        private static SemaphoreSlim commandUsesSemaphore = new SemaphoreSlim(1);
 
-        public static async Task<Dictionary<Guid, long>> GetCommandUses()
+        public static Dictionary<Guid, long> GetCommandUses()
         {
             Dictionary<Guid, long> results = new Dictionary<Guid, long>();
 
-            await CommandBase.commandUsesSemaphore.WaitAsync();
-
-            foreach (Guid key in CommandBase.commandUses.Keys.ToList())
+            try
             {
-                results[key] = CommandBase.commandUses[key];
-                CommandBase.commandUses[key] = 0;
+                foreach (Guid key in CommandBase.commandUses.Keys.ToList())
+                {
+                    results[key] = CommandBase.commandUses[key];
+                    CommandBase.commandUses[key] = 0;
+                }
             }
-
-            CommandBase.commandUsesSemaphore.Release();
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
 
             return results;
         }
@@ -136,19 +135,24 @@ namespace MixItUp.Base.Commands
                     arguments = new List<string>();
                 }
 
+                try
+                {
+                    if (this.StoreID != Guid.Empty)
+                    {
+                        if (!CommandBase.commandUses.ContainsKey(this.StoreID))
+                        {
+                            CommandBase.commandUses[this.StoreID] = 0;
+                        }
+                        CommandBase.commandUses[this.StoreID]++;
+                    }
+                }
+                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+
                 this.currentCancellationTokenSource = new CancellationTokenSource();
                 this.currentTaskRun = Task.Run(async () =>
                 {
                     try
                     {
-                        await CommandBase.commandUsesSemaphore.WaitAsync();
-                        if (this.StoreID != Guid.Empty && !CommandBase.commandUses.ContainsKey(this.StoreID))
-                        {
-                            CommandBase.commandUses[this.StoreID] = 0;
-                        }
-                        CommandBase.commandUses[this.StoreID]++;
-                        CommandBase.commandUsesSemaphore.Release();
-
                         if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
                         {
                             await this.AsyncSemaphore.WaitAsync();

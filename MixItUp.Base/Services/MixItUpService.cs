@@ -226,7 +226,7 @@ namespace MixItUp.Base.Services
             {
                 try
                 {
-                    Dictionary<Guid, long> commandUses = await CommandBase.GetCommandUses();
+                    Dictionary<Guid, long> commandUses = CommandBase.GetCommandUses();
                     foreach (var kvp in commandUses)
                     {
                         await this.AddStoreListingUses(new StoreListingUsesModel() { ID = kvp.Key, Uses = kvp.Value });
