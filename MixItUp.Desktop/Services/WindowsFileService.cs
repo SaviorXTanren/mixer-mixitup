@@ -96,7 +96,10 @@ namespace MixItUp.Desktop.Files
                 await WindowsFileService.createLock.WaitAsync();
                 using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
                 {
-                    await writer.WriteAsync(data);
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        await writer.WriteAsync(data);
+                    }
                     await writer.FlushAsync();
                 }
                 WindowsFileService.createLock.Release();
@@ -127,7 +130,10 @@ namespace MixItUp.Desktop.Files
                 await WindowsFileService.appendLock.WaitAsync();
                 using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
                 {
-                    await writer.WriteAsync(data);
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        await writer.WriteAsync(data);
+                    }
                     await writer.FlushAsync();
                 }
                 WindowsFileService.appendLock.Release();

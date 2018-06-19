@@ -60,7 +60,8 @@ namespace MixItUp.Base.Actions
         {
             if (this.FileActionType == FileActionTypeEnum.SaveToFile || this.FileActionType == FileActionTypeEnum.AppendToFile)
             {
-                string textToWrite = await this.ReplaceStringWithSpecialModifiers(this.TransferText, user, arguments);
+                string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
+                textToWrite = await this.ReplaceStringWithSpecialModifiers(textToWrite, user, arguments);
                 if (this.FileActionType == FileActionTypeEnum.SaveToFile)
                 {
                     await ChannelSession.Services.FileService.SaveFile(this.FilePath, textToWrite);

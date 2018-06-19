@@ -51,10 +51,12 @@ namespace MixItUp.WPF.Controls.Actions
                 FileActionTypeEnum fileType = EnumHelper.GetEnumValueFromString<FileActionTypeEnum>((string)this.FileActionTypeComboBox.SelectedItem);
                 if (fileType == FileActionTypeEnum.SaveToFile || fileType == FileActionTypeEnum.AppendToFile)
                 {
-                    if (!string.IsNullOrEmpty(this.SaveToFileTextTextBox.Text))
+                    string transferText = this.SaveToFileTextTextBox.Text;
+                    if (string.IsNullOrEmpty(transferText))
                     {
-                        return new FileAction(fileType, transferText: this.SaveToFileTextTextBox.Text, filePath: this.FilePathTextBox.Text);
+                        transferText = string.Empty;
                     }
+                    return new FileAction(fileType, transferText: this.SaveToFileTextTextBox.Text, filePath: this.FilePathTextBox.Text);
                 }
                 else if (fileType == FileActionTypeEnum.ReadFromFile || fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.ReadRandomLineFromFile)
                 {
