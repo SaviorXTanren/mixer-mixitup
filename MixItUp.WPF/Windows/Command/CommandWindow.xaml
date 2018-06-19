@@ -58,7 +58,7 @@
 
             <Button x:Name="AdvancedCommandButton" Grid.Row="6" Click="AdvancedCommandButton_Click">Advanced Command</Button>
 
-            <Button x:Name="DownloadFromStoreButton" Grid.Row="8" Click="DownloadFromStoreButton_Click">
+            <Button x:Name="DownloadFromStoreButton" Grid.Row="8" Click="DownloadFromStoreButton_Click" Visibility="Collapsed">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
