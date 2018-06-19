@@ -17,7 +17,10 @@ namespace MixItUp.Base.ViewModel.Import
         public ScorpBotRank(DbDataReader reader)
         {
             this.Name = (string)reader["Name"];
-            this.Amount = int.Parse((string)reader["Points_v3"]);
+
+            int amount = 0;
+            int.TryParse((string)reader["Points_v3"], out amount);
+            this.Amount = amount;
         }
     }
 }
