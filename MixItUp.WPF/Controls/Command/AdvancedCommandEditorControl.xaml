@@ -66,7 +66,7 @@
 
             <Button x:Name="ImportButton" Click="ImportButton_Click" Grid.Column="10" ToolTip="Import Actions From File" Content="{MaterialDesign:PackIcon Import}" />
 
-            <Button x:Name="UploadToMixItUpStoreButton" Click="UploadToMixItUpStoreButton_Click" Grid.Column="12" ToolTip="Upload to Mix It Up Store" Visibility="Collapsed">
+            <Button x:Name="UploadToMixItUpStoreButton" Click="UploadToMixItUpStoreButton_Click" Grid.Column="12" ToolTip="Upload to Mix It Up Store">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
