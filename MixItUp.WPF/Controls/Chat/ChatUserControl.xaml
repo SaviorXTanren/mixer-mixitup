@@ -14,7 +14,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" />
+        <UsersControls:UserProfileAvatarControl x:Name="UserAvatar" Grid.Column="0" Width="20" Height="20" />
 
         <Image x:Name="SubscriberImage" Grid.Column="1" Margin="5,0,0,0" Width="15" Height="15" VerticalAlignment="Center" Visibility="Collapsed" />
 

@@ -7,6 +7,8 @@ using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,12 +25,15 @@ namespace MixItUp.WPF.Controls.Store
         private CommandWindow window;
 
         private StoreDetailListingModel currentListing = null;
-
+        private ObservableCollection<ListingUserReviewControl> currentReviews = new ObservableCollection<ListingUserReviewControl>();
+        
         public MainStoreControl(CommandWindow window)
         {
             this.window = window;
 
             InitializeComponent();
+
+            this.ReviewsItemsControl.ItemsSource = this.currentReviews;
         }
 
         public async Task StoreListingSelected(StoreListingModel storeListing)
@@ -39,11 +44,18 @@ namespace MixItUp.WPF.Controls.Store
                 this.DetailsGrid.Visibility = Visibility.Visible;
                 this.BackButton.Visibility = Visibility.Visible;
 
+                this.DetailsUserAvatar.SetImageUrl(storeListing.UserAvatar);
                 this.RateReviewButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;
                 this.ReportButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;
                 this.RemoveButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Visible : Visibility.Collapsed;
 
                 this.DetailsGrid.DataContext = this.currentListing = await ChannelSession.Services.MixItUpService.GetStoreListing(storeListing.ID);
+
+                this.currentReviews.Clear();
+                foreach (StoreListingReviewModel review in this.currentListing.Reviews)
+                {
+                    this.currentReviews.Add(new ListingUserReviewControl(review));
+                }
             });
         }
 
@@ -250,6 +262,11 @@ namespace MixItUp.WPF.Controls.Store
             await this.CreateAndAddCategory(EnumHelper.GetEnumName(ActionTypeEnum.Chat));
             await this.CreateAndAddCategory(EnumHelper.GetEnumName(ActionTypeEnum.Overlay));
             await this.CreateAndAddCategory(EnumHelper.GetEnumName(ActionTypeEnum.StreamingSoftware));
+        }
+
+        private void HelpButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Mix-It-Up-Store");
         }
     }
 }

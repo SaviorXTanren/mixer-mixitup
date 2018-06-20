@@ -547,6 +547,9 @@
     <Compile Include="Controls\Store\ListingReviewDialogControl.xaml.cs">
       <DependentUpon>ListingReviewDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Store\ListingUserReviewControl.xaml.cs">
+      <DependentUpon>ListingUserReviewControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Store\MainStoreControl.xaml.cs">
       <DependentUpon>MainStoreControl.xaml</DependentUpon>
     </Compile>
@@ -1056,6 +1059,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Store\ListingReviewDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Store\ListingUserReviewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
