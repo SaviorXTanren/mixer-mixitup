@@ -36,6 +36,7 @@ namespace MixItUp.Base.Util
         public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
         public const string RandomNumberSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
+        public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
@@ -230,6 +231,15 @@ namespace MixItUp.Base.Util
                 if (currentlyPlaying != null)
                 {
                     this.ReplaceSpecialIdentifier("spotifycurrentlyplaying", currentlyPlaying.ToString());
+                }
+            }
+
+            if (this.ContainsSpecialIdentifier(FeaturedChannelsSpecialIdentifer))
+            {
+                IEnumerable<ExpandedChannelModel> featuredChannels = await ChannelSession.Connection.GetFeaturedChannels();
+                if (featuredChannels != null)
+                {
+                    this.ReplaceSpecialIdentifier(FeaturedChannelsSpecialIdentifer, string.Join(", ", featuredChannels.Select(c => "@" + c.user.username)));
                 }
             }
 
