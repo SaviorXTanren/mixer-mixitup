@@ -63,6 +63,8 @@
                 },
             });
 
+            var zIndexCounter = 0;
+
             var mainOverlayDiv = document.getElementById('mainOverlay');
             var noConnectionDiv = document.getElementById('noConnectionDiv');
             var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
@@ -262,6 +264,7 @@
 
                     var divContainer = document.createElement('div');
                     divContainer.style.cssText += 'position: absolute; width: 1920px; height: 1080px; max-width: 1920px; max-height: 1080px; min-width: 1920px; min-height: 1080px;';
+                    divContainer.style.zIndex = zIndexCounter++;
                     divContainer.appendChild(addedElement);
 
                     $(divContainer).animateCss(data.EntranceAnimationName, function () {
