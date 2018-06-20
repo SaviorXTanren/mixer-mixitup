@@ -46,8 +46,8 @@
 
         <Grid Grid.Row="2" Margin="10,0">
             <Border Style="{StaticResource DefaultBorder}">
-                <DataGrid x:Name="UserDataGridView" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
-                    <DataGrid.Columns>
+                <Controls:SortedDataGrid x:Name="UserDataGridView" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
+                    <Controls:SortedDataGrid.Columns>
                         <DataGridTextColumn Header="Username" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
                         <DataGridTextColumn Header="Minutes" Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="80" />
                         <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="100">
@@ -56,6 +56,11 @@
                                     <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
+                                    <Setter Property="ToolTip" Value="Primary Currency" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding RankNameAndPoints}" IsReadOnly="True" Width="200">
                             <DataGridTextColumn.Header>
@@ -63,6 +68,11 @@
                                     <MaterialDesign:PackIcon Kind="Wunderlist" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell" BasedOn="{StaticResource StandardDataGridCell}">
+                                    <Setter Property="ToolTip" Value="Primary Rank" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
                         <DataGridTemplateColumn Header="Actions" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
@@ -85,8 +95,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                    </Controls:SortedDataGrid.Columns>
+                </Controls:SortedDataGrid>
             </Border>
         </Grid>
     </Grid>

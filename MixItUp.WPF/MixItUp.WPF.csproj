@@ -531,6 +531,7 @@
     <Compile Include="Controls\MainControls\TimerControl.xaml.cs">
       <DependentUpon>TimerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SortedDataGrid.cs" />
     <Compile Include="Controls\Statistics\StatisticsOverviewControl.xaml.cs">
       <DependentUpon>StatisticsOverviewControl.xaml</DependentUpon>
     </Compile>
