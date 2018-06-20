@@ -359,10 +359,9 @@ namespace MixItUp.Desktop.Services
             ChannelSession.ReconnectionOccurred("OBS");
         }
 
-        private async void OBSWebsocket_Disconnected(object sender, EventArgs e)
+        private void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("OBS");
-            await this.DisconnectOBSStudio();
         }
 
         private void XSplitServer_Connected(object sender, EventArgs e)

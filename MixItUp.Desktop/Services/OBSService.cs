@@ -63,8 +63,9 @@ namespace MixItUp.OBS
         {
             if (this.OBSWebsocket != null)
             {
-                this.Disconnected(this, new EventArgs());
+                this.OBSWebsocket.Disconnected -= OBSWebsocket_Disconnected;
                 this.OBSWebsocket.Disconnect();
+                this.Disconnected(this, new EventArgs());
                 this.OBSWebsocket = null;
             }
             return Task.FromResult(0);
@@ -153,13 +154,15 @@ namespace MixItUp.OBS
             return Task.FromResult(0);
         }
 
-        private void OBSWebsocket_Disconnected(object sender, EventArgs e)
+        private async void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
-            this.Disconnect();
-            if (this.Disconnected != null)
+            await this.Disconnect();
+
+            do
             {
-                this.Disconnected(this, new EventArgs());
+                await Task.Delay(2500);
             }
+            while (!await this.Connect());
         }
     }
 }
