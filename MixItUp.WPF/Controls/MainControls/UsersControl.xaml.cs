@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -116,6 +117,36 @@ namespace MixItUp.WPF.Controls.MainControls
         private void UserDataGridView_Sorted(object sender, DataGridColumn column)
         {
             this.RefreshList(column);
+        }
+
+        private async void ExportUserDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog("User Data.txt");
+                if (!string.IsNullOrEmpty(filePath))
+                {
+                    StringBuilder fileContents = new StringBuilder();
+                    fileContents.Append("User ID\tUsername\tViewing Minutes\tOffline Viewing Minutes");
+                    foreach (var kvp in ChannelSession.Settings.Currencies.ToDictionary())
+                    {
+                        fileContents.Append("\t" + kvp.Value.Name);
+                    }
+                    fileContents.AppendLine();
+
+                    foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values.ToList())
+                    {
+                        fileContents.Append(string.Format("{0}\t{1}\t{2}\t{3}", userData.ID, userData.UserName, userData.ViewingMinutes, userData.OfflineViewingMinutes));
+                        foreach (var kvp in ChannelSession.Settings.Currencies.ToDictionary())
+                        {
+                            fileContents.Append("\t" + userData.GetCurrencyAmount(kvp.Value));
+                        }
+                        fileContents.AppendLine();
+                    }
+
+                    await ChannelSession.Services.FileService.SaveFile(filePath, fileContents.ToString());
+                }
+            });
         }
     }
 }

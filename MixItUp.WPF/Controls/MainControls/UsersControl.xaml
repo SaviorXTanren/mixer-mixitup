@@ -21,6 +21,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" HorizontalAlignment="Center">
@@ -99,5 +101,7 @@
                 </Controls:SortedDataGrid>
             </Border>
         </Grid>
+
+        <Button x:Name="ExportUserDataButton" Grid.Row="4" Width="120" Click="ExportUserDataButton_Click">Export Data</Button>
     </Grid>
 </local:MainControlBase>
