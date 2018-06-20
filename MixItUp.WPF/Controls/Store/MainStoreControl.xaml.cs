@@ -248,8 +248,8 @@ namespace MixItUp.WPF.Controls.Store
 
             this.CategoriesStackPanel.Children.Clear();
             await this.CreateAndAddCategory(EnumHelper.GetEnumName(ActionTypeEnum.Chat));
-            await this.CreateAndAddCategory(StoreListingModel.DonationTag);
             await this.CreateAndAddCategory(EnumHelper.GetEnumName(ActionTypeEnum.Overlay));
+            await this.CreateAndAddCategory(EnumHelper.GetEnumName(ActionTypeEnum.StreamingSoftware));
         }
     }
 }

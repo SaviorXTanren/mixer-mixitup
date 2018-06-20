@@ -32,6 +32,7 @@ namespace MixItUp.Base.Model.Store
             {
                 List<string> tags = new List<string>();
                 tags.AddRange(EnumHelper.GetEnumNames<ActionTypeEnum>());
+                tags.Remove(EnumHelper.GetEnumName(ActionTypeEnum.Custom));
                 tags.Add(StoreListingModel.FollowTag);
                 tags.Add(StoreListingModel.HostTag);
                 tags.Add(StoreListingModel.DonationTag);
