@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
@@ -78,7 +79,9 @@ namespace MixItUp.WPF.Controls.Store
                 StoreDetailListingModel listingDetails = await ChannelSession.Services.MixItUpService.GetStoreListing(this.currentListing.ID);
                 await ChannelSession.Services.MixItUpService.AddStoreListingDownload(this.currentListing);
 
-                IEnumerable<ActionBase> actions = listingDetails.GetActions();
+                List<ActionBase> actions = listingDetails.GetActions();
+
+                StoreCommandUpgrader.PerformUpgrades(actions, listingDetails.AppVersion);
 
                 if (listingDetails.AssetsIncluded && listingDetails.AssetData != null && listingDetails.AssetData.Length > 0)
                 {

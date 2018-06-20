@@ -4,19 +4,10 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Actions
 {
-    public enum CurrencyGiveToTypeEnum
-    {
-        [Name("Current User")]
-        CurrentUser,
-        [Name("Specific User")]
-        SpecificUser,
-        [Name("All Chat Users")]
-        AllChatUsers
-    }
-
     /// <summary>
     /// Interaction logic for CurrencyActionControl.xaml
     /// </summary>
@@ -31,7 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
-            this.GiveToComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyGiveToTypeEnum>();
+            this.CurrencyActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyActionTypeEnum>();
 
             if (this.action != null)
             {
@@ -40,49 +31,30 @@ namespace MixItUp.WPF.Controls.Actions
                     this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.action.CurrencyID];
                 }
 
+                this.CurrencyActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.CurrencyActionType);
                 this.CurrencyAmountTextBox.Text = this.action.Amount.ToString();
-                if (!string.IsNullOrEmpty(this.action.Username))
-                {
-                    this.GiveToComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyGiveToTypeEnum.SpecificUser);
-                }
-                else if (this.action.GiveToAllUsers)
-                {
-                    this.GiveToComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyGiveToTypeEnum.AllChatUsers);
-                }
-                else
-                {
-                    this.GiveToComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyGiveToTypeEnum.CurrentUser);
-                }
-
                 this.CurrencyUsernameTextBox.Text = this.action.Username;
-
                 this.DeductFromUserToggleButton.IsChecked = this.action.DeductFromUser;
-                this.CurrencyWhisperToggleButton.IsChecked = this.action.IsWhisper;
-                this.CurrencyMessageTextBox.Text = this.action.ChatText;
             }
             return Task.FromResult(0);
         }
 
         public override ActionBase GetAction()
         {
-            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) && this.GiveToComboBox.SelectedIndex >= 0)
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyActionTypeComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text))
             {
-                CurrencyGiveToTypeEnum giveTo = EnumHelper.GetEnumValueFromString<CurrencyGiveToTypeEnum>((string)this.GiveToComboBox.SelectedItem);
-                if (giveTo == CurrencyGiveToTypeEnum.SpecificUser)
+                UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
+                CurrencyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<CurrencyActionTypeEnum>((string)this.CurrencyActionTypeComboBox.SelectedItem);
+                
+                if (actionType == CurrencyActionTypeEnum.GiveToSpecificUser)
                 {
                     if (string.IsNullOrEmpty(this.CurrencyUsernameTextBox.Text))
                     {
                         return null;
                     }
                 }
-                else
-                {
-                    this.CurrencyUsernameTextBox.Text = null;
-                }
 
-                UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
-                return new CurrencyAction(currency, this.CurrencyUsernameTextBox.Text, (giveTo == CurrencyGiveToTypeEnum.AllChatUsers), this.CurrencyAmountTextBox.Text,
-                    this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault(), this.CurrencyMessageTextBox.Text, this.CurrencyWhisperToggleButton.IsChecked.GetValueOrDefault());
+                return new CurrencyAction(currency, actionType, this.CurrencyAmountTextBox.Text, this.CurrencyUsernameTextBox.Text, this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
             }
             return null;
         }
@@ -91,17 +63,19 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.CurrencyTypeComboBox.SelectedIndex >= 0)
             {
-                this.CurrencyUsernameTextBox.IsEnabled = true;
-                this.CurrencyAmountTextBox.IsEnabled = true;
+                this.CurrencyActionTypeComboBox.IsEnabled = this.CurrencyUsernameTextBox.IsEnabled = this.CurrencyAmountTextBox.IsEnabled =
+                    this.DeductFromUserTextBlock.IsEnabled = this.DeductFromUserToggleButton.IsEnabled = true;
             }
         }
 
-        private void GiveToComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CurrencyActionTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.GiveToComboBox.SelectedIndex >= 0)
+            if (this.CurrencyActionTypeComboBox.SelectedIndex >= 0)
             {
-                CurrencyGiveToTypeEnum giveTo = EnumHelper.GetEnumValueFromString<CurrencyGiveToTypeEnum>((string)this.GiveToComboBox.SelectedItem);
-                this.CurrencyUsernameTextBox.IsEnabled = (giveTo == CurrencyGiveToTypeEnum.SpecificUser);
+                CurrencyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<CurrencyActionTypeEnum>((string)this.CurrencyActionTypeComboBox.SelectedItem);
+                this.GiveToGrid.Visibility = (actionType == CurrencyActionTypeEnum.GiveToSpecificUser || actionType == CurrencyActionTypeEnum.GiveToAllChatUsers) ?
+                    Visibility.Visible : Visibility.Collapsed;
+                this.CurrencyUsernameTextBox.Visibility = (actionType == CurrencyActionTypeEnum.GiveToSpecificUser) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
     }

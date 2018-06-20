@@ -49,13 +49,12 @@ namespace MixItUp.Desktop.Services
 
         internal static async Task UpgradeSettingsToLatest(int version, string filePath)
         {
-            await DesktopSettingsUpgrader.Version11Upgrade(version, filePath);
-            await DesktopSettingsUpgrader.Version12Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version13Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version14Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version15Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version16Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version17Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version18Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -63,118 +62,6 @@ namespace MixItUp.Desktop.Services
             settings.Version = DesktopChannelSettings.LatestVersion;
 
             await ChannelSession.Services.Settings.Save(settings);
-        }
-
-        private static async Task Version11Upgrade(int version, string filePath)
-        {
-            if (version < 11)
-            {
-                string data = File.ReadAllText(filePath);
-                data = data.Replace("MixItUp.Base.Actions.OverlayAction, MixItUp.Base", "MixItUp.Desktop.Services.LegacyOverlayAction, MixItUp.Desktop");
-                DesktopChannelSettings legacySettings = SerializerHelper.DeserializeFromString<DesktopChannelSettings>(data);
-                await ChannelSession.Services.Settings.Initialize(legacySettings);
-
-                Dictionary<Guid, LegacyOverlayAction> legacyOverlayActions = new Dictionary<Guid, LegacyOverlayAction>();
-
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(legacySettings.ChatCommands);
-                commands.AddRange(legacySettings.EventCommands);
-                commands.AddRange(legacySettings.InteractiveCommands);
-                commands.AddRange(legacySettings.TimerCommands);
-                commands.AddRange(legacySettings.ActionGroupCommands);
-                commands.AddRange(legacySettings.GameCommands);
-                commands.AddRange(legacySettings.RemoteCommands);
-                foreach (CommandBase command in commands)
-                {
-                    foreach (ActionBase action in command.Actions)
-                    {
-                        if (action is LegacyOverlayAction)
-                        {
-                            legacyOverlayActions[action.ID] = (LegacyOverlayAction)action;
-                        }
-                    }
-                }
-
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                commands.Clear();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.EventCommands);
-                commands.AddRange(settings.InteractiveCommands);
-                commands.AddRange(settings.TimerCommands);
-                commands.AddRange(settings.ActionGroupCommands);
-                commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
-                foreach (CommandBase command in commands)
-                {
-                    foreach (ActionBase action in command.Actions)
-                    {
-                        if (action is OverlayAction && legacyOverlayActions.ContainsKey(action.ID))
-                        {
-                            OverlayAction overlayAction = (OverlayAction)action;
-                            LegacyOverlayAction legacyOverlayAction = legacyOverlayActions[action.ID];
-
-                            OverlayEffectEntranceAnimationTypeEnum entrance = OverlayEffectEntranceAnimationTypeEnum.None;
-                            OverlayEffectExitAnimationTypeEnum exit = OverlayEffectExitAnimationTypeEnum.None;
-                            if (legacyOverlayAction.FadeDuration > 0)
-                            {
-                                entrance = OverlayEffectEntranceAnimationTypeEnum.FadeIn;
-                                exit = OverlayEffectExitAnimationTypeEnum.FadeOut;
-                            }
-
-                            if (!string.IsNullOrEmpty(legacyOverlayAction.ImagePath))
-                            {
-                                overlayAction.Effect = new OverlayImageEffect(legacyOverlayAction.ImagePath, legacyOverlayAction.ImageWidth, legacyOverlayAction.ImageHeight,
-                                    entrance, OverlayEffectVisibleAnimationTypeEnum.None, exit, legacyOverlayAction.Duration, legacyOverlayAction.Horizontal, legacyOverlayAction.Vertical);
-                            }
-                            else if (!string.IsNullOrEmpty(legacyOverlayAction.Text))
-                            {
-                                overlayAction.Effect = new OverlayTextEffect(legacyOverlayAction.Text, legacyOverlayAction.Color, legacyOverlayAction.FontSize,
-                                    entrance, OverlayEffectVisibleAnimationTypeEnum.None, exit, legacyOverlayAction.Duration, legacyOverlayAction.Horizontal, legacyOverlayAction.Vertical);
-                            }
-                            else if (!string.IsNullOrEmpty(legacyOverlayAction.youtubeVideoID))
-                            {
-                                overlayAction.Effect = new OverlayYoutubeEffect(legacyOverlayAction.youtubeVideoID, legacyOverlayAction.youtubeStartTime, legacyOverlayAction.VideoWidth,
-                                    legacyOverlayAction.VideoHeight, entrance, OverlayEffectVisibleAnimationTypeEnum.None, exit, legacyOverlayAction.Duration, legacyOverlayAction.Horizontal,
-                                    legacyOverlayAction.Vertical);
-                            }
-                            else if (!string.IsNullOrEmpty(legacyOverlayAction.localVideoFilePath))
-                            {
-                                overlayAction.Effect = new OverlayVideoEffect(legacyOverlayAction.localVideoFilePath, legacyOverlayAction.VideoWidth, legacyOverlayAction.VideoHeight,
-                                    entrance, OverlayEffectVisibleAnimationTypeEnum.None, exit, legacyOverlayAction.Duration, legacyOverlayAction.Horizontal, legacyOverlayAction.Vertical);
-                            }
-                            else if (!string.IsNullOrEmpty(legacyOverlayAction.HTMLText))
-                            {
-                                overlayAction.Effect = new OverlayHTMLEffect(legacyOverlayAction.HTMLText, entrance, OverlayEffectVisibleAnimationTypeEnum.None, exit, legacyOverlayAction.Duration,
-                                    legacyOverlayAction.Horizontal, legacyOverlayAction.Vertical);
-                            }
-                        }
-                        else if (action is CounterAction)
-                        {
-                            CounterAction counterAction = (CounterAction)action;
-                            if (counterAction.SaveToFile)
-                            {
-                                counterAction.ResetOnLoad = !counterAction.ResetOnLoad;
-                            }
-                        }
-                    }
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
-        }
-
-        private static async Task Version12Upgrade(int version, string filePath)
-        {
-            if (version < 12)
-            {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-                SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(settings));
-
-                await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN CustomCommands TEXT");
-                await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN Options TEXT");
-            }
         }
 
         private static async Task Version13Upgrade(int version, string filePath)
@@ -455,6 +342,30 @@ namespace MixItUp.Desktop.Services
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
                 await ChannelSession.Services.Settings.Initialize(settings);
                 settings.GiveawayTimer = Math.Max(settings.GiveawayTimer / 60, 1);
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version18Upgrade(int version, string filePath)
+        {
+            if (version < 18)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                List<CommandBase> commands = new List<CommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.EventCommands);
+                commands.AddRange(settings.InteractiveCommands);
+                commands.AddRange(settings.TimerCommands);
+                commands.AddRange(settings.ActionGroupCommands);
+                commands.AddRange(settings.GameCommands);
+                commands.AddRange(settings.RemoteCommands);
+                foreach (CommandBase command in commands)
+                {
+                    StoreCommandUpgrader.SeperateChatFromCurrencyActions(command.Actions);
+                }
+
                 await ChannelSession.Services.Settings.Save(settings);
             }
         }
