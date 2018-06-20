@@ -708,7 +708,7 @@ namespace MixItUp.Base.Commands
         }
 
         public XboxGameChatCommand()
-            : base("Xbox Game", new List<string>() { "xboxgame", "xbox" }, 5, MixerRoleEnum.User)
+            : base("Xbox Game", new List<string>() { "xboxgame" }, 5, MixerRoleEnum.User)
         {
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
