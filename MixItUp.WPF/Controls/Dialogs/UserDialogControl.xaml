@@ -101,7 +101,7 @@
             <TextBlock Grid.Column="6" Text="{Binding Data.PrimaryCurrency}" VerticalAlignment="Center" />
 
             <MaterialDesign:PackIcon Kind="Wunderlist" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="8" />
-            <TextBlock Grid.Column="10" Text="{Binding Data.RankNameAndPoints}" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="10" Text="{Binding Data.PrimaryRankNameAndPoints}" VerticalAlignment="Center" />
 
         </Grid>
 

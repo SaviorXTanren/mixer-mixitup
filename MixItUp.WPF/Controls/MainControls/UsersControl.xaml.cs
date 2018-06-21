@@ -60,7 +60,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (columnIndex == 0) { data = data.OrderBy(u => u.UserName); }
                 if (columnIndex == 1) { data = data.OrderBy(u => u.ViewingMinutes); }
                 if (columnIndex == 2) { data = data.OrderBy(u => u.PrimaryCurrency); }
-                if (columnIndex == 3) { data = data.OrderBy(u => u.RankNameAndPoints); }
+                if (columnIndex == 3) { data = data.OrderBy(u => u.PrimaryRankPoints); }
 
                 if (sortColumn.SortDirection.GetValueOrDefault() == ListSortDirection.Descending)
                 {

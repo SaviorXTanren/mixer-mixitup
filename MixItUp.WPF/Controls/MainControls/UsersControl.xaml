@@ -51,10 +51,10 @@
                 <Controls:SortedDataGrid x:Name="UserDataGridView" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
                     <Controls:SortedDataGrid.Columns>
                         <DataGridTextColumn Header="Username" Binding="{Binding UserName}" IsReadOnly="True" Width="*" />
-                        <DataGridTextColumn Header="Minutes" Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="80" />
+                        <DataGridTextColumn Header="Online Minutes" Binding="{Binding ViewingMinutes}" IsReadOnly="True" Width="120" />
                         <DataGridTextColumn Binding="{Binding PrimaryCurrency}" IsReadOnly="True" Width="100">
                             <DataGridTextColumn.Header>
-                                <Grid HorizontalAlignment="Center" Margin="26,0,0,0">
+                                <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                     <MaterialDesign:PackIcon Kind="Coin" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>
@@ -64,9 +64,9 @@
                                 </Style>
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding RankNameAndPoints}" IsReadOnly="True" Width="200">
+                        <DataGridTextColumn Binding="{Binding PrimaryRankPoints}" IsReadOnly="True" Width="100">
                             <DataGridTextColumn.Header>
-                                <Grid HorizontalAlignment="Center" Margin="76,0,0,0">
+                                <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                     <MaterialDesign:PackIcon Kind="Wunderlist" Height="24" Width="24" />
                                 </Grid>
                             </DataGridTextColumn.Header>

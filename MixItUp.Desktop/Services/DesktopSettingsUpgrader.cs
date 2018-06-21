@@ -33,7 +33,7 @@ namespace MixItUp.Desktop.Services
         private class LegacyUserDataViewModel : UserDataViewModel
         {
             [DataMember]
-            public new int RankPoints { get; set; }
+            public int RankPoints { get; set; }
 
             [DataMember]
             public int CurrencyAmount { get; set; }

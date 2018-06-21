@@ -214,21 +214,21 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string RankPoints
+        public int PrimaryRankPoints
         {
             get
             {
                 UserCurrencyDataViewModel currency = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.IsRank);
                 if (currency != null)
                 {
-                    return currency.Amount.ToString();
+                    return currency.Amount;
                 }
-                return "0";
+                return 0;
             }
         }
 
         [JsonIgnore]
-        public string RankName
+        public string PrimaryRankName
         {
             get
             {
@@ -237,11 +237,11 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public string RankNameAndPoints
+        public string PrimaryRankNameAndPoints
         {
             get
             {
-                return string.Format("{0} - {1}", this.RankName, this.RankPoints);
+                return string.Format("{0} - {1}", this.PrimaryRankName, this.PrimaryRankPoints);
             }
         }
 

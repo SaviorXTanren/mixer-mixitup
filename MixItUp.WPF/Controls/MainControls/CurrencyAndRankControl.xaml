@@ -132,7 +132,7 @@
                                             <TextBlock Text="{Binding UserRankNameSpecialIdentifier}" />
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock>$arg1</TextBlock>
+                                            <TextBlock>$target</TextBlock>
                                             <TextBlock Text="{Binding UserRankNameSpecialIdentifier}" />
                                         </StackPanel>
                                     </StackPanel>
