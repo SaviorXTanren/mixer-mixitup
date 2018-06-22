@@ -57,7 +57,7 @@ namespace MixItUp.XSplit
 
         public async Task<bool> Connect() { return await this.Initialize(); }
 
-        public async Task Disconnect() { await this.Disconnect(); }
+        public async Task Disconnect() { await base.Disconnect(); }
 
         public async Task ShowScene(string sceneName)
         {
