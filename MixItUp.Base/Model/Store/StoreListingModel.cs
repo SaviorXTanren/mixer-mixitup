@@ -101,9 +101,6 @@ namespace MixItUp.Base.Model.Store
         public bool IsCommandOwnedByUser { get { return (this.User != null && this.User.id.Equals(ChannelSession.User.id)); } }
 
         [JsonIgnore]
-        public bool IsSameAppVersion { get { return ChannelSession.Services.FileService.GetApplicationVersion().Trim().Equals(this.AppVersion.Trim()); } }
-
-        [JsonIgnore]
         public string UserName { get { return (this.User != null) ? this.User.username : "Unknown"; } }
         [JsonIgnore]
         public string UserAvatar { get { return (this.User != null && !string.IsNullOrEmpty(this.User.avatarUrl)) ? this.User.avatarUrl : UserViewModel.DefaultAvatarLink; } }

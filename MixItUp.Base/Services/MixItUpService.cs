@@ -47,6 +47,7 @@ namespace MixItUp.Base.Services
     public class MixItUpService : IMixItUpService, IDisposable
     {
         public const string MixItUpAPIEndpoint = "https://mixitupapi.azurewebsites.net/api/";
+        //public const string MixItUpAPIEndpoint = "http://localhost:33901/api/"; // Dev Endpoint
 
         private OAuthTokenModel token = null;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -69,7 +70,7 @@ namespace MixItUp.Base.Services
         public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
 
         public async Task SendLoginEvent(LoginEvent login) { await this.PostAsync("login", login); }
-        public async Task SendErrorEvent(ErrorEvent error) { await this.PostAsync("error", error); }
+        public async Task SendErrorEvent(ErrorEvent error) { await this.PostAsync("error", error, logException: false); }
 
         public async Task SendIssueReport(IssueReportModel report) { await this.PostAsync("issuereport", report); }
 
@@ -131,13 +132,17 @@ namespace MixItUp.Base.Services
                         string content = await response.Content.ReadAsStringAsync();
                         return SerializerHelper.DeserializeFromString<T>(content);
                     }
+                    else
+                    {
+                        await this.ProcessResponseIfError(response);
+                    }
                 }
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
             return default(T);
         }
 
-        private async Task PostAsync(string endpoint, object data)
+        private async Task PostAsync(string endpoint, object data, bool logException = true)
         {
             try
             {
@@ -145,9 +150,16 @@ namespace MixItUp.Base.Services
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PostAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
+                    await this.ProcessResponseIfError(response);
                 }
             }
-            catch (Exception) { }
+            catch (Exception ex)
+            {
+                if (logException)
+                {
+                    Logger.Log(ex);
+                }
+            }
         }
 
         private async Task<T> PostAsyncWithResult<T>(string endpoint, object data)
@@ -163,9 +175,13 @@ namespace MixItUp.Base.Services
                         string resultContent = await response.Content.ReadAsStringAsync();
                         return SerializerHelper.DeserializeFromString<T>(resultContent);
                     }
+                    else
+                    {
+                        await this.ProcessResponseIfError(response);
+                    }
                 }
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
             return default(T);
         }
 
@@ -177,9 +193,10 @@ namespace MixItUp.Base.Services
                 {
                     string content = SerializerHelper.SerializeToString(data);
                     HttpResponseMessage response = await client.PutAsync(endpoint, new StringContent(content, Encoding.UTF8, "application/json"));
+                    await this.ProcessResponseIfError(response);
                 }
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async Task PatchAsync(string endpoint, object data)
@@ -192,9 +209,10 @@ namespace MixItUp.Base.Services
                     HttpRequestMessage message = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint);
                     message.Content = new StringContent(content, Encoding.UTF8, "application/json");
                     HttpResponseMessage response = await client.SendAsync(message);
+                    await this.ProcessResponseIfError(response);
                 }
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async Task DeleteAsync(string endpoint)
@@ -204,9 +222,10 @@ namespace MixItUp.Base.Services
                 using (HttpClientWrapper client = new HttpClientWrapper(MixItUpAPIEndpoint))
                 {
                     HttpResponseMessage response = await client.DeleteAsync(endpoint);
+                    await this.ProcessResponseIfError(response);
                 }
             }
-            catch (Exception) { }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private async Task SetStoreListingUsers(IEnumerable<StoreListingModel> listings)
@@ -236,6 +255,15 @@ namespace MixItUp.Base.Services
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
 
                 await Task.Delay(60000);
+            }
+        }
+
+        private async Task ProcessResponseIfError(HttpResponseMessage response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                string resultContent = await response.Content.ReadAsStringAsync();
+                Logger.Log(resultContent);
             }
         }
 
