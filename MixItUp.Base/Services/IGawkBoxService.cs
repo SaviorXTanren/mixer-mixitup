@@ -46,7 +46,6 @@ namespace MixItUp.Base.Services
                 ImageLink = this.Gifts.FirstOrDefault().ImageLink,
 
                 Amount = Math.Round(this.TotalAmount, 2),
-                AmountText = string.Format("{0:C}", this.TotalAmount),
 
                 DateTime = DateTimeOffset.Now,
             };

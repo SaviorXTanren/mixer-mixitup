@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
@@ -27,10 +28,11 @@ namespace MixItUp.Base.Model.User
 
         [DataMember]
         public double Amount { get; set; }
-        [DataMember]
-        public string AmountText { get; set; }
 
         [DataMember]
         public DateTimeOffset DateTime { get; set; }
+
+        [JsonIgnore]
+        public string AmountText { get { return string.Format("{0:C}", Math.Round(this.Amount, 2)); } }
     }
 }

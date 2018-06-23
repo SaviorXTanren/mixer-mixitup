@@ -89,7 +89,6 @@ namespace MixItUp.Base.Services
                 Message = this.Comment,
 
                 Amount = Math.Round(this.Amount, 2),
-                AmountText = string.Format("{0:C}", this.Amount),
 
                 DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.CompletedAtTimestamp),
             };

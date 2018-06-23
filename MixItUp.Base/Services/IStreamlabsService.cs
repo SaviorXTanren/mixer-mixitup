@@ -18,13 +18,21 @@ namespace MixItUp.Base.Services
         public string Message { get; set; }
 
         [JsonProperty("amount")]
-        public string Amount { get; set; }
+        public string AmountString { get; set; }
 
         [JsonProperty("created_at")]
         public long CreatedAt { get; set; }
 
         [JsonIgnore]
-        public double AmountValue { get { return Math.Round(double.Parse(this.Amount), 2); } }
+        public double Amount
+        {
+            get
+            {
+                double amount = 0;
+                double.TryParse(this.AmountString, out amount);
+                return amount;
+            }
+        }
 
         public StreamlabsDonation()
         {
@@ -41,8 +49,7 @@ namespace MixItUp.Base.Services
                 UserName = this.UserName,
                 Message = this.Message,
 
-                Amount = Math.Round(this.AmountValue, 2),
-                AmountText = string.Format("{0:C}", this.Amount),
+                Amount = Math.Round(this.Amount, 2),
 
                 DateTime = DateTimeHelper.UnixTimestampToDateTimeOffset(this.CreatedAt),
             };
