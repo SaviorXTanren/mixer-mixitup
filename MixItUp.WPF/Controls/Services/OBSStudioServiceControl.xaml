@@ -26,7 +26,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">Requires OBS 21.1 or higher</TextBlock>
-                <TextBlock Grid.Row="1" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">(OBS-FTL &amp; StreamLabs OBS NOT supported)</TextBlock>
+                <TextBlock Grid.Row="1" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">(OBS-FTL NOT supported)</TextBlock>
 
                 <TextBlock Grid.Row="3" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">The OBS WebSocket must be installed from the <Hyperlink NavigateUri="OBS" RequestNavigate="Hyperlink_RequestNavigate">OBS Folder</Hyperlink> in the Mix It Up install folder</TextBlock>
             </Grid>
