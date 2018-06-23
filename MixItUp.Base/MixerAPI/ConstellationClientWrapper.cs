@@ -214,27 +214,32 @@ namespace MixItUp.Base.MixerAPI
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()))
             {
-                int viewerCount = 0;
-                if (channel != null)
+                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString()))
                 {
-                    viewerCount = (int)channel.viewersCurrent;
-                }
+                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString());
 
-                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                {
-                    user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
-                }
+                    int viewerCount = 0;
+                    if (channel != null)
+                    {
+                        viewerCount = (int)channel.viewersCurrent;
+                    }
 
-                if (this.OnHostedOccurred != null)
-                {
-                    this.OnHostedOccurred(this, new Tuple<UserViewModel, int>(user, viewerCount));
-                }
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
+                    }
 
-                EventCommand command = this.FindMatchingEventCommand(e.channel);
-                if (command != null)
-                {
-                    command.AddSpecialIdentifier("hostviewercount", viewerCount.ToString());
-                    await this.RunEventCommand(command, user);
+                    if (this.OnHostedOccurred != null)
+                    {
+                        this.OnHostedOccurred(this, new Tuple<UserViewModel, int>(user, viewerCount));
+                    }
+
+                    EventCommand command = this.FindMatchingEventCommand(e.channel);
+                    if (command != null)
+                    {
+                        command.AddSpecialIdentifier("hostviewercount", viewerCount.ToString());
+                        await this.RunEventCommand(command, user);
+                    }
                 }
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
