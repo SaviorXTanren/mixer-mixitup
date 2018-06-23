@@ -1,7 +1,5 @@
-﻿using Mixer.Base.Model.OAuth;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.WPF.Util;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -24,6 +22,7 @@ namespace MixItUp.WPF.Controls.Services
             if (ChannelSession.Settings.BotOAuthToken != null)
             {
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
+                this.NewBotLoginGrid.Visibility = Visibility.Collapsed;
 
                 this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
                 if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
@@ -36,6 +35,7 @@ namespace MixItUp.WPF.Controls.Services
             else
             {
                 this.NewBotLoginGrid.Visibility = Visibility.Visible;
+                this.ExistingBotGrid.Visibility = Visibility.Collapsed;
             }
 
             return base.OnLoaded();
@@ -45,13 +45,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             bool result = await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.ConnectBot((OAuthShortCodeModel shortCode) =>
-                {
-                    this.BotShortCodeTextBox.IsEnabled = true;
-                    this.BotShortCodeTextBox.Text = shortCode.code;
-
-                    Process.Start("https://mixer.com/oauth/shortcode?approval_prompt=force&code=" + shortCode.code);
-                });
+                return await ChannelSession.ConnectBot();
             });
 
             if (!result)

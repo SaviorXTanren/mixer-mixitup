@@ -239,13 +239,20 @@ namespace MixItUp.Base
             return result;
         }
 
-        public static async Task<bool> ConnectBot(Action<OAuthShortCodeModel> callback)
+        public static async Task<bool> ConnectBot()
         {
-            MixerConnection connection = await MixerConnection.ConnectViaShortCode(ChannelSession.ClientID, ChannelSession.BotScopes, callback);
-            if (connection != null)
+            try
             {
-                ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
-                return await ChannelSession.InitializeBotInternal();
+                MixerConnection connection = await MixerConnection.ConnectViaLocalhostOAuthBrowser(ChannelSession.ClientID, ChannelSession.BotScopes, false, loginSuccessHtmlPageFilePath: OAuthServiceBase.LoginRedirectPageFileName);
+                if (connection != null)
+                {
+                    ChannelSession.BotConnection = new MixerConnectionWrapper(connection);
+                    return await ChannelSession.InitializeBotInternal();
+                }
+            }
+            catch (Exception ex)
+            {
+                Util.Logger.Log(ex);
             }
             return false;
         }

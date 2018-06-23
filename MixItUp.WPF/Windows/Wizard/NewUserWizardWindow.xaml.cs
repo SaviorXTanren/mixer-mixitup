@@ -173,12 +173,7 @@ namespace MixItUp.WPF.Windows.Wizard
         {
             bool result = await this.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.ConnectBot((OAuthShortCodeModel shortCode) =>
-                {
-                    this.BotLoginShortCodeTextBox.Text = shortCode.code;
-
-                    Process.Start("https://mixer.com/oauth/shortcode?approval_prompt=force&code=" + shortCode.code);
-                });
+                return await ChannelSession.ConnectBot();
             });
 
             if (result)

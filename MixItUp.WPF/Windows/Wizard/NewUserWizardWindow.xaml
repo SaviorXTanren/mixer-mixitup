@@ -71,14 +71,9 @@
                             <Grid Grid.Column="2" x:Name="BotLogInGrid" Visibility="Visible" HorizontalAlignment="Right">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" x:Name="BotLogInButton" Click="BotLogInButton_Click">Bot Log In</Button>
-
-                                <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,0,0,40">Short Code:</TextBlock>
-                                <TextBox Grid.Column="2" x:Name="BotLoginShortCodeTextBox" IsReadOnly="True" VerticalAlignment="Center" />
                             </Grid>
 
                             <Grid Grid.Column="2" x:Name="BotLoggedInGrid" Visibility="Hidden" HorizontalAlignment="Right">
