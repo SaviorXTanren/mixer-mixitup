@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -15,19 +16,27 @@ namespace MixItUp.Base.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return WaitAction.asyncSemaphore; } }
 
         [DataMember]
+        [Obsolete]
         public double WaitAmount { get; set; }
+
+        [DataMember]
+        public string Amount { get; set; }
 
         public WaitAction() : base(ActionTypeEnum.Wait) { }
 
-        public WaitAction(double waitAmount)
+        public WaitAction(string amount)
             : this()
         {
-            this.WaitAmount = waitAmount;
+            this.Amount = amount;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            await Task.Delay((int)(1000 * this.WaitAmount));
+            string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
+            if (double.TryParse(amountText, out double amount))
+            {
+                await Task.Delay((int)(1000 * amount));
+            }
         }
     }
 }

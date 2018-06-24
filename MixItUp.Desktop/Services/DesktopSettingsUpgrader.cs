@@ -49,9 +49,6 @@ namespace MixItUp.Desktop.Services
 
         internal static async Task UpgradeSettingsToLatest(int version, string filePath)
         {
-            await DesktopSettingsUpgrader.Version13Upgrade(version, filePath);
-            await DesktopSettingsUpgrader.Version14Upgrade(version, filePath);
-            await DesktopSettingsUpgrader.Version15Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version16Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version17Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version18Upgrade(version, filePath);
@@ -62,178 +59,6 @@ namespace MixItUp.Desktop.Services
             settings.Version = DesktopChannelSettings.LatestVersion;
 
             await ChannelSession.Services.Settings.Save(settings);
-        }
-
-        private static async Task Version13Upgrade(int version, string filePath)
-        {
-            if (version < 13)
-            {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<LegacyDesktopChannelSettings>(filePath);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.GameCommands);
-                foreach (PermissionsCommandBase command in commands)
-                {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    command.Requirements.Role.MixerRole = command.Requirements.UserRole;
-#pragma warning restore CS0612 // Type or member is obsolete
-                }
-
-                foreach (InteractiveCommand command in settings.InteractiveCommands)
-                {
-                    if (command is InteractiveButtonCommand)
-                    {
-                        InteractiveButtonCommand bCommand = (InteractiveButtonCommand)command;
-#pragma warning disable CS0612 // Type or member is obsolete
-                        if (!string.IsNullOrEmpty(bCommand.CooldownGroup) && settings.interactiveCooldownGroupsInternal.ContainsKey(bCommand.CooldownGroup))
-                        {
-                            bCommand.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Group, bCommand.CooldownGroup,
-                                settings.interactiveCooldownGroupsInternal[bCommand.CooldownGroup]);
-                            settings.CooldownGroups[bCommand.CooldownGroup] = settings.interactiveCooldownGroupsInternal[bCommand.CooldownGroup];
-                        }
-                        else
-                        {
-                            bCommand.Requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Individual, bCommand.IndividualCooldown);
-                        }
-#pragma warning restore CS0612 // Type or member is obsolete
-                    }
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
-        }
-
-        private static async Task Version14Upgrade(int version, string filePath)
-        {
-            if (version < 14)
-            {
-                string data = File.ReadAllText(filePath);
-                JObject dataJObj = JObject.Parse(data);
-                if (dataJObj.ContainsKey("interactiveCommandsInternal"))
-                {
-                    JArray interactiveCommands = (JArray)dataJObj["interactiveCommandsInternal"];
-                    foreach (JToken interactiveCommand in interactiveCommands)
-                    {
-                        interactiveCommand["$type"] = "MixItUp.Base.Commands.InteractiveButtonCommand, MixItUp.Base";
-                    }
-                }
-                data = SerializerHelper.SerializeToString(dataJObj);
-
-                DesktopChannelSettings settings = SerializerHelper.DeserializeFromString<DesktopChannelSettings>(data);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                List<PermissionsCommandBase> permissionCommands = new List<PermissionsCommandBase>();
-                permissionCommands.AddRange(settings.ChatCommands);
-                permissionCommands.AddRange(settings.GameCommands);
-                permissionCommands.AddRange(settings.InteractiveCommands);
-                foreach (PermissionsCommandBase command in permissionCommands)
-                {
-                    command.Requirements.Role.MixerRole = ConvertLegacyRoles(command.Requirements.Role.MixerRole);
-                }
-
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.EventCommands);
-                commands.AddRange(settings.InteractiveCommands);
-                commands.AddRange(settings.TimerCommands);
-                commands.AddRange(settings.ActionGroupCommands);
-                commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
-                foreach (CommandBase command in commands)
-                {
-                    foreach (ActionBase action in command.Actions)
-                    {
-                        if (action is InteractiveAction)
-                        {
-                            InteractiveAction iAction = (InteractiveAction)action;
-                            iAction.RoleRequirement = ConvertLegacyRoles(iAction.RoleRequirement);
-                        }
-                    }
-                }
-
-                foreach (PreMadeChatCommandSettings preMadeCommandSettings in settings.PreMadeChatCommandSettings)
-                {
-                    preMadeCommandSettings.Permissions = ConvertLegacyRoles(preMadeCommandSettings.Permissions);
-                }
-
-                foreach (InteractiveUserGroupViewModel userGroup in settings.InteractiveUserGroups.Values.SelectMany(ug => ug))
-                {
-                    userGroup.AssociatedUserRole = ConvertLegacyRoles(userGroup.AssociatedUserRole);
-                }
-
-                foreach (GameCommandBase command in settings.GameCommands)
-                {
-                    if (command is OutcomeGameCommandBase)
-                    {
-                        OutcomeGameCommandBase outcomeGame = (OutcomeGameCommandBase)command;
-                        foreach (GameOutcomeGroup group in outcomeGame.Groups)
-                        {
-                            group.Role = ConvertLegacyRoles(group.Role);
-                        }
-                    }
-                }
-
-                settings.ModerationFilteredWordsExcempt = ConvertLegacyRoles(settings.ModerationFilteredWordsExcempt);
-                settings.ModerationChatTextExcempt = ConvertLegacyRoles(settings.ModerationChatTextExcempt);
-                settings.ModerationBlockLinksExcempt = ConvertLegacyRoles(settings.ModerationBlockLinksExcempt);
-
-                IEnumerable<InteractiveCommand> oldInteractiveCommand = settings.InteractiveCommands.ToList();
-                settings.InteractiveCommands.Clear();
-                foreach (InteractiveCommand command in oldInteractiveCommand)
-                {
-                    settings.InteractiveCommands.Add(new InteractiveButtonCommand()
-                    {
-                        ID = command.ID,
-                        Name = command.Name,
-                        Type = command.Type,
-                        Commands = command.Commands,
-                        Actions = command.Actions,
-                        IsEnabled = command.IsEnabled,
-                        IsBasic = command.IsBasic,
-                        Unlocked = command.Unlocked,
-
-                        Requirements = command.Requirements,
-
-                        GameID = command.GameID,
-                        SceneID = command.SceneID,
-                        Control = command.Control,
-                        Trigger = EnumHelper.GetEnumValueFromString<InteractiveButtonCommandTriggerType>(command.CommandsString),
-                    });
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
-        }
-
-        private static async Task Version15Upgrade(int version, string filePath)
-        {
-            if (version < 15)
-            {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-#pragma warning disable CS0612 // Type or member is obsolete
-                EventCommand donationCommand = settings.EventCommands.FirstOrDefault(c => c.MatchesEvent(EnumHelper.GetEnumName(OtherEventTypeEnum.Donation)));
-#pragma warning restore CS0612 // Type or member is obsolete
-                if (donationCommand != null)
-                {
-                    string donationCommandJson = SerializerHelper.SerializeToString(donationCommand);
-
-                    EventCommand streamlabsCommand = SerializerHelper.DeserializeFromString<EventCommand>(donationCommandJson);
-                    streamlabsCommand.OtherEventType = OtherEventTypeEnum.StreamlabsDonation;
-                    settings.EventCommands.Add(streamlabsCommand);
-
-                    EventCommand gawkBoxCommand = SerializerHelper.DeserializeFromString<EventCommand>(donationCommandJson);
-                    gawkBoxCommand.OtherEventType = OtherEventTypeEnum.GawkBoxDonation;
-                    settings.EventCommands.Add(gawkBoxCommand);
-
-                    settings.EventCommands.Remove(donationCommand);
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
         }
 
         private static async Task Version16Upgrade(int version, string filePath)
@@ -364,6 +189,30 @@ namespace MixItUp.Desktop.Services
                 foreach (CommandBase command in commands)
                 {
                     StoreCommandUpgrader.SeperateChatFromCurrencyActions(command.Actions);
+                }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version19Upgrade(int version, string filePath)
+        {
+            if (version < 19)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                List<CommandBase> commands = new List<CommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.EventCommands);
+                commands.AddRange(settings.InteractiveCommands);
+                commands.AddRange(settings.TimerCommands);
+                commands.AddRange(settings.ActionGroupCommands);
+                commands.AddRange(settings.GameCommands);
+                commands.AddRange(settings.RemoteCommands);
+                foreach (CommandBase command in commands)
+                {
+                    StoreCommandUpgrader.ChangeWaitActionsToUseSpecialIdentifiers(command.Actions);
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);

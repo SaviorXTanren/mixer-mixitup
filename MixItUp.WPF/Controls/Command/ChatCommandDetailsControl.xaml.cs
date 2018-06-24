@@ -22,14 +22,15 @@ namespace MixItUp.WPF.Controls.Command
 
         private bool autoAddToChatCommands = true;
 
-        public ChatCommandDetailsControl(ChatCommand command)
+        public ChatCommandDetailsControl(ChatCommand command, bool autoAddToChatCommands = true)
         {
             this.command = command;
+            this.autoAddToChatCommands = autoAddToChatCommands;
 
             InitializeComponent();
         }
 
-        public ChatCommandDetailsControl(bool autoAddToChatCommands = true) : this(null) { this.autoAddToChatCommands = autoAddToChatCommands; }
+        public ChatCommandDetailsControl(bool autoAddToChatCommands = true) : this(null, autoAddToChatCommands) { }
 
         public override Task Initialize()
         {

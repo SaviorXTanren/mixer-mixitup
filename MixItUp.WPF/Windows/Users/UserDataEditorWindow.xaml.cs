@@ -133,7 +133,7 @@ namespace MixItUp.WPF.Windows.Currency
             ChatCommand command = commandButtonsControl.GetCommandFromCommandButtons<ChatCommand>(sender);
             if (command != null)
             {
-                CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command));
+                CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(command, autoAddToChatCommands: false));
                 window.Closed += Window_Closed;
                 window.Show();
             }

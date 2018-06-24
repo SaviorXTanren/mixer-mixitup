@@ -18,17 +18,16 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.action != null)
             {
-                this.WaitAmountTextBox.Text = this.action.WaitAmount.ToString();
+                this.WaitAmountTextBox.Text = this.action.Amount;
             }
             return Task.FromResult(0);
         }
 
         public override ActionBase GetAction()
         {
-            double waitAmount;
-            if (!string.IsNullOrEmpty(this.WaitAmountTextBox.Text) && double.TryParse(this.WaitAmountTextBox.Text, out waitAmount) && waitAmount > 0.0)
+            if (!string.IsNullOrEmpty(this.WaitAmountTextBox.Text))
             {
-                return new WaitAction(waitAmount);
+                return new WaitAction(this.WaitAmountTextBox.Text);
             }
             return null;
         }
