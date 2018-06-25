@@ -63,5 +63,11 @@ namespace MixItUp.Base.Services
         Task Disconnect();
 
         OAuthTokenModel GetOAuthTokenCopy();
+
+        Task SpinWheel();
+        
+        Task EmptyJar();
+
+        Task RollCredits();
     }
 }

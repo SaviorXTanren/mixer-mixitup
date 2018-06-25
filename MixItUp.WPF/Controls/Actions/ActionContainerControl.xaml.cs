@@ -115,6 +115,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.StreamingSoftware:
                         this.actionControl = (this.action != null) ? new StreamingSoftwareActionControl(this, (StreamingSoftwareAction)this.action) : new StreamingSoftwareActionControl(this);
                         break;
+                    case ActionTypeEnum.Streamlabs:
+                        this.actionControl = (this.action != null) ? new StreamlabsActionControl(this, (StreamlabsAction)this.action) : new StreamlabsActionControl(this);
+                        break;
                 }
 
                 if (this.action != null && !string.IsNullOrEmpty(this.action.Label))
