@@ -47,11 +47,13 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.PreMadeCommandsButton.IsEnabled = true;
                 this.CustomCommandsGrid.Visibility = Visibility.Visible;
+                this.CommandNameFilterGrid.Visibility = Visibility.Visible;
             }
             else
             {
                 this.CustomCommandsButton.IsEnabled = true;
                 this.PreMadeCommandsGrid.Visibility = Visibility.Visible;
+                this.CommandNameFilterGrid.Visibility = Visibility.Collapsed;
             }
 
             return base.InitializeInternal();
@@ -116,6 +118,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CustomCommandsButton.IsEnabled = true;
             this.PreMadeCommandsGrid.Visibility = Visibility.Visible;
             this.CustomCommandsGrid.Visibility = Visibility.Collapsed;
+            this.CommandNameFilterGrid.Visibility = Visibility.Collapsed;
         }
 
         private void CustomCommandsButton_Click(object sender, RoutedEventArgs e)
@@ -124,6 +127,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CustomCommandsButton.IsEnabled = false;
             this.PreMadeCommandsGrid.Visibility = Visibility.Collapsed;
             this.CustomCommandsGrid.Visibility = Visibility.Visible;
+            this.CommandNameFilterGrid.Visibility = Visibility.Visible;
         }
 
         private void CommandButtons_EditClicked(object sender, RoutedEventArgs e)

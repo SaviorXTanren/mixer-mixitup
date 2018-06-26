@@ -23,9 +23,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
-
-
-        <Grid Grid.Row="0" HorizontalAlignment="Center">
+        
+        <Grid Grid.Row="0" HorizontalAlignment="Center" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />

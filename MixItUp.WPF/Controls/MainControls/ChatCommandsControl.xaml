@@ -27,11 +27,24 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" x:Name="PreMadeCommandsButton" Click="PreMadeCommandsButton_Click" IsEnabled="False">Pre-Made Commands</Button>
             <Button Grid.Column="1" x:Name="CustomCommandsButton" Click="CustomCommandsButton_Click" IsEnabled="False">Custom Commands</Button>
-            
+
+            <Grid x:Name="CommandNameFilterGrid" Grid.Column="2" HorizontalAlignment="Center" Margin="30,0,0,0" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Command Name:" />
+
+                <TextBox Grid.Column="2" x:Name="CommandNameFilterTextBox" Width="150" TextChanged="CommandNameFilterTextBox_TextChanged" />
+            </Grid>
+
         </Grid>
 
         <Grid x:Name="PreMadeCommandsGrid" Grid.Row="2" Visibility="Collapsed">
@@ -65,26 +78,13 @@
 
         <Grid x:Name="CustomCommandsGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Command Name:" />
-
-                <TextBox Grid.Column="2" x:Name="CommandNameFilterTextBox" Width="150" TextChanged="CommandNameFilterTextBox_TextChanged" />
-            </Grid>
-
-            <Controls:SortedDataGrid x:Name="CustomCommandsListView" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <Controls:SortedDataGrid x:Name="CustomCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <Controls:SortedDataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                     <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="150" />
@@ -106,7 +106,7 @@
                 </Controls:SortedDataGrid.Columns>
             </Controls:SortedDataGrid>
 
-            <Button x:Name="AddCommandButton" Grid.Row="3" Click="AddCommandButton_Click" Width="130">New Command</Button>
+            <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="130">New Command</Button>
         </Grid>
     </Grid>
 </local:MainControlBase>
