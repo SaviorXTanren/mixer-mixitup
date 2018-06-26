@@ -202,6 +202,12 @@ namespace MixItUp.Desktop.Services
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
+                PreMadeChatCommandSettings cSetting = settings.PreMadeChatCommandSettings.FirstOrDefault(c => c.Name.Equals("Ban"));
+                if (cSetting != null)
+                {
+                    cSetting.IsEnabled = false;
+                }
+
                 List<CommandBase> commands = new List<CommandBase>();
                 commands.AddRange(settings.ChatCommands);
                 commands.AddRange(settings.EventCommands);

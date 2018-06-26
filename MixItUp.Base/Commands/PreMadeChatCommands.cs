@@ -595,6 +595,7 @@ namespace MixItUp.Base.Commands
         public BanChatCommand()
             : base("Ban", "ban", 5, MixerRoleEnum.Mod)
         {
+            this.IsEnabled = false;
             this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
             {
                 if (ChannelSession.Chat != null)
