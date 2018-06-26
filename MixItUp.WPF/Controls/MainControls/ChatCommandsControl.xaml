@@ -65,18 +65,31 @@
 
         <Grid x:Name="CustomCommandsGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
             </Grid.RowDefinitions>
 
-            <DataGrid x:Name="CustomCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-                <DataGrid.Columns>
+            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Command Name:" />
+
+                <TextBox Grid.Column="2" x:Name="CommandNameFilterTextBox" Width="150" TextChanged="CommandNameFilterTextBox_TextChanged" />
+            </Grid>
+
+            <Controls:SortedDataGrid x:Name="CustomCommandsListView" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                <Controls:SortedDataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="2*" />
                     <DataGridTextColumn Header="Commands" Binding="{Binding CommandsString}" IsReadOnly="True" Width="150" />
                     <DataGridTextColumn Header="Permission" Binding="{Binding UserRoleRequirementString}" IsReadOnly="True" Width="125" />
-                    <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" Width="50">
+                    <DataGridTextColumn Binding="{Binding Requirements.Cooldown.CooldownAmount}" IsReadOnly="True" Width="75">
                         <DataGridTextColumn.Header>
                             <Grid HorizontalAlignment="Center" Margin="0,0,0,0">
                                 <MaterialDesign:PackIcon Kind="Timer" Height="24" Width="24" />
@@ -90,10 +103,10 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                </Controls:SortedDataGrid.Columns>
+            </Controls:SortedDataGrid>
 
-            <Button x:Name="AddCommandButton" Grid.Row="2" Click="AddCommandButton_Click" Width="130">New Command</Button>
+            <Button x:Name="AddCommandButton" Grid.Row="3" Click="AddCommandButton_Click" Width="130">New Command</Button>
         </Grid>
     </Grid>
 </local:MainControlBase>
