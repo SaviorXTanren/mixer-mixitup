@@ -39,6 +39,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private int totalMessages = 0;
         private ScrollViewer chatListScrollViewer;
         private bool lockChatList = true;
+        private List<string> messageHistory = new List<string>();
+        private int activeMessageHistory = 0;
 
         public ChatControl(bool isPopOut = false)
         {
@@ -309,11 +311,52 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private void ChatMessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Up:
+                    if (activeMessageHistory > 0)
+                    {
+                        activeMessageHistory--;
+                        this.ChatMessageTextBox.Text = messageHistory[activeMessageHistory];
+                    }
+                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                    break;
+
+                case Key.Down:
+                    if (activeMessageHistory < messageHistory.Count)
+                    {
+                        activeMessageHistory++;
+                        if (activeMessageHistory == messageHistory.Count)
+                        {
+                            this.ChatMessageTextBox.Text = string.Empty;
+                        }
+                        else
+                        {
+                            this.ChatMessageTextBox.Text = messageHistory[activeMessageHistory];
+                        }
+                    }
+                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                    break;
+            }
+        }
+
         private async void SendChatMessageButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(this.ChatMessageTextBox.Text))
             {
                 string message = this.ChatMessageTextBox.Text;
+
+                if (messageHistory.Contains(message))
+                {
+                    // Remove so we can move to the end
+                    messageHistory.Remove(message);
+                }
+
+                messageHistory.Add(message);
+                activeMessageHistory = messageHistory.Count;
+
                 this.ChatMessageTextBox.Text = string.Empty;
 
                 if (ChatAction.WhisperRegex.IsMatch(message))
