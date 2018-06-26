@@ -206,7 +206,36 @@ namespace MixItUp.Desktop.Files
 
         public async Task UnzipFiles(string zipFilePath, string destinationFolderPath)
         {
-            await Task.Run(() => { ZipFile.ExtractToDirectory(zipFilePath, destinationFolderPath); });
+            await Task.Run(() =>
+            {
+                try
+                {
+                    if (File.Exists(zipFilePath))
+                    {
+                        using (FileStream stream = File.OpenRead(zipFilePath))
+                        {
+                            ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read);
+                            foreach (ZipArchiveEntry file in archive.Entries)
+                            {
+                                string fullPath = Path.Combine(destinationFolderPath, file.FullName);
+                                if (string.IsNullOrEmpty(file.Name))
+                                {
+                                    string directoryPath = Path.GetDirectoryName(fullPath);
+                                    if (!Directory.Exists(directoryPath))
+                                    {
+                                        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                                    }
+                                }
+                                file.ExtractToFile(fullPath, true);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
         }
 
         public string GetTempFolder() { return Path.GetTempPath(); }
