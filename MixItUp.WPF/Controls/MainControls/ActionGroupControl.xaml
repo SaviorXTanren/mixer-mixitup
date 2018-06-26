@@ -17,14 +17,28 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
 
-        <DataGrid x:Name="ActionGroupCommandsListView" Grid.Row="0" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
-            <DataGrid.Columns>
+
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Group Name:" />
+
+            <TextBox Grid.Column="2" x:Name="ActionGroupNameFilterTextBox" Width="150" TextChanged="ActionGroupNameFilterTextBox_TextChanged" />
+        </Grid>
+
+        <Controls:SortedDataGrid x:Name="ActionGroupCommandsListView" Grid.Row="1" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+            <Controls:SortedDataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                 <DataGridTemplateColumn Header="Actions" Width="240">
                     <DataGridTemplateColumn.CellTemplate>
@@ -33,10 +47,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+            </Controls:SortedDataGrid.Columns>
+        </Controls:SortedDataGrid>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center">
+        <Grid Grid.Row="3" HorizontalAlignment="Center">
             <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Action Group</Button>
         </Grid>
 
