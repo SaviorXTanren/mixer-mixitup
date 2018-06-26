@@ -32,7 +32,10 @@ namespace MixItUp.Base.ViewModel.User
             : this(quote)
         {
             this.DateTime = dateTime;
-            this.GameName = game.name;
+            if (game != null)
+            {
+                this.GameName = game.name;
+            }
         }
 
         public override string ToString()
