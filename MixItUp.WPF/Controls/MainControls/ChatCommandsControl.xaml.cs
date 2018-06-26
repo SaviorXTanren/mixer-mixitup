@@ -4,10 +4,13 @@ using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Windows.Command;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -17,6 +20,8 @@ namespace MixItUp.WPF.Controls.MainControls
     public partial class ChatCommandsControl : MainControlBase
     {
         private ObservableCollection<ChatCommand> customChatCommands = new ObservableCollection<ChatCommand>();
+
+        private DataGridColumn lastSortedColumn = null;
 
         public ChatCommandsControl()
         {
@@ -34,6 +39,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             this.CustomCommandsListView.ItemsSource = this.customChatCommands;
+            this.CustomCommandsListView.Sorted += CustomCommandsListView_Sorted;
 
             this.RefreshList();
 
@@ -51,21 +57,57 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
+        private void CustomCommandsListView_Sorted(object sender, DataGridColumn column)
+        {
+            this.RefreshList(column);
+        }
+
         protected override Task OnVisibilityChanged()
         {
             this.RefreshList();
             return Task.FromResult(0);
         }
 
-        private void RefreshList()
+        private void RefreshList(DataGridColumn sortColumn = null)
         {
+            string filter = this.CommandNameFilterTextBox.Text;
+            if (!string.IsNullOrEmpty(filter))
+            {
+                filter = filter.ToLower();
+            }
+
             this.CustomCommandsListView.SelectedIndex = -1;
 
             this.customChatCommands.Clear();
-            foreach (ChatCommand command in ChannelSession.Settings.ChatCommands.OrderBy(c => c.Name))
+
+            IEnumerable<ChatCommand> data = ChannelSession.Settings.ChatCommands.ToList();
+            if (sortColumn != null)
             {
-                this.customChatCommands.Add(command);
+                int columnIndex = this.CustomCommandsListView.Columns.IndexOf(sortColumn);
+                if (columnIndex == 0) { data = data.OrderBy(u => u.Name); }
+                if (columnIndex == 1) { data = data.OrderBy(u => u.CommandsString); }
+                if (columnIndex == 2) { data = data.OrderBy(u => u.UserRoleRequirementString); }
+                if (columnIndex == 3) { data = data.OrderBy(u => u.Requirements.Cooldown.CooldownAmount); }
+
+                if (sortColumn.SortDirection.GetValueOrDefault() == ListSortDirection.Descending)
+                {
+                    data = data.Reverse();
+                }
+                lastSortedColumn = sortColumn;
             }
+
+            foreach (var commandData in data)
+            {
+                if (string.IsNullOrEmpty(filter) || commandData.Name.ToLower().Contains(filter))
+                {
+                    this.customChatCommands.Add(commandData);
+                }
+            }
+        }
+
+        private void CommandNameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            this.RefreshList();
         }
 
         private void PreMadeCommandsButton_Click(object sender, RoutedEventArgs e)
