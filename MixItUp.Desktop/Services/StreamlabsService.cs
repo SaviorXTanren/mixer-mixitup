@@ -24,7 +24,7 @@ namespace MixItUp.Desktop.Services
         private const string BaseAddress = "https://streamlabs.com/api/v1.0/";
 
         private const string ClientID = "ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX";
-        private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write";
+        private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write+credits.write";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
@@ -92,6 +92,21 @@ namespace MixItUp.Desktop.Services
             }
             catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             return results;
+        }
+
+        public async Task SpinWheel()
+        {
+            await this.PostAsync("wheel/spin", new StringContent($"access_token={this.token.accessToken}"));
+        }
+
+        public async Task EmptyJar()
+        {
+            await this.PostAsync("jar/empty", new StringContent($"access_token={this.token.accessToken}"));
+        }
+
+        public async Task RollCredits()
+        {
+            await this.PostAsync("credits/roll", new StringContent($"access_token={this.token.accessToken}"));
         }
 
         protected override async Task RefreshOAuthToken()

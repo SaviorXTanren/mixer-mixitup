@@ -227,6 +227,9 @@
     <Compile Include="Controls\Actions\CurrencyActionControl.xaml.cs">
       <DependentUpon>CurrencyActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\StreamlabsActionControl.xaml.cs">
+      <DependentUpon>StreamlabsActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\DiscordActionControl.xaml.cs">
       <DependentUpon>DiscordActionControl.xaml</DependentUpon>
     </Compile>
@@ -633,6 +636,10 @@
     <Page Include="Controls\Actions\CurrencyActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\StreamlabsActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Actions\DiscordActionControl.xaml">
       <SubType>Designer</SubType>
