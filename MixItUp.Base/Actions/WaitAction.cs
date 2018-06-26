@@ -33,7 +33,7 @@ namespace MixItUp.Base.Actions
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             string amountText = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
-            if (double.TryParse(amountText, out double amount))
+            if (double.TryParse(amountText, out double amount) && amount > 0.0)
             {
                 await Task.Delay((int)(1000 * amount));
             }
