@@ -14,6 +14,8 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public RequirementViewModel Requirements { get; set; }
 
+        private SemaphoreSlim permissionsCheckSemaphore = new SemaphoreSlim(1);
+
         public PermissionsCommandBase()
         {
             this.Requirements = new RequirementViewModel();
@@ -40,12 +42,6 @@ namespace MixItUp.Base.Commands
                 }
                 return string.Empty;
             }
-        }
-
-        public async Task<bool> CheckAllRequirements(UserViewModel user)
-        {
-            return (await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)
-                && await this.CheckCurrencyRequirement(user) && await this.CheckThresholdRequirement(user));
         }
 
         public async Task<bool> CheckCooldownRequirement(UserViewModel user)
@@ -108,19 +104,31 @@ namespace MixItUp.Base.Commands
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
-            if (!await this.CheckAllRequirements(user))
+            try
             {
-                return;
-            }
+                await this.permissionsCheckSemaphore.WaitAsync();
 
-            if (!this.Requirements.TrySubtractCurrencyAmount(user))
-            {
-                return;
-            }
+                if (!await this.CheckAllRequirements(user))
+                {
+                    return;
+                }
 
-            this.Requirements.UpdateCooldown(user);
+                if (!this.Requirements.TrySubtractCurrencyAmount(user))
+                {
+                    return;
+                }
+
+                this.Requirements.UpdateCooldown(user);
+            }
+            finally { this.permissionsCheckSemaphore.Release(); }
 
             await base.PerformInternal(user, arguments, token);
+        }
+
+        private async Task<bool> CheckAllRequirements(UserViewModel user)
+        {
+            return (await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)
+                && await this.CheckCurrencyRequirement(user) && await this.CheckThresholdRequirement(user));
         }
     }
 }
