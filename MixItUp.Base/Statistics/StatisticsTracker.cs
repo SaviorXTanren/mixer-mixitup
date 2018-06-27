@@ -1,4 +1,4 @@
-﻿using Mixer.Base.Model.Interactive;
+﻿using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -12,36 +12,38 @@ namespace MixItUp.Base.Statistics
     {
         public List<StatisticDataTrackerBase> Statistics { get; private set; }
 
-        private DateTimeOffset startTime = DateTimeOffset.Now;
+        public DateTimeOffset StartTime { get; private set; }
 
-        private EventStatisticDataTracker followTracker = new EventStatisticDataTracker("Follows", "AccountPlus");
-        private EventStatisticDataTracker unfollowTracker = new EventStatisticDataTracker("Unfollows", "AccountMinus");
-        private EventStatisticDataTracker hostsTracker = new EventStatisticDataTracker("Hosts", "AccountMultiple", (EventStatisticDataTracker dataTracker) =>
+        private EventStatisticDataTracker followTracker = new EventStatisticDataTracker("Follows", "AccountPlus", new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker unfollowTracker = new EventStatisticDataTracker("Unfollows", "AccountMinus", new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker hostsTracker = new EventStatisticDataTracker("Hosts", "AccountMultiple", new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
-            return string.Format("Total Hosts: {0},    Total Viewers From Hosts: {1},    Average Viewers From Hosts: {2}", dataTracker.MaxKeys, dataTracker.MaxValues, dataTracker.AverageValues);
+            return string.Format("Hosts: {0},    Total Host Viewers: {1},    Average Host Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValue);
         });
-        private EventStatisticDataTracker subscriberTracker = new EventStatisticDataTracker("Subscribes", "AccountStar");
-        private EventStatisticDataTracker resubscriberTracker = new EventStatisticDataTracker("Resubscribes", "AccountConvert");
+        private EventStatisticDataTracker subscriberTracker = new EventStatisticDataTracker("Subscribes", "AccountStar", new List<string>() { "Username", "Date & Time" });
+        private EventStatisticDataTracker resubscriberTracker = new EventStatisticDataTracker("Resubscribes", "AccountConvert", new List<string>() { "Username", "Date & Time" });
 
-        private EventStatisticDataTracker interactiveTracker = new EventStatisticDataTracker("Interactive", "GamepadVariant", (EventStatisticDataTracker dataTracker) =>
+        private EventStatisticDataTracker interactiveTracker = new EventStatisticDataTracker("Interactive", "GamepadVariant", new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
-            return string.Format("Buttons Pressed: {0},    Average Presses: {1}", dataTracker.MaxValues, dataTracker.AverageValues);
+            return string.Format("Total Uses: {0},    Average Uses: {1}", dataTracker.Total, dataTracker.Average);
         });
 
-        private EventStatisticDataTracker donationsTracker = new EventStatisticDataTracker("Donations", "CashMultiple", (EventStatisticDataTracker dataTracker) =>
+        private EventStatisticDataTracker donationsTracker = new EventStatisticDataTracker("Donations", "CashMultiple", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
-            return string.Format("Donations: {0},    Total Amount: {1:C}", dataTracker.MaxKeys, dataTracker.MaxValuesDecimal);
+            return string.Format("Donaters: {0},    Total: {1:C},    Average: {2:C}", dataTracker.UniqueIdentifiers, dataTracker.TotalValueDecimal, dataTracker.AverageValue);
         });
 
         public StatisticsTracker()
         {
+            this.StartTime = DateTimeOffset.Now;
+
             ChannelSession.Constellation.OnFollowOccurred += Constellation_OnFollowOccurred;
             ChannelSession.Constellation.OnUnfollowOccurred += Constellation_OnUnfollowOccurred;
             ChannelSession.Constellation.OnHostedOccurred += Constellation_OnHostedOccurred;
             ChannelSession.Constellation.OnSubscribedOccurred += Constellation_OnSubscribedOccurred;
             ChannelSession.Constellation.OnResubscribedOccurred += Constellation_OnResubscribedOccurred;
 
-            ChannelSession.Interactive.OnGiveInput += Interactive_OnGiveInput;
+            ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
 
@@ -78,18 +80,6 @@ namespace MixItUp.Base.Statistics
             this.Statistics.Add(this.donationsTracker);
         }
 
-        public string GetDefaultFileName() { return string.Format("Stream Statistics - {0}.csv", this.startTime.ToString("MM-dd-yy HH-mm")); }
-
-        public Task Export(string filename = null)
-        {
-            if (!string.IsNullOrEmpty(filename))
-            {
-                filename = this.GetDefaultFileName();
-            }
-
-            return Task.FromResult(0);
-        }
-
         private void Constellation_OnFollowOccurred(object sender, UserViewModel e)
         {
             this.followTracker.OnStatisticEventOccurred(e.UserName);
@@ -107,20 +97,17 @@ namespace MixItUp.Base.Statistics
 
         private void Constellation_OnSubscribedOccurred(object sender, UserViewModel e)
         {
-            this.unfollowTracker.OnStatisticEventOccurred(e.UserName);
+            this.subscriberTracker.OnStatisticEventOccurred(e.UserName);
         }
 
         private void Constellation_OnResubscribedOccurred(object sender, Tuple<UserViewModel, int> e)
         {
-            this.unfollowTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
+            this.resubscriberTracker.OnStatisticEventOccurred(e.Item1.UserName);
         }
 
-        private void Interactive_OnGiveInput(object sender, InteractiveGiveInputModel e)
+        private void Interactive_OnInteractiveControlUsed(object sender, Tuple<UserViewModel, InteractiveConnectedControlCommand> e)
         {
-            if (e.input != null)
-            {
-                this.interactiveTracker.OnStatisticEventOccurred(e.input.controlID, 1);
-            }
+            this.interactiveTracker.OnStatisticEventOccurred(e.Item2.Name, e.Item1.UserName);
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)

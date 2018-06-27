@@ -30,25 +30,11 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click">Export To File</Button>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Auto-Export To File:</TextBlock>
-
-                <CheckBox Grid.Column="2" x:Name="AutoExportCheckBox" Checked="AutoExportCheckBox_Checked" Unchecked="AutoExportCheckBox_Checked" />
-            </Grid>
-
-            <Button Grid.Column="2" x:Name="ExportStatsButton" Width="130" Click="ExportStatsButton_Click" IsEnabled="False">Export To File</Button>
-
-            <TextBlock Grid.Column="4" VerticalAlignment="Center">Also check out: <Hyperlink NavigateUri="http://mixdash.cc" RequestNavigate="Hyperlink_RequestNavigate">http://mixdash.cc</Hyperlink></TextBlock>
+            <TextBlock Grid.Column="2" VerticalAlignment="Center">Also check out: <Hyperlink NavigateUri="http://mixdash.cc" RequestNavigate="Hyperlink_RequestNavigate">http://mixdash.cc</Hyperlink></TextBlock>
         </Grid>
     </Grid>
 </local:MainControlBase>
