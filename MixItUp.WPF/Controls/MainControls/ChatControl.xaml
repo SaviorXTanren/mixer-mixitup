@@ -128,7 +128,7 @@
 
                         <ComboBox x:Name="SendChatAsComboBox" Grid.Column="1" MaterialDesign:HintAssist.Hint="Send As" Width="80" />
 
-                        <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" PreviewKeyDown="ChatMessageTextBox_PreviewKeyDown" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <Button x:Name="SendChatMessageButton" Grid.Column="4" Width="70" Click="SendChatMessageButton_Click">Send</Button>
                     </Grid>
