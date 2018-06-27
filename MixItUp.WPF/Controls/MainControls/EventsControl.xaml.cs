@@ -109,7 +109,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserFirstJoin));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserUnfollow));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserPurge));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserTimeout));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.MixerUserBan));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamlabsDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GawkBoxDonation));

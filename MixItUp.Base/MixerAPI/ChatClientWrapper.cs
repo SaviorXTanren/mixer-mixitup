@@ -28,7 +28,6 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserLeaveOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserPurgeOccurred = delegate { };
-        public event EventHandler<UserViewModel> OnUserTimeoutOccurred = delegate { };
 
         public Dictionary<Guid, ChatMessageViewModel> Messages { get; private set; }
 
@@ -83,7 +82,6 @@ namespace MixItUp.Base.MixerAPI
                 this.Client.OnPurgeMessageOccurred -= ChatClient_OnPurgeMessageOccurred;
                 this.Client.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
                 this.Client.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
-                this.Client.OnUserTimeoutOccurred -= ChatClient_OnUserTimeoutOccurred;
                 this.Client.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
                 this.Client.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
                 if (ChannelSession.Settings.DiagnosticLogging)
@@ -215,7 +213,6 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
                     this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
                     this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                    this.Client.OnUserTimeoutOccurred += ChatClient_OnUserTimeoutOccurred;
                     this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
                     this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
                     if (ChannelSession.Settings.DiagnosticLogging)
@@ -609,21 +606,6 @@ namespace MixItUp.Base.MixerAPI
             if (user != null)
             {
                 this.OnUserLeaveOccurred(sender, user);
-            }
-        }
-
-        private async void ChatClient_OnUserTimeoutOccurred(object sender, ChatUserEventModel e)
-        {
-            UserViewModel user = await ChannelSession.ChannelUsers.GetUser(e.user);
-            if (user != null)
-            {
-                this.OnUserTimeoutOccurred(sender, user);
-
-                if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserTimeout)))
-                {
-                    ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserTimeout));
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserTimeout)), user);
-                }
             }
         }
 
