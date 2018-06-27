@@ -22,7 +22,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="15" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
@@ -54,6 +54,38 @@
 
         <Grid x:Name="SpecialIdentifierResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
             <TextBox x:Name="SpecialIdentifierResponseTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid x:Name="JSONToSpecialIdentifiersResponseActionGrid" Grid.Row="6" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <ItemsControl x:Name="JSONToSpecialIdentifiersItemsControl" Grid.Row="0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" x:Name="JSONNameTextBox" Width="300" Text="{Binding JSONParameterName}" MaterialDesign:HintAssist.Hint="JSON Value Name (Use '\' for nested parameters)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <TextBox Grid.Column="2" x:Name="SpecialIdentifierNameTextBox" Width="320" Text="{Binding SpecialIdentifierName}" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+
+                            <Button Grid.Column="4" x:Name="DeleteJSONToSpecialIdentifierButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteJSONToSpecialIdentifierButton_Click" ToolTip="Delete" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Button x:Name="AddJSONToSpecialIdentifierButton" Grid.Row="2" Width="130" Click="AddJSONToSpecialIdentifierButton_Click">Add New Pair</Button>
         </Grid>
 
     </Grid>

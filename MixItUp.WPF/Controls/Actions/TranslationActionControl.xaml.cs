@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (responseType == TranslationResponseActionTypeEnum.SpecialIdentifier)
                 {
-                    if (!string.IsNullOrEmpty(this.SpecialIdentifierResponseTextBox.Text) && this.SpecialIdentifierResponseTextBox.Text.All(c => Char.IsLetterOrDigit(c)))
+                    if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.SpecialIdentifierResponseTextBox.Text))
                     {
                         return TranslationAction.CreateForSpecialIdentifier(culture, this.TranslationTextTextBox.Text, this.AllowProfanityCheckBox.IsChecked.GetValueOrDefault(),
                             this.SpecialIdentifierResponseTextBox.Text);

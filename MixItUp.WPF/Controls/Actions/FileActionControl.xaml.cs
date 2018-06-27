@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,7 +61,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (fileType == FileActionTypeEnum.ReadFromFile || fileType == FileActionTypeEnum.ReadSpecificLineFromFile || fileType == FileActionTypeEnum.ReadRandomLineFromFile)
                 {
-                    if (!string.IsNullOrEmpty(this.SpecialIdentifierNameTextBox.Text) && this.SpecialIdentifierNameTextBox.Text.All(c => Char.IsLetterOrDigit(c)))
+                    if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.SpecialIdentifierNameTextBox.Text))
                     {
                         FileAction action = new FileAction(fileType, transferText: this.SpecialIdentifierNameTextBox.Text, filePath: this.FilePathTextBox.Text);
                         if (fileType == FileActionTypeEnum.ReadSpecificLineFromFile)

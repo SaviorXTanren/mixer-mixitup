@@ -69,6 +69,11 @@ namespace MixItUp.Base.Util
             return text;
         }
 
+        public static bool IsValidSpecialIdentifier(string text)
+        {
+            return !string.IsNullOrEmpty(text) && text.All(c => Char.IsLetterOrDigit(c));
+        }
+
         public static string ConvertToSpecialIdentifier(string text)
         {
             StringBuilder specialIdentifier = new StringBuilder();

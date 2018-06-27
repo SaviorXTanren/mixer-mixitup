@@ -2,6 +2,7 @@
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,9 @@ namespace MixItUp.Base.Actions
         Chat,
         Command,
         [Name("Special Identifier")]
-        SpecialIdentifier
+        SpecialIdentifier,
+        [Name("JSON to Special Identifers")]
+        JSONToSpecialIdentifiers
     }
 
     [DataContract]
@@ -47,6 +50,13 @@ namespace MixItUp.Base.Actions
             return action;
         }
 
+        public static WebRequestAction CreateForJSONToSpecialIdentifiers(string url, Dictionary<string, string> jsonToSpecialIdentifiers)
+        {
+            WebRequestAction action = new WebRequestAction(url, WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers);
+            action.JSONToSpecialIdentifiers = jsonToSpecialIdentifiers;
+            return action;
+        }
+
         public const string ResponseSpecialIdentifier = "webrequestresult";
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
@@ -69,6 +79,9 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public string SpecialIdentifierName { get; set; }
+
+        [DataMember]
+        public Dictionary<string, string> JSONToSpecialIdentifiers { get; set; }
 
         [DataMember]
         [Obsolete]
@@ -130,6 +143,43 @@ namespace MixItUp.Base.Actions
                             {
                                 string replacementText = await this.ReplaceStringWithSpecialModifiers(webRequestResult, user, arguments);
                                 SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.SpecialIdentifierName, replacementText);
+                            }
+                            else if (this.ResponseAction == WebRequestResponseActionTypeEnum.JSONToSpecialIdentifiers)
+                            {
+                                try
+                                {
+                                    JObject jobj = JObject.Parse(webRequestResult);
+                                    if (this.JSONToSpecialIdentifiers != null)
+                                    {
+                                        foreach (var kvp in this.JSONToSpecialIdentifiers)
+                                        {
+                                            string[] splits = kvp.Key.Split(new char[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                                            if (splits.Count() > 0)
+                                            {
+                                                JToken currentToken = jobj;
+                                                for (int i = 0; i < splits.Count(); i++)
+                                                {
+                                                    if (currentToken[splits[i]] == null)
+                                                    {
+                                                        currentToken = null;
+                                                        break;
+                                                    }
+                                                    currentToken = currentToken[splits[i]];
+                                                }
+
+                                                if (currentToken != null)
+                                                {
+                                                    string replacementText = await this.ReplaceStringWithSpecialModifiers(currentToken.ToString(), user, arguments);
+                                                    SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(kvp.Value, replacementText);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    MixItUp.Base.Util.Logger.Log(ex);
+                                }
                             }
                         }
                     }

@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -44,7 +45,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            if (!string.IsNullOrEmpty(this.CounterNameTextBox.Text) && this.CounterNameTextBox.Text.All(c => char.IsLetterOrDigit(c)))
+            if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.CounterNameTextBox.Text))
             {
                 if (this.CounterActionTypeComboBox.SelectedIndex == 0)
                 {
