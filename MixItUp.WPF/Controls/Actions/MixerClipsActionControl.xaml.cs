@@ -1,5 +1,7 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base;
+using MixItUp.Base.Actions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -17,6 +19,9 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.ClipLengthTextBox.Text = "30";
+
+            this.OnlyAvailableForPartnersWarningTextBlock.Visibility = (ChannelSession.Channel.partnered) ? Visibility.Collapsed : Visibility.Visible;
+
             if (this.action != null)
             {
                 this.ClipNameTextBox.Text = this.action.ClipName;

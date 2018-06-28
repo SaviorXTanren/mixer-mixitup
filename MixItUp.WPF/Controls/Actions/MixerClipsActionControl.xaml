@@ -28,6 +28,8 @@
             <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
         </TextBlock>
 
+        <TextBlock Grid.Row="0" x:Name="OnlyAvailableForPartnersWarningTextBlock" HorizontalAlignment="Right" Foreground="Red">This feature is currently available for Partners only</TextBlock>
+
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
