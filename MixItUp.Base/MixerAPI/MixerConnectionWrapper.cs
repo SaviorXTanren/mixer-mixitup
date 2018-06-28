@@ -2,6 +2,7 @@
 using Mixer.Base.Interactive;
 using Mixer.Base.Model.Broadcast;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
@@ -126,6 +127,14 @@ namespace MixItUp.Base.MixerAPI
         public async Task<IEnumerable<UserWithChannelModel>> GetTeamUsers(TeamModel team, uint maxResults = 1) { return await this.RunAsync(this.Connection.Teams.GetTeamUsers(team, maxResults)); }
 
         public async Task<ChannelModel> SetHostChannel(ChannelModel hosterChannel, ChannelModel channelToHost) { return await this.RunAsync(this.Connection.Channels.SetHostChannel(hosterChannel, channelToHost)); }
+
+        public async Task<BroadcastModel> GetCurrentBroadcast() { return await this.RunAsync(this.Connection.Broadcasts.GetCurrentBroadcast()); }
+
+        public async Task<bool> CanClipBeMade(BroadcastModel broadcast) { return await this.RunAsync(this.Connection.Clips.CanClipBeMade(broadcast)); }
+
+        public async Task<bool> CreateClip(ClipRequestModel clipRequest) { return await this.RunAsync(this.Connection.Clips.CreateClip(clipRequest)); }
+
+        public async Task<IEnumerable<ClipModel>> GetChannelClips(ChannelModel channel) { return await this.RunAsync(this.Connection.Clips.GetChannelClips(channel)); }
 
         private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
         {

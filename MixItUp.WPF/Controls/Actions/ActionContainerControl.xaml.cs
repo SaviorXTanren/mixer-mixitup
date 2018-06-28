@@ -118,6 +118,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Streamlabs:
                         this.actionControl = (this.action != null) ? new StreamlabsActionControl(this, (StreamlabsAction)this.action) : new StreamlabsActionControl(this);
                         break;
+                    case ActionTypeEnum.MixerClips:
+                        this.actionControl = (this.action != null) ? new MixerClipsActionControl(this, (MixerClipsAction)this.action) : new MixerClipsActionControl(this);
+                        break;
                 }
 
                 if (this.action != null && !string.IsNullOrEmpty(this.action.Label))

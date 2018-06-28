@@ -243,6 +243,9 @@
     <Compile Include="Controls\Actions\CurrencyActionControl.xaml.cs">
       <DependentUpon>CurrencyActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\MixerClipsActionControl.xaml.cs">
+      <DependentUpon>MixerClipsActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\StreamlabsActionControl.xaml.cs">
       <DependentUpon>StreamlabsActionControl.xaml</DependentUpon>
     </Compile>
@@ -653,6 +656,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\CurrencyActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\MixerClipsActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

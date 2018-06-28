@@ -55,6 +55,8 @@ namespace MixItUp.Base.Actions
         [Name("Streaming Software")]
         StreamingSoftware,
         Streamlabs,
+        [Name("Mixer Clips")]
+        MixerClips,
 
         Custom = 99,
     }
