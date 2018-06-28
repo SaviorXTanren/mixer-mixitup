@@ -139,6 +139,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
+                this.EnableGameQueueToggleButton.IsChecked = ChannelSession.GameQueueEnabled;
                 this.ClearQueueButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.Requirement.IsEnabled = (!ChannelSession.GameQueueEnabled);
                 this.RefreshQueueList();
             }));
