@@ -49,6 +49,20 @@ namespace MixItUp.Base.ViewModel.User
             });
         }
 
+        public async Task<UserViewModel> AddOrUpdateUser(UserViewModel user)
+        {
+            if (user.ID > 0)
+            {
+                await this.LockWrapper(() =>
+                {
+                    this.users[user.ID] = user;
+                    return Task.FromResult(0);
+                });
+                return await this.GetUser(user.ID);
+            }
+            return null;
+        }
+
         public async Task<UserViewModel> AddOrUpdateUser(ChatUserModel chatUser)
         {
             if (chatUser.userId.HasValue)

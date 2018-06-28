@@ -10,7 +10,7 @@ using MixItUp.WPF.Windows.Command;
 using MixItUp.Base;
 using MixItUp.WPF.Controls.Currency;
 
-namespace MixItUp.WPF.Windows.Currency
+namespace MixItUp.WPF.Windows.Users
 {
     /// <summary>
     /// Interaction logic for UserDataEditorWindow.xaml

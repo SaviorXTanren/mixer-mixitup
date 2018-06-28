@@ -2,6 +2,7 @@
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
+using MixItUp.WPF.Windows.Users;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -117,6 +118,13 @@ namespace MixItUp.WPF.Controls.MainControls
         private void UserDataGridView_Sorted(object sender, DataGridColumn column)
         {
             this.RefreshList(column);
+        }
+
+        private void ImportUserDataButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserDataImportWindow window = new UserDataImportWindow();
+            window.Closed += Window_Closed;
+            window.Show();
         }
 
         private async void ExportUserDataButton_Click(object sender, RoutedEventArgs e)

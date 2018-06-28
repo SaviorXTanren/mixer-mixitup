@@ -91,7 +91,7 @@ namespace MixItUp.Base.Util
         {
             Random random = new Random();
             SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id] = new RandomUserSpecialIdentiferGroup();
-            IEnumerable<UserViewModel> users = await ChannelSession.ChannelUsers.GetAllWorkableUsers();
+            IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
             users = users.Where(u => !u.ID.Equals(ChannelSession.User.id));
             if (users.Count() > 0)
             {
@@ -314,7 +314,7 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                IEnumerable<UserViewModel> users = await ChannelSession.ChannelUsers.GetAllUsers();
+                IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllUsers();
                 if (users.Count() > 0)
                 {
                     Random random = new Random();

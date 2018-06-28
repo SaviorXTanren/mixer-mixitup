@@ -109,7 +109,7 @@ namespace MixItUp.Base.Actions
                 }
                 else if (this.CurrencyActionType == CurrencyActionTypeEnum.GiveToAllChatUsers)
                 {
-                    foreach (UserViewModel chatUser in await ChannelSession.ChannelUsers.GetAllWorkableUsers())
+                    foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                     {
                         receiverCurrencyDatas.Add(chatUser.Data.GetCurrency(this.CurrencyID));
                     }

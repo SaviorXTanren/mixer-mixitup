@@ -102,6 +102,16 @@
             </Border>
         </Grid>
 
-        <Button x:Name="ExportUserDataButton" Grid.Row="4" Width="120" Click="ExportUserDataButton_Click">Export Data</Button>
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="ImportUserDataButton" Grid.Column="0" Width="120" Click="ImportUserDataButton_Click">Import Data</Button>
+
+            <Button x:Name="ExportUserDataButton" Grid.Column="2" Width="120" Click="ExportUserDataButton_Click">Export Data</Button>
+        </Grid>
     </Grid>
 </local:MainControlBase>

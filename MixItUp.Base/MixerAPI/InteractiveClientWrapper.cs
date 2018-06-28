@@ -423,9 +423,9 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (InteractiveParticipantModel participant in await this.GetRecentParticipants())
                 {
-                    if (await ChannelSession.ChannelUsers.HasUser(participant.userID))
+                    if (await ChannelSession.ActiveUsers.HasUser(participant.userID))
                     {
-                        await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
+                        await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
                     }
                 }
 
@@ -461,7 +461,7 @@ namespace MixItUp.Base.MixerAPI
                 List<InteractiveParticipantModel> participantsToUpdate = new List<InteractiveParticipantModel>();
                 foreach (InteractiveParticipantModel participant in participants)
                 {
-                    UserViewModel user = await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
+                    UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
                     if (user != null)
                     {
                         if (this.Client.InteractiveGame != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.InteractiveGame.id))
@@ -522,7 +522,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (InteractiveParticipantModel participant in e.participants)
                 {
-                    await ChannelSession.ChannelUsers.RemoveInteractiveUser(participant);
+                    await ChannelSession.ActiveUsers.RemoveInteractiveUser(participant);
                 }
             }
             this.OnParticipantLeave(this, e);
@@ -569,14 +569,14 @@ namespace MixItUp.Base.MixerAPI
                         UserViewModel user = null;
                         if (!string.IsNullOrEmpty(e.participantID))
                         {
-                            user = await ChannelSession.ChannelUsers.GetUser(e.participantID);
+                            user = await ChannelSession.ActiveUsers.GetUser(e.participantID);
                             if (user == null)
                             {
                                 IEnumerable<InteractiveParticipantModel> recentParticipants = await this.GetRecentParticipants();
                                 InteractiveParticipantModel participant = recentParticipants.FirstOrDefault(p => p.sessionID.Equals(e.participantID));
                                 if (participant != null)
                                 {
-                                    user = await ChannelSession.ChannelUsers.AddOrUpdateUser(participant);
+                                    user = await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
                                 }
                             }
                         }

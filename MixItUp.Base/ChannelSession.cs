@@ -103,7 +103,7 @@ namespace MixItUp.Base
         public static PrivatePopulatedUserModel BotUser { get; private set; }
         public static ExpandedChannelModel Channel { get; private set; }
 
-        public static UserContainerViewModel ChannelUsers { get; private set; }
+        public static UserContainerViewModel ActiveUsers { get; private set; }
 
         public static IChannelSettings Settings { get; private set; }
 
@@ -177,7 +177,7 @@ namespace MixItUp.Base
                 ChannelSession.SecretManager = new SecretManagerService();
             }
 
-            ChannelSession.ChannelUsers = new UserContainerViewModel();
+            ChannelSession.ActiveUsers = new UserContainerViewModel();
 
             ChannelSession.PreMadeChatCommands = new List<PreMadeChatCommand>();
             ChannelSession.GameQueue = new LockedList<UserViewModel>();
@@ -486,7 +486,7 @@ namespace MixItUp.Base
         {
             if (currency.Currency.RankChangedCommand != null)
             {
-                UserViewModel user = await ChannelSession.ChannelUsers.GetUser(currency.User.ID);
+                UserViewModel user = await ChannelSession.ActiveUsers.GetUser(currency.User.ID);
                 if (user != null)
                 {
                     await currency.Currency.RankChangedCommand.Perform(user);

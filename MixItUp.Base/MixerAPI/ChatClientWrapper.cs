@@ -225,7 +225,7 @@ namespace MixItUp.Base.MixerAPI
 
                     foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
                     {
-                        await ChannelSession.ChannelUsers.AddOrUpdateUser(chatUser);
+                        await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
                     }
 
                     if (ChannelSession.IsStreamer)
@@ -313,7 +313,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task<UserViewModel> AddUser(ChatUserModel chatUser)
         {
-            return await ChannelSession.ChannelUsers.AddOrUpdateUser(chatUser);
+            return await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
         }
 
         private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
@@ -453,7 +453,7 @@ namespace MixItUp.Base.MixerAPI
                     }
                 }
 
-                foreach (UserViewModel user in await ChannelSession.ChannelUsers.GetAllWorkableUsers())
+                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                 {
                     user.UpdateMinuteUserData(currenciesToUpdate);
                 }
@@ -479,7 +479,7 @@ namespace MixItUp.Base.MixerAPI
                     }
                 }
 
-                foreach (UserViewModel user in await ChannelSession.ChannelUsers.GetAllUsers())
+                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
                 {
                     if (chatUsers.ContainsKey(user.ID))
                     {
@@ -488,13 +488,13 @@ namespace MixItUp.Base.MixerAPI
                     }
                     else
                     {
-                        await ChannelSession.ChannelUsers.RemoveUser(user.ID);
+                        await ChannelSession.ActiveUsers.RemoveUser(user.ID);
                     }
                 }
 
                 foreach (ChatUserModel chatUser in chatUsers.Values)
                 {
-                    await ChannelSession.ChannelUsers.AddOrUpdateUser(chatUser);
+                    await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
                 }
 
                 await Task.Delay(30000);
@@ -569,7 +569,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
-            UserViewModel user = await ChannelSession.ChannelUsers.GetUser(e.user_id);
+            UserViewModel user = await ChannelSession.ActiveUsers.GetUser(e.user_id);
             if (user != null)
             {
                 this.OnUserPurgeOccurred(sender, user);
@@ -602,7 +602,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
         {
-            UserViewModel user = await ChannelSession.ChannelUsers.RemoveUser(e.id);
+            UserViewModel user = await ChannelSession.ActiveUsers.RemoveUser(e.id);
             if (user != null)
             {
                 this.OnUserLeaveOccurred(sender, user);

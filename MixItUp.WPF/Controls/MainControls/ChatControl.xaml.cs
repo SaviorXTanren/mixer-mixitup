@@ -138,7 +138,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.UserControls.Clear();
 
-            List<UserViewModel> users = (await ChannelSession.ChannelUsers.GetAllUsers()).ToList();
+            List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
             users = users.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
             foreach (UserViewModel user in users)
             {
@@ -146,7 +146,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
-            this.ChatCountTextBlock.Text = (await ChannelSession.ChannelUsers.Count()).ToString();
+            this.ChatCountTextBlock.Text = (await ChannelSession.ActiveUsers.Count()).ToString();
 
             userUpdateLock.Release();
         }

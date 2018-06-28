@@ -130,7 +130,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
-            List<UserViewModel> users = (await ChannelSession.ChannelUsers.GetAllUsers()).ToList();
+            List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
             users.Remove(user);
             if (ChannelSession.BotUser != null)
             {
