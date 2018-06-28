@@ -36,6 +36,11 @@ namespace MixItUp.Base.Commands
         MixerUserPurge = 32,
         [Name("User Banned")]
         MixerUserBan = 34,
+
+        [Name("Channel Stream Start")]
+        MixerChannelStreamStart = 40,
+        [Name("Channel Stream Stop")]
+        MixerChannelStreamStop = 41,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>

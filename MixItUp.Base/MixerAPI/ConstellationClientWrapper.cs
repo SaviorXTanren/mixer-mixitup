@@ -175,7 +175,27 @@ namespace MixItUp.Base.MixerAPI
 
             if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
             {
-
+                if (e.payload["online"] != null)
+                {
+                    bool online = e.payload["online"].ToObject<bool>();
+                    user = ChannelSession.GetCurrentUser();
+                    if (online)
+                    {
+                        if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)))
+                        {
+                            this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart));
+                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)), user);
+                        }
+                    }
+                    else
+                    {
+                        if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)))
+                        {
+                            this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop));
+                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)), user);
+                        }
+                    }
+                }
             }
             else if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()))
             {
