@@ -16,15 +16,15 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
 
-        <MaterialDesign:PackIcon Kind="AccountSettingsVariant" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="AccountSettingsVariant" x:Key="UserRolePopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="User Role" />
 
-        <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="Timer" x:Key="CooldownPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="Cooldown" />
 
-        <MaterialDesign:PackIcon Kind="Coin" x:Key="CurrencyPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="Coin" x:Key="CurrencyPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="Currency" />
 
-        <MaterialDesign:PackIcon Kind="Wunderlist" x:Key="RankPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="Wunderlist" x:Key="RankPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="Rank" />
 
-        <MaterialDesign:PackIcon Kind="AccountMultiple" x:Key="ThresholdPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" />
+        <MaterialDesign:PackIcon Kind="AccountMultiple" x:Key="ThresholdPopupBoxIcon" Style="{StaticResource DefaultPackIcon}" x:Shared="False" Width="24" Height="24" ToolTip="User Threshold" />
 
     </UserControl.Resources>
 
