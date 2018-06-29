@@ -83,6 +83,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.customChatCommands.Clear();
 
             IEnumerable<ChatCommand> data = ChannelSession.Settings.ChatCommands.ToList();
+            data = data.OrderBy(c => c.Name);
             if (sortColumn != null)
             {
                 int columnIndex = this.CustomCommandsListView.Columns.IndexOf(sortColumn);

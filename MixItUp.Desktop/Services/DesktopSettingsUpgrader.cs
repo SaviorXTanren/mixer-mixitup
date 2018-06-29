@@ -52,6 +52,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version16Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version17Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version18Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version19Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
