@@ -50,6 +50,8 @@ namespace MixItUp.Base.Util
 
         public void RemoveAt(int index) { lock (objLock) { this.items.RemoveAt(index); } }
 
+        public int RemoveAll(Predicate<T> match) { lock (objLock) { return this.items.RemoveAll(match); } }
+
         IEnumerator IEnumerable.GetEnumerator() { lock (objLock) { return this.ToList().GetEnumerator(); } }
 
         public List<T> ToList() { lock (objLock) { return this.items.ToList(); } }
