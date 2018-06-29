@@ -61,6 +61,11 @@ namespace MixItUp.Desktop.Files
             return Task.FromResult<IEnumerable<string>>(new List<string>());
         }
 
+        public bool FileExists(string filePath)
+        {
+            return File.Exists(filePath);
+        }
+
         public async Task<string> ReadFile(string filePath)
         {
             try
@@ -226,7 +231,10 @@ namespace MixItUp.Desktop.Files
                                         Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
                                     }
                                 }
-                                file.ExtractToFile(fullPath, true);
+                                else
+                                {
+                                    file.ExtractToFile(fullPath, true);
+                                }
                             }
                         }
                     }

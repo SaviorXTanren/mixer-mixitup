@@ -21,7 +21,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Left">
@@ -40,6 +42,26 @@
             <TextBox Grid.Column="0" x:Name="ClipNameTextBox" MaterialDesign:HintAssist.Hint="Clip Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="525" />
 
             <TextBox Grid.Column="2" x:Name="ClipLengthTextBox" MaterialDesign:HintAssist.Hint="Length (15-300 Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+        </Grid>
+
+        <Grid x:Name="DownloadClipGrid" Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" VerticalAlignment="Bottom">Download Clip:</TextBlock>
+            <ToggleButton Grid.Column="2" x:Name="DownloadClipToggleButton" VerticalAlignment="Bottom" Checked="DownloadClipToggleButton_Checked" Unchecked="DownloadClipToggleButton_Checked" />
+
+            <TextBox Grid.Column="4" x:Name="DownloadDirectoryTextBox" IsEnabled="False" MaterialDesign:HintAssist.Hint="Download Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="450" />
+            <Button Grid.Column="6" x:Name="DownloadDirectoryBrowseButton" IsEnabled="False" VerticalAlignment="Bottom" Click="DownloadDirectoryBrowseButton_Click">Browse</Button>
+
+            <TextBlock Grid.Column="4" x:Name="FFMPEGNotInstalledTextBlock" Visibility="Collapsed" Margin="40,0,0,0" VerticalAlignment="Center" Foreground="Red">FFMPEG must be installed through the Mix It Up Settings to use this feature</TextBlock>
         </Grid>
     </Grid>
 </local:ActionControlBase>
