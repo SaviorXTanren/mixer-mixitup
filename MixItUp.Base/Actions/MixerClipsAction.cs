@@ -118,7 +118,7 @@ namespace MixItUp.Base.Actions
                     }
                     else
                     {
-                        await ChannelSession.Chat.SendMessage("Unable to create clip, please try again later");
+                        await ChannelSession.Chat.SendMessage("Unable to create clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
                     }
                 }
             }
