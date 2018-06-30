@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -10,7 +11,8 @@ namespace MixItUp.Base.ViewModel.Requirement
     public enum CooldownTypeEnum
     {
         Global,
-        Individual,
+        [Name("Per Person")]
+        PerPerson,
         Group,
     }
 
@@ -84,7 +86,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 return false;
             }
-            else if (this.Type == CooldownTypeEnum.Individual && this.individualCooldowns.ContainsKey(user.ID) && this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
+            else if (this.Type == CooldownTypeEnum.PerPerson && this.individualCooldowns.ContainsKey(user.ID) && this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
             {
                 return false;
             }
@@ -106,7 +108,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 timeLeft = this.globalCooldown.AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
-            else if (this.Type == CooldownTypeEnum.Individual)
+            else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 timeLeft = this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
@@ -123,7 +125,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 this.globalCooldown = DateTimeOffset.Now;
             }
-            else if (this.Type == CooldownTypeEnum.Individual)
+            else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 this.individualCooldowns[user.ID] = DateTimeOffset.Now;
             }
@@ -139,7 +141,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             {
                 this.globalCooldown = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
             }
-            else if (this.Type == CooldownTypeEnum.Individual)
+            else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 this.individualCooldowns[user.ID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
             }
