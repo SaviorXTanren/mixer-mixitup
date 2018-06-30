@@ -20,6 +20,9 @@ namespace MixItUp.Base.ViewModel.Import
         public string Command { get; set; }
 
         [DataMember]
+        public bool ContainsExclamation { get; set; }
+
+        [DataMember]
         public string Text { get; set; }
 
         [DataMember]
@@ -45,6 +48,9 @@ namespace MixItUp.Base.ViewModel.Import
         {
             this.Command = command;
             this.Command = this.Command.ToLower();
+
+            this.ContainsExclamation = this.Command.Contains("!");
+
             this.Command = this.Command.Replace("!", "");
 
             this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(text);

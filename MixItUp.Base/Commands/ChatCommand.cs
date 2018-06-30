@@ -31,7 +31,7 @@ namespace MixItUp.Base.Commands
             : this(command.Command, command.Command, command.Requirements)
         {
             this.Actions.AddRange(command.Actions);
-            this.IncludeExclamationInCommands = false;
+            this.IncludeExclamationInCommands = command.ContainsExclamation;
             this.IsEnabled = command.Enabled;
         }
 
