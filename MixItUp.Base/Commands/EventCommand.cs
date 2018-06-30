@@ -34,6 +34,9 @@ namespace MixItUp.Base.Commands
         MixerUserUnfollow = 31,
         [Name("User Purged")]
         MixerUserPurge = 32,
+        [Name("User Timed Out")]
+        [Obsolete]
+        MixerUserTimeout = 33,
         [Name("User Banned")]
         MixerUserBan = 34,
 
