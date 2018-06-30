@@ -126,7 +126,7 @@ namespace MixItUp.Base.Commands
 
         public long GetCooldownTimestamp()
         {
-            if (this.Requirements.Cooldown != null && (this.Requirements.Cooldown.Type == CooldownTypeEnum.Global || this.Requirements.Cooldown.Type == CooldownTypeEnum.Group))
+            if (this.Requirements.Cooldown != null && (this.Requirements.Cooldown.Type == CooldownTypeEnum.Static || this.Requirements.Cooldown.Type == CooldownTypeEnum.Group))
             {
                 return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount));
             }

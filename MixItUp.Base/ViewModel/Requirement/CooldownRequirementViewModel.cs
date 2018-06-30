@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Util;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -9,8 +10,9 @@ namespace MixItUp.Base.ViewModel.Requirement
 {
     public enum CooldownTypeEnum
     {
-        Global,
-        Individual,
+        Static,
+        [Name("Per Person")]
+        PerPerson,
         Group,
     }
 
@@ -35,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public CooldownRequirementViewModel()
         {
-            this.Type = CooldownTypeEnum.Global;
+            this.Type = CooldownTypeEnum.Static;
         }
 
         public CooldownRequirementViewModel(CooldownTypeEnum type, int amount)
@@ -80,11 +82,11 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public bool DoesMeetRequirement(UserViewModel user)
         {
-            if (this.Type == CooldownTypeEnum.Global && this.globalCooldown.AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
+            if (this.Type == CooldownTypeEnum.Static && this.globalCooldown.AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
             {
                 return false;
             }
-            else if (this.Type == CooldownTypeEnum.Individual && this.individualCooldowns.ContainsKey(user.ID) && this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
+            else if (this.Type == CooldownTypeEnum.PerPerson && this.individualCooldowns.ContainsKey(user.ID) && this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
             {
                 return false;
             }
@@ -102,11 +104,11 @@ namespace MixItUp.Base.ViewModel.Requirement
         public async Task SendNotMetWhisper(UserViewModel user)
         {
             TimeSpan timeLeft = new TimeSpan();
-            if (this.Type == CooldownTypeEnum.Global)
+            if (this.Type == CooldownTypeEnum.Static)
             {
                 timeLeft = this.globalCooldown.AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
-            else if (this.Type == CooldownTypeEnum.Individual)
+            else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 timeLeft = this.individualCooldowns[user.ID].AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
@@ -119,11 +121,11 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public void UpdateCooldown(UserViewModel user)
         {
-            if (this.Type == CooldownTypeEnum.Global)
+            if (this.Type == CooldownTypeEnum.Static)
             {
                 this.globalCooldown = DateTimeOffset.Now;
             }
-            else if (this.Type == CooldownTypeEnum.Individual)
+            else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 this.individualCooldowns[user.ID] = DateTimeOffset.Now;
             }
@@ -135,11 +137,11 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public void ResetCooldown(UserViewModel user)
         {
-            if (this.Type == CooldownTypeEnum.Global)
+            if (this.Type == CooldownTypeEnum.Static)
             {
                 this.globalCooldown = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
             }
-            else if (this.Type == CooldownTypeEnum.Individual)
+            else if (this.Type == CooldownTypeEnum.PerPerson)
             {
                 this.individualCooldowns[user.ID] = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
             }
