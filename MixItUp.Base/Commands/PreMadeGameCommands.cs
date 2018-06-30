@@ -28,7 +28,7 @@ namespace MixItUp.Base.Commands
 
         public SpinWheelGameCommand(UserCurrencyViewModel currency)
             : base("Spin Wheel", new List<string>() { "spin" }, new RequirementViewModel(role: new RoleRequirementViewModel(MixerRoleEnum.User),
-                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Static, 15), currency: new CurrencyRequirementViewModel(currency, 1, 100)),
+                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Global, 15), currency: new CurrencyRequirementViewModel(currency, 1, 100)),
                   new List<GameOutcome>(), new List<GameOutcomeGroup>(), null)
         {
             this.Outcomes.Add(new GameOutcome("Win", PreMadeGameCommandHelper.CreateCustomChatCommand("@$username won $gamepayout $gamecurrencyname!")));
@@ -55,7 +55,7 @@ namespace MixItUp.Base.Commands
 
         public HeistGameCommand(UserCurrencyViewModel currency)
             : base("Heist", new List<string>() { "heist" }, new RequirementViewModel(role: new RoleRequirementViewModel(MixerRoleEnum.User),
-                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Static, 60), currency: new CurrencyRequirementViewModel(currency, CurrencyRequirementTypeEnum.MinimumOnly, 10)),
+                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Global, 60), currency: new CurrencyRequirementViewModel(currency, CurrencyRequirementTypeEnum.MinimumOnly, 10)),
                   new List<GameOutcome>(), new List<GameOutcomeGroup>(), null, gameLength: 30, minimumParticipants: 2)
         {
             this.GameStartedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username is starting a heist! Type \"!heist <BET>\" in chat to join in!");
@@ -91,7 +91,7 @@ namespace MixItUp.Base.Commands
 
         public RussianRouletteGameCommand(UserCurrencyViewModel currency)
             : base("Russian Roulette", new List<string>() { "rr", "russian" }, new RequirementViewModel(role: new RoleRequirementViewModel(MixerRoleEnum.User),
-                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Static, 60), currency: new CurrencyRequirementViewModel(currency, 10)), gameLength: 30, minimumParticipants: 2)
+                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Global, 60), currency: new CurrencyRequirementViewModel(currency, 10)), gameLength: 30, minimumParticipants: 2)
         {
             this.GameStartedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username is starting a game of Russian Roulette! Type \"!rr\" in chat to join in and win the whole pot!");
             this.GameEndedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("Russian Roulette has ended...and @$username emerged victorious with $gamepayout $gamecurrencyname!");
@@ -106,7 +106,7 @@ namespace MixItUp.Base.Commands
 
         public CharityGameCommand(UserCurrencyViewModel currency)
             : base("Charity", new List<string>() { "charity" }, new RequirementViewModel(role: new RoleRequirementViewModel(MixerRoleEnum.User),
-                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Static, 15),
+                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Global, 15),
                 currency: new CurrencyRequirementViewModel(currency, CurrencyRequirementTypeEnum.MinimumOnly, 1)), giveToRandomUser: true)
         {
             this.UserParticipatedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$username just received $gamepayout $gamecurrencyname randomly from @$gamestarterusername!");
@@ -119,7 +119,7 @@ namespace MixItUp.Base.Commands
 
         public GiveGameCommand(UserCurrencyViewModel currency)
             : base("Give", new List<string>() { "give" }, new RequirementViewModel(role: new RoleRequirementViewModel(MixerRoleEnum.User),
-                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Static, 15),
+                cooldown: new CooldownRequirementViewModel(CooldownTypeEnum.Global, 15),
                 currency: new CurrencyRequirementViewModel(currency, CurrencyRequirementTypeEnum.MinimumOnly, 1)), giveToRandomUser: false)
         {
             this.UserParticipatedCommand = PreMadeGameCommandHelper.CreateCustomChatCommand("@$gamestarterusername just gave $gamepayout $gamecurrencyname to @$username!");

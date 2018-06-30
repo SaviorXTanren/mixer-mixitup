@@ -21,7 +21,7 @@ namespace MixItUp.WPF.Controls.Requirement
             InitializeComponent();
 
             this.CooldownTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CooldownTypeEnum>().OrderBy(c => c);
-            this.CooldownTypeComboBox.SelectedItem = EnumHelper.GetEnumName(CooldownTypeEnum.Static);
+            this.CooldownTypeComboBox.SelectedItem = EnumHelper.GetEnumName(CooldownTypeEnum.Global);
             this.CooldownAmountTextBox.Text = "0";
 
             IEnumerable<PermissionsCommandBase> permissionCommands = ChannelSession.AllCommands.Where(c => c is PermissionsCommandBase).Select(c => (PermissionsCommandBase)c);

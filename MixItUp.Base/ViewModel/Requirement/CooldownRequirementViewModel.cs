@@ -10,7 +10,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 {
     public enum CooldownTypeEnum
     {
-        Static,
+        Global,
         [Name("Per Person")]
         PerPerson,
         Group,
@@ -37,7 +37,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public CooldownRequirementViewModel()
         {
-            this.Type = CooldownTypeEnum.Static;
+            this.Type = CooldownTypeEnum.Global;
         }
 
         public CooldownRequirementViewModel(CooldownTypeEnum type, int amount)
@@ -82,7 +82,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public bool DoesMeetRequirement(UserViewModel user)
         {
-            if (this.Type == CooldownTypeEnum.Static && this.globalCooldown.AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
+            if (this.Type == CooldownTypeEnum.Global && this.globalCooldown.AddSeconds(this.CooldownAmount) > DateTimeOffset.Now)
             {
                 return false;
             }
@@ -104,7 +104,7 @@ namespace MixItUp.Base.ViewModel.Requirement
         public async Task SendNotMetWhisper(UserViewModel user)
         {
             TimeSpan timeLeft = new TimeSpan();
-            if (this.Type == CooldownTypeEnum.Static)
+            if (this.Type == CooldownTypeEnum.Global)
             {
                 timeLeft = this.globalCooldown.AddSeconds(this.CooldownAmount) - DateTimeOffset.Now;
             }
@@ -121,7 +121,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public void UpdateCooldown(UserViewModel user)
         {
-            if (this.Type == CooldownTypeEnum.Static)
+            if (this.Type == CooldownTypeEnum.Global)
             {
                 this.globalCooldown = DateTimeOffset.Now;
             }
@@ -137,7 +137,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public void ResetCooldown(UserViewModel user)
         {
-            if (this.Type == CooldownTypeEnum.Static)
+            if (this.Type == CooldownTypeEnum.Global)
             {
                 this.globalCooldown = DateTimeOffset.Now.Subtract(TimeSpan.FromSeconds(this.CooldownAmount));
             }
