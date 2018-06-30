@@ -26,6 +26,11 @@ namespace MixItUp.WPF.Controls.Requirement
             this.CurrencyPopup.Visibility = Visibility.Collapsed;
         }
 
+        public void HideThresholdRequirement()
+        {
+            this.ThresholdPopup.Visibility = Visibility.Collapsed;
+        }
+
         public async Task<bool> Validate()
         {
             if (this.CurrencyPopup.Visibility == Visibility.Visible)

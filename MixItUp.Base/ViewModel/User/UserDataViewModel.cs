@@ -285,7 +285,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SubtractCurrencyAmount(UserCurrencyViewModel currency, int amount)
         {
-            this.AddCurrencyAmount(currency, -1 * amount);
+            this.SetCurrencyAmount(currency, Math.Max(this.GetCurrencyAmount(currency) - amount, 0));
         }
 
         public void ResetCurrency(UserCurrencyViewModel currency)

@@ -54,7 +54,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             return false;
         }
 
-        public async Task SendNotMetWhisper(UserViewModel user)
+        public async Task SendThresholdNotMetWhisper(UserViewModel user)
         {
             await ChannelSession.Chat.Whisper(user.UserName, string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
         }

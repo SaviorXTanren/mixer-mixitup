@@ -55,22 +55,7 @@
             </DataGrid>
 
             <Grid Grid.Row="2" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Pre-Made Games:</TextBlock>
-                <ComboBox Grid.Column="2" x:Name="PreMadeGamesComboBox" Width="180" VerticalAlignment="Center" />
-
-                <Button x:Name="AddPreMadeGameButton" Grid.Column="4" Click="AddPreMadeGameButton_Click">Add Pre-Made Game</Button>
-
-                <Button x:Name="AddCommandButton" Grid.Column="6" Click="AddCommandButton_Click">New Custom Game</Button>
+                <Button x:Name="AddGameButton" Click="AddGameButton_Click" Width="100">New Game</Button>
             </Grid>
 
         </Grid>

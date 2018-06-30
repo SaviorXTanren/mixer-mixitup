@@ -29,7 +29,15 @@ namespace MixItUp.Base.ViewModel.User
             });
         }
 
-        public async Task<UserViewModel> GetUser(uint userID)
+        public async Task<UserViewModel> GetUserByUsername(string username)
+        {
+            return await this.LockWrapper(() =>
+            {
+                return Task.FromResult<UserViewModel>(this.users.Values.FirstOrDefault(u => u.UserName.Equals(username)));
+            });
+        }
+
+        public async Task<UserViewModel> GetUserByID(uint userID)
         {
             return await this.LockWrapper(() =>
             {
@@ -41,7 +49,7 @@ namespace MixItUp.Base.ViewModel.User
             });
         }
 
-        public async Task<UserViewModel> GetUser(string interactiveParticipantID)
+        public async Task<UserViewModel> GetUserByID(string interactiveParticipantID)
         {
             return await this.LockWrapper(() =>
             {
@@ -58,7 +66,7 @@ namespace MixItUp.Base.ViewModel.User
                     this.users[user.ID] = user;
                     return Task.FromResult(0);
                 });
-                return await this.GetUser(user.ID);
+                return await this.GetUserByID(user.ID);
             }
             return null;
         }
@@ -83,7 +91,7 @@ namespace MixItUp.Base.ViewModel.User
                         await this.PerformUserFirstJoin(this.users[chatUser.userId.GetValueOrDefault()]);
                     }
                 });
-                return await this.GetUser(chatUser.userId.GetValueOrDefault());
+                return await this.GetUserByID(chatUser.userId.GetValueOrDefault());
             }
             return null;
         }
@@ -106,7 +114,7 @@ namespace MixItUp.Base.ViewModel.User
                     await this.PerformUserFirstJoin(this.users[interactiveUser.userID]);
                 }
             });
-            return await this.GetUser(interactiveUser.userID);
+            return await this.GetUserByID(interactiveUser.userID);
         }
 
         public async Task RemoveInteractiveUser(InteractiveParticipantModel interactiveUser)

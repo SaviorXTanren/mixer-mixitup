@@ -184,8 +184,16 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             if (ChannelSession.Chat != null && ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this",
-                    this.RequiredAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                if (this.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0}-{1} {2} to do this",
+                        this.RequiredAmount, this.MaximumAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this",
+                        this.RequiredAmount, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                }
             }
         }
 

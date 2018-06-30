@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -11,8 +10,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
-    #region Game Outcome Classes
-
     [DataContract]
     public class GameOutcome
     {
@@ -20,638 +17,369 @@ namespace MixItUp.Base.Commands
         public string Name { get; set; }
 
         [DataMember]
-        public CustomCommand ResultCommand { get; set; }
-
-        public GameOutcome() { }
-
-        public GameOutcome(string name)
-        {
-            this.Name = name;
-        }
-
-        public GameOutcome(string name, CustomCommand resultCommand)
-            : this(name)
-        {
-            this.ResultCommand = resultCommand;
-        }
-    }
-
-    [DataContract]
-    public class GameOutcomeGroup
-    {
-        [DataMember]
-        public MixerRoleEnum Role { get; set; }
-
-        [DataMember]
-        public CurrencyRequirementViewModel RankRequirement { get; set; }
-
-        [DataMember]
-        public List<GameOutcomeProbability> Probabilities { get; set; }
-
-        public GameOutcomeGroup() { this.Probabilities = new List<GameOutcomeProbability>(); }
-
-        public GameOutcomeGroup(MixerRoleEnum role) : this() { this.Role = role; }
-
-        public GameOutcomeGroup(CurrencyRequirementViewModel rankRequirement) : this() { this.RankRequirement = rankRequirement; }
-
-        public int GetEvaluatedTestPayout() { return this.Probabilities.Sum(p => p.GetEvaluatedTestPayout()); }
-
-        public bool IsObtainableByUser(UserViewModel user)
-        {
-            if (this.RankRequirement != null && this.RankRequirement.GetCurrency() != null)
-            {
-                return (user.Data.GetCurrencyAmount(this.RankRequirement.GetCurrency()) >= this.RankRequirement.RequiredRank.MinimumPoints);
-            }
-            else
-            {
-                return (user.MixerRoles.Any(r => r >= this.Role));
-            }
-        }
-    }
-
-    [DataContract]
-    public class GameOutcomeProbability
-    {
-        [DataMember]
-        public double Probability { get; set; }
-
-        [DataMember]
         public double Payout { get; set; }
 
         [DataMember]
-        public string OutcomeName { get; set; }
+        public Dictionary<MixerRoleEnum, int> RoleProbabilities { get; set; }
 
-        public GameOutcomeProbability() { }
+        [DataMember]
+        public CustomCommand Command { get; set; }
 
-        public GameOutcomeProbability(int probability, int payout)
+        public GameOutcome() { }
+
+        public GameOutcome(string name, double payout, Dictionary<MixerRoleEnum, int> roleProbabilities, CustomCommand command)
         {
-            this.Probability = probability;
+            this.Name = name;
             this.Payout = payout;
+            this.RoleProbabilities = roleProbabilities;
+            this.Command = command;
         }
 
-        public GameOutcomeProbability(int probability, int payout, string outcomeName)
-            : this(probability, payout)
+        public int GetRoleProbability(MixerRoleEnum role)
         {
-            this.OutcomeName = outcomeName;
-        }
-
-        public int GetEvaluatedTestPayout() { return this.EvaluatePayout(100) * (int)this.Probability; }
-
-        public int EvaluatePayout(double bet) { return (this.Payout == 0 || this.Probability == 0) ? 0 : (int)(bet + (bet * (this.Payout / 100.0))); }
-    }
-
-    #endregion Game Outcome Classes
-
-    #region Game Type Classes
-
-    [DataContract]
-    public class UserCharityGameCommand : GameCommandBase
-    {
-        [DataMember]
-        public bool GiveToRandomUser { get; set; }
-
-        [DataMember]
-        public CustomCommand UserParticipatedCommand { get; set; }
-
-        [JsonIgnore]
-        private int lastBet = 0;
-
-        public UserCharityGameCommand() { }
-
-        public UserCharityGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, bool giveToRandomUser)
-            : base(name, commands, requirements)
-        {
-            this.GiveToRandomUser = giveToRandomUser;
-        }
-
-        public override int TotalBets { get { return this.lastBet; } }
-
-        public override int TotalUsers { get { return 1; } }
-
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
-        {
-            List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
-            users.Remove(user);
-            if (ChannelSession.BotUser != null)
+            if (this.RoleProbabilities.ContainsKey(role))
             {
-                users.RemoveAll(u => u.ID.Equals(ChannelSession.BotUser.id));
+                return this.RoleProbabilities[role];
             }
 
-            if (users.Count == 0)
+            foreach (MixerRoleEnum checkRole in this.RoleProbabilities.Select(kvp => kvp.Key).OrderByDescending(k => k))
             {
-                await this.WhisperUser(user, "There are not enough other users in chat to use this command");
-                return;
-            }
-
-            UserViewModel receiver = null;
-            if (this.GiveToRandomUser)
-            {
-                Random random = new Random();
-                int randomNumber = random.Next(users.Count);
-                receiver = users[randomNumber];
-            }
-            else if (arguments != null && arguments.Count() == 2)
-            {
-                string username = arguments.First();
-                username = username.Replace("@", "");
-                receiver = users.FirstOrDefault(u => u.UserName.Equals(username));
-            }
-            else
-            {
-                await this.WhisperUser(user, string.Format("USAGE: !{0} <USERNAME> <BET>", this.Commands.FirstOrDefault()));
-                return;
-            }
-
-            if (receiver == null)
-            {
-                await this.WhisperUser(user, "We could not find someone with that username in chat");
-                return;
-            }
-
-            if (await this.PerformUserJoinChecks(user, arguments))
-            {
-                this.gameStarterUser = user;
-                this.SetLastRun(user);
-
-                this.lastBet = this.GetBetAmount(arguments);
-
-                receiver.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.TotalBets);
-
-                await this.RunCommand(this.UserParticipatedCommand, receiver, this.TotalBets);
-            }
-        }
-
-        protected override int GetUserBet(UserViewModel user) { return this.lastBet; }
-
-        protected override int GetBetAmount(IEnumerable<string> arguments)
-        {
-            int amount = -1;
-
-            if (!this.GiveToRandomUser && arguments != null && arguments.Count() == 2)
-            {
-                int.TryParse(arguments.ElementAt(1), out amount);
-            }
-
-            if (amount < 0)
-            {
-                amount = base.GetBetAmount(arguments);
-            }
-
-            return amount;
-        }
-    }
-
-    [DataContract]
-    public class OnlyOneWinnerGameCommand : GameCommandBase
-    {
-        [DataMember]
-        public int GameLength { get; set; }
-        [DataMember]
-        public int MinimumParticipants { get; set; }
-
-        [DataMember]
-        public CustomCommand GameStartedCommand { get; set; }
-        [DataMember]
-        public CustomCommand GameEndedCommand { get; set; }
-        [DataMember]
-        public CustomCommand NotEnoughUsersCommand { get; set; }
-        [DataMember]
-        public CustomCommand UserJoinedCommand { get; set; }
-
-        [JsonIgnore]
-        protected Dictionary<UserViewModel, int> UserBets = new Dictionary<UserViewModel, int>();
-
-        [JsonIgnore]
-        private Task currentGameInstance = null;
-
-        public OnlyOneWinnerGameCommand() { }
-
-        public OnlyOneWinnerGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int gameLength, int minimumParticipants)
-            : base(name, commands, requirements)
-        {
-            this.GameLength = gameLength;
-            this.MinimumParticipants = minimumParticipants;
-        }
-
-        public override int TotalBets { get { return this.UserBets.Sum(kvp => kvp.Value); } }
-
-        public override int TotalUsers { get { return this.UserBets.Count; } }
-
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
-        {
-            if (!this.UserBets.ContainsKey(user))
-            {
-                if (await this.PerformUserJoinChecks(user, arguments))
+                if (role >= checkRole)
                 {
-                    this.UserBets[user] = this.GetBetAmount(arguments);
-                    if (this.UserBets.Count == 1)
-                    {
-                        await this.StartGame(user);
-                    }
-                    await this.RunCommand(this.UserJoinedCommand, user);
-                }
-            }
-            else
-            {
-                await this.WhisperUser(user, "You have already entered the game");
-                return;
-            }
-        }
-
-        private async Task StartGame(UserViewModel user)
-        {
-            this.gameStarterUser = user;
-            this.currentGameInstance = Task.Run(async () =>
-            {
-                try
-                {
-                    await Task.Delay(this.GameLength * 1000);
-
-                    this.SetLastRun(user);
-
-                    if (this.UserBets.Count >= this.MinimumParticipants)
-                    {
-                        Random random = new Random();
-                        int randomNumber = random.Next(this.UserBets.Count);
-                        UserViewModel winner = this.UserBets.ElementAt(randomNumber).Key;
-
-                        winner.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.TotalBets);
-
-                        await this.RunCommand(this.GameEndedCommand, winner, this.TotalBets);
-                    }
-                    else
-                    {
-                        await this.RunCommand(this.NotEnoughUsersCommand, user);
-                    }
-
-                    this.UserBets.Clear();
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-                finally { this.currentGameInstance = null; }
-            });
-
-            await this.RunCommand(this.GameStartedCommand, user);
-        }
-
-        protected override int GetUserBet(UserViewModel user) { return this.UserBets.ContainsKey(user) ? this.UserBets[user] : 0; }
-    }
-
-    [DataContract]
-    public class IndividualProbabilityGameCommand : OutcomeGameCommandBase
-    {
-        [DataMember]
-        public int GameLength { get; set; }
-        [DataMember]
-        public int MinimumParticipants { get; set; }
-
-        [DataMember]
-        public CustomCommand GameStartedCommand { get; set; }
-        [DataMember]
-        public CustomCommand GameEndedCommand { get; set; }
-        [DataMember]
-        public CustomCommand NotEnoughUsersCommand { get; set; }
-        [DataMember]
-        public CustomCommand UserJoinedCommand { get; set; }
-
-        [JsonIgnore]
-        protected Dictionary<UserViewModel, int> UserBets = new Dictionary<UserViewModel, int>();
-
-        [JsonIgnore]
-        private Task currentGameInstance = null;
-
-        public IndividualProbabilityGameCommand() { }
-
-        public IndividualProbabilityGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes,
-            IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand, int gameLength, int minimumParticipants)
-            : base(name, commands, requirements, outcomes, groups, loseLeftoverCommand)
-        {
-            this.GameLength = gameLength;
-            this.MinimumParticipants = minimumParticipants;
-        }
-
-        public override int TotalBets { get { return this.UserBets.Sum(kvp => kvp.Value); } }
-
-        public override int TotalUsers { get { return this.UserBets.Count; } }
-
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
-        {
-            if (!this.UserBets.ContainsKey(user))
-            {
-                if (await this.PerformUserJoinChecks(user, arguments))
-                {
-                    this.UserBets[user] = this.GetBetAmount(arguments);
-                    if (this.UserBets.Count == 1)
-                    {
-                        await this.StartGame(user);
-                    }
-                    await this.RunCommand(this.UserJoinedCommand, user);
-                }
-            }
-            else
-            {
-                await this.WhisperUser(user, "You have already entered the game");
-                return;
-            }
-        }
-
-        private async Task StartGame(UserViewModel user)
-        {
-            this.gameStarterUser = user;
-            this.currentGameInstance = Task.Run(async () =>
-            {
-                try
-                {
-                    await Task.Delay(this.GameLength * 1000);
-
-                    this.SetLastRun(user);
-
-                    if (this.UserBets.Count >= this.MinimumParticipants)
-                    {
-                        foreach (var kvp in this.UserBets)
-                        {
-                            await this.RunRandomProbabilityForUser(this, kvp.Key, kvp.Value, this.Requirements.Currency.GetCurrency());
-                        }
-
-                        await this.RunCommand(this.GameEndedCommand, user, this.TotalBets);
-                    }
-                    else
-                    {
-                        await this.RunCommand(this.NotEnoughUsersCommand, user);
-                    }
-
-                    this.UserBets.Clear();
-                }
-                catch (Exception ex) { Logger.Log(ex); }
-                finally { this.currentGameInstance = null; }
-            });
-
-            await this.RunCommand(this.GameStartedCommand, user);
-        }
-
-        protected override int GetUserBet(UserViewModel user) { return this.UserBets.ContainsKey(user) ? this.UserBets[user] : 0; }
-    }
-
-    [DataContract]
-    public class SinglePlayerGameCommand : OutcomeGameCommandBase
-    {
-        [JsonIgnore]
-        private int lastBet = 0;
-
-        public SinglePlayerGameCommand() { }
-
-        public SinglePlayerGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes,
-            IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand)
-            : base(name, commands, requirements, outcomes, groups, loseLeftoverCommand)
-        { }
-
-        public override int TotalBets { get { return this.lastBet; } }
-
-        public override int TotalUsers { get { return 1; } }
-
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
-        {
-            if (await this.PerformUserJoinChecks(user, arguments))
-            {
-                this.gameStarterUser = user;
-
-                this.SetLastRun(user);
-
-                int betAmount = this.GetBetAmount(arguments);
-
-                await this.RunRandomProbabilityForUser(this, user, betAmount, this.Requirements.Currency.GetCurrency());
-            }
-        }
-
-        protected override int GetUserBet(UserViewModel user) { return this.lastBet; }
-    }
-
-    #endregion Game Type Classes
-
-    #region Base Game Classes
-
-    [DataContract]
-    public abstract class OutcomeGameCommandBase : GameCommandBase
-    {
-        [DataMember]
-        public List<GameOutcome> Outcomes { get; set; }
-
-        [DataMember]
-        public List<GameOutcomeGroup> Groups { get; set; }
-
-        [DataMember]
-        public CustomCommand LoseLeftoverCommand { get; set; }
-
-        [JsonIgnore]
-        private int randomSeed = (int)DateTime.Now.Ticks;
-
-        public OutcomeGameCommandBase()
-        {
-            this.Outcomes = new List<GameOutcome>();
-            this.Groups = new List<GameOutcomeGroup>();
-        }
-
-        public OutcomeGameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirement, IEnumerable<GameOutcome> outcomes,
-            IEnumerable<GameOutcomeGroup> groups, CustomCommand loseLeftoverCommand)
-            : base(name, commands, requirement)
-        {
-            this.Outcomes = outcomes.ToList();
-            this.Groups = groups.ToList();
-            this.LoseLeftoverCommand = loseLeftoverCommand;
-        }
-
-        public async Task RunRandomProbabilityForUser(GameCommandBase command, UserViewModel user, int bet, UserCurrencyViewModel currency)
-        {
-            GameOutcomeGroup bestGroup = this.Groups.First();
-            foreach (GameOutcomeGroup group in this.Groups)
-            {
-                if (group.IsObtainableByUser(user) && group.GetEvaluatedTestPayout() > bestGroup.GetEvaluatedTestPayout())
-                {
-                    bestGroup = group;
+                    return this.RoleProbabilities[checkRole];
                 }
             }
 
-            GameOutcomeProbability selectedProbability = this.SelectRandomProbability(bestGroup.Probabilities);
-            int payout = selectedProbability.EvaluatePayout(bet);
-            user.Data.AddCurrencyAmount(currency, payout);
-
-            GameOutcome outcome = this.Outcomes.FirstOrDefault(o => o.Name.Equals(selectedProbability.OutcomeName));
-            if (outcome != null)
-            {
-                await command.RunCommand(outcome.ResultCommand, user, payout);
-            }
-            else
-            {
-                await command.RunCommand(this.LoseLeftoverCommand, user, payout);
-            }
+            return this.RoleProbabilities.LastOrDefault().Value;
         }
 
-        public GameOutcomeProbability SelectRandomProbability(IEnumerable<GameOutcomeProbability> outcomeProbabilities)
+        public int GetPayout(UserViewModel user, int betAmount)
         {
-            this.randomSeed -= 123;
-            Random random = new Random(this.randomSeed);
-            int randomNumber = random.Next(100);
-
-            int minProbability = 0;
-            int maxProbability = 0;
-            foreach (GameOutcomeProbability outcomeProbability in outcomeProbabilities)
-            {
-                maxProbability += (int)outcomeProbability.Probability;
-                if (minProbability <= randomNumber && randomNumber < maxProbability)
-                {
-                    return outcomeProbability;
-                }
-                minProbability = maxProbability;
-            }
-            return new GameOutcomeProbability(0, 0, null);
+            return Convert.ToInt32(Convert.ToDouble(betAmount) * this.Payout);
         }
     }
 
     [DataContract]
     public abstract class GameCommandBase : PermissionsCommandBase
     {
-        public const string GameStarterUserNameSpecialIdentifier = "gamestarterusername";
-        public const string GameBetSpecialIdentifier = "usergamebet";
-        public const string GameTotalBetsSpecialIdentifier = "gametotalbets";
-        public const string GameTotalUsersSpecialIdentifier = "gametotalusers";
+        public const string GameBetSpecialIdentifier = "gamebet";
+
         public const string GamePayoutSpecialIdentifier = "gamepayout";
-        public const string GameCurrencyNameSpecialIdentifier = "gamecurrencyname";
+        public const string GameWinnersSpecialIdentifier = "gamewinners";
 
         private static SemaphoreSlim gameCommandPerformSemaphore = new SemaphoreSlim(1);
 
-        [Obsolete]
-        [DataMember]
-        internal CurrencyRequirementTypeEnum CurrencyRequirementType { get; set; }
+        [JsonIgnore]
+        private int randomSeed = (int)DateTime.Now.Ticks;
+
         public GameCommandBase() { }
 
-        public GameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirement)
-            : base(name, CommandTypeEnum.Game, commands, requirement)
-        { }
+        public GameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirements) : base(name, CommandTypeEnum.Game, commands, requirements) { }
 
-        [JsonIgnore]
-        public abstract int TotalBets { get; }
-
-        [JsonIgnore]
-        public abstract int TotalUsers { get; }
-
-        [JsonIgnore]
-        protected UserViewModel gameStarterUser;
-
-        [JsonIgnore]
         protected override SemaphoreSlim AsyncSemaphore { get { return GameCommandBase.gameCommandPerformSemaphore; } }
 
-        protected abstract int GetUserBet(UserViewModel user);
-
-        public async Task RunCommand(CustomCommand command, UserViewModel user, int payout = 0)
+        protected virtual async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (command != null)
+            if ((this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+                && arguments.Count() != 0)
             {
-                this.AddSpecialIdentifiersToCommand(command, user, payout);
-                await command.Perform(user);
-            }
-        }
-
-        public override bool ContainsCommand(string command)
-        {
-            var commandsToCheck = this.Commands;
-            commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
-            return commandsToCheck.Contains(command);
-        }
-
-        protected virtual void AddSpecialIdentifiersToCommand(CustomCommand command, UserViewModel user = null, int payout = 0)
-        {
-            command.AddSpecialIdentifier(GameCommandBase.GameTotalBetsSpecialIdentifier, this.TotalBets.ToString());
-            command.AddSpecialIdentifier(GameCommandBase.GameTotalUsersSpecialIdentifier, this.TotalUsers.ToString());
-            command.AddSpecialIdentifier(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
-            command.AddSpecialIdentifier(GameCommandBase.GameCurrencyNameSpecialIdentifier, this.Requirements.Currency.GetCurrency().Name);
-            if (user != null)
-            {
-                command.AddSpecialIdentifier(GameCommandBase.GameBetSpecialIdentifier, this.GetUserBet(user).ToString());
-            }
-            if (this.gameStarterUser != null)
-            {
-                command.AddSpecialIdentifier(GameCommandBase.GameStarterUserNameSpecialIdentifier, this.gameStarterUser.UserName);
-            }
-        }
-
-        protected virtual async Task<bool> PerformUserJoinChecks(UserViewModel user, IEnumerable<string> arguments)
-        {
-            if (!await this.CheckCooldownRequirement(user) || !await this.CheckUserRoleRequirement(user) || !await this.CheckRankRequirement(user))
-            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: {0}", this.Commands.First()));
                 return false;
             }
-
-            int betAmount = this.GetBetAmount(arguments);
-            if (betAmount < 0)
+            else if (arguments.Count() != 1)
             {
-                if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+                string betAmountUsageText = this.Requirements.Currency.RequiredAmount.ToString();
+                if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
                 {
-                    await this.WhisperUser(user, string.Format("USAGE: !{0}", this.Commands.FirstOrDefault()));
-                    return false;
+                    betAmountUsageText += "-" + this.Requirements.Currency.MaximumAmount.ToString();
+                }
+                else if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
+                {
+                    betAmountUsageText += "+";
+                }
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: {0} {1}", this.Commands.First(), betAmountUsageText));
+                return false;
+            }
+            return true;
+        }
+
+        protected async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
+        {
+            int betAmount = 0;
+
+            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            if (currency == null)
+            {
+                return -1;
+            }
+
+            if (this.Requirements.Currency.RequirementType != CurrencyRequirementTypeEnum.NoCurrencyCost)
+            {
+                if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+                {
+                    betAmount = this.Requirements.Currency.RequiredAmount;
                 }
                 else
                 {
-                    await this.WhisperUser(user, string.Format("USAGE: !{0} <BET>", this.Commands.FirstOrDefault()));
-                    return false;
+                    if (!int.TryParse(betAmountText, out betAmount) || betAmount <= 0)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You must specify a valid amount");
+                        return -1;
+                    }
+
+                    if (!this.Requirements.DoesMeetCurrencyRequirement(betAmount))
+                    {
+                        if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must specify an amount between {0} - {1} {2}",
+                                this.Requirements.Currency.RequiredAmount, this.Requirements.Currency.MaximumAmount, currency.Name));
+                        }
+                        else if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("You must specify an amount of at least {0} {1}",
+                                this.Requirements.Currency.RequiredAmount, currency.Name));
+                        }
+                        return -1;
+                    }
                 }
             }
+            return betAmount;
+        }
 
+        protected async Task<bool> PerformCurrencyChecks(UserViewModel user, int betAmount)
+        {
             UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
             if (currency == null)
             {
                 return false;
             }
 
-            if (!this.Requirements.Currency.DoesMeetCurrencyRequirement(betAmount))
+            if (!(await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)))
             {
-                string requiredBet = "You must enter a valid bet";
-                if (this.Requirements.Currency.MaximumAmount > 0)
-                {
-                    requiredBet += string.Format(" between {0} - {1} {2}", this.Requirements.Currency.RequiredAmount, this.Requirements.Currency.MaximumAmount, currency.Name);
-                }
-                else
-                {
-                    requiredBet += string.Format(" of {0} or more {1}", this.Requirements.Currency.RequiredAmount, currency.Name);
-                }
-                await this.WhisperUser(user, requiredBet);
                 return false;
             }
 
-            if (!this.Requirements.Currency.TrySubtractAmount(user.Data, betAmount))
+            if (user.Data.GetCurrencyAmount(currency) < betAmount)
             {
-                await this.WhisperUser(user, string.Format("You do not have the minimum {0} {1} to participate", this.Requirements.Currency.RequiredAmount, currency.Name));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have {0} {1}", betAmount, currency.Name));
                 return false;
             }
+            user.Data.SubtractCurrencyAmount(currency, betAmount);
 
             return true;
         }
 
-        protected virtual int GetBetAmount(IEnumerable<string> arguments)
+        protected GameOutcome SelectRandomOutcome(UserViewModel user, IEnumerable<GameOutcome> outcomes)
         {
-            int amount = -1;
-            if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            int randomNumber = this.GenerateRandomNumber();
+
+            int cumulativeOutcomeProbability = 0;
+            foreach (GameOutcome outcome in outcomes)
             {
-                if (arguments == null || arguments.Count() == 0)
+                if (cumulativeOutcomeProbability <= randomNumber && randomNumber < outcome.GetRoleProbability(user.PrimaryRole))
                 {
-                    amount = this.Requirements.Currency.RequiredAmount;
+                    return outcome;
                 }
+                cumulativeOutcomeProbability += outcome.GetRoleProbability(user.PrimaryRole);
             }
-            else if (arguments != null && arguments.Count() == 1)
-            {
-                int.TryParse(arguments.FirstOrDefault(), out amount);
-            }
-            return amount;
+            return outcomes.Last();
         }
 
-        protected void SetLastRun(UserViewModel user) { this.Requirements.Cooldown.UpdateCooldown(user); }
-
-        protected async Task WhisperUser(UserViewModel user, string message)
+        protected virtual async Task PerformOutcome(UserViewModel user, IEnumerable<string> arguments, GameOutcome outcome, int betAmount)
         {
-            if (ChannelSession.Chat != null && !string.IsNullOrEmpty(message))
+            int payout = outcome.GetPayout(user, betAmount);
+            user.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), payout);
+
+            if (outcome.Command != null)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, message);
+                outcome.Command.AddSpecialIdentifier(GameCommandBase.GameBetSpecialIdentifier, betAmount.ToString());
+                outcome.Command.AddSpecialIdentifier(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
+                outcome.Command.AddSpecialIdentifier(GameCommandBase.GameWinnersSpecialIdentifier, "@" + user.UserName);
+                await outcome.Command.Perform(user, arguments);
+            }
+        }
+
+        protected int GenerateRandomNumber()
+        {
+            this.randomSeed -= 123;
+            Random random = new Random(this.randomSeed);
+            return random.Next(100);
+        }
+    }
+
+    [DataContract]
+    public class SpinGameCommand : GameCommandBase
+    {
+        [DataMember]
+        public List<GameOutcome> Outcomes { get; set; }
+
+        public SpinGameCommand()
+        {
+            this.Outcomes = new List<GameOutcome>();
+        }
+
+        public SpinGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes)
+            : base(name, commands, requirements)
+        {
+            this.Outcomes = new List<GameOutcome>(outcomes);
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        {
+            if (await this.PerformUsageChecks(user, arguments))
+            {
+                int betAmount = await this.GetBetAmount(user, arguments.First());
+                if (betAmount >= 0)
+                {
+                    if (await this.PerformCurrencyChecks(user, betAmount))
+                    {
+                        await this.PerformOutcome(user, arguments, this.SelectRandomOutcome(user, this.Outcomes), betAmount);
+                        this.Requirements.UpdateCooldown(user);
+                    }
+                }
             }
         }
     }
 
-    #endregion Base Game Classes
+    [DataContract]
+    public class TwoPlayerGameCommand : GameCommandBase
+    {
+        [DataMember]
+        public int StarterPlayerSuccessProbability { get; set; }
+
+        [DataMember]
+        public bool RequiresOtherPlayerAgreement { get; set; }
+        [DataMember]
+        public int OtherPlayerResponseTime { get; set; }
+
+        private SemaphoreSlim otherPlayerSemaphore = new SemaphoreSlim(1);
+        private UserViewModel otherPlayer;
+        private int betAmount = 0;
+
+        public TwoPlayerGameCommand()
+        {
+
+        }
+
+        public TwoPlayerGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements)
+            : base(name, commands, requirements)
+        {
+
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        {
+            if (this.otherPlayer != null)
+            {
+                bool matchesPlayer = false;
+                await this.otherPlayerSemaphore.WaitAsync();
+
+                if (this.otherPlayer.Equals(user))
+                {
+                    matchesPlayer = true;
+                    this.otherPlayer = null;
+                }
+
+                this.otherPlayerSemaphore.Release();
+
+                if (matchesPlayer)
+                {
+                    await this.PerformTwoPlayerCompetition(user, arguments, betAmount);
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "There is already an existing game underway, please wait until it is finished");
+                }
+            }
+            else if (await this.PerformUsageChecks(user, arguments))
+            {
+                this.otherPlayer = await ChannelSession.ActiveUsers.GetUserByUsername(arguments.First());
+                if (this.otherPlayer == null)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("The user {0} either does not exist or is not currently in the channel", arguments.First()));
+                }
+
+                this.betAmount = await this.GetBetAmount(user, arguments.Skip(1).First());
+                if (this.betAmount >= 0)
+                {
+                    UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                    if (this.otherPlayer.Data.GetCurrencyAmount(currency) < betAmount)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("{0} does not have {1} {2}", this.otherPlayer.UserName, betAmount, currency.Name));
+                        return;
+                    }
+
+                    if (this.RequiresOtherPlayerAgreement)
+                    {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(this.OtherPlayerResponseTime * 1000);
+
+                            await this.otherPlayerSemaphore.WaitAsync();
+
+                            if (this.otherPlayer != null)
+                            {
+                                await ChannelSession.Chat.SendMessage(string.Format("{0} did not accept in time...", this.otherPlayer.UserName));
+                                this.otherPlayer = null;
+                            }
+
+                            this.otherPlayerSemaphore.Release();
+                        });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    }
+                    else
+                    {
+                        await this.PerformTwoPlayerCompetition(user, arguments, betAmount);
+                    }
+                }
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if ((this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+                && arguments.Count() != 1)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: {0} <USERNAME>", this.Commands.First()));
+                return false;
+            }
+            else if (arguments.Count() != 2)
+            {
+                string betAmountUsageText = this.Requirements.Currency.RequiredAmount.ToString();
+                if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    betAmountUsageText += "-" + this.Requirements.Currency.MaximumAmount.ToString();
+                }
+                else if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
+                {
+                    betAmountUsageText += "+";
+                }
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: {0} <USERNAME> {1}", this.Commands.First(), betAmountUsageText));
+                return false;
+            }
+            return true;
+        }
+
+        private async Task PerformTwoPlayerCompetition(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            if (await this.PerformCurrencyChecks(user, this.betAmount))
+            {
+                //await this.PerformOutcome(user, arguments, this.SelectRandomOutcome(user, this.Outcomes), betAmount);
+                this.Requirements.UpdateCooldown(user);
+            }
+        }
+    }
+
+    [DataContract]
+    public class GroupGameCommand
+    {
+        public const string GameTotalBetsSpecialIdentifier = "gametotalbets";
+    }
+
+    [DataContract]
+    public class LongRunningGameCommand
+    {
+
+    }
 }

@@ -12,7 +12,9 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class CommandButtonsControl : NotifyPropertyChangedUserControl
     {
-        public static readonly DependencyProperty EditingButtonsEnabledProperty = DependencyProperty.Register("EditingButtonsEnabled", typeof(bool), typeof(CommandButtonsControl), new PropertyMetadata(true));
+        public static readonly DependencyProperty RemoveEditingButtonProperty = DependencyProperty.Register("RemoveEditingButton", typeof(bool), typeof(CommandButtonsControl), new PropertyMetadata(false));
+        public static readonly DependencyProperty RemoveDeleteButtonProperty = DependencyProperty.Register("RemoveDeleteButton", typeof(bool), typeof(CommandButtonsControl), new PropertyMetadata(false));
+        public static readonly DependencyProperty RemoveEnableDisableToggleProperty = DependencyProperty.Register("RemoveEnableDisableToggle", typeof(bool), typeof(CommandButtonsControl), new PropertyMetadata(false));
 
         public static readonly RoutedEvent PlayClickedEvent = EventManager.RegisterRoutedEvent("PlayClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(CommandButtonsControl));
         public static readonly RoutedEvent StopClickedEvent = EventManager.RegisterRoutedEvent("StopClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(CommandButtonsControl));
@@ -31,6 +33,24 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
 
             this.Loaded += CommandButtonsControl_Loaded;
+        }
+
+        public bool RemoveEditingButton
+        {
+            get { return (bool)GetValue(RemoveEditingButtonProperty); }
+            set { SetValue(RemoveEditingButtonProperty, value); }
+        }
+
+        public bool RemoveDeleteButton
+        {
+            get { return (bool)GetValue(RemoveDeleteButtonProperty); }
+            set { SetValue(RemoveDeleteButtonProperty, value); }
+        }
+
+        public bool RemoveEnableDisableToggle
+        {
+            get { return (bool)GetValue(RemoveEnableDisableToggleProperty); }
+            set { SetValue(RemoveEnableDisableToggleProperty, value); }
         }
 
         public T GetCommandFromCommandButtons<T>() where T : CommandBase { return this.GetCommandFromCommandButtons<T>(this); }
@@ -72,6 +92,21 @@ namespace MixItUp.WPF.Controls.Command
                 if (!command.IsEditable)
                 {
                     this.EditButton.IsEnabled = false;
+                }
+
+                if (this.RemoveEditingButton)
+                {
+                    this.EditButton.Visibility = Visibility.Collapsed;
+                }
+
+                if (this.RemoveDeleteButton)
+                {
+                    this.DeleteButton.Visibility = Visibility.Collapsed;
+                }
+
+                if (this.RemoveEnableDisableToggle)
+                {
+                    this.EnableDisableToggleSwitch.Visibility = Visibility.Collapsed;
                 }
             }
         }

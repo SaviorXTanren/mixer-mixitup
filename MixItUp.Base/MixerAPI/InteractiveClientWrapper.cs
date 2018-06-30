@@ -569,7 +569,7 @@ namespace MixItUp.Base.MixerAPI
                         UserViewModel user = null;
                         if (!string.IsNullOrEmpty(e.participantID))
                         {
-                            user = await ChannelSession.ActiveUsers.GetUser(e.participantID);
+                            user = await ChannelSession.ActiveUsers.GetUserByID(e.participantID);
                             if (user == null)
                             {
                                 IEnumerable<InteractiveParticipantModel> recentParticipants = await this.GetRecentParticipants();

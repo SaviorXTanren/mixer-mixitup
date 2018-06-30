@@ -72,19 +72,10 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
-            {
-                if (this.GetExistingCommand() != command && this.NameTextBox.Text.Equals(command.Name))
-                {
-                    await MessageBoxHelper.ShowMessageDialog("There already exists a command with the same name");
-                    return false;
-                }
-            }
-
             IEnumerable<string> commandStrings = this.GetCommandStrings();
             if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("Each command string must be unique");
+                await MessageBoxHelper.ShowMessageDialog("Each chat triggers must be unique");
                 return false;
             }
 
@@ -94,7 +85,7 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     if (commandStrings.Any(c => command.Commands.Contains(c)))
                     {
-                        await MessageBoxHelper.ShowMessageDialog("There already exists an enabled, chat command that uses one of the command strings you have specified");
+                        await MessageBoxHelper.ShowMessageDialog("There already exists a command that uses one of the chat triggers you have specified");
                         return false;
                     }
                 }

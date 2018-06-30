@@ -352,6 +352,10 @@
     <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
       <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\GameEditorControlBase.cs" />
+    <Compile Include="Controls\Games\SpinGameEditorControl.xaml.cs">
+      <DependentUpon>SpinGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
     </Compile>
@@ -378,18 +382,6 @@
     </Compile>
     <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Games\GameOutcomeCommandControl.xaml.cs">
-      <DependentUpon>GameOutcomeCommandControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Games\GameOutcomeGroupControl.xaml.cs">
-      <DependentUpon>GameOutcomeGroupControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Games\GameOutcomeProbabilityControl.xaml.cs">
-      <DependentUpon>GameOutcomeProbabilityControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Games\GameStepCommandControl.xaml.cs">
-      <DependentUpon>GameStepCommandControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\LoadingControlBase.cs" />
     <Compile Include="Controls\MainControls\AboutControl.xaml.cs">
@@ -803,6 +795,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Games\SpinGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\SongRequestControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -836,22 +832,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirement\CurrencyRequirementControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Games\GameOutcomeCommandControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Games\GameOutcomeGroupControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Games\GameOutcomeProbabilityControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Games\GameStepCommandControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

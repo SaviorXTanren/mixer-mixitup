@@ -569,7 +569,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.GetUser(e.user_id);
+            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(e.user_id);
             if (user != null)
             {
                 this.OnUserPurgeOccurred(sender, user);

@@ -28,7 +28,7 @@
 
     </UserControl.Resources>
 
-    <GroupBox Width="250">
+    <GroupBox MinWidth="200">
         <GroupBox.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -81,7 +81,7 @@
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox Grid.Column="8" ToggleContent="{StaticResource ThresholdPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="ThresholdPopup" Grid.Column="8" ToggleContent="{StaticResource ThresholdPopupBoxIcon}" Margin="8,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
                     <RequirementControls:ThresholdRequirementControl x:Name="ThresholdRequirement" />
                 </Grid>

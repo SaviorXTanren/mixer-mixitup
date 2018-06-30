@@ -486,7 +486,7 @@ namespace MixItUp.Base
         {
             if (currency.Currency.RankChangedCommand != null)
             {
-                UserViewModel user = await ChannelSession.ActiveUsers.GetUser(currency.User.ID);
+                UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(currency.User.ID);
                 if (user != null)
                 {
                     await currency.Currency.RankChangedCommand.Perform(user);

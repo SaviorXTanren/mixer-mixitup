@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Command"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
-        xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
-        xmlns:GameControls="clr-namespace:MixItUp.WPF.Controls.Games"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -16,292 +14,62 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
-                  
+                           
         Icon="./../../Logo.ico"
-        Title="Customize Game" Height="600" Width="800">
+        Title="Customize Game"
+        Height="600" Width="800">
+    <Windows:LoadingWindowBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Windows:LoadingWindowBase.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
-        <ScrollViewer Grid.Row="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <StackPanel Grid.Row="0" Margin="10">
-                    <Grid x:Name="CommandDetailsGrid">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <Grid Grid.Row="0" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox Grid.Column="0" x:Name="GameNameTextBox" MaterialDesign:HintAssist.Hint="Game Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                            <TextBox x:Name="GameChatCommandTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Chat Triggers (letters/numbers only, space seperated)" Width="350" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                            <ComboBox x:Name="GameTypeComboBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Game Type" Width="200" VerticalAlignment="Center" SelectionChanged="GameTypeComboBox_SelectionChanged" />
-
-                        </Grid>
-
-                        <Grid Grid.Row="2" HorizontalAlignment="Center">
-                            <RequirementControls:RequirementControl x:Name="Requirements" />
-                        </Grid>
-
-                        <Grid x:Name="CurrencyGrid" Grid.Row="4" HorizontalAlignment="Center" IsEnabled="False">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency" Width="120" VerticalAlignment="Center" DisplayMemberPath="Name" SelectionChanged="CurrencyTypeComboBox_SelectionChanged" />
-
-                            <ComboBox x:Name="CurrencyRequirementTypeComboBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Currency Requirement" Width="200" VerticalAlignment="Center" SelectionChanged="CurrencyRequirementTypeComboBox_SelectionChanged" />
-
-                            <Grid x:Name="CurrencyCostsGrid" Grid.Column="4" IsEnabled="False">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox x:Name="CurrencyMinimumCostTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Minimum Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" VerticalAlignment="Center" />
-
-                                <TextBox x:Name="CurrencyMaximumCostTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Maximum Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" VerticalAlignment="Center" IsEnabled="False" />
-                            </Grid>
-
-                        </Grid>
-                    </Grid>
-
-                    <Grid x:Name="UserCharityGameGrid" Margin="0,20,0,0" HorizontalAlignment="Center" Visibility="Collapsed">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <Grid Grid.Column="0" VerticalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Grid.Column="0">Specify User</TextBlock>
-                            <ToggleButton x:Name="GiveToRandomUserCharityToggleButton" Grid.Column="2" Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="Specify User/Random User" />
-                            <TextBlock Grid.Column="4">Random User</TextBlock>
-                        </Grid>
-                        
-                        <GroupBox Header="User Participated" Grid.Column="2" Width="250" HorizontalAlignment="Center">
-                            <GameControls:GameStepCommandControl x:Name="UserParticipatedCommandControl" HorizontalAlignment="Center" />
-                        </GroupBox>
-                    </Grid>
-
-                    <Grid x:Name="MultiplayerGameDetailsGrid" Margin="0,20,0,0" HorizontalAlignment="Center" Visibility="Collapsed">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="10" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <Grid Grid.Row="0" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox x:Name="GameLengthTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Game Length (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                            <TextBox x:Name="GameMinimumParticipantsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Min Participants" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                        </Grid>
-
-                        <Grid Grid.Row="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="10" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <GroupBox Header="Game Started" Grid.Column="0" Grid.Row="0" Width="250">
-                                <GameControls:GameStepCommandControl x:Name="GameStartedCommandControl" HorizontalAlignment="Center" />
-                            </GroupBox>
-
-                            <GroupBox Header="Game Ended" Grid.Column="2" Grid.Row="0" Width="250">
-                                <GameControls:GameStepCommandControl x:Name="GameEndedCommandControl" HorizontalAlignment="Center" />
-                            </GroupBox>
-
-                            <GroupBox Header="User Joined" Grid.Column="0" Grid.Row="2" Width="250">
-                                <GameControls:GameStepCommandControl x:Name="UserJoinedCommandControl" HorizontalAlignment="Center" />
-                            </GroupBox>
-
-                            <GroupBox Header="Not Enough Users" Grid.Column="2" Grid.Row="2" Width="250">
-                                <GameControls:GameStepCommandControl x:Name="NotEnoughUsersCommandControl" HorizontalAlignment="Center" />
-                            </GroupBox>
-
-                        </Grid>
-                    </Grid>
-
-                    <Grid x:Name="OutcomesDetailsGrid" Margin="0,20,0,0" HorizontalAlignment="Center" Visibility="Collapsed">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="10" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <Grid Grid.Row="0" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="40" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="40" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <Button x:Name="AddOutcomeRankGroupButton" Grid.Column="0" HorizontalAlignment="Center" Click="AddOutcomeRankGroupButton_Click">Add Rank Group</Button>
-
-                            <Button x:Name="AddOutcomeProbabilityButton" Grid.Column="2" HorizontalAlignment="Center" Click="AddOutcomeProbabilityButton_Click">Add Outcome Probability</Button>
-
-                            <GroupBox Header="Lose Outcome" Grid.Column="4" Width="250">
-                                <GameControls:GameStepCommandControl x:Name="LoseLeftoverProbabilityCommandControl" HorizontalAlignment="Center" />
-                            </GroupBox>
-
-                        </Grid>
-
-                        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1" Grid.Row="2" Width="700" Height="300">
-                            <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1" Grid.Row="0">
-                                        <ItemsControl x:Name="OutcomeCommandsItemsControl" Margin="142,0,0,0">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                        </ItemsControl>
-                                    </Border>
-
-                                    <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" BorderThickness="1" Grid.Row="1">
-                                        <ItemsControl x:Name="OutcomeGroupsItemsControl">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Vertical"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                        </ItemsControl>
-                                    </Border>
-                                </Grid>
-                            </ScrollViewer>
-                        </Border>
-                    </Grid>
-
-                </StackPanel>
-
-                <Grid Grid.Row="2" Margin="0,20,0,0" HorizontalAlignment="Center">
-                    <Button x:Name="SaveButton" Width="80" Click="SaveButton_Click">Save</Button>
-                </Grid>
-            </Grid>
-        </ScrollViewer>
-
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Visible" Visibility="Collapsed">
-            <Grid Margin="10">
+        <Grid Margin="10" x:Name="GameTypeSelectionGrid" Visibility="Collapsed" Grid.Row="0">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
+                    <RowDefinition Height="40" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="200" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="6" HorizontalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center">Select the Game Type you would like to create:</TextBlock>
 
-                    <TextBlock Grid.Column="0">
-                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
-                    </TextBlock>
+                <ComboBox Grid.Row="2" x:Name="GameTypeComboBox" HorizontalAlignment="Center" Width="200" DisplayMemberPath="Name" MaterialDesign:HintAssist.Hint="Game Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="GameTypeComboBox_SelectionChanged" />
 
-                    <TextBlock Grid.Column="2">
-                        <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Games" RequestNavigate="Hyperlink_RequestNavigate">Games Reference</Hyperlink>
-                    </TextBlock>
-
-                </Grid>
-
-                <Grid x:Name="MultiplayerDetailsGrid" Grid.Row="2" Visibility="Collapsed">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-
-
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-
-
-
-
-                    </Grid>
-                </Grid>
-
-
-
+                <TextBlock Grid.Row="4" x:Name="GameDescriptionTextBlock" HorizontalAlignment="Center" Width="500" TextWrapping="Wrap" />
             </Grid>
-        </ScrollViewer>
 
-        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="2" />
+            <Button x:Name="NextButton" Width="80" Margin="0,0,40,20" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="NextButton_Click">Next</Button>
+        </Grid>
+
+        <Grid x:Name="GameEditorGrid" Visibility="Collapsed" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible">
+                <ContentControl Margin="10" x:Name="MainContentControl" />
+            </ScrollViewer>
+
+            <Button x:Name="SaveButton" Grid.Row="2" Margin="0,0,0,10" Click="SaveButton_Click" Width="80">Save</Button>
+        </Grid>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
     </Grid>
 </Windows:LoadingWindowBase>

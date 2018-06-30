@@ -94,7 +94,7 @@ namespace MixItUp.Base.Commands
         {
             if (!this.Requirements.DoesMeetThresholdRequirement(user))
             {
-                await this.Requirements.Threshold.SendNotMetWhisper(user);
+                await this.Requirements.Threshold.SendThresholdNotMetWhisper(user);
                 return false;
             }
             return true;
@@ -125,7 +125,7 @@ namespace MixItUp.Base.Commands
             await base.PerformInternal(user, arguments, token);
         }
 
-        private async Task<bool> CheckAllRequirements(UserViewModel user)
+        protected async Task<bool> CheckAllRequirements(UserViewModel user)
         {
             return (await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)
                 && await this.CheckCurrencyRequirement(user) && await this.CheckThresholdRequirement(user));

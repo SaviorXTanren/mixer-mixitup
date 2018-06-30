@@ -35,9 +35,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 this.GameCommandsListView.ItemsSource = this.gameCommands;
 
-                List<string> preMadeGameNames = new List<string>() { "Spin Wheel", "Heist", "Russian Roulette", "Charity", "Give" };
-                this.PreMadeGamesComboBox.ItemsSource = preMadeGameNames.OrderBy(s => s);
-
                 this.RefreshList();
             }
             else
@@ -87,41 +84,7 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void AddPreMadeGameButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.PreMadeGamesComboBox.SelectedIndex >= 0)
-            {
-                await this.Window.RunAsyncOperation(async () =>
-                {
-                    string gameName = (string)this.PreMadeGamesComboBox.SelectedItem;
-                    if (ChannelSession.Settings.GameCommands.Any(c => c.Name.Equals(gameName)))
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("This game already exist in your game list");
-                        return;
-                    }
-
-                    UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.First();
-                    GameCommandBase game = null;
-                    switch (gameName)
-                    {
-                        case "Spin Wheel": game = new SpinWheelGameCommand(currency); break;
-                        case "Heist": game = new HeistGameCommand(currency); break;
-                        case "Russian Roulette": game = new RussianRouletteGameCommand(currency); break;
-                        case "Charity": game = new CharityGameCommand(currency); break;
-                        case "Give": game = new GiveGameCommand(currency); break;
-                    }
-
-                    ChannelSession.Settings.GameCommands.Add(game);
-                    await ChannelSession.SaveSettings();
-
-                    this.PreMadeGamesComboBox.SelectedIndex = -1;
-
-                    this.RefreshList();
-                });
-            }
-        }
-
-        private void AddCommandButton_Click(object sender, RoutedEventArgs e)
+        private void AddGameButton_Click(object sender, RoutedEventArgs e)
         {
             GameCommandWindow window = new GameCommandWindow();
             window.Closed += Window_Closed;
