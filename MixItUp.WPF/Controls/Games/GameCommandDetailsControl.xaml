@@ -1,0 +1,57 @@
+﻿<Controls:LoadingControlBase x:Class="MixItUp.WPF.Controls.Games.GameCommandDetailsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Games"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="0" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="175" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="325" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Game Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox x:Name="ChatCommandTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Chat Triggers (No ! needed, space seperated)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="135" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="135" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency" VerticalAlignment="Center" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <TextBox x:Name="RequiredAmountTextBox" Visibility="Collapsed" Grid.Column="2" Grid.ColumnSpan="3" MaterialDesign:HintAssist.Hint="Required Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            
+            <TextBox x:Name="MinimumAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Minimum (Required)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox x:Name="MaximumAmountTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Maximum (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+        </Grid>
+
+        <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" Grid.Row="0" Grid.RowSpan="3" />
+    </Grid>
+</Controls:LoadingControlBase>

@@ -208,17 +208,17 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public class SpinGameCommand : GameCommandBase
+    public abstract class BasicOutcomeGameCommand : GameCommandBase
     {
         [DataMember]
         public List<GameOutcome> Outcomes { get; set; }
 
-        public SpinGameCommand()
+        public BasicOutcomeGameCommand()
         {
             this.Outcomes = new List<GameOutcome>();
         }
 
-        public SpinGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes)
+        public BasicOutcomeGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes)
             : base(name, commands, requirements)
         {
             this.Outcomes = new List<GameOutcome>(outcomes);
@@ -228,7 +228,7 @@ namespace MixItUp.Base.Commands
         {
             if (await this.PerformUsageChecks(user, arguments))
             {
-                int betAmount = await this.GetBetAmount(user, arguments.First());
+                int betAmount = await this.GetBetAmount(user, arguments.FirstOrDefault());
                 if (betAmount >= 0)
                 {
                     if (await this.PerformCurrencyChecks(user, betAmount))
@@ -239,6 +239,22 @@ namespace MixItUp.Base.Commands
                 }
             }
         }
+    }
+
+    [DataContract]
+    public class SpinGameCommand : BasicOutcomeGameCommand
+    {
+        public SpinGameCommand() { }
+
+        public SpinGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes) : base(name, commands, requirements, outcomes) { }
+    }
+
+    [DataContract]
+    public class VendingMachineGameCommand : BasicOutcomeGameCommand
+    {
+        public VendingMachineGameCommand() { }
+
+        public VendingMachineGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes) : base(name, commands, requirements, outcomes) { }
     }
 
     [DataContract]

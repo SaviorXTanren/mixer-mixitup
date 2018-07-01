@@ -352,9 +352,15 @@
     <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
       <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\GameCommandDetailsControl.xaml.cs">
+      <DependentUpon>GameCommandDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\GameEditorControlBase.cs" />
     <Compile Include="Controls\Games\SpinGameEditorControl.xaml.cs">
       <DependentUpon>SpinGameEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Games\VendingMachineGameEditorControl.xaml.cs">
+      <DependentUpon>VendingMachineGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
@@ -795,7 +801,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Games\GameCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Games\SpinGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\VendingMachineGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
