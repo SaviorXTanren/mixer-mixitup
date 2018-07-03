@@ -265,6 +265,49 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
+    public abstract class StealGameCommand : GameCommandBase
+    {
+        [DataMember]
+        public GameOutcome StealSuccessfulOutcome { get; set; }
+
+        [DataMember]
+        public GameOutcome StealFailedOutcome { get; set; }
+
+        public StealGameCommand() { }
+
+        public StealGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome stealSuccessfulOutcome, GameOutcome stealFailedOutcome)
+            : base(name, commands, requirements)
+        {
+            this.StealSuccessfulOutcome = stealSuccessfulOutcome;
+            this.StealFailedOutcome = stealFailedOutcome;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        {
+            if (await this.PerformUsageChecks(user, arguments))
+            {
+                int betAmount = await this.GetBetAmount(user, arguments.FirstOrDefault());
+                if (betAmount >= 0)
+                {
+                    if (await this.PerformCurrencyChecks(user, betAmount))
+                    {
+                        int randomNumber = this.GenerateRandomNumber();
+                        if (randomNumber < this.StealSuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                        {
+                            await this.PerformOutcome(user, arguments, this.StealSuccessfulOutcome, betAmount);
+                        }
+                        else
+                        {
+                            await this.PerformOutcome(user, arguments, this.StealFailedOutcome, betAmount);
+                        }
+                        this.Requirements.UpdateCooldown(user);
+                    }
+                }
+            }
+        }
+    }
+
+    [DataContract]
     public class TwoPlayerGameCommand : GameCommandBase
     {
         [DataMember]
@@ -361,11 +404,13 @@ namespace MixItUp.Base.Commands
 
         protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
         {
-            if ((this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
-                && arguments.Count() != 1)
+            if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <USERNAME>", this.Commands.First()));
-                return false;
+                if (arguments.Count() != 1)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <USERNAME>", this.Commands.First()));
+                    return false;
+                }
             }
             else if (arguments.Count() != 2)
             {
