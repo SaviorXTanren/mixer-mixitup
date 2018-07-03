@@ -37,6 +37,7 @@ namespace MixItUp.Base.Util
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
         public const string RandomNumberSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
+        public const string StreamTitleSpecialIdentifer = "streamtitle";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
@@ -245,6 +246,14 @@ namespace MixItUp.Base.Util
                 if (featuredChannels != null)
                 {
                     this.ReplaceSpecialIdentifier(FeaturedChannelsSpecialIdentifer, string.Join(", ", featuredChannels.Select(c => "@" + c.user.username)));
+                }
+            }
+
+            if (this.ContainsSpecialIdentifier(StreamTitleSpecialIdentifer))
+            {
+                if (ChannelSession.Channel?.name != null)
+                {
+                    this.ReplaceSpecialIdentifier(StreamTitleSpecialIdentifer, ChannelSession.Channel.name);
                 }
             }
 
