@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
@@ -23,18 +24,50 @@ namespace MixItUp.WPF.Controls.Games
             InitializeComponent();
         }
 
-        public GameCommandDetailsControl(GameCommandBase existingCommand)
-            : this()
-        {
-            this.existingCommand = existingCommand;
-        }
-
         public string GameName { get { return this.NameTextBox.Text; } }
-        public IEnumerable<string> ChatTriggers { get { return this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).Select(t => "!" + t); } }
+        public IEnumerable<string> ChatTriggers { get { return this.ChatCommandTextBox.Text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries); } }
         public UserCurrencyViewModel Currency { get { return (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem; } }
+        public CurrencyRequirementTypeEnum CurrencyUsage
+        {
+            get
+            {
+                return (this.CurrencyRequirementComboBox.SelectedIndex >= 0) ? EnumHelper.GetEnumValueFromString<CurrencyRequirementTypeEnum>((string)this.CurrencyRequirementComboBox.SelectedItem)
+                    : CurrencyRequirementTypeEnum.MinimumAndMaximum;
+            }
+        }
         public int RequiredAmount { get { return int.Parse(this.RequiredAmountTextBox.Text); } }
         public int MinimumAmount { get { return int.Parse(this.MinimumAmountTextBox.Text); } }
         public int MaximumAmount { get { return int.Parse(this.MaximumAmountTextBox.Text); } }
+
+        public RequirementViewModel GetRequirements()
+        {
+            RequirementViewModel requirements = this.Requirements.GetRequirements();
+
+            UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
+            CurrencyRequirementTypeEnum requirement = this.CurrencyUsage;
+            if (requirement == CurrencyRequirementTypeEnum.NoCurrencyCost)
+            {
+                requirements.Currency = new CurrencyRequirementViewModel(currency, requirement, 0);
+            }
+            else if (requirement == CurrencyRequirementTypeEnum.RequiredAmount)
+            {
+                int.TryParse(this.RequiredAmountTextBox.Text, out int required);
+                requirements.Currency = new CurrencyRequirementViewModel(currency, requirement, required);
+            }
+            else if (requirement == CurrencyRequirementTypeEnum.MinimumOnly)
+            {
+                int.TryParse(this.MinimumAmountTextBox.Text, out int minimum);
+                requirements.Currency = new CurrencyRequirementViewModel(currency, requirement, minimum);
+            }
+            else if (requirement == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+            {
+                int.TryParse(this.MinimumAmountTextBox.Text, out int minimum);
+                int.TryParse(this.MaximumAmountTextBox.Text, out int maximum);
+                requirements.Currency = new CurrencyRequirementViewModel(currency, minimum, maximum);
+            }
+
+            return requirements;
+        }
 
         public void SetAsRequiredAmount()
         {
@@ -43,14 +76,21 @@ namespace MixItUp.WPF.Controls.Games
             this.MaximumAmountTextBox.Visibility = Visibility.Collapsed;
         }
 
-        public void SetDefaultValues(string name, string triggers, int minimum, int maximum = 0)
+        public void SetDefaultValues(string name, string triggers, CurrencyRequirementTypeEnum currencyRequirement, int minimum = 0, int maximum = 0)
         {
             this.NameTextBox.Text = name;
             this.ChatCommandTextBox.Text = triggers;
-            this.CurrencyTypeComboBox.SelectedIndex = 0;
+            this.CurrencyRequirementComboBox.SelectedItem = EnumHelper.GetEnumName(currencyRequirement);
             this.RequiredAmountTextBox.Text = minimum.ToString();
             this.MinimumAmountTextBox.Text = minimum.ToString();
             this.MaximumAmountTextBox.Text = (maximum > 0) ? maximum.ToString() : string.Empty;
+        }
+
+        public void SetDefaultValues(GameCommandBase command)
+        {
+            this.existingCommand = command;
+            this.SetDefaultValues(command.Name, command.CommandsString, command.Requirements.Currency.RequirementType, command.Requirements.Currency.RequiredAmount, command.Requirements.Currency.MaximumAmount);
+            this.CurrencyTypeComboBox.SelectedItem = command.Requirements.Currency.GetCurrency();
         }
 
         public async Task<bool> Validate()
@@ -73,7 +113,7 @@ namespace MixItUp.WPF.Controls.Games
                 return false;
             }
 
-            IEnumerable<string> commandStrings = this.GetChatTriggers();
+            IEnumerable<string> commandStrings = this.ChatTriggers;
             if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
             {
                 await MessageBoxHelper.ShowMessageDialog("Each chat trigger must be unique");
@@ -91,35 +131,45 @@ namespace MixItUp.WPF.Controls.Games
                 return false;
             }
 
-            if (this.RequiredAmountTextBox.Visibility == Visibility.Visible)
+            if (this.CurrencyRequirementComboBox.SelectedIndex < 0)
             {
-                if (string.IsNullOrEmpty(this.RequiredAmountTextBox.Text) || !int.TryParse(this.RequiredAmountTextBox.Text, out int amount) || amount <= 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A valid required amount must be specified");
-                    return false;
-                }
+                await MessageBoxHelper.ShowMessageDialog("A currency usage must be selected");
+                return false;
             }
-            else
+            CurrencyRequirementTypeEnum requirement = this.CurrencyUsage;
+
+            int minimum = 0;
+            int maximum = 0;
+
+            if (requirement == CurrencyRequirementTypeEnum.MinimumOnly || requirement == CurrencyRequirementTypeEnum.MinimumAndMaximum)
             {
-                if (string.IsNullOrEmpty(this.MinimumAmountTextBox.Text) || !int.TryParse(this.MinimumAmountTextBox.Text, out int minimum) || minimum <= 0)
+                if (string.IsNullOrEmpty(this.MinimumAmountTextBox.Text) || !int.TryParse(this.MinimumAmountTextBox.Text, out minimum) || minimum <= 0)
                 {
                     await MessageBoxHelper.ShowMessageDialog("A valid minimum amount must be specified");
                     return false;
                 }
-
-                int maximum = 0;
-                if (!string.IsNullOrEmpty(this.MaximumAmountTextBox.Text))
+            }
+            
+            if (requirement == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+            {
+                if (string.IsNullOrEmpty(this.MaximumAmountTextBox.Text) || !int.TryParse(this.MaximumAmountTextBox.Text, out maximum) || maximum <= 0)
                 {
-                    if (!int.TryParse(this.MaximumAmountTextBox.Text, out maximum) || maximum <= 0)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("A valid maximum amount must be specified");
-                        return false;
-                    }
+                    await MessageBoxHelper.ShowMessageDialog("A valid maximum amount must be specified");
+                    return false;
                 }
 
                 if (maximum > 0 && maximum < minimum)
                 {
                     await MessageBoxHelper.ShowMessageDialog("Maximum amount must be greater than or equal to minimum amount");
+                    return false;
+                }
+            }
+
+            if (requirement == CurrencyRequirementTypeEnum.RequiredAmount)
+            {
+                if (string.IsNullOrEmpty(this.RequiredAmountTextBox.Text) || !int.TryParse(this.RequiredAmountTextBox.Text, out minimum) || minimum <= 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A valid required amount must be specified");
                     return false;
                 }
             }
@@ -147,12 +197,17 @@ namespace MixItUp.WPF.Controls.Games
             IEnumerable<UserCurrencyViewModel> currencies = ChannelSession.Settings.Currencies.Values;
             this.IsEnabled = (currencies.Count() > 0);
             this.CurrencyTypeComboBox.ItemsSource = currencies;
+            this.CurrencyTypeComboBox.SelectedIndex = 0;
+
+            this.CurrencyRequirementComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyRequirementTypeEnum>();
+            this.CurrencyRequirementComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyRequirementTypeEnum.MinimumAndMaximum);
 
             if (this.existingCommand != null)
             {
                 this.NameTextBox.Text = this.existingCommand.Name;
-                this.ChatCommandTextBox.Text = this.existingCommand.CommandsString.Replace("!", "");
+                this.ChatCommandTextBox.Text = this.existingCommand.CommandsString;
                 this.CurrencyTypeComboBox.SelectedItem = this.existingCommand.Requirements.Currency.GetCurrency();
+                this.CurrencyRequirementComboBox.SelectedItem = EnumHelper.GetEnumName(this.existingCommand.Requirements.Currency.RequirementType);
                 this.RequiredAmountTextBox.Text = this.existingCommand.Requirements.Currency.RequiredAmount.ToString();
                 this.MinimumAmountTextBox.Text = this.existingCommand.Requirements.Currency.RequiredAmount.ToString();
                 this.MaximumAmountTextBox.Text = (this.existingCommand.Requirements.Currency.MaximumAmount > 0) ? this.existingCommand.Requirements.Currency.MaximumAmount.ToString() : string.Empty;
@@ -166,9 +221,15 @@ namespace MixItUp.WPF.Controls.Games
             return base.OnLoaded();
         }
 
-        private IEnumerable<string> GetChatTriggers()
+        private void CurrencyRequirementComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            return ;
+            if (this.CurrencyRequirementComboBox.SelectedIndex >= 0)
+            {
+                CurrencyRequirementTypeEnum requirement = this.CurrencyUsage;
+                this.RequiredAmountTextBox.Visibility = (requirement == CurrencyRequirementTypeEnum.RequiredAmount) ? Visibility.Visible : Visibility.Collapsed;
+                this.MinimumAmountTextBox.Visibility = (requirement == CurrencyRequirementTypeEnum.MinimumOnly || requirement == CurrencyRequirementTypeEnum.MinimumAndMaximum) ? Visibility.Visible : Visibility.Collapsed;
+                this.MaximumAmountTextBox.Visibility = (requirement == CurrencyRequirementTypeEnum.MinimumAndMaximum) ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
     }
 }

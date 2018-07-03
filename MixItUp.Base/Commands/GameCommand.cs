@@ -76,15 +76,22 @@ namespace MixItUp.Base.Commands
 
         public GameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirements) : base(name, CommandTypeEnum.Game, commands, requirements) { }
 
+        public override bool ContainsCommand(string command)
+        {
+            return this.Commands.Select(c => "!" + c).Contains(command);
+        }
+
         protected override SemaphoreSlim AsyncSemaphore { get { return GameCommandBase.gameCommandPerformSemaphore; } }
 
         protected virtual async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
         {
-            if ((this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
-                && arguments.Count() != 0)
+            if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: {0}", this.Commands.First()));
-                return false;
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0}", this.Commands.First()));
+                    return false;
+                }
             }
             else if (arguments.Count() != 1)
             {
@@ -97,7 +104,7 @@ namespace MixItUp.Base.Commands
                 {
                     betAmountUsageText += "+";
                 }
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: {0} {1}", this.Commands.First(), betAmountUsageText));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} {1}", this.Commands.First(), betAmountUsageText));
                 return false;
             }
             return true;
@@ -357,7 +364,7 @@ namespace MixItUp.Base.Commands
             if ((this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
                 && arguments.Count() != 1)
             {
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: {0} <USERNAME>", this.Commands.First()));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <USERNAME>", this.Commands.First()));
                 return false;
             }
             else if (arguments.Count() != 2)
@@ -371,7 +378,7 @@ namespace MixItUp.Base.Commands
                 {
                     betAmountUsageText += "+";
                 }
-                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: {0} <USERNAME> {1}", this.Commands.First(), betAmountUsageText));
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <USERNAME> {1}", this.Commands.First(), betAmountUsageText));
                 return false;
             }
             return true;

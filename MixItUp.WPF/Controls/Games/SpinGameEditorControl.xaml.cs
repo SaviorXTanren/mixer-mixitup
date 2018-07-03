@@ -155,35 +155,21 @@ namespace MixItUp.WPF.Controls.Games
 
         public override void SaveGameCommand()
         {
-            UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
-            int.TryParse(this.MinimumAmountTextBox.Text, out int minimum);
-            int.TryParse(this.MaximumAmountTextBox.Text, out int maximum);
-
-            RequirementViewModel requirements = this.Requirements.GetRequirements();
-            requirements.Currency = (maximum > 0) ? new CurrencyRequirementViewModel(currency, minimum, maximum) :
-                new CurrencyRequirementViewModel(currency, CurrencyRequirementTypeEnum.MinimumOnly, minimum);
-
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
             }
-            ChannelSession.Settings.GameCommands.Add(new SpinGameCommand(this.NameTextBox.Text, this.GetChatTriggers(), requirements, this.spinOutcomes.Select(o => o.GetGameOutcome())));
+            ChannelSession.Settings.GameCommands.Add(new SpinGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
+                this.CommandDetailsControl.GetRequirements(), this.spinOutcomes.Select(o => o.GetGameOutcome())));
         }
 
         protected override Task OnLoaded()
         {
-
-
             this.OutcomesItemsControl.ItemsSource = this.spinOutcomes;
 
             if (this.existingCommand != null)
             {
-                this.NameTextBox.Text = this.existingCommand.Name;
-                this.ChatCommandTextBox.Text = this.existingCommand.CommandsString.Replace("!", "");
-                this.CurrencyTypeComboBox.SelectedItem = this.existingCommand.Requirements.Currency.GetCurrency();
-                this.MinimumAmountTextBox.Text = this.existingCommand.Requirements.Currency.RequiredAmount.ToString();
-                this.MaximumAmountTextBox.Text = (this.existingCommand.Requirements.Currency.MaximumAmount > 0) ? this.existingCommand.Requirements.Currency.MaximumAmount.ToString() : string.Empty;
-
+                this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
                 foreach (GameOutcome outcome in this.existingCommand.Outcomes)
                 {
                     this.spinOutcomes.Add(new SpinOutcome(outcome));
@@ -191,14 +177,10 @@ namespace MixItUp.WPF.Controls.Games
             }
             else
             {
-                this.NameTextBox.Text = "Spin";
-                this.ChatCommandTextBox.Text = "spin";
-                this.CurrencyTypeComboBox.SelectedIndex = 0;
-                this.MinimumAmountTextBox.Text = "10";
-                this.MaximumAmountTextBox.Text = "1000";
-
+                this.CommandDetailsControl.SetDefaultValues("Spin", "spin", CurrencyRequirementTypeEnum.MinimumAndMaximum, 10, 1000);
+                UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault();
                 this.spinOutcomes.Add(new SpinOutcome("Lose", this.CreateBasicChatCommand("Sorry @$username, you lost the spin!"), 0, 70, 70, 70));
-                this.spinOutcomes.Add(new SpinOutcome("Win", this.CreateBasicChatCommand("Congrats @$username, you won $gamepayout!"), 200, 30, 30, 30));
+                this.spinOutcomes.Add(new SpinOutcome("Win", this.CreateBasicChatCommand("Congrats @$username, you won $gamepayout " + currency.Name + "!"), 200, 30, 30, 30));
             }
 
             return base.OnLoaded();

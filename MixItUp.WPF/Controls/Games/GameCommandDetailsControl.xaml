@@ -23,9 +23,9 @@
 
         <Grid Grid.Column="0" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="175" />
+                <ColumnDefinition Width="200" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="325" />
+                <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
             <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Game Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -35,20 +35,24 @@
 
         <Grid Grid.Column="0" Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220" />
+                <ColumnDefinition Width="180" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="135" />
+                <ColumnDefinition Width="160" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="135" />
+                <ColumnDefinition Width="70" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="70" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency" VerticalAlignment="Center" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+            <ComboBox x:Name="CurrencyTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency Name" VerticalAlignment="Center" DisplayMemberPath="Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBox x:Name="RequiredAmountTextBox" Visibility="Collapsed" Grid.Column="2" Grid.ColumnSpan="3" MaterialDesign:HintAssist.Hint="Required Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <ComboBox x:Name="CurrencyRequirementComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Currency Usage" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CurrencyRequirementComboBox_SelectionChanged" />
+
+            <TextBox x:Name="RequiredAmountTextBox" Visibility="Collapsed" Grid.Column="4" Grid.ColumnSpan="3" MaterialDesign:HintAssist.Hint="Required Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             
-            <TextBox x:Name="MinimumAmountTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Minimum (Required)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MinimumAmountTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Minimum" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="MaximumAmountTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Maximum (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="MaximumAmountTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Maximum" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
         </Grid>
 
