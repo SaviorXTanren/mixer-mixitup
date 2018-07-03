@@ -22,8 +22,10 @@ namespace MixItUp.WPF.Controls.Command
 
         private InteractiveTextBoxCommand command;
 
-        public InteractiveTextBoxCommandDetailsControl(InteractiveTextBoxCommand command)
+        public InteractiveTextBoxCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveTextBoxCommand command)
         {
+            this.Game = game;
+            this.Version = version;
             this.command = command;
             this.Control = command.TextBox;
 
@@ -40,7 +42,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public override async Task Initialize()
+        public override Task Initialize()
         {
             this.TextValueSpecialIdentifierTextBlock.Text = SpecialIdentifierStringBuilder.InteractiveTextBoxTextEntrySpecialIdentifierHelpText;
 
@@ -56,15 +58,13 @@ namespace MixItUp.WPF.Controls.Command
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.Requirements.SetRequirements(this.command.Requirements);
 
-                IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                this.Game = games.FirstOrDefault(g => g.id.Equals(this.command.GameID));
                 if (this.Game != null)
                 {
-                    this.Version = this.Game.versions.First();
-                    this.Version = await ChannelSession.Connection.GetInteractiveGameVersion(this.Version);
                     this.Scene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
                 }
             }
+
+            return Task.FromResult(0);
         }
 
         public override async Task<bool> Validate()

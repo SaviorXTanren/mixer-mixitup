@@ -109,7 +109,7 @@ namespace MixItUp.WPF
                     }
                 }
                 catch (Exception) { }
-                Logger.Log(ex, isCrashing: true);
+                Logger.Log(ex, includeFullStackTrace: false, isCrashing: true);
 
                 string reporterFilePath = Path.Combine(ChannelSession.Services.FileService.GetApplicationDirectory(), "MixItUp.Reporter.exe");
                 ProcessStartInfo processStartInfo = new ProcessStartInfo(reporterFilePath, string.Format("{0} {1}", (ChannelSession.User != null) ? ChannelSession.User.id : 0, Logger.CurrentLogFilePath));

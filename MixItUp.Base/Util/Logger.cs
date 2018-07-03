@@ -40,13 +40,20 @@ namespace MixItUp.Base.Util
             catch (Exception) { }
         }
 
-        public static void Log(Exception ex, bool isCrashing = false)
+        public static void Log(Exception ex, bool includeFullStackTrace = false, bool isCrashing = false)
         {
+            string exString = ex.ToString();
+
+            if (includeFullStackTrace)
+            {
+                exString += Environment.NewLine + "Full Stack:" + Environment.StackTrace;
+            }
+
             if (!Logger.IsDebug)
             {
-                Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendErrorEvent(new ErrorEvent(JsonConvert.SerializeObject(ex.ToString()), isCrashing)); });
+                Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendErrorEvent(new ErrorEvent(JsonConvert.SerializeObject(exString), isCrashing)); });
             }
-            Logger.Log(ex.ToString());
+            Logger.Log(exString);
         }
 
         private static void Logger_LogOccurred(object sender, string e)

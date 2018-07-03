@@ -31,9 +31,11 @@ namespace MixItUp.WPF.Controls.Command
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveTextBoxCommandEditorControl(CommandWindow window, InteractiveTextBoxCommand command)
+        public BasicInteractiveTextBoxCommandEditorControl(CommandWindow window, InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveTextBoxCommand command)
         {
             this.window = window;
+            this.game = game;
+            this.version = version;
             this.command = command;
 
             InitializeComponent();
@@ -60,12 +62,8 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.command != null)
             {
-                IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                this.game = games.FirstOrDefault(g => g.name.Equals(this.command.GameID));
                 if (this.game != null)
                 {
-                    this.version = this.game.versions.First();
-                    this.version = await ChannelSession.Connection.GetInteractiveGameVersion(this.version);
                     this.scene = this.version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
                     this.textBox = this.command.TextBox;
                 }

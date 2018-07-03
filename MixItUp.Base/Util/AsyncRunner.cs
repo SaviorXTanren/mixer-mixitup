@@ -15,7 +15,7 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logger.Log(ex, includeFullStackTrace: true);
             }
         }
 
@@ -36,7 +36,7 @@ namespace MixItUp.Base.Util
                         return default(T);
                     }
                 }
-                Logger.Log(ex);
+                Logger.Log(ex, includeFullStackTrace: true);
             }
             return default(T);
         }
@@ -49,7 +49,7 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logger.Log(ex, includeFullStackTrace: true);
             }
         }
 
@@ -61,7 +61,7 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logger.Log(ex, includeFullStackTrace: true);
             }
             return default(T);
         }
@@ -105,7 +105,7 @@ namespace MixItUp.Base.Util
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Logger.Log(ex, includeFullStackTrace: true);
             }
         }
     }
