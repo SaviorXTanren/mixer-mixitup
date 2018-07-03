@@ -356,16 +356,16 @@ namespace MixItUp.WPF.Controls.MainControls
                 CommandWindow window = null;
                 if (command is InteractiveButtonCommand)
                 {
-                    window = new CommandWindow(new InteractiveButtonCommandDetailsControl((InteractiveButtonCommand)command));
+                    window = new CommandWindow(new InteractiveButtonCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (InteractiveButtonCommand)command));
 
                 }
                 else if (command is InteractiveJoystickCommand)
                 {
-                    window = new CommandWindow(new InteractiveJoystickCommandDetailsControl((InteractiveJoystickCommand)command));
+                    window = new CommandWindow(new InteractiveJoystickCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (InteractiveJoystickCommand)command));
                 }
                 else if (command is InteractiveTextBoxCommand)
                 {
-                    window = new CommandWindow(new InteractiveTextBoxCommandDetailsControl((InteractiveTextBoxCommand)command));
+                    window = new CommandWindow(new InteractiveTextBoxCommandDetailsControl(this.selectedGame, this.selectedGameVersion, (InteractiveTextBoxCommand)command));
                 }
 
                 if (window != null)

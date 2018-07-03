@@ -25,8 +25,10 @@ namespace MixItUp.WPF.Controls.Command
 
         private InteractiveJoystickCommand command;
 
-        public InteractiveJoystickCommandDetailsControl(InteractiveJoystickCommand command)
+        public InteractiveJoystickCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveJoystickCommand command)
         {
+            this.Game = game;
+            this.Version = version;
             this.command = command;
             this.Control = command.Joystick;
 
@@ -43,7 +45,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public override async Task Initialize()
+        public override Task Initialize()
         {
             this.JoystickSetupComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveJoystickSetupType>();
             this.UpKeyComboBox.ItemsSource = this.RightKeyComboBox.ItemsSource = this.DownKeyComboBox.ItemsSource = this.LeftKeyComboBox.ItemsSource = EnumHelper.GetEnumNames<InputKeyEnum>().OrderBy(s => s);
@@ -59,15 +61,13 @@ namespace MixItUp.WPF.Controls.Command
                 this.JoystickDeadZoneTextBox.Text = (this.command.DeadZone * 100).ToString();
                 this.MouseMovementMultiplierTextBox.Text = this.command.MouseMovementMultiplier.ToString();
 
-                IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                this.Game = games.FirstOrDefault(g => g.id.Equals(this.command.GameID));
                 if (this.Game != null)
                 {
-                    this.Version = this.Game.versions.First();
-                    this.Version = await ChannelSession.Connection.GetInteractiveGameVersion(this.Version);
                     this.Scene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
                 }
             }
+
+            return Task.FromResult(0);
         }
 
         public override async Task<bool> Validate()

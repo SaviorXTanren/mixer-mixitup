@@ -30,9 +30,11 @@ namespace MixItUp.WPF.Controls.Command
 
         private ActionControlBase actionControl;
 
-        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, InteractiveButtonCommand command)
+        public BasicInteractiveButtonCommandEditorControl(CommandWindow window, InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveButtonCommand command)
         {
             this.window = window;
+            this.game = game;
+            this.version = version;
             this.command = command;
 
             InitializeComponent();
@@ -60,12 +62,8 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.command != null)
             {
-                IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                this.game = games.FirstOrDefault(g => g.name.Equals(this.command.GameID));
                 if (this.game != null)
                 {
-                    this.version = this.game.versions.First();
-                    this.version = await ChannelSession.Connection.GetInteractiveGameVersion(this.version);
                     this.scene = this.version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(this.command.SceneID));
                     this.button = this.command.Button;
                 }
@@ -185,6 +183,10 @@ namespace MixItUp.WPF.Controls.Command
                 {
                     this.command = new InteractiveButtonCommand(this.game, this.scene, this.button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
                     ChannelSession.Settings.InteractiveCommands.Add(this.command);
+                }
+                else
+                {
+                    this.command.Requirements = requirements;
                 }
 
                 this.command.Button.cost = sparkCost;
