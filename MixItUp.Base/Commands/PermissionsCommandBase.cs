@@ -90,16 +90,6 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
-        public async Task<bool> CheckThresholdRequirement(UserViewModel user)
-        {
-            if (!this.Requirements.DoesMeetThresholdRequirement(user))
-            {
-                await this.Requirements.Threshold.SendNotMetWhisper(user);
-                return false;
-            }
-            return true;
-        }
-
         public void ResetCooldown(UserViewModel user) { this.Requirements.ResetCooldown(user); }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
@@ -113,12 +103,21 @@ namespace MixItUp.Base.Commands
                     return;
                 }
 
-                if (!this.Requirements.TrySubtractCurrencyAmount(user))
+                IEnumerable<UserViewModel> triggeringUsers = await this.Requirements.GetTriggeringUsers(this.Name, user);
+                if (triggeringUsers == null)
                 {
+                    // The action did not trigger due to threshold requirements not being met
                     return;
                 }
 
-                this.Requirements.UpdateCooldown(user);
+
+                foreach(UserViewModel triggeringUser in triggeringUsers)
+                {
+                    // Do our best to subtract the required currency
+                    this.Requirements.TrySubtractCurrencyAmount(triggeringUser);
+
+                    this.Requirements.UpdateCooldown(triggeringUser);
+                }
             }
             finally { this.permissionsCheckSemaphore.Release(); }
 
@@ -128,7 +127,7 @@ namespace MixItUp.Base.Commands
         private async Task<bool> CheckAllRequirements(UserViewModel user)
         {
             return (await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)
-                && await this.CheckCurrencyRequirement(user) && await this.CheckThresholdRequirement(user));
+                && await this.CheckCurrencyRequirement(user));
         }
     }
 }

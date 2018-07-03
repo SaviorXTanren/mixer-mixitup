@@ -1,7 +1,9 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -27,7 +29,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             this.TimeSpan = timeSpan;
         }
 
-        public bool DoesMeetRequirement(UserViewModel user)
+        public async Task<IEnumerable<UserViewModel>> GetTriggeringUsers(string commandName, UserViewModel user)
         {
             DateTime cutoffDateTime = DateTime.Now.Subtract(new TimeSpan(0, 0, this.TimeSpan));
             List<UserViewModel> toRemove = new List<UserViewModel>();
@@ -44,19 +46,24 @@ namespace MixItUp.Base.ViewModel.Requirement
                 this.performs.Remove(userToRemove);
             }
 
+            bool sendChatIfNotMet = !this.performs.ContainsKey(user);
             this.performs[user] = DateTime.Now;
 
-            if (this.performs.Count >= this.Amount)
+            int remaining = this.Amount - this.performs.Count;
+            if (remaining <= 0)
             {
+                // Need to copy the values before we clear them
+                IEnumerable<UserViewModel> triggeringUsers = this.performs.Keys.ToArray();
                 this.performs.Clear();
-                return true;
+                return triggeringUsers;
             }
-            return false;
-        }
 
-        public async Task SendNotMetWhisper(UserViewModel user)
-        {
-            await ChannelSession.Chat.Whisper(user.UserName, string.Format("This command requires {0} more users to trigger!", this.Amount - this.performs.Count));
+            if (sendChatIfNotMet)
+            {
+                await ChannelSession.Chat.SendMessage(string.Format("{0} command requires {1} more user(s) to trigger!", commandName, remaining));
+            }
+
+            return null;
         }
     }
 }
