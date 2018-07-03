@@ -73,7 +73,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
             else
             {
-                this.GameNameComboBox.Text = "<Type a valid game name here>";
+                this.GameNameComboBox.Text = "Web Show";
             }
 
             List<string> ageRatingList = EnumHelper.GetEnumNames<AgeRatingEnum>().Select(s => s.ToLower()).ToList();
@@ -236,7 +236,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     // If we did a search and it didn't find any relevant games, let's
                     // get something that is at least actionable.
-                    games = await ChannelSession.Connection.GetGameTypes("game", 10);
+                    games = await ChannelSession.Connection.GetGameTypes("Web Show", 10);
                 }
 
                 this.relatedGames.Clear();
