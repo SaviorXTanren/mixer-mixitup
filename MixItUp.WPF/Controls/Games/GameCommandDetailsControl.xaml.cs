@@ -22,6 +22,17 @@ namespace MixItUp.WPF.Controls.Games
         public GameCommandDetailsControl()
         {
             InitializeComponent();
+
+            this.Requirements.HideCurrencyRequirement();
+            this.Requirements.HideThresholdRequirement();
+
+            IEnumerable<UserCurrencyViewModel> currencies = ChannelSession.Settings.Currencies.Values;
+            this.IsEnabled = (currencies.Count() > 0);
+            this.CurrencyTypeComboBox.ItemsSource = currencies;
+            this.CurrencyTypeComboBox.SelectedIndex = 0;
+
+            this.CurrencyRequirementComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyRequirementTypeEnum>();
+            this.CurrencyRequirementComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyRequirementTypeEnum.MinimumAndMaximum);
         }
 
         public string GameName { get { return this.NameTextBox.Text; } }
@@ -191,17 +202,6 @@ namespace MixItUp.WPF.Controls.Games
 
         protected override Task OnLoaded()
         {
-            this.Requirements.HideCurrencyRequirement();
-            this.Requirements.HideThresholdRequirement();
-
-            IEnumerable<UserCurrencyViewModel> currencies = ChannelSession.Settings.Currencies.Values;
-            this.IsEnabled = (currencies.Count() > 0);
-            this.CurrencyTypeComboBox.ItemsSource = currencies;
-            this.CurrencyTypeComboBox.SelectedIndex = 0;
-
-            this.CurrencyRequirementComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyRequirementTypeEnum>();
-            this.CurrencyRequirementComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyRequirementTypeEnum.MinimumAndMaximum);
-
             if (this.existingCommand != null)
             {
                 this.NameTextBox.Text = this.existingCommand.Name;

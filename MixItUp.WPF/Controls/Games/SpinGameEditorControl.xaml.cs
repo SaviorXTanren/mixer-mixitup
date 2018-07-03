@@ -92,7 +92,7 @@ namespace MixItUp.WPF.Controls.Games
     /// </summary>
     public partial class SpinGameEditorControl : GameEditorControlBase
     {
-        private ObservableCollection<SpinOutcome> spinOutcomes = new ObservableCollection<SpinOutcome>();
+        private ObservableCollection<SpinOutcome> outcomes = new ObservableCollection<SpinOutcome>();
 
         private SpinGameCommand existingCommand;
 
@@ -114,7 +114,7 @@ namespace MixItUp.WPF.Controls.Games
                 return false;
             }
 
-            foreach (SpinOutcome outcome in this.spinOutcomes)
+            foreach (SpinOutcome outcome in this.outcomes)
             {
                 if (string.IsNullOrEmpty(outcome.Name))
                 {
@@ -129,21 +129,21 @@ namespace MixItUp.WPF.Controls.Games
                 }
             }
 
-            int userTotalChance = this.spinOutcomes.Select(o => o.UserChance).Sum();
+            int userTotalChance = this.outcomes.Select(o => o.UserChance).Sum();
             if (userTotalChance != 100)
             {
                 await MessageBoxHelper.ShowMessageDialog("The combined User Chance %'s do not equal 100");
                 return false;
             }
 
-            int subscriberTotalChance = this.spinOutcomes.Select(o => o.SubscriberChance).Sum();
+            int subscriberTotalChance = this.outcomes.Select(o => o.SubscriberChance).Sum();
             if (subscriberTotalChance != 100)
             {
                 await MessageBoxHelper.ShowMessageDialog("The combined Sub Chance %'s do not equal 100");
                 return false;
             }
 
-            int modTotalChance = this.spinOutcomes.Select(o => o.ModChance).Sum();
+            int modTotalChance = this.outcomes.Select(o => o.ModChance).Sum();
             if (modTotalChance != 100)
             {
                 await MessageBoxHelper.ShowMessageDialog("The combined Mod Chance %'s do not equal 100");
@@ -160,27 +160,27 @@ namespace MixItUp.WPF.Controls.Games
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
             }
             ChannelSession.Settings.GameCommands.Add(new SpinGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
-                this.CommandDetailsControl.GetRequirements(), this.spinOutcomes.Select(o => o.GetGameOutcome())));
+                this.CommandDetailsControl.GetRequirements(), this.outcomes.Select(o => o.GetGameOutcome())));
         }
 
         protected override Task OnLoaded()
         {
-            this.OutcomesItemsControl.ItemsSource = this.spinOutcomes;
+            this.OutcomesItemsControl.ItemsSource = this.outcomes;
 
             if (this.existingCommand != null)
             {
                 this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
                 foreach (GameOutcome outcome in this.existingCommand.Outcomes)
                 {
-                    this.spinOutcomes.Add(new SpinOutcome(outcome));
+                    this.outcomes.Add(new SpinOutcome(outcome));
                 }
             }
             else
             {
                 this.CommandDetailsControl.SetDefaultValues("Spin", "spin", CurrencyRequirementTypeEnum.MinimumAndMaximum, 10, 1000);
                 UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault();
-                this.spinOutcomes.Add(new SpinOutcome("Lose", this.CreateBasicChatCommand("Sorry @$username, you lost the spin!"), 0, 70, 70, 70));
-                this.spinOutcomes.Add(new SpinOutcome("Win", this.CreateBasicChatCommand("Congrats @$username, you won $gamepayout " + currency.Name + "!"), 200, 30, 30, 30));
+                this.outcomes.Add(new SpinOutcome("Lose", this.CreateBasicChatCommand("Sorry @$username, you lost the spin!"), 0, 70, 70, 70));
+                this.outcomes.Add(new SpinOutcome("Win", this.CreateBasicChatCommand("Congrats @$username, you won $gamepayout " + currency.Name + "!"), 200, 30, 30, 30));
             }
 
             return base.OnLoaded();
@@ -201,12 +201,12 @@ namespace MixItUp.WPF.Controls.Games
         {
             Button button = (Button)sender;
             SpinOutcome outcome = (SpinOutcome)button.DataContext;
-            this.spinOutcomes.Remove(outcome);
+            this.outcomes.Remove(outcome);
         }
 
         private void AddOutcomeButton_Click(object sender, RoutedEventArgs e)
         {
-            this.spinOutcomes.Add(new SpinOutcome("", this.CreateBasicChatCommand("@$username")));
+            this.outcomes.Add(new SpinOutcome("", this.CreateBasicChatCommand("@$username")));
         }
 
         private CustomCommand CreateBasicChatCommand(string message)

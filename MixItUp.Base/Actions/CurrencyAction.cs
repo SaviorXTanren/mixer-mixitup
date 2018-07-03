@@ -55,7 +55,7 @@ namespace MixItUp.Base.Actions
 
         public CurrencyAction() : base(ActionTypeEnum.Currency) { }
 
-        public CurrencyAction(UserCurrencyViewModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username, bool deductFromUser)
+        public CurrencyAction(UserCurrencyViewModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null, bool deductFromUser = false)
             : this()
         {
             this.CurrencyID = currency.ID;

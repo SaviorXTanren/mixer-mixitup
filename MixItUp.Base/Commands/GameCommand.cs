@@ -183,7 +183,7 @@ namespace MixItUp.Base.Commands
             int cumulativeOutcomeProbability = 0;
             foreach (GameOutcome outcome in outcomes)
             {
-                if (cumulativeOutcomeProbability <= randomNumber && randomNumber < outcome.GetRoleProbability(user.PrimaryRole))
+                if (cumulativeOutcomeProbability <= randomNumber && randomNumber < (cumulativeOutcomeProbability + outcome.GetRoleProbability(user.PrimaryRole)))
                 {
                     return outcome;
                 }
