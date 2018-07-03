@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -10,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
+    #region Base Game Classes
+
     [DataContract]
     public class GameOutcome
     {
@@ -178,7 +181,7 @@ namespace MixItUp.Base.Commands
 
         protected GameOutcome SelectRandomOutcome(UserViewModel user, IEnumerable<GameOutcome> outcomes)
         {
-            int randomNumber = this.GenerateRandomNumber();
+            int randomNumber = this.GenerateProbability();
 
             int cumulativeOutcomeProbability = 0;
             foreach (GameOutcome outcome in outcomes)
@@ -206,12 +209,14 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        protected int GenerateRandomNumber()
+        protected int GenerateRandomNumber(int maxValue)
         {
             this.randomSeed -= 123;
             Random random = new Random(this.randomSeed);
-            return random.Next(100);
+            return random.Next(maxValue);
         }
+
+        protected int GenerateProbability() { return this.GenerateRandomNumber(100); }
     }
 
     [DataContract]
@@ -248,6 +253,8 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    #endregion Base Game Classes
+
     [DataContract]
     public class SpinGameCommand : BasicOutcomeGameCommand
     {
@@ -265,7 +272,7 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public abstract class StealGameCommand : GameCommandBase
+    public class StealGameCommand : GameCommandBase
     {
         [DataMember]
         public GameOutcome StealSuccessfulOutcome { get; set; }
@@ -291,19 +298,47 @@ namespace MixItUp.Base.Commands
                 {
                     if (await this.PerformCurrencyChecks(user, betAmount))
                     {
-                        int randomNumber = this.GenerateRandomNumber();
+                        UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+
+                        List<UserViewModel> users = new List<UserViewModel>();
+                        foreach (UserViewModel activeUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                        {
+                            if (!user.Equals(activeUser) && activeUser.Data.GetCurrencyAmount(currency) >= betAmount)
+                            {
+                                users.Add(activeUser);
+                            }
+                        }
+
+                        if (users.Count == 0)
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("There are no active users with {0} {1}", betAmount, currency.Name));
+                            user.Data.AddCurrencyAmount(currency, betAmount);
+                            return;
+                        }
+
+                        int userIndex = this.GenerateRandomNumber(users.Count);
+                        UserViewModel targetUser = users[userIndex];
+
+                        int randomNumber = this.GenerateProbability();
                         if (randomNumber < this.StealSuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
                         {
-                            await this.PerformOutcome(user, arguments, this.StealSuccessfulOutcome, betAmount);
+                            user.Data.AddCurrencyAmount(currency, betAmount);
+                            targetUser.Data.SubtractCurrencyAmount(currency, betAmount);
+                            await this.PerformOutcome(user, arguments, this.StealSuccessfulOutcome, betAmount, targetUser);
                         }
                         else
                         {
-                            await this.PerformOutcome(user, arguments, this.StealFailedOutcome, betAmount);
+                            await this.PerformOutcome(user, arguments, this.StealFailedOutcome, betAmount, targetUser);
                         }
                         this.Requirements.UpdateCooldown(user);
                     }
                 }
             }
+        }
+
+        protected async Task PerformOutcome(UserViewModel user, IEnumerable<string> arguments, GameOutcome outcome, int betAmount, UserViewModel targetUser)
+        {
+            await base.PerformOutcome(user, new List<string>() { targetUser.UserName }, outcome, betAmount);
         }
     }
 

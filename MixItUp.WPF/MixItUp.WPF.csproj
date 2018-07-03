@@ -359,6 +359,9 @@
     <Compile Include="Controls\Games\SpinGameEditorControl.xaml.cs">
       <DependentUpon>SpinGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\StealGameEditorControl.xaml.cs">
+      <DependentUpon>StealGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\VendingMachineGameEditorControl.xaml.cs">
       <DependentUpon>VendingMachineGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -806,6 +809,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\SpinGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\StealGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

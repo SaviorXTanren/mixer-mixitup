@@ -47,6 +47,7 @@ namespace MixItUp.WPF.Windows.Command
             {
                 if (this.command is SpinGameCommand) { this.SetGameEditorControl(new SpinGameEditorControl((SpinGameCommand)this.command)); }
                 if (this.command is VendingMachineGameCommand) { this.SetGameEditorControl(new VendingMachineGameEditorControl((VendingMachineGameCommand)this.command)); }
+                if (this.command is StealGameCommand) { this.SetGameEditorControl(new StealGameEditorControl((StealGameCommand)this.command)); }
             }
             else
             {
@@ -59,6 +60,9 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.gameListings.Add(new GameTypeListing("Vending Machine", "The Vending Machine game picks a random number and selects an outcome based on that number. Unlike the Spin game, the Vending Machine game doesn't have a payout for each outcome and instead is more focused on an \"action\" occurring with each outcome, such as a sound effect, image, or a specialized effect."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !vend", new VendingMachineGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Steal", "The Steal game picks a random user in chat and attempts to steal currency from them. If successful, the user steals the amount of currency they specified from the random user. If failed, they lose the amount of currency specified."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !steal 100", new StealGameEditorControl()));
             }
 
             return Task.FromResult(0);
