@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -104,13 +105,13 @@ namespace MixItUp.Base.ViewModel.Requirement
             return true;
         }
 
-        public bool DoesMeetThresholdRequirement(UserViewModel user)
+        public async Task<IEnumerable<UserViewModel>> GetTriggeringUsers(string commandName, UserViewModel user)
         {
             if (this.Threshold != null)
             {
-                return this.Threshold.DoesMeetRequirement(user);
+                return await this.Threshold.GetTriggeringUsers(commandName, user);
             }
-            return true;
+            return new UserViewModel[] { user };
         }
 
         public void UpdateCooldown(UserViewModel user)
