@@ -89,7 +89,13 @@ namespace MixItUp.WPF.Controls.Store
             await this.window.RunAsyncOperation(async () =>
             {
                 StoreDetailListingModel listingDetails = await ChannelSession.Services.MixItUpService.GetStoreListing(this.currentListing.ID);
-                await ChannelSession.Services.MixItUpService.AddStoreListingDownload(this.currentListing);
+                if (listingDetails == null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Failed to download command, please try again");
+                    return;
+                }
+
+                await ChannelSession.Services.MixItUpService.AddStoreListingDownload(listingDetails);
 
                 List<ActionBase> actions = listingDetails.GetActions();
 
