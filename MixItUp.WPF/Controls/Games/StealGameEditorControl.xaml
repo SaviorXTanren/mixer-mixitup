@@ -31,11 +31,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="User Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" Width="85" MaterialDesign:HintAssist.Hint="User Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="SubscriberPercentageTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Sub Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="SubscriberPercentageTextBox" Grid.Column="2" Width="85" MaterialDesign:HintAssist.Hint="Sub Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="ModPercentageTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ModPercentageTextBox" Grid.Column="4" Width="85" MaterialDesign:HintAssist.Hint="Mod Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="6" Header="Success">
                 <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" Margin="30,0,0,0" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />

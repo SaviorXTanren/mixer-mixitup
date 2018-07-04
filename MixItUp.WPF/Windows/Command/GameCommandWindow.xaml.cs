@@ -49,6 +49,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.command is VendingMachineGameCommand) { this.SetGameEditorControl(new VendingMachineGameEditorControl((VendingMachineGameCommand)this.command)); }
                 if (this.command is StealGameCommand) { this.SetGameEditorControl(new StealGameEditorControl((StealGameCommand)this.command)); }
                 if (this.command is PickpocketGameCommand) { this.SetGameEditorControl(new PickpocketGameEditorControl((PickpocketGameCommand)this.command)); }
+                if (this.command is DuelGameCommand) { this.SetGameEditorControl(new DuelGameEditorControl((DuelGameCommand)this.command)); }
             }
             else
             {
@@ -62,11 +63,14 @@ namespace MixItUp.WPF.Windows.Command
                 this.gameListings.Add(new GameTypeListing("Vending Machine", "The Vending Machine game picks a random number and selects an outcome based on that number. Unlike the Spin game, the Vending Machine game doesn't have a payout for each outcome and instead is more focused on an \"action\" occurring with each outcome, such as a sound effect, image, or a specialized effect."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !vend", new VendingMachineGameEditorControl()));
 
-                this.gameListings.Add(new GameTypeListing("Steal", "The Steal game picks a random user in chat and attempts to steal currency from them. If successful, the user steals the amount of currency they bet from the random user. If failed, they lose the amount of currency they bet."
+                this.gameListings.Add(new GameTypeListing("Steal", "The Steal game picks a random user in chat and attempts to steal currency from them. If successful, the user steals the bet amount from the random user. If failed, they lose the bet amount."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !steal 100", new StealGameEditorControl()));
 
-                this.gameListings.Add(new GameTypeListing("Pickpocket", "The Pickpocket game attempts to steal currency from a specified user. If successful, the user steals the amount of currency they bet from the specified user. If failed, they lose the amount of currency they bet."
+                this.gameListings.Add(new GameTypeListing("Pickpocket", "The Pickpocket game attempts to steal currency from a specified user. If successful, the user steals the bet amount from the specified user. If failed, they lose the bet amount."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !pickpocket <USERNAME> 100", new PickpocketGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Duel", "The Duel game challenges the specified user to a winner-takes-all for the bet amount. If successful, the user takes the bet amount from the specified user. If failed, the specified user takes the bet amount from the user."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !duel <USERNAME> 100", new DuelGameEditorControl()));
             }
 
             return Task.FromResult(0);

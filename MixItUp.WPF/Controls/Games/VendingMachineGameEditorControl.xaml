@@ -55,11 +55,11 @@
 
                             <Grid Grid.Column="4">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="85" />
                                     <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="85" />
                                     <ColumnDefinition Width="20" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="85" />
                                 </Grid.ColumnDefinitions>
 
                                 <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="User Chance %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserChanceString}" />

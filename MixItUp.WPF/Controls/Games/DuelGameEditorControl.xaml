@@ -1,4 +1,4 @@
-﻿<local:GameEditorControlBase x:Class="MixItUp.WPF.Controls.Games.PickpocketGameEditorControl"
+﻿<local:GameEditorControlBase x:Class="MixItUp.WPF.Controls.Games.DuelGameEditorControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,6 +14,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="40" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <local:GameCommandDetailsControl x:Name="CommandDetailsControl" Grid.Row="0" HorizontalAlignment="Center" />
@@ -21,9 +25,19 @@
         <Grid Grid.Row="2" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="Duel Started">
+                <CommandControls:CommandButtonsControl x:Name="DuelStartedCommandButtonsControl" Margin="30,0,0,0" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            </GroupBox>
+
+            <TextBox x:Name="TimeLimitTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Time Limit (Seconds)" Width="120" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
@@ -31,17 +45,25 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" Width="85" MaterialDesign:HintAssist.Hint="User Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="UserPercentageTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="User Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="SubscriberPercentageTextBox" Grid.Column="2" Width="85" MaterialDesign:HintAssist.Hint="Sub Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="SubscriberPercentageTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Sub Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <TextBox x:Name="ModPercentageTextBox" Grid.Column="4" Width="85" MaterialDesign:HintAssist.Hint="Mod Chance %" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <TextBox x:Name="ModPercentageTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Mod Chance %" Width="85" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
 
-            <GroupBox Grid.Column="6" Header="Success">
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="Success">
                 <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" Margin="30,0,0,0" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="8" Header="Failure">
+            <GroupBox Grid.Column="2" Header="Failure">
                 <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" Margin="30,0,0,0" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
