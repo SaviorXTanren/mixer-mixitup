@@ -142,14 +142,17 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
 
-            Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(dataReader["CurrencyAmounts"].ToString());
-            if (currencyAmounts != null)
+            if (dataReader["CurrencyAmounts"] != null)
             {
-                foreach (var kvp in currencyAmounts)
+                Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(dataReader["CurrencyAmounts"].ToString());
+                if (currencyAmounts != null)
                 {
-                    if (settings.Currencies.ContainsKey(kvp.Key))
+                    foreach (var kvp in currencyAmounts)
                     {
-                        this.SetCurrencyAmount(settings.Currencies[kvp.Key], kvp.Value);
+                        if (settings.Currencies.ContainsKey(kvp.Key))
+                        {
+                            this.SetCurrencyAmount(settings.Currencies[kvp.Key], kvp.Value);
+                        }
                     }
                 }
             }
