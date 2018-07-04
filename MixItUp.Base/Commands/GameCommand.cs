@@ -220,17 +220,17 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public abstract class BasicOutcomeGameCommand : GameCommandBase
+    public abstract class SinglePlayerOutcomeGameCommand : GameCommandBase
     {
         [DataMember]
         public List<GameOutcome> Outcomes { get; set; }
 
-        public BasicOutcomeGameCommand()
+        public SinglePlayerOutcomeGameCommand()
         {
             this.Outcomes = new List<GameOutcome>();
         }
 
-        public BasicOutcomeGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes)
+        public SinglePlayerOutcomeGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes)
             : base(name, commands, requirements)
         {
             this.Outcomes = new List<GameOutcome>(outcomes);
@@ -253,87 +253,82 @@ namespace MixItUp.Base.Commands
         }
     }
 
-    #endregion Base Game Classes
-
     [DataContract]
-    public class SpinGameCommand : BasicOutcomeGameCommand
-    {
-        public SpinGameCommand() { }
-
-        public SpinGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes) : base(name, commands, requirements, outcomes) { }
-    }
-
-    [DataContract]
-    public class VendingMachineGameCommand : BasicOutcomeGameCommand
-    {
-        public VendingMachineGameCommand() { }
-
-        public VendingMachineGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes) : base(name, commands, requirements, outcomes) { }
-    }
-
-    [DataContract]
-    public class StealGameCommand : GameCommandBase
+    public class TwoPlayerGameCommandBase : GameCommandBase
     {
         [DataMember]
-        public GameOutcome StealSuccessfulOutcome { get; set; }
+        public GameOutcome SuccessfulOutcome { get; set; }
 
         [DataMember]
-        public GameOutcome StealFailedOutcome { get; set; }
+        public GameOutcome FailedOutcome { get; set; }
 
-        public StealGameCommand() { }
+        public TwoPlayerGameCommandBase() { }
 
-        public StealGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome stealSuccessfulOutcome, GameOutcome stealFailedOutcome)
+        public TwoPlayerGameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome successfulOutcome, GameOutcome failedOutcome)
             : base(name, commands, requirements)
         {
-            this.StealSuccessfulOutcome = stealSuccessfulOutcome;
-            this.StealFailedOutcome = stealFailedOutcome;
+            this.SuccessfulOutcome = successfulOutcome;
+            this.FailedOutcome = failedOutcome;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
         {
             if (await this.PerformUsageChecks(user, arguments))
             {
-                int betAmount = await this.GetBetAmount(user, arguments.FirstOrDefault());
+                int betAmount = await this.GetBetAmount(user, this.GetBetAmountArgument(arguments));
                 if (betAmount >= 0)
                 {
                     if (await this.PerformCurrencyChecks(user, betAmount))
                     {
                         UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
-
-                        List<UserViewModel> users = new List<UserViewModel>();
-                        foreach (UserViewModel activeUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                        if (currency == null)
                         {
-                            if (!user.Equals(activeUser) && activeUser.Data.GetCurrencyAmount(currency) >= betAmount)
-                            {
-                                users.Add(activeUser);
-                            }
-                        }
-
-                        if (users.Count == 0)
-                        {
-                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("There are no active users with {0} {1}", betAmount, currency.Name));
-                            user.Data.AddCurrencyAmount(currency, betAmount);
                             return;
                         }
 
-                        int userIndex = this.GenerateRandomNumber(users.Count);
-                        UserViewModel targetUser = users[userIndex];
-
-                        int randomNumber = this.GenerateProbability();
-                        if (randomNumber < this.StealSuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                        UserViewModel targetUser = await this.GetTargetUser(user, arguments, currency, betAmount);
+                        if (targetUser != null)
                         {
-                            user.Data.AddCurrencyAmount(currency, betAmount);
-                            targetUser.Data.SubtractCurrencyAmount(currency, betAmount);
-                            await this.PerformOutcome(user, arguments, this.StealSuccessfulOutcome, betAmount, targetUser);
+                            int randomNumber = this.GenerateProbability();
+                            if (randomNumber < this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                            {
+                                user.Data.AddCurrencyAmount(currency, betAmount);
+                                targetUser.Data.SubtractCurrencyAmount(currency, betAmount);
+                                await this.PerformOutcome(user, arguments, this.SuccessfulOutcome, betAmount, targetUser);
+                            }
+                            else
+                            {
+                                await this.PerformOutcome(user, arguments, this.FailedOutcome, betAmount, targetUser);
+                            }
+                            this.Requirements.UpdateCooldown(user);
                         }
-                        else
-                        {
-                            await this.PerformOutcome(user, arguments, this.StealFailedOutcome, betAmount, targetUser);
-                        }
-                        this.Requirements.UpdateCooldown(user);
                     }
                 }
             }
+        }
+
+        protected virtual string GetBetAmountArgument(IEnumerable<string> arguments) { return arguments.FirstOrDefault(); }
+
+        protected virtual async Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
+        {
+            List<UserViewModel> users = new List<UserViewModel>();
+            foreach (UserViewModel activeUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+            {
+                if (!user.Equals(activeUser) && activeUser.Data.GetCurrencyAmount(currency) >= betAmount)
+                {
+                    users.Add(activeUser);
+                }
+            }
+
+            if (users.Count == 0)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("There are no active users with {0} {1}", betAmount, currency.Name));
+                user.Data.AddCurrencyAmount(currency, betAmount);
+                return null;
+            }
+
+            int userIndex = this.GenerateRandomNumber(users.Count);
+            return users[userIndex];
         }
 
         protected async Task PerformOutcome(UserViewModel user, IEnumerable<string> arguments, GameOutcome outcome, int betAmount, UserViewModel targetUser)
@@ -342,100 +337,42 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    #endregion Base Game Classes
+
     [DataContract]
-    public class TwoPlayerGameCommand : GameCommandBase
+    public class SpinGameCommand : SinglePlayerOutcomeGameCommand
     {
-        [DataMember]
-        public int StarterPlayerSuccessProbability { get; set; }
+        public SpinGameCommand() { }
 
-        [DataMember]
-        public bool RequiresOtherPlayerAgreement { get; set; }
-        [DataMember]
-        public int OtherPlayerResponseTime { get; set; }
+        public SpinGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes) : base(name, commands, requirements, outcomes) { }
+    }
 
-        private SemaphoreSlim otherPlayerSemaphore = new SemaphoreSlim(1);
-        private UserViewModel otherPlayer;
-        private int betAmount = 0;
+    [DataContract]
+    public class VendingMachineGameCommand : SinglePlayerOutcomeGameCommand
+    {
+        public VendingMachineGameCommand() { }
 
-        public TwoPlayerGameCommand()
-        {
+        public VendingMachineGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes) : base(name, commands, requirements, outcomes) { }
+    }
 
-        }
+    [DataContract]
+    public class StealGameCommand : TwoPlayerGameCommandBase
+    {
+        public StealGameCommand() { }
 
-        public TwoPlayerGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements)
-            : base(name, commands, requirements)
-        {
+        public StealGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome successfulOutcome, GameOutcome failedOutcome)
+            : base(name, commands, requirements, successfulOutcome, failedOutcome)
+        { }
+    }
 
-        }
+    [DataContract]
+    public class PickpocketGameCommand : TwoPlayerGameCommandBase
+    {
+        public PickpocketGameCommand() { }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
-        {
-            if (this.otherPlayer != null)
-            {
-                bool matchesPlayer = false;
-                await this.otherPlayerSemaphore.WaitAsync();
-
-                if (this.otherPlayer.Equals(user))
-                {
-                    matchesPlayer = true;
-                    this.otherPlayer = null;
-                }
-
-                this.otherPlayerSemaphore.Release();
-
-                if (matchesPlayer)
-                {
-                    await this.PerformTwoPlayerCompetition(user, arguments, betAmount);
-                }
-                else
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "There is already an existing game underway, please wait until it is finished");
-                }
-            }
-            else if (await this.PerformUsageChecks(user, arguments))
-            {
-                this.otherPlayer = await ChannelSession.ActiveUsers.GetUserByUsername(arguments.First());
-                if (this.otherPlayer == null)
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("The user {0} either does not exist or is not currently in the channel", arguments.First()));
-                }
-
-                this.betAmount = await this.GetBetAmount(user, arguments.Skip(1).First());
-                if (this.betAmount >= 0)
-                {
-                    UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
-                    if (this.otherPlayer.Data.GetCurrencyAmount(currency) < betAmount)
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("{0} does not have {1} {2}", this.otherPlayer.UserName, betAmount, currency.Name));
-                        return;
-                    }
-
-                    if (this.RequiresOtherPlayerAgreement)
-                    {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () =>
-                        {
-                            await Task.Delay(this.OtherPlayerResponseTime * 1000);
-
-                            await this.otherPlayerSemaphore.WaitAsync();
-
-                            if (this.otherPlayer != null)
-                            {
-                                await ChannelSession.Chat.SendMessage(string.Format("{0} did not accept in time...", this.otherPlayer.UserName));
-                                this.otherPlayer = null;
-                            }
-
-                            this.otherPlayerSemaphore.Release();
-                        });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    }
-                    else
-                    {
-                        await this.PerformTwoPlayerCompetition(user, arguments, betAmount);
-                    }
-                }
-            }
-        }
+        public PickpocketGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, GameOutcome successfulOutcome, GameOutcome failedOutcome)
+            : base(name, commands, requirements, successfulOutcome, failedOutcome)
+        { }
 
         protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
         {
@@ -464,13 +401,35 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
-        private async Task PerformTwoPlayerCompetition(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            if (await this.PerformCurrencyChecks(user, this.betAmount))
+            if (arguments.Count() == 2)
             {
-                //await this.PerformOutcome(user, arguments, this.SelectRandomOutcome(user, this.Outcomes), betAmount);
-                this.Requirements.UpdateCooldown(user);
+                return arguments.Skip(1).FirstOrDefault();
             }
+            return arguments.FirstOrDefault();
+        }
+
+        protected override async Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
+        {
+            string username = arguments.FirstOrDefault().Replace("@", "");
+            UserViewModel targetUser = await ChannelSession.ActiveUsers.GetUserByUsername(username);
+
+            if (targetUser == null || user.Equals(targetUser))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "The User specified is either not valid or not currently in the channel");
+                user.Data.AddCurrencyAmount(currency, betAmount);
+                return null;
+            }
+
+            if (targetUser.Data.GetCurrencyAmount(currency) < betAmount)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, betAmount, currency.Name));
+                user.Data.AddCurrencyAmount(currency, betAmount);
+                return null;
+            }
+
+            return targetUser;
         }
     }
 

@@ -33,7 +33,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             return await this.LockWrapper(() =>
             {
-                return Task.FromResult<UserViewModel>(this.users.Values.FirstOrDefault(u => u.UserName.Equals(username)));
+                return Task.FromResult<UserViewModel>(this.users.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.CurrentCultureIgnoreCase)));
             });
         }
 

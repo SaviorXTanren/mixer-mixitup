@@ -14,21 +14,21 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Games
 {
     /// <summary>
-    /// Interaction logic for StealGameEditorControl.xaml
+    /// Interaction logic for PickpocketGameEditorControl.xaml
     /// </summary>
-    public partial class StealGameEditorControl : GameEditorControlBase
+    public partial class PickpocketGameEditorControl : GameEditorControlBase
     {
-        private StealGameCommand existingCommand;
+        private PickpocketGameCommand existingCommand;
 
         private CustomCommand successOutcomeCommand;
         private CustomCommand failOutcomeCommand;
 
-        public StealGameEditorControl()
+        public PickpocketGameEditorControl()
         {
             InitializeComponent();
         }
 
-        public StealGameEditorControl(StealGameCommand command)
+        public PickpocketGameEditorControl(PickpocketGameCommand command)
             : this()
         {
             this.existingCommand = command;
@@ -75,7 +75,7 @@ namespace MixItUp.WPF.Controls.Games
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
             }
-            ChannelSession.Settings.GameCommands.Add(new StealGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
+            ChannelSession.Settings.GameCommands.Add(new PickpocketGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
                 this.CommandDetailsControl.GetRequirements(), new GameOutcome("Success", 1, successRoleProbabilities, this.successOutcomeCommand),
                 new GameOutcome("Failure", 0, failRoleProbabilities, this.failOutcomeCommand)));
         }
@@ -93,13 +93,13 @@ namespace MixItUp.WPF.Controls.Games
             }
             else
             {
-                this.CommandDetailsControl.SetDefaultValues("Steal", "steal", CurrencyRequirementTypeEnum.MinimumAndMaximum, 10, 1000);
+                this.CommandDetailsControl.SetDefaultValues("Pickpocket", "pickpocket", CurrencyRequirementTypeEnum.MinimumAndMaximum, 10, 1000);
                 UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault();
-                this.UserPercentageTextBox.Text = "60";
-                this.SubscriberPercentageTextBox.Text = "60";
-                this.ModPercentageTextBox.Text = "60";
+                this.UserPercentageTextBox.Text = "40";
+                this.SubscriberPercentageTextBox.Text = "40";
+                this.ModPercentageTextBox.Text = "40";
                 this.successOutcomeCommand = this.CreateBasicChatCommand("@$username stole $gamepayout " + currency.Name + " from @$targetusername!");
-                this.failOutcomeCommand = this.CreateBasicChatCommand("@$username was unable to steal from anyone...");
+                this.failOutcomeCommand = this.CreateBasicChatCommand("@$username was unable to steal from @$targetusername...");
             }
 
             this.SuccessOutcomeCommandButtonsControl.DataContext = this.successOutcomeCommand;
