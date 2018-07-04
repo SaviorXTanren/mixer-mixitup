@@ -205,7 +205,7 @@ namespace MixItUp.Overlay
 
         protected override async Task ProcessConnection(HttpListenerContext listenerContext)
         {
-            string url = listenerContext.Request.RawUrl;
+            string url = listenerContext.Request.Url.LocalPath;
             url = url.Trim(new char[] { '/' });
 
             if (url.Equals("overlay"))
