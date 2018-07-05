@@ -39,6 +39,7 @@ namespace MixItUp.Base.Util
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
         public const string StreamTitleSpecialIdentifier = "streamtitle";
         public const string StreamSubCountSpecialIdentifier = "streamsubcount";
+        public const string StreamHostCountSpecialIdentifier = "streamhostcount";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
@@ -268,6 +269,19 @@ namespace MixItUp.Base.Util
                 else
                 {
                     this.ReplaceSpecialIdentifier(StreamSubCountSpecialIdentifier, "0");
+                }
+            }
+
+            if (this.ContainsSpecialIdentifier(StreamHostCountSpecialIdentifier))
+            {
+                IEnumerable<ChannelAdvancedModel> hosters = await ChannelSession.Connection.GetHosters(ChannelSession.Channel);
+                if (hosters != null)
+                {
+                    this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, hosters.Count().ToString());
+                }
+                else
+                {
+                    this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, "0");
                 }
             }
 
