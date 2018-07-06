@@ -72,6 +72,15 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
+            foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
+            {
+                if (this.GetExistingCommand() != command && this.NameTextBox.Text.Equals(command.Name))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("There already exists a command with the same name");
+                    return false;
+                }
+            }
+
             IEnumerable<string> commandStrings = this.GetCommandStrings();
             if (commandStrings.GroupBy(c => c).Where(g => g.Count() > 1).Count() > 0)
             {
@@ -79,7 +88,7 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
+            foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
             {
                 if (command.IsEnabled && this.GetExistingCommand() != command)
                 {

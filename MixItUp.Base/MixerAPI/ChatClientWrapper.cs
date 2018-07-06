@@ -405,7 +405,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 GlobalEvents.ChatCommandMessageReceived(message);
 
-                List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllChatCommands);
+                List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllEnabledChatCommands);
                 commandsToCheck.AddRange(message.User.Data.CustomCommands);
                 PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.CommandName));
                 if (command != null)

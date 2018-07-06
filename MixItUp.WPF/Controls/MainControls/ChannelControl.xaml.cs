@@ -67,9 +67,13 @@ namespace MixItUp.WPF.Controls.MainControls
             this.AgeRatingComboBox.ItemsSource = EnumHelper.GetEnumNames<AgeRatingEnum>();
 
             this.StreamTitleTextBox.Text = ChannelSession.Channel.name;
-            if (ChannelSession.Channel.type != null)
+            if (ChannelSession.Channel?.type?.name != null)
             {
                 this.GameNameComboBox.Text = ChannelSession.Channel.type.name;
+            }
+            else
+            {
+                this.GameNameComboBox.Text = "Web Show";
             }
 
             List<string> ageRatingList = EnumHelper.GetEnumNames<AgeRatingEnum>().Select(s => s.ToLower()).ToList();
@@ -117,7 +121,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(this.GameNameComboBox.Text))
+            if (string.IsNullOrWhiteSpace(this.GameNameComboBox.Text) || (this.GameNameComboBox.SelectedIndex == -1))
             {
                 await MessageBoxHelper.ShowMessageDialog("A valid & existing game name must be selected");
                 return;
@@ -227,6 +231,14 @@ namespace MixItUp.WPF.Controls.MainControls
             if (!string.IsNullOrEmpty(gameName))
             {
                 var games = await ChannelSession.Connection.GetGameTypes(gameName, 10);
+
+                if (games.Count() == 0)
+                {
+                    // If we did a search and it didn't find any relevant games, let's
+                    // get something that is at least actionable.
+                    games = await ChannelSession.Connection.GetGameTypes("Web Show", 10);
+                }
+
                 this.relatedGames.Clear();
                 foreach (var game in games)
                 {
