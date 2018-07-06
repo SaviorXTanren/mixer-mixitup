@@ -182,7 +182,7 @@ namespace MixItUp.WPF.Windows.Command
                     return;
                 }
 
-                foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
+                foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
                 {
                     if (this.command != command && this.GameNameTextBox.Text.Equals(command.Name))
                     {
@@ -198,7 +198,7 @@ namespace MixItUp.WPF.Windows.Command
                     return;
                 }
 
-                foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
+                foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
                 {
                     if (command.IsEnabled && this.GetExistingCommand() != command)
                     {

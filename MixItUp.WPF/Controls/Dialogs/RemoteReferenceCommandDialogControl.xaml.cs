@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Controls.Dialogs
             if (this.CommandTypeComboBox.SelectedIndex >= 0)
             {
                 CommandTypeEnum commandType = EnumHelper.GetEnumValueFromString<CommandTypeEnum>((string)this.CommandTypeComboBox.SelectedItem);
-                IEnumerable<CommandBase> commands = ChannelSession.AllCommands.Where(c => c.Type == commandType);
+                IEnumerable<CommandBase> commands = ChannelSession.AllEnabledCommands.Where(c => c.Type == commandType);
                 if (commandType == CommandTypeEnum.Chat)
                 {
                     commands = commands.Where(c => !(c is PreMadeChatCommand));

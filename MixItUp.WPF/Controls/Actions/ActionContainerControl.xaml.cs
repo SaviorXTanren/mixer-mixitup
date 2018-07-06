@@ -121,6 +121,9 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.MixerClips:
                         this.actionControl = (this.action != null) ? new MixerClipsActionControl(this, (MixerClipsAction)this.action) : new MixerClipsActionControl(this);
                         break;
+                    case ActionTypeEnum.Command:
+                        this.actionControl = (this.action != null) ? new CommandActionControl(this, (CommandAction)this.action) : new CommandActionControl(this);
+                        break;
                 }
 
                 if (this.action != null && !string.IsNullOrEmpty(this.action.Label))

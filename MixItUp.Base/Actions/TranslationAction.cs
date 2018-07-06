@@ -107,7 +107,7 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.ResponseAction == TranslationResponseActionTypeEnum.Command)
                     {
-                        CommandBase command = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
+                        CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
                         if (command != null)
                         {
                             string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;

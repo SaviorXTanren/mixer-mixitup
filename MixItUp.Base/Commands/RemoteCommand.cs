@@ -46,7 +46,7 @@ namespace MixItUp.Base.Commands
             {
                 if (this.CommandID != Guid.Empty)
                 {
-                    return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
+                    return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
                 }
                 return null;
             }

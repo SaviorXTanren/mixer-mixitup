@@ -116,7 +116,7 @@ namespace MixItUp.Base.Actions
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.Command)
                             {
-                                CommandBase command = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
+                                CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.ResponseCommandID));
 
 #pragma warning disable CS0612 // Type or member is obsolete
                                 if (command == null && !string.IsNullOrEmpty(this.ResponseCommandName))

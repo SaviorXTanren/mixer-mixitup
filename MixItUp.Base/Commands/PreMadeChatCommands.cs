@@ -119,7 +119,7 @@ namespace MixItUp.Base.Commands
                 if (ChannelSession.Chat != null)
                 {
                     List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
-                    foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
+                    foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
                     {
                         if (await command.Requirements.DoesMeetUserRoleRequirement(user))
                         {
@@ -963,7 +963,7 @@ namespace MixItUp.Base.Commands
                         return;
                     }
 
-                    foreach (PermissionsCommandBase command in ChannelSession.AllChatCommands)
+                    foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
                     {
                         if (command.IsEnabled)
                         {
@@ -1019,7 +1019,7 @@ namespace MixItUp.Base.Commands
                 {
                     string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                    PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger));
+                    PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger));
                     if (command == null)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
@@ -1074,7 +1074,7 @@ namespace MixItUp.Base.Commands
                 {
                     string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                    PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger));
+                    PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger));
                     if (command == null)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
