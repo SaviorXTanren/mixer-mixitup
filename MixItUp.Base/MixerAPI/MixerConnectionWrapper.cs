@@ -96,6 +96,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<ChannelDetailsModel> GetChannelDetails(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetChannelDetails(channel.id)); }
 
+        public async Task<IEnumerable<ChannelAdvancedModel>> GetHosters(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetHosters(channel, uint.MaxValue)); }
+
         public async Task<GameTypeModel> GetGameType(uint id) { return await this.RunAsync(this.Connection.GameTypes.GetGameType(id)); }
 
         public async Task<IEnumerable<GameTypeModel>> GetGameTypes(string name, uint maxResults = 1) { return await this.RunAsync(this.Connection.GameTypes.GetGameTypes(name, maxResults)); }
