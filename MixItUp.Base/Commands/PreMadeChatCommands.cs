@@ -967,7 +967,7 @@ namespace MixItUp.Base.Commands
                     {
                         if (command.IsEnabled)
                         {
-                            if (command.Commands.Contains(commandTrigger))
+                            if (command.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase))
                             {
                                 await ChannelSession.Chat.Whisper(user.UserName, "ERROR: There already exists an enabled, chat command that uses the command trigger you have specified");
                                 return;
@@ -1019,7 +1019,7 @@ namespace MixItUp.Base.Commands
                 {
                     string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                    PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger));
+                    PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                     if (command == null)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");
@@ -1074,7 +1074,7 @@ namespace MixItUp.Base.Commands
                 {
                     string commandTrigger = arguments.ElementAt(0).ToLower();
 
-                    PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger));
+                    PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Commands.Contains(commandTrigger, StringComparer.InvariantCultureIgnoreCase));
                     if (command == null)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, "ERROR: Could not find any command with that trigger");

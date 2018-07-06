@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.Import;
 using MixItUp.Base.ViewModel.Requirement;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -42,7 +43,7 @@ namespace MixItUp.Base.Commands
             {
                 commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
             }
-            return commandsToCheck.Contains(command);
+            return commandsToCheck.Contains(command, StringComparer.InvariantCultureIgnoreCase);
         }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }

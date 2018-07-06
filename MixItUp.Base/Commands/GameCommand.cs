@@ -554,7 +554,7 @@ namespace MixItUp.Base.Commands
         {
             var commandsToCheck = this.Commands;
             commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
-            return commandsToCheck.Contains(command);
+            return commandsToCheck.Contains(command, StringComparer.InvariantCultureIgnoreCase);
         }
 
         protected virtual void AddSpecialIdentifiersToCommand(CustomCommand command, UserViewModel user = null, int payout = 0)
