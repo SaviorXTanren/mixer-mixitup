@@ -11,8 +11,16 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="CommandTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+        <ComboBox x:Name="TypeComboBox" Grid.Row="0" SelectionChanged="CommandTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+
+        <ComboBox x:Name="CommandNameComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="Command" DisplayMemberPath="Name" />
+
+        <TextBox Grid.Row="4" x:Name="CommandArgumentsTextBox" MaterialDesign:HintAssist.Hint="(Optional) Command Arguments" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" />
     </Grid>
 </local:ActionControlBase>
