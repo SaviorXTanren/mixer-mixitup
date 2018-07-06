@@ -54,15 +54,14 @@ namespace MixItUp.Base.Actions
                 {
                     command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
 
-                    // Do we need to apply special identifiers to arguments now?
+                    IEnumerable<string> newArguments = null;
                     if (!string.IsNullOrEmpty(this.CommandArguments))
                     {
                         string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.CommandArguments, user, arguments);
-                        arguments = arguments.Union(processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                        newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                     }
 
-                    // Consider trying to prevent recursion here a bit?
-                    await command.Perform(user, arguments);
+                    await command.Perform(user, newArguments);
                 }
             }
             else if (this.CommandActionType == CommandActionTypeEnum.EnableDisableCommand)
