@@ -1,6 +1,8 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -45,26 +47,30 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            PermissionsCommandBase command = ChannelSession.PreMadeChatCommands.Union<PermissionsCommandBase>(ChannelSession.Settings.ChatCommands).FirstOrDefault(c => c.Name.Equals(this.CommandName));
-            if (command != null)
+            if (this.CommandActionType == CommandActionTypeEnum.RunCommand)
             {
-                switch (this.CommandActionType)
+                PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Name.Equals(this.CommandName));
+                if (command != null)
                 {
-                    case CommandActionTypeEnum.RunCommand:
-                        command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
+                    command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
 
-                        // Do we need to apply special identifiers to arguments now?
-                        if (!string.IsNullOrEmpty(this.CommandArguments))
-                        {
-                            arguments = arguments.Union(new string[] { this.CommandArguments });
-                        }
+                    // Do we need to apply special identifiers to arguments now?
+                    if (!string.IsNullOrEmpty(this.CommandArguments))
+                    {
+                        string processedMessage = await this.ReplaceStringWithSpecialModifiers(this.CommandArguments, user, arguments);
+                        arguments = arguments.Union(processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                    }
 
-                        // Consider trying to prevent recursion here a bit?
-                        await command.Perform(user, arguments);
-                        break;
-                    case CommandActionTypeEnum.EnableDisableCommand:
-                        command.IsEnabled = !command.IsEnabled;
-                        break;
+                    // Consider trying to prevent recursion here a bit?
+                    await command.Perform(user, arguments);
+                }
+            }
+            else if (this.CommandActionType == CommandActionTypeEnum.EnableDisableCommand)
+            {
+                PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.Name.Equals(this.CommandName));
+                if (command != null)
+                {
+                    command.IsEnabled = !command.IsEnabled;
                 }
             }
         }

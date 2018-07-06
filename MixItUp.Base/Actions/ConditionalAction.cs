@@ -59,7 +59,7 @@ namespace MixItUp.Base.Actions
             this.CommandID = command.ID;
         }
 
-        public CommandBase GetCommand() { return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
+        public CommandBase GetCommand() { return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID)); }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {

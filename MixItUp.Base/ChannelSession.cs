@@ -122,7 +122,7 @@ namespace MixItUp.Base
 
         public static LockedDictionary<string, int> Counters { get; private set; }
 
-        public static IEnumerable<PermissionsCommandBase> AllChatCommands
+        public static IEnumerable<PermissionsCommandBase> AllEnabledChatCommands
         {
             get
             {
@@ -134,12 +134,24 @@ namespace MixItUp.Base
             }
         }
 
-        public static IEnumerable<CommandBase> AllCommands
+        public static IEnumerable<PermissionsCommandBase> AllChatCommands
+        {
+            get
+            {
+                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
+                commands.AddRange(ChannelSession.PreMadeChatCommands);
+                commands.AddRange(ChannelSession.Settings.ChatCommands);
+                commands.AddRange(ChannelSession.Settings.GameCommands);
+                return commands;
+            }
+        }
+
+        public static IEnumerable<CommandBase> AllEnabledCommands
         {
             get
             {
                 List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(ChannelSession.AllChatCommands);
+                commands.AddRange(ChannelSession.AllEnabledChatCommands);
                 commands.AddRange(ChannelSession.Settings.EventCommands);
                 commands.AddRange(ChannelSession.Settings.InteractiveCommands);
                 commands.AddRange(ChannelSession.Settings.TimerCommands);
@@ -418,7 +430,7 @@ namespace MixItUp.Base
                         await ChannelSession.Services.InitializeTiltify();
                     }
 
-                    foreach (CommandBase command in ChannelSession.AllCommands)
+                    foreach (CommandBase command in ChannelSession.AllEnabledCommands)
                     {
                         foreach (ActionBase action in command.Actions)
                         {

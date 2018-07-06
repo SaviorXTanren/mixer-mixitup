@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (this.action.ResponseAction == WebRequestResponseActionTypeEnum.Command)
                 {
-                    this.CommandResponseComboBox.SelectedItem = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.action.ResponseCommandID));
+                    this.CommandResponseComboBox.SelectedItem = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.action.ResponseCommandID));
                     this.CommandResponseArgumentsTextBox.Text = this.action.ResponseCommandArgumentsText;
                 }
                 else if (this.action.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)

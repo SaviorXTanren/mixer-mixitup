@@ -23,11 +23,11 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CommandActionTypeEnum>();
 
-            this.CommandNameComboBox.ItemsSource = ChannelSession.PreMadeChatCommands.Union<PermissionsCommandBase>(ChannelSession.Settings.ChatCommands).OrderBy(c => c.Name);
+            this.CommandNameComboBox.ItemsSource = ChannelSession.AllChatCommands.OrderBy(c => c.Name);
             if (this.command != null)
             {
                 this.TypeComboBox.SelectedValue = EnumHelper.GetEnumName(this.command.CommandActionType);
-                this.CommandNameComboBox.SelectedItem = ChannelSession.PreMadeChatCommands.Union<PermissionsCommandBase>(ChannelSession.Settings.ChatCommands).FirstOrDefault(c => c.Name.Equals(this.command.CommandName));
+                this.CommandNameComboBox.SelectedItem = ChannelSession.AllChatCommands.FirstOrDefault(c => c.Name.Equals(this.command.CommandName));
                 this.CommandArgumentsTextBox.Text = this.command.CommandArguments;
             }
             return Task.FromResult(0);
