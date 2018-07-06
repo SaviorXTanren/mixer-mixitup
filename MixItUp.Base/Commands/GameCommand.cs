@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -23,6 +22,9 @@ namespace MixItUp.Base.Commands
         public double Payout { get; set; }
 
         [DataMember]
+        public Dictionary<MixerRoleEnum, double> RolePayouts { get; set; }
+
+        [DataMember]
         public Dictionary<MixerRoleEnum, int> RoleProbabilities { get; set; }
 
         [DataMember]
@@ -34,6 +36,16 @@ namespace MixItUp.Base.Commands
         {
             this.Name = name;
             this.Payout = payout;
+            this.RolePayouts = new Dictionary<MixerRoleEnum, double>();
+            this.RoleProbabilities = roleProbabilities;
+            this.Command = command;
+        }
+
+        public GameOutcome(string name, Dictionary<MixerRoleEnum, double> rolePayouts, Dictionary<MixerRoleEnum, int> roleProbabilities, CustomCommand command)
+        {
+            this.Name = name;
+            this.Payout = 0;
+            this.RolePayouts = rolePayouts;
             this.RoleProbabilities = roleProbabilities;
             this.Command = command;
         }
@@ -58,7 +70,29 @@ namespace MixItUp.Base.Commands
 
         public int GetPayout(UserViewModel user, int betAmount)
         {
-            return Convert.ToInt32(Convert.ToDouble(betAmount) * this.Payout);
+            return Convert.ToInt32(Convert.ToDouble(betAmount) * this.GetPayoutAmount(user.PrimaryRole));
+        }
+
+        private double GetPayoutAmount(MixerRoleEnum role)
+        {
+            if (this.RolePayouts.Count > 0)
+            {
+                if (this.RolePayouts.ContainsKey(role))
+                {
+                    return this.RolePayouts[role];
+                }
+
+                foreach (MixerRoleEnum checkRole in this.RolePayouts.Select(kvp => kvp.Key).OrderByDescending(k => k))
+                {
+                    if (role >= checkRole)
+                    {
+                        return this.RolePayouts[checkRole];
+                    }
+                }
+
+                return this.RolePayouts.LastOrDefault().Value;
+            }
+            return this.Payout;
         }
     }
 
@@ -227,7 +261,7 @@ namespace MixItUp.Base.Commands
             int cumulativeOutcomeProbability = 0;
             foreach (GameOutcome outcome in outcomes)
             {
-                if (cumulativeOutcomeProbability <= randomNumber && randomNumber < (cumulativeOutcomeProbability + outcome.GetRoleProbability(user.PrimaryRole)))
+                if (cumulativeOutcomeProbability < randomNumber && randomNumber <= (cumulativeOutcomeProbability + outcome.GetRoleProbability(user.PrimaryRole)))
                 {
                     return outcome;
                 }
@@ -261,7 +295,7 @@ namespace MixItUp.Base.Commands
             return random.Next(maxValue);
         }
 
-        protected int GenerateProbability() { return this.GenerateRandomNumber(100); }
+        protected int GenerateProbability() { return this.GenerateRandomNumber(100) + 1; }
     }
 
     [DataContract]
@@ -335,7 +369,7 @@ namespace MixItUp.Base.Commands
                         if (targetUser != null)
                         {
                             int randomNumber = this.GenerateProbability();
-                            if (randomNumber < this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                            if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
                             {
                                 user.Data.AddCurrencyAmount(currency, betAmount);
                                 targetUser.Data.SubtractCurrencyAmount(currency, betAmount);
@@ -455,7 +489,6 @@ namespace MixItUp.Base.Commands
         }
     }
 
-
     [DataContract]
     public class DuelGameCommand : TwoPlayerGameCommandBase
     {
@@ -519,7 +552,7 @@ namespace MixItUp.Base.Commands
                     }
 
                     int randomNumber = this.GenerateProbability();
-                    if (randomNumber < this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                    if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
                     {
                         this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount * 2);
                         user.Data.SubtractCurrencyAmount(currency, this.currentBetAmount);
@@ -603,6 +636,152 @@ namespace MixItUp.Base.Commands
         protected override Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
         {
             return base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
+        }
+    }
+
+    [DataContract]
+    public class HeistGameCommand : GameCommandBase
+    {
+        [DataMember]
+        public int MinimumParticipants { get; set; }
+        [DataMember]
+        public int TimeLimit { get; set; }
+
+        [DataMember]
+        public CustomCommand StartedCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand UserJoinCommand { get; set; }
+
+        [DataMember]
+        public GameOutcome UserSuccessOutcome { get; set; }
+        [DataMember]
+        public GameOutcome UserFailOutcome { get; set; }
+
+        [DataMember]
+        public CustomCommand AllSucceedCommand { get; set; }
+        [DataMember]
+        public CustomCommand TopThirdsSucceedCommand { get; set; }
+        [DataMember]
+        public CustomCommand MiddleThirdsSucceedCommand { get; set; }
+        [DataMember]
+        public CustomCommand LowThirdsSucceedCommand { get; set; }
+        [DataMember]
+        public CustomCommand NoneSucceedCommand { get; set; }
+
+        [JsonIgnore]
+        private UserViewModel starterUser;
+        [JsonIgnore]
+        private Task timeLimitTask;
+        [JsonIgnore]
+        private Dictionary<UserViewModel, int> enteredUsers = new Dictionary<UserViewModel, int>();
+
+        public HeistGameCommand() { }
+
+        public HeistGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
+            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand allSucceedCommand, CustomCommand topThirdsSucceedCommand,
+            CustomCommand middleThirdsSucceedCommand, CustomCommand lowThirdsSucceedCommand, CustomCommand noneSucceedCommand)
+            : base(name, commands, requirements)
+        {
+            this.MinimumParticipants = minimumParticipants;
+            this.TimeLimit = timeLimit;
+            this.StartedCommand = startedCommand;
+            this.UserJoinCommand = userJoinCommand;
+            this.UserSuccessOutcome = userSuccessOutcome;
+            this.UserFailOutcome = userFailOutcome;
+            this.AllSucceedCommand = allSucceedCommand;
+            this.TopThirdsSucceedCommand = topThirdsSucceedCommand;
+            this.MiddleThirdsSucceedCommand = middleThirdsSucceedCommand;
+            this.LowThirdsSucceedCommand = lowThirdsSucceedCommand;
+            this.NoneSucceedCommand = noneSucceedCommand;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        {
+            if (await this.PerformUsageChecks(user, arguments))
+            {
+                int betAmount = await this.GetBetAmount(user, this.GetBetAmountArgument(arguments));
+                if (betAmount >= 0)
+                {
+                    if (await this.PerformCurrencyChecks(user, betAmount))
+                    {
+                        if (this.timeLimitTask == null)
+                        {
+                            this.enteredUsers.Clear();
+                            this.enteredUsers[user] = betAmount;
+                            this.starterUser = user;
+
+                            this.timeLimitTask = Task.Run(async () =>
+                            {
+                                await Task.Delay(this.TimeLimit * 1000);
+
+                                this.Requirements.UpdateCooldown(user);
+                                this.timeLimitTask = null;
+
+                                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                                if (currency == null)
+                                {
+                                    return;
+                                }
+
+                                if (this.enteredUsers.Count < this.MinimumParticipants)
+                                {
+                                    foreach (var enteredUser in this.enteredUsers)
+                                    {
+                                        enteredUser.Key.Data.AddCurrencyAmount(currency, enteredUser.Value);
+                                    }
+                                    await ChannelSession.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
+                                    return;
+                                }
+
+                                List<UserViewModel> successUsers = new List<UserViewModel>();
+                                foreach (var enteredUser in this.enteredUsers)
+                                {
+                                    int randomNumber = this.GenerateProbability();
+                                    if (randomNumber <= this.UserSuccessOutcome.GetRoleProbability(user.PrimaryRole))
+                                    {
+                                        successUsers.Add(user);
+                                        await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserSuccessOutcome, enteredUser.Value);
+                                    }
+                                    else
+                                    {
+                                        await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserFailOutcome, enteredUser.Value);
+                                    }
+                                }
+
+                                double successRate = Convert.ToDouble(successUsers.Count) / Convert.ToDouble(this.enteredUsers.Count);
+                                if (successRate == 1.0)
+                                {
+                                    await this.PerformCommand(this.AllSucceedCommand, user, arguments, betAmount, 0);
+                                }
+                                else if (successRate > (2.0 / 3.0))
+                                {
+                                    await this.PerformCommand(this.TopThirdsSucceedCommand, user, arguments, betAmount, 0);
+                                }
+                                else if (successRate > (1.0 / 3.0))
+                                {
+                                    await this.PerformCommand(this.MiddleThirdsSucceedCommand, user, arguments, betAmount, 0);
+                                }
+                                else if (successRate > 0)
+                                {
+                                    await this.PerformCommand(this.LowThirdsSucceedCommand, user, arguments, betAmount, 0);
+                                }
+                                else
+                                {
+                                    await this.PerformCommand(this.NoneSucceedCommand, user, arguments, betAmount, 0);
+                                }
+                            });
+
+                            await this.PerformCommand(this.StartedCommand, user, arguments, betAmount, 0);
+                        }
+                        else
+                        {
+                            this.enteredUsers[user] = betAmount;
+                            await this.PerformCommand(this.UserJoinCommand, user, arguments, betAmount, 0);
+                        }
+                    }
+                }
+            }
         }
     }
 }

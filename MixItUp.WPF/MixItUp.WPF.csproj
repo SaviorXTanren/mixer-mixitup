@@ -359,6 +359,9 @@
       <DependentUpon>GameCommandDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\GameEditorControlBase.cs" />
+    <Compile Include="Controls\Games\HeistGameEditorControl.xaml.cs">
+      <DependentUpon>HeistGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\PickpocketGameEditorControl.xaml.cs">
       <DependentUpon>PickpocketGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -815,6 +818,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\GameCommandDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\HeistGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

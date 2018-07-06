@@ -50,6 +50,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.command is StealGameCommand) { this.SetGameEditorControl(new StealGameEditorControl((StealGameCommand)this.command)); }
                 if (this.command is PickpocketGameCommand) { this.SetGameEditorControl(new PickpocketGameEditorControl((PickpocketGameCommand)this.command)); }
                 if (this.command is DuelGameCommand) { this.SetGameEditorControl(new DuelGameEditorControl((DuelGameCommand)this.command)); }
+                if (this.command is HeistGameCommand) { this.SetGameEditorControl(new HeistGameEditorControl((HeistGameCommand)this.command)); }
             }
             else
             {
@@ -61,7 +62,7 @@ namespace MixItUp.WPF.Windows.Command
                     + Environment.NewLine + Environment.NewLine + "\tEX: !spin 100", new SpinGameEditorControl()));
 
                 this.gameListings.Add(new GameTypeListing("Vending Machine", "The Vending Machine game picks a random number and selects an outcome based on that number. Unlike the Spin game, the Vending Machine game doesn't have a payout for each outcome and instead is more focused on an \"action\" occurring with each outcome, such as a sound effect, image, or a specialized effect."
-                    + Environment.NewLine + Environment.NewLine + "\tEX: !vend", new VendingMachineGameEditorControl()));
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !vend" + Environment.NewLine + Environment.NewLine + "Game Designed By: https://mixer.com/InsertCoinTheater", new VendingMachineGameEditorControl()));
 
                 this.gameListings.Add(new GameTypeListing("Steal", "The Steal game picks a random user in chat and attempts to steal currency from them. If successful, the user steals the bet amount from the random user. If failed, they lose the bet amount."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !steal 100", new StealGameEditorControl()));
@@ -71,6 +72,9 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.gameListings.Add(new GameTypeListing("Duel", "The Duel game challenges the specified user to a winner-takes-all for the bet amount. If successful, the user takes the bet amount from the specified user. If failed, the specified user takes the bet amount from the user."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !duel <USERNAME> 100", new DuelGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Heist", "The Heist game allows a user to start a group activity for users to individually bet when they participate. Each user has their own individual chance to succeed and win back more or fail and lose their bet."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !heist 100", new HeistGameEditorControl()));
             }
 
             return Task.FromResult(0);
