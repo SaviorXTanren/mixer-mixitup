@@ -90,16 +90,6 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
-        public async Task<bool> CheckThresholdRequirement(UserViewModel user)
-        {
-            if (!this.Requirements.DoesMeetThresholdRequirement(user))
-            {
-                await this.Requirements.Threshold.SendThresholdNotMetWhisper(user);
-                return false;
-            }
-            return true;
-        }
-
         public void ResetCooldown(UserViewModel user) { this.Requirements.ResetCooldown(user); }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
@@ -120,8 +110,7 @@ namespace MixItUp.Base.Commands
                     return;
                 }
 
-
-                foreach(UserViewModel triggeringUser in triggeringUsers)
+                foreach (UserViewModel triggeringUser in triggeringUsers)
                 {
                     // Do our best to subtract the required currency
                     this.Requirements.TrySubtractCurrencyAmount(triggeringUser);

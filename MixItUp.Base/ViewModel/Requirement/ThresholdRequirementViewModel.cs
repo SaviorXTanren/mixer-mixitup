@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -57,6 +56,14 @@ namespace MixItUp.Base.ViewModel.Requirement
                 this.performs.Clear();
                 return triggeringUsers;
             }
+
+            if (sendChatIfNotMet)
+            {
+                await ChannelSession.Chat.SendMessage(string.Format("{0} command requires {1} more user(s) to trigger!", commandName, remaining));
+            }
+
+            return null;
+        }
 
         public async Task SendThresholdNotMetWhisper(UserViewModel user)
         {
