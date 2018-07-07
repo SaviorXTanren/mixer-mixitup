@@ -453,7 +453,7 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     currency = new UserCurrencyViewModel()
                     {
-                        Name = currencyName, SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName), AcquireInterval = currencyInterval, 
+                        Name = currencyName, SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName), AcquireInterval = currencyInterval,
                         AcquireAmount = currencyAmount, MaxAmount = currencyMaxAmount, OnFollowBonus = currencyOnFollowBonus, OnSubscribeBonus = currencyOnSubBonus,
                     };
                     ChannelSession.Settings.Currencies[currency.ID] = currency;
