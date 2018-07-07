@@ -319,9 +319,9 @@ namespace MixItUp.Base.Commands
             this.Actions.Add(new InteractiveJoystickAction(this));
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
-            await base.PerformInternal(user, arguments, token);
+            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
         }
 
         [OnDeserialized]
@@ -374,7 +374,7 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public override string EventTypeString { get { return "submit"; } }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             if (this.UseChatModeration && arguments.Count() > 0)
             {
@@ -385,7 +385,7 @@ namespace MixItUp.Base.Commands
                     return;
                 }
             }
-            await base.PerformInternal(user, arguments, token);
+            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
         }
     }
 }

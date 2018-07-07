@@ -92,7 +92,7 @@ namespace MixItUp.Base.Commands
 
         public void ResetCooldown(UserViewModel user) { this.Requirements.ResetCooldown(user); }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace MixItUp.Base.Commands
             }
             finally { this.permissionsCheckSemaphore.Release(); }
 
-            await base.PerformInternal(user, arguments, token);
+            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
         }
 
         protected async Task<bool> CheckAllRequirements(UserViewModel user)

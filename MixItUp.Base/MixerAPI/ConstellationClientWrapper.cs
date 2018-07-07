@@ -103,17 +103,17 @@ namespace MixItUp.Base.MixerAPI
             return null;
         }
 
-        public async Task RunEventCommand(EventCommand command, UserViewModel user)
+        public async Task RunEventCommand(EventCommand command, UserViewModel user, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (command != null)
             {
                 if (user != null)
                 {
-                    await command.Perform(user);
+                    await command.Perform(user, arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
                 }
                 else
                 {
-                    await command.Perform();
+                    await command.Perform(ChannelSession.GetCurrentUser(), arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
                 }
             }
         }
@@ -257,8 +257,8 @@ namespace MixItUp.Base.MixerAPI
                     EventCommand command = this.FindMatchingEventCommand(e.channel);
                     if (command != null)
                     {
-                        command.AddSpecialIdentifier("hostviewercount", viewerCount.ToString());
-                        await this.RunEventCommand(command, user);
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
+                        await this.RunEventCommand(command, user, specialIdentifiers);
                     }
                 }
             }

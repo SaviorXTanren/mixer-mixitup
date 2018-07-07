@@ -56,16 +56,16 @@ namespace MixItUp.Base.Commands
 
         protected override SemaphoreSlim AsyncSemaphore { get { return RemoteCommand.remoteCommandPerformSemaphore; } }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             CommandBase command = this.ReferenceCommand;
             if (command != null)
             {
-                await command.Perform(user, arguments);
+                await command.Perform(user, arguments, extraSpecialIdentifiers);
             }
             else
             {
-                await base.PerformInternal(user, arguments, token);
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
             }
         }
     }

@@ -52,8 +52,6 @@ namespace MixItUp.Base.Actions
                 PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Name.Equals(this.CommandName));
                 if (command != null)
                 {
-                    command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
-
                     IEnumerable<string> newArguments = null;
                     if (!string.IsNullOrEmpty(this.CommandArguments))
                     {
@@ -61,7 +59,7 @@ namespace MixItUp.Base.Actions
                         newArguments = processedMessage.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                     }
 
-                    await command.Perform(user, newArguments);
+                    await command.Perform(user, newArguments, this.GetExtraSpecialIdentifiers());
                 }
             }
             else if (this.CommandActionType == CommandActionTypeEnum.EnableDisableCommand)

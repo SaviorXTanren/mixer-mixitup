@@ -113,8 +113,7 @@ namespace MixItUp.Base.Actions
                             string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
                             string commandArguments = await this.ReplaceSpecialIdentifiers(this.ResponseChatText, user, arguments, translationResult);
 
-                            command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
-                            await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                            await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
                         }
                     }
                     else if (this.ResponseAction == TranslationResponseActionTypeEnum.SpecialIdentifier)
@@ -128,7 +127,7 @@ namespace MixItUp.Base.Actions
 
         private async Task<string> ReplaceSpecialIdentifiers(string text, UserViewModel user, IEnumerable<string> arguments, string translationResult)
         {
-            this.AddSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, translationResult);
+            this.extraSpecialIdentifiers[WebRequestAction.ResponseSpecialIdentifier] = translationResult;
             return await this.ReplaceStringWithSpecialModifiers(text, user, arguments);
         }
     }

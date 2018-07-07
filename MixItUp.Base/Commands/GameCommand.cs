@@ -281,10 +281,11 @@ namespace MixItUp.Base.Commands
         {
             if (command != null)
             {
-                command.AddSpecialIdentifier(GameCommandBase.GameBetSpecialIdentifier, betAmount.ToString());
-                command.AddSpecialIdentifier(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
-                command.AddSpecialIdentifier(GameCommandBase.GameWinnersSpecialIdentifier, "@" + user.UserName);
-                await command.Perform(user, arguments);
+                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                specialIdentifiers.Add(GameCommandBase.GameBetSpecialIdentifier, betAmount.ToString());
+                specialIdentifiers.Add(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
+                specialIdentifiers.Add(GameCommandBase.GameWinnersSpecialIdentifier, "@" + user.UserName);
+                await command.Perform(user, arguments, specialIdentifiers);
             }
         }
 
@@ -315,7 +316,7 @@ namespace MixItUp.Base.Commands
             this.Outcomes = new List<GameOutcome>(outcomes);
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             if (await this.PerformUsageChecks(user, arguments))
             {
@@ -350,7 +351,7 @@ namespace MixItUp.Base.Commands
             this.FailedOutcome = failedOutcome;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             if (await this.PerformUsageChecks(user, arguments))
             {
@@ -521,7 +522,7 @@ namespace MixItUp.Base.Commands
             this.TimeLimit = timeLimit;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             bool hasTarget = false;
             bool isTarget = false;
@@ -696,7 +697,7 @@ namespace MixItUp.Base.Commands
             this.NoneSucceedCommand = noneSucceedCommand;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             if (await this.PerformUsageChecks(user, arguments))
             {

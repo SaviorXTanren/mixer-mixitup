@@ -126,13 +126,18 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(IEnumerable<string> arguments) { await this.Perform(ChannelSession.GetCurrentUser(), arguments); }
 
-        public Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        public Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (this.IsEnabled)
             {
                 if (arguments == null)
                 {
                     arguments = new List<string>();
+                }
+
+                if (extraSpecialIdentifiers == null)
+                {
+                    extraSpecialIdentifiers = new Dictionary<string, string>();
                 }
 
                 try
@@ -164,7 +169,7 @@ namespace MixItUp.Base.Commands
                             action.AssignRandomUserSpecialIdentifierGroup(this.ID);
                         }
 
-                        await this.PerformInternal(user, arguments, this.currentCancellationTokenSource.Token);
+                        await this.PerformInternal(user, arguments, extraSpecialIdentifiers, this.currentCancellationTokenSource.Token);
                     }
                     catch (TaskCanceledException) { }
                     catch (Exception ex) { Util.Logger.Log(ex); }
@@ -189,7 +194,7 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, CancellationToken token)
+        protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             List<ActionBase> actionsToRun = new List<ActionBase>();
             if (this.IsRandomized)
@@ -210,7 +215,7 @@ namespace MixItUp.Base.Commands
                     ChannelSession.Services.OverlayServer.StartBatching();
                 }
 
-                await actionsToRun[i].Perform(user, arguments);
+                await actionsToRun[i].Perform(user, arguments, extraSpecialIdentifiers);
 
                 if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
                 {
@@ -227,22 +232,6 @@ namespace MixItUp.Base.Commands
             if (this.currentCancellationTokenSource != null)
             {
                 this.currentCancellationTokenSource.Cancel();
-            }
-        }
-
-        public void AddSpecialIdentifier(string specialIdentifier, string replacement)
-        {
-            foreach (ActionBase action in this.Actions)
-            {
-                action.AddSpecialIdentifier(specialIdentifier, replacement);
-            }
-        }
-
-        public void AddSpecialIdentifiers(IDictionary<string, string> specialIdentifierReplacements)
-        {
-            foreach (var kvp in specialIdentifierReplacements)
-            {
-                this.AddSpecialIdentifier(kvp.Key, kvp.Value);
             }
         }
 

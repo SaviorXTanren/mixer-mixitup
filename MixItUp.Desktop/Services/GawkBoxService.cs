@@ -10,6 +10,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -41,11 +42,12 @@ namespace MixItUp.Desktop.Services
                     EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GawkBoxDonation));
                     if (command != null)
                     {
-                        command.AddSpecialIdentifier("donationsource", EnumHelper.GetEnumName(donation.Source));
-                        command.AddSpecialIdentifier("donationamount", donation.AmountText);
-                        command.AddSpecialIdentifier("donationmessage", donation.Message);
-                        command.AddSpecialIdentifier("donationimage", donation.ImageLink);
-                        await command.Perform(user);
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                        specialIdentifiers.Add("donationsource", EnumHelper.GetEnumName(donation.Source));
+                        specialIdentifiers.Add("donationamount", donation.AmountText);
+                        specialIdentifiers.Add("donationmessage", donation.Message);
+                        specialIdentifiers.Add("donationimage", donation.ImageLink);
+                        await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                     }
                 }
             }

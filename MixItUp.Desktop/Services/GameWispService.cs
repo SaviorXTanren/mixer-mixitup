@@ -173,14 +173,15 @@ namespace MixItUp.Desktop.Services
                     tier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.ID.ToString().Equals(subscribeEvent.TierID));
                 }
 
-                command.AddSpecialIdentifier("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
-                command.AddSpecialIdentifier("subscribeamount", subscribeEvent.Amount);
+                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                specialIdentifiers.Add("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
+                specialIdentifiers.Add("subscribeamount", subscribeEvent.Amount);
                 if (tier != null)
                 {
-                    command.AddSpecialIdentifier("subscribetier", tier.Title);
+                    specialIdentifiers.Add("subscribetier", tier.Title);
                 }
 
-                await command.Perform(user);
+                await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
             }
         }
     }

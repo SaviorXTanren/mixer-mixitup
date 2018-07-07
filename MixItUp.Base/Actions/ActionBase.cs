@@ -75,7 +75,7 @@ namespace MixItUp.Base.Actions
         public string Label { get; set; }
 
         [JsonIgnore]
-        private Dictionary<string, string> additiveSpecialIdentifiers = new Dictionary<string, string>();
+        protected Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
         [JsonIgnore]
         private Guid randomUserSpecialIdentifierGroup = Guid.Empty;
 
@@ -91,23 +91,18 @@ namespace MixItUp.Base.Actions
             this.Label = EnumHelper.GetEnumName(this.Type);
         }
 
-        public async Task Perform(UserViewModel user, IEnumerable<string> arguments)
+        public async Task Perform(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             await this.AsyncSemaphore.WaitAsync();
 
             try
             {
+                this.extraSpecialIdentifiers = extraSpecialIdentifiers;
+
                 await this.PerformInternal(user, arguments);
             }
             catch (Exception ex) { Util.Logger.Log(ex); }
             finally { this.AsyncSemaphore.Release(); }
-
-            this.additiveSpecialIdentifiers.Clear();
-        }
-
-        public void AddSpecialIdentifier(string specialIdentifier, string replacement)
-        {
-            this.additiveSpecialIdentifiers[specialIdentifier] = replacement;
         }
 
         public void AssignRandomUserSpecialIdentifierGroup(Guid id) { this.randomUserSpecialIdentifierGroup = id; }
@@ -118,14 +113,14 @@ namespace MixItUp.Base.Actions
         {
             SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.randomUserSpecialIdentifierGroup, encode);
             await siString.ReplaceCommonSpecialModifiers(user, arguments);
-            foreach (var kvp in this.additiveSpecialIdentifiers)
+            foreach (var kvp in this.extraSpecialIdentifiers)
             {
                 siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
             return siString.ToString();
         }
 
-        protected IDictionary<string, string> GetAdditiveSpecialIdentifiers() { return this.additiveSpecialIdentifiers.ToDictionary(kvp => kvp.Key, kvp => kvp.Value); }
+        protected Dictionary<string, string> GetExtraSpecialIdentifiers() { return this.extraSpecialIdentifiers.ToDictionary(kvp => kvp.Key, kvp => kvp.Value); }
 
         protected abstract SemaphoreSlim AsyncSemaphore { get; }
     }

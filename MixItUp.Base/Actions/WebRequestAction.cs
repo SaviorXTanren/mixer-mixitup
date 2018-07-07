@@ -135,8 +135,7 @@ namespace MixItUp.Base.Actions
                                     string argumentsText = (this.ResponseCommandArgumentsText != null) ? this.ResponseCommandArgumentsText : string.Empty;
                                     string commandArguments = await this.ReplaceSpecialIdentifiers(argumentsText, user, arguments, webRequestResult);
 
-                                    command.AddSpecialIdentifiers(this.GetAdditiveSpecialIdentifiers());
-                                    await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                                    await command.Perform(user, commandArguments.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries), this.GetExtraSpecialIdentifiers());
                                 }
                             }
                             else if (this.ResponseAction == WebRequestResponseActionTypeEnum.SpecialIdentifier)
@@ -189,7 +188,7 @@ namespace MixItUp.Base.Actions
 
         private async Task<string> ReplaceSpecialIdentifiers(string text, UserViewModel user, IEnumerable<string> arguments, string webRequestResult)
         {
-            this.AddSpecialIdentifier(WebRequestAction.ResponseSpecialIdentifier, webRequestResult);
+            this.extraSpecialIdentifiers[WebRequestAction.ResponseSpecialIdentifier] = webRequestResult;
             return await this.ReplaceStringWithSpecialModifiers(text, user, arguments);
         }
     }
