@@ -175,26 +175,33 @@ namespace MixItUp.Base.Util
 
         public static async Task SendModerationWhisper(UserViewModel user, string moderationReason)
         {
-            string whisperMessage = " due to chat moderation for the following reason: " + moderationReason + ". Please watch what you type in chat or further actions may be taken.";
-
-            if (user.PrimaryRole < ChannelSession.Settings.ModerationTimeoutExempt)
+            if (user != null)
             {
-                user.ChatOffenses++;
-                if (ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount > 0 && user.ChatOffenses >= ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount)
+                if (moderationReason == null)
                 {
-                    await ChannelSession.Chat.Whisper(user.UserName, "You have been timed out from chat for 5 minutes" + whisperMessage);
-                    await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
-                    return;
+                    moderationReason = "Rule Violation";
                 }
-                else if (ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount > 0 && user.ChatOffenses >= ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount)
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "You have been timed out from chat for 1 minute" + whisperMessage);
-                    await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
-                    return;
-                }
-            }
+                string whisperMessage = " due to chat moderation for the following reason: " + moderationReason + ". Please watch what you type in chat or further actions may be taken.";
 
-            await ChannelSession.Chat.Whisper(user.UserName, "Your message has been deleted" + whisperMessage);
+                if (user.PrimaryRole < ChannelSession.Settings.ModerationTimeoutExempt)
+                {
+                    user.ChatOffenses++;
+                    if (ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount > 0 && user.ChatOffenses >= ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You have been timed out from chat for 5 minutes" + whisperMessage);
+                        await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
+                        return;
+                    }
+                    else if (ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount > 0 && user.ChatOffenses >= ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount)
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You have been timed out from chat for 1 minute" + whisperMessage);
+                        await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
+                        return;
+                    }
+                }
+
+                await ChannelSession.Chat.Whisper(user.UserName, "Your message has been deleted" + whisperMessage);
+            }
         }
 
         private static string PrepareTextForChecking(string text)
