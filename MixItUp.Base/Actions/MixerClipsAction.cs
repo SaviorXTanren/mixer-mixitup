@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Broadcast;
 using Mixer.Base.Model.Clips;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -88,8 +89,24 @@ namespace MixItUp.Base.Actions
                             {
                                 await ChannelSession.Chat.SendMessage("Clip Created: " + string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.User.username, clip.shareableId));
 
-                                if (this.DownloadClip && Directory.Exists(this.DownloadDirectory) && ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath()))
+                                if (this.DownloadClip)
                                 {
+                                    if (!Directory.Exists(this.DownloadDirectory))
+                                    {
+                                        string error = "ERROR: The download folder specified for Mixer Clips does not exist";
+                                        Logger.Log(error);
+                                        await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                                        return;
+                                    }
+
+                                    if (!ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath()))
+                                    {
+                                        string error = "ERROR: FFMPEG could not be found and the Mixer Clip can not be converted without it";
+                                        Logger.Log(error);
+                                        await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                                        return;
+                                    }
+
                                     ClipLocatorModel clipLocator = clip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(VideoFileContentLocatorType));
                                     if (clipLocator != null)
                                     {
@@ -101,13 +118,32 @@ namespace MixItUp.Base.Actions
                                         process.StartInfo.FileName = MixerClipsAction.GetFFMPEGExecutablePath();
                                         process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile);
                                         process.StartInfo.RedirectStandardOutput = true;
+                                        process.StartInfo.RedirectStandardError = true;
                                         process.StartInfo.UseShellExecute = false;
                                         process.StartInfo.CreateNoWindow = true;
 
                                         process.Start();
-                                        while (!process.HasExited)
+
+                                        string processOutput = await process.StandardOutput.ReadToEndAsync();
+                                        string processError = await process.StandardError.ReadToEndAsync();
+
+                                        for (int j = 0; j < 60; j++)
                                         {
+                                            if (process.HasExited)
+                                            {
+                                                break;
+                                            }
                                             await Task.Delay(500);
+                                        }
+
+                                        if (!process.HasExited || process.ExitCode != 0)
+                                        {
+                                            string error = "ERROR: FFMPEG conversion process of Mixer Clip failed";
+                                            Logger.Log(error);
+                                            Logger.Log(processOutput);
+                                            Logger.Log(processError);
+                                            await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                                            return;
                                         }
                                     }
                                 }
