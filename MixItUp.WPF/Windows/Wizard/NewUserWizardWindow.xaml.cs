@@ -453,8 +453,13 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     currency = new UserCurrencyViewModel()
                     {
-                        Name = currencyName, SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName), AcquireInterval = currencyInterval,
-                        AcquireAmount = currencyAmount, MaxAmount = currencyMaxAmount, OnFollowBonus = currencyOnFollowBonus, OnSubscribeBonus = currencyOnSubBonus,
+                        Name = currencyName,
+                        SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(currencyName),
+                        AcquireInterval = currencyInterval,
+                        AcquireAmount = currencyAmount,
+                        MaxAmount = currencyMaxAmount,
+                        OnFollowBonus = currencyOnFollowBonus,
+                        OnSubscribeBonus = currencyOnSubBonus,
                         SubscriberBonus = currencySubBonus
                     };
                     ChannelSession.Settings.Currencies[currency.ID] = currency;
@@ -596,47 +601,54 @@ namespace MixItUp.WPF.Windows.Wizard
                 InteractiveGameListingModel soundwaveGame = this.interactiveGames.FirstOrDefault(g => g.name.Equals(SoundwaveInteractiveGameName));
                 if (soundwaveGame != null)
                 {
-                    InteractiveGameVersionModel soundwaveGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(soundwaveGame.versions.First());
-                    InteractiveSceneModel soundwaveGameScene = soundwaveGameVersion.controls.scenes.First();
-
-                    foreach (string profile in this.soundwaveProfiles.Where(p => p.AddProfile).Select(p => p.Name))
+                    InteractiveGameVersionModel version = soundwaveGame.versions.FirstOrDefault();
+                    if (version != null)
                     {
-                        // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
-                        InteractiveSceneModel profileScene = InteractiveGameHelper.CreateDefaultScene();
-                        InteractiveGameListingModel profileGame = await ChannelSession.Connection.CreateInteractiveGame(ChannelSession.Channel, ChannelSession.User, profile, profileScene);
-                        InteractiveGameVersionModel gameVersion = profileGame.versions.FirstOrDefault();
-                        if (gameVersion != null)
+                        InteractiveGameVersionModel soundwaveGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(version);
+                        InteractiveSceneModel soundwaveGameScene = soundwaveGameVersion.controls.scenes.FirstOrDefault();
+
+                        if (soundwaveGameScene != null)
                         {
-                            InteractiveGameVersionModel profileGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(gameVersion);
-                            if (profileGameVersion != null)
+                            foreach (string profile in this.soundwaveProfiles.Where(p => p.AddProfile).Select(p => p.Name))
                             {
-                                profileScene = profileGameVersion.controls.scenes.First();
-
-                                for (int i = 0; i < this.soundwaveData.Profiles[profile].Count(); i++)
+                                // Add code logic to create Interactive Game on Mixer that is a copy of the Soundwave Interactive game, but with buttons filed in with name and not disabled
+                                InteractiveSceneModel profileScene = InteractiveGameHelper.CreateDefaultScene();
+                                InteractiveGameListingModel profileGame = await ChannelSession.Connection.CreateInteractiveGame(ChannelSession.Channel, ChannelSession.User, profile, profileScene);
+                                InteractiveGameVersionModel gameVersion = profileGame.versions.FirstOrDefault();
+                                if (gameVersion != null)
                                 {
-                                    SoundwaveButton soundwaveButton = this.soundwaveData.Profiles[profile][i];
-                                    InteractiveButtonControlModel soundwaveControl = (InteractiveButtonControlModel)soundwaveGameScene.allControls.FirstOrDefault(c => c.controlID.Equals(i.ToString()));
-
-                                    InteractiveButtonControlModel button = InteractiveGameHelper.CreateButton(soundwaveButton.name, soundwaveButton.name, soundwaveButton.sparks);
-                                    button.position = soundwaveControl.position;
-
-                                    RequirementViewModel requirements = new RequirementViewModel();
-                                    requirements.Cooldown.Amount = soundwaveButton.cooldown;
-                                    if (this.soundwaveData.StaticCooldown)
+                                    InteractiveGameVersionModel profileGameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(gameVersion);
+                                    if (profileGameVersion != null)
                                     {
-                                        requirements.Cooldown.Type = CooldownTypeEnum.Group;
-                                        requirements.Cooldown.GroupName = SoundwaveInteractiveCooldownGroupName;
+                                        profileScene = profileGameVersion.controls.scenes.First();
+
+                                        for (int i = 0; i < this.soundwaveData.Profiles[profile].Count(); i++)
+                                        {
+                                            SoundwaveButton soundwaveButton = this.soundwaveData.Profiles[profile][i];
+                                            InteractiveButtonControlModel soundwaveControl = (InteractiveButtonControlModel)soundwaveGameScene.allControls.FirstOrDefault(c => c.controlID.Equals(i.ToString()));
+
+                                            InteractiveButtonControlModel button = InteractiveGameHelper.CreateButton(soundwaveButton.name, soundwaveButton.name, soundwaveButton.sparks);
+                                            button.position = soundwaveControl.position;
+
+                                            RequirementViewModel requirements = new RequirementViewModel();
+                                            requirements.Cooldown.Amount = soundwaveButton.cooldown;
+                                            if (this.soundwaveData.StaticCooldown)
+                                            {
+                                                requirements.Cooldown.Type = CooldownTypeEnum.Group;
+                                                requirements.Cooldown.GroupName = SoundwaveInteractiveCooldownGroupName;
+                                            }
+                                            InteractiveButtonCommand command = new InteractiveButtonCommand(profileGame, profileScene, button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
+
+                                            SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
+                                            command.Actions.Add(action);
+
+                                            ChannelSession.Settings.InteractiveCommands.Add(command);
+                                            profileScene.buttons.Add(button);
+                                        }
+
+                                        await ChannelSession.Connection.UpdateInteractiveGameVersion(profileGameVersion);
                                     }
-                                    InteractiveButtonCommand command = new InteractiveButtonCommand(profileGame, profileScene, button, InteractiveButtonCommandTriggerType.MouseDown, requirements);
-
-                                    SoundAction action = new SoundAction(soundwaveButton.path, soundwaveButton.volume);
-                                    command.Actions.Add(action);
-
-                                    ChannelSession.Settings.InteractiveCommands.Add(command);
-                                    profileScene.buttons.Add(button);
                                 }
-
-                                await ChannelSession.Connection.UpdateInteractiveGameVersion(profileGameVersion);
                             }
                         }
                     }
