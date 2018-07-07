@@ -181,10 +181,10 @@ namespace MixItUp.WPF.Controls.Games
                 this.userSuccessCommand = this.CreateBasicChatCommand("Congrats, you made out with $gamepayout " + currency.Name + "!", whisper: true);
                 this.userFailCommand = this.CreateBasicChatCommand("The cops caught you before you could make it out! Better luck next time...", whisper: true);
 
-                this.allSucceedCommand = this.CreateBasicChatCommand("What a steal! Everyone made it out and cleaned the bank out dry!");
-                this.topThirdsSucceedCommand = this.CreateBasicChatCommand("The cops showed up at the last second and snagged a few of you, but most made it out with the good!");
-                this.middleThirdsSucceedCommand = this.CreateBasicChatCommand("As you started to leave the bank, the cops were ready for you and got almost half of you!");
-                this.lowThirdsSucceedCommand = this.CreateBasicChatCommand("A heated battle took place inside the bank and almost everyone got caught by the cops!");
+                this.allSucceedCommand = this.CreateBasic2ChatCommand("What a steal! Everyone made it out and cleaned the bank out dry! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
+                this.topThirdsSucceedCommand = this.CreateBasic2ChatCommand("The cops showed up at the last second and snagged a few of you, but most made it out with the good! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
+                this.middleThirdsSucceedCommand = this.CreateBasic2ChatCommand("As you started to leave the bank, the cops were ready for you and got almost half of you! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
+                this.lowThirdsSucceedCommand = this.CreateBasic2ChatCommand("A heated battle took place inside the bank and almost everyone got caught by the cops! Total Amount: $gameallpayout " + currency.Name + "!", "Winners: $gamewinners");
                 this.noneSucceedCommand = this.CreateBasicChatCommand("Someone was a spy! The cops were waiting for you as soon as you showed up and got everyone!");
             }
 
@@ -216,6 +216,14 @@ namespace MixItUp.WPF.Controls.Games
         {
             CustomCommand command = new CustomCommand("Game Outcome");
             command.Actions.Add(new ChatAction(message, sendAsStreamer: false, isWhisper: whisper));
+            return command;
+        }
+
+        private CustomCommand CreateBasic2ChatCommand(string message1, string message2)
+        {
+            CustomCommand command = new CustomCommand("Game Outcome");
+            command.Actions.Add(new ChatAction(message1));
+            command.Actions.Add(new ChatAction(message2));
             return command;
         }
     }

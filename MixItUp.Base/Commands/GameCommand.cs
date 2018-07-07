@@ -102,9 +102,16 @@ namespace MixItUp.Base.Commands
         public const string GameBetSpecialIdentifier = "gamebet";
 
         public const string GamePayoutSpecialIdentifier = "gamepayout";
+        public const string GameAllPayoutSpecialIdentifier = "gameallpayout";
+
         public const string GameWinnersSpecialIdentifier = "gamewinners";
 
         private static SemaphoreSlim gameCommandPerformSemaphore = new SemaphoreSlim(1);
+
+        [JsonIgnore]
+        protected HashSet<UserViewModel> winners = new HashSet<UserViewModel>();
+        [JsonIgnore]
+        protected int totalPayout = 0;
 
         [JsonIgnore]
         private int randomSeed = (int)DateTime.Now.Ticks;
@@ -274,6 +281,7 @@ namespace MixItUp.Base.Commands
         {
             int payout = outcome.GetPayout(user, betAmount);
             user.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), payout);
+            this.totalPayout += payout;
             await this.PerformCommand(outcome.Command, user, arguments, betAmount, payout);
         }
 
@@ -284,7 +292,15 @@ namespace MixItUp.Base.Commands
                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                 specialIdentifiers.Add(GameCommandBase.GameBetSpecialIdentifier, betAmount.ToString());
                 specialIdentifiers.Add(GameCommandBase.GamePayoutSpecialIdentifier, payout.ToString());
-                specialIdentifiers.Add(GameCommandBase.GameWinnersSpecialIdentifier, "@" + user.UserName);
+                specialIdentifiers.Add(GameCommandBase.GameAllPayoutSpecialIdentifier, this.totalPayout.ToString());
+                if (this.winners.Count > 0)
+                {
+                    specialIdentifiers.Add(GameCommandBase.GameWinnersSpecialIdentifier, string.Join(", ", this.winners.Select(w => "@" + w.UserName)));
+                }
+                else
+                {
+                    specialIdentifiers.Add(GameCommandBase.GameWinnersSpecialIdentifier, "@" + user.UserName);
+                }
                 await command.Perform(user, arguments, specialIdentifiers);
             }
         }
@@ -297,6 +313,13 @@ namespace MixItUp.Base.Commands
         }
 
         protected int GenerateProbability() { return this.GenerateRandomNumber(100) + 1; }
+
+        protected virtual void ResetData(UserViewModel user)
+        {
+            this.winners.Clear();
+            this.totalPayout = 0;
+            this.Requirements.UpdateCooldown(user);
+        }
     }
 
     [DataContract]
@@ -326,7 +349,7 @@ namespace MixItUp.Base.Commands
                     if (await this.PerformCurrencyChecks(user, betAmount))
                     {
                         await this.PerformOutcome(user, arguments, this.SelectRandomOutcome(user, this.Outcomes), betAmount);
-                        this.Requirements.UpdateCooldown(user);
+                        this.ResetData(user);
                     }
                 }
             }
@@ -380,7 +403,7 @@ namespace MixItUp.Base.Commands
                             {
                                 await this.PerformOutcome(user, arguments, this.FailedOutcome, betAmount, targetUser);
                             }
-                            this.Requirements.UpdateCooldown(user);
+                            this.ResetData(user);
                         }
                     }
                 }
@@ -555,18 +578,18 @@ namespace MixItUp.Base.Commands
                     int randomNumber = this.GenerateProbability();
                     if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
                     {
+                        this.winners.Add(this.currentStarterUser);
                         this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount * 2);
                         user.Data.SubtractCurrencyAmount(currency, this.currentBetAmount);
                         await this.PerformCommand(this.SuccessfulOutcome.Command, this.currentStarterUser, new List<string>() { user.UserName }, currentBetAmount, currentBetAmount);
                     }
                     else
                     {
+                        this.winners.Add(user);
                         user.Data.AddCurrencyAmount(currency, this.currentBetAmount);
                         await this.PerformCommand(this.FailedOutcome.Command, this.currentStarterUser, new List<string>() { user.UserName }, currentBetAmount, currentBetAmount);
                     }
-                    this.Requirements.UpdateCooldown(user);
-
-                    this.currentStarterUser = null;
+                    this.ResetData(user);
                 }
                 else
                 {
@@ -607,9 +630,7 @@ namespace MixItUp.Base.Commands
                                         if (this.currentTargetUser != null)
                                         {
                                             await ChannelSession.Chat.SendMessage(string.Format("@{0} did not respond in time...", this.currentTargetUser.UserName));
-                                            this.currentStarterUser = null;
-                                            this.currentTargetUser = null;
-                                            this.Requirements.UpdateCooldown(user);
+                                            this.ResetData(user);
                                         }
                                     }
                                 }
@@ -637,6 +658,13 @@ namespace MixItUp.Base.Commands
         protected override Task<UserViewModel> GetTargetUser(UserViewModel user, IEnumerable<string> arguments, UserCurrencyViewModel currency, int betAmount)
         {
             return base.GetArgumentsTargetUser(user, arguments, currency, betAmount);
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.currentStarterUser = null;
+            this.currentTargetUser = null;
+            base.ResetData(user);
         }
     }
 
@@ -708,6 +736,8 @@ namespace MixItUp.Base.Commands
                     {
                         if (this.timeLimitTask == null)
                         {
+                            this.totalPayout = 0;
+
                             this.enteredUsers.Clear();
                             this.enteredUsers[user] = betAmount;
                             this.starterUser = user;
@@ -717,7 +747,6 @@ namespace MixItUp.Base.Commands
                                 await Task.Delay(this.TimeLimit * 1000);
 
                                 this.Requirements.UpdateCooldown(user);
-                                this.timeLimitTask = null;
 
                                 UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
                                 if (currency == null)
@@ -735,13 +764,12 @@ namespace MixItUp.Base.Commands
                                     return;
                                 }
 
-                                List<UserViewModel> successUsers = new List<UserViewModel>();
                                 foreach (var enteredUser in this.enteredUsers)
                                 {
                                     int randomNumber = this.GenerateProbability();
                                     if (randomNumber <= this.UserSuccessOutcome.GetRoleProbability(user.PrimaryRole))
                                     {
-                                        successUsers.Add(user);
+                                        this.winners.Add(enteredUser.Key);
                                         await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserSuccessOutcome, enteredUser.Value);
                                     }
                                     else
@@ -750,7 +778,7 @@ namespace MixItUp.Base.Commands
                                     }
                                 }
 
-                                double successRate = Convert.ToDouble(successUsers.Count) / Convert.ToDouble(this.enteredUsers.Count);
+                                double successRate = Convert.ToDouble(this.winners.Count) / Convert.ToDouble(this.enteredUsers.Count);
                                 if (successRate == 1.0)
                                 {
                                     await this.PerformCommand(this.AllSucceedCommand, user, arguments, betAmount, 0);
@@ -771,6 +799,8 @@ namespace MixItUp.Base.Commands
                                 {
                                     await this.PerformCommand(this.NoneSucceedCommand, user, arguments, betAmount, 0);
                                 }
+
+                                this.ResetData(user);
                             });
 
                             await this.PerformCommand(this.StartedCommand, user, arguments, betAmount, 0);
@@ -783,6 +813,14 @@ namespace MixItUp.Base.Commands
                     }
                 }
             }
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.starterUser = null;
+            this.timeLimitTask = null;
+            this.enteredUsers.Clear();
+            base.ResetData(user);
         }
     }
 }
