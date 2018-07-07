@@ -111,7 +111,7 @@ namespace MixItUp.WPF.Controls.Games
             }
             else
             {
-                this.CommandDetailsControl.SetDefaultValues("Heist", "rr russian", CurrencyRequirementTypeEnum.MinimumAndMaximum, 10, 1000);
+                this.CommandDetailsControl.SetDefaultValues("Russian Roulette", "rr russian", CurrencyRequirementTypeEnum.MinimumAndMaximum, 10, 1000);
                 UserCurrencyViewModel currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault();
                 this.MinimumParticipantsTextBox.Text = "2";
                 this.TimeLimitTextBox.Text = "30";

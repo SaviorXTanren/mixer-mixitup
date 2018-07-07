@@ -50,6 +50,12 @@ namespace MixItUp.WPF.Controls.Games
         public int MinimumAmount { get { return int.Parse(this.MinimumAmountTextBox.Text); } }
         public int MaximumAmount { get { return int.Parse(this.MaximumAmountTextBox.Text); } }
 
+        public void SetAsMinimumOnly()
+        {
+            this.CurrencyRequirementComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyRequirementTypeEnum.MinimumOnly);
+            this.CurrencyRequirementComboBox.IsEnabled = false;
+        }
+
         public RequirementViewModel GetRequirements()
         {
             RequirementViewModel requirements = this.Requirements.GetRequirements();
