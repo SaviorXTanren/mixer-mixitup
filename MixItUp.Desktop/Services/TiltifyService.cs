@@ -188,10 +188,10 @@ namespace MixItUp.Desktop.Services
                                 if (command != null)
                                 {
                                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                                    specialIdentifiers.Add("donationsource", EnumHelper.GetEnumName(donation.Source));
-                                    specialIdentifiers.Add("donationamount", donation.AmountText);
-                                    specialIdentifiers.Add("donationmessage", donation.Message);
-                                    specialIdentifiers.Add("donationimage", donation.ImageLink);
+                                    specialIdentifiers["donationsource"] = EnumHelper.GetEnumName(donation.Source);
+                                    specialIdentifiers["donationamount"] = donation.AmountText;
+                                    specialIdentifiers["donationmessage"] = donation.Message;
+                                    specialIdentifiers["donationimage"] = donation.ImageLink;
                                     await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                                 }
                             }

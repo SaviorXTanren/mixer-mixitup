@@ -174,11 +174,11 @@ namespace MixItUp.Desktop.Services
                 }
 
                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                specialIdentifiers.Add("subscribemonths", subscribeEvent.SubscribeMonths.ToString());
-                specialIdentifiers.Add("subscribeamount", subscribeEvent.Amount);
+                specialIdentifiers["subscribemonths"] = subscribeEvent.SubscribeMonths.ToString();
+                specialIdentifiers["subscribeamount"] = subscribeEvent.Amount;
                 if (tier != null)
                 {
-                    specialIdentifiers.Add("subscribetier", tier.Title);
+                    specialIdentifiers["subscribetier"] = tier.Title;
                 }
 
                 await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
