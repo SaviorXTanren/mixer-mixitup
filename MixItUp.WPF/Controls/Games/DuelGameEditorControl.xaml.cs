@@ -120,23 +120,5 @@ namespace MixItUp.WPF.Controls.Games
 
             return base.OnLoaded();
         }
-
-        private void OutcomeCommandButtonsControl_EditClicked(object sender, RoutedEventArgs e)
-        {
-            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
-            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
-            if (command != null)
-            {
-                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
-                window.Show();
-            }
-        }
-
-        private CustomCommand CreateBasicChatCommand(string message)
-        {
-            CustomCommand command = new CustomCommand("Game Outcome");
-            command.Actions.Add(new ChatAction(message));
-            return command;
-        }
     }
 }

@@ -40,11 +40,11 @@
             <TextBox x:Name="TimeLimitTextBox" Grid.Column="2" Width="70" MaterialDesign:HintAssist.Hint="Time Limit" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <GroupBox Grid.Column="4" Header="Game Start">
-                <CommandControls:CommandButtonsControl x:Name="GameStartCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="GameStartCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="6" Header="User Joined">
-                <CommandControls:CommandButtonsControl x:Name="UserJoinedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="UserJoinedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
@@ -85,11 +85,11 @@
             </Grid>
 
             <GroupBox Grid.Column="2" Header="User Success">
-                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="4" Header="User Failure">
-                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
 
@@ -107,23 +107,23 @@
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="All Succeed">
-                <CommandControls:CommandButtonsControl x:Name="AllSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="AllSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="2" Header="99% - 66% Succeed">
-                <CommandControls:CommandButtonsControl x:Name="TopThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="TopThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="4" Header="65% - 33% Succeed">
-                <CommandControls:CommandButtonsControl x:Name="MiddleThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="MiddleThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="6" Header="33% - 1% Succeed">
-                <CommandControls:CommandButtonsControl x:Name="BottomThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="BottomThirdsSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <GroupBox Grid.Column="8" Header="All Failed">
-                <CommandControls:CommandButtonsControl x:Name="NoneSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="NoneSucceedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
     </Grid>

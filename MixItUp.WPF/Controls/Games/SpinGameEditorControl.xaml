@@ -53,7 +53,7 @@
 
                             <TextBox x:Name="OutcomeNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Outcome Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding Name}" />
 
-                            <CommandControls:CommandButtonsControl x:Name="OutcomeCommandButtonsControl" DataContext="{Binding Command}" Grid.Column="2" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                            <CommandControls:CommandButtonsControl x:Name="OutcomeCommandButtonsControl" DataContext="{Binding Command}" Grid.Column="2" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
 
                             <TextBox x:Name="PayoutTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Payout %" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding PayoutString}" />
 

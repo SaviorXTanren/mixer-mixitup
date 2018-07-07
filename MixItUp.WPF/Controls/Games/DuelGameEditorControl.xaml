@@ -30,7 +30,7 @@
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="Duel Started">
-                <CommandControls:CommandButtonsControl x:Name="DuelStartedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+                <CommandControls:CommandButtonsControl x:Name="DuelStartedCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
             <TextBox x:Name="TimeLimitTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Time Limit (Seconds)" Width="120" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
@@ -59,12 +59,12 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Header="Success">
-                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="0" Header="Challenger Wins">
+                <CommandControls:CommandButtonsControl x:Name="SuccessOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
 
-            <GroupBox Grid.Column="2" Header="Failure">
-                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="OutcomeCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
+            <GroupBox Grid.Column="2" Header="Challenger Loses">
+                <CommandControls:CommandButtonsControl x:Name="FailOutcomeCommandButtonsControl" HorizontalAlignment="Center" EditClicked="SubCommandButtonsControl_EditClicked" RemoveDeleteButton="True"  RemoveEnableDisableToggle="True" />
             </GroupBox>
         </Grid>
     </Grid>
