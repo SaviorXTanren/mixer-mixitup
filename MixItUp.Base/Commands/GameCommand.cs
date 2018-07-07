@@ -195,7 +195,7 @@ namespace MixItUp.Base.Commands
             return arguments.FirstOrDefault();
         }
 
-        protected async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
+        protected virtual async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
         {
             int betAmount = 0;
 
@@ -460,6 +460,126 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    [DataContract]
+    public abstract class GroupGameCommand : GameCommandBase
+    {
+        [DataMember]
+        public int MinimumParticipants { get; set; }
+        [DataMember]
+        public int TimeLimit { get; set; }
+
+        [DataMember]
+        public CustomCommand StartedCommand { get; set; }
+
+        [DataMember]
+        public CustomCommand UserJoinCommand { get; set; }
+
+        [DataMember]
+        public GameOutcome UserSuccessOutcome { get; set; }
+        [DataMember]
+        public GameOutcome UserFailOutcome { get; set; }
+
+        [JsonIgnore]
+        protected UserViewModel starterUser;
+        [JsonIgnore]
+        protected Task timeLimitTask;
+        [JsonIgnore]
+        protected Dictionary<UserViewModel, int> enteredUsers = new Dictionary<UserViewModel, int>();
+
+        public GroupGameCommand() { }
+
+        public GroupGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
+            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome)
+            : base(name, commands, requirements)
+        {
+            this.MinimumParticipants = minimumParticipants;
+            this.TimeLimit = timeLimit;
+            this.StartedCommand = startedCommand;
+            this.UserJoinCommand = userJoinCommand;
+            this.UserSuccessOutcome = userSuccessOutcome;
+            this.UserFailOutcome = userFailOutcome;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (await this.PerformUsageChecks(user, arguments))
+            {
+                int betAmount = await this.GetBetAmount(user, this.GetBetAmountArgument(arguments));
+                if (betAmount >= 0)
+                {
+                    if (await this.PerformCurrencyChecks(user, betAmount))
+                    {
+                        if (this.timeLimitTask == null)
+                        {
+                            this.totalPayout = 0;
+
+                            this.enteredUsers.Clear();
+                            this.enteredUsers[user] = betAmount;
+                            this.starterUser = user;
+
+                            await this.GameStarted(user, betAmount);
+
+                            this.timeLimitTask = Task.Run(async () =>
+                            {
+                                await Task.Delay(this.TimeLimit * 1000);
+
+                                this.Requirements.UpdateCooldown(user);
+
+                                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                                if (currency == null)
+                                {
+                                    this.ResetData(user);
+                                    return;
+                                }
+
+                                if (this.enteredUsers.Count < this.MinimumParticipants)
+                                {
+                                    foreach (var enteredUser in this.enteredUsers)
+                                    {
+                                        enteredUser.Key.Data.AddCurrencyAmount(currency, enteredUser.Value);
+                                    }
+                                    await ChannelSession.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
+                                }
+                                else
+                                {
+                                    await this.SelectWinners();
+
+                                    await this.GameCompleted();
+                                }
+
+                                this.ResetData(user);
+                            });
+
+                            await this.PerformCommand(this.StartedCommand, user, arguments, betAmount, 0);
+                        }
+                        else
+                        {
+                            this.enteredUsers[user] = betAmount;
+                            await this.PerformCommand(this.UserJoinCommand, user, arguments, betAmount, 0);
+                        }
+                    }
+                }
+            }
+        }
+
+        protected virtual Task GameStarted(UserViewModel user, int betAmount)
+        {
+            return Task.FromResult(0);
+        }
+
+        protected abstract Task SelectWinners();
+
+        protected abstract Task GameCompleted();
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.starterUser = null;
+            this.timeLimitTask = null;
+            this.enteredUsers.Clear();
+            base.ResetData(user);
+        }
+    }
+
     #endregion Base Game Classes
 
     [DataContract]
@@ -669,24 +789,8 @@ namespace MixItUp.Base.Commands
     }
 
     [DataContract]
-    public class HeistGameCommand : GameCommandBase
+    public class HeistGameCommand : GroupGameCommand
     {
-        [DataMember]
-        public int MinimumParticipants { get; set; }
-        [DataMember]
-        public int TimeLimit { get; set; }
-
-        [DataMember]
-        public CustomCommand StartedCommand { get; set; }
-
-        [DataMember]
-        public CustomCommand UserJoinCommand { get; set; }
-
-        [DataMember]
-        public GameOutcome UserSuccessOutcome { get; set; }
-        [DataMember]
-        public GameOutcome UserFailOutcome { get; set; }
-
         [DataMember]
         public CustomCommand AllSucceedCommand { get; set; }
         [DataMember]
@@ -698,26 +802,13 @@ namespace MixItUp.Base.Commands
         [DataMember]
         public CustomCommand NoneSucceedCommand { get; set; }
 
-        [JsonIgnore]
-        private UserViewModel starterUser;
-        [JsonIgnore]
-        private Task timeLimitTask;
-        [JsonIgnore]
-        private Dictionary<UserViewModel, int> enteredUsers = new Dictionary<UserViewModel, int>();
-
         public HeistGameCommand() { }
 
         public HeistGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
             CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand allSucceedCommand, CustomCommand topThirdsSucceedCommand,
             CustomCommand middleThirdsSucceedCommand, CustomCommand lowThirdsSucceedCommand, CustomCommand noneSucceedCommand)
-            : base(name, commands, requirements)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
         {
-            this.MinimumParticipants = minimumParticipants;
-            this.TimeLimit = timeLimit;
-            this.StartedCommand = startedCommand;
-            this.UserJoinCommand = userJoinCommand;
-            this.UserSuccessOutcome = userSuccessOutcome;
-            this.UserFailOutcome = userFailOutcome;
             this.AllSucceedCommand = allSucceedCommand;
             this.TopThirdsSucceedCommand = topThirdsSucceedCommand;
             this.MiddleThirdsSucceedCommand = middleThirdsSucceedCommand;
@@ -725,102 +816,133 @@ namespace MixItUp.Base.Commands
             this.NoneSucceedCommand = noneSucceedCommand;
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        protected override async Task SelectWinners()
         {
-            if (await this.PerformUsageChecks(user, arguments))
+            foreach (var enteredUser in this.enteredUsers)
             {
-                int betAmount = await this.GetBetAmount(user, this.GetBetAmountArgument(arguments));
-                if (betAmount >= 0)
+                int randomNumber = this.GenerateProbability();
+                if (randomNumber <= this.UserSuccessOutcome.GetRoleProbability(enteredUser.Key.PrimaryRole))
                 {
-                    if (await this.PerformCurrencyChecks(user, betAmount))
-                    {
-                        if (this.timeLimitTask == null)
-                        {
-                            this.totalPayout = 0;
-
-                            this.enteredUsers.Clear();
-                            this.enteredUsers[user] = betAmount;
-                            this.starterUser = user;
-
-                            this.timeLimitTask = Task.Run(async () =>
-                            {
-                                await Task.Delay(this.TimeLimit * 1000);
-
-                                this.Requirements.UpdateCooldown(user);
-
-                                UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
-                                if (currency == null)
-                                {
-                                    return;
-                                }
-
-                                if (this.enteredUsers.Count < this.MinimumParticipants)
-                                {
-                                    foreach (var enteredUser in this.enteredUsers)
-                                    {
-                                        enteredUser.Key.Data.AddCurrencyAmount(currency, enteredUser.Value);
-                                    }
-                                    await ChannelSession.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
-                                    return;
-                                }
-
-                                foreach (var enteredUser in this.enteredUsers)
-                                {
-                                    int randomNumber = this.GenerateProbability();
-                                    if (randomNumber <= this.UserSuccessOutcome.GetRoleProbability(user.PrimaryRole))
-                                    {
-                                        this.winners.Add(enteredUser.Key);
-                                        await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserSuccessOutcome, enteredUser.Value);
-                                    }
-                                    else
-                                    {
-                                        await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserFailOutcome, enteredUser.Value);
-                                    }
-                                }
-
-                                double successRate = Convert.ToDouble(this.winners.Count) / Convert.ToDouble(this.enteredUsers.Count);
-                                if (successRate == 1.0)
-                                {
-                                    await this.PerformCommand(this.AllSucceedCommand, user, arguments, betAmount, 0);
-                                }
-                                else if (successRate > (2.0 / 3.0))
-                                {
-                                    await this.PerformCommand(this.TopThirdsSucceedCommand, user, arguments, betAmount, 0);
-                                }
-                                else if (successRate > (1.0 / 3.0))
-                                {
-                                    await this.PerformCommand(this.MiddleThirdsSucceedCommand, user, arguments, betAmount, 0);
-                                }
-                                else if (successRate > 0)
-                                {
-                                    await this.PerformCommand(this.LowThirdsSucceedCommand, user, arguments, betAmount, 0);
-                                }
-                                else
-                                {
-                                    await this.PerformCommand(this.NoneSucceedCommand, user, arguments, betAmount, 0);
-                                }
-
-                                this.ResetData(user);
-                            });
-
-                            await this.PerformCommand(this.StartedCommand, user, arguments, betAmount, 0);
-                        }
-                        else
-                        {
-                            this.enteredUsers[user] = betAmount;
-                            await this.PerformCommand(this.UserJoinCommand, user, arguments, betAmount, 0);
-                        }
-                    }
+                    this.winners.Add(enteredUser.Key);
+                    await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserSuccessOutcome, enteredUser.Value);
+                }
+                else
+                {
+                    await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserFailOutcome, enteredUser.Value);
                 }
             }
         }
 
-        protected override void ResetData(UserViewModel user)
+        protected override async Task GameCompleted()
         {
-            this.starterUser = null;
-            this.timeLimitTask = null;
-            this.enteredUsers.Clear();
-            base.ResetData(user);
+            double successRate = Convert.ToDouble(this.winners.Count) / Convert.ToDouble(this.enteredUsers.Count);
+            if (successRate == 1.0)
+            {
+                await this.PerformCommand(this.AllSucceedCommand, this.starterUser, new List<string>(), 0, 0);
+            }
+            else if (successRate > (2.0 / 3.0))
+            {
+                await this.PerformCommand(this.TopThirdsSucceedCommand, this.starterUser, new List<string>(), 0, 0);
+            }
+            else if (successRate > (1.0 / 3.0))
+            {
+                await this.PerformCommand(this.MiddleThirdsSucceedCommand, this.starterUser, new List<string>(), 0, 0);
+            }
+            else if (successRate > 0)
+            {
+                await this.PerformCommand(this.LowThirdsSucceedCommand, this.starterUser, new List<string>(), 0, 0);
+            }
+            else
+            {
+                await this.PerformCommand(this.NoneSucceedCommand, this.starterUser, new List<string>(), 0, 0);
+            }
+        }
+    }
+
+    [DataContract]
+    public class RussianRouletteGameCommand : GroupGameCommand
+    {
+        [DataMember]
+        public int MaxWinners { get; set; }
+
+        [DataMember]
+        public CustomCommand GameCompleteCommand { get; set; }
+
+        [JsonIgnore]
+        private int betAmount = 0;
+
+        public RussianRouletteGameCommand() { }
+
+        public RussianRouletteGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, CustomCommand startedCommand,
+            CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, int maxWinners, CustomCommand gameCompleteCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+        {
+            this.MaxWinners = maxWinners;
+            this.GameCompleteCommand = gameCompleteCommand;
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask != null)
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    return false;
+                }
+                return true;
+            }
+            return await base.PerformUsageChecks(user, arguments);
+        }
+
+        protected override async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
+        {
+            if (this.timeLimitTask != null)
+            {
+                return this.betAmount;
+            }
+            return await base.GetBetAmount(user, betAmountText);
+        }
+
+        protected override async Task GameStarted(UserViewModel user, int betAmount)
+        {
+            this.betAmount = betAmount;
+            await base.GameStarted(user, betAmount);
+        }
+
+        protected override async Task SelectWinners()
+        {
+            for (int i = 0; i < this.MaxWinners; i++)
+            {
+                int randomNumber = this.GenerateRandomNumber(this.enteredUsers.Count);
+                UserViewModel winner = this.enteredUsers.ElementAt(randomNumber).Key;
+                this.winners.Add(winner);
+            }
+
+            this.totalPayout = this.enteredUsers.Values.Sum();
+            int individualPayout = this.totalPayout / this.winners.Count;
+
+            foreach (var kvp in this.enteredUsers)
+            {
+                if (this.winners.Contains(kvp.Key))
+                {
+                    kvp.Key.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), individualPayout);
+                    await this.PerformCommand(this.UserSuccessOutcome.Command, kvp.Key, new List<string>(), kvp.Value, individualPayout);
+                }
+                else
+                {
+                    await this.PerformOutcome(kvp.Key, new List<string>(), this.UserFailOutcome, kvp.Value);
+                }
+            }
+        }
+
+        protected override async Task GameCompleted()
+        {
+            UserViewModel winner = this.winners.FirstOrDefault();
+            if (winner != null)
+            {
+                await this.PerformCommand(this.GameCompleteCommand, winner, new List<string>(), this.enteredUsers[winner], this.totalPayout);
+            }
         }
     }
 }

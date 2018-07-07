@@ -51,6 +51,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.command is PickpocketGameCommand) { this.SetGameEditorControl(new PickpocketGameEditorControl((PickpocketGameCommand)this.command)); }
                 if (this.command is DuelGameCommand) { this.SetGameEditorControl(new DuelGameEditorControl((DuelGameCommand)this.command)); }
                 if (this.command is HeistGameCommand) { this.SetGameEditorControl(new HeistGameEditorControl((HeistGameCommand)this.command)); }
+                if (this.command is RussianRouletteGameCommand) { this.SetGameEditorControl(new RussianRouletteGameEditorControl((RussianRouletteGameCommand)this.command)); }
             }
             else
             {
@@ -75,6 +76,9 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.gameListings.Add(new GameTypeListing("Heist", "The Heist game allows a user to start a group activity for users to individually bet when they participate. Each user has their own individual chance to succeed and win back more or fail and lose their bet."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !heist 100", new HeistGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Russian Roulette", "The Russian Roulette game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally"
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !rr 100\t\tAfter Start: !rr", new RussianRouletteGameEditorControl()));
             }
 
             return Task.FromResult(0);

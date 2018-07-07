@@ -129,9 +129,8 @@ namespace MixItUp.WPF.Controls.Games
             }
             ChannelSession.Settings.GameCommands.Add(new HeistGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
                 this.CommandDetailsControl.GetRequirements(), minimumParticipants, timeLimit, this.startedCommand, this.userJoinCommand,
-                new GameOutcome("Success", successRolePayouts, successRoleProbabilities, this.userSuccessCommand),
-                new GameOutcome("Failure", 0, failRoleProbabilities, this.userFailCommand), this.allSucceedCommand, this.topThirdsSucceedCommand, this.middleThirdsSucceedCommand,
-                this.lowThirdsSucceedCommand, this.noneSucceedCommand));
+                new GameOutcome("Success", successRolePayouts, successRoleProbabilities, this.userSuccessCommand), new GameOutcome("Failure", 0, failRoleProbabilities, this.userFailCommand),
+                this.allSucceedCommand, this.topThirdsSucceedCommand, this.middleThirdsSucceedCommand, this.lowThirdsSucceedCommand, this.noneSucceedCommand));
         }
 
         protected override Task OnLoaded()
