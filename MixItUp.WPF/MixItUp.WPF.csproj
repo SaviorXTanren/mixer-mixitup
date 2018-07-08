@@ -371,6 +371,9 @@
     <Compile Include="Controls\Games\PickpocketGameEditorControl.xaml.cs">
       <DependentUpon>PickpocketGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\RouletteGameEditorControl.xaml.cs">
+      <DependentUpon>RouletteGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\RussianRouletteGameEditorControl.xaml.cs">
       <DependentUpon>RussianRouletteGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -843,6 +846,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\PickpocketGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\RouletteGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -53,6 +53,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.command is HeistGameCommand) { this.SetGameEditorControl(new HeistGameEditorControl((HeistGameCommand)this.command)); }
                 if (this.command is RussianRouletteGameCommand) { this.SetGameEditorControl(new RussianRouletteGameEditorControl((RussianRouletteGameCommand)this.command)); }
                 if (this.command is BidGameCommand) { this.SetGameEditorControl(new BidGameEditorControl((BidGameCommand)this.command)); }
+                if (this.command is RouletteGameCommand) { this.SetGameEditorControl(new RouletteGameEditorControl((RouletteGameCommand)this.command)); }
             }
             else
             {
@@ -80,6 +81,9 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.gameListings.Add(new GameTypeListing("Russian Roulette", "The Russian Roulette game allows a user to start a winner-takes-all bet amongst all entered users. By default, the user that starts the game specifies how much the bet is and all subsequent users must bet that amount to join, with all winners of the game splitting the total payout equally."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !rr 100\t\tAfter Start: !rr", new RussianRouletteGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Roulette", "The Roulette game allows a user to start a group betting game amongst all users to bet on a specific number or name. If the game is based on a number range, then a user can select any number in that range. If the game is based on a series of names, a user can select any one of the names. All users who select the winning bet type get the payout for their bet, everyone else losses their bet."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !roulette <NUMBER> 100", new RouletteGameEditorControl()));
 
                 this.gameListings.Add(new GameTypeListing("Bid", "The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn't abused, such as Moderators or higher only."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !bid 100", new BidGameEditorControl()));

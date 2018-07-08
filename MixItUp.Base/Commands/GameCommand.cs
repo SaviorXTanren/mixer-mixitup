@@ -306,9 +306,12 @@ namespace MixItUp.Base.Commands
                 {
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "@" + user.UserName;
                 }
+                this.AddAdditionalSpecialIdentifiers(specialIdentifiers);
                 await command.Perform(user, arguments, specialIdentifiers);
             }
         }
+
+        protected virtual void AddAdditionalSpecialIdentifiers(Dictionary<string, string> specialIdentifiers) { }
 
         protected int GenerateRandomNumber(int maxValue)
         {
@@ -512,7 +515,7 @@ namespace MixItUp.Base.Commands
                 int betAmount = await this.GetBetAmount(user, this.GetBetAmountArgument(arguments));
                 if (betAmount >= 0)
                 {
-                    if (await this.PerformRequirementChecks(user, betAmount) && await this.PerformCurrencyChecks(user, betAmount))
+                    if (await this.PerformRequirementChecks(user, betAmount) && await this.PerformCurrencyChecks(user, betAmount) && await this.CanUserEnter(user, arguments, betAmount))
                     {
                         if (this.timeLimitTask == null)
                         {
@@ -522,7 +525,7 @@ namespace MixItUp.Base.Commands
                             this.enteredUsers[user] = betAmount;
                             this.starterUser = user;
 
-                            await this.GameStarted(user, betAmount);
+                            await this.GameStarted(user, arguments, betAmount);
 
                             this.timeLimitTask = Task.Run(async () =>
                             {
@@ -555,7 +558,7 @@ namespace MixItUp.Base.Commands
                         }
                         else
                         {
-                            await this.UserJoined(user, betAmount);
+                            await this.UserJoined(user, arguments, betAmount);
                             await this.PerformCommand(this.UserJoinCommand, user, arguments, betAmount, 0);
                         }
                     }
@@ -563,19 +566,23 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        protected virtual async Task<bool> CanUserReEnter(UserViewModel user, int betAmount)
+        protected virtual async Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
         {
-            await ChannelSession.Chat.Whisper(user.UserName, "You've already joined the game");
-            return false;
+            if (this.enteredUsers.ContainsKey(user))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, "You've already joined the game");
+                return false;
+            }
+            return true;
         }
 
-        protected virtual Task UserJoined(UserViewModel user, int betAmount)
+        protected virtual Task UserJoined(UserViewModel user, IEnumerable<string> arguments, int betAmount)
         {
             this.enteredUsers[user] = betAmount;
             return Task.FromResult(0);
         }
 
-        protected virtual Task GameStarted(UserViewModel user, int betAmount)
+        protected virtual Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
         {
             return Task.FromResult(0);
         }
@@ -927,10 +934,10 @@ namespace MixItUp.Base.Commands
             return await base.GetBetAmount(user, betAmountText);
         }
 
-        protected override async Task GameStarted(UserViewModel user, int betAmount)
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
         {
             this.betAmount = betAmount;
-            await base.GameStarted(user, betAmount);
+            await base.GameStarted(user, arguments, betAmount);
         }
 
         protected override async Task SelectWinners()
@@ -1006,14 +1013,14 @@ namespace MixItUp.Base.Commands
             return await base.PerformUsageChecks(user, arguments);
         }
 
-        protected override async Task<bool> CanUserReEnter(UserViewModel user, int betAmount)
+        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
         {
-            if (this.highestUser != null && this.highestUser.Equals(user))
-            {
-                await ChannelSession.Chat.Whisper(user.UserName, "You are already the highest user");
-                return false;
-            }
-            return true;
+            return base.GetBetAmountUserArgument(arguments);
+        }
+
+        protected override Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            return Task.FromResult(true);
         }
 
         protected override async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
@@ -1027,22 +1034,22 @@ namespace MixItUp.Base.Commands
             return betAmount;
         }
 
-        protected override async Task GameStarted(UserViewModel user, int betAmount)
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
         {
             this.highestUser = user;
             this.highestBid = betAmount;
 
-            await base.GameStarted(user, betAmount);
+            await base.GameStarted(user, arguments, betAmount);
         }
 
-        protected override async Task UserJoined(UserViewModel user, int betAmount)
+        protected override async Task UserJoined(UserViewModel user, IEnumerable<string> arguments, int betAmount)
         {
             if (this.highestUser != null)
             {
                 this.highestUser.Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.highestBid);
             }
 
-            await base.UserJoined(user, betAmount);
+            await base.UserJoined(user, arguments, betAmount);
 
             this.highestUser = user;
             this.highestBid = betAmount;
@@ -1067,6 +1074,141 @@ namespace MixItUp.Base.Commands
 
             this.highestUser = null;
             this.highestBid = 0;
+        }
+    }
+
+    [DataContract]
+    public class RouletteGameCommand : GroupGameCommand
+    {
+        public const string GameValidBetTypesSpecialIdentifier = "gamevalidbettypes";
+
+        public const string GameWinningBetTypeSpecialIdentifier = "gamewinningbettype";
+
+        [DataMember]
+        public bool IsNumberRange { get; set; }
+        [DataMember]
+        public HashSet<string> ValidBetTypes { get; set; }
+
+        [DataMember]
+        public CustomCommand GameCompleteCommand { get; set; }
+
+        [JsonIgnore]
+        private Dictionary<UserViewModel, string> userBetTypes = new Dictionary<UserViewModel, string>();
+        [JsonIgnore]
+        private string winningBetType = string.Empty;
+
+        public RouletteGameCommand() { }
+
+        public RouletteGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, bool isNumberRange, HashSet<string> validBetTypes,
+            CustomCommand startedCommand, CustomCommand userJoinCommand, GameOutcome userSuccessOutcome, GameOutcome userFailOutcome, CustomCommand gameCompleteCommand)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+        {
+            this.IsNumberRange = isNumberRange;
+            this.ValidBetTypes = validBetTypes;
+            this.GameCompleteCommand = gameCompleteCommand;
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.NoCurrencyCost || this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.RequiredAmount)
+            {
+                if (arguments.Count() != 1)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <NUMBER>", this.Commands.First()));
+                    return false;
+                }
+            }
+            else if (arguments.Count() != 2)
+            {
+                string betAmountUsageText = this.Requirements.Currency.RequiredAmount.ToString();
+                if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumAndMaximum)
+                {
+                    betAmountUsageText += "-" + this.Requirements.Currency.MaximumAmount.ToString();
+                }
+                else if (this.Requirements.Currency.RequirementType == CurrencyRequirementTypeEnum.MinimumOnly)
+                {
+                    betAmountUsageText += "+";
+                }
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <NUMBER> {1}", this.Commands.First(), betAmountUsageText));
+                return false;
+            }
+            return true;
+        }
+
+        protected override string GetBetAmountArgument(IEnumerable<string> arguments)
+        {
+            return base.GetBetAmountUserArgument(arguments);
+        }
+
+        protected override async Task<bool> CanUserEnter(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            string betType = arguments.ElementAt(0).ToLower();
+            if (!this.ValidBetTypes.Contains(betType))
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("Valid Bet Types: {0}", this.GetValidBetTypeString()));
+                return false;
+            }
+            return await base.CanUserEnter(user, arguments, betAmount);
+        }
+
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.userBetTypes[user] = arguments.ElementAt(0).ToLower();
+            await base.GameStarted(user, arguments, betAmount);
+        }
+
+        protected override async Task UserJoined(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.userBetTypes[user] = arguments.ElementAt(0).ToLower();
+            await base.UserJoined(user, arguments, betAmount);
+        }
+
+        protected override async Task SelectWinners()
+        {
+            int randomNumber = this.GenerateRandomNumber(this.ValidBetTypes.Count);
+            this.winningBetType = this.ValidBetTypes.ElementAt(randomNumber);
+
+            foreach (var enteredUser in this.enteredUsers)
+            {
+                if (this.userBetTypes.ContainsKey(enteredUser.Key) && this.userBetTypes[enteredUser.Key].Equals(this.winningBetType))
+                {
+                    this.winners.Add(enteredUser.Key);
+                    await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserSuccessOutcome, enteredUser.Value);
+                }
+                else
+                {
+                    await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserFailOutcome, enteredUser.Value);
+                }
+            }
+        }
+
+        protected override async Task GameCompleted()
+        {
+            await this.PerformCommand(this.GameCompleteCommand, ChannelSession.GetCurrentUser(), new List<string>(), 0, this.totalPayout);
+
+            this.userBetTypes.Clear();
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(Dictionary<string, string> specialIdentifiers)
+        {
+            specialIdentifiers[GameValidBetTypesSpecialIdentifier] = this.GetValidBetTypeString();
+            if (!string.IsNullOrEmpty(this.winningBetType))
+            {
+                specialIdentifiers[GameWinningBetTypeSpecialIdentifier] = winningBetType;
+            }
+        }
+
+        private string GetValidBetTypeString()
+        {
+            if (this.IsNumberRange)
+            {
+                IEnumerable<int> numbers = this.ValidBetTypes.Select(s => int.Parse(s));
+                return numbers.Min() + "-" + numbers.Max();
+            }
+            else
+            {
+                return string.Join(", ", this.ValidBetTypes);
+            }
         }
     }
 }
