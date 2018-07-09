@@ -22,5 +22,7 @@ namespace MixItUp.Base.Services
         Task<StreamingSourceDimensions> GetSourceDimensions(string sourceName);
 
         Task StartStopStream();
+
+        Task SaveReplayBuffer();
     }
 }

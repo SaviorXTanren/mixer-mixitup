@@ -42,6 +42,10 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     // Do nothing...
                 }
+                else if (this.action.ActionType == StreamingActionTypeEnum.SaveReplayBuffer)
+                {
+                    // Do nothing...
+                }
                 else
                 {
                     this.SourceNameTextBox.Text = this.action.SourceName;
@@ -83,6 +87,10 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (type == StreamingActionTypeEnum.StartStopStream)
                 {
                     return StreamingSoftwareAction.CreateStartStopStreamAction(software);
+                }
+                else if (type == StreamingActionTypeEnum.SaveReplayBuffer)
+                {
+                    return StreamingSoftwareAction.CreateSaveReplayBufferAction(software);
                 }
                 else if (!string.IsNullOrEmpty(this.SourceNameTextBox.Text))
                 {
@@ -168,6 +176,18 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (type == StreamingActionTypeEnum.StartStopStream)
                 {
                     if (software == StreamingSoftwareTypeEnum.XSplit)
+                    {
+                        this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
+                        return;
+                    }
+                    else
+                    {
+                        // Do nothing...
+                    }
+                }
+                else if (type == StreamingActionTypeEnum.SaveReplayBuffer)
+                {
+                    if (software != StreamingSoftwareTypeEnum.OBSStudio)
                     {
                         this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
                         return;

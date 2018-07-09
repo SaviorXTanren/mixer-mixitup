@@ -154,6 +154,16 @@ namespace MixItUp.OBS
             return Task.FromResult(0);
         }
 
+        public Task SaveReplayBuffer()
+        {
+            try
+            {
+                this.OBSWebsocket.SaveReplayBuffer();
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return Task.FromResult(0);
+        }
+
         private async void OBSWebsocket_Disconnected(object sender, EventArgs e)
         {
             await this.Disconnect();
