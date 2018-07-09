@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
@@ -582,10 +583,7 @@ namespace MixItUp.Base.Commands
             return Task.FromResult(0);
         }
 
-        protected virtual Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
-        {
-            return Task.FromResult(0);
-        }
+        protected virtual Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount) { return Task.FromResult(0); }
 
         protected virtual async Task NotEnoughUsers()
         {
@@ -597,9 +595,9 @@ namespace MixItUp.Base.Commands
             await ChannelSession.Chat.SendMessage(string.Format("@{0} couldn't get enough users to join in...", this.starterUser.UserName));
         }
 
-        protected abstract Task SelectWinners();
+        protected virtual Task SelectWinners() { return Task.FromResult(0); }
 
-        protected abstract Task GameCompleted();
+        protected virtual Task GameCompleted() { return Task.FromResult(0); }
 
         protected override void ResetData(UserViewModel user)
         {
@@ -1071,9 +1069,13 @@ namespace MixItUp.Base.Commands
         protected override async Task GameCompleted()
         {
             await this.PerformCommand(this.GameCompleteCommand, this.highestUser, new List<string>(), this.highestBid, this.totalPayout);
+        }
 
+        protected override void ResetData(UserViewModel user)
+        {
             this.highestUser = null;
             this.highestBid = 0;
+            base.ResetData(user);
         }
     }
 
@@ -1185,8 +1187,12 @@ namespace MixItUp.Base.Commands
         protected override async Task GameCompleted()
         {
             await this.PerformCommand(this.GameCompleteCommand, ChannelSession.GetCurrentUser(), new List<string>(), 0, this.totalPayout);
+        }
 
+        protected override void ResetData(UserViewModel user)
+        {
             this.userBetTypes.Clear();
+            base.ResetData(user);
         }
 
         protected override void AddAdditionalSpecialIdentifiers(Dictionary<string, string> specialIdentifiers)
@@ -1208,6 +1214,141 @@ namespace MixItUp.Base.Commands
             else
             {
                 return string.Join(", ", this.ValidBetTypes);
+            }
+        }
+    }
+
+    [DataContract]
+    public class HitmanGameCommand : GroupGameCommand
+    {
+        public const string GameHitmanNameSpecialIdentifier = "gamehitmanname";
+
+        private static readonly HashSet<string> DefaultWords = new HashSet<string>() { "ABLE", "ACCEPTABLE", "ACCORDING", "ACCURATE", "ACTION", "ACTIVE", "ACTUAL", "ADDITIONAL", "ADMINISTRATIVE", "ADULT", "AFRAID", "AFTER", "AFTERNOON", "AGENT", "AGGRESSIVE", "AGO", "AIRLINE", "ALIVE", "ALL", "ALONE", "ALTERNATIVE", "AMAZING", "ANGRY", "ANIMAL", "ANNUAL", "ANOTHER", "ANXIOUS", "ANY", "APART", "APPROPRIATE", "ASLEEP", "AUTOMATIC", "AVAILABLE", "AWARE", "AWAY", "BACKGROUND", "BASIC", "BEAUTIFUL", "BEGINNING", "BEST", "BETTER", "BIG", "BITTER", "BORING", "BORN", "BOTH", "BRAVE", "BRIEF", "BRIGHT", "BRILLIANT", "BROAD", "BROWN", "BUDGET", "BUSINESS", "BUSY", "CALM", "CAPABLE", "CAPITAL", "CAR", "CAREFUL", "CERTAIN", "CHANCE", "CHARACTER", "CHEAP", "CHEMICAL", "CHICKEN", "CHOICE", "CIVIL", "CLASSIC", "CLEAN", "CLEAR", "CLOSE", "COLD", "COMFORTABLE", "COMMERCIAL", "COMMON", "COMPETITIVE", "COMPLETE", "COMPLEX", "COMPREHENSIVE", "CONFIDENT", "CONNECT", "CONSCIOUS", "CONSISTENT", "CONSTANT", "CONTENT", "COOL", "CORNER", "CORRECT", "CRAZY", "CREATIVE", "CRITICAL", "CULTURAL", "CURIOUS", "CURRENT", "CUTE", "DANGEROUS", "DARK", "DAUGHTER", "DAY", "DEAD", "DEAR", "DECENT", "DEEP", "DEPENDENT", "DESIGNER", "DESPERATE", "DIFFERENT", "DIFFICULT", "DIRECT", "DIRTY", "DISTINCT", "DOUBLE", "DOWNTOWN", "DRAMATIC", "DRESS", "DRUNK", "DRY", "DUE", "EACH", "EAST", "EASTERN", "EASY", "ECONOMY", "EDUCATIONAL", "EFFECTIVE", "EFFICIENT", "EITHER", "ELECTRICAL", "ELECTRONIC", "EMBARRASSED", "EMERGENCY", "EMOTIONAL", "EMPTY", "ENOUGH", "ENTIRE", "ENVIRONMENTAL", "EQUAL", "EQUIVALENT", "EVEN", "EVENING", "EVERY", "EXACT", "EXCELLENT", "EXCITING", "EXISTING", "EXPENSIVE", "EXPERT", "EXPRESS", "EXTENSION", "EXTERNAL", "EXTRA", "EXTREME", "FAIR", "FAMILIAR", "FAMOUS", "FAR", "FAST", "FAT", "FEDERAL", "FEELING", "FEMALE", "FEW", "FINAL", "FINANCIAL", "FINE", "FIRM", "FIRST", "FIT", "FLAT", "FOREIGN", "FORMAL", "FORMER", "FORWARD", "FREE", "FREQUENT", "FRESH", "FRIENDLY", "FRONT", "FULL", "FUN", "FUNNY", "FUTURE", "GAME", "GENERAL", "GLAD", "GLASS", "GLOBAL", "GOLD", "GOOD", "GRAND", "GREAT", "GREEN", "GROSS", "GUILTY", "HAPPY", "HARD", "HEAD", "HEALTHY", "HEAVY", "HELPFUL", "HIGH", "HIS", "HISTORICAL", "HOLIDAY", "HOME", "HONEST", "HORROR", "HOT", "HOUR", "HOUSE", "HUGE", "HUMAN", "HUNGRY", "IDEAL", "ILL", "ILLEGAL", "IMMEDIATE", "IMPORTANT", "IMPOSSIBLE", "IMPRESSIVE", "INCIDENT", "INDEPENDENT", "INDIVIDUAL", "INEVITABLE", "INFORMAL", "INITIAL", "INNER", "INSIDE", "INTELLIGENT", "INTERESTING", "INTERNAL", "INTERNATIONAL", "JOINT", "JUNIOR", "JUST", "KEY", "KIND", "KITCHEN", "KNOWN", "LARGE", "LAST", "LATE", "LATTER", "LEADING", "LEAST", "LEATHER", "LEFT", "LEGAL", "LESS", "LEVEL", "LIFE", "LITTLE", "LIVE", "LIVING", "LOCAL", "LOGICAL", "LONELY", "LONG", "LOOSE", "LOST", "LOUD", "LOW", "LOWER", "LUCKY", "MAD", "MAIN", "MAJOR", "MALE", "MANY", "MASSIVE", "MASTER", "MATERIAL", "MAXIMUM", "MEAN", "MEDICAL", "MEDIUM", "MENTAL", "MIDDLE", "MINIMUM", "MINOR", "MINUTE", "MISSION", "MOBILE", "MONEY", "MORE", "MOST", "MOTHER", "MOTOR", "MOUNTAIN", "MUCH", "NARROW", "NASTY", "NATIONAL", "NATIVE", "NATURAL", "NEARBY", "NEAT", "NECESSARY", "NEGATIVE", "NEITHER", "NERVOUS", "NEW", "NEXT", "NICE", "NO", "NORMAL", "NORTH", "NOVEL", "NUMEROUS", "OBJECTIVE", "OBVIOUS", "ODD", "OFFICIAL", "OK", "OLD", "ONE", "ONLY", "OPEN", "OPENING", "OPPOSITE", "ORDINARY", "ORIGINAL", "OTHER", "OTHERWISE", "OUTSIDE", "OVER", "OVERALL", "OWN", "PARKING", "PARTICULAR", "PARTY", "PAST", "PATIENT", "PERFECT", "PERIOD", "PERSONAL", "PHYSICAL", "PLANE", "PLASTIC", "PLEASANT", "PLENTY", "PLUS", "POLITICAL", "POOR", "POPULAR", "POSITIVE", "POSSIBLE", "POTENTIAL", "POWERFUL", "PRACTICAL", "PREGNANT", "PRESENT", "PRETEND", "PRETTY", "PREVIOUS", "PRIMARY", "PRIOR", "PRIVATE", "PRIZE", "PROFESSIONAL", "PROOF", "PROPER", "PROUD", "PSYCHOLOGICAL", "PUBLIC", "PURE", "PURPLE", "QUICK", "QUIET", "RARE", "RAW", "READY", "REAL", "REALISTIC", "REASONABLE", "RECENT", "RED", "REGULAR", "RELATIVE", "RELEVANT", "REMARKABLE", "REMOTE", "REPRESENTATIVE", "RESIDENT", "RESPONSIBLE", "RICH", "RIGHT", "ROUGH", "ROUND", "ROUTINE", "ROYAL", "SAD", "SAFE", "SALT", "SAME", "SAVINGS", "SCARED", "SEA", "SECRET", "SECURE", "SELECT", "SENIOR", "SENSITIVE", "SEPARATE", "SERIOUS", "SEVERAL", "SEVERE", "SEXUAL", "SHARP", "SHORT", "SHOT", "SICK", "SIGNAL", "SIGNIFICANT", "SILLY", "SILVER", "SIMILAR", "SIMPLE", "SINGLE", "SLIGHT", "SLOW", "SMALL", "SMART", "SMOOTH", "SOFT", "SOLID", "SOME", "SORRY", "SOUTH", "SOUTHERN", "SPARE", "SPECIAL", "SPECIALIST", "SPECIFIC", "SPIRITUAL", "SQUARE", "STANDARD", "STATUS", "STILL", "STOCK", "STRAIGHT", "STRANGE", "STREET", "STRICT", "STRONG", "STUPID", "SUBJECT", "SUBSTANTIAL", "SUCCESSFUL", "SUCH", "SUDDEN", "SUFFICIENT", "SUITABLE", "SUPER", "SURE", "SUSPICIOUS", "SWEET", "SWIMMING", "TALL", "TECHNICAL", "TEMPORARY", "TERRIBLE", "THAT", "THEN", "THESE", "THICK", "THIN", "THINK", "THIS", "TIGHT", "TIME", "TINY", "TOP", "TOTAL", "TOUGH", "TRADITIONAL", "TRAINING", "TRICK", "TYPICAL", "UGLY", "UNABLE", "UNFAIR", "UNHAPPY", "UNIQUE", "UNITED", "UNLIKELY", "UNUSUAL", "UPPER", "UPSET", "UPSTAIRS", "USED", "USEFUL", "USUAL", "VALUABLE", "VARIOUS", "VAST", "VEGETABLE", "VISIBLE", "VISUAL", "WARM", "WASTE", "WEAK", "WEEKLY", "WEIRD", "WEST", "WESTERN", "WHAT", "WHICH", "WHITE", "WHOLE", "WIDE", "WILD", "WILLING", "WINE", "WINTER", "WISE", "WONDERFUL", "WOODEN", "WORK", "WORKING", "WORTH", "WRONG", "YELLOW", "YOUNG" };
+
+        [DataMember]
+        public string CustomWordsFilePath { get; set; }
+
+        [DataMember]
+        public CustomCommand HitmanApproachingCommand { get; set; }
+        [DataMember]
+        public CustomCommand HitmanAppearsCommand { get; set; }
+
+        [DataMember]
+        public int HitmanTimeLimit { get; set; }
+
+        [JsonIgnore]
+        private int betAmount = 0;
+        [JsonIgnore]
+        private string hitmanName = null;
+
+        public HitmanGameCommand() { }
+
+        public HitmanGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, int minimumParticipants, int timeLimit, string customWordsFilePath,
+            int hitmanTimeLimit, CustomCommand startedCommand, CustomCommand userJoinCommand, CustomCommand hitmanApproachingCommand, CustomCommand hitmanAppearsCommand,
+            GameOutcome userSuccessOutcome, GameOutcome userFailOutcome)
+            : base(name, commands, requirements, minimumParticipants, timeLimit, startedCommand, userJoinCommand, userSuccessOutcome, userFailOutcome)
+        {
+            this.CustomWordsFilePath = customWordsFilePath;
+            this.HitmanApproachingCommand = hitmanApproachingCommand;
+            this.HitmanAppearsCommand = hitmanAppearsCommand;
+            this.HitmanTimeLimit = hitmanTimeLimit;
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.timeLimitTask != null)
+            {
+                if (arguments.Count() != 0)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("The game is already underway, type !{0} in chat to join!", this.Commands.First()));
+                    return false;
+                }
+                return true;
+            }
+            return await base.PerformUsageChecks(user, arguments);
+        }
+
+        protected override async Task<int> GetBetAmount(UserViewModel user, string betAmountText)
+        {
+            if (this.timeLimitTask != null)
+            {
+                return this.betAmount;
+            }
+            return await base.GetBetAmount(user, betAmountText);
+        }
+
+        protected override async Task GameStarted(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.betAmount = betAmount;
+            await base.GameStarted(user, arguments, betAmount);
+        }
+
+        protected override async Task SelectWinners()
+        {
+            await this.PerformCommand(this.HitmanApproachingCommand, this.starterUser, new List<string>(), this.betAmount, 0);
+
+            HashSet<string> wordsToUse = HitmanGameCommand.DefaultWords;
+            if (!string.IsNullOrEmpty(this.CustomWordsFilePath) && ChannelSession.Services.FileService.FileExists(this.CustomWordsFilePath))
+            {
+                string fileData = await ChannelSession.Services.FileService.ReadFile(this.CustomWordsFilePath);
+                if (!string.IsNullOrEmpty(fileData))
+                {
+                    wordsToUse = new HashSet<string>();
+                    foreach (string split in fileData.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        wordsToUse.Add(split);
+                    }
+                }
+            }
+
+            await Task.Delay(5000);
+
+            int randomNumber = this.GenerateRandomNumber(wordsToUse.Count);
+            this.hitmanName = wordsToUse.ElementAt(randomNumber);
+
+            ChannelSession.Chat.OnMessageOccurred += Chat_OnMessageOccurred;
+
+            await this.PerformCommand(this.HitmanAppearsCommand, this.starterUser, new List<string>(), this.betAmount, 0);
+
+            for (int i = 0; i < this.HitmanTimeLimit * 2; i++)
+            {
+                await Task.Delay(500);
+                if (this.winners.Count > 0)
+                {
+                    break;
+                }
+            }
+
+            ChannelSession.Chat.OnMessageOccurred -= Chat_OnMessageOccurred;
+
+            if (this.winners.Count > 0)
+            {
+                this.totalPayout = this.enteredUsers.Values.Sum();
+                this.winners.First().Data.AddCurrencyAmount(this.Requirements.Currency.GetCurrency(), this.totalPayout);
+                await this.PerformCommand(this.UserSuccessOutcome.Command, this.winners.First(), new List<string>(), this.betAmount, this.totalPayout);
+            }
+            else
+            {
+                await this.PerformCommand(this.UserFailOutcome.Command, ChannelSession.GetCurrentUser(), new List<string>(), this.betAmount, this.totalPayout);
+            }
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(Dictionary<string, string> specialIdentifiers)
+        {
+            if (!string.IsNullOrEmpty(this.hitmanName))
+            {
+                specialIdentifiers[GameHitmanNameSpecialIdentifier] = this.hitmanName;
+            }
+        }
+
+        private void Chat_OnMessageOccurred(object sender, ChatMessageViewModel message)
+        {
+            if (!string.IsNullOrEmpty(this.hitmanName) && this.winners.Count == 0)
+            {
+                if (!string.IsNullOrEmpty(message.Message) && message.Message.Equals(this.hitmanName))
+                {
+                    this.winners.Add(message.User);
+                }
             }
         }
     }

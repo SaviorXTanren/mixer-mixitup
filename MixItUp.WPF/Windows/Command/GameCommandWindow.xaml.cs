@@ -54,6 +54,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.command is RussianRouletteGameCommand) { this.SetGameEditorControl(new RussianRouletteGameEditorControl((RussianRouletteGameCommand)this.command)); }
                 if (this.command is BidGameCommand) { this.SetGameEditorControl(new BidGameEditorControl((BidGameCommand)this.command)); }
                 if (this.command is RouletteGameCommand) { this.SetGameEditorControl(new RouletteGameEditorControl((RouletteGameCommand)this.command)); }
+                if (this.command is HitmanGameCommand) { this.SetGameEditorControl(new HitmanGameEditorControl((HitmanGameCommand)this.command)); }
             }
             else
             {
@@ -87,6 +88,9 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.gameListings.Add(new GameTypeListing("Bid", "The Bid game allows a user to start a bidding competition amongst all users to win a prize or special privilege. A user must bid at least 1 currency amount higher than the highest bid to become the leading bidder. When a user is outbid, they receive their bet currency back and the highest bidder when time runs out wins. Additionally, you can specify what user roles can start this game to ensure it isn't abused, such as Moderators or higher only."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !bid 100", new BidGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Hitman", "The Hitman game allows a user to start a a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman's name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !hitman 100", new HitmanGameEditorControl()));
             }
 
             return Task.FromResult(0);
