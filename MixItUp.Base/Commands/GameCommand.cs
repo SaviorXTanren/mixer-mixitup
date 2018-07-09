@@ -1345,7 +1345,7 @@ namespace MixItUp.Base.Commands
         {
             if (!string.IsNullOrEmpty(this.hitmanName) && this.winners.Count == 0)
             {
-                if (!string.IsNullOrEmpty(message.Message) && message.Message.Equals(this.hitmanName))
+                if (!string.IsNullOrEmpty(message.Message) && message.Message.Equals(this.hitmanName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     this.winners.Add(message.User);
                 }
