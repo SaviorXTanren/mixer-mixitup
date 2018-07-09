@@ -38,6 +38,7 @@ namespace MixItUp.OBS
                     {
                         this.OBSWebsocket.Connect(this.serverIP, this.password);
                         this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
+
                         connected = true;
                     }
                     catch (Exception ex) { Logger.Log(ex); }
@@ -45,6 +46,8 @@ namespace MixItUp.OBS
 
                 await Task.Delay(2000);
                 tokenSource.Cancel();
+
+                await this.StartReplayBuffer();
 
                 if (connected)
                 {
@@ -152,6 +155,23 @@ namespace MixItUp.OBS
             }
             catch (Exception ex) { Logger.Log(ex); }
             return Task.FromResult(0);
+        }
+
+        public Task<bool> StartReplayBuffer()
+        {
+            try
+            {
+                this.OBSWebsocket.StartReplayBuffer();
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Equals("replay buffer already active"))
+                {
+                    Logger.Log(ex);
+                    return Task.FromResult(false);
+                }
+            }
+            return Task.FromResult(true);
         }
 
         public Task SaveReplayBuffer()

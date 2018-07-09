@@ -24,5 +24,6 @@ namespace MixItUp.Base.Services
         Task StartStopStream();
 
         Task SaveReplayBuffer();
+        Task<bool> StartReplayBuffer();
     }
 }

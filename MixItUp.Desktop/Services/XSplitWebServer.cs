@@ -81,6 +81,7 @@ namespace MixItUp.XSplit
         public Task StartStopStream() { return Task.FromResult(0); }
 
         public Task SaveReplayBuffer() { return Task.FromResult(0); }
+        public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }
 
         protected override async Task ProcessReceivedPacket(string packetJSON)
         {

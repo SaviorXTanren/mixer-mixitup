@@ -279,6 +279,7 @@ namespace MixItUp.Desktop.Services
         }
 
         public Task SaveReplayBuffer() { return Task.FromResult(0); }
+        public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }
 
         private async Task<StreamlabsOBSScene> GetActiveScene()
         {
