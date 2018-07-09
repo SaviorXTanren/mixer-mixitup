@@ -38,6 +38,9 @@ namespace MixItUp.Base.Actions
 
         [Name("Start/Stop Stream")]
         StartStopStream,
+
+        [Name("Save Replay Buffer")]
+        SaveReplayBuffer,
     }
 
     public class StreamingSourceDimensions
@@ -108,6 +111,11 @@ namespace MixItUp.Base.Actions
         public static StreamingSoftwareAction CreateStartStopStreamAction(StreamingSoftwareTypeEnum softwareType)
         {
             return new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.StartStopStream);
+        }
+
+        public static StreamingSoftwareAction CreateSaveReplayBufferAction(StreamingSoftwareTypeEnum softwareType)
+        {
+            return new StreamingSoftwareAction(softwareType, StreamingActionTypeEnum.SaveReplayBuffer);
         }
 
         [DataMember]
@@ -210,6 +218,10 @@ namespace MixItUp.Base.Actions
                 if (this.ActionType == StreamingActionTypeEnum.StartStopStream)
                 {
                     await ssService.StartStopStream();
+                }
+                else if (this.ActionType == StreamingActionTypeEnum.SaveReplayBuffer)
+                {
+                    await ssService.SaveReplayBuffer();
                 }
                 else if (this.ActionType == StreamingActionTypeEnum.Scene && !string.IsNullOrEmpty(this.SceneName))
                 {

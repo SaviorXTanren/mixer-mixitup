@@ -278,6 +278,8 @@ namespace MixItUp.Desktop.Services
             await this.SendAndReceive(new StreamlabsOBSRequest("toggleStreaming", "StreamingService"));
         }
 
+        public Task SaveReplayBuffer() { return Task.FromResult(0); }
+
         private async Task<StreamlabsOBSScene> GetActiveScene()
         {
             return await this.GetResult<StreamlabsOBSScene>(new StreamlabsOBSRequest("activeScene", "ScenesService"));
