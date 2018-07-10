@@ -435,12 +435,12 @@ namespace MixItUp.Base.MixerAPI
                 tokenSource.Token.ThrowIfCancellationRequested();
 
                 await ChannelSession.RefreshChannel();
-                await Task.Delay(30000);
+                await Task.Delay(30000, tokenSource.Token);
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
                 await ChannelSession.RefreshChannel();
-                await Task.Delay(30000);
+                await Task.Delay(30000, tokenSource.Token);
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
@@ -497,7 +497,7 @@ namespace MixItUp.Base.MixerAPI
                     await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
                 }
 
-                await Task.Delay(30000);
+                await Task.Delay(30000, tokenSource.Token);
             });
         }
 
@@ -511,7 +511,7 @@ namespace MixItUp.Base.MixerAPI
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
-                await Task.Delay(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval);
+                await Task.Delay(1000 * 60 * ChannelSession.Settings.TimerCommandsInterval, tokenSource.Token);
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
@@ -524,7 +524,7 @@ namespace MixItUp.Base.MixerAPI
                     while ((this.Messages.Count - startMessageCount) < ChannelSession.Settings.TimerCommandsMinimumMessages)
                     {
                         tokenSource.Token.ThrowIfCancellationRequested();
-                        await Task.Delay(1000 * 10);
+                        await Task.Delay(1000 * 10, tokenSource.Token);
                     }
 
                     await command.Perform();
@@ -630,6 +630,9 @@ namespace MixItUp.Base.MixerAPI
         private async void StreamerClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
         {
             ChannelSession.DisconnectionOccurred("Streamer Chat");
+
+            // Force background tasks to stop before reconnecting
+            this.backgroundThreadCancellationTokenSource.Cancel();
 
             do
             {
