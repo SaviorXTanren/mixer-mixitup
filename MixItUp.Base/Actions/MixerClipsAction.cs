@@ -16,6 +16,8 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class MixerClipsAction : ActionBase
     {
+        public const string MixerClipURLSpecialIdentifier = "mixerclipurl";
+
         public const int MinimumLength = 15;
         public const int MaximumLength = 300;
 
@@ -87,7 +89,11 @@ namespace MixItUp.Base.Actions
                             ClipModel clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
                             if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
                             {
-                                await ChannelSession.Chat.SendMessage("Clip Created: " + string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.User.username, clip.shareableId));
+                                string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.User.username, clip.shareableId);
+
+                                await ChannelSession.Chat.SendMessage("Clip Created: " + clipUrl);
+
+                                this.extraSpecialIdentifiers[MixerClipURLSpecialIdentifier] = clipUrl;
 
                                 if (this.DownloadClip)
                                 {
