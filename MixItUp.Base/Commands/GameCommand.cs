@@ -1527,4 +1527,101 @@ namespace MixItUp.Base.Commands
             await this.PerformCommand(this.PayoutCommand, user, arguments, betAmount, this.totalPayout);
         }
     }
+
+    [DataContract]
+    public class VolcanoGameCommand : LongRunningGameCommand
+    {
+        [DataMember]
+        public CustomCommand Stage1Command { get; set; }
+        [DataMember]
+        public CustomCommand Stage1Status { get; set; }
+
+        [DataMember]
+        public int Stage2MinimumAmount { get; set; }
+        [DataMember]
+        public CustomCommand Stage2Command { get; set; }
+        [DataMember]
+        public CustomCommand Stage2Status { get; set; }
+
+        [DataMember]
+        public int Stage3MinimumAmount { get; set; }
+        [DataMember]
+        public CustomCommand Stage3Command { get; set; }
+        [DataMember]
+        public CustomCommand Stage3Status { get; set; }
+
+        [DataMember]
+        public int PayoutProbability { get; set; }
+        [DataMember]
+        public CustomCommand PayoutCommand { get; set; }
+
+        public VolcanoGameCommand() { }
+
+        public VolcanoGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, string statusArgument)
+            : base(name, commands, requirements, statusArgument)
+        {
+
+        }
+
+        protected override async Task ReportStatus(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (this.TotalAmount >= this.Stage3MinimumAmount)
+            {
+                await this.PerformCommand(this.Stage3Status, user, arguments, 0, 0);
+            }
+            else if (this.TotalAmount >= this.Stage2MinimumAmount)
+            {
+                await this.PerformCommand(this.Stage2Status, user, arguments, 0, 0);
+            }
+            else
+            {
+                await this.PerformCommand(this.Stage1Status, user, arguments, 0, 0);
+            }
+        }
+
+        protected override async Task<bool> ShouldPerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            if (this.TotalAmount >= this.Stage3MinimumAmount)
+            {
+                int randomNumber = this.GenerateProbability();
+                if (randomNumber <= this.PayoutProbability)
+                {
+                    return true;
+                }
+            }
+
+            if (this.TotalAmount >= this.Stage3MinimumAmount)
+            {
+                await this.PerformCommand(this.Stage3Command, user, arguments, betAmount, 0);
+            }
+            else if (this.TotalAmount >= this.Stage2MinimumAmount)
+            {
+                await this.PerformCommand(this.Stage2Command, user, arguments, betAmount, 0);
+            }
+            else
+            {
+                await this.PerformCommand(this.Stage1Command, user, arguments, betAmount, 0);
+            }
+            return false;
+        }
+
+        protected override async Task PerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            //double amount = Convert.ToDouble(this.TotalAmount);
+            //int minimum = Convert.ToInt32(amount * this.PayoutPercentageMinimum);
+            //int maximum = Convert.ToInt32(amount * this.PayoutPercentageMaximum);
+
+            //this.totalPayout = this.GenerateRandomNumber(minimum, maximum + 1);
+
+            //UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            //if (currency == null)
+            //{
+            //    return;
+            //}
+            //user.Data.AddCurrencyAmount(currency, this.totalPayout);
+            //this.TotalAmount -= this.totalPayout;
+
+            await this.PerformCommand(this.PayoutCommand, user, arguments, betAmount, this.totalPayout);
+        }
+    }
 }
