@@ -358,6 +358,9 @@
     <Compile Include="Controls\Games\BidGameEditorControl.xaml.cs">
       <DependentUpon>BidGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\CoinPusherGameEditorControl.xaml.cs">
+      <DependentUpon>CoinPusherGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\DuelGameEditorControl.xaml.cs">
       <DependentUpon>DuelGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -833,6 +836,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\BidGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\CoinPusherGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

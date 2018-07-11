@@ -1,15 +1,11 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
-using MixItUp.WPF.Windows.Command;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace MixItUp.WPF.Controls.Games
 {

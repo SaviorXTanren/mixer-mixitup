@@ -89,9 +89,9 @@ namespace MixItUp.WPF.Controls.Games
                     return false;
                 }
 
-                if (maxNumber <= minNumber)
+                if (maxNumber < minNumber)
                 {
-                    await MessageBoxHelper.ShowMessageDialog("The Max Number must be greater than the Min Number");
+                    await MessageBoxHelper.ShowMessageDialog("The Max Number can not be less than the Min Number");
                     return false;
                 }
             }

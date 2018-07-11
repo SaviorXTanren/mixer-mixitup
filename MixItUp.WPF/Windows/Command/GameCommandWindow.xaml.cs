@@ -55,6 +55,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.command is BidGameCommand) { this.SetGameEditorControl(new BidGameEditorControl((BidGameCommand)this.command)); }
                 if (this.command is RouletteGameCommand) { this.SetGameEditorControl(new RouletteGameEditorControl((RouletteGameCommand)this.command)); }
                 if (this.command is HitmanGameCommand) { this.SetGameEditorControl(new HitmanGameEditorControl((HitmanGameCommand)this.command)); }
+                if (this.command is CoinPusherGameCommand) { this.SetGameEditorControl(new CoinPusherGameEditorControl((CoinPusherGameCommand)this.command)); }
             }
             else
             {
@@ -91,6 +92,9 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.gameListings.Add(new GameTypeListing("Hitman", "The Hitman game allows a user to start a a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman's name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !hitman 100", new HitmanGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Coin Pusher", "The Coin Pusher game allow a user to deposit a specific amount of currency into a machine with the chance for a large payout. A minimum amount of currency must be inserted into the machine to allow for a payout and a minimum & maximum payout percentage can be specified when a payout occurs."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !pusher 100", new CoinPusherGameEditorControl()));
             }
 
             return Task.FromResult(0);
