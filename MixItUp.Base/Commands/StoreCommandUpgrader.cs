@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Actions;
+using System;
 using System.Collections.Generic;
 
 namespace MixItUp.Base.Commands
@@ -51,7 +52,9 @@ namespace MixItUp.Base.Commands
 
         private static bool IsVersionLessThan(string currentVersion, string checkVersion)
         {
-            return currentVersion.CompareTo(checkVersion) < 0;
+            Version current = Version.Parse(currentVersion.Trim());
+            Version check = Version.Parse(checkVersion);
+            return current.CompareTo(check) < 0;
         }
     }
 }
