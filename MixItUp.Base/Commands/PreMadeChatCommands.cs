@@ -118,7 +118,6 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    //List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
                     List<string> commandTriggers = new List<string>();
                     foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
                     {
