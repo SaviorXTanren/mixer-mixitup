@@ -32,6 +32,7 @@ namespace MixItUp.Base.Services
 
         Task PlayPauseCurrentSong();
         Task SkipToNextSong();
+        Task RefreshVolume();
 
         Task<SongRequestItem> GetCurrentlyPlaying();
         Task<SongRequestItem> GetNextTrack();
