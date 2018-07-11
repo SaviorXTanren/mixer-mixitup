@@ -17,6 +17,14 @@ namespace MixItUp.WPF.Controls.Settings
     {
         private const string FFMPEGDownloadLink = "https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-4.0-win32-static.zip";
 
+        public static readonly string OptOutTrackingTooltip =
+            "This option allows you to opt-out of any tracking of your" + Environment.NewLine +
+            "data via our back-end services. We track data around app" + Environment.NewLine +
+            "usage & crashes to help improve your experience. If you" + Environment.NewLine +
+            "select this option, we will stop all tracking of this data." + Environment.NewLine + Environment.NewLine +
+            "Note that this does not disable any data included with uploading" + Environment.NewLine +
+            "& reviewing Mix It Up store commands.";
+
         public static readonly string AutoLogInTooltip =
             "The Auto Log-In setting allows Mix It Up to automatically" + Environment.NewLine +
             "log in the currently signed-in Mixer user account." + Environment.NewLine + Environment.NewLine +
@@ -29,6 +37,9 @@ namespace MixItUp.WPF.Controls.Settings
         public GeneralSettingsControl()
         {
             InitializeComponent();
+
+            this.OptOutTrackingTextBlock.ToolTip = OptOutTrackingTooltip;
+            this.OptOutTrackingToggleButton.ToolTip = OptOutTrackingTooltip;
 
             this.AutoLogInAccountTextBlock.ToolTip = AutoLogInTooltip;
             this.AutoLogInAccountToggleButton.ToolTip = AutoLogInTooltip;
@@ -46,6 +57,7 @@ namespace MixItUp.WPF.Controls.Settings
             audioOutputDevicesNames.AddRange(this.audioOutputDevices.Values);
             this.DefaultAudioOutputComboBox.ItemsSource = audioOutputDevicesNames;
 
+            this.OptOutTrackingToggleButton.IsChecked = ChannelSession.Settings.OptOutTracking;
             this.FeatureMeToggleButton.IsChecked = ChannelSession.Settings.FeatureMe;
             this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.Channel.user.id);
             this.DefaultStreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.DefaultStreamingSoftware);
@@ -66,6 +78,20 @@ namespace MixItUp.WPF.Controls.Settings
         protected override async Task OnVisibilityChanged()
         {
             await this.InitializeInternal();
+        }
+
+        private void OptOutTrackingToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.OptOutTracking = this.OptOutTrackingToggleButton.IsChecked.GetValueOrDefault();
+            if (ChannelSession.Settings.OptOutTracking)
+            {
+                this.FeatureMeToggleButton.IsEnabled = false;
+                this.FeatureMeToggleButton.IsChecked = false;
+            }
+            else
+            {
+                this.FeatureMeToggleButton.IsEnabled = true;
+            }
         }
 
         private void FeatureMeToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)

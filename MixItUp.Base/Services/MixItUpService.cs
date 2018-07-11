@@ -69,8 +69,20 @@ namespace MixItUp.Base.Services
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
 
-        public async Task SendLoginEvent(LoginEvent login) { await this.PostAsync("login", login); }
-        public async Task SendErrorEvent(ErrorEvent error) { await this.PostAsync("error", error, logException: false); }
+        public async Task SendLoginEvent(LoginEvent login)
+        {
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                await this.PostAsync("login", login);
+            }
+        }
+        public async Task SendErrorEvent(ErrorEvent error)
+        {
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                await this.PostAsync("error", error, logException: false);
+            }
+        }
 
         public async Task SendIssueReport(IssueReportModel report) { await this.PostAsync("issuereport", report); }
 
@@ -117,7 +129,13 @@ namespace MixItUp.Base.Services
         public async Task UpdateStoreReview(StoreListingReviewModel review) { await this.PutAsync("store/reviews", review); }
 
         public async Task AddStoreListingDownload(StoreListingModel listing) { await this.PostAsync("store/metadata/downloads", listing.ID); }
-        public async Task AddStoreListingUses(StoreListingUsesModel uses) { await this.PostAsync("store/metadata/uses", uses); }
+        public async Task AddStoreListingUses(StoreListingUsesModel uses)
+        {
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                await this.PostAsync("store/metadata/uses", uses);
+            }
+        }
         public async Task AddStoreListingReport(StoreListingReportModel report) { await this.PostAsync("store/metadata/reports", report); }
 
         private async Task<T> GetAsync<T>(string endpoint)
