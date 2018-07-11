@@ -183,7 +183,7 @@ namespace MixItUp.Base.ViewModel.User
         public string FollowAgeString { get { return (this.FollowDate != null) ? this.FollowDate.GetValueOrDefault().GetAge() : "Not Following"; } }
 
         [JsonIgnore]
-        public bool IsSubscriber { get { return this.MixerRoles.Overlaps(new MixerRoleEnum[] { MixerRoleEnum.Subscriber, MixerRoleEnum.Streamer }); } }
+        public bool IsSubscriber { get { return this.MixerRoles.Overlaps(new MixerRoleEnum[] { MixerRoleEnum.Subscriber, MixerRoleEnum.Mod, MixerRoleEnum.ChannelEditor, MixerRoleEnum.Streamer }); } }
 
         [JsonIgnore]
         public string SubscribeAgeString { get { return (this.SubscribeDate != null) ? this.SubscribeDate.GetValueOrDefault().GetAge() : "Not Subscribed"; } }
