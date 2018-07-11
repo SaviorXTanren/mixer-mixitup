@@ -77,13 +77,6 @@ namespace MixItUp.WPF.Controls.MainControls
             this.DeleteCurrency(currency);
         }
 
-        private void AddNewCurrencyButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            CurrencyWindow window = new CurrencyWindow(isRank: false);
-            window.Closed += Window_Closed;
-            window.Show();
-        }
-
         private void RankEditButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;
@@ -100,16 +93,16 @@ namespace MixItUp.WPF.Controls.MainControls
             this.DeleteCurrency(currency);
         }
 
-        private void AddNewRankButton_Click(object sender, RoutedEventArgs e)
-        {
-            CurrencyWindow window = new CurrencyWindow(isRank: true);
-            window.Closed += Window_Closed;
-            window.Show();
-        }
-
         private void Window_Closed(object sender, System.EventArgs e)
         {
             this.RefreshList();
+        }
+
+        private void AddNewCurrencyRankButton_Click(object sender, RoutedEventArgs e)
+        {
+            CurrencyWindow window = new CurrencyWindow();
+            window.Closed += Window_Closed;
+            window.Show();
         }
     }
 }

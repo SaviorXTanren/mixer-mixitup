@@ -7,11 +7,13 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +24,12 @@ namespace MixItUp.WPF.Windows.Currency
 {
     public enum CurrencyAcquireRateTypeEnum
     {
+        [Name("1 Per Minute")]
         Minutes,
+        [Name("1 Per Hour")]
         Hours,
         Custom,
+        Disabled,
     }
 
     /// <summary>
@@ -34,32 +39,26 @@ namespace MixItUp.WPF.Windows.Currency
     {
         private const string RankChangedCommandName = "User Rank Changed";
 
-        private bool isRank = false;
         private UserCurrencyViewModel currency;
         private CustomCommand rankChangedCommand;
-
-        private string specialIdentifier = null;
 
         private Dictionary<UserDataViewModel, int> userImportData = new Dictionary<UserDataViewModel, int>();
 
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
-        public CurrencyWindow(bool isRank)
+        public CurrencyWindow()
         {
-            this.isRank = isRank;
-
             InitializeComponent();
 
             this.Initialize(this.StatusBar);
-
-            this.ExportUserCurrencyToFileButton.IsEnabled = false;
         }
 
         public CurrencyWindow(UserCurrencyViewModel currency)
         {
             this.currency = currency;
-            this.isRank = this.currency.IsRank;
             this.rankChangedCommand = this.currency.RankChangedCommand;
+
+            this.ImportFromFileButton.IsEnabled = true;
 
             InitializeComponent();
 
@@ -68,72 +67,71 @@ namespace MixItUp.WPF.Windows.Currency
 
         protected override async Task OnLoaded()
         {
-            if (isRank)
-            {
-                this.Title += "Rank";
-                this.RankSpecialIdentifierGrid.Visibility = Visibility.Visible;
-                this.RankGrid.Visibility = Visibility.Visible;
+            this.RanksListView.ItemsSource = this.ranks;
 
-                this.RanksListView.ItemsSource = this.ranks;
-            }
-            else
-            {
-                this.Title += "Currency";
-            }
+            this.OnlineRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>();
+            this.OfflineRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>();
 
-            this.CurrencyAcquireRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>();
-            this.OfflineCurrencyAcquireRateComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyAcquireRateTypeEnum>();
-
-            this.ResetCurrencyComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
+            this.AutomaticResetComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyResetRateEnum>();
 
             if (this.currency != null)
             {
-                this.CurrencyNameTextBox.Text = this.currency.Name;
-
-                if (this.currency.IsMinutesInterval)
-                {
-                    this.CurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
-                }
-                else if (this.currency.IsHoursInterval)
-                {
-                    this.CurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Hours);
-                }
-                else
-                {
-                    this.CurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
-                }
-                this.CurrencyAmountTextBox.Text = this.currency.AcquireAmount.ToString();
-                this.CurrencyTimeTextBox.Text = this.currency.AcquireInterval.ToString();
-
-                if (this.currency.IsMinutesOfflineInterval)
-                {
-                    this.OfflineCurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
-                }
-                else if (this.currency.IsHoursOfflineInterval)
-                {
-                    this.OfflineCurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Hours);
-                }
-                else
-                {
-                    this.OfflineCurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
-                }
-                this.OfflineCurrencyAmountTextBox.Text = this.currency.OfflineAcquireAmount.ToString();
-                this.OfflineCurrencyTimeTextBox.Text = this.currency.OfflineAcquireInterval.ToString();
+                this.NameTextBox.Text = this.currency.Name;
 
                 if (this.currency.MaxAmount != int.MaxValue)
                 {
-                    this.CurrencyMaxAmountTextBox.Text = this.currency.MaxAmount.ToString();
+                    this.MaxAmountTextBox.Text = this.currency.MaxAmount.ToString();
                 }
 
-                this.CurrencySubscriberBonusTextBox.Text = this.currency.SubscriberBonus.ToString();
-                this.CurrencyOnFollowBonusTextBox.Text = this.currency.OnFollowBonus.ToString();
-                this.CurrencyOnHostBonusTextBox.Text = this.currency.OnHostBonus.ToString();
-                this.CurrencyOnSubscribeBonusTextBox.Text = this.currency.OnSubscribeBonus.ToString();
+                if (this.currency.IsOnlineIntervalMinutes)
+                {
+                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
+                }
+                else if (this.currency.IsOnlineIntervalHours)
+                {
+                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Hours);
+                }
+                else if (this.currency.IsOnlineIntervalDisabled)
+                {
+                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
+                }
+                else
+                {
+                    this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
+                }
+                this.OnlineAmountRateTextBox.Text = this.currency.AcquireAmount.ToString();
+                this.OnlineTimeRateTextBox.Text = this.currency.AcquireInterval.ToString();
 
-                this.ResetCurrencyComboBox.SelectedItem = EnumHelper.GetEnumName(this.currency.ResetInterval);
+                if (this.currency.IsOfflineIntervalMinutes)
+                {
+                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
+                }
+                else if (this.currency.IsOfflineIntervalHours)
+                {
+                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Hours);
+                }
+                else if (this.currency.IsOfflineIntervalDisabled)
+                {
+                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
+                }
+                else
+                {
+                    this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
+                }
+                this.OfflineAmountRateTextBox.Text = this.currency.OfflineAcquireAmount.ToString();
+                this.OfflineTimeRateTextBox.Text = this.currency.OfflineAcquireInterval.ToString();
+
+                this.SubscriberBonusTextBox.Text = this.currency.SubscriberBonus.ToString();
+
+                this.OnFollowBonusTextBox.Text = this.currency.OnFollowBonus.ToString();
+                this.OnHostBonusTextBox.Text = this.currency.OnHostBonus.ToString();
+                this.OnSubscribeBonusTextBox.Text = this.currency.OnSubscribeBonus.ToString();
+
+                this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(this.currency.ResetInterval);
 
                 if (this.currency.IsRank)
                 {
+                    this.IsRankToggleButton.IsChecked = true;
                     foreach (UserRankViewModel rank in this.currency.Ranks.OrderBy(r => r.MinimumPoints))
                     {
                         this.ranks.Add(rank);
@@ -143,47 +141,83 @@ namespace MixItUp.WPF.Windows.Currency
             }
             else
             {
-                this.CurrencySubscriberBonusTextBox.Text = "0";
-                this.CurrencyOnFollowBonusTextBox.Text = "0";
-                this.CurrencyOnHostBonusTextBox.Text = "0";
-                this.CurrencyOnSubscribeBonusTextBox.Text = "0";
+                this.OnlineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Minutes);
+                this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
 
-                this.ResetCurrencyComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
-                this.OfflineCurrencyAcquireRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Custom);
-                this.OfflineCurrencyAmountTextBox.Text = "0";
-                this.OfflineCurrencyTimeTextBox.Text = "0";
+                this.SubscriberBonusTextBox.Text = "0";
+                this.OnFollowBonusTextBox.Text = "0";
+                this.OnHostBonusTextBox.Text = "0";
+                this.OnSubscribeBonusTextBox.Text = "0";
+
+                this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
             }
 
             await base.OnLoaded();
         }
 
-        private void CurrencyNameTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.CurrencyNameTextBox.Text))
+            Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
+        }
+
+        private void IsRankToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.RankListGrid.Visibility = (this.IsRankToggleButton.IsChecked.GetValueOrDefault()) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void OnlineRateComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.OnlineRateComboBox.SelectedIndex >= 0)
             {
-                this.specialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.CurrencyNameTextBox.Text);
-                this.UserAmountSpecialIdentifierTextBlock.Text = string.Format("$user{0}", this.specialIdentifier);
-                this.UserRankSpecialIdentifierTextBlock.Text = string.Format("$user{0}rank", this.specialIdentifier);
-            }
-            else
-            {
-                this.specialIdentifier = null;
-                this.UserAmountSpecialIdentifierTextBlock.Text = "";
-                this.UserRankSpecialIdentifierTextBlock.Text = "";
+                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OnlineRateComboBox.SelectedItem);
+                this.OnlineAmountRateTextBox.IsEnabled = (acquireRate == CurrencyAcquireRateTypeEnum.Custom);
+                this.OnlineTimeRateTextBox.IsEnabled = (acquireRate == CurrencyAcquireRateTypeEnum.Custom);
+
+                if (acquireRate == CurrencyAcquireRateTypeEnum.Minutes || acquireRate == CurrencyAcquireRateTypeEnum.Hours)
+                {
+                    this.OnlineAmountRateTextBox.Text = "1";
+                    if (acquireRate == CurrencyAcquireRateTypeEnum.Minutes)
+                    {
+                        this.OnlineTimeRateTextBox.Text = "1";
+                    }
+                    else if (acquireRate == CurrencyAcquireRateTypeEnum.Hours)
+                    {
+                        this.OnlineTimeRateTextBox.Text = "60";
+                    }
+                }
+                else
+                {
+                    this.OnlineAmountRateTextBox.Text = "0";
+                    this.OnlineTimeRateTextBox.Text = "0";
+                }
             }
         }
 
-        private async void ResetCurrencyManuallyButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void OfflineRateComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.currency != null)
+            if (this.OfflineRateComboBox.SelectedIndex >= 0)
             {
-                await this.RunAsyncOperation(async () =>
+                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OfflineRateComboBox.SelectedItem);
+                this.OfflineAmountRateTextBox.IsEnabled = (acquireRate == CurrencyAcquireRateTypeEnum.Custom);
+                this.OfflineTimeRateTextBox.IsEnabled = (acquireRate == CurrencyAcquireRateTypeEnum.Custom);
+
+                if (acquireRate == CurrencyAcquireRateTypeEnum.Minutes || acquireRate == CurrencyAcquireRateTypeEnum.Hours)
                 {
-                    if (await MessageBoxHelper.ShowConfirmationDialog("Do you want to reset all currency?"))
+                    this.OfflineAmountRateTextBox.Text = "1";
+                    if (acquireRate == CurrencyAcquireRateTypeEnum.Minutes)
                     {
-                        this.currency.Reset();
+                        this.OfflineTimeRateTextBox.Text = "1";
                     }
-                });
+                    else if (acquireRate == CurrencyAcquireRateTypeEnum.Hours)
+                    {
+                        this.OfflineTimeRateTextBox.Text = "60";
+                    }
+                }
+                else
+                {
+                    this.OfflineAmountRateTextBox.Text = "0";
+                    this.OfflineTimeRateTextBox.Text = "0";
+                }
             }
         }
 
@@ -205,7 +239,7 @@ namespace MixItUp.WPF.Windows.Currency
             int rankAmount = 0;
             if (string.IsNullOrEmpty(this.RankAmountTextBox.Text) || !int.TryParse(this.RankAmountTextBox.Text, out rankAmount) || rankAmount < 0)
             {
-                await MessageBoxHelper.ShowMessageDialog("A rank amount must be specified");
+                await MessageBoxHelper.ShowMessageDialog("A minimum amount must be specified");
                 return;
             }
 
@@ -265,43 +299,28 @@ namespace MixItUp.WPF.Windows.Currency
             });
         }
 
-        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
+        private async void ManualResetButton_Click(object sender, RoutedEventArgs e)
         {
-            this.rankChangedCommand = (CustomCommand)e;
-        }
-
-        private void Window_Closed(object sender, System.EventArgs e)
-        {
-            this.UpdateRankChangedCommand();
-        }
-
-        private void UpdateRankChangedCommand()
-        {
-            if (this.rankChangedCommand != null)
+            await this.RunAsyncOperation(async () =>
             {
-                this.NewCommandButton.Visibility = Visibility.Collapsed;
-                this.CommandButtons.Visibility = Visibility.Visible;
-                this.CommandButtons.DataContext = this.rankChangedCommand;
-            }
-            else
-            {
-                this.NewCommandButton.Visibility = Visibility.Visible;
-                this.CommandButtons.Visibility = Visibility.Collapsed;
-            }
+                if (await MessageBoxHelper.ShowConfirmationDialog("Do you want to reset all currency?"))
+                {
+                    if (this.currency != null)
+                    {
+                        this.currency.Reset();
+                    }
+                }
+            });
         }
 
-        private async void ImportUserCurrencyFromFileButton_Click(object sender, RoutedEventArgs e)
+        private async void ImportFromFileButton_Click(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {
                 this.userImportData.Clear();
 
-                string message = "This will allow you to import the total amounts that each user had and assign them to this ";
-                message += (this.isRank) ? "rank" : "currency";
-                message += " and will overwrite any amounts that each user has.";
-                message += Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?";
-
-                if (await MessageBoxHelper.ShowConfirmationDialog(message))
+                if (await MessageBoxHelper.ShowConfirmationDialog("This will allow you to import the total amounts that each user had, assign them to this currency/rank, and will overwrite any amounts that each user has." +
+                    Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?"))
                 {
                     try
                     {
@@ -369,10 +388,16 @@ namespace MixItUp.WPF.Windows.Currency
                                             this.userImportData[data] = amount;
                                         }
                                         this.userImportData[data] = Math.Max(this.userImportData[data], amount);
-                                        this.ImportUserCurrencyFromFileButton.Content = string.Format("{0} Imported...", this.userImportData.Count());
+                                        this.ImportFromFileButton.Content = string.Format("{0} Imported...", this.userImportData.Count());
                                     }
                                 }
-                                this.ImportUserCurrencyFromFileButton.Content = "Import From File";
+
+                                foreach (var kvp in this.userImportData)
+                                {
+                                    kvp.Key.SetCurrencyAmount(this.currency, kvp.Value);
+                                }
+
+                                this.ImportFromFileButton.Content = "Import From File";
                                 return;
                             }
                         }
@@ -387,224 +412,12 @@ namespace MixItUp.WPF.Windows.Currency
                         Environment.NewLine + Environment.NewLine + "<USER ID> <AMOUNT>" +
                         Environment.NewLine + Environment.NewLine + "<USER ID> <USERNAME> <AMOUNT>");
 
-                    this.ImportUserCurrencyFromFileButton.Content = "Import From File";
+                    this.ImportFromFileButton.Content = "Import From File";
                 }
             });
         }
 
-        private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            await this.RunAsyncOperation(async () =>
-            {
-                if (string.IsNullOrEmpty(this.CurrencyNameTextBox.Text))
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A currency name must be specified");
-                    return;
-                }
-
-                UserCurrencyViewModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.CurrencyNameTextBox.Text));
-                if (dupeCurrency != null && (this.currency == null || !this.currency.ID.Equals(dupeCurrency.ID)))
-                {
-                    await MessageBoxHelper.ShowMessageDialog("There already exists a currency or rank system with this name");
-                    return;
-                }
-
-                if (this.CurrencyAcquireRateComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("The currency rate must be selected");
-                    return;
-                }
-                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.CurrencyAcquireRateComboBox.SelectedItem);
-
-                int currencyAmount = 1;
-                int currencyTime = 1;
-                if (acquireRate == CurrencyAcquireRateTypeEnum.Hours)
-                {
-                    currencyTime = 60;
-                }
-                else if (acquireRate == CurrencyAcquireRateTypeEnum.Custom)
-                {
-                    if (string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text) || !int.TryParse(this.CurrencyAmountTextBox.Text, out currencyAmount) || currencyAmount < 0)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("The currency rate must be 0 or greater");
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(this.CurrencyTimeTextBox.Text) || !int.TryParse(this.CurrencyTimeTextBox.Text, out currencyTime) || currencyTime < 0)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("The currency interval must be 0 or greater");
-                        return;
-                    }
-
-                    if ((currencyAmount == 0 && currencyTime != 0) || (currencyAmount != 0 && currencyTime == 0))
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("The currency rate and interval must be both greater than 0 or both equal to 0");
-                        return;
-                    }
-                }
-
-                int maxAmount = int.MaxValue;
-                if (!string.IsNullOrEmpty(this.CurrencyMaxAmountTextBox.Text) && (!int.TryParse(this.CurrencyMaxAmountTextBox.Text, out maxAmount) || maxAmount <= 0))
-                {
-                    await MessageBoxHelper.ShowMessageDialog("The max amount must be greater than 0 or can be left empty for no max amount");
-                    return;
-                }
-
-                int subscriberBonus = 0;
-                if (string.IsNullOrEmpty(this.CurrencySubscriberBonusTextBox.Text) || !int.TryParse(this.CurrencySubscriberBonusTextBox.Text, out subscriberBonus) || subscriberBonus < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("The Subscriber bonus must be 0 or greater");
-                    return;
-                }
-
-                int onFollowBonus = 0;
-                if (string.IsNullOrEmpty(this.CurrencyOnFollowBonusTextBox.Text) || !int.TryParse(this.CurrencyOnFollowBonusTextBox.Text, out onFollowBonus) || onFollowBonus < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("The On Follow bonus must be 0 or greater");
-                    return;
-                }
-
-                int onHostBonus = 0;
-                if (string.IsNullOrEmpty(this.CurrencyOnHostBonusTextBox.Text) || !int.TryParse(this.CurrencyOnHostBonusTextBox.Text, out onHostBonus) || onHostBonus < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("The On Host bonus must be 0 or greater");
-                    return;
-                }
-
-                int onSubscribeBonus = 0;
-                if (string.IsNullOrEmpty(this.CurrencyOnSubscribeBonusTextBox.Text) || !int.TryParse(this.CurrencyOnSubscribeBonusTextBox.Text, out onSubscribeBonus) || onSubscribeBonus < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("The On Subscribe bonus must be 0 or greater");
-                    return;
-                }
-
-                if (this.OfflineCurrencyAcquireRateComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("The offline currency rate must be selected");
-                    return;
-                }
-                CurrencyAcquireRateTypeEnum offlineAcquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OfflineCurrencyAcquireRateComboBox.SelectedItem);
-
-                int offlineCurrencyAmount = 1;
-                int offlineCurrencyTime = 1;
-                if (offlineAcquireRate == CurrencyAcquireRateTypeEnum.Hours)
-                {
-                    offlineCurrencyTime = 60;
-                }
-                else if (offlineAcquireRate == CurrencyAcquireRateTypeEnum.Custom)
-                {
-                    if (string.IsNullOrEmpty(this.OfflineCurrencyAmountTextBox.Text) || !int.TryParse(this.OfflineCurrencyAmountTextBox.Text, out offlineCurrencyAmount) || offlineCurrencyAmount < 0)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("The offline currency rate must be 0 or greater");
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(this.OfflineCurrencyTimeTextBox.Text) || !int.TryParse(this.OfflineCurrencyTimeTextBox.Text, out offlineCurrencyTime) || offlineCurrencyTime < 0)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("The offline currency interval must be 0 or greater");
-                        return;
-                    }
-
-                    if ((offlineCurrencyAmount == 0 && offlineCurrencyTime != 0) || (offlineCurrencyAmount != 0 && offlineCurrencyTime == 0))
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("The offline currency rate and interval must be both greater than 0 or both equal to 0");
-                        return;
-                    }
-                }
-
-                if (this.ResetCurrencyComboBox.SelectedIndex < 0)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A reset frequency must be selected");
-                    return;
-                }
-
-                if (string.IsNullOrEmpty(this.specialIdentifier))
-                {
-                    await MessageBoxHelper.ShowMessageDialog("A currency special identifier must exist. Please ensure your currency name contains letters or numbers.");
-                    return;
-                }
-
-                if (this.isRank)
-                {
-                    if (this.ranks.Count() < 1)
-                    {
-                        await MessageBoxHelper.ShowMessageDialog("At least one rank must be created");
-                        return;
-                    }
-                }
-
-                bool newCurrencyRank = false;
-                if (this.currency == null)
-                {
-                    newCurrencyRank = true;
-                    this.currency = new UserCurrencyViewModel();
-                }
-
-                this.currency.Name = this.CurrencyNameTextBox.Text;
-                this.currency.AcquireAmount = currencyAmount;
-                this.currency.AcquireInterval = currencyTime;
-                this.currency.MaxAmount = maxAmount;
-
-                this.currency.SubscriberBonus = subscriberBonus;
-                this.currency.OnFollowBonus = onFollowBonus;
-                this.currency.OnHostBonus = onHostBonus;
-                this.currency.OnSubscribeBonus = onSubscribeBonus;
-
-                this.currency.OfflineAcquireAmount = offlineCurrencyAmount;
-                this.currency.OfflineAcquireInterval = offlineCurrencyTime;
-
-                this.currency.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.ResetCurrencyComboBox.SelectedItem);
-
-                this.currency.SpecialIdentifier = this.specialIdentifier;
-
-                if (this.isRank)
-                {
-                    this.currency.Ranks = ranks.ToList();
-                    this.currency.RankChangedCommand = this.rankChangedCommand;
-                }
-
-                if (!ChannelSession.Settings.Currencies.ContainsKey(this.currency.ID))
-                {
-                    ChannelSession.Settings.Currencies[this.currency.ID] = this.currency;
-                }
-
-                foreach (var kvp in this.userImportData)
-                {
-                    kvp.Key.SetCurrencyAmount(this.currency, kvp.Value);
-                }
-
-                await ChannelSession.SaveSettings();
-
-                if (newCurrencyRank)
-                {
-                    string type = (this.currency.IsRank) ? "rank" : "currency";
-                    if (await MessageBoxHelper.ShowConfirmationDialog("Since you just created a new " + type + ", would you like to create a chat command to show a user's " + type + "?"))
-                    {
-                        ChatCommand currencyRankCommand = new ChatCommand(this.currency.Name, this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
-                        string chatText = string.Empty;
-                        if (this.currency.IsRank)
-                        {
-                            chatText = string.Format("@$username is a ${0} with ${1} {2}!", this.currency.UserRankNameSpecialIdentifier, this.currency.UserAmountSpecialIdentifier, this.currency.Name);
-                        }
-                        else
-                        {
-                            chatText = string.Format("@$username has ${0} {1}!", this.currency.UserAmountSpecialIdentifier, this.currency.Name);
-                        }
-                        ChatAction chatAction = new ChatAction(chatText);
-                        currencyRankCommand.Actions.Add(chatAction);
-
-                        CommandWindow window = new CommandWindow(new ChatCommandDetailsControl(currencyRankCommand));
-                        window.Closed += Window_Closed;
-                        window.Show();
-                        window.Focus();
-                    }
-                }
-
-                this.Close();
-            });
-        }
-
-        private async void ExportUserCurrencyToFileButton_Click(object sender, RoutedEventArgs e)
+        private async void ExportToFileButton_Click(object sender, RoutedEventArgs e)
         {
             await this.RunAsyncOperation(async () =>
             {
@@ -622,21 +435,219 @@ namespace MixItUp.WPF.Windows.Currency
             });
         }
 
-        private void CurrencyAcquireRateComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void SaveButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.CurrencyAcquireRateComboBox.SelectedIndex >= 0)
+            await this.RunAsyncOperation(async () =>
             {
-                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.CurrencyAcquireRateComboBox.SelectedItem);
-                this.CustomRateGrid.Visibility = (acquireRate == CurrencyAcquireRateTypeEnum.Custom) ? Visibility.Visible : Visibility.Collapsed;
-            }
+                if (string.IsNullOrEmpty(this.NameTextBox.Text))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("A currency name must be specified");
+                    return;
+                }
+
+                UserCurrencyViewModel dupeCurrency = ChannelSession.Settings.Currencies.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
+                if (dupeCurrency != null && (this.currency == null || !this.currency.ID.Equals(dupeCurrency.ID)))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("There already exists a currency or rank system with this name");
+                    return;
+                }
+
+                int maxAmount = int.MaxValue;
+                if (!string.IsNullOrEmpty(this.MaxAmountTextBox.Text))
+                {
+                    if (!int.TryParse(this.MaxAmountTextBox.Text, out maxAmount) || maxAmount <= 0)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("The max amount must be greater than 0 or can be left empty for no max amount");
+                        return;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(this.OnlineAmountRateTextBox.Text) || !int.TryParse(this.OnlineAmountRateTextBox.Text, out int onlineAmount) || onlineAmount < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The online amount must be 0 or greater");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(this.OnlineTimeRateTextBox.Text) || !int.TryParse(this.OnlineTimeRateTextBox.Text, out int onlineTime) || onlineTime < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The online minutes must be 0 or greater");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(this.OfflineAmountRateTextBox.Text) || !int.TryParse(this.OfflineAmountRateTextBox.Text, out int offlineAmount) || offlineAmount < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The offline amount must be 0 or greater");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(this.OfflineTimeRateTextBox.Text) || !int.TryParse(this.OfflineTimeRateTextBox.Text, out int offlineTime) || offlineTime < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The offline minutes must be 0 or greater");
+                    return;
+                }
+
+                if (onlineAmount > 0 && onlineTime == 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The online time can not be 0 if the online amount is greater than 0");
+                    return;
+                }
+
+                if (offlineAmount > 0 && offlineTime == 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The offline time can not be 0 if the offline amount is greater than 0");
+                    return;
+                }
+
+                int subscriberBonus = 0;
+                if (string.IsNullOrEmpty(this.SubscriberBonusTextBox.Text) || !int.TryParse(this.SubscriberBonusTextBox.Text, out subscriberBonus) || subscriberBonus < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The Subscriber bonus must be 0 or greater");
+                    return;
+                }
+
+                int onFollowBonus = 0;
+                if (string.IsNullOrEmpty(this.OnFollowBonusTextBox.Text) || !int.TryParse(this.OnFollowBonusTextBox.Text, out onFollowBonus) || onFollowBonus < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The On Follow bonus must be 0 or greater");
+                    return;
+                }
+
+                int onHostBonus = 0;
+                if (string.IsNullOrEmpty(this.OnHostBonusTextBox.Text) || !int.TryParse(this.OnHostBonusTextBox.Text, out onHostBonus) || onHostBonus < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The On Host bonus must be 0 or greater");
+                    return;
+                }
+
+                int onSubscribeBonus = 0;
+                if (string.IsNullOrEmpty(this.OnSubscribeBonusTextBox.Text) || !int.TryParse(this.OnSubscribeBonusTextBox.Text, out onSubscribeBonus) || onSubscribeBonus < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The On Subscribe bonus must be 0 or greater");
+                    return;
+                }
+
+                if (this.IsRankToggleButton.IsChecked.GetValueOrDefault())
+                {
+                    if (this.ranks.Count() < 1)
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("At least one rank must be created");
+                        return;
+                    }
+                }
+
+                bool isNew = false;
+                if (this.currency == null)
+                {
+                    isNew = true;
+                    this.currency = new UserCurrencyViewModel();
+                    ChannelSession.Settings.Currencies[this.currency.ID] = this.currency;
+                }
+
+                this.currency.Name = this.NameTextBox.Text;
+                this.currency.MaxAmount = maxAmount;
+
+                this.currency.AcquireAmount = onlineAmount;
+                this.currency.AcquireInterval = onlineTime;
+                this.currency.OfflineAcquireAmount = offlineAmount;
+                this.currency.OfflineAcquireInterval = offlineTime;
+
+                this.currency.SubscriberBonus = subscriberBonus;
+                this.currency.OnFollowBonus = onFollowBonus;
+                this.currency.OnHostBonus = onHostBonus;
+                this.currency.OnSubscribeBonus = onSubscribeBonus;
+
+                this.currency.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.AutomaticResetComboBox.SelectedItem);
+
+                this.currency.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.currency.Name);
+
+                if (this.IsRankToggleButton.IsChecked.GetValueOrDefault())
+                {
+                    this.currency.Ranks = ranks.ToList();
+                    this.currency.RankChangedCommand = this.rankChangedCommand;
+                }
+                else
+                {
+                    this.currency.Ranks = new List<UserRankViewModel>();
+                    this.currency.RankChangedCommand = null;
+                }
+
+                await ChannelSession.SaveSettings();
+
+                if (isNew)
+                {
+                    List<NewCurrencyRankCommand> commandsToAdd = new List<NewCurrencyRankCommand>();
+
+                    ChatCommand statusCommand = new ChatCommand("User " + this.currency.Name, this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                    string statusChatText = string.Empty;
+                    if (this.currency.IsRank)
+                    {
+                        statusChatText = string.Format("@$username is a ${0} with ${1} {2}!", this.currency.UserRankNameSpecialIdentifier, this.currency.UserAmountSpecialIdentifier, this.currency.Name);
+                    }
+                    else
+                    {
+                        statusChatText = string.Format("@$username has ${0} {1}!", this.currency.UserAmountSpecialIdentifier, this.currency.Name);
+                    }
+                    statusCommand.Actions.Add(new ChatAction(statusChatText));
+                    commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
+
+                    ChatCommand addCommand = new ChatCommand("Add " + this.currency.Name, "add" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                    addCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.GiveToSpecificUser, "$arg2text", "$targetusername"));
+                    addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", this.currency.Name)));
+                    commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
+
+                    ChatCommand addAllCommand = new ChatCommand("Add All " + this.currency.Name, "addall" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                    addAllCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.GiveToAllChatUsers, "$arg1text"));
+                    addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text {0}!", this.currency.Name)));
+                    commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
+
+                    if (!this.currency.IsRank)
+                    {
+                        ChatCommand giveCommand = new ChatCommand("Give " + this.currency.Name, "give" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                        giveCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.GiveToSpecificUser, "$arg2text", "$targetusername", deductFromUser: true));
+                        giveCommand.Actions.Add(new ChatAction(string.Format("@$username gave @$targetusername $arg2text {0}!", this.currency.Name)));
+                        commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", giveCommand.Commands.First(), "Gives Amount To Specified User"), giveCommand));
+                    }
+
+                    NewCurrencyRankCommandsDialogControl dControl = new NewCurrencyRankCommandsDialogControl(this.currency, commandsToAdd);
+                    string result = await MessageBoxHelper.ShowCustomDialog(dControl);
+                    if (!string.IsNullOrEmpty(result) && result.Equals("True"))
+                    {
+                        foreach (NewCurrencyRankCommand command in dControl.commands)
+                        {
+                            if (command.AddCommand)
+                            {
+                                ChannelSession.Settings.ChatCommands.Add(command.Command);
+                            }
+                        }
+                    }
+                }
+
+                this.Close();
+            });
         }
 
-        private void OfflineCurrencyAcquireRateComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Window_CommandSaveSuccessfully(object sender, CommandBase e)
         {
-            if (this.OfflineCurrencyAcquireRateComboBox.SelectedIndex >= 0)
+            this.rankChangedCommand = (CustomCommand)e;
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            this.UpdateRankChangedCommand();
+        }
+
+        private void UpdateRankChangedCommand()
+        {
+            if (this.rankChangedCommand != null)
             {
-                CurrencyAcquireRateTypeEnum acquireRate = EnumHelper.GetEnumValueFromString<CurrencyAcquireRateTypeEnum>((string)this.OfflineCurrencyAcquireRateComboBox.SelectedItem);
-                this.OfflineCustomRateGrid.Visibility = (acquireRate == CurrencyAcquireRateTypeEnum.Custom) ? Visibility.Visible : Visibility.Collapsed;
+                this.NewCommandButton.Visibility = Visibility.Collapsed;
+                this.CommandButtons.Visibility = Visibility.Visible;
+                this.CommandButtons.DataContext = this.rankChangedCommand;
+            }
+            else
+            {
+                this.NewCommandButton.Visibility = Visibility.Visible;
+                this.CommandButtons.Visibility = Visibility.Collapsed;
             }
         }
     }

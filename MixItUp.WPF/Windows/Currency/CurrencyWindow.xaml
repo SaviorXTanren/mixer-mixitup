@@ -17,7 +17,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
                   
         Icon="./../../Logo.ico"
-        Title="Customize " Height="600" Width="800">
+        Title="Customize Currency/Rank" Height="600" Width="800">
     <Windows:LoadingWindowBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -40,222 +40,219 @@
             <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="0" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,30">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="30" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <Button x:Name="HelpButton" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{MaterialDesign:PackIcon Help}" Click="HelpButton_Click" ToolTip="Help" />
 
-                    <Grid Grid.Row="0" HorizontalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox Grid.Column="0" x:Name="CurrencyNameTextBox" MaterialDesign:HintAssist.Hint="Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="CurrencyNameTextBox_TextChanged" />
-
-                        <ComboBox Grid.Column="2" x:Name="CurrencyAcquireRateComboBox" Width="150" MaterialDesign:HintAssist.Hint="Acquire Rate" SelectionChanged="CurrencyAcquireRateComboBox_SelectionChanged" />
-
-                        <Grid x:Name="CustomRateGrid" Grid.Column="3" Visibility="Collapsed">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox Grid.Column="1" x:Name="CurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                            <TextBlock Grid.Column="3" VerticalAlignment="Bottom">/</TextBlock>
-                            <TextBox Grid.Column="5" x:Name="CurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                        </Grid>
-
-                        <TextBox Grid.Column="5" x:Name="CurrencyMaxAmountTextBox" MaterialDesign:HintAssist.Hint="Max Amount" Width="120" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                    </Grid>
-                    
-                    <Grid Grid.Row="2" HorizontalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBox Grid.Column="0" x:Name="CurrencySubscriberBonusTextBox" MaterialDesign:HintAssist.Hint="Subscriber Bonus" Width="120" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <TextBox Grid.Column="2" x:Name="CurrencyOnFollowBonusTextBox" MaterialDesign:HintAssist.Hint="On Follow Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <TextBox Grid.Column="4" x:Name="CurrencyOnHostBonusTextBox" MaterialDesign:HintAssist.Hint="On Host Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                        <TextBox Grid.Column="6" x:Name="CurrencyOnSubscribeBonusTextBox" MaterialDesign:HintAssist.Hint="On Subscribe Bonus" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                    </Grid>
-
-                    <Grid Grid.Row="4" HorizontalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Grid.Column="0" Text="Offline Acquire Rate:" VerticalAlignment="Bottom"/>
-
-                        <ComboBox Grid.Column="2" x:Name="OfflineCurrencyAcquireRateComboBox" Width="150" MaterialDesign:HintAssist.Hint="Offline Acquire Rate" SelectionChanged="OfflineCurrencyAcquireRateComboBox_SelectionChanged" />
-
-                        <Grid x:Name="OfflineCustomRateGrid" Grid.Column="3" Visibility="Collapsed">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox Grid.Column="1" x:Name="OfflineCurrencyAmountTextBox" MaterialDesign:HintAssist.Hint="Amount" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                            <TextBlock Grid.Column="3" VerticalAlignment="Bottom">/</TextBlock>
-                            <TextBox Grid.Column="5" x:Name="OfflineCurrencyTimeTextBox" MaterialDesign:HintAssist.Hint="Minutes" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                        </Grid>
-                    </Grid>
-
-                    <Grid Grid.Row="6" HorizontalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <ComboBox Grid.Column="0" x:Name="ResetCurrencyComboBox" Width="150" MaterialDesign:HintAssist.Hint="Reset Frequency" />
-
-                        <Button Grid.Column="2" x:Name="ResetCurrencyManuallyButton" Click="ResetCurrencyManuallyButton_Click">Manual Reset</Button>
-                    </Grid>
-
-                    <Grid Grid.Row="8" HorizontalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="10" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <Grid Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="200" />
-                            </Grid.ColumnDefinitions>
-                            
-                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" TextDecorations="Underline">User Amount Special Identifier:</TextBlock>
-                            <TextBox Grid.Column="2" x:Name="UserAmountSpecialIdentifierTextBlock" IsReadOnly="True" />
-                        </Grid>
-
-                        <Grid Grid.Row="2" x:Name="RankSpecialIdentifierGrid" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="10" />
-                                <ColumnDefinition Width="200" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" TextDecorations="Underline">User Rank Name Special Identifier:</TextBlock>
-                            <TextBox Grid.Column="2" x:Name="UserRankSpecialIdentifierTextBlock" IsReadOnly="True" />
-
-                        </Grid>
-
-                    </Grid>
-
-                    <Grid x:Name="RankGrid" Grid.Row="10" Visibility="Collapsed">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-
-                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Visible" Height="200" Width="450">
-                            <DataGrid x:Name="RanksListView" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Rank Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
-                                    <DataGridTextColumn Header="Minimum Points" Binding="{Binding MinimumPoints}" IsReadOnly="True" Width="*" />
-                                    <DataGridTemplateColumn Width="65">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Button x:Name="DeleteRankButton" Click="DeleteRankButton_Click" Width="40" HorizontalAlignment="Center">
-                                                    <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                </Button>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </ScrollViewer>
-
-                        <Grid Grid.Row="2" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox Grid.Column="0" x:Name="RankNameTextBox" MaterialDesign:HintAssist.Hint="Rank Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                            <TextBox Grid.Column="2" x:Name="RankAmountTextBox" MaterialDesign:HintAssist.Hint="Minimum Points" Width="110" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                            <Button x:Name="AddRankButton" Grid.Column="4" Click="AddRankButton_Click">Add Rank</Button>
-
-                        </Grid>
-
-                        <Grid Grid.Row="4" HorizontalAlignment="Center">
-                            <GroupBox Header="User Rank Changed">
-                                <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
-                                    <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
-
-                                    <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" Visibility="Collapsed" />
-                                </Grid>
-                            </GroupBox>
-                        </Grid>
-                    </Grid>
-                </Grid>
-
-                <Grid Grid.Row="2" Margin="0,20,0,0" HorizontalAlignment="Center">
+                <Grid Grid.Row="0" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="40" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="ImportUserCurrencyFromFileButton" Grid.Column="0" Click="ImportUserCurrencyFromFileButton_Click">Import From File</Button>
-                    
-                    <Button x:Name="SaveButton" Grid.Column="2" Width="80" Click="SaveButton_Click">Save</Button>
+                    <TextBox x:Name="NameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Currency/Rank Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="250" />
 
-                    <Button x:Name="ExportUserCurrencyToFileButton" Grid.Column="4" Click="ExportUserCurrencyToFileButton_Click">Export To File</Button>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="0,4,0,0">Is Rank System:</TextBlock>
+                    <ToggleButton Grid.Column="4" x:Name="IsRankToggleButton" Margin="0,4,0,0" Checked="IsRankToggleButton_Checked" Unchecked="IsRankToggleButton_Checked" />
+
+                    <TextBox x:Name="MaxAmountTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Max Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="140" />
                 </Grid>
+
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Grid.Column="0" Header="Online Rate">
+                        <Grid Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox x:Name="OnlineRateComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Acquire Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" SelectionChanged="OnlineRateComboBox_SelectionChanged" />
+
+                            <TextBox x:Name="OnlineAmountRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
+
+                            <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">/</TextBlock>
+
+                            <TextBox x:Name="OnlineTimeRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Grid.Column="2" Header="Offline Rate">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox x:Name="OfflineRateComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Acquire Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="100" SelectionChanged="OfflineRateComboBox_SelectionChanged" />
+
+                            <TextBox x:Name="OfflineAmountRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
+
+                            <TextBlock Grid.Column="4" VerticalAlignment="Center" Margin="0,20,0,0">/</TextBlock>
+
+                            <TextBox x:Name="OfflineTimeRateTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="60" IsEnabled="False" />
+
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+                <Grid Grid.Row="4" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <GroupBox Header="Role Bonuses" Grid.Column="0">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Subscriber Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="Event Bonuses" Grid.Column="2">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox x:Name="OnFollowBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="On Follow" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+
+                            <TextBox x:Name="OnHostBonusTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="On Host" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+
+                            <TextBox x:Name="OnSubscribeBonusTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="On Subscribe" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+                <Grid x:Name="RankListGrid" Grid.Row="6" Visibility="Collapsed" Margin="0,0,0,20" HorizontalAlignment="Center">
+                    <GroupBox Header="User Ranks">
+                        <Grid Margin="10" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Visible" Height="200" Width="375">
+                                <DataGrid x:Name="RanksListView" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Center">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Rank Name" Binding="{Binding Name}" IsReadOnly="True" Width="190" />
+                                        <DataGridTextColumn Header="Min Points" Binding="{Binding MinimumPoints}" IsReadOnly="True" Width="90" />
+                                        <DataGridTemplateColumn Width="65">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button x:Name="DeleteRankButton" Click="DeleteRankButton_Click" Width="40" HorizontalAlignment="Center">
+                                                        <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                                    </Button>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </ScrollViewer>
+
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="20" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox Grid.Column="0" x:Name="RankNameTextBox" MaterialDesign:HintAssist.Hint="Rank Name" Width="150" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                                    <TextBox Grid.Column="2" x:Name="RankAmountTextBox" MaterialDesign:HintAssist.Hint="Min Points" Width="80" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                </Grid>
+
+                                <Button x:Name="AddRankButton" Grid.Row="2" Click="AddRankButton_Click" Width="130">Add New Rank</Button>
+
+                                <Grid Grid.Row="4" HorizontalAlignment="Center">
+                                    <GroupBox Header="On User Rank Changed">
+                                        <Grid Margin="10,0,10,0" HorizontalAlignment="Center">
+                                            <Button x:Name="NewCommandButton" HorizontalAlignment="Center" Click="NewCommandButton_Click">Add Command</Button>
+
+                                            <CommandControls:CommandButtonsControl x:Name="CommandButtons" HorizontalAlignment="Center" EditClicked="CommandButtons_EditClicked" DeleteClicked="CommandButtons_DeleteClicked" Visibility="Collapsed" />
+                                        </Grid>
+                                    </GroupBox>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+                <Grid Grid.Row="8" HorizontalAlignment="Center">
+                    <GroupBox Header="Data" Grid.Column="2">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="20" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Automatic Reset" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+
+                            <Button x:Name="ManualResetButton" Grid.Column="2" Click="ManualResetButton_Click">Manual Reset</Button>
+
+                            <Button x:Name="ImportFromFileButton" Grid.Column="4" Click="ImportFromFileButton_Click" IsEnabled="False">Import From File</Button>
+
+                            <Button x:Name="ExportToFileButton" Grid.Column="6" Click="ExportToFileButton_Click">Export To File</Button>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+
+                <Button x:Name="SaveButton" Grid.Row="10" HorizontalAlignment="Center" Click="SaveButton_Click" Width="80">Save</Button>
             </Grid>
         </ScrollViewer>
 

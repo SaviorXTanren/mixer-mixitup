@@ -21,6 +21,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -28,8 +30,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Currencies</TextBlock>
@@ -82,10 +82,6 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
-            
-            <Grid Grid.Row="4" HorizontalAlignment="Center">
-                <Button x:Name="AddNewCurrencyButton" Click="AddNewCurrencyButton_Click" ToolTip="Add Currency">Add Currency</Button>
-            </Grid>
         </Grid>
 
         <Grid Grid.Row="2">
@@ -93,8 +89,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Rank Systems</TextBlock>
@@ -163,10 +157,10 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
+        </Grid>
 
-            <Grid Grid.Row="4" HorizontalAlignment="Center">
-                <Button x:Name="AddNewRankButton" Click="AddNewRankButton_Click" ToolTip="Add Rank System">Add Rank System</Button>
-            </Grid>
+        <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <Button x:Name="AddNewCurrencyRankButton" Click="AddNewCurrencyRankButton_Click" ToolTip="Add Currency/Rank System">Add Currency/Rank</Button>
         </Grid>
     </Grid>
 </local:MainControlBase>

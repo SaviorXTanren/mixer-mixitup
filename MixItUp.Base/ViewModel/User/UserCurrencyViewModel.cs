@@ -77,16 +77,22 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsActive { get { return this.AcquireAmount != 0 && this.AcquireInterval != 0; } }
 
         [JsonIgnore]
-        public bool IsMinutesInterval { get { return this.AcquireAmount == 1 && this.AcquireInterval == 1; } }
+        public bool IsOnlineIntervalMinutes { get { return this.AcquireAmount == 1 && this.AcquireInterval == 1; } }
 
         [JsonIgnore]
-        public bool IsHoursInterval { get { return this.AcquireAmount == 1 && this.AcquireInterval == 60; } }
+        public bool IsOnlineIntervalHours { get { return this.AcquireAmount == 1 && this.AcquireInterval == 60; } }
 
         [JsonIgnore]
-        public bool IsMinutesOfflineInterval { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 1; } }
+        public bool IsOnlineIntervalDisabled { get { return this.AcquireAmount == 0 && this.AcquireInterval == 0; } }
 
         [JsonIgnore]
-        public bool IsHoursOfflineInterval { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 60; } }
+        public bool IsOfflineIntervalMinutes { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 1; } }
+
+        [JsonIgnore]
+        public bool IsOfflineIntervalHours { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 60; } }
+
+        [JsonIgnore]
+        public bool IsOfflineIntervalDisabled { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 1; } }
 
         [JsonIgnore]
         public string UserAmountSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
