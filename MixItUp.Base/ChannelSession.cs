@@ -458,6 +458,14 @@ namespace MixItUp.Base
                         }
                     }
 
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    {
+                        if (currency.ShouldBeReset())
+                        {
+                            currency.Reset();
+                        }
+                    }
+
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 

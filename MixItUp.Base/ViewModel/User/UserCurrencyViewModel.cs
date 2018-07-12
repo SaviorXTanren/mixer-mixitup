@@ -105,7 +105,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool ShouldBeReset()
         {
-            if (!this.ResetInterval.Equals("Never"))
+            if (this.ResetInterval != CurrencyResetRateEnum.Never)
             {
                 DateTimeOffset newResetDate = DateTimeOffset.MinValue;
 
