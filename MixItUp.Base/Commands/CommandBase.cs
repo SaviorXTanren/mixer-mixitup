@@ -120,7 +120,7 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public string CommandsString { get { return string.Join(" ", this.Commands); } }
 
-        public virtual bool ContainsCommand(string command) { return this.Commands.Count() > 0 && this.Commands.Contains(command); }
+        public virtual bool ContainsCommand(string command) { return this.Commands.Count() > 0 && this.Commands.Contains(command, StringComparer.InvariantCultureIgnoreCase); }
 
         public async Task Perform() { await this.Perform(null); }
 

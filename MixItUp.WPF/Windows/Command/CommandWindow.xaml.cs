@@ -64,7 +64,7 @@ namespace MixItUp.WPF.Windows.Command
                         }
                         else if (command is InteractiveTextBoxCommand)
                         {
-                            InteractiveButtonCommandDetailsControl interactiveCommandDetails = (InteractiveButtonCommandDetailsControl)this.commandDetailsControl;
+                            InteractiveTextBoxCommandDetailsControl interactiveCommandDetails = (InteractiveTextBoxCommandDetailsControl)this.commandDetailsControl;
                             this.ShowCommandEditor(new BasicInteractiveTextBoxCommandEditorControl(this, interactiveCommandDetails.Game, interactiveCommandDetails.Version, (InteractiveTextBoxCommand)command));
                         }
                         else if (command is EventCommand)

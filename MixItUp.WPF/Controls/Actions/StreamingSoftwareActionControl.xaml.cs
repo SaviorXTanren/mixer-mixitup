@@ -42,6 +42,10 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     // Do nothing...
                 }
+                else if (this.action.ActionType == StreamingActionTypeEnum.SaveReplayBuffer)
+                {
+                    // Do nothing...
+                }
                 else
                 {
                     this.SourceNameTextBox.Text = this.action.SourceName;
@@ -83,6 +87,10 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (type == StreamingActionTypeEnum.StartStopStream)
                 {
                     return StreamingSoftwareAction.CreateStartStopStreamAction(software);
+                }
+                else if (type == StreamingActionTypeEnum.SaveReplayBuffer)
+                {
+                    return StreamingSoftwareAction.CreateSaveReplayBufferAction(software);
                 }
                 else if (!string.IsNullOrEmpty(this.SourceNameTextBox.Text))
                 {
@@ -148,7 +156,7 @@ namespace MixItUp.WPF.Controls.Actions
             }
         }
 
-        private void StreamingActionTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void StreamingActionTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.FeatureNotSupportedGrid.Visibility = Visibility.Collapsed;
             this.SceneGrid.Visibility = Visibility.Collapsed;
@@ -156,6 +164,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.SourceTextGrid.Visibility = Visibility.Collapsed;
             this.SourceWebBrowserGrid.Visibility = Visibility.Collapsed;
             this.SourceDimensionsGrid.Visibility = Visibility.Collapsed;
+            this.ReplayBufferNotEnabledInSettingsGrid.Visibility = Visibility.Collapsed;
 
             if (this.StreamingActionTypeComboBox.SelectedIndex >= 0)
             {
@@ -175,6 +184,25 @@ namespace MixItUp.WPF.Controls.Actions
                     else
                     {
                         // Do nothing...
+                    }
+                }
+                else if (type == StreamingActionTypeEnum.SaveReplayBuffer)
+                {
+                    if (software != StreamingSoftwareTypeEnum.OBSStudio)
+                    {
+                        this.FeatureNotSupportedGrid.Visibility = Visibility.Visible;
+                        return;
+                    }
+                    else
+                    {
+                        if (ChannelSession.Services.OBSWebsocket != null)
+                        {
+                            if (!(await ChannelSession.Services.OBSWebsocket.StartReplayBuffer()))
+                            {
+                                this.ReplayBufferNotEnabledInSettingsGrid.Visibility = Visibility.Visible;
+                                return;
+                            }
+                        }
                     }
                 }
                 else

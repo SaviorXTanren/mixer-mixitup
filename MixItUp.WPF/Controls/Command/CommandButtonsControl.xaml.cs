@@ -33,6 +33,12 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
 
             this.Loaded += CommandButtonsControl_Loaded;
+            this.DataContextChanged += CommandButtonsControl_DataContextChanged;
+        }
+
+        private void CommandButtonsControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            RefreshUI();
         }
 
         public bool RemoveEditingButton
@@ -84,6 +90,11 @@ namespace MixItUp.WPF.Controls.Command
         }
 
         private void CommandButtonsControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            RefreshUI();
+        }
+
+        private void RefreshUI()
         {
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
             if (command != null)

@@ -92,7 +92,7 @@ namespace MixItUp.WPF.Controls.Command
             {
                 if (command.IsEnabled && this.GetExistingCommand() != command)
                 {
-                    if (commandStrings.Any(c => command.Commands.Contains(c)))
+                    if (commandStrings.Any(c => command.Commands.Contains(c, StringComparer.InvariantCultureIgnoreCase)))
                     {
                         await MessageBoxHelper.ShowMessageDialog("There already exists a command that uses one of the chat triggers you have specified");
                         return false;

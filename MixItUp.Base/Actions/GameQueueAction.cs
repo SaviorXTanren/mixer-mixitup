@@ -26,7 +26,9 @@ namespace MixItUp.Base.Actions
         [Name("Remove Random User in Queue")]
         RemoveRandom,
         [Name("Enable/Disable Game Queue")]
-        EnableDisableQueue
+        EnableDisableQueue,
+        [Name("Clear the Game Queue")]
+        ClearQueue,
     }
 
     [DataContract]
@@ -158,10 +160,14 @@ namespace MixItUp.Base.Actions
 
                             if (queueUser != null)
                             {
-                                await ChannelSession.Chat.SendMessage(string.Format("it's time to play @{0}! Listen carefully for instructions on how to join @{1}", queueUser.UserName,
+                                await ChannelSession.Chat.SendMessage(string.Format("It's time to play @{0}! Listen carefully for instructions on how to join @{1}", queueUser.UserName,
                                     ChannelSession.Channel.user.username));
                             }
                         }
+                    }
+                    else if (this.GameQueueType == GameQueueActionType.ClearQueue)
+                    {
+                        ChannelSession.GameQueue.Clear();
                     }
                 }
 

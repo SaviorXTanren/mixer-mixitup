@@ -47,6 +47,10 @@
             <TextBlock Foreground="Red" HorizontalAlignment="Center">This feature is not currently supported for this Streaming Software</TextBlock>
         </Grid>
 
+        <Grid x:Name="ReplayBufferNotEnabledInSettingsGrid" Grid.Row="2" Visibility="Collapsed">
+            <TextBlock Foreground="Red" HorizontalAlignment="Center">Replay buffer has not been enabled. Open OBS Settings -> Output and enable the replay buffer</TextBlock>
+        </Grid>
+
         <Grid x:Name="SourceGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
