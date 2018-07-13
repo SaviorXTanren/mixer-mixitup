@@ -21,13 +21,13 @@ namespace MixItUp.Base.Actions
         QueueStatus,
         [Name("User Leave Queue")]
         LeaveQueue,
-        [Name("Remove User in Front of Queue")]
+        [Name("Remove User at Front of Queue")]
         RemoveFirst,
         [Name("Remove Random User in Queue")]
         RemoveRandom,
-        [Name("Enable/Disable Game Queue")]
+        [Name("Enable/Disable Queue")]
         EnableDisableQueue,
-        [Name("Clear the Game Queue")]
+        [Name("Clear Queue")]
         ClearQueue,
     }
 
