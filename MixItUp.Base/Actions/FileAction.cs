@@ -117,6 +117,8 @@ namespace MixItUp.Base.Actions
                             return;
                         }
                     }
+
+                    data = await this.ReplaceStringWithSpecialModifiers(data, user, arguments);
                     SpecialIdentifierStringBuilder.AddCustomSpecialIdentifier(this.TransferText, data);
                 }
             }
