@@ -636,6 +636,8 @@ namespace MixItUp.Base.Commands
                 if (await this.PerformRequirementChecks(user))
                 {
                     await this.ReportStatus(user, arguments);
+
+                    this.Requirements.UpdateCooldown(user);
                 }
             }
             else if (await this.PerformUsageChecks(user, arguments))
@@ -1532,50 +1534,115 @@ namespace MixItUp.Base.Commands
     public class VolcanoGameCommand : LongRunningGameCommand
     {
         [DataMember]
-        public CustomCommand Stage1Command { get; set; }
+        public CustomCommand Stage1DepositCommand { get; set; }
         [DataMember]
-        public CustomCommand Stage1Status { get; set; }
+        public CustomCommand Stage1StatusCommand { get; set; }
 
         [DataMember]
         public int Stage2MinimumAmount { get; set; }
         [DataMember]
-        public CustomCommand Stage2Command { get; set; }
+        public CustomCommand Stage2DepositCommand { get; set; }
         [DataMember]
-        public CustomCommand Stage2Status { get; set; }
+        public CustomCommand Stage2StatusCommand { get; set; }
 
         [DataMember]
         public int Stage3MinimumAmount { get; set; }
         [DataMember]
-        public CustomCommand Stage3Command { get; set; }
+        public CustomCommand Stage3DepositCommand { get; set; }
         [DataMember]
-        public CustomCommand Stage3Status { get; set; }
+        public CustomCommand Stage3StatusCommand { get; set; }
 
         [DataMember]
         public int PayoutProbability { get; set; }
         [DataMember]
+        public double PayoutPercentageMinimum { get; set; }
+        [DataMember]
+        public double PayoutPercentageMaximum { get; set; }
+        [DataMember]
         public CustomCommand PayoutCommand { get; set; }
+
+        [DataMember]
+        public string CollectArgument { get; set; }
+        [DataMember]
+        public int CollectTimeLimit { get; set; }
+        [DataMember]
+        public double CollectPayoutPercentageMinimum { get; set; }
+        [DataMember]
+        public double CollectPayoutPercentageMaximum { get; set; }
+        [DataMember]
+        public CustomCommand CollectCommand { get; set; }
+
+        [JsonIgnore]
+        private bool collectActive = false;
+        [JsonIgnore]
+        private HashSet<UserViewModel> collectUsers = new HashSet<UserViewModel>();
 
         public VolcanoGameCommand() { }
 
-        public VolcanoGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, string statusArgument)
+        public VolcanoGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, string statusArgument, CustomCommand stage1DepositCommand, CustomCommand stage1StatusCommand,
+            int stage2MinimumAmount, CustomCommand stage2DepositCommand, CustomCommand stage2StatusCommand, int stage3MinimumAmount, CustomCommand stage3DepositCommand, CustomCommand stage3StatusCommand,
+            int payoutProbability, double payoutPercentageMinimum, double payoutPercentageMaximum, CustomCommand payoutCommand, string collectArgument, int collectTimeLimit,
+            double collectPayoutPercentageMinimum, double collectPayoutPercentageMaximum, CustomCommand collectCommand)
             : base(name, commands, requirements, statusArgument)
         {
+            this.Stage1DepositCommand = stage1DepositCommand;
+            this.Stage1StatusCommand = stage1StatusCommand;
+            this.Stage2MinimumAmount = stage2MinimumAmount;
+            this.Stage2DepositCommand = stage2DepositCommand;
+            this.Stage2StatusCommand = stage2StatusCommand;
+            this.Stage3MinimumAmount = stage3MinimumAmount;
+            this.Stage3DepositCommand = stage3DepositCommand;
+            this.Stage3StatusCommand = stage3StatusCommand;
+            this.PayoutProbability = payoutProbability;
+            this.PayoutPercentageMinimum = payoutPercentageMinimum;
+            this.PayoutPercentageMaximum = payoutPercentageMaximum;
+            this.PayoutCommand = payoutCommand;
+            this.CollectArgument = collectArgument;
+            this.CollectTimeLimit = collectTimeLimit;
+            this.CollectPayoutPercentageMinimum = collectPayoutPercentageMinimum;
+            this.CollectPayoutPercentageMaximum = collectPayoutPercentageMaximum;
+            this.CollectCommand = collectCommand;
+        }
 
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (this.collectActive)
+            {
+                if (arguments.Count() == 1 && arguments.ElementAt(0).Equals(this.CollectArgument))
+                {
+                    if (this.collectUsers.Contains(user))
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "You've already collected your share");
+                        return;
+                    }
+
+                    this.collectUsers.Add(user);
+                    await this.PerformPayout(user, arguments, 0, this.CollectPayoutPercentageMinimum, this.CollectPayoutPercentageMaximum, this.CollectCommand);
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, "Collecting is currently underway, please wait until it has completed");
+                }
+            }
+            else
+            {
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
         }
 
         protected override async Task ReportStatus(UserViewModel user, IEnumerable<string> arguments)
         {
             if (this.TotalAmount >= this.Stage3MinimumAmount)
             {
-                await this.PerformCommand(this.Stage3Status, user, arguments, 0, 0);
+                await this.PerformCommand(this.Stage3StatusCommand, user, arguments, 0, 0);
             }
             else if (this.TotalAmount >= this.Stage2MinimumAmount)
             {
-                await this.PerformCommand(this.Stage2Status, user, arguments, 0, 0);
+                await this.PerformCommand(this.Stage2StatusCommand, user, arguments, 0, 0);
             }
             else
             {
-                await this.PerformCommand(this.Stage1Status, user, arguments, 0, 0);
+                await this.PerformCommand(this.Stage1StatusCommand, user, arguments, 0, 0);
             }
         }
 
@@ -1592,36 +1659,57 @@ namespace MixItUp.Base.Commands
 
             if (this.TotalAmount >= this.Stage3MinimumAmount)
             {
-                await this.PerformCommand(this.Stage3Command, user, arguments, betAmount, 0);
+                await this.PerformCommand(this.Stage3DepositCommand, user, arguments, betAmount, 0);
             }
             else if (this.TotalAmount >= this.Stage2MinimumAmount)
             {
-                await this.PerformCommand(this.Stage2Command, user, arguments, betAmount, 0);
+                await this.PerformCommand(this.Stage2DepositCommand, user, arguments, betAmount, 0);
             }
             else
             {
-                await this.PerformCommand(this.Stage1Command, user, arguments, betAmount, 0);
+                await this.PerformCommand(this.Stage1DepositCommand, user, arguments, betAmount, 0);
             }
             return false;
         }
 
         protected override async Task PerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
         {
-            //double amount = Convert.ToDouble(this.TotalAmount);
-            //int minimum = Convert.ToInt32(amount * this.PayoutPercentageMinimum);
-            //int maximum = Convert.ToInt32(amount * this.PayoutPercentageMaximum);
+            this.totalPayout = 0;
 
-            //this.totalPayout = this.GenerateRandomNumber(minimum, maximum + 1);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                this.collectActive = true;
 
-            //UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
-            //if (currency == null)
-            //{
-            //    return;
-            //}
-            //user.Data.AddCurrencyAmount(currency, this.totalPayout);
-            //this.TotalAmount -= this.totalPayout;
+                await Task.Delay(this.CollectTimeLimit * 1000);
 
-            await this.PerformCommand(this.PayoutCommand, user, arguments, betAmount, this.totalPayout);
+                this.collectActive = false;
+
+                this.TotalAmount = 0;
+                this.collectUsers.Clear();
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            await this.PerformPayout(user, arguments, betAmount, this.PayoutPercentageMinimum, this.PayoutPercentageMaximum, this.PayoutCommand);
+        }
+
+        private async Task PerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount, double minimum, double maximum, CustomCommand command)
+        {
+            double amount = Convert.ToDouble(this.TotalAmount);
+            int minAmount = Convert.ToInt32(amount * minimum);
+            int maxAmount = Convert.ToInt32(amount * maximum);
+
+            int payout = this.GenerateRandomNumber(minAmount, maxAmount + 1);
+            this.totalPayout += payout;
+
+            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            if (currency == null)
+            {
+                return;
+            }
+            user.Data.AddCurrencyAmount(currency, payout);
+
+            await this.PerformCommand(command, user, arguments, betAmount, payout);
         }
     }
 }

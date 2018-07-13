@@ -37,13 +37,13 @@
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
         <Grid Margin="10" x:Name="GameTypeSelectionGrid" Visibility="Collapsed" Grid.Row="0">
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid HorizontalAlignment="Center" Margin="0,40">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="40" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="40" />
-                    <RowDefinition Height="200" />
+                    <RowDefinition Height="300" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" HorizontalAlignment="Center">Select the Game Type you would like to create:</TextBlock>

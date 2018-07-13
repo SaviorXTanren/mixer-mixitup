@@ -56,6 +56,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.command is RouletteGameCommand) { this.SetGameEditorControl(new RouletteGameEditorControl((RouletteGameCommand)this.command)); }
                 if (this.command is HitmanGameCommand) { this.SetGameEditorControl(new HitmanGameEditorControl((HitmanGameCommand)this.command)); }
                 if (this.command is CoinPusherGameCommand) { this.SetGameEditorControl(new CoinPusherGameEditorControl((CoinPusherGameCommand)this.command)); }
+                if (this.command is VolcanoGameCommand) { this.SetGameEditorControl(new VolcanoGameEditorControl((VolcanoGameCommand)this.command)); }
             }
             else
             {
@@ -93,8 +94,12 @@ namespace MixItUp.WPF.Windows.Command
                 this.gameListings.Add(new GameTypeListing("Hitman", "The Hitman game allows a user to start a a winner-takes-all bet amongst all entered users. After the initial time limit, a hitman with a specific name will appear in chat. If a user types the hitman's name in chat within the time limit, they win the entire pot. Otherwise, everyone loses their money."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !hitman 100", new HitmanGameEditorControl()));
 
-                this.gameListings.Add(new GameTypeListing("Coin Pusher", "The Coin Pusher game allow a user to deposit a specific amount of currency into a machine with the chance for a large payout. A minimum amount of currency must be inserted into the machine to allow for a payout and a minimum & maximum payout percentage can be specified when a payout occurs."
+                this.gameListings.Add(new GameTypeListing("Coin Pusher", "The Coin Pusher game allows a user to deposit a specific amount of currency into a machine with the chance for a large payout. A minimum amount of currency must be inserted into the machine to allow for a payout and a minimum & maximum payout percentage can be specified when a payout occurs."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !pusher 100", new CoinPusherGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Volcano", "The Volcano game allows a user to deposit a specific amount of currency into a volcano with the chance for a personal payout and a payout for all users in chat. The volcano goes through 3 stages as more and more currency is deposited into it and a different set of Deposit & Status commands are used depending on what stage the Volcano is at." + Environment.NewLine + Environment.NewLine +
+                    "Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized payout for them. After the eruption, all users have a chance to collect erupted currency during the collection time limit. After the collection is done, the volcano contents resets back to 0."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !volcano 100" + Environment.NewLine + Environment.NewLine + "Game Designed By: https://mixer.com/InsertCoinTheater", new VolcanoGameEditorControl()));
             }
 
             return Task.FromResult(0);
