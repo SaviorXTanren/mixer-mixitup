@@ -157,31 +157,39 @@ namespace MixItUp.OBS
             return Task.FromResult(0);
         }
 
-        public Task<bool> StartReplayBuffer()
+        public async Task<bool> StartReplayBuffer()
         {
             try
             {
-                this.OBSWebsocket.StartReplayBuffer();
+                CancellationTokenSource cancellationToken = new CancellationTokenSource();
+                Task t = Task.Run(() => { this.OBSWebsocket.StartReplayBuffer(); }, cancellationToken.Token);
+                await Task.Delay(2000);
+                if (!t.IsCompleted)
+                {
+                    cancellationToken.Cancel();
+                    return false;
+                }
             }
             catch (Exception ex)
             {
                 if (!ex.Message.Equals("replay buffer already active"))
                 {
                     Logger.Log(ex);
-                    return Task.FromResult(false);
+                    return false;
                 }
             }
-            return Task.FromResult(true);
+            return true;
         }
 
-        public Task SaveReplayBuffer()
+        public async Task SaveReplayBuffer()
         {
-            try
+            CancellationTokenSource cancellationToken = new CancellationTokenSource();
+            Task t = Task.Run(() => { this.OBSWebsocket.StartReplayBuffer(); }, cancellationToken.Token);
+            await Task.Delay(2000);
+            if (!t.IsCompleted)
             {
-                this.OBSWebsocket.SaveReplayBuffer();
+                cancellationToken.Cancel();
             }
-            catch (Exception ex) { Logger.Log(ex); }
-            return Task.FromResult(0);
         }
 
         private async void OBSWebsocket_Disconnected(object sender, EventArgs e)
