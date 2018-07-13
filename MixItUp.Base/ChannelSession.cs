@@ -126,11 +126,7 @@ namespace MixItUp.Base
         {
             get
             {
-                List<PermissionsCommandBase> commands = new List<PermissionsCommandBase>();
-                commands.AddRange(ChannelSession.PreMadeChatCommands);
-                commands.AddRange(ChannelSession.Settings.ChatCommands);
-                commands.AddRange(ChannelSession.Settings.GameCommands);
-                return commands.Where(c => c.IsEnabled);
+                return ChannelSession.AllChatCommands.Where(c => c.IsEnabled);
             }
         }
 
@@ -150,14 +146,22 @@ namespace MixItUp.Base
         {
             get
             {
+                return ChannelSession.AllCommands.Where(c => c.IsEnabled);
+            }
+        }
+
+        public static IEnumerable<CommandBase> AllCommands
+        {
+            get
+            {
                 List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(ChannelSession.AllEnabledChatCommands);
+                commands.AddRange(ChannelSession.AllChatCommands);
                 commands.AddRange(ChannelSession.Settings.EventCommands);
                 commands.AddRange(ChannelSession.Settings.InteractiveCommands);
                 commands.AddRange(ChannelSession.Settings.TimerCommands);
                 commands.AddRange(ChannelSession.Settings.ActionGroupCommands);
                 commands.AddRange(ChannelSession.Settings.RemoteCommands);
-                return commands.Where(c => c.IsEnabled);
+                return commands;
             }
         }
 

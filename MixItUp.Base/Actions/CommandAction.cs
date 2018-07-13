@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -30,18 +29,18 @@ namespace MixItUp.Base.Actions
         public CommandActionTypeEnum CommandActionType { get; set; }
 
         [DataMember]
-        public string CommandName { get; set; }
+        public Guid CommandID { get; set; }
 
         [DataMember]
         public string CommandArguments { get; set; }
 
         public CommandAction() : base(ActionTypeEnum.Command) { }
 
-        public CommandAction(CommandActionTypeEnum commandActionType, PermissionsCommandBase command, string commandArguments)
+        public CommandAction(CommandActionTypeEnum commandActionType, CommandBase command, string commandArguments)
             : this()
         {
             this.CommandActionType = commandActionType;
-            this.CommandName = command.Name;
+            this.CommandID = command.ID;
             this.CommandArguments = commandArguments;
         }
 
@@ -49,7 +48,7 @@ namespace MixItUp.Base.Actions
         {
             if (this.CommandActionType == CommandActionTypeEnum.RunCommand)
             {
-                PermissionsCommandBase command = ChannelSession.AllEnabledChatCommands.FirstOrDefault(c => c.Name.Equals(this.CommandName));
+                CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
                 if (command != null)
                 {
                     IEnumerable<string> newArguments = null;
@@ -64,7 +63,7 @@ namespace MixItUp.Base.Actions
             }
             else if (this.CommandActionType == CommandActionTypeEnum.EnableDisableCommand)
             {
-                PermissionsCommandBase command = ChannelSession.AllChatCommands.FirstOrDefault(c => c.Name.Equals(this.CommandName));
+                CommandBase command = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
                 if (command != null)
                 {
                     command.IsEnabled = !command.IsEnabled;

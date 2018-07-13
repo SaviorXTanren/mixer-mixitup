@@ -17,9 +17,19 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ComboBox x:Name="TypeComboBox" Grid.Row="0" SelectionChanged="CommandTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+        <ComboBox x:Name="TypeComboBox" Grid.Row="0" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
 
-        <ComboBox x:Name="CommandNameComboBox" Grid.Row="2" MaterialDesign:HintAssist.Hint="Command" DisplayMemberPath="Name" />
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="CommandTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Command Type" SelectionChanged="CommandTypeComboBox_SelectionChanged" />
+
+            <ComboBox x:Name="CommandNameComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Command" DisplayMemberPath="Name" />
+        </Grid>
 
         <TextBox Grid.Row="4" x:Name="CommandArgumentsTextBox" MaterialDesign:HintAssist.Hint="(Optional) Command Arguments" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Visibility="Collapsed" />
     </Grid>
