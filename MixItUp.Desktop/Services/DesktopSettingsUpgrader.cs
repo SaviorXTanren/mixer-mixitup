@@ -54,6 +54,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version18Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version19Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version20Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version21Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -241,6 +242,19 @@ namespace MixItUp.Desktop.Services
                 settings.ActionGroupCommands.RemoveAll(c => c == null);
                 settings.GameCommands.RemoveAll(c => c == null);
                 settings.RemoteCommands.RemoveAll(c => c == null);
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version21Upgrade(int version, string filePath)
+        {
+            if (version < 21)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.GameCommands.Clear();
 
                 await ChannelSession.Services.Settings.Save(settings);
             }

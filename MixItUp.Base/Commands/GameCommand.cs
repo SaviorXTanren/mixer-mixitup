@@ -11,6 +11,38 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Commands
 {
+    #region OLD GAME CLASSES
+
+    [DataContract]
+    internal class GameOutcomeGroup { }
+
+    [DataContract]
+    internal class GameOutcomeProbability { }
+
+    [DataContract]
+    internal class UserCharityGameCommand : GameCommandBase { }
+
+    [DataContract]
+    internal class OnlyOneWinnerGameCommand : GameCommandBase { }
+
+    [DataContract]
+    internal class IndividualProbabilityGameCommand : GameCommandBase { }
+
+    [DataContract]
+    internal class SinglePlayerGameCommand : GameCommandBase { }
+
+    [DataContract]
+    internal class SpinWheelGameCommand : GameCommandBase { }
+
+    [DataContract]
+    internal class CharityGameCommand : GameCommandBase { }
+
+    [DataContract]
+    internal class GiveGameCommand : GameCommandBase { }
+
+    #endregion OLD GAME CLASSES
+
+
     #region Base Game Classes
 
     [DataContract]
