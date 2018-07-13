@@ -58,9 +58,9 @@ namespace MixItUp.WPF.Windows.Currency
             this.currency = currency;
             this.rankChangedCommand = this.currency.RankChangedCommand;
 
-            this.ImportFromFileButton.IsEnabled = true;
-
             InitializeComponent();
+
+            this.ImportFromFileButton.IsEnabled = true;
 
             this.Initialize(this.StatusBar);
         }

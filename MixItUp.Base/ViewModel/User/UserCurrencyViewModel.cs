@@ -92,7 +92,7 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsOfflineIntervalHours { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 60; } }
 
         [JsonIgnore]
-        public bool IsOfflineIntervalDisabled { get { return this.OfflineAcquireAmount == 1 && this.OfflineAcquireInterval == 1; } }
+        public bool IsOfflineIntervalDisabled { get { return this.OfflineAcquireAmount == 0 && this.OfflineAcquireInterval == 0; } }
 
         [JsonIgnore]
         public string UserAmountSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
