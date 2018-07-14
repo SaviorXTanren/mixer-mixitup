@@ -16,6 +16,7 @@ namespace MixItUp.Base.Model.User
         Tiltify,
         [Name("Extra Life")]
         ExtraLife,
+        TipeeeStream,
     }
 
     [DataContract]

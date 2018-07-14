@@ -29,6 +29,8 @@ namespace MixItUp.Base.Commands
         TiltifyDonation = 12,
         [Name("Extra Life Donation")]
         ExtraLifeDonation = 13,
+        [Name("Tipeee Stream Donation")]
+        TipeeeStreamDonation = 14,
 
         [Name("User First Joined")]
         MixerUserFirstJoin = 30,

@@ -673,6 +673,9 @@
     <Compile Include="Controls\Services\TiltifyServiceControl.xaml.cs">
       <DependentUpon>TiltifyServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\TipeeeStreamServiceControl.xaml.cs">
+      <DependentUpon>TipeeeStreamServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\TwitterServiceControl.xaml.cs">
       <DependentUpon>TwitterServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1382,6 +1385,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\TiltifyServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\TipeeeStreamServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

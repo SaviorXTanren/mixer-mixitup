@@ -33,6 +33,7 @@ namespace MixItUp.Base.Services
         public ITelemetryService Telemetry { get; protected set; }
         public IStreamDeckService StreamDeck { get; protected set; }
         public IScoutService Scout { get; protected set; }
+        public ITipeeeStreamService TipeeeStream { get; protected set; }
 
         public abstract Task Close();
 
@@ -81,5 +82,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeStreamDeck();
         public abstract Task DisconnectStreamDeck();
+
+        public abstract Task<bool> InitializeTipeeeStream(string authorizationCode = null);
+        public abstract Task DisconnectTipeeeStream();
     }
 }

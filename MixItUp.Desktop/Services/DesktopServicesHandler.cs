@@ -415,6 +415,35 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeTipeeeStream(string authorizationCode = null)
+        {
+            this.TipeeeStream = (ChannelSession.Settings.TipeeeStreamOAuthToken != null) ? new TipeeeStreamService(ChannelSession.Settings.TipeeeStreamOAuthToken) : new TipeeeStreamService(authorizationCode);
+            if (await this.TipeeeStream.Connect())
+            {
+                this.TipeeeStream.OnWebSocketConnectedOccurred += TipeeeStream_OnWebSocketConnectedOccurred;
+                this.TipeeeStream.OnWebSocketDisconnectedOccurred += TipeeeStream_OnWebSocketDisconnectedOccurred;
+                return true;
+            }
+            else
+            {
+                await this.DisconnectTipeeeStream();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectTipeeeStream()
+        {
+            if (this.TipeeeStream != null)
+            {
+                this.TipeeeStream.OnWebSocketConnectedOccurred -= TipeeeStream_OnWebSocketConnectedOccurred;
+                this.TipeeeStream.OnWebSocketDisconnectedOccurred -= TipeeeStream_OnWebSocketDisconnectedOccurred;
+
+                await this.TipeeeStream.Disconnect();
+                this.TipeeeStream = null;
+                ChannelSession.Settings.TipeeeStreamOAuthToken = null;
+            }
+        }
+
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");
@@ -463,6 +492,16 @@ namespace MixItUp.Desktop.Services
         private void GameWisp_OnWebSocketDisconnectedOccurred(object sender, EventArgs e)
         {
             ChannelSession.DisconnectionOccurred("GameWisp");
+        }
+
+        private void TipeeeStream_OnWebSocketConnectedOccurred(object sender, EventArgs e)
+        {
+            ChannelSession.ReconnectionOccurred("Tipeee Stream");
+        }
+
+        private void TipeeeStream_OnWebSocketDisconnectedOccurred(object sender, EventArgs e)
+        {
+            ChannelSession.DisconnectionOccurred("Tipeee Stream");
         }
     }
 }

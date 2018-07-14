@@ -55,7 +55,7 @@ namespace MixItUp.Desktop.Services
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
                     payload["client_id"] = TiltifyService.ClientID;
-                    payload["client_secret"] = "3fd28348789f22af38bc140ea094bad57863cdc28794ed8ffb28ec6c6c3f6598";
+                    payload["client_secret"] = ChannelSession.SecretManager.GetSecret("TiltifySecret");
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TiltifyService.ListeningURL;
 
