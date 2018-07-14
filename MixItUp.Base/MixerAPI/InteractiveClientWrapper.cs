@@ -339,7 +339,10 @@ namespace MixItUp.Base.MixerAPI
             InteractiveGameVersionModel gameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(this.Game.versions.OrderByDescending(v => v.createdAt.GetValueOrDefault()).First());
             foreach (InteractiveSceneModel scene in gameVersion.controls.scenes)
             {
-                await this.UpdateControls(new InteractiveConnectedSceneModel() { sceneID = scene.sceneID }, scene.allControls);
+                if (scene.allControls.Count() > 0)
+                {
+                    await this.UpdateControls(new InteractiveConnectedSceneModel() { sceneID = scene.sceneID }, scene.allControls);
+                }
             }
 
             // Initialize Scenes
