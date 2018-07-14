@@ -26,7 +26,7 @@ namespace MixItUp.Base.Actions
         RemoveFirst,
         [Name("Remove Random User in Queue")]
         RemoveRandom,
-        [Name("Remove First User Type in Queue")]
+        [Name("Remove First User of Type in Queue")]
         RemoveFirstType,
         [Name("Enable/Disable Queue")]
         EnableDisableQueue,
