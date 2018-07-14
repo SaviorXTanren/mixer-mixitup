@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.User
 {
@@ -103,6 +104,40 @@ namespace MixItUp.Base.ViewModel.User
         [JsonIgnore]
         public string Top10SpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader, this.SpecialIdentifier); } }
 
+        public UserRankViewModel GetRankForPoints(int points)
+        {
+            UserRankViewModel rank = UserCurrencyViewModel.NoRank;
+            if (this.Ranks.Count > 0)
+            {
+                rank = this.Ranks.Where(r => r.MinimumPoints <= points).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
+                if (rank == null)
+                {
+                    rank = UserCurrencyViewModel.NoRank;
+                }
+            }
+            return rank;
+        }
+
+        public async Task UpdateUserData()
+        {
+            if (this.IsActive)
+            {
+                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                {
+                    int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                    int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                    if (interval > 0 && (minutes % interval) == 0)
+                    {
+                        user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                        if (user.IsSubscriber && (ChannelSession.Channel.online || (this.OfflineAcquireAmount > 0)))
+                        {
+                            user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                        }
+                    }
+                }
+            }
+        }
+
         public bool ShouldBeReset()
         {
             if (this.ResetInterval != CurrencyResetRateEnum.Never)
@@ -119,25 +154,11 @@ namespace MixItUp.Base.ViewModel.User
             return false;
         }
 
-        public UserRankViewModel GetRankForPoints(int points)
-        {
-            UserRankViewModel rank = UserCurrencyViewModel.NoRank;
-            if (this.Ranks.Count > 0)
-            {
-                rank = this.Ranks.Where(r => r.MinimumPoints <= points).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
-                if (rank == null)
-                {
-                    rank = UserCurrencyViewModel.NoRank;
-                }
-            }
-            return rank;
-        }
-
         public void Reset()
         {
-            foreach (var kvp in ChannelSession.Settings.UserData.ToDictionary())
+            foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
             {
-                kvp.Value.ResetCurrency(this);
+                userData.SetCurrencyAmount(this, 0);
             }
             this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);
         }

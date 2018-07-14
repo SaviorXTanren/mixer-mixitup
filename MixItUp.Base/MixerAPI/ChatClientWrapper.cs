@@ -444,18 +444,14 @@ namespace MixItUp.Base.MixerAPI
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
-                List<UserCurrencyViewModel> currenciesToUpdate = new List<UserCurrencyViewModel>();
-                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                {
-                    if (currency.IsActive)
-                    {
-                        currenciesToUpdate.Add(currency);
-                    }
-                }
-
                 foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                 {
-                    user.UpdateMinuteUserData(currenciesToUpdate);
+                    user.UpdateMinuteData();
+                }
+
+                foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                {
+                    await currency.UpdateUserData();
                 }
 
                 await ChannelSession.SaveSettings();

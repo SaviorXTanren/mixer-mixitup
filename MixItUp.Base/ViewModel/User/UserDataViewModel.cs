@@ -291,15 +291,6 @@ namespace MixItUp.Base.ViewModel.User
             this.SetCurrencyAmount(currency, Math.Max(this.GetCurrencyAmount(currency) - amount, 0));
         }
 
-        public void ResetCurrency(UserCurrencyViewModel currency)
-        {
-            UserCurrencyDataViewModel currencyData = this.CurrencyAmounts.Values.FirstOrDefault(c => c.Currency.Equals(currency));
-            if (currencyData != null)
-            {
-                currencyData.Amount = 0;
-            }
-        }
-
         public override bool Equals(object obj)
         {
             if (obj is UserDataViewModel)

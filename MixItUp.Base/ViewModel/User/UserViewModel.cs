@@ -353,7 +353,7 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public void UpdateMinuteUserData(IEnumerable<UserCurrencyViewModel> currenciesToUpdate)
+        public void UpdateMinuteData()
         {
             if (ChannelSession.Channel.online)
             {
@@ -362,20 +362,6 @@ namespace MixItUp.Base.ViewModel.User
             else
             {
                 this.Data.OfflineViewingMinutes++;
-            }
-
-            foreach (UserCurrencyViewModel currency in currenciesToUpdate)
-            {
-                int minutes = ChannelSession.Channel.online ? this.Data.ViewingMinutes : this.Data.OfflineViewingMinutes;
-                int interval = ChannelSession.Channel.online ? currency.AcquireInterval : currency.OfflineAcquireInterval;
-                if (interval > 0 && (minutes % interval) == 0)
-                {
-                    this.Data.AddCurrencyAmount(currency, ChannelSession.Channel.online ? currency.AcquireAmount : currency.OfflineAcquireAmount);
-                    if (this.IsSubscriber && (ChannelSession.Channel.online || (currency.OfflineAcquireAmount > 0)))
-                    {
-                        this.Data.AddCurrencyAmount(currency, currency.SubscriberBonus);
-                    }
-                }
             }
         }
 
