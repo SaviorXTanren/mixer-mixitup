@@ -1,11 +1,8 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
-using MixItUp.Desktop.Services;
 using MixItUp.WPF.Util;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +16,11 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class SongRequestControl : MainControlBase, IDisposable
     {
+        private static readonly string SpotifySetupTooltip = "To use Spotify with Song Requests, you must ensure Spotify is" + Environment.NewLine +
+            "running on your computer and you have played at least one" + Environment.NewLine +
+            "song in the Spotify app. This is required to be done everytime" + Environment.NewLine +
+            "to let Spotify know that where to send our song requests to.";
+
         private static SemaphoreSlim songListLock = new SemaphoreSlim(1);
 
         private ObservableCollection<SongRequestItem> requests = new ObservableCollection<SongRequestItem>();
@@ -32,6 +34,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override async Task InitializeInternal()
         {
+            this.SpotifyTextBlock.ToolTip = SpotifySetupTooltip;
+            this.SpotifyToggleButton.ToolTip = SpotifySetupTooltip;
+
             GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;
 
             this.SongRequestsQueueListView.ItemsSource = this.requests;

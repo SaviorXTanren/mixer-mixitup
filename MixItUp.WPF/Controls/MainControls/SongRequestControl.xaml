@@ -76,7 +76,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Column="0" Grid.Row="0">Spotify:</TextBlock>
+                    <TextBlock x:Name="SpotifyTextBlock" Grid.Column="0" Grid.Row="0">Spotify:</TextBlock>
                     <ToggleButton x:Name="SpotifyToggleButton" Grid.Column="2" Grid.Row="0" Checked="SpotifyToggleButton_Checked" Unchecked="SpotifyToggleButton_Checked" />
                     <Grid x:Name="SpotifyOptionsGrid" Grid.Column="3" Grid.Row="0" Margin="10,0,0,0" IsEnabled="False">
                         <Grid.ColumnDefinitions>
