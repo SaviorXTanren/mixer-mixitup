@@ -74,6 +74,7 @@ namespace MixItUp.Base.Statistics
         public int Total { get { return this.DataPoints.Count; ; } }
 
         public double Average { get { return ((double)this.Total) / ((double)this.TotalMinutes); } }
+        public string AverageString { get { return Math.Round(Average, 2).ToString(); } }
 
         public int MaxValue { get { return (int)this.MaxValueDecimal; } }
         public double MaxValueDecimal { get { return (this.DataPoints.Count > 0) ? this.DataPoints.Select(dp => dp.ValueDecimal).Max() : 0.0; } }
@@ -82,6 +83,7 @@ namespace MixItUp.Base.Statistics
         public double TotalValueDecimal { get { return this.DataPoints.Select(dp => dp.ValueDecimal).Sum(); } }
 
         public double AverageValue { get { return this.TotalValueDecimal / ((double)this.TotalMinutes); } }
+        public string AverageValueString { get { return Math.Round(AverageValue, 2).ToString(); } }
 
         public abstract IEnumerable<string> GetExportHeaders();
 
@@ -132,7 +134,7 @@ namespace MixItUp.Base.Statistics
             return results;
         }
 
-        public override string ToString() { return string.Format("Max: {0},    Average: {1}", this.MaxValue, this.AverageValue); }
+        public override string ToString() { return string.Format("Max: {0},    Average: {1}", this.MaxValue, this.AverageValueString); }
     }
 
     public class EventStatisticDataTracker : StatisticDataTrackerBase

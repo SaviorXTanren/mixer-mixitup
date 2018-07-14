@@ -18,19 +18,19 @@ namespace MixItUp.Base.Statistics
         private EventStatisticDataTracker unfollowTracker = new EventStatisticDataTracker("Unfollows", "AccountMinus", new List<string>() { "Username", "Date & Time" });
         private EventStatisticDataTracker hostsTracker = new EventStatisticDataTracker("Hosts", "AccountMultiple", new List<string>() { "Username", "Viewers", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
-            return string.Format("Hosts: {0},    Total Host Viewers: {1},    Average Host Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValue);
+            return string.Format("Hosts: {0},    Total Host Viewers: {1},    Average Host Viewers: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
         });
         private EventStatisticDataTracker subscriberTracker = new EventStatisticDataTracker("Subscribes", "AccountStar", new List<string>() { "Username", "Date & Time" });
         private EventStatisticDataTracker resubscriberTracker = new EventStatisticDataTracker("Resubscribes", "AccountConvert", new List<string>() { "Username", "Date & Time" });
 
         private EventStatisticDataTracker interactiveTracker = new EventStatisticDataTracker("Interactive", "GamepadVariant", new List<string>() { "Control Name", "Username", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
-            return string.Format("Total Uses: {0},    Average Uses: {1}", dataTracker.Total, dataTracker.Average);
+            return string.Format("Total Uses: {0},    Average Uses: {1}", dataTracker.Total, dataTracker.AverageString);
         });
 
         private EventStatisticDataTracker donationsTracker = new EventStatisticDataTracker("Donations", "CashMultiple", new List<string>() { "Username", "Amount", "Date & Time" }, (EventStatisticDataTracker dataTracker) =>
         {
-            return string.Format("Donaters: {0},    Total: {1:C},    Average: {2:C}", dataTracker.UniqueIdentifiers, dataTracker.TotalValueDecimal, dataTracker.AverageValue);
+            return string.Format("Donaters: {0},    Total: {1:C},    Average: {2:C}", dataTracker.UniqueIdentifiers, dataTracker.TotalValueDecimal, dataTracker.AverageValueString);
         });
 
         public StatisticsTracker()
