@@ -100,6 +100,8 @@ namespace MixItUp.WPF.Controls.Games
             if (this.existingCommand != null)
             {
                 this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
+
+                this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
                 this.MinimumAmountForPayoutTextBox.Text = this.existingCommand.MinimumAmountForPayout.ToString();
                 this.PayoutProbabilityTextBox.Text = this.existingCommand.PayoutProbability.ToString();
                 this.PayoutPercentageMinimumLimitTextBox.Text = (this.existingCommand.PayoutPercentageMinimum * 100).ToString();

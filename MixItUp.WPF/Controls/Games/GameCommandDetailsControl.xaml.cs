@@ -108,6 +108,9 @@ namespace MixItUp.WPF.Controls.Games
             this.existingCommand = command;
             this.SetDefaultValues(command.Name, command.CommandsString, command.Requirements.Currency.RequirementType, command.Requirements.Currency.RequiredAmount, command.Requirements.Currency.MaximumAmount);
             this.CurrencyTypeComboBox.SelectedItem = command.Requirements.Currency.GetCurrency();
+            this.Requirements.RoleRequirement.SetRoleRequirement(this.existingCommand.Requirements.Role);
+            this.Requirements.CooldownRequirement.SetCooldownRequirement(this.existingCommand.Requirements.Cooldown);
+            this.Requirements.RankRequirement.SetCurrencyRequirement(this.existingCommand.Requirements.Rank);
         }
 
         public async Task<bool> Validate()

@@ -93,6 +93,8 @@ namespace MixItUp.WPF.Controls.Games
             if (this.existingCommand != null)
             {
                 this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
+
+                this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
                 this.startedCommand = this.existingCommand.StartedCommand;
                 this.TimeLimitTextBox.Text = this.existingCommand.TimeLimit.ToString();
                 this.UserPercentageTextBox.Text = this.existingCommand.SuccessfulOutcome.RoleProbabilities[MixerRoleEnum.User].ToString();

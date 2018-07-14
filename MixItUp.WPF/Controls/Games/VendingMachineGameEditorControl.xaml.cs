@@ -158,6 +158,7 @@ namespace MixItUp.WPF.Controls.Games
             if (this.existingCommand != null)
             {
                 this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
+
                 foreach (GameOutcome outcome in this.existingCommand.Outcomes)
                 {
                     this.outcomes.Add(new VendingMachineOutcome(outcome));

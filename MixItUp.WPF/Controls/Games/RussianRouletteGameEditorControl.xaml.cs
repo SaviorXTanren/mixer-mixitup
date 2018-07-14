@@ -92,6 +92,7 @@ namespace MixItUp.WPF.Controls.Games
             if (this.existingCommand != null)
             {
                 this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
+
                 this.MinimumParticipantsTextBox.Text = this.existingCommand.MinimumParticipants.ToString();
                 this.TimeLimitTextBox.Text = this.existingCommand.TimeLimit.ToString();
                 this.MaxWinnersTextBox.Text = this.existingCommand.MaxWinners.ToString();

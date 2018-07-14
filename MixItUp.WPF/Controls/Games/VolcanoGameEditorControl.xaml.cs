@@ -142,6 +142,7 @@ namespace MixItUp.WPF.Controls.Games
             if (this.existingCommand != null)
             {
                 this.CommandDetailsControl.SetDefaultValues(this.existingCommand);
+
                 this.StatusArgumentTextBox.Text = this.existingCommand.StatusArgument;
                 this.stage1DepositCommand = this.existingCommand.Stage1DepositCommand;
                 this.stage1StatusCommand = this.existingCommand.Stage1StatusCommand;
