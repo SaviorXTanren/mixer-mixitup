@@ -5,9 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Actions"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ComboBox x:Name="GameQueueActionTypeComboBox" MaterialDesign:HintAssist.Hint="Game Queue Action" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
+
+        <ComboBox x:Name="GameQueueActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Game Queue Action" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="GameQueueActionTypeComboBox_SelectionChanged" />
+
+        <RequirementControls:RoleRequirementControl x:Name="RoleRequirement" Grid.Column="2" Visibility="Collapsed" VerticalAlignment="Center" />
     </Grid>
 </local:ActionControlBase>

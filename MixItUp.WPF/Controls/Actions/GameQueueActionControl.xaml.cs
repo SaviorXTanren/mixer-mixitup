@@ -2,6 +2,7 @@
 using MixItUp.Base.Actions;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -22,6 +23,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.GameQueueActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.GameQueueType);
+                this.RoleRequirement.SetRoleRequirement(this.action.RoleRequirement);
             }
             return Task.FromResult(0);
         }
@@ -31,9 +33,26 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.GameQueueActionTypeComboBox.SelectedIndex >= 0)
             {
                 GameQueueActionType gameQueueType = EnumHelper.GetEnumValueFromString<GameQueueActionType>((string)this.GameQueueActionTypeComboBox.SelectedItem);
+                if (gameQueueType == GameQueueActionType.RemoveFirstType)
+                {
+                    if (this.RoleRequirement.GetRoleRequirement() == null)
+                    {
+                        return null;
+                    }
+                    return new GameQueueAction(gameQueueType, this.RoleRequirement.GetRoleRequirement());
+                }
                 return new GameQueueAction(gameQueueType);
             }
             return null;
+        }
+
+        private void GameQueueActionTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.GameQueueActionTypeComboBox.SelectedIndex >= 0)
+            {
+                GameQueueActionType gameQueueType = EnumHelper.GetEnumValueFromString<GameQueueActionType>((string)this.GameQueueActionTypeComboBox.SelectedItem);
+                this.RoleRequirement.Visibility = (gameQueueType == GameQueueActionType.RemoveFirstType) ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
     }
 }

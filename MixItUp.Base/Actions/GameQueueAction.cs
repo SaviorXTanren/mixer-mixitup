@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace MixItUp.Base.Actions
         RemoveFirst,
         [Name("Remove Random User in Queue")]
         RemoveRandom,
+        [Name("Remove First User Type in Queue")]
+        RemoveFirstType,
         [Name("Enable/Disable Queue")]
         EnableDisableQueue,
         [Name("Clear Queue")]
@@ -41,12 +44,16 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public GameQueueActionType GameQueueType { get; set; }
 
+        [DataMember]
+        public RoleRequirementViewModel RoleRequirement { get; set; }
+
         public GameQueueAction() : base(ActionTypeEnum.GameQueue) { }
 
-        public GameQueueAction(GameQueueActionType gameQueueType)
+        public GameQueueAction(GameQueueActionType gameQueueType, RoleRequirementViewModel roleRequirement = null)
             : this()
         {
             this.GameQueueType = gameQueueType;
+            this.RoleRequirement = roleRequirement;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -140,7 +147,7 @@ namespace MixItUp.Base.Actions
                         ChannelSession.GameQueue.Remove(user);
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You have left the queue to play with @{0}.", ChannelSession.Channel.user.username));
                     }
-                    else if (this.GameQueueType == GameQueueActionType.RemoveFirst || this.GameQueueType == GameQueueActionType.RemoveRandom)
+                    else if (this.GameQueueType == GameQueueActionType.RemoveFirst || this.GameQueueType == GameQueueActionType.RemoveRandom || this.GameQueueType == GameQueueActionType.RemoveFirstType)
                     {
                         if (ChannelSession.GameQueue.Count() > 0)
                         {
@@ -148,18 +155,25 @@ namespace MixItUp.Base.Actions
                             if (this.GameQueueType == GameQueueActionType.RemoveFirst)
                             {
                                 queueUser = ChannelSession.GameQueue.ElementAt(0);
-                                ChannelSession.GameQueue.RemoveAt(0);
                             }
                             else if (this.GameQueueType == GameQueueActionType.RemoveRandom)
                             {
                                 Random random = new Random();
                                 int index = random.Next(0, ChannelSession.GameQueue.Count());
                                 queueUser = ChannelSession.GameQueue.ElementAt(index);
-                                ChannelSession.GameQueue.RemoveAt(index);
+                            }
+                            else if (this.GameQueueType == GameQueueActionType.RemoveFirstType)
+                            {
+                                queueUser = ChannelSession.GameQueue.FirstOrDefault(u => this.RoleRequirement.DoesMeetRequirement(u));
+                                if (queueUser != null)
+                                {
+                                    queueUser = ChannelSession.GameQueue.ElementAt(0);
+                                }
                             }
 
                             if (queueUser != null)
                             {
+                                ChannelSession.GameQueue.Remove(queueUser);
                                 await ChannelSession.Chat.SendMessage(string.Format("It's time to play @{0}! Listen carefully for instructions on how to join @{1}", queueUser.UserName,
                                     ChannelSession.Channel.user.username));
                             }
