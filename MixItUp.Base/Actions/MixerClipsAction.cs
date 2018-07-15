@@ -181,10 +181,5 @@ namespace MixItUp.Base.Actions
                 }
             }
         }
-
-        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
