@@ -64,17 +64,17 @@ namespace MixItUp.Desktop.Services
         public StreamlabsOBSSceneItemTransformXY Scale { get; set; }
 
         [JsonProperty("rotation")]
-        public double Rotation { get; set; }
+        public double? Rotation { get; set; }
     }
 
     [DataContract]
     public class StreamlabsOBSSceneItemTransformXY
     {
         [JsonProperty("x")]
-        public double X { get; set; }
+        public double? X { get; set; }
 
         [JsonProperty("y")]
-        public double Y { get; set; }
+        public double? Y { get; set; }
     }
 
     [DataContract]
