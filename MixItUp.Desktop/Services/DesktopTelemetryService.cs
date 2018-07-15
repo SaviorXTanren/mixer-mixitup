@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace MixItUp.Desktop.Services
             this.telemetryClient.Context.Cloud.RoleName = "MixItUpApp";
             this.telemetryClient.Context.Session.Id = Guid.NewGuid().ToString();
             this.telemetryClient.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
+            this.telemetryClient.Context.Component.Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
         }
 
         public void TrackException(Exception ex)
