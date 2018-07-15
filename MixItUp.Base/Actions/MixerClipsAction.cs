@@ -121,52 +121,52 @@ namespace MixItUp.Base.Actions
                                         string fileName = new string(clipName.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray());
                                         string destinationFile = Path.Combine(this.DownloadDirectory, fileName + ".mp4");
 
-                                            Process process = new Process();
-                                            process.StartInfo.FileName = MixerClipsAction.GetFFMPEGExecutablePath();
-                                            process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile);
-                                            process.StartInfo.RedirectStandardOutput = true;
-                                            process.StartInfo.RedirectStandardError = true;
-                                            process.StartInfo.UseShellExecute = false;
-                                            process.StartInfo.CreateNoWindow = true;
+                                        Process process = new Process();
+                                        process.StartInfo.FileName = MixerClipsAction.GetFFMPEGExecutablePath();
+                                        process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile);
+                                        process.StartInfo.RedirectStandardOutput = true;
+                                        process.StartInfo.RedirectStandardError = true;
+                                        process.StartInfo.UseShellExecute = false;
+                                        process.StartInfo.CreateNoWindow = true;
 
-                                            StringBuilder processOutput = new StringBuilder(512);
-                                            process.OutputDataReceived += (sender, args) =>
+                                        StringBuilder processOutput = new StringBuilder(512);
+                                        process.OutputDataReceived += (sender, args) =>
+                                        {
+                                            processOutput.Append(args.Data);
+                                        };
+
+                                        StringBuilder processError = new StringBuilder(512);
+                                        process.ErrorDataReceived += (sender, args) =>
+                                        {
+                                            processError.Append(args.Data);
+                                        };
+
+                                        process.Start();
+
+                                        process.BeginOutputReadLine();
+                                        process.BeginErrorReadLine();
+
+                                        process.WaitForExit(30000);
+
+                                        if (!process.HasExited)
+                                        {
+                                            try
                                             {
-                                                processOutput.Append(args.Data);
-                                            };
-
-                                            StringBuilder processError = new StringBuilder(512);
-                                            process.ErrorDataReceived += (sender, args) =>
-                                            {
-                                                processError.Append(args.Data);
-                                            };
-
-                                            process.Start();
-
-                                            process.BeginOutputReadLine();
-                                            process.BeginErrorReadLine();
-
-                                            process.WaitForExit(30000);
-
-                                            if (!process.HasExited)
-                                            {
-                                                try
-                                                {
-                                                    process.Kill();
-                                                }
-                                                catch { }
-                                                await Task.Delay(1000);
+                                                process.Kill();
                                             }
+                                            catch { }
+                                            await Task.Delay(1000);
+                                        }
 
-                                            if (!process.HasExited || process.ExitCode != 0)
-                                            {
-                                                string error = "ERROR: FFMPEG conversion process of Mixer Clip failed";
-                                                Logger.Log(error);
-                                                Logger.Log(processOutput.ToString());
-                                                Logger.Log(processError.ToString());
-                                                await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
-                                                return;
-                                            }
+                                        if (!process.HasExited || process.ExitCode != 0)
+                                        {
+                                            string error = "ERROR: FFMPEG conversion process of Mixer Clip failed";
+                                            Logger.Log(error);
+                                            Logger.Log(processOutput.ToString());
+                                            Logger.Log(processError.ToString());
+                                            await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                                            return;
+                                        }
                                     }
                                 }
                                 return;
