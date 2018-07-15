@@ -28,6 +28,7 @@ namespace MixItUp.Desktop.Services
         {
             if (!ChannelSession.Settings.OptOutTracking)
             {
+                RefreshUserDetails();
                 this.telemetryClient.TrackException(ex);
             }
         }
@@ -36,6 +37,7 @@ namespace MixItUp.Desktop.Services
         {
             if (!ChannelSession.Settings.OptOutTracking)
             {
+                RefreshUserDetails();
                 this.telemetryClient.TrackPageView(pageName);
             }
         }
@@ -53,6 +55,19 @@ namespace MixItUp.Desktop.Services
         {
             this.telemetryClient.Flush();
             Task.Delay(1000); // Allow time to flush
+        }
+
+        private void RefreshUserDetails()
+        {
+            if (string.IsNullOrEmpty(this.telemetryClient.Context.User.Id))
+            {
+                if (string.IsNullOrEmpty(ChannelSession.Settings.TelemetryUserId))
+                {
+                    ChannelSession.Settings.TelemetryUserId = Guid.NewGuid().ToString();
+                }
+
+                this.telemetryClient.Context.User.Id = ChannelSession.Settings.TelemetryUserId;
+            }
         }
     }
 }

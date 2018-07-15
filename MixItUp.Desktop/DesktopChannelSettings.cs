@@ -242,6 +242,9 @@ namespace MixItUp.Desktop
         public bool SpotifyAllowExplicit { get; set; }
 
         [JsonProperty]
+        public string TelemetryUserId { get; set; }
+
+        [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
 
         [JsonProperty]

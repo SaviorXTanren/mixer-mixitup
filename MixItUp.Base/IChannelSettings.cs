@@ -132,6 +132,8 @@ namespace MixItUp.Base
 
         List<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
         bool SpotifyAllowExplicit { get; set; }
+
+        string TelemetryUserId { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings
