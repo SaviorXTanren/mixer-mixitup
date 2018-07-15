@@ -9,8 +9,10 @@ namespace MixItUp.Base.Services
     {
         void TrackException(Exception ex);
         void TrackPageView(string pageName);
+        void TrackLogin();
 
         void Start();
+        void SetUserId(string userId);
         void End();
     }
 }
