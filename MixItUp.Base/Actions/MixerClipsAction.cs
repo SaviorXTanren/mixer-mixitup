@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -128,26 +129,41 @@ namespace MixItUp.Base.Actions
                                         process.StartInfo.UseShellExecute = false;
                                         process.StartInfo.CreateNoWindow = true;
 
+                                        StringBuilder processOutput = new StringBuilder(512);
+                                        process.OutputDataReceived += (sender, args) =>
+                                        {
+                                            processOutput.Append(args.Data);
+                                        };
+
+                                        StringBuilder processError = new StringBuilder(512);
+                                        process.ErrorDataReceived += (sender, args) =>
+                                        {
+                                            processError.Append(args.Data);
+                                        };
+
                                         process.Start();
 
-                                        string processOutput = await process.StandardOutput.ReadToEndAsync();
-                                        string processError = await process.StandardError.ReadToEndAsync();
+                                        process.BeginOutputReadLine();
+                                        process.BeginErrorReadLine();
 
-                                        for (int j = 0; j < 60; j++)
+                                        process.WaitForExit(30000);
+
+                                        if (!process.HasExited)
                                         {
-                                            if (process.HasExited)
+                                            try
                                             {
-                                                break;
+                                                process.Kill();
                                             }
-                                            await Task.Delay(500);
+                                            catch { }
+                                            await Task.Delay(1000);
                                         }
 
                                         if (!process.HasExited || process.ExitCode != 0)
                                         {
                                             string error = "ERROR: FFMPEG conversion process of Mixer Clip failed";
                                             Logger.Log(error);
-                                            Logger.Log(processOutput);
-                                            Logger.Log(processError);
+                                            Logger.Log(processOutput.ToString());
+                                            Logger.Log(processError.ToString());
                                             await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
                                             return;
                                         }
