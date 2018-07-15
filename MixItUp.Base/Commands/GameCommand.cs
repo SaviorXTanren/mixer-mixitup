@@ -273,12 +273,20 @@ namespace MixItUp.Base.Commands
 
         protected async Task<bool> PerformRequirementChecks(UserViewModel user)
         {
-            if (!(await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)))
+            if (await this.CheckCooldownRequirement(user) && await this.PerformNonCooldownRequirementChecks(user))
             {
-                return false;
+                return true;
             }
+            return false;
+        }
 
-            return true;
+        protected async Task<bool> PerformNonCooldownRequirementChecks(UserViewModel user)
+        {
+            if (await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user))
+            {
+                return true;
+            }
+            return false;
         }
 
         protected virtual async Task<bool> PerformCurrencyChecks(UserViewModel user, int betAmount)
@@ -665,11 +673,9 @@ namespace MixItUp.Base.Commands
         {
             if (arguments.Count() == 1 && arguments.ElementAt(0).Equals(this.StatusArgument))
             {
-                if (await this.PerformRequirementChecks(user))
+                if (await this.PerformNonCooldownRequirementChecks(user))
                 {
                     await this.ReportStatus(user, arguments);
-
-                    this.Requirements.UpdateCooldown(user);
                 }
             }
             else if (await this.PerformUsageChecks(user, arguments))
@@ -1640,20 +1646,23 @@ namespace MixItUp.Base.Commands
         {
             if (this.collectActive)
             {
-                if (arguments.Count() == 1 && arguments.ElementAt(0).Equals(this.CollectArgument))
+                if (await this.PerformNonCooldownRequirementChecks(user))
                 {
-                    if (this.collectUsers.Contains(user))
+                    if (arguments.Count() == 1 && arguments.ElementAt(0).Equals(this.CollectArgument))
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, "You've already collected your share");
-                        return;
-                    }
+                        if (this.collectUsers.Contains(user))
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "You've already collected your share");
+                            return;
+                        }
 
-                    this.collectUsers.Add(user);
-                    await this.PerformPayout(user, arguments, 0, this.CollectPayoutPercentageMinimum, this.CollectPayoutPercentageMaximum, this.CollectCommand);
-                }
-                else
-                {
-                    await ChannelSession.Chat.Whisper(user.UserName, "Collecting is currently underway, please wait until it has completed");
+                        this.collectUsers.Add(user);
+                        await this.PerformPayout(user, arguments, 0, this.CollectPayoutPercentageMinimum, this.CollectPayoutPercentageMaximum, this.CollectCommand);
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "Collecting is currently underway, please wait until it has completed");
+                    }
                 }
             }
             else
