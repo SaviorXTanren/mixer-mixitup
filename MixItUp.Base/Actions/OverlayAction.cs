@@ -57,14 +57,21 @@ namespace MixItUp.Base.Actions
 
         [Name("Rotate In")]
         RotateIn,
+
+
         [Name("Rotate In Up")]
+        [Obsolete]
         RotateInUp,
         [Name("Rotate In Down")]
+        [Obsolete]
         RotateInDown,
         [Name("Rotate In Left")]
+        [Obsolete]
         RotateInLeft,
         [Name("Rotate In Right")]
+        [Obsolete]
         RotateInRight,
+
 
         [Name("Slide In Up")]
         SlideInUp,
@@ -150,14 +157,21 @@ namespace MixItUp.Base.Actions
 
         [Name("Rotate Out")]
         RotateOut,
+
+
         [Name("Rotate Out Up")]
+        [Obsolete]
         RotateOutUp,
         [Name("Rotate Out Down")]
+        [Obsolete]
         RotateOutDown,
         [Name("Rotate Out Left")]
+        [Obsolete]
         RotateOutLeft,
         [Name("Rotate Out Right")]
+        [Obsolete]
         RotateOutRight,
+
 
         [Name("Slide Out Up")]
         SlideOutUp,
@@ -403,14 +417,20 @@ namespace MixItUp.Base.Actions
             return jobj.ToObject<T>();
         }
 
-        private string GetAnimationClassName<T>(T typedName)
+        private string GetAnimationClassName<T>(T animationType)
         {
-            string name = typedName.ToString();
-            if (name == "Random")
+            string name = EnumHelper.GetEnumName(animationType);
+
+            if (EnumHelper.IsObsolete(animationType))
+            {
+                name = string.Empty;
+            }
+
+            if (!string.IsNullOrEmpty(name) && name.Equals("Random"))
             {
                 List<T> values = EnumHelper.GetEnumList<T>().ToList();
                 values.RemoveAll(v => v.ToString().Equals("None") || v.ToString().Equals("Random"));
-                name = values[Random.Next(values.Count)].ToString();
+                name = EnumHelper.GetEnumName(values[Random.Next(values.Count)]);
             }
 
             if (!string.IsNullOrEmpty(name) && !name.Equals("None"))
