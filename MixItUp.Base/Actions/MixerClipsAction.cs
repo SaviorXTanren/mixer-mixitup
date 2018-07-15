@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -120,37 +121,52 @@ namespace MixItUp.Base.Actions
                                         string fileName = new string(clipName.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray());
                                         string destinationFile = Path.Combine(this.DownloadDirectory, fileName + ".mp4");
 
-                                        Process process = new Process();
-                                        process.StartInfo.FileName = MixerClipsAction.GetFFMPEGExecutablePath();
-                                        process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile);
-                                        process.StartInfo.RedirectStandardOutput = true;
-                                        process.StartInfo.RedirectStandardError = true;
-                                        process.StartInfo.UseShellExecute = false;
-                                        process.StartInfo.CreateNoWindow = true;
+                                            Process process = new Process();
+                                            process.StartInfo.FileName = MixerClipsAction.GetFFMPEGExecutablePath();
+                                            process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile);
+                                            process.StartInfo.RedirectStandardOutput = true;
+                                            process.StartInfo.RedirectStandardError = true;
+                                            process.StartInfo.UseShellExecute = false;
+                                            process.StartInfo.CreateNoWindow = true;
 
-                                        process.Start();
-
-                                        string processOutput = await process.StandardOutput.ReadToEndAsync();
-                                        string processError = await process.StandardError.ReadToEndAsync();
-
-                                        for (int j = 0; j < 60; j++)
-                                        {
-                                            if (process.HasExited)
+                                            StringBuilder processOutput = new StringBuilder(512);
+                                            process.OutputDataReceived += (sender, args) =>
                                             {
-                                                break;
-                                            }
-                                            await Task.Delay(500);
-                                        }
+                                                processOutput.Append(args.Data);
+                                            };
 
-                                        if (!process.HasExited || process.ExitCode != 0)
-                                        {
-                                            string error = "ERROR: FFMPEG conversion process of Mixer Clip failed";
-                                            Logger.Log(error);
-                                            Logger.Log(processOutput);
-                                            Logger.Log(processError);
-                                            await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
-                                            return;
-                                        }
+                                            StringBuilder processError = new StringBuilder(512);
+                                            process.ErrorDataReceived += (sender, args) =>
+                                            {
+                                                processError.Append(args.Data);
+                                            };
+
+                                            process.Start();
+
+                                            process.BeginOutputReadLine();
+                                            process.BeginErrorReadLine();
+
+                                            process.WaitForExit(30000);
+
+                                            if (!process.HasExited)
+                                            {
+                                                try
+                                                {
+                                                    process.Kill();
+                                                }
+                                                catch { }
+                                                await Task.Delay(1000);
+                                            }
+
+                                            if (!process.HasExited || process.ExitCode != 0)
+                                            {
+                                                string error = "ERROR: FFMPEG conversion process of Mixer Clip failed";
+                                                Logger.Log(error);
+                                                Logger.Log(processOutput.ToString());
+                                                Logger.Log(processError.ToString());
+                                                await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                                                return;
+                                            }
                                     }
                                 }
                                 return;
@@ -164,6 +180,11 @@ namespace MixItUp.Base.Actions
                     }
                 }
             }
+        }
+
+        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
