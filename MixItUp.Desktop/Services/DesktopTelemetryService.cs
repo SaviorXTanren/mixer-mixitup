@@ -40,7 +40,11 @@ namespace MixItUp.Desktop.Services
 
         public void Start()
         {
-            this.telemetryClient.InstrumentationKey = ChannelSession.SecretManager.GetSecret("ApplicationInsightsKey");
+            string key = ChannelSession.SecretManager.GetSecret("ApplicationInsightsKey");
+            if (!string.IsNullOrEmpty(key))
+            {
+                this.telemetryClient.InstrumentationKey = key;
+            }
         }
 
         public void End()
