@@ -5,6 +5,7 @@ using MixItUp.Base.ViewModel.User;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using System.Linq;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -22,7 +23,7 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
-            this.CurrencyActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyActionTypeEnum>();
+            this.CurrencyActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyActionTypeEnum>().OrderBy(s => s);
 
             if (this.action != null)
             {
@@ -46,7 +47,7 @@ namespace MixItUp.WPF.Controls.Actions
                 UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
                 CurrencyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<CurrencyActionTypeEnum>((string)this.CurrencyActionTypeComboBox.SelectedItem);
                 
-                if (actionType == CurrencyActionTypeEnum.GiveToSpecificUser)
+                if (actionType == CurrencyActionTypeEnum.AddToSpecificUser)
                 {
                     if (string.IsNullOrEmpty(this.CurrencyUsernameTextBox.Text))
                     {
@@ -73,9 +74,15 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.CurrencyActionTypeComboBox.SelectedIndex >= 0)
             {
                 CurrencyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<CurrencyActionTypeEnum>((string)this.CurrencyActionTypeComboBox.SelectedItem);
-                this.GiveToGrid.Visibility = (actionType == CurrencyActionTypeEnum.GiveToSpecificUser || actionType == CurrencyActionTypeEnum.GiveToAllChatUsers) ?
+                this.GiveToGrid.Visibility = (actionType == CurrencyActionTypeEnum.AddToSpecificUser || actionType == CurrencyActionTypeEnum.AddToAllChatUsers ||
+                    actionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || actionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers) ?
                     Visibility.Visible : Visibility.Collapsed;
-                this.CurrencyUsernameTextBox.Visibility = (actionType == CurrencyActionTypeEnum.GiveToSpecificUser) ? Visibility.Visible : Visibility.Collapsed;
+
+                this.CurrencyUsernameTextBox.Visibility = (actionType == CurrencyActionTypeEnum.AddToSpecificUser || actionType == CurrencyActionTypeEnum.SubtractFromSpecificUser) ?
+                    Visibility.Visible : Visibility.Collapsed;
+
+                this.DeductFromUserTextBlock.IsEnabled = this.DeductFromUserToggleButton.IsEnabled =
+                    (actionType == CurrencyActionTypeEnum.AddToSpecificUser || actionType == CurrencyActionTypeEnum.AddToAllChatUsers) ? true : false;
             }
         }
     }

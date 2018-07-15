@@ -15,10 +15,16 @@ namespace MixItUp.Base.Actions
         AddToUser,
         [Name("Subtract from user")]
         SubtractFromUser,
-        [Name("Give to specific user")]
-        GiveToSpecificUser,
-        [Name("Give to all chat users")]
-        GiveToAllChatUsers,
+
+        [Name("Add to specific user")]
+        AddToSpecificUser,
+        [Name("Add to all chat users")]
+        AddToAllChatUsers,
+
+        [Name("Subtract from specific user")]
+        SubtractFromSpecificUser,
+        [Name("Subtract from all chat users")]
+        SubtractFromAllChatUsers,
     }
 
     [DataContract]
@@ -83,12 +89,12 @@ namespace MixItUp.Base.Actions
                 }
 
                 UserCurrencyDataViewModel senderCurrencyData = user.Data.GetCurrency(this.CurrencyID);
-                List<UserCurrencyDataViewModel> receiverCurrencyDatas = new List<UserCurrencyDataViewModel>();
+                HashSet<UserCurrencyDataViewModel> receiverCurrencyDatas = new HashSet<UserCurrencyDataViewModel>();
                 if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToUser)
                 {
                     receiverCurrencyDatas.Add(senderCurrencyData);
                 }
-                else if (this.CurrencyActionType == CurrencyActionTypeEnum.GiveToSpecificUser)
+                else if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser)
                 {
                     if (!string.IsNullOrEmpty(this.Username))
                     {
@@ -107,7 +113,7 @@ namespace MixItUp.Base.Actions
                         }
                     }
                 }
-                else if (this.CurrencyActionType == CurrencyActionTypeEnum.GiveToAllChatUsers)
+                else if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToAllChatUsers || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                 {
                     foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                     {
@@ -130,7 +136,14 @@ namespace MixItUp.Base.Actions
                 {
                     foreach (UserCurrencyDataViewModel receiverCurrencyData in receiverCurrencyDatas)
                     {
-                        receiverCurrencyData.Amount += amountValue;
+                        if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                        {
+                            receiverCurrencyData.Amount -= amountValue;
+                        }
+                        else
+                        {
+                            receiverCurrencyData.Amount += amountValue;
+                        }
                     }
                 }
             }
