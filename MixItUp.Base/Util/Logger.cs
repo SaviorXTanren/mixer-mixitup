@@ -42,6 +42,8 @@ namespace MixItUp.Base.Util
 
         public static void Log(Exception ex, bool includeFullStackTrace = false, bool isCrashing = false)
         {
+            ChannelSession.Services.Telemetry.TrackException(ex);
+
             string exString = ex.ToString();
 
             if (includeFullStackTrace)

@@ -35,6 +35,7 @@ namespace MixItUp.Desktop.Services
             await this.DisconnectStreamlabsOBSService();
             await this.DisconnectXSplitServer();
             await this.DisconnectDeveloperAPI();
+            await this.DisconnectTelemetryService();
         }
 
         public override async Task<bool> InitializeOverlayServer()
@@ -159,6 +160,19 @@ namespace MixItUp.Desktop.Services
             });
         }
 
+        public override async Task<bool> InitializeTelemetryService()
+        {
+            return await Task.Run(() =>
+            {
+                if (this.Telemetry == null)
+                {
+                    this.Telemetry = new DesktopTelemetryService();
+                    this.Telemetry.Start();
+                }
+                return true;
+            });
+        }
+
         public override async Task DisconnectDeveloperAPI()
         {
             await Task.Run(() =>
@@ -167,6 +181,18 @@ namespace MixItUp.Desktop.Services
                 {
                     this.DeveloperAPI.End();
                     this.DeveloperAPI = null;
+                }
+            });
+        }
+
+        public override async Task DisconnectTelemetryService()
+        {
+            await Task.Run(() =>
+            {
+                if (this.Telemetry != null)
+                {
+                    this.Telemetry.End();
+                    this.Telemetry = null;
                 }
             });
         }
