@@ -475,6 +475,7 @@ namespace MixItUp.Base
                     await ChannelSession.SaveSettings();
                     await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
 
+                    ChannelSession.Services.Telemetry.TrackLogin();
                     if (!Util.Logger.IsDebug)
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
