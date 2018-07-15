@@ -24,12 +24,18 @@ namespace MixItUp.Desktop.Services
 
         public void TrackException(Exception ex)
         {
-            this.telemetryClient.TrackException(ex);
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                this.telemetryClient.TrackException(ex);
+            }
         }
 
         public void TrackPageView(string pageName)
         {
-            this.telemetryClient.TrackPageView(pageName);
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                this.telemetryClient.TrackPageView(pageName);
+            }
         }
 
         public void Start()
