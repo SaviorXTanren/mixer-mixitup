@@ -42,7 +42,7 @@ namespace MixItUp.Base.Util
 
         public static void Log(Exception ex, bool includeFullStackTrace = false, bool isCrashing = false)
         {
-            if (ChannelSession.Services.Telemetry != null)
+            if (isCrashing && ChannelSession.Services.Telemetry != null)
             {
                 ChannelSession.Services.Telemetry.TrackException(ex);
             }
