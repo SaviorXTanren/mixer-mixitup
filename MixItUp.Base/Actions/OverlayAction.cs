@@ -419,7 +419,7 @@ namespace MixItUp.Base.Actions
 
         private string GetAnimationClassName<T>(T animationType)
         {
-            string name = EnumHelper.GetEnumName(animationType);
+            string name = animationType.ToString();
 
             if (EnumHelper.IsObsolete(animationType))
             {
@@ -430,7 +430,7 @@ namespace MixItUp.Base.Actions
             {
                 List<T> values = EnumHelper.GetEnumList<T>().ToList();
                 values.RemoveAll(v => v.ToString().Equals("None") || v.ToString().Equals("Random"));
-                name = EnumHelper.GetEnumName(values[Random.Next(values.Count)]);
+                name = values[Random.Next(values.Count)].ToString();
             }
 
             if (!string.IsNullOrEmpty(name) && !name.Equals("None"))
