@@ -95,16 +95,16 @@ namespace MixItUp.WPF
         {
             if (!this.crashObtained)
             {
-                if (ChannelSession.Services.Telemetry != null)
-                {
-                    ChannelSession.Services.Telemetry.TrackException(ex);
-                }
-
                 #if DEBUG
                     Debugger.Break();
                 #endif
 
                 this.crashObtained = true;
+
+                if (ChannelSession.Services.Telemetry != null)
+                {
+                    ChannelSession.Services.Telemetry.TrackException(ex);
+                }
 
                 try
                 {
