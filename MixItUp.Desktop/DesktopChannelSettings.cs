@@ -193,6 +193,9 @@ namespace MixItUp.Desktop
         public int TiltifyCampaign { get; set; }
 
         [JsonProperty]
+        public string DiscordServer { get; set; }
+
+        [JsonProperty]
         public bool UnlockAllCommands { get; set; }
 
         [JsonProperty]

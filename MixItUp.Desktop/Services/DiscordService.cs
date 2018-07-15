@@ -338,8 +338,6 @@ namespace MixItUp.Desktop.Services
 
         public string BotPermissions { get; private set; }
 
-        private string serverID;
-
         public DiscordService() : base(DiscordService.BaseAddress) { }
 
         public DiscordService(OAuthTokenModel token) : base(DiscordService.BaseAddress, token) { }
@@ -454,7 +452,7 @@ namespace MixItUp.Desktop.Services
             string authorizationCode = await oauthServer.WaitForAuthorizationCode();
             oauthServer.End();
 
-            this.serverID = oauthServer.ServerID;
+            ChannelSession.Settings.DiscordServer = oauthServer.ServerID;
             this.BotPermissions = oauthServer.BotPermissions;
 
             return authorizationCode;
@@ -479,9 +477,9 @@ namespace MixItUp.Desktop.Services
             this.botService = new DiscordBotService(this.baseAddress, ChannelSession.SecretManager.GetSecret("DiscordBotToken"));
 
             this.User = await this.GetCurrentUser();
-            if (!string.IsNullOrEmpty(this.serverID))
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.DiscordServer))
             {
-                this.Server = await this.GetServer(this.serverID);
+                this.Server = await this.GetServer(ChannelSession.Settings.DiscordServer);
             }
 
             //DiscordGateway gateway = await this.GetBotGateway();

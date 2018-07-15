@@ -104,6 +104,8 @@ namespace MixItUp.Base
 
         int TiltifyCampaign { get; set; }
 
+        string DiscordServer { get; set; }
+
         bool UnlockAllCommands { get; set; }
 
         int ChatFontSize { get; set; }
