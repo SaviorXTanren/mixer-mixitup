@@ -377,6 +377,8 @@ namespace MixItUp.Base
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
                     ChannelSession.Settings.Channel = channel;
 
+                    ChannelSession.Services.Telemetry.SetUserId(ChannelSession.Settings.TelemetryUserId);
+
                     ChannelSession.Connection.Initialize();
 
                     if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect())

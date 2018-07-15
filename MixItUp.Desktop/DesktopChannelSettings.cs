@@ -453,6 +453,18 @@ namespace MixItUp.Desktop
                     this.UserData = new DatabaseDictionary<uint, UserDataViewModel>(initialUsers);
                 }
             }
+
+            if (string.IsNullOrEmpty(this.TelemetryUserId))
+            {
+                if (MixItUp.Base.Util.Logger.IsDebug)
+                {
+                    this.TelemetryUserId = "MixItUpDebuggingUser";
+                }
+                else
+                {
+                    this.TelemetryUserId = Guid.NewGuid().ToString();
+                }
+            }
         }
 
         public async Task CopyLatestValues()
@@ -528,7 +540,7 @@ namespace MixItUp.Desktop
 
                 IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
                 changedUsers = changedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
-                await this.DatabaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts," + 
+                await this.DatabaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts," +
                     " CustomCommands = @CustomCommands, Options = @Options WHERE ID = @ID",
                     changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
                     new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()),

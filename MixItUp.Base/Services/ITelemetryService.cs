@@ -12,6 +12,7 @@ namespace MixItUp.Base.Services
         void TrackLogin();
 
         void Start();
+        void SetUserId(string userId);
         void End();
     }
 }

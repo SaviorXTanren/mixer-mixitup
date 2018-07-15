@@ -28,7 +28,6 @@ namespace MixItUp.Desktop.Services
         {
             if (!ChannelSession.Settings.OptOutTracking)
             {
-                RefreshUserDetails();
                 this.telemetryClient.TrackException(ex);
             }
         }
@@ -37,7 +36,6 @@ namespace MixItUp.Desktop.Services
         {
             if (!ChannelSession.Settings.OptOutTracking)
             {
-                RefreshUserDetails();
                 this.telemetryClient.TrackPageView(pageName);
             }
         }
@@ -46,7 +44,6 @@ namespace MixItUp.Desktop.Services
         {
             if (!ChannelSession.Settings.OptOutTracking)
             {
-                RefreshUserDetails();
                 this.telemetryClient.TrackEvent("Login");
             }
         }
@@ -60,30 +57,15 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public void SetUserId(string userId)
+        {
+            this.telemetryClient.Context.User.Id = userId;
+        }
+
         public void End()
         {
             this.telemetryClient.Flush();
             Task.Delay(1000); // Allow time to flush
-        }
-
-        private void RefreshUserDetails()
-        {
-            if (string.IsNullOrEmpty(this.telemetryClient.Context.User.Id))
-            {
-                if (string.IsNullOrEmpty(ChannelSession.Settings.TelemetryUserId))
-                {
-                    if (MixItUp.Base.Util.Logger.IsDebug)
-                    {
-                        ChannelSession.Settings.TelemetryUserId = "MixItUpDebuggingUser";
-                    }
-                    else
-                    {
-                        ChannelSession.Settings.TelemetryUserId = Guid.NewGuid().ToString();
-                    }
-                }
-
-                this.telemetryClient.Context.User.Id = ChannelSession.Settings.TelemetryUserId;
-            }
         }
     }
 }
