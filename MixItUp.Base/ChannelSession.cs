@@ -359,6 +359,8 @@ namespace MixItUp.Base
 
         private static async Task<bool> InitializeInternal(string channelName = null)
         {
+            await ChannelSession.Services.InitializeTelemetryService();
+
             PrivatePopulatedUserModel user = await ChannelSession.Connection.GetCurrentUser();
             if (user != null)
             {
