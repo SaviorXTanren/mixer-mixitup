@@ -138,7 +138,7 @@ namespace MixItUp.Base.Actions
                     {
                         if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                         {
-                            receiverCurrencyData.Amount -= amountValue;
+                            receiverCurrencyData.Amount = Math.Max(receiverCurrencyData.Amount - amountValue, 0);
                         }
                         else
                         {
