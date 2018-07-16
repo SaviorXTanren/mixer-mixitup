@@ -124,12 +124,12 @@ namespace MixItUp.Base.Actions
 
                 if ((this.DeductFromUser && receiverCurrencyDatas.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)
                 {
-                    if (senderCurrencyData.Amount < amountValue)
+                    if (this.CurrencyActionType != CurrencyActionTypeEnum.SubtractFromUser && senderCurrencyData.Amount < amountValue)
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
                         return;
                     }
-                    senderCurrencyData.Amount -= amountValue;
+                    senderCurrencyData.Amount = Math.Max(senderCurrencyData.Amount - amountValue, 0);
                 }
 
                 if (receiverCurrencyDatas.Count > 0)
