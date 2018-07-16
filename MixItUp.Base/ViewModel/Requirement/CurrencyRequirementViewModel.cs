@@ -120,6 +120,11 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public bool DoesMeetCurrencyRequirement(UserDataViewModel userData)
         {
+            if (userData.IsCurrencyRankExempt)
+            {
+                return true;
+            }
+
             UserCurrencyViewModel currency = this.GetCurrency();
             if (currency == null)
             {
@@ -154,6 +159,11 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public bool DoesMeetRankRequirement(UserDataViewModel userData)
         {
+            if (userData.IsCurrencyRankExempt)
+            {
+                return true;
+            }
+
             UserCurrencyViewModel currency = this.GetCurrency();
             if (currency == null)
             {

@@ -274,11 +274,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SetCurrencyAmount(UserCurrencyViewModel currency, int amount)
         {
-            if (!this.IsCurrencyRankExempt)
-            {
-                UserCurrencyDataViewModel currencyData = this.GetCurrency(currency);
-                currencyData.Amount = Math.Min(amount, currencyData.Currency.MaxAmount);
-            }
+            UserCurrencyDataViewModel currencyData = this.GetCurrency(currency);
+            currencyData.Amount = Math.Min(amount, currencyData.Currency.MaxAmount);
         }
 
         public void AddCurrencyAmount(UserCurrencyViewModel currency, int amount)
@@ -288,7 +285,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SubtractCurrencyAmount(UserCurrencyViewModel currency, int amount)
         {
-            this.SetCurrencyAmount(currency, Math.Max(this.GetCurrencyAmount(currency) - amount, 0));
+            if (!this.IsCurrencyRankExempt)
+            {
+                this.SetCurrencyAmount(currency, Math.Max(this.GetCurrencyAmount(currency) - amount, 0));
+            }
         }
 
         public override bool Equals(object obj)
