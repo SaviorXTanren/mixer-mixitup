@@ -134,7 +134,36 @@ namespace MixItUp.WPF.Controls.Command
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
             if (command != null)
             {
-                await command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
+                Dictionary<string, string> extraSpecialIdentifiers = null;
+                if (command is EventCommand)
+                {
+                    EventCommand eventCommand = command as EventCommand;
+                    switch (eventCommand.OtherEventType)
+                    {
+                        case OtherEventTypeEnum.GameWispSubscribed:
+                        case OtherEventTypeEnum.GameWispResubscribed:
+                            extraSpecialIdentifiers = new Dictionary<string, string>
+                            {
+                                { "subscribemonths", "999" },
+                                { "subscribetier", "Test Tier" },
+                                { "subscribeamount", "$12.34" },
+                            };
+                            break;
+                        case OtherEventTypeEnum.StreamlabsDonation:
+                        case OtherEventTypeEnum.GawkBoxDonation:
+                        case OtherEventTypeEnum.TiltifyDonation:
+                            extraSpecialIdentifiers = new Dictionary<string, string>
+                            {
+                                { "donationsource", "Test Source" },
+                                { "donationamount", "$12.34" },
+                                { "donationmessage", "Test donation message." },
+                                { "donationimage", ChannelSession.GetCurrentUser().AvatarLink },
+                            };
+                            break;
+                    }
+                }
+
+                await command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName }, extraSpecialIdentifiers);
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;
