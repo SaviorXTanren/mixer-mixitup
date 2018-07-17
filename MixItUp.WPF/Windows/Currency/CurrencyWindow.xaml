@@ -140,7 +140,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Subscriber Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Sub/Mod Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
 
                         </Grid>
                     </GroupBox>
