@@ -185,9 +185,9 @@ namespace MixItUp.Base.Commands
             return Task.FromResult(0);
         }
 
-        public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null)
+        public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
-            await this.Perform(user, arguments);
+            await this.Perform(user, arguments, extraSpecialIdentifiers);
             if (this.currentTaskRun != null && !this.currentTaskRun.IsCompleted)
             {
                 await this.currentTaskRun;
