@@ -134,31 +134,32 @@ namespace MixItUp.WPF.Controls.Command
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
             if (command != null)
             {
-                Dictionary<string, string> extraSpecialIdentifiers = null;
+                Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
                 if (command is EventCommand)
                 {
                     EventCommand eventCommand = command as EventCommand;
+                    switch (eventCommand.EventType)
+                    {
+                        case Mixer.Base.Clients.ConstellationEventTypeEnum.channel__id__hosted:
+                            extraSpecialIdentifiers["hostviewercount"] = "123";
+                            break;
+                    }
+
                     switch (eventCommand.OtherEventType)
                     {
                         case OtherEventTypeEnum.GameWispSubscribed:
                         case OtherEventTypeEnum.GameWispResubscribed:
-                            extraSpecialIdentifiers = new Dictionary<string, string>
-                            {
-                                { "subscribemonths", "999" },
-                                { "subscribetier", "Test Tier" },
-                                { "subscribeamount", "$12.34" },
-                            };
+                            extraSpecialIdentifiers["subscribemonths"] = "999";
+                            extraSpecialIdentifiers["subscribetier"] = "Test Tier";
+                            extraSpecialIdentifiers["subscribeamount"] = "$12.34";
                             break;
                         case OtherEventTypeEnum.StreamlabsDonation:
                         case OtherEventTypeEnum.GawkBoxDonation:
                         case OtherEventTypeEnum.TiltifyDonation:
-                            extraSpecialIdentifiers = new Dictionary<string, string>
-                            {
-                                { "donationsource", "Test Source" },
-                                { "donationamount", "$12.34" },
-                                { "donationmessage", "Test donation message." },
-                                { "donationimage", ChannelSession.GetCurrentUser().AvatarLink },
-                            };
+                            extraSpecialIdentifiers["donationsource"] = "Test Source";
+                            extraSpecialIdentifiers["donationamount"] = "$12.34";
+                            extraSpecialIdentifiers["donationmessage"] = "Test donation message.";
+                            extraSpecialIdentifiers["donationimage"] = ChannelSession.GetCurrentUser().AvatarLink;
                             break;
                     }
                 }
