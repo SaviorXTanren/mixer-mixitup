@@ -134,7 +134,37 @@ namespace MixItUp.WPF.Controls.Command
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
             if (command != null)
             {
-                await command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
+                Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                if (command is EventCommand)
+                {
+                    EventCommand eventCommand = command as EventCommand;
+                    switch (eventCommand.EventType)
+                    {
+                        case Mixer.Base.Clients.ConstellationEventTypeEnum.channel__id__hosted:
+                            extraSpecialIdentifiers["hostviewercount"] = "123";
+                            break;
+                    }
+
+                    switch (eventCommand.OtherEventType)
+                    {
+                        case OtherEventTypeEnum.GameWispSubscribed:
+                        case OtherEventTypeEnum.GameWispResubscribed:
+                            extraSpecialIdentifiers["subscribemonths"] = "999";
+                            extraSpecialIdentifiers["subscribetier"] = "Test Tier";
+                            extraSpecialIdentifiers["subscribeamount"] = "$12.34";
+                            break;
+                        case OtherEventTypeEnum.StreamlabsDonation:
+                        case OtherEventTypeEnum.GawkBoxDonation:
+                        case OtherEventTypeEnum.TiltifyDonation:
+                            extraSpecialIdentifiers["donationsource"] = "Test Source";
+                            extraSpecialIdentifiers["donationamount"] = "$12.34";
+                            extraSpecialIdentifiers["donationmessage"] = "Test donation message.";
+                            extraSpecialIdentifiers["donationimage"] = ChannelSession.GetCurrentUser().AvatarLink;
+                            break;
+                    }
+                }
+
+                await command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName }, extraSpecialIdentifiers);
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;
