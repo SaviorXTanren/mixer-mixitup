@@ -143,6 +143,9 @@ namespace MixItUp.WPF.Controls.Command
                         case Mixer.Base.Clients.ConstellationEventTypeEnum.channel__id__hosted:
                             extraSpecialIdentifiers["hostviewercount"] = "123";
                             break;
+                        case Mixer.Base.Clients.ConstellationEventTypeEnum.channel__id__resubscribed:
+                            extraSpecialIdentifiers["usersubmonths"] = "5";
+                            break;
                     }
 
                     switch (eventCommand.OtherEventType)

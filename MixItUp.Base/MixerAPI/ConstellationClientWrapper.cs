@@ -304,7 +304,8 @@ namespace MixItUp.Base.MixerAPI
                         this.OnResubscribedOccurred(this, new Tuple<UserViewModel, int>(user, resubMonths));
                     }
 
-                    await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user);
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
+                    await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user, specialIdentifiers);
                 }
             }
 

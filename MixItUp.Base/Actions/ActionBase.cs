@@ -112,11 +112,11 @@ namespace MixItUp.Base.Actions
         protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false)
         {
             SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.randomUserSpecialIdentifierGroup, encode);
-            await siString.ReplaceCommonSpecialModifiers(user, arguments);
             foreach (var kvp in this.extraSpecialIdentifiers)
             {
                 siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
+            await siString.ReplaceCommonSpecialModifiers(user, arguments);
             return siString.ToString();
         }
 
