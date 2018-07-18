@@ -10,6 +10,7 @@ namespace MixItUp.Base.Services
         void TrackException(Exception ex);
         void TrackPageView(string pageName);
         void TrackLogin();
+        void TrackSongRequest(SongRequestServiceTypeEnum songService);
 
         void Start();
         void SetUserId(string userId);

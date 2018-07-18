@@ -154,6 +154,8 @@ namespace MixItUp.Desktop.Services
                     }
                     DesktopSongRequestService.songRequestLock.Release();
 
+                    ChannelSession.Services?.Telemetry?.TrackSongRequest(requestSearch.Type);
+
                     await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue", requestSearch.SongRequest.Name));
                     GlobalEvents.SongRequestsChangedOccurred();
 
