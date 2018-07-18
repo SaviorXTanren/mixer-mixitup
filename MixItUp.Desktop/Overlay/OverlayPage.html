@@ -251,7 +251,7 @@
                         youtubeSongPlaying = true;
                         youtubePlayer.setVolume(data.Volume);
                         youtubePlayer.setLoop(true);
-                        youtubePlayer.loadPlaylist(data.Source);
+                        youtubePlayer.loadPlaylist({ list: data.Source, listType: 'playlist', index: 0 });
                         youtubePlayer.setShuffle(true);
                     }
                     else if (data.Action == 'volume') {
