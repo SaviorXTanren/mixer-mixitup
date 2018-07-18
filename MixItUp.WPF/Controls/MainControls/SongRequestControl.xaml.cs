@@ -199,9 +199,10 @@ namespace MixItUp.WPF.Controls.MainControls
             SongRequestControl.songListLock.Release();
         }
 
-        private async void VolumeSlider_ValueChanged(object sender, int e)
+        private async void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ChannelSession.Settings.SongRequestVolume = this.VolumeSlider.Value;
+            ChannelSession.Settings.SongRequestVolume = (int)this.VolumeSlider.Value;
+            this.VolumeAmountTextBlock.Text = ChannelSession.Settings.SongRequestVolume.ToString();
             await this.Window.RunAsyncOperation(async () =>
             {
                 if (ChannelSession.Services.SongRequestService != null)
@@ -209,6 +210,11 @@ namespace MixItUp.WPF.Controls.MainControls
                     await ChannelSession.Services.SongRequestService.RefreshVolume();
                 }
             });
+        }
+
+        private void DefaultPlaylistURL_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ChannelSession.Settings.DefaultPlaylist = this.DefaultPlaylistURL.Text;
         }
 
         #region IDisposable Support
@@ -238,10 +244,5 @@ namespace MixItUp.WPF.Controls.MainControls
             Dispose(true);
         }
         #endregion
-
-        private void DefaultPlaylistURL_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ChannelSession.Settings.DefaultPlaylist = this.DefaultPlaylistURL.Text;
-        }
     }
 }
