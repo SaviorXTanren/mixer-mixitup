@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Model.TestStreams;
+using MixItUp.Base;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows;
@@ -45,6 +46,14 @@ namespace MixItUp.WPF.Controls.Services
         {
             bool result = await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
+                TestStreamSettingsModel testStreamSettings = await ChannelSession.Connection.GetTestStreamSettings(ChannelSession.Channel);
+                if (testStreamSettings != null && testStreamSettings.isActive.GetValueOrDefault())
+                {
+                    if (!await MessageBoxHelper.ShowConfirmationDialog("Because test stream settings are enabled, your bot account will not be able to connect correctly. You will need to disable Test Streams in order to use your bot account for things such a chat messages & whispers. Are you sure you still wish to connect it?"))
+                    {
+                        return false;
+                    }
+                }
                 return await ChannelSession.ConnectBot();
             });
 

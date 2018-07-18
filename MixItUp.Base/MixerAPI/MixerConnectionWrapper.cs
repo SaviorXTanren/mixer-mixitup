@@ -7,6 +7,7 @@ using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.Teams;
+using Mixer.Base.Model.TestStreams;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Util;
@@ -141,6 +142,8 @@ namespace MixItUp.Base.MixerAPI
         public async Task<ClipModel> GetClip(string shareableID) { return await this.RunAsync(this.Connection.Clips.GetClip(shareableID)); }
 
         public async Task<IEnumerable<ClipModel>> GetChannelClips(ChannelModel channel) { return await this.RunAsync(this.Connection.Clips.GetChannelClips(channel)); }
+
+        public async Task<TestStreamSettingsModel> GetTestStreamSettings(ChannelModel channel) { return await this.RunAsync(this.Connection.TestStreams.GetSettings(channel)); }
 
         private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
         {
