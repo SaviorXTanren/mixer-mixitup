@@ -1,4 +1,5 @@
 ﻿using Microsoft.ApplicationInsights;
+using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using System;
@@ -45,6 +46,14 @@ namespace MixItUp.Desktop.Services
             if (!ChannelSession.Settings.OptOutTracking)
             {
                 this.telemetryClient.TrackEvent("Login");
+            }
+        }
+
+        public void TrackSongRequest(SongRequestServiceTypeEnum songService)
+        {
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                this.telemetryClient.TrackEvent("SongRequest", new Dictionary<string, string> { { "Song Request Service", EnumHelper.GetEnumName(songService) } });
             }
         }
 
