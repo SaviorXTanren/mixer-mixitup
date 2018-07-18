@@ -301,6 +301,8 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
+                await this.RefreshVolume();
+
                 JObject payload = new JObject();
                 payload["context_uri"] = playlist.Uri;
 
@@ -308,8 +310,13 @@ namespace MixItUp.Desktop.Services
                 position["position"] = 0;
                 payload["offset"] = position;
 
-                HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
-                return (response.StatusCode == HttpStatusCode.NoContent);
+                HttpResponseMessage playResponse = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
+                await Task.Delay(250);
+                await this.PutAsync("me/player/shuffle?state=true", null);
+                await Task.Delay(250);
+                await this.NextCurrentlyPlaying();
+                await Task.Delay(500);
+                return (playResponse.StatusCode == HttpStatusCode.NoContent);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return false;
@@ -319,16 +326,27 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
+                await this.RefreshVolume();
+
                 JArray songArray = new JArray();
                 songArray.Add(uri);
                 JObject payload = new JObject();
                 payload["uris"] = songArray;
 
                 HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
+                await Task.Delay(1000);
                 return (response.StatusCode == HttpStatusCode.NoContent);
             }
             catch (Exception ex) { Logger.Log(ex); }
             return false;
+        }
+
+        public Task RefreshVolume()
+        {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            this.PutAsync($"me/player/volume?volume_percent={ChannelSession.Settings.SongRequestVolume}", null);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            return Task.FromResult(0);
         }
 
         protected override async Task RefreshOAuthToken()
