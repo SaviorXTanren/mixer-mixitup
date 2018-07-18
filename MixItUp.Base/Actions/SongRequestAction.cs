@@ -79,7 +79,7 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.SetVolume)
                     {
-                        if (arguments.Count() > 0 && int.TryParse(arguments.First(), out int volume))
+                        if (arguments != null && arguments.Count() > 0 && int.TryParse(arguments.First(), out int volume))
                         {
                             volume = MathHelper.Clamp(volume, 0, 100);
                             ChannelSession.Settings.SongRequestVolume = volume;
