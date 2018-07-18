@@ -220,6 +220,10 @@
                 }
             }
 
+            function getRandom(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
             function songRequestPacket(data) {
                 if (data.Type == 'YouTube' && youtubePlayerReady) {
                     if (data.Action == 'playpause' && youtubeSongPlaying) {
@@ -234,9 +238,24 @@
                         youtubeSongPlaying = false;
                         youtubePlayer.stopVideo();
                     }
+                    else if (data.Action == 'next') {
+                        youtubePlayer.nextVideo();
+                    }
                     else if (data.Action == 'song') {
                         youtubeSongPlaying = true;
+                        youtubePlayer.setVolume(data.Volume);
+                        youtubePlayer.setLoop(false);
                         youtubePlayer.loadVideoById(data.Source);
+                    }
+                    else if (data.Action == 'playlist') {
+                        youtubeSongPlaying = true;
+                        youtubePlayer.setVolume(data.Volume);
+                        youtubePlayer.setLoop(true);
+                        youtubePlayer.loadPlaylist(data.Source);
+                        youtubePlayer.setShuffle(true);
+                    }
+                    else if (data.Action == 'volume') {
+                        youtubePlayer.setVolume(data.Volume);
                     }
                 }
                 else if (data.Type == 'SoundCloud' && soundCloudPlayerReady) {
@@ -252,8 +271,24 @@
                         soundCloudPlayerSongPlaying = false;
                         soundCloudPlayer.seekTo(3600000);
                     }
+                    else if (data.Action == 'next') {
+                        soundCloudPlayer.next();
+                    }
                     else if (data.Action == 'song') {
+                        soundCloudPlayer.setVolume(data.Volume);
                         soundCloudPlayer.load(data.Source, { auto_play: true });
+                    }
+                    else if (data.Action == 'playlist') {
+                        soundCloudPlayer.setVolume(data.Volume);
+                        soundCloudPlayer.load(
+                            data.Source,
+                            {
+                                auto_play: true,
+                                callback: () => soundCloudPlayer.skip(getRandom(0, 10000))
+                            });
+                    }
+                    else if (data.Action == 'volume') {
+                        soundCloudPlayer.setVolume(data.Volume);
                     }
                 }
             }

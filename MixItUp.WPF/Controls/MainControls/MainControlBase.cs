@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.WPF.Windows;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,10 +42,15 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void MainControlBase_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
         {
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            {
+                return;
+            }
+
             if ((bool)e.NewValue)
             {
                 string typeName = this.GetType().FullName;
-                if (!IgnoredPages.Contains(typeName))
+                if (!IgnoredPages.Contains(typeName) && ChannelSession.Services?.Telemetry != null)
                 {
                     ChannelSession.Services.Telemetry.TrackPageView(typeName);
                 }

@@ -242,6 +242,12 @@ namespace MixItUp.Desktop
         public bool SpotifyAllowExplicit { get; set; }
 
         [JsonProperty]
+        public string DefaultPlaylist { get; set; }
+
+        [JsonProperty]
+        public int SongRequestVolume { get; set; } = 100;
+
+        [JsonProperty]
         public string TelemetryUserId { get; set; }
 
         [JsonProperty]

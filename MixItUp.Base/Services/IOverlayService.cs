@@ -30,6 +30,8 @@ namespace MixItUp.Base.Services
         public string Action { get; set; }
         [DataMember]
         public string Source { get; set; }
+        [DataMember]
+        public int Volume { get; set; }
     }
 
     public interface IOverlayService

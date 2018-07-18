@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private static SemaphoreSlim songListLock = new SemaphoreSlim(1);
 
-        private ObservableCollection<SongRequestItem> requests = new ObservableCollection<SongRequestItem>();
+        private ObservableCollection<SongRequestItem> requestPlaylist = new ObservableCollection<SongRequestItem>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
@@ -39,13 +39,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
             GlobalEvents.OnSongRequestsChangedOccurred += GlobalEvents_OnSongRequestsChangedOccurred;
 
-            this.SongRequestsQueueListView.ItemsSource = this.requests;
+            this.SongRequestsQueueListView.ItemsSource = this.requestPlaylist;
+            this.DefaultPlaylistURL.Text = ChannelSession.Settings.DefaultPlaylist;
 
             this.SpotifyToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify);
             this.YouTubeToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube);
             this.SoundCloudToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.SoundCloud);
 
             this.SpotifyAllowExplicitSongToggleButton.IsChecked = ChannelSession.Settings.SpotifyAllowExplicit;
+
+            this.VolumeSlider.Value = ChannelSession.Settings.SongRequestVolume;
 
             await this.RefreshRequestsList();
 
@@ -150,7 +153,7 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteQueueButton_Click(object sender, RoutedEventArgs e)
         {
             await this.Window.RunAsyncOperation(async () =>
             {
@@ -177,13 +180,35 @@ namespace MixItUp.WPF.Controls.MainControls
             this.SongRequestServicesGrid.IsEnabled = !ChannelSession.Services.SongRequestService.IsEnabled;
             this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
 
-            this.requests.Clear();
+            this.requestPlaylist.Clear();
             foreach (SongRequestItem item in await ChannelSession.Services.SongRequestService.GetAllRequests())
             {
-                this.requests.Add(item);
+                this.requestPlaylist.Add(item);
+            }
+
+            SongRequestItem song = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+            if (song != null)
+            {
+                CurrentSongName.Text = song.Name;
+            }
+            else
+            {
+                CurrentSongName.Text = "None";
             }
 
             SongRequestControl.songListLock.Release();
+        }
+
+        private async void VolumeSlider_ValueChanged(object sender, int e)
+        {
+            ChannelSession.Settings.SongRequestVolume = this.VolumeSlider.Value;
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (ChannelSession.Services.SongRequestService != null)
+                {
+                    await ChannelSession.Services.SongRequestService.RefreshVolume();
+                }
+            });
         }
 
         #region IDisposable Support
@@ -213,5 +238,10 @@ namespace MixItUp.WPF.Controls.MainControls
             Dispose(true);
         }
         #endregion
+
+        private void DefaultPlaylistURL_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ChannelSession.Settings.DefaultPlaylist = this.DefaultPlaylistURL.Text;
+        }
     }
 }
