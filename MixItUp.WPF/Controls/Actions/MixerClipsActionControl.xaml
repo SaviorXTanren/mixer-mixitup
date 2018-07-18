@@ -37,11 +37,18 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" x:Name="ClipNameTextBox" MaterialDesign:HintAssist.Hint="Clip Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="525" />
+            <TextBox Grid.Column="0" x:Name="ClipNameTextBox" MaterialDesign:HintAssist.Hint="Clip Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="390" />
 
-            <TextBox Grid.Column="2" x:Name="ClipLengthTextBox" MaterialDesign:HintAssist.Hint="Length (15-300 Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+            <TextBox Grid.Column="2" x:Name="ClipLengthTextBox" MaterialDesign:HintAssist.Hint="Length (15-300 Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+
+            <TextBlock Grid.Column="4" VerticalAlignment="Bottom">Show Info In Chat:</TextBlock>
+            <ToggleButton Grid.Column="6" x:Name="ShowClipInfoInChatToggleButton" VerticalAlignment="Bottom" />
         </Grid>
 
         <Grid x:Name="DownloadClipGrid" Grid.Row="4">

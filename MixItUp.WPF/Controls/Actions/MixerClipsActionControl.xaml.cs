@@ -20,6 +20,7 @@ namespace MixItUp.WPF.Controls.Actions
         public override Task OnLoaded()
         {
             this.ClipLengthTextBox.Text = "30";
+            this.ShowClipInfoInChatToggleButton.IsChecked = true;
 
             this.OnlyAvailableForPartnersWarningTextBlock.Visibility = (ChannelSession.Channel.partnered) ? Visibility.Collapsed : Visibility.Visible;
 
@@ -36,6 +37,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.ClipNameTextBox.Text = this.action.ClipName;
                 this.ClipLengthTextBox.Text = this.action.ClipLength.ToString();
+                this.ShowClipInfoInChatToggleButton.IsChecked = this.action.ShowClipInfoInChat;
                 this.DownloadClipToggleButton.IsChecked = this.action.DownloadClip;
                 this.DownloadDirectoryTextBox.Text = this.action.DownloadDirectory;
             }
@@ -52,12 +54,13 @@ namespace MixItUp.WPF.Controls.Actions
                     {
                         if (!string.IsNullOrEmpty(this.DownloadDirectoryTextBox.Text) && Directory.Exists(this.DownloadDirectoryTextBox.Text))
                         {
-                            return new MixerClipsAction(this.ClipNameTextBox.Text, length, downloadClip: true, downloadDirectory: this.DownloadDirectoryTextBox.Text);
+                            return new MixerClipsAction(this.ClipNameTextBox.Text, length, showClipInfoInChat: this.ShowClipInfoInChatToggleButton.IsChecked.GetValueOrDefault(),
+                                downloadClip: true, downloadDirectory: this.DownloadDirectoryTextBox.Text);
                         }
                     }
                     else
                     {
-                        return new MixerClipsAction(this.ClipNameTextBox.Text, length);
+                        return new MixerClipsAction(this.ClipNameTextBox.Text, length, showClipInfoInChat: this.ShowClipInfoInChatToggleButton.IsChecked.GetValueOrDefault());
                     }
                 }
             }

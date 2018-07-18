@@ -39,17 +39,21 @@ namespace MixItUp.Base.Actions
         public int ClipLength { get; set; }
 
         [DataMember]
+        public bool ShowClipInfoInChat { get; set; }
+
+        [DataMember]
         public bool DownloadClip { get; set; }
         [DataMember]
         public string DownloadDirectory { get; set; }
 
         public MixerClipsAction() : base(ActionTypeEnum.MixerClips) { }
 
-        public MixerClipsAction(string clipName, int clipLength, bool downloadClip = false, string downloadDirectory = null)
+        public MixerClipsAction(string clipName, int clipLength, bool showClipInfoInChat = true, bool downloadClip = false, string downloadDirectory = null)
             : this()
         {
             this.ClipName = clipName;
             this.ClipLength = clipLength;
+            this.ShowClipInfoInChat = showClipInfoInChat;
             this.DownloadClip = downloadClip;
             this.DownloadDirectory = downloadDirectory;
         }
@@ -58,7 +62,10 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
-                await ChannelSession.Chat.SendMessage("Sending clip creation request to Mixer...");
+                if (this.ShowClipInfoInChat)
+                {
+                    await ChannelSession.Chat.SendMessage("Sending clip creation request to Mixer...");
+                }
 
                 string clipName = await this.ReplaceStringWithSpecialModifiers(this.ClipName, user, arguments);
                 if (!string.IsNullOrEmpty(clipName) && MixerClipsAction.MinimumLength <= this.ClipLength && this.ClipLength <= MixerClipsAction.MaximumLength)
@@ -92,7 +99,10 @@ namespace MixItUp.Base.Actions
                             {
                                 string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.User.username, clip.shareableId);
 
-                                await ChannelSession.Chat.SendMessage("Clip Created: " + clipUrl);
+                                if (this.ShowClipInfoInChat)
+                                {
+                                    await ChannelSession.Chat.SendMessage("Clip Created: " + clipUrl);
+                                }
 
                                 this.extraSpecialIdentifiers[MixerClipURLSpecialIdentifier] = clipUrl;
 
