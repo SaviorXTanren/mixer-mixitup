@@ -1,7 +1,9 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +24,8 @@ namespace MixItUp.Base.Actions
         SkipToNextSong,
         [Name("Enable/Disable Song Requests")]
         EnableDisableSongRequests,
+        [Name("Set Song Request Volume")]
+        SetVolume,
     }
 
     public class SongRequestAction : ActionBase
@@ -72,6 +76,21 @@ namespace MixItUp.Base.Actions
                     if (this.SongRequestType == SongRequestActionTypeEnum.AddSongToQueue)
                     {
                         await ChannelSession.Services.SongRequestService.AddSongRequest(user, string.Join(" ", arguments));
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.SetVolume)
+                    {
+                        if (arguments != null && arguments.Count() > 0 && int.TryParse(arguments.First(), out int volume))
+                        {
+                            volume = MathHelper.Clamp(volume, 0, 100);
+                            ChannelSession.Settings.SongRequestVolume = volume;
+                            await ChannelSession.Services.SongRequestService.RefreshVolume();
+                            await ChannelSession.Chat.SendMessage("Song request volume set to " + ChannelSession.Settings.SongRequestVolume);
+                        }
+                        else
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, "Please specify a volume level [0-100].");
+                            return;
+                        }
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.DisplayCurrentlyPlaying)
                     {
