@@ -146,7 +146,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceDisconnectSoundFilePath, 100);
             }
 
-            this.serviceDisconnections.Add(serviceName);
+            lock (this.serviceDisconnections)
+            {
+                this.serviceDisconnections.Add(serviceName);
+            }
             this.RefreshServiceDisconnectionsAlertTooltip();
         }
 
@@ -157,7 +160,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationServiceConnectSoundFilePath, 100);
             }
 
-            this.serviceDisconnections.Remove(serviceName);
+            lock (this.serviceDisconnections)
+            {
+                this.serviceDisconnections.Remove(serviceName);
+            }
             this.RefreshServiceDisconnectionsAlertTooltip();
         }
 
@@ -168,13 +174,15 @@ namespace MixItUp.WPF.Controls.MainControls
                 StringBuilder tooltip = new StringBuilder();
                 tooltip.AppendLine(DisconnectedServicesHeader);
                 tooltip.AppendLine();
-                foreach (string serviceName in this.serviceDisconnections.OrderBy(s => s))
+                lock (this.serviceDisconnections)
                 {
-                    tooltip.AppendLine("- " + serviceName);
+                    foreach (string serviceName in this.serviceDisconnections.OrderBy(s => s))
+                    {
+                        tooltip.AppendLine("- " + serviceName);
+                    }
+                    this.DisconnectionAlertButton.Visibility = (serviceDisconnections.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
                 }
                 this.DisconnectionAlertButton.ToolTip = tooltip.ToString();
-
-                this.DisconnectionAlertButton.Visibility = (serviceDisconnections.Count == 0) ? Visibility.Collapsed : Visibility.Visible;
             });
         }
 
