@@ -411,14 +411,6 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllUsers();
-                if (users.Count() > 0)
-                {
-                    Random random = new Random();
-                    int index = random.Next(users.Count());
-
-                }
-
                 if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
                 {
                     int startIndex = 0;
