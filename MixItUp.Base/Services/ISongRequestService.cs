@@ -30,6 +30,7 @@ namespace MixItUp.Base.Services
 
         Task AddSongRequest(UserViewModel user, string identifier);
         Task RemoveSongRequest(SongRequestItem song);
+        Task RemoveLastSongRequestedByUser(UserViewModel user);
 
         Task PlayPauseCurrentSong();
         Task SkipToNextSong();

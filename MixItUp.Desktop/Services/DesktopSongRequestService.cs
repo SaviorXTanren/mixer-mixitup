@@ -156,7 +156,7 @@ namespace MixItUp.Desktop.Services
 
                     ChannelSession.Services?.Telemetry?.TrackSongRequest(requestSearch.Type);
 
-                    await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue", requestSearch.SongRequest.Name));
+                    await ChannelSession.Chat.SendMessage(string.Format("{0} was added to the queue.", requestSearch.SongRequest.Name));
                     GlobalEvents.SongRequestsChangedOccurred();
 
                     return;
@@ -182,6 +182,27 @@ namespace MixItUp.Desktop.Services
             DesktopSongRequestService.songRequestLock.Release();
 
             GlobalEvents.SongRequestsChangedOccurred();
+        }
+
+        public async Task RemoveLastSongRequestedByUser(UserViewModel user)
+        {
+            await DesktopSongRequestService.songRequestLock.WaitAsync();
+            SongRequestItem song = this.allRequests.LastOrDefault(s => s.User.ID == user.ID);
+            if (song != null)
+            {
+                this.allRequests.Remove(song);
+            }
+            DesktopSongRequestService.songRequestLock.Release();
+
+            if (song != null)
+            {
+                await ChannelSession.Chat.SendMessage(string.Format("{0} was removed from the queue.", song.Name));
+                GlobalEvents.SongRequestsChangedOccurred();
+            }
+            else
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You have no songs in the queue.", song.Name));
+            }
         }
 
         public async Task PlayPauseCurrentSong()
