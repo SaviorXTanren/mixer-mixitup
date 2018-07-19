@@ -125,8 +125,8 @@ namespace MixItUp.Desktop.Services
             }
 
             List<Task<SongRequestItemSearch>> allRequests = new List<Task<SongRequestItemSearch>>();
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube)) { allRequests.Add(this.GetYouTubeSongRequest(identifier)); }
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.SoundCloud)) { allRequests.Add(this.GetSoundCloudSongRequest(identifier)); }
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube)) { allRequests.Add(this.GetYouTubeSongRequest(user, identifier)); }
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.SoundCloud)) { allRequests.Add(this.GetSoundCloudSongRequest(user, identifier)); }
             if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify)) { allRequests.Add(this.GetSpotifySongRequest(user, identifier)); }
 
             SongRequestItemSearch requestSearch = null;
@@ -396,7 +396,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task<SongRequestItemSearch> GetYouTubeSongRequest(string identifier)
+        private async Task<SongRequestItemSearch> GetYouTubeSongRequest(UserViewModel user, string identifier)
         {
             identifier = identifier.Replace(YouTubeLongLinkPrefix, "");
             identifier = identifier.Replace(YouTubeShortLinkPrefix, "");
@@ -416,7 +416,7 @@ namespace MixItUp.Desktop.Services
                         JObject jobj = JObject.Parse(content);
                         if (jobj["title"] != null)
                         {
-                            return new SongRequestItemSearch(new SongRequestItem() { ID = identifier, Name = jobj["title"].ToString(), Type = SongRequestServiceTypeEnum.YouTube });
+                            return new SongRequestItemSearch(new SongRequestItem() { ID = identifier, Name = jobj["title"].ToString(), User = user, Type = SongRequestServiceTypeEnum.YouTube });
                         }
                     }
                 }
@@ -426,7 +426,7 @@ namespace MixItUp.Desktop.Services
             return new SongRequestItemSearch(SongRequestServiceTypeEnum.YouTube, "The link you specified is not a valid YouTube video");
         }
 
-        private async Task<SongRequestItemSearch> GetSoundCloudSongRequest(string identifier)
+        private async Task<SongRequestItemSearch> GetSoundCloudSongRequest(UserViewModel user, string identifier)
         {
             if (Regex.IsMatch(identifier, SoundCloudPublicLinkFormat))
             {
@@ -442,7 +442,7 @@ namespace MixItUp.Desktop.Services
                             JObject jobj = JObject.Parse(content);
                             if (jobj["title"] != null)
                             {
-                                return new SongRequestItemSearch(new SongRequestItem() { ID = identifier, Name = jobj["title"].ToString(), Type = SongRequestServiceTypeEnum.SoundCloud });
+                                return new SongRequestItemSearch(new SongRequestItem() { ID = identifier, Name = jobj["title"].ToString(), User = user, Type = SongRequestServiceTypeEnum.SoundCloud });
                             }
                         }
                     }
@@ -533,7 +533,7 @@ namespace MixItUp.Desktop.Services
                         }
                         else
                         {
-                            return new SongRequestItemSearch(new SongRequestItem() { ID = song.ID, Name = song.ToString(), Type = SongRequestServiceTypeEnum.Spotify });
+                            return new SongRequestItemSearch(new SongRequestItem() { ID = song.ID, Name = song.ToString(), User = user, Type = SongRequestServiceTypeEnum.Spotify });
                         }
                     }
                     else
@@ -595,6 +595,7 @@ namespace MixItUp.Desktop.Services
                     {
                         ID = $"{DefaultSongId}:{ChannelSession.Settings.DefaultPlaylist}",
                         Name = "Default Spotify Playlist",
+                        User = ChannelSession.GetCurrentUser(),
                         Type = SongRequestServiceTypeEnum.Spotify
                     };
                     await ChannelSession.Services.Spotify.PlayPlaylist(new SpotifyPlaylist { Uri = ChannelSession.Settings.DefaultPlaylist });
@@ -613,6 +614,7 @@ namespace MixItUp.Desktop.Services
                                 {
                                     ID = $"{DefaultSongId}:{ChannelSession.Settings.DefaultPlaylist}",
                                     Name = "Default YouTube Playlist",
+                                    User = ChannelSession.GetCurrentUser(),
                                     Type = SongRequestServiceTypeEnum.YouTube
                                 };
                                 await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "playlist", Source = queryParameteters["list"], Volume = ChannelSession.Settings.SongRequestVolume });
@@ -624,6 +626,7 @@ namespace MixItUp.Desktop.Services
                             {
                                 ID = $"{DefaultSongId}:{ChannelSession.Settings.DefaultPlaylist}",
                                 Name = "Default SoundCloud Playlist",
+                                User = ChannelSession.GetCurrentUser(),
                                 Type = SongRequestServiceTypeEnum.SoundCloud
                             };
                             await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.SoundCloud.ToString(), Action = "playlist", Source = ChannelSession.Settings.DefaultPlaylist, Volume = ChannelSession.Settings.SongRequestVolume });
