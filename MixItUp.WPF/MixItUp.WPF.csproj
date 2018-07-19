@@ -109,6 +109,9 @@
     <Reference Include="SocketIoClientDotNet, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SocketIoClientDotNet.1.0.6\lib\net45\SocketIoClientDotNet.dll</HintPath>
     </Reference>
+    <Reference Include="StreamDeckSharp, Version=0.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\streamdecksharp.0.1.9\lib\net40\StreamDeckSharp.dll</HintPath>
+    </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
     </Reference>

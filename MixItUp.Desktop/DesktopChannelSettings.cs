@@ -66,6 +66,9 @@ namespace MixItUp.Desktop
         public OAuthTokenModel TiltifyOAuthToken { get; set; }
 
         [JsonProperty]
+        public string StreamDeckDeviceName { get; set; }
+
+        [JsonProperty]
         public ExpandedChannelModel Channel { get; set; }
 
         [JsonProperty]

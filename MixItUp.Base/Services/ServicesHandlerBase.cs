@@ -29,6 +29,7 @@ namespace MixItUp.Base.Services
         public IDiscordService Discord { get; protected set; }
         public ITiltifyService Tiltify { get; protected set; }
         public ITelemetryService Telemetry { get; protected set; }
+        public IStreamDeckService StreamDeck { get; protected set; }
 
         public abstract Task Close();
 
@@ -70,5 +71,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeTiltify(string authorizationCode = null);
         public abstract Task DisconnectTiltify();
+
+        public abstract Task<bool> InitializeStreamDeck();
+        public abstract Task DisconnectStreamDeck();
     }
 }
