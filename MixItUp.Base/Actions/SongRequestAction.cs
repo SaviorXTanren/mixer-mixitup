@@ -26,6 +26,8 @@ namespace MixItUp.Base.Actions
         EnableDisableSongRequests,
         [Name("Set Song Request Volume")]
         SetVolume,
+        [Name("Remove Last Song Requested By User")]
+        RemoveLastByUser,
     }
 
     public class SongRequestAction : ActionBase
@@ -76,6 +78,10 @@ namespace MixItUp.Base.Actions
                     if (this.SongRequestType == SongRequestActionTypeEnum.AddSongToQueue)
                     {
                         await ChannelSession.Services.SongRequestService.AddSongRequest(user, string.Join(" ", arguments));
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.RemoveLastByUser)
+                    {
+                        await ChannelSession.Services.SongRequestService.RemoveLastSongRequestedByUser(user);
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.SetVolume)
                     {

@@ -17,6 +17,7 @@ namespace MixItUp.Base.Services
         public string ID { get; set; }
         public string Name { get; set; }
         public SongRequestServiceTypeEnum Type { get; set; }
+        public UserViewModel User { get; set; }
     }
 
     public interface ISongRequestService
@@ -29,6 +30,7 @@ namespace MixItUp.Base.Services
 
         Task AddSongRequest(UserViewModel user, string identifier);
         Task RemoveSongRequest(SongRequestItem song);
+        Task RemoveLastSongRequestedByUser(UserViewModel user);
 
         Task PlayPauseCurrentSong();
         Task SkipToNextSong();
