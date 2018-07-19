@@ -43,6 +43,9 @@ namespace MixItUp.Base.Util
         public const string StreamSubCountSpecialIdentifier = "streamsubcount";
         public const string StreamHostCountSpecialIdentifier = "streamhostcount";
 
+        public const string CurrentSongIdentifierHeader = "currentsong";
+        public const string NextSongIdentifierHeader = "nextsong";
+
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 
@@ -191,6 +194,48 @@ namespace MixItUp.Base.Util
                     {
                         this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time", "No users found.");
                     }
+                }
+            }
+
+            if (this.ContainsSpecialIdentifier(CurrentSongIdentifierHeader))
+            {
+                SongRequestItem song = null;
+
+                if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
+                {
+                    song = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                }
+
+                if (song != null)
+                {
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", song.Name);
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", song.User.UserName);
+                }
+                else
+                {
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", "No Song");
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", "Nobody");
+                }
+            }
+
+            if (this.ContainsSpecialIdentifier(NextSongIdentifierHeader))
+            {
+                SongRequestItem song = null;
+
+                if (ChannelSession.Services.SongRequestService != null && ChannelSession.Services.SongRequestService.IsEnabled)
+                {
+                    song = await ChannelSession.Services.SongRequestService.GetNextTrack();
+                }
+
+                if (song != null)
+                {
+                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "title", song.Name);
+                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "username", song.User.UserName);
+                }
+                else
+                {
+                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "title", "No Song");
+                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "username", "Nobody");
                 }
             }
 
@@ -364,14 +409,6 @@ namespace MixItUp.Base.Util
                     {
                         await this.HandleUserSpecialIdentifiers(RandomUserSpecialIdentifierGroups[randomUserSpecialIdentifierGroupID].RandomSubscriber, RandomSubscriberSpecialIdentifierHeader);
                     }
-                }
-
-                IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllUsers();
-                if (users.Count() > 0)
-                {
-                    Random random = new Random();
-                    int index = random.Next(users.Count());
-                    
                 }
 
                 if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
