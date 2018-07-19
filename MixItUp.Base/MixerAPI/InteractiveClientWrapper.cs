@@ -242,6 +242,11 @@ namespace MixItUp.Base.MixerAPI
             InteractiveParticipantCollectionModel collection = null;
             do
             {
+                if (this.Client == null)
+                {
+                    break;
+                }
+
                 collection = await this.RunAsync(this.Client.GetAllParticipants(startTime));
                 if (collection != null && collection.participants != null)
                 {
