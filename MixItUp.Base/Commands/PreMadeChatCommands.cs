@@ -492,7 +492,7 @@ namespace MixItUp.Base.Commands
 
                         if (ChannelSession.Chat != null)
                         {
-                            await ChannelSession.Chat.SendMessage("Added Quote: \"" + quote.ToString() + "\"");
+                            await ChannelSession.Chat.SendMessage(string.Format("Added Quote #{0}: {1}", (ChannelSession.Settings.UserQuotes.IndexOf(quote) + 1), quote.ToString()));
                         }
                     }
                     else
