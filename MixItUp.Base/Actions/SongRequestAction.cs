@@ -12,8 +12,8 @@ namespace MixItUp.Base.Actions
 {
     public enum SongRequestActionTypeEnum
     {
-        [Name("Add Song To Queue")]
-        AddSongToQueue,
+        [Name("Search Songs & Use Artist Lookup")]
+        SearchSongsAndUseArtistSelect,
         [Name("Display Currently Playing")]
         DisplayCurrentlyPlaying,
         [Name("Display Next Song")]
@@ -28,6 +28,8 @@ namespace MixItUp.Base.Actions
         SetVolume,
         [Name("Remove Last Song Requested By User")]
         RemoveLastByUser,
+        [Name("Search Songs & Pick First Result")]
+        SearchSongsAndPickFirstResult,
     }
 
     public class SongRequestAction : ActionBase
@@ -39,12 +41,20 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public SongRequestActionTypeEnum SongRequestType { get; set; }
 
-        public SongRequestAction() : base(ActionTypeEnum.SongRequest) { }
+        [DataMember]
+        public SongRequestServiceTypeEnum SpecificService { get; set; }
 
-        public SongRequestAction(SongRequestActionTypeEnum songRequestType)
+        public SongRequestAction()
+            : base(ActionTypeEnum.SongRequest)
+        {
+            this.SpecificService = SongRequestServiceTypeEnum.All;
+        }
+
+        public SongRequestAction(SongRequestActionTypeEnum songRequestType, SongRequestServiceTypeEnum service = SongRequestServiceTypeEnum.All)
             : this()
         {
             this.SongRequestType = songRequestType;
+            this.SpecificService = service;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -75,9 +85,13 @@ namespace MixItUp.Base.Actions
                         return;
                     }
 
-                    if (this.SongRequestType == SongRequestActionTypeEnum.AddSongToQueue)
+                    if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndUseArtistSelect)
                     {
-                        await ChannelSession.Services.SongRequestService.AddSongRequest(user, string.Join(" ", arguments));
+                        await ChannelSession.Services.SongRequestService.AddSongRequest(user, this.SpecificService, string.Join(" ", arguments));
+                    }
+                    else if (this.SongRequestType == SongRequestActionTypeEnum.SearchSongsAndPickFirstResult)
+                    {
+                        await ChannelSession.Services.SongRequestService.AddSongRequest(user, this.SpecificService, string.Join(" ", arguments), pickFirst: true);
                     }
                     else if (this.SongRequestType == SongRequestActionTypeEnum.RemoveLastByUser)
                     {

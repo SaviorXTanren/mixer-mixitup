@@ -88,6 +88,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     return;
                 }
 
+                ChannelSession.Settings.SongRequestServiceTypes.Clear();
                 if (this.SpotifyToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.Spotify); }
                 if (this.YouTubeToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.YouTube); }
                 if (this.SoundCloudToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.SoundCloud); }
