@@ -240,7 +240,7 @@ namespace MixItUp.Desktop
         public List<FavoriteGroupModel> FavoriteGroups { get; set; }
 
         [JsonProperty]
-        public List<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
+        public HashSet<SongRequestServiceTypeEnum> SongRequestServiceTypes { get; set; }
         [JsonProperty]
         public bool SpotifyAllowExplicit { get; set; }
 
@@ -295,7 +295,7 @@ namespace MixItUp.Desktop
             this.RemoteBoards = new List<RemoteBoardModel>();
             this.RemoteSavedDevices = new List<RemoteDeviceModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();
-            this.SongRequestServiceTypes = new List<SongRequestServiceTypeEnum>();
+            this.SongRequestServiceTypes = new HashSet<SongRequestServiceTypeEnum>();
 
             this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
