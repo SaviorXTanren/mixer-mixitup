@@ -50,7 +50,10 @@ namespace MixItUp.Desktop.Services
 
         private const string SpotifyLinkPrefix = "https://open.spotify.com/track/";
         private const string SpotifyTrackPrefix = "spotify:track:";
+
+        private const string SpotifyPlaylistLinkRegex = @"https://open.spotify.com/user/\w+/playlist/\w+";
         private const string SpotifyPlaylistRegex = @"spotify:user:\w+:playlist:";
+        private const string SpotifyPlaylistUriFormat = "spotify:user:{0}:playlist:{1}";
 
         private const string YouTubeLongLinkPrefix = "www.youtube.com/watch?v=";
         private const string YouTubeShortLinkPrefix = "youtu.be/";
@@ -717,8 +720,20 @@ namespace MixItUp.Desktop.Services
         {
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultPlaylist))
             {
-                if (ChannelSession.Services.Spotify != null && Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistRegex, RegexOptions.IgnoreCase))
+                if (ChannelSession.Services.Spotify != null && (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistRegex, RegexOptions.IgnoreCase) ||
+                    Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase)))
                 {
+                    string uri = ChannelSession.Settings.DefaultPlaylist;
+                    if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
+                    {
+                        string playlistID = ChannelSession.Settings.DefaultPlaylist.Split(new char[] { '/' }).Last();
+                        if (playlistID.Contains("?"))
+                        {
+                            playlistID = playlistID.Substring(0, playlistID.IndexOf("?"));
+                        }
+                        uri = string.Format(SpotifyPlaylistUriFormat, ChannelSession.Services.Spotify.Profile.ID, playlistID);
+                    }
+
                     this.currentSong = new SongRequestItem
                     {
                         ID = $"{DefaultSongId}:{ChannelSession.Settings.DefaultPlaylist}",
@@ -726,7 +741,7 @@ namespace MixItUp.Desktop.Services
                         User = ChannelSession.GetCurrentUser(),
                         Type = SongRequestServiceTypeEnum.Spotify
                     };
-                    await ChannelSession.Services.Spotify.PlayPlaylist(new SpotifyPlaylist { Uri = ChannelSession.Settings.DefaultPlaylist });
+                    await ChannelSession.Services.Spotify.PlayPlaylist(new SpotifyPlaylist { Uri = uri });
                 }
                 else if (ChannelSession.Services.OverlayServer != null)
                 {
