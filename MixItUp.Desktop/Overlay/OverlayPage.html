@@ -154,7 +154,7 @@
             function textPacket(data) {
                 var addedElement = document.createElement('h1');
                 addedElement.innerHTML = data.Text;
-                addedElement.style.cssText += 'font-size: ' + data.Size + 'px; color: ' + data.Color + '; ' + 'text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;';
+                addedElement.style.cssText += 'font-size: ' + data.Size + 'px; color: ' + data.Color + '; ' + 'text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; white-space: nowrap;';
 
                 addWaitRemoveElement(data, addedElement);
             }
