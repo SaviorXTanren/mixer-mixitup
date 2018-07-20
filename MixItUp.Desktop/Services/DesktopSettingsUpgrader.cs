@@ -55,6 +55,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version19Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version20Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version21Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version22Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -255,6 +256,36 @@ namespace MixItUp.Desktop.Services
                 await ChannelSession.Services.Settings.Initialize(settings);
 
                 settings.GameCommands.Clear();
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version22Upgrade(int version, string filePath)
+        {
+            if (version < 22)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                PreMadeChatCommandSettings cSetting = settings.PreMadeChatCommandSettings.FirstOrDefault(c => c.Name.Equals("Ban"));
+                if (cSetting != null)
+                {
+                    cSetting.IsEnabled = false;
+                }
+
+                List<CommandBase> commands = new List<CommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.EventCommands);
+                commands.AddRange(settings.InteractiveCommands);
+                commands.AddRange(settings.TimerCommands);
+                commands.AddRange(settings.ActionGroupCommands);
+                commands.AddRange(settings.GameCommands);
+                commands.AddRange(settings.RemoteCommands);
+                foreach (CommandBase command in commands)
+                {
+                    StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(command.Actions);
+                }
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
