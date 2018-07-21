@@ -18,7 +18,7 @@ namespace MixItUp.Base.Commands
                 StoreCommandUpgrader.ChangeWaitActionsToUseSpecialIdentifiers(actions);
             }
 
-            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.4.13.0"))
+            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.4.12.5"))
             {
                 StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(actions);
             }
