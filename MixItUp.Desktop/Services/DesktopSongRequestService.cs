@@ -785,6 +785,7 @@ namespace MixItUp.Desktop.Services
 
         private async Task PlayDefaultPlaylist()
         {
+            this.currentSong = null;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultPlaylist))
             {
                 if (ChannelSession.Services.Spotify != null && (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistRegex, RegexOptions.IgnoreCase) ||
