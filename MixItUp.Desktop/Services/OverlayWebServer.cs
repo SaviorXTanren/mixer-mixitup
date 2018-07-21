@@ -257,7 +257,7 @@ namespace MixItUp.Overlay
                     {
                         if (ChannelSession.Services.SongRequestService != null)
                         {
-                            ChannelSession.Services.SongRequestService.OverlaySongFinished();
+                            await ChannelSession.Services.SongRequestService.SkipToNextSong();
                         }
                     }
                 }

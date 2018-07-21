@@ -310,12 +310,9 @@ namespace MixItUp.Desktop.Services
                 position["position"] = 0;
                 payload["offset"] = position;
 
-                HttpResponseMessage playResponse = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
-                await Task.Delay(250);
                 await this.PutAsync("me/player/shuffle?state=true", null);
                 await Task.Delay(250);
-                await this.NextCurrentlyPlaying();
-                await Task.Delay(500);
+                HttpResponseMessage playResponse = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
                 return (playResponse.StatusCode == HttpStatusCode.NoContent);
             }
             catch (Exception ex) { Logger.Log(ex); }
