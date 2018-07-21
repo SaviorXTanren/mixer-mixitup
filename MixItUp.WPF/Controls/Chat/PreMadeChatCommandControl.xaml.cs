@@ -79,7 +79,8 @@ namespace MixItUp.WPF.Controls.Chat
 
             await this.window.RunAsyncOperation(async () =>
             {
-                await command.Perform(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName });
+                UserViewModel currentUser = await ChannelSession.GetCurrentUser();
+                await command.Perform(currentUser, new List<string>() { "@" + currentUser.UserName });
             });
         }
 

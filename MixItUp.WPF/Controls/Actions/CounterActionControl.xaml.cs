@@ -4,7 +4,6 @@ using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Actions
@@ -33,7 +32,7 @@ namespace MixItUp.WPF.Controls.Actions
                 if (this.action.UpdateAmount)
                 {
                     this.CounterActionTypeComboBox.SelectedIndex = 0;
-                    this.CounterAmountTextBox.Text = this.action.CounterAmount.ToString();
+                    this.CounterAmountTextBox.Text = this.action.Amount;
                 }
                 else if (this.action.ResetAmount)
                 {
@@ -49,11 +48,8 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 if (this.CounterActionTypeComboBox.SelectedIndex == 0)
                 {
-                    if (int.TryParse(this.CounterAmountTextBox.Text, out int counterAmount))
-                    {
-                        return new CounterAction(this.CounterNameTextBox.Text, counterAmount, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(),
-                            this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
-                    }
+                    return new CounterAction(this.CounterNameTextBox.Text, this.CounterAmountTextBox.Text, this.SaveToFileToggleButton.IsChecked.GetValueOrDefault(),
+                        this.ResetOnLoadToggleButton.IsChecked.GetValueOrDefault());
                 }
                 else if (this.CounterActionTypeComboBox.SelectedIndex == 1)
                 {

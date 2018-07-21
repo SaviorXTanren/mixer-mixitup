@@ -17,6 +17,11 @@ namespace MixItUp.Base.Commands
             {
                 StoreCommandUpgrader.ChangeWaitActionsToUseSpecialIdentifiers(actions);
             }
+
+            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.4.13.0"))
+            {
+                StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(actions);
+            }
         }
 
         internal static void SeperateChatFromCurrencyActions(List<ActionBase> actions)
@@ -45,6 +50,21 @@ namespace MixItUp.Base.Commands
                     WaitAction wAction = (WaitAction)action;
 #pragma warning disable CS0612 // Type or member is obsolete
                     wAction.Amount = wAction.WaitAmount.ToString();
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+            }
+        }
+
+        internal static void ChangeCounterActionsToUseSpecialIdentifiers(List<ActionBase> actions)
+        {
+            for (int i = 0; i < actions.Count; i++)
+            {
+                ActionBase action = actions[i];
+                if (action is CounterAction)
+                {
+                    CounterAction cAction = (CounterAction)action;
+#pragma warning disable CS0612 // Type or member is obsolete
+                    cAction.Amount = cAction.CounterAmount.ToString();
 #pragma warning restore CS0612 // Type or member is obsolete
                 }
             }

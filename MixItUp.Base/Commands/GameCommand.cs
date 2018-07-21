@@ -1328,7 +1328,7 @@ namespace MixItUp.Base.Commands
 
         protected override async Task GameCompleted()
         {
-            await this.PerformCommand(this.GameCompleteCommand, ChannelSession.GetCurrentUser(), new List<string>(), 0, this.totalPayout);
+            await this.PerformCommand(this.GameCompleteCommand, await ChannelSession.GetCurrentUser(), new List<string>(), 0, this.totalPayout);
         }
 
         protected override void ResetData(UserViewModel user)
@@ -1472,7 +1472,7 @@ namespace MixItUp.Base.Commands
             }
             else
             {
-                await this.PerformCommand(this.UserFailOutcome.Command, ChannelSession.GetCurrentUser(), new List<string>(), this.betAmount, this.totalPayout);
+                await this.PerformCommand(this.UserFailOutcome.Command, await ChannelSession.GetCurrentUser(), new List<string>(), this.betAmount, this.totalPayout);
             }
         }
 

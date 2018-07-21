@@ -119,7 +119,7 @@ namespace MixItUp.Base.Actions
                     {
                         receiverCurrencyDatas.Add(chatUser.Data.GetCurrency(this.CurrencyID));
                     }
-                    receiverCurrencyDatas.Add(ChannelSession.GetCurrentUser().Data.GetCurrency(this.CurrencyID));
+                    receiverCurrencyDatas.Add((await ChannelSession.GetCurrentUser()).Data.GetCurrency(this.CurrencyID));
                 }
 
                 if ((this.DeductFromUser && receiverCurrencyDatas.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)

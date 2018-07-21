@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
@@ -192,7 +193,8 @@ namespace MixItUp.WPF.Controls.Actions
                 ActionBase action = this.GetAction();
                 if (action != null)
                 {
-                    await action.Perform(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName }, new Dictionary<string, string>());
+                    UserViewModel currentUser = await ChannelSession.GetCurrentUser();
+                    await action.Perform(currentUser, new List<string>() { "@" + currentUser.UserName }, new Dictionary<string, string>());
                 }
                 else
                 {
