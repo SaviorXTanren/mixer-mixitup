@@ -343,7 +343,15 @@ namespace MixItUp.Base
             }
         }
 
-        public static UserViewModel GetCurrentUser() { return new UserViewModel(ChannelSession.User); }
+        public static async Task<UserViewModel> GetCurrentUser()
+        {
+            UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(ChannelSession.User.id);
+            if (user == null)
+            {
+                user = new UserViewModel(ChannelSession.User);
+            }
+            return user;
+        }
 
         public static void DisconnectionOccurred(string serviceName)
         {

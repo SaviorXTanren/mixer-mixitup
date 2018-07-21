@@ -113,7 +113,7 @@ namespace MixItUp.Base.MixerAPI
                 }
                 else
                 {
-                    await command.Perform(ChannelSession.GetCurrentUser(), arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                    await command.Perform(await ChannelSession.GetCurrentUser(), arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
                 }
             }
         }
@@ -178,7 +178,7 @@ namespace MixItUp.Base.MixerAPI
                 if (e.payload["online"] != null)
                 {
                     bool online = e.payload["online"].ToObject<bool>();
-                    user = ChannelSession.GetCurrentUser();
+                    user = await ChannelSession.GetCurrentUser();
                     if (online)
                     {
                         if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)))

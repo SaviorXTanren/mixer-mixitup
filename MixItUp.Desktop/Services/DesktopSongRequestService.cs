@@ -368,28 +368,28 @@ namespace MixItUp.Desktop.Services
             DesktopSongRequestService.songRequestLock.Release();
         }
 
-        public Task<SongRequestItem> GetCurrentlyPlaying()
+        public async Task<SongRequestItem> GetCurrentlyPlaying()
         {
             if (this.currentSong == null)
             {
                 if (this.playingBackupPlaylist)
                 {
-                    return Task.FromResult(new SongRequestItem
+                    return new SongRequestItem
                     {
                         ID = ChannelSession.Settings.DefaultPlaylist,
                         Name = "Default Playlist",
-                        User = ChannelSession.GetCurrentUser(),
+                        User = await ChannelSession.GetCurrentUser(),
                         Type = this.backupPlaylistService
-                    });
+                    };
                 }
                 else
                 {
-                    return Task.FromResult<SongRequestItem>(null);
+                    return null;
                 }
             }
             else
             {
-                return Task.FromResult(this.currentSong);
+                return this.currentSong;
             }
         }
 

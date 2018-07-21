@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
@@ -134,6 +135,8 @@ namespace MixItUp.WPF.Controls.Command
             CommandBase command = this.GetCommandFromCommandButtons<CommandBase>(this);
             if (command != null)
             {
+                UserViewModel currentUser = await ChannelSession.GetCurrentUser();
+
                 Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
                 if (command is EventCommand)
                 {
@@ -162,16 +165,16 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["donationsource"] = "Test Source";
                             extraSpecialIdentifiers["donationamount"] = "$12.34";
                             extraSpecialIdentifiers["donationmessage"] = "Test donation message.";
-                            extraSpecialIdentifiers["donationimage"] = ChannelSession.GetCurrentUser().AvatarLink;
+                            extraSpecialIdentifiers["donationimage"] = currentUser.AvatarLink;
                             break;
                     }
                 }
 
-                await command.PerformAndWait(ChannelSession.GetCurrentUser(), new List<string>() { "@" + ChannelSession.GetCurrentUser().UserName }, extraSpecialIdentifiers);
+                await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.UserName }, extraSpecialIdentifiers);
                 if (command is PermissionsCommandBase)
                 {
                     PermissionsCommandBase permissionCommand = (PermissionsCommandBase)command;
-                    permissionCommand.ResetCooldown(ChannelSession.GetCurrentUser());
+                    permissionCommand.ResetCooldown(await ChannelSession.GetCurrentUser());
                 }
                 this.SwitchToPlay();
             }
