@@ -4,7 +4,6 @@ using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -111,7 +110,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void EnableSongRequestsToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
-            ChannelSession.Services.SongRequestService.Disable();
+            await ChannelSession.Services.SongRequestService.Disable();
 
             await this.RefreshRequestsList();
         }

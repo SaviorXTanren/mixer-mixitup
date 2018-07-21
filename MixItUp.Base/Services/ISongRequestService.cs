@@ -27,7 +27,7 @@ namespace MixItUp.Base.Services
 
         Task<bool> Initialize();
 
-        void Disable();
+        Task Disable();
 
         Task AddSongRequest(UserViewModel user, SongRequestServiceTypeEnum service, string identifier, bool pickFirst = false);
         Task RemoveSongRequest(SongRequestItem song);
@@ -42,7 +42,5 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SongRequestItem>> GetAllRequests();
         Task ClearAllRequests();
-
-        void OverlaySongFinished();
     }
 }

@@ -67,14 +67,14 @@ namespace MixItUp.Base.Actions
                     {
                         if (!await ChannelSession.Services.SongRequestService.Initialize())
                         {
-                            ChannelSession.Services.SongRequestService.Disable();
+                            await ChannelSession.Services.SongRequestService.Disable();
                             await ChannelSession.Chat.Whisper(user.UserName, "Song Requests were not able to enabled, please try manually enabling it.");
                             return;
                         }
                     }
                     else
                     {
-                        ChannelSession.Services.SongRequestService.Disable();
+                        await ChannelSession.Services.SongRequestService.Disable();
                     }
                 }
                 else
