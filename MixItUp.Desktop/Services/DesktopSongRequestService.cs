@@ -299,7 +299,7 @@ namespace MixItUp.Desktop.Services
                     }
                     else if (this.backupPlaylistService == SongRequestServiceTypeEnum.YouTube || this.backupPlaylistService == SongRequestServiceTypeEnum.SoundCloud)
                     {
-                        await this.NextOverlay(this.currentSong.Type);
+                        await this.NextOverlay(this.backupPlaylistService);
                     }
                 }
                 else if (this.currentSong != null)
@@ -350,7 +350,7 @@ namespace MixItUp.Desktop.Services
                     }
                     else if (this.backupPlaylistService == SongRequestServiceTypeEnum.YouTube || this.backupPlaylistService == SongRequestServiceTypeEnum.SoundCloud)
                     {
-                        await this.RefreshOverlayVolume(this.currentSong.Type);
+                        await this.RefreshOverlayVolume(this.backupPlaylistService);
                     }
                 }
                 else if (this.currentSong != null)
