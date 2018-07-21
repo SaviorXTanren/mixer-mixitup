@@ -336,6 +336,7 @@ namespace MixItUp.Base.Commands
             if (command != null)
             {
                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                this.AddAdditionalSpecialIdentifiers(user, arguments, specialIdentifiers);
                 specialIdentifiers[GameCommandBase.GameBetSpecialIdentifier] = betAmount.ToString();
                 specialIdentifiers[GameCommandBase.GamePayoutSpecialIdentifier] = payout.ToString();
                 specialIdentifiers[GameCommandBase.GameAllPayoutSpecialIdentifier] = this.totalPayout.ToString();
@@ -347,12 +348,11 @@ namespace MixItUp.Base.Commands
                 {
                     specialIdentifiers[GameCommandBase.GameWinnersSpecialIdentifier] = "@" + user.UserName;
                 }
-                this.AddAdditionalSpecialIdentifiers(specialIdentifiers);
                 await command.Perform(user, arguments, specialIdentifiers);
             }
         }
 
-        protected virtual void AddAdditionalSpecialIdentifiers(Dictionary<string, string> specialIdentifiers) { }
+        protected virtual void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) { }
 
         protected int GenerateProbability() { return this.GenerateRandomNumber(100) + 1; }
 
@@ -742,7 +742,7 @@ namespace MixItUp.Base.Commands
             base.ResetData(user);
         }
 
-        protected override void AddAdditionalSpecialIdentifiers(Dictionary<string, string> specialIdentifiers)
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             specialIdentifiers[GameTotalAmountSpecialIdentifier] = this.TotalAmount.ToString();
         }
@@ -1222,6 +1222,8 @@ namespace MixItUp.Base.Commands
     [DataContract]
     public class RouletteGameCommand : GroupGameCommand
     {
+        public const string GameBetTypeSpecialIdentifier = "gamebettype";
+
         public const string GameValidBetTypesSpecialIdentifier = "gamevalidbettypes";
 
         public const string GameWinningBetTypeSpecialIdentifier = "gamewinningbettype";
@@ -1335,8 +1337,9 @@ namespace MixItUp.Base.Commands
             base.ResetData(user);
         }
 
-        protected override void AddAdditionalSpecialIdentifiers(Dictionary<string, string> specialIdentifiers)
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
+            specialIdentifiers[GameBetTypeSpecialIdentifier] = this.userBetTypes[user];
             specialIdentifiers[GameValidBetTypesSpecialIdentifier] = this.GetValidBetTypeString();
             if (!string.IsNullOrEmpty(this.winningBetType))
             {
@@ -1473,7 +1476,7 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        protected override void AddAdditionalSpecialIdentifiers(Dictionary<string, string> specialIdentifiers)
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
             if (!string.IsNullOrEmpty(this.hitmanName))
             {
