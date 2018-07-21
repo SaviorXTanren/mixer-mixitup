@@ -265,7 +265,7 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (this.backupPlaylistService == SongRequestServiceTypeEnum.YouTube || this.backupPlaylistService == SongRequestServiceTypeEnum.SoundCloud)
                 {
-                    await this.PlayPauseOverlaySong(this.currentSong.Type);
+                    await this.PlayPauseOverlaySong(this.backupPlaylistService);
                 }
             }
             else if (this.currentSong != null)
@@ -785,6 +785,7 @@ namespace MixItUp.Desktop.Services
 
         private async Task PlayDefaultPlaylist()
         {
+            this.currentSong = null;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultPlaylist))
             {
                 if (ChannelSession.Services.Spotify != null && (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistRegex, RegexOptions.IgnoreCase) ||
@@ -801,9 +802,11 @@ namespace MixItUp.Desktop.Services
                         uri = string.Format(SpotifyPlaylistUriFormat, ChannelSession.Services.Spotify.Profile.ID, playlistID);
                     }
 
+                    string id = uri.Split(new string[] { ":playlist:" }, StringSplitOptions.RemoveEmptyEntries).Last();
+
                     this.playingBackupPlaylist = true;
                     this.backupPlaylistService = SongRequestServiceTypeEnum.Spotify;
-                    await ChannelSession.Services.Spotify.PlayPlaylist(new SpotifyPlaylist { Uri = uri });
+                    await ChannelSession.Services.Spotify.PlayPlaylist(new SpotifyPlaylist { Uri = uri, ID = id }, random: true);
                 }
                 else if (ChannelSession.Services.OverlayServer != null)
                 {
