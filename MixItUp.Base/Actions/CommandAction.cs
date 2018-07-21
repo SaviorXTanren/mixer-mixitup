@@ -32,6 +32,9 @@ namespace MixItUp.Base.Actions
         public Guid CommandID { get; set; }
 
         [DataMember]
+        public Type PreMadeType { get; set; }
+
+        [DataMember]
         public string CommandArguments { get; set; }
 
         public CommandAction() : base(ActionTypeEnum.Command) { }
@@ -40,15 +43,39 @@ namespace MixItUp.Base.Actions
             : this()
         {
             this.CommandActionType = commandActionType;
-            this.CommandID = command.ID;
+            if (command is PreMadeChatCommand)
+            {
+                this.PreMadeType = command.GetType();
+                this.CommandID = Guid.Empty;
+            }
+            else
+            {
+                this.CommandID = command.ID;
+                this.PreMadeType = null;
+            }            
             this.CommandArguments = commandArguments;
+        }
+
+        public CommandBase Command
+        {
+            get
+            {
+                if (this.PreMadeType != null)
+                {
+                    return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.GetType().Equals(this.PreMadeType));
+                }
+                else
+                {
+                    return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
+                }
+            }
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
+            CommandBase command = this.Command;
             if (this.CommandActionType == CommandActionTypeEnum.RunCommand)
             {
-                CommandBase command = ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
                 if (command != null)
                 {
                     IEnumerable<string> newArguments = null;
@@ -63,7 +90,6 @@ namespace MixItUp.Base.Actions
             }
             else if (this.CommandActionType == CommandActionTypeEnum.EnableDisableCommand)
             {
-                CommandBase command = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
                 if (command != null)
                 {
                     command.IsEnabled = !command.IsEnabled;

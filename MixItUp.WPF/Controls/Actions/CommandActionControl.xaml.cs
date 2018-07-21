@@ -31,8 +31,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.CommandNameComboBox.ItemsSource = ChannelSession.AllCommands.OrderBy(c => c.Name);
             if (this.command != null)
             {
-                CommandBase chosenCommand = ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.command.CommandID));
-
+                CommandBase chosenCommand = this.command.Command;
                 this.TypeComboBox.SelectedValue = EnumHelper.GetEnumName(this.command.CommandActionType);
                 if (chosenCommand != null)
                 {
