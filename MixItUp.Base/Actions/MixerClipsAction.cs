@@ -46,7 +46,11 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string DownloadDirectory { get; set; }
 
-        public MixerClipsAction() : base(ActionTypeEnum.MixerClips) { }
+        public MixerClipsAction()
+            : base(ActionTypeEnum.MixerClips)
+        {
+            this.ShowClipInfoInChat = true;
+        }
 
         public MixerClipsAction(string clipName, int clipLength, bool showClipInfoInChat = true, bool downloadClip = false, string downloadDirectory = null)
             : this()
