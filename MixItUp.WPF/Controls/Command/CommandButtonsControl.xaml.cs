@@ -163,6 +163,7 @@ namespace MixItUp.WPF.Controls.Command
                         case OtherEventTypeEnum.GawkBoxDonation:
                         case OtherEventTypeEnum.TiltifyDonation:
                             extraSpecialIdentifiers["donationsource"] = "Test Source";
+                            extraSpecialIdentifiers["donationamountnumber"] = "12.34";
                             extraSpecialIdentifiers["donationamount"] = "$12.34";
                             extraSpecialIdentifiers["donationmessage"] = "Test donation message.";
                             extraSpecialIdentifiers["donationimage"] = currentUser.AvatarLink;

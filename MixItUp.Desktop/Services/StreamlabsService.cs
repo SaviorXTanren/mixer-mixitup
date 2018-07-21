@@ -171,6 +171,7 @@ namespace MixItUp.Desktop.Services
                             {
                                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
                                 specialIdentifiers["donationsource"] = EnumHelper.GetEnumName(donation.Source);
+                                specialIdentifiers["donationamountnumber"] = donation.Amount.ToString();
                                 specialIdentifiers["donationamount"] = donation.AmountText;
                                 specialIdentifiers["donationmessage"] = donation.Message;
                                 specialIdentifiers["donationimage"] = donation.ImageLink;
