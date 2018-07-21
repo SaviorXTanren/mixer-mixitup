@@ -474,7 +474,7 @@ namespace MixItUp.Desktop.Services
                     }
                     else if (this.backupPlaylistService == SongRequestServiceTypeEnum.YouTube || this.backupPlaylistService == SongRequestServiceTypeEnum.SoundCloud)
                     {
-                        await this.PlayPauseOverlaySong(this.currentSong.Type);
+                        await this.PlayPauseOverlaySong(this.backupPlaylistService);
                     }
                 }
                 this.playingBackupPlaylist = false;
