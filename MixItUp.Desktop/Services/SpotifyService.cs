@@ -297,7 +297,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task<bool> PlaySong(SpotifySong song) { return await this.PlaySong(song.Uri); }
 
-        public async Task<bool> PlayPlaylist(SpotifyPlaylist playlist)
+        public async Task<bool> PlayPlaylist(SpotifyPlaylist playlist, bool random = false)
         {
             try
             {
@@ -309,6 +309,16 @@ namespace MixItUp.Desktop.Services
                 JObject position = new JObject();
                 position["position"] = 0;
                 payload["offset"] = position;
+
+                if (random)
+                {
+                    IEnumerable<SpotifySong> playlistSongs = await this.GetPlaylistSongs(playlist);
+                    if (playlistSongs != null && playlistSongs.Count() > 0)
+                    {
+                        Random rand = new Random();
+                        position["position"] = rand.Next(playlistSongs.Count());
+                    }
+                }
 
                 await this.PutAsync("me/player/shuffle?state=true", null);
                 await Task.Delay(250);

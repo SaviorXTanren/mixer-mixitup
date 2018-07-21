@@ -801,9 +801,11 @@ namespace MixItUp.Desktop.Services
                         uri = string.Format(SpotifyPlaylistUriFormat, ChannelSession.Services.Spotify.Profile.ID, playlistID);
                     }
 
+                    string id = uri.Split(new string[] { ":playlist:" }, StringSplitOptions.RemoveEmptyEntries).Last();
+
                     this.playingBackupPlaylist = true;
                     this.backupPlaylistService = SongRequestServiceTypeEnum.Spotify;
-                    await ChannelSession.Services.Spotify.PlayPlaylist(new SpotifyPlaylist { Uri = uri });
+                    await ChannelSession.Services.Spotify.PlayPlaylist(new SpotifyPlaylist { Uri = uri, ID = id }, random: true);
                 }
                 else if (ChannelSession.Services.OverlayServer != null)
                 {
