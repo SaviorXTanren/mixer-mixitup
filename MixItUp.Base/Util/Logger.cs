@@ -54,10 +54,6 @@ namespace MixItUp.Base.Util
                 exString += Environment.NewLine + "Full Stack:" + Environment.StackTrace;
             }
 
-            if (!Logger.IsDebug)
-            {
-                Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendErrorEvent(new ErrorEvent(JsonConvert.SerializeObject(exString), isCrashing)); });
-            }
             Logger.Log(exString);
         }
 
