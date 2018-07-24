@@ -60,6 +60,7 @@ namespace MixItUp.WPF.Windows.Currency
 
             InitializeComponent();
 
+            this.ExportToFileButton.IsEnabled = true;
             this.ImportFromFileButton.IsEnabled = true;
 
             this.Initialize(this.StatusBar);

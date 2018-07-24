@@ -247,7 +247,7 @@
 
                             <Button x:Name="ImportFromFileButton" Grid.Column="4" Click="ImportFromFileButton_Click" IsEnabled="False">Import From File</Button>
 
-                            <Button x:Name="ExportToFileButton" Grid.Column="6" Click="ExportToFileButton_Click">Export To File</Button>
+                            <Button x:Name="ExportToFileButton" Grid.Column="6" Click="ExportToFileButton_Click" IsEnabled="False">Export To File</Button>
                         </Grid>
                     </GroupBox>
                 </Grid>
