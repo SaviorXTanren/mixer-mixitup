@@ -22,8 +22,6 @@ namespace MixItUp.Base.Services
         Task<MixItUpUpdateModel> GetLatestUpdate();
 
         Task SendLoginEvent(LoginEvent login);
-        Task SendErrorEvent(ErrorEvent error);
-
         Task SendIssueReport(IssueReportModel report);
 
         Task<StoreDetailListingModel> GetStoreListing(Guid ID);
@@ -74,13 +72,6 @@ namespace MixItUp.Base.Services
             if (!ChannelSession.Settings.OptOutTracking)
             {
                 await this.PostAsync("login", login);
-            }
-        }
-        public async Task SendErrorEvent(ErrorEvent error)
-        {
-            if (!ChannelSession.Settings.OptOutTracking)
-            {
-                await this.PostAsync("error", error, logException: false);
             }
         }
 
