@@ -47,6 +47,7 @@ namespace MixItUp.Base
             OAuthClientScopeEnum.chat__view_deleted,
             OAuthClientScopeEnum.chat__whisper,
 
+            OAuthClientScopeEnum.channel__clip__create__self,
             OAuthClientScopeEnum.channel__details__self,
             OAuthClientScopeEnum.channel__update__self,
             OAuthClientScopeEnum.channel__analytics__self,
