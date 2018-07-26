@@ -77,10 +77,10 @@ namespace MixItUp.Base.Statistics
         public string AverageString { get { return Math.Round(Average, 2).ToString(); } }
 
         public int MaxValue { get { return (int)this.MaxValueDecimal; } }
-        public double MaxValueDecimal { get { return (this.DataPoints.Count > 0) ? this.DataPoints.Select(dp => dp.ValueDecimal).Max() : 0.0; } }
+        public double MaxValueDecimal { get { return (this.DataPoints.Count > 0) ? this.DataPoints.Select(dp => dp.ValueDecimal).ToArray().Max() : 0.0; } }
 
         public int TotalValue { get { return (int)this.TotalValueDecimal; } }
-        public double TotalValueDecimal { get { return this.DataPoints.Select(dp => dp.ValueDecimal).Sum(); } }
+        public double TotalValueDecimal { get { return this.DataPoints.Select(dp => dp.ValueDecimal).ToArray().Sum(); } }
 
         public double AverageValue { get { return this.TotalValueDecimal / ((double)this.TotalMinutes); } }
         public string AverageValueString { get { return Math.Round(AverageValue, 2).ToString(); } }
