@@ -10,7 +10,9 @@ using MixItUp.WPF.Windows.PopOut;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,7 +59,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        protected override Task InitializeInternal()
+        protected override async Task InitializeInternal()
         {
             GlobalEvents.OnChatFontSizeChanged += GlobalEvents_OnChatFontSizeChanged;
 
@@ -82,17 +84,20 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (ChannelSession.Channel.badge != null && ChannelSession.Channel.badge != null && !string.IsNullOrEmpty(ChannelSession.Channel.badge.url))
             {
-                ChatControl.SubscriberBadgeBitmap = new BitmapImage();
-                ChatControl.SubscriberBadgeBitmap.BeginInit();
-                ChatControl.SubscriberBadgeBitmap.UriSource = new Uri(ChannelSession.Channel.badge.url, UriKind.Absolute);
-                ChatControl.SubscriberBadgeBitmap.EndInit();
+                using (WebClient client = new WebClient())
+                {
+                    var bytes = await client.DownloadDataTaskAsync(new Uri(ChannelSession.Channel.badge.url, UriKind.Absolute));
+                    ChatControl.SubscriberBadgeBitmap = new BitmapImage();
+                    ChatControl.SubscriberBadgeBitmap.BeginInit();
+                    ChatControl.SubscriberBadgeBitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    ChatControl.SubscriberBadgeBitmap.StreamSource = new MemoryStream(bytes);
+                    ChatControl.SubscriberBadgeBitmap.EndInit();
+                }
             }
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(async () => { await this.ChatRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-            return Task.FromResult(0);
         }
 
         protected override Task OnVisibilityChanged()

@@ -141,9 +141,10 @@
                         <Hyperlink NavigateUri="https://www.xsplit.com/" RequestNavigate="Hyperlink_RequestNavigate">XSplit</Hyperlink>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="4" Grid.Column="0">
+                    <!-- This link is no longer valid, should we add some other link? -->
+                    <!--<TextBlock Grid.Row="4" Grid.Column="0">
                         <Hyperlink NavigateUri="https://forums.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Forums</Hyperlink>
-                    </TextBlock>
+                    </TextBlock>-->
                 </Grid>
             </GroupBox>
         </Grid>
