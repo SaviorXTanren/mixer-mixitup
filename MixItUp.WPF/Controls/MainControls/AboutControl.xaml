@@ -142,7 +142,7 @@
                     </TextBlock>
 
                     <TextBlock Grid.Row="4" Grid.Column="0">
-                        <Hyperlink NavigateUri="https://forums.mixer.com/" RequestNavigate="Hyperlink_RequestNavigate">Mixer Forums</Hyperlink>
+                        <Hyperlink NavigateUri="https://watchbeam.zendesk.com/hc/en-us" RequestNavigate="Hyperlink_RequestNavigate">Mixer Support</Hyperlink>
                     </TextBlock>
                 </Grid>
             </GroupBox>

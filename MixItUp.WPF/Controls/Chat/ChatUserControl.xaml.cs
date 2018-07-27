@@ -28,7 +28,9 @@ namespace MixItUp.WPF.Controls.Chat
 
             if (!string.IsNullOrEmpty(this.User.AvatarLink))
             {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 this.UserAvatar.SetImageUrl(this.User.AvatarLink);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
 
             if (ChatControl.SubscriberBadgeBitmap != null && this.User.IsSubscriber)
