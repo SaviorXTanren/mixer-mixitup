@@ -184,7 +184,7 @@ namespace MixItUp.OBS
         public async Task SaveReplayBuffer()
         {
             CancellationTokenSource cancellationToken = new CancellationTokenSource();
-            Task t = Task.Run(() => { this.OBSWebsocket.StartReplayBuffer(); }, cancellationToken.Token);
+            Task t = Task.Run(() => { this.OBSWebsocket.SaveReplayBuffer(); }, cancellationToken.Token);
             await Task.Delay(2000);
             if (!t.IsCompleted)
             {
