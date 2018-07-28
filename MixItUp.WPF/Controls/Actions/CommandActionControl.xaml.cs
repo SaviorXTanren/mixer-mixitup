@@ -22,7 +22,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CommandActionTypeEnum>();
+            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CommandActionTypeEnum>().OrderBy(s => s);
 
             List<string> types = new List<string>(EnumHelper.GetEnumNames(ChannelSession.AllCommands.Select(c => c.Type).Distinct()));
             types.Add(PreMadeCommandType);
@@ -69,7 +69,8 @@ namespace MixItUp.WPF.Controls.Actions
                     case CommandActionTypeEnum.RunCommand:
                         this.CommandArgumentsTextBox.Visibility = Visibility.Visible;
                         break;
-                    case CommandActionTypeEnum.EnableDisableCommand:
+                    case CommandActionTypeEnum.DisableCommand:
+                    case CommandActionTypeEnum.EnableCommand:
                         this.CommandArgumentsTextBox.Visibility = Visibility.Collapsed;
                         break;
                 }

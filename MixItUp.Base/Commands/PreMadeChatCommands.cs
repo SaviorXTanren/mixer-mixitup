@@ -260,7 +260,6 @@ namespace MixItUp.Base.Commands
         }
     }
 
-
     public class CostreamChatCommand : PreMadeChatCommand
     {
         public CostreamChatCommand()
@@ -1065,7 +1064,6 @@ namespace MixItUp.Base.Commands
             }));
         }
     }
-
 
     public class DisableCommandChatCommand : PreMadeChatCommand
     {

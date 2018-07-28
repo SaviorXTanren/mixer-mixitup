@@ -14,8 +14,10 @@ namespace MixItUp.Base.Actions
     {
         [Name("Run Command")]
         RunCommand,
-        [Name("Enable/Disable Command")]
-        EnableDisableCommand,
+        [Name("Disable Command")]
+        DisableCommand,
+        [Name("Enable Command")]
+        EnableCommand,
     }
 
     [DataContract]
@@ -88,11 +90,11 @@ namespace MixItUp.Base.Actions
                     await command.Perform(user, newArguments, this.GetExtraSpecialIdentifiers());
                 }
             }
-            else if (this.CommandActionType == CommandActionTypeEnum.EnableDisableCommand)
+            else if (this.CommandActionType == CommandActionTypeEnum.DisableCommand || this.CommandActionType == CommandActionTypeEnum.EnableCommand)
             {
                 if (command != null)
                 {
-                    command.IsEnabled = !command.IsEnabled;
+                    command.IsEnabled = (this.CommandActionType == CommandActionTypeEnum.EnableCommand) ? true : false;
                 }
             }
         }
