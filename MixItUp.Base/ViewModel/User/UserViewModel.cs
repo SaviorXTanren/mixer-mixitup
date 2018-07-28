@@ -218,10 +218,15 @@ namespace MixItUp.Base.ViewModel.User
                     case MixerRoleEnum.ChannelEditor:
                     case MixerRoleEnum.Mod:
                         return "UserModRoleColor";
-                    case MixerRoleEnum.Pro:
-                        return "UserProRoleColor";
-                    default:
-                        return "UserDefaultRoleColor";
+                }
+
+                if (this.MixerRoles.Contains(MixerRoleEnum.Pro))
+                {
+                    return "UserProRoleColor";
+                }
+                else
+                {
+                    return "UserDefaultRoleColor";
                 }
             }
         }
