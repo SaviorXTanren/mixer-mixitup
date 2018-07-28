@@ -62,11 +62,11 @@ namespace MixItUp.Base.Actions
             {
                 if (this.PreMadeType != null)
                 {
-                    return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.GetType().Equals(this.PreMadeType));
+                    return ChannelSession.AllCommands.FirstOrDefault(c => c.GetType().Equals(this.PreMadeType));
                 }
                 else
                 {
-                    return ChannelSession.AllEnabledCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
+                    return ChannelSession.AllCommands.FirstOrDefault(c => c.ID.Equals(this.CommandID));
                 }
             }
         }
