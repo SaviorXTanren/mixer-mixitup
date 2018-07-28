@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
@@ -14,16 +17,21 @@ namespace MixItUp.WPF.Controls.Users
             InitializeComponent();
         }
 
-        public void SetImageUrl(string url)
+        public async Task SetImageUrl(string url)
         {
             if (!string.IsNullOrEmpty(url))
             {
-                BitmapImage bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.UriSource = new Uri(url, UriKind.Absolute);
-                bitmap.EndInit();
+                using (WebClient client = new WebClient())
+                {
+                    var bytes = await client.DownloadDataTaskAsync(url);
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.StreamSource = new MemoryStream(bytes);
+                    bitmap.EndInit();
 
-                this.ProfileAvatarImage.ImageSource = bitmap;
+                    this.ProfileAvatarImage.ImageSource = bitmap;
+                }
             }
         }
 

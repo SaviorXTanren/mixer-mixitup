@@ -287,7 +287,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void MixerLabButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://mixer.com/lab/");
+            Process.Start("explorer.exe", "https://mixer.com/lab/");
         }
 
         private async void GroupsButton_Click(object sender, RoutedEventArgs e)

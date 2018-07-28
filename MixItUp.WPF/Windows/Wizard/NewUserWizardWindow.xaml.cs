@@ -181,7 +181,9 @@ namespace MixItUp.WPF.Windows.Wizard
                 this.BotLoggedInNameTextBlock.Text = ChannelSession.BotUser.username;
                 if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
                 {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 
                 this.BotLogInGrid.Visibility = System.Windows.Visibility.Hidden;
