@@ -80,14 +80,16 @@ namespace MixItUp.WPF.Controls.Games
 
             Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
 
+            GameCommandBase newCommand = new HitmanGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
+                this.CommandDetailsControl.GetRequirements(), minimumParticipants, timeLimit, this.CustomHitmanNamesFilePathTextBox.Text, hitmanTimeLimit,
+                this.startedCommand, this.userJoinCommand, this.hitmanApproachingCommand, this.hitmanAppearsCommand, new GameOutcome("Success", 0, roleProbabilities, this.userSuccessCommand),
+                new GameOutcome("Failure", 0, roleProbabilities, this.userFailCommand));
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
+                newCommand.ID = this.existingCommand.ID;
             }
-            ChannelSession.Settings.GameCommands.Add(new HitmanGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
-                this.CommandDetailsControl.GetRequirements(), minimumParticipants, timeLimit, this.CustomHitmanNamesFilePathTextBox.Text, hitmanTimeLimit,
-                this.startedCommand, this.userJoinCommand, this.hitmanApproachingCommand, this.hitmanAppearsCommand, new GameOutcome("Success", 0, roleProbabilities, this.userSuccessCommand),
-                new GameOutcome("Failure", 0, roleProbabilities, this.userFailCommand)));
+            ChannelSession.Settings.GameCommands.Add(newCommand);
         }
 
         protected override Task OnLoaded()

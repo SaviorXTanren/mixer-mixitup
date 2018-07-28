@@ -79,13 +79,15 @@ namespace MixItUp.WPF.Controls.Games
             Dictionary<MixerRoleEnum, int> successRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, userChance }, { MixerRoleEnum.Subscriber, subscriberChance }, { MixerRoleEnum.Mod, modChance } };
             Dictionary<MixerRoleEnum, int> failRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 100 - userChance }, { MixerRoleEnum.Subscriber, 100 - subscriberChance }, { MixerRoleEnum.Mod, 100 - modChance } };
 
+            GameCommandBase newCommand = new DuelGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
+                this.CommandDetailsControl.GetRequirements(), new GameOutcome("Success", 1, successRoleProbabilities, this.successOutcomeCommand),
+                new GameOutcome("Failure", 0, failRoleProbabilities, this.failOutcomeCommand), this.startedCommand, timeLimit);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
+                newCommand.ID = this.existingCommand.ID;
             }
-            ChannelSession.Settings.GameCommands.Add(new DuelGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
-                this.CommandDetailsControl.GetRequirements(), new GameOutcome("Success", 1, successRoleProbabilities, this.successOutcomeCommand),
-                new GameOutcome("Failure", 0, failRoleProbabilities, this.failOutcomeCommand), this.startedCommand, timeLimit));
+            ChannelSession.Settings.GameCommands.Add(newCommand);
         }
 
         protected override Task OnLoaded()

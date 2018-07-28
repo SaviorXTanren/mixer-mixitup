@@ -78,13 +78,15 @@ namespace MixItUp.WPF.Controls.Games
 
             Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };
 
+            GameCommandBase newCommand = new RussianRouletteGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
+                this.CommandDetailsControl.GetRequirements(), minimumParticipants, timeLimit, this.startedCommand, this.userJoinCommand,
+                new GameOutcome("Success", 0, roleProbabilities, this.userSuccessCommand), new GameOutcome("Failure", 0, roleProbabilities, this.userFailCommand), maxWinners, this.gameCompleteCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
+                newCommand.ID = this.existingCommand.ID;
             }
-            ChannelSession.Settings.GameCommands.Add(new RussianRouletteGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
-                this.CommandDetailsControl.GetRequirements(), minimumParticipants, timeLimit, this.startedCommand, this.userJoinCommand,
-                new GameOutcome("Success", 0, roleProbabilities, this.userSuccessCommand), new GameOutcome("Failure", 0, roleProbabilities, this.userFailCommand), maxWinners, this.gameCompleteCommand));
+            ChannelSession.Settings.GameCommands.Add(newCommand);
         }
 
         protected override Task OnLoaded()

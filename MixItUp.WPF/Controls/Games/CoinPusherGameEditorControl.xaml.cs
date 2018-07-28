@@ -87,12 +87,14 @@ namespace MixItUp.WPF.Controls.Games
             minPayoutPercentage = minPayoutPercentage / 100.0;
             maxPayoutPercentage = maxPayoutPercentage / 100.0;
 
+            GameCommandBase newCommand = new CoinPusherGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers, this.CommandDetailsControl.GetRequirements(),
+                this.StatusArgumentTextBox.Text.ToLower(), minAmountForPayout, payoutProbability, minPayoutPercentage, maxPayoutPercentage, this.statusCommand, this.noPayoutCommand, this.payoutCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
+                newCommand.ID = this.existingCommand.ID;
             }
-            ChannelSession.Settings.GameCommands.Add(new CoinPusherGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers, this.CommandDetailsControl.GetRequirements(),
-                this.StatusArgumentTextBox.Text.ToLower(), minAmountForPayout, payoutProbability, minPayoutPercentage, maxPayoutPercentage, this.statusCommand, this.noPayoutCommand, this.payoutCommand));
+            ChannelSession.Settings.GameCommands.Add(newCommand);
         }
 
         protected override Task OnLoaded()

@@ -67,12 +67,14 @@ namespace MixItUp.WPF.Controls.Games
             int.TryParse(this.TimeLimitTextBox.Text, out int timeLimit);
             RoleRequirementViewModel starterRequirement = new RoleRequirementViewModel((string)this.GameStartRoleComboBox.SelectedItem);
 
+            GameCommandBase newCommand = new BidGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
+                this.CommandDetailsControl.GetRequirements(), minimumParticipants, timeLimit, starterRequirement, this.startedCommand, this.userJoinCommand, this.gameCompleteCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
+                newCommand.ID = this.existingCommand.ID;
             }
-            ChannelSession.Settings.GameCommands.Add(new BidGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
-                this.CommandDetailsControl.GetRequirements(), minimumParticipants, timeLimit, starterRequirement, this.startedCommand, this.userJoinCommand, this.gameCompleteCommand));
+            ChannelSession.Settings.GameCommands.Add(newCommand);
         }
 
         protected override Task OnLoaded()

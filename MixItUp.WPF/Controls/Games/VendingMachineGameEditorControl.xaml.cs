@@ -143,12 +143,14 @@ namespace MixItUp.WPF.Controls.Games
 
         public override void SaveGameCommand()
         {
+            GameCommandBase newCommand = new VendingMachineGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
+                this.CommandDetailsControl.GetRequirements(), this.outcomes.Select(o => o.GetGameOutcome()));
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
+                newCommand.ID = this.existingCommand.ID;
             }
-            ChannelSession.Settings.GameCommands.Add(new VendingMachineGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers,
-                this.CommandDetailsControl.GetRequirements(), this.outcomes.Select(o => o.GetGameOutcome())));
+            ChannelSession.Settings.GameCommands.Add(newCommand);
         }
 
         protected override Task OnLoaded()

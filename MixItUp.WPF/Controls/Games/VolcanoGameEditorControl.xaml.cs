@@ -127,14 +127,16 @@ namespace MixItUp.WPF.Controls.Games
             collectMinPayoutPercentage = collectMinPayoutPercentage / 100.0;
             collectMaxPayoutPercentage = collectMaxPayoutPercentage / 100.0;
 
+            GameCommandBase newCommand = new VolcanoGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers, this.CommandDetailsControl.GetRequirements(),
+                this.StatusArgumentTextBox.Text.ToLower(), this.stage1DepositCommand, this.stage1StatusCommand, stage2Minimum, this.stage2DepositCommand, this.stage2StatusCommand, stage3Minimum,
+                this.stage3DepositCommand, this.stage3StatusCommand, payoutProbability, minPayoutPercentage, maxPayoutPercentage, this.payoutCommand, this.CollectArgumentTextBox.Text,
+                collectTime, collectMinPayoutPercentage, collectMaxPayoutPercentage, this.collectCommand);
             if (this.existingCommand != null)
             {
                 ChannelSession.Settings.GameCommands.Remove(this.existingCommand);
+                newCommand.ID = this.existingCommand.ID;
             }
-            ChannelSession.Settings.GameCommands.Add(new VolcanoGameCommand(this.CommandDetailsControl.GameName, this.CommandDetailsControl.ChatTriggers, this.CommandDetailsControl.GetRequirements(),
-                this.StatusArgumentTextBox.Text.ToLower(), this.stage1DepositCommand, this.stage1StatusCommand, stage2Minimum, this.stage2DepositCommand, this.stage2StatusCommand, stage3Minimum,
-                this.stage3DepositCommand, this.stage3StatusCommand, payoutProbability, minPayoutPercentage, maxPayoutPercentage, this.payoutCommand, this.CollectArgumentTextBox.Text,
-                collectTime, collectMinPayoutPercentage, collectMaxPayoutPercentage, this.collectCommand));
+            ChannelSession.Settings.GameCommands.Add(newCommand);
         }
 
         protected override Task OnLoaded()
