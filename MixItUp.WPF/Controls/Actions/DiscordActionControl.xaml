@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="DiscordActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" SelectionChanged="DiscordActionTypeComboBox_SelectionChanged" />
+            <ComboBox x:Name="DiscordActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="DiscordActionTypeComboBox_SelectionChanged" />
 
             <TextBlock x:Name="DiscordNotEnabledWarningTextBlock" Grid.Column="4" Foreground="Red" Visibility="Hidden" VerticalAlignment="Center">Please enable Discord connection in the Services Section!</TextBlock>
         </Grid>
@@ -43,7 +43,7 @@
                     <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
                 </TextBlock>
 
-                <ComboBox x:Name="SendMessageChannelComboBox" Grid.Row="2" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Channel" DisplayMemberPath="Name" Width="200" />
+                <ComboBox x:Name="SendMessageChannelComboBox" Grid.Row="2" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Channel" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" Width="200" />
 
                 <TextBox x:Name="SendMessageTextBox" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 

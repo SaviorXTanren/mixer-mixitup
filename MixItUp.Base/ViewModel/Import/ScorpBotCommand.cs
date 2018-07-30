@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 
 namespace MixItUp.Base.ViewModel.Import
 {

@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <ComboBox x:Name="FileActionTypeComboBox" SelectionChanged="FileActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" />
+            <ComboBox x:Name="FileActionTypeComboBox" SelectionChanged="FileActionTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
 
         <Grid x:Name="FileGrid" Visibility="Collapsed" Grid.Row="2">

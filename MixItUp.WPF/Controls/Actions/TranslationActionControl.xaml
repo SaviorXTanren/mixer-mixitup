@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="TranslationLanguageComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Language To Translate To" DisplayMemberPath="DisplayName" />
+            <ComboBox x:Name="TranslationLanguageComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Language To Translate To" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="DisplayName" />
 
             <TextBlock Grid.Column="2" VerticalAlignment="Center">Allow Profanity:</TextBlock>
             <CheckBox Grid.Column="4" x:Name="AllowProfanityCheckBox" VerticalAlignment="Center" />
@@ -64,7 +64,7 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" DisplayMemberPath="Name" />
+            <ComboBox x:Name="CommandResponseComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Chat Command" Style="{StaticResource MaterialDesignFloatingHintComboBox}" DisplayMemberPath="Name" />
 
             <TextBox x:Name="CommandResponseArgumentsTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Arguments ($translationresult = Translated Text)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
