@@ -1486,7 +1486,7 @@ namespace MixItUp.Base.Commands
 
         private void Chat_OnMessageOccurred(object sender, ChatMessageViewModel message)
         {
-            if (!string.IsNullOrEmpty(this.hitmanName) && this.winners.Count == 0)
+            if (!string.IsNullOrEmpty(this.hitmanName) && this.winners.Count == 0 && this.enteredUsers.ContainsKey(message.User))
             {
                 if (!string.IsNullOrEmpty(message.Message) && message.Message.Equals(this.hitmanName, StringComparison.CurrentCultureIgnoreCase))
                 {
