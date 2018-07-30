@@ -591,12 +591,12 @@ namespace MixItUp.WPF.Windows.Currency
                     statusCommand.Actions.Add(new ChatAction(statusChatText));
                     commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", statusCommand.Commands.First(), "Shows User's Amount"), statusCommand));
 
-                    ChatCommand addCommand = new ChatCommand("Add " + this.currency.Name, "add" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                    ChatCommand addCommand = new ChatCommand("Add " + this.currency.Name, "add" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.Mod, 5));
                     addCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", "$targetusername"));
                     addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", this.currency.Name)));
                     commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addCommand.Commands.First(), "Adds Amount To Specified User"), addCommand));
 
-                    ChatCommand addAllCommand = new ChatCommand("Add All " + this.currency.Name, "addall" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                    ChatCommand addAllCommand = new ChatCommand("Add All " + this.currency.Name, "addall" + this.currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.Mod, 5));
                     addAllCommand.Actions.Add(new CurrencyAction(this.currency, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
                     addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text {0}!", this.currency.Name)));
                     commandsToAdd.Add(new NewCurrencyRankCommand(string.Format("!{0} - {1}", addAllCommand.Commands.First(), "Adds Amount To All Chat Users"), addAllCommand));
