@@ -117,8 +117,6 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveClientWrapper : MixerWebSocketWrapper
     {
-        private static UserViewModel defaultInteractiveUser = new UserViewModel(0, "Unknown User");
-
         public event EventHandler<InteractiveGiveInputModel> OnGiveInput = delegate { };
         public event EventHandler<InteractiveConnectedSceneModel> OnControlDelete = delegate { };
         public event EventHandler<InteractiveConnectedSceneModel> OnControlCreate = delegate { };
@@ -594,7 +592,8 @@ namespace MixItUp.Base.MixerAPI
 
                         if (user == null)
                         {
-                            user = InteractiveClientWrapper.defaultInteractiveUser;
+                            user = new UserViewModel(0, "Unknown User");
+                            user.InteractiveID = e.participantID;
                         }
 
                         if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
