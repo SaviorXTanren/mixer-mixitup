@@ -14,7 +14,7 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         
         Icon="./Logo.ico"
-        Title="Mix It Up - Error Reporter" Height="300" Width="400">
+        Title="Mix It Up - Error Reporter" Height="370" Width="400">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -41,13 +41,17 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Width="330">Whoops! Looks like Mix It Up ran into an issue. Would you like to submit a bug to help us improve?</TextBlock>
 
             <TextBox x:Name="IssueDescriptionTextBox" Grid.Row="2" AcceptsReturn="True" Width="320" Height="120" MaterialDesign:HintAssist.Hint="Issue Description (What Happened?)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-            <Grid Grid.Row="4" HorizontalAlignment="Center">
+            <TextBox x:Name="ReplyEmailTextBox" Grid.Row="4" Width="320" MaterialDesign:HintAssist.Hint="Your E-Mail for Follow-Up Questions (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            
+            <Grid Grid.Row="6" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />

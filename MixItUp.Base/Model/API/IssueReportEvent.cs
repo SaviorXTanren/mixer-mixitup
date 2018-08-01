@@ -9,6 +9,8 @@ namespace MixItUp.Base.Model.API
         [JsonProperty]
         public uint MixerUserID { get; set; }
         [JsonProperty]
+        public string EmailAddress { get; set; }
+        [JsonProperty]
         public string Description { get; set; }
         [JsonProperty]
         public string LogContents { get; set; }
