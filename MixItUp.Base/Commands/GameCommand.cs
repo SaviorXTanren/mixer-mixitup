@@ -911,15 +911,12 @@ namespace MixItUp.Base.Commands
 
                                     await Task.Delay(this.TimeLimit * 1000);
 
-                                    if (!currentCancellationSource.Token.IsCancellationRequested)
+                                    await this.targetUserSemaphore.WaitAsync();
+                                    if (!currentCancellationSource.Token.IsCancellationRequested && this.currentTargetUser != null)
                                     {
-                                        await this.targetUserSemaphore.WaitAsync();
-
-                                        if (this.currentTargetUser != null)
-                                        {
-                                            await ChannelSession.Chat.SendMessage(string.Format("@{0} did not respond in time...", this.currentTargetUser.UserName));
-                                            this.ResetData(user);
-                                        }
+                                        await ChannelSession.Chat.SendMessage(string.Format("@{0} did not respond in time...", this.currentTargetUser.UserName));
+                                        this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount);
+                                        this.ResetData(user);
                                     }
                                 }
                                 catch (Exception) { }
