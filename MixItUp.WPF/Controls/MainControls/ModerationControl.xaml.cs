@@ -117,7 +117,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private string ConvertFilteredWordListToText(IEnumerable<string> words)
         {
-            string text = string.Join(Environment.NewLine, ChannelSession.Settings.FilteredWords);
+            string text = string.Join(Environment.NewLine, words);
             text = text.Replace(ModerationHelper.BannedWordWildcardRegexFormat, "*");
             return text;
         }
