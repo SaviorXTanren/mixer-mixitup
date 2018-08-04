@@ -291,6 +291,11 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public void ResetCurrencyAmount(UserCurrencyViewModel currency)
+        {
+            this.CurrencyAmounts[currency] = new UserCurrencyDataViewModel(this, currency);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is UserDataViewModel)

@@ -308,7 +308,7 @@ namespace MixItUp.WPF.Windows.Currency
                 {
                     if (this.currency != null)
                     {
-                        this.currency.Reset();
+                        await this.currency.Reset();
                     }
                 }
             });

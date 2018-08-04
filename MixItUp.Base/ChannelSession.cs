@@ -479,7 +479,7 @@ namespace MixItUp.Base
                     {
                         if (currency.ShouldBeReset())
                         {
-                            currency.Reset();
+                            await currency.Reset();
                         }
                     }
 

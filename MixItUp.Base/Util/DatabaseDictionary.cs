@@ -65,6 +65,8 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public void ManualValueChanged(K key) { this.ValueChanged(key); }
+
         private IEnumerable<V> GetValues(HashSet<K> keys)
         {
             lock (valuesUpdateLock)

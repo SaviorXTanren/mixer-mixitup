@@ -49,7 +49,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (await MessageBoxHelper.ShowConfirmationDialog("Are you sure you wish to delete this?"))
                 {
                     ChannelSession.Settings.Currencies.Remove(currency.ID);
-                    currency.Reset();
+                    await currency.Reset();
                     this.RefreshList();
                 }
             });

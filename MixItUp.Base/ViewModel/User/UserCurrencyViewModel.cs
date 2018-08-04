@@ -154,13 +154,16 @@ namespace MixItUp.Base.ViewModel.User
             return false;
         }
 
-        public void Reset()
+        public async Task Reset()
         {
             foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
             {
-                userData.SetCurrencyAmount(this, 0);
+                userData.ResetCurrencyAmount(this);
+                ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
             }
             this.LastReset = new DateTimeOffset(DateTimeOffset.Now.Date);
+
+            await ChannelSession.SaveSettings();
         }
 
         public override bool Equals(object obj)
