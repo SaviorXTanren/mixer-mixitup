@@ -55,6 +55,12 @@ namespace MixItUp.WPF
             {
                 this.Title += " - Moderator";
             }
+
+            if (!string.IsNullOrEmpty(ChannelSession.Channel?.user?.username))
+            {
+                this.Title += " - " + ChannelSession.Channel.user.username;
+            }
+
             this.Title += " - v" + Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             await this.MainMenu.Initialize(this);
