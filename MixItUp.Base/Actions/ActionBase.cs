@@ -109,9 +109,9 @@ namespace MixItUp.Base.Actions
 
         protected abstract Task PerformInternal(UserViewModel user, IEnumerable<string> arguments);
 
-        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false)
+        protected async Task<string> ReplaceStringWithSpecialModifiers(string str, UserViewModel user, IEnumerable<string> arguments, bool encode = false, bool isFilePath = false)
         {
-            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.randomUserSpecialIdentifierGroup, encode);
+            SpecialIdentifierStringBuilder siString = new SpecialIdentifierStringBuilder(str, this.randomUserSpecialIdentifierGroup, encode, isFilePath);
             foreach (var kvp in this.extraSpecialIdentifiers)
             {
                 siString.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
