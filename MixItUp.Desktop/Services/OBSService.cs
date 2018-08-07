@@ -29,28 +29,22 @@ namespace MixItUp.OBS
             {
                 this.OBSWebsocket = new OBSWebsocket();
 
-                CancellationTokenSource tokenSource = new CancellationTokenSource();
                 bool connected = false;
 
-                Task t = Task.Factory.StartNew(() =>
+                try
                 {
-                    try
+                    this.OBSWebsocket.Connect(this.serverIP, this.password);
+                    if (this.OBSWebsocket.IsConnected)
                     {
-                        this.OBSWebsocket.Connect(this.serverIP, this.password);
                         this.OBSWebsocket.Disconnected += OBSWebsocket_Disconnected;
-
                         connected = true;
                     }
-                    catch (Exception ex) { Logger.Log(ex); }
-                }, tokenSource.Token);
-
-                await Task.Delay(2000);
-                tokenSource.Cancel();
-
-                await this.StartReplayBuffer();
+                }
+                catch (Exception ex) { Logger.Log(ex); }
 
                 if (connected)
                 {
+                    await this.StartReplayBuffer();
                     this.Connected(this, new EventArgs());
                 }
                 else

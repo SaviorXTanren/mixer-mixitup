@@ -219,13 +219,16 @@ namespace OBSWebsocketDotNet
             };
             WSConnection.Connect();
 
-            OBSAuthInfo authInfo = GetAuthInfo();
+            if (WSConnection.IsAlive)
+            {
+                OBSAuthInfo authInfo = GetAuthInfo();
 
-            if (authInfo.AuthRequired)
-                Authenticate(password, authInfo);
+                if (authInfo.AuthRequired)
+                    Authenticate(password, authInfo); 
 
-            if (Connected != null)
-                Connected(this, null);
+                if (Connected != null)
+                    Connected(this, null);
+            }
         }
 
         /// <summary>
