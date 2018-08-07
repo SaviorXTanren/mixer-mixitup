@@ -466,7 +466,7 @@ namespace MixItUp.Base.Actions
                 if (this.Effect is OverlayImageEffect)
                 {
                     OverlayImageEffect imageEffect = (OverlayImageEffect)this.Effect;
-                    string imageFilePath = await this.ReplaceStringWithSpecialModifiers(imageEffect.FilePath, user, arguments);
+                    string imageFilePath = await this.ReplaceStringWithSpecialModifiers(imageEffect.FilePath, user, arguments, isFilePath: true);
                     if (!string.IsNullOrEmpty(imageFilePath))
                     {
                         OverlayImageEffect copy = imageEffect.Copy<OverlayImageEffect>();
@@ -488,7 +488,14 @@ namespace MixItUp.Base.Actions
                 }
                 else if (this.Effect is OverlayVideoEffect)
                 {
-                    await ChannelSession.Services.OverlayServer.SendLocalVideo((OverlayVideoEffect)this.Effect);
+                    OverlayVideoEffect videoEffect = (OverlayVideoEffect)this.Effect;
+                    string videoFilePath = await this.ReplaceStringWithSpecialModifiers(videoEffect.FilePath, user, arguments, isFilePath: true);
+                    if (!string.IsNullOrEmpty(videoFilePath))
+                    {
+                        OverlayVideoEffect copy = videoEffect.Copy<OverlayVideoEffect>();
+                        copy.FilePath = videoFilePath;
+                        await ChannelSession.Services.OverlayServer.SendLocalVideo(copy);
+                    }
                 }
                 else if (this.Effect is OverlayHTMLEffect)
                 {

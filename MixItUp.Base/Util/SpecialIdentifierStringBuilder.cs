@@ -6,6 +6,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -122,12 +123,14 @@ namespace MixItUp.Base.Util
         private string text;
         private Guid randomUserSpecialIdentifierGroupID;
         private bool encode;
+        private bool isFilePath;
 
-        public SpecialIdentifierStringBuilder(string text, Guid randomUserSpecialIdentifierGroupID, bool encode = false)
+        public SpecialIdentifierStringBuilder(string text, Guid randomUserSpecialIdentifierGroupID, bool encode = false, bool isFilePath = false)
         {
             this.text = text;
             this.randomUserSpecialIdentifierGroupID = randomUserSpecialIdentifierGroupID;
             this.encode = encode;
+            this.isFilePath = isFilePath;
         }
 
         public async Task ReplaceCommonSpecialModifiers(UserViewModel user, IEnumerable<string> arguments = null)
@@ -459,6 +462,11 @@ namespace MixItUp.Base.Util
             if (encode)
             {
                 replacement = HttpUtility.UrlEncode(replacement);
+            }
+            if (isFilePath)
+            {
+                char[] invalidChars = Path.GetInvalidFileNameChars();
+                replacement = new string(replacement.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray());
             }
             this.text = this.text.Replace(SpecialIdentifierHeader + identifier, replacement);
         }
