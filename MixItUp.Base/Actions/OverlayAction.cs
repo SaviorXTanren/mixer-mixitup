@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
@@ -466,7 +467,7 @@ namespace MixItUp.Base.Actions
                 if (this.Effect is OverlayImageEffect)
                 {
                     OverlayImageEffect imageEffect = (OverlayImageEffect)this.Effect;
-                    string imageFilePath = await this.ReplaceStringWithSpecialModifiers(imageEffect.FilePath, user, arguments, isFilePath: true);
+                    string imageFilePath = (await this.ReplaceStringWithSpecialModifiers(imageEffect.FilePath, user, arguments)).ToFilePathString();
                     if (!string.IsNullOrEmpty(imageFilePath))
                     {
                         OverlayImageEffect copy = imageEffect.Copy<OverlayImageEffect>();
@@ -489,7 +490,7 @@ namespace MixItUp.Base.Actions
                 else if (this.Effect is OverlayVideoEffect)
                 {
                     OverlayVideoEffect videoEffect = (OverlayVideoEffect)this.Effect;
-                    string videoFilePath = await this.ReplaceStringWithSpecialModifiers(videoEffect.FilePath, user, arguments, isFilePath: true);
+                    string videoFilePath = (await this.ReplaceStringWithSpecialModifiers(videoEffect.FilePath, user, arguments)).ToFilePathString();
                     if (!string.IsNullOrEmpty(videoFilePath))
                     {
                         OverlayVideoEffect copy = videoEffect.Copy<OverlayVideoEffect>();
