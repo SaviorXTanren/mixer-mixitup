@@ -58,27 +58,28 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
+            string filePath = (await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, arguments)).ToFilePathString();
             if (this.FileActionType == FileActionTypeEnum.SaveToFile || this.FileActionType == FileActionTypeEnum.AppendToFile)
             {
                 string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
                 textToWrite = await this.ReplaceStringWithSpecialModifiers(textToWrite, user, arguments);
                 if (this.FileActionType == FileActionTypeEnum.SaveToFile)
                 {
-                    await ChannelSession.Services.FileService.SaveFile(this.FilePath, textToWrite);
+                    await ChannelSession.Services.FileService.SaveFile(filePath, textToWrite);
                 }
                 else if (this.FileActionType == FileActionTypeEnum.AppendToFile)
                 {
                     string dataToWrite = textToWrite;
-                    if (!string.IsNullOrEmpty(await ChannelSession.Services.FileService.ReadFile(this.FilePath)))
+                    if (!string.IsNullOrEmpty(await ChannelSession.Services.FileService.ReadFile(filePath)))
                     {
                         dataToWrite = Environment.NewLine + dataToWrite;
                     }
-                    await ChannelSession.Services.FileService.AppendFile(this.FilePath, dataToWrite);
+                    await ChannelSession.Services.FileService.AppendFile(filePath, dataToWrite);
                 }
             }
             else
             {
-                string data = await ChannelSession.Services.FileService.ReadFile(this.FilePath);
+                string data = await ChannelSession.Services.FileService.ReadFile(filePath);
                 if (!string.IsNullOrEmpty(data))
                 {
                     if (this.FileActionType == FileActionTypeEnum.ReadSpecificLineFromFile || this.FileActionType == FileActionTypeEnum.ReadRandomLineFromFile)

@@ -131,16 +131,14 @@ namespace MixItUp.Base.Actions
                                     ClipLocatorModel clipLocator = clip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(VideoFileContentLocatorType));
                                     if (clipLocator != null)
                                     {
-                                        char[] invalidChars = Path.GetInvalidFileNameChars();
-                                        string fileName = new string(clipName.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray());
-                                        string destinationFile = Path.Combine(this.DownloadDirectory, fileName + ".mp4");
+                                        string destinationFile = Path.Combine(this.DownloadDirectory, clipName + ".mp4");
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                                         Task.Run(async () =>
                                         {
                                             Process process = new Process();
                                             process.StartInfo.FileName = MixerClipsAction.GetFFMPEGExecutablePath();
-                                            process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile);
+                                            process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile.ToFilePathString());
                                             process.StartInfo.RedirectStandardOutput = true;
                                             process.StartInfo.UseShellExecute = false;
                                             process.StartInfo.CreateNoWindow = true;
