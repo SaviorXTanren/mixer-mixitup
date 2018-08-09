@@ -88,7 +88,11 @@ namespace MixItUp.Base.MixerAPI
             {
                 this.userEventTracking[eventName] = new HashSet<uint>();
             }
-            this.userEventTracking[eventName].Add(user.ID);
+
+            if (user != null)
+            {
+                this.userEventTracking[eventName].Add(user.ID);
+            }
         }
 
         public EventCommand FindMatchingEventCommand(string eventDetails)
