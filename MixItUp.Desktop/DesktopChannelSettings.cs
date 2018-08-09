@@ -217,6 +217,8 @@ namespace MixItUp.Desktop
         public string ChatInteractiveAlertsColorScheme { get; set; }
 
         [JsonProperty]
+        public string NotificationChatMessageSoundFilePath { get; set; }
+        [JsonProperty]
         public string NotificationChatTaggedSoundFilePath { get; set; }
         [JsonProperty]
         public string NotificationChatWhisperSoundFilePath { get; set; }

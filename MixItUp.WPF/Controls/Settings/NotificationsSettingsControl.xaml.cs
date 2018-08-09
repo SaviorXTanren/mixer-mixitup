@@ -24,11 +24,13 @@ namespace MixItUp.WPF.Controls.Settings
         {
             InitializeComponent();
 
+            this.ChatMessageComboBox.ItemsSource = this.AvailableSounds;
             this.ChatTaggedComboBox.ItemsSource = this.AvailableSounds;
             this.ChatWhisperComboBox.ItemsSource = this.AvailableSounds;
             this.ServiceConnectComboBox.ItemsSource = this.AvailableSounds;
             this.ServiceDisconnectComboBox.ItemsSource = this.AvailableSounds;
 
+            this.AssignSelectedItem(this.ChatMessageComboBox, ChannelSession.Settings.NotificationChatMessageSoundFilePath);
             this.AssignSelectedItem(this.ChatTaggedComboBox, ChannelSession.Settings.NotificationChatTaggedSoundFilePath);
             this.AssignSelectedItem(this.ChatWhisperComboBox, ChannelSession.Settings.NotificationChatWhisperSoundFilePath);
             this.AssignSelectedItem(this.ServiceConnectComboBox, ChannelSession.Settings.NotificationServiceConnectSoundFilePath);
@@ -93,6 +95,22 @@ namespace MixItUp.WPF.Controls.Settings
                 }
             }
             return null;
+        }
+
+        private void PlayChatMessageButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
+            {
+                ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatMessageSoundFilePath, 100);
+            }
+        }
+
+        private void ChatMessageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.ChatMessageComboBox.SelectedIndex >= 0)
+            {
+                ChannelSession.Settings.NotificationChatMessageSoundFilePath = this.GetSoundFilePath(this.ChatMessageComboBox, ChannelSession.Settings.NotificationChatMessageSoundFilePath);
+            }
         }
 
         private void PlayChatTaggedButton_Click(object sender, RoutedEventArgs e)
