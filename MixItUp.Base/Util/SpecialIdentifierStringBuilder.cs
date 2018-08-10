@@ -251,8 +251,8 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(StartSpecialIdentifierHeader + "date", startTime.ToString("d"));
                     this.ReplaceSpecialIdentifier(StartSpecialIdentifierHeader + "time", startTime.ToString("t"));
 
-                    this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "total", duration.ToString("h\\:mm"));
-                    this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "hours", duration.ToString("%h"));
+                    this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "total", (int)duration.TotalHours + duration.ToString("\\:mm"));
+                    this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "hours", ((int)duration.TotalHours).ToString());
                     this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "minutes", duration.ToString("mm"));
                     this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "seconds", duration.ToString("ss"));
                 }
