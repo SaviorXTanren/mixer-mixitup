@@ -48,6 +48,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.InteractiveMoveUserToGroupGroupNameTextBox.Text = this.action.GroupName;
                     this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
+                    this.InteractiveMoveUserToGroupUserNameTextBox.Text = this.action.OptionalUserName;
                 }
                 else if (this.action.InteractiveType == InteractiveActionTypeEnum.MoveGroupToScene)
                 {
@@ -58,6 +59,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
                     this.InteractiveMoveUserToSceneSceneIDTextBox.Text = this.action.SceneID;
+                    this.InteractiveMoveUserToSceneUserNameTextBox.Text = this.action.OptionalUserName;
                 }
                 else if (this.action.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.action.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
                     this.action.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
@@ -82,7 +84,8 @@ namespace MixItUp.WPF.Controls.Actions
                     this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedIndex >= 0)
                 {
                     return new InteractiveAction(interactiveType, this.InteractiveMoveUserToGroupGroupNameTextBox.Text, null,
-                        EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedItem));
+                        EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedItem),
+                        this.InteractiveMoveUserToGroupUserNameTextBox.Text);
                 }
                 else if (interactiveType == InteractiveActionTypeEnum.MoveGroupToScene && !string.IsNullOrEmpty(this.InteractiveMoveGroupToSceneGroupNameTextBox.Text) &&
                     !string.IsNullOrEmpty(this.InteractiveMoveGroupToSceneSceneIDTextBox.Text))
@@ -93,7 +96,8 @@ namespace MixItUp.WPF.Controls.Actions
                     !string.IsNullOrEmpty(this.InteractiveMoveUserToSceneSceneIDTextBox.Text))
                 {
                     return new InteractiveAction(interactiveType, this.InteractiveMoveUserToSceneSceneIDTextBox.Text, this.InteractiveMoveUserToSceneSceneIDTextBox.Text,
-                        EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedItem));
+                        EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedItem),
+                        this.InteractiveMoveUserToSceneUserNameTextBox.Text);
                 }
                 else if (interactiveType == InteractiveActionTypeEnum.CooldownButton || interactiveType == InteractiveActionTypeEnum.CooldownGroup ||
                     interactiveType == InteractiveActionTypeEnum.CooldownScene)

@@ -29,11 +29,15 @@
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <ComboBox x:Name="InteractiveMoveUserToGroupPermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
             <TextBox x:Name="InteractiveMoveUserToGroupGroupNameTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Group Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox x:Name="InteractiveMoveUserToGroupUserNameTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="User To Move (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="InteractiveMoveGroupToSceneGrid" Visibility="Collapsed">
@@ -53,11 +57,15 @@
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <ComboBox x:Name="InteractiveMoveUserToScenePermissionsAllowedComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Permissions" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
             <TextBox x:Name="InteractiveMoveUserToSceneSceneIDTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Scene Name (Case Sensitive)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBox x:Name="InteractiveMoveUserToSceneUserNameTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="User To Move (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
 
         <Grid Grid.Row="2" x:Name="InteractiveCooldownGrid" Visibility="Collapsed">

@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
@@ -63,19 +64,23 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public uint InteractiveGameID { get; set; }
 
+        [DataMember]
+        public string OptionalUserName { get; set; }
+
         public InteractiveAction()
             : base(ActionTypeEnum.Interactive)
         {
             this.RoleRequirement = MixerRoleEnum.User;
         }
 
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string groupName = null, string sceneID = null, MixerRoleEnum roleRequirement = MixerRoleEnum.User)
+        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string groupName = null, string sceneID = null, MixerRoleEnum roleRequirement = MixerRoleEnum.User, string username = null)
             : this()
         {
             this.InteractiveType = interactiveType;
             this.GroupName = groupName;
             this.SceneID = sceneID;
             this.RoleRequirement = roleRequirement;
+            this.OptionalUserName = username;
         }
 
         public InteractiveAction(InteractiveActionTypeEnum interactiveType, string cooldownID, int cooldownAmount)
@@ -134,7 +139,19 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.InteractiveType == InteractiveActionTypeEnum.MoveUserToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
                     {
-                        await ChannelSession.Interactive.AddUserToGroup(user, this.GroupName);
+                        if (!string.IsNullOrEmpty(this.OptionalUserName))
+                        {
+                            string optionalUserName = await this.ReplaceStringWithSpecialModifiers(this.OptionalUserName, user, arguments);
+                            UserViewModel optionalUser = await ChannelSession.ActiveUsers.GetUserByUsername(optionalUserName);
+                            if (optionalUser != null)
+                            {
+                                await ChannelSession.Interactive.AddUserToGroup(optionalUser, this.GroupName);
+                            }
+                        }
+                        else
+                        {
+                            await ChannelSession.Interactive.AddUserToGroup(user, this.GroupName);
+                        }
                     }
                     else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
                         this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
