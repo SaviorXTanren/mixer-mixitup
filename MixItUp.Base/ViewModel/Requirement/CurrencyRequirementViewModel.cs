@@ -106,13 +106,11 @@ namespace MixItUp.Base.ViewModel.Requirement
                     return false;
                 }
 
-                UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
-                if (userCurrencyData.Amount < amount)
+                if (!userData.HasCurrencyAmount(currency, amount))
                 {
                     return false;
                 }
-
-                userCurrencyData.Amount -= amount;
+                userData.SubtractCurrencyAmount(currency, amount);
                 return true;
             }
             return false;
@@ -176,13 +174,13 @@ namespace MixItUp.Base.ViewModel.Requirement
                 return false;
             }
 
-            UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
-            if (userCurrencyData.Amount < rank.MinimumPoints)
+            if (!userData.HasCurrencyAmount(currency, rank.MinimumPoints))
             {
                 return false;
             }
 
-            if (this.MustEqual && userCurrencyData.GetRank() != rank)
+            UserCurrencyDataViewModel userCurrencyData = userData.GetCurrency(currency);
+            if (this.MustEqual && userCurrencyData.GetRank() != rank && !userData.IsCurrencyRankExempt)
             {
                 return false;
             }

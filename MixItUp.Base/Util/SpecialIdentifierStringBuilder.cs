@@ -149,11 +149,12 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
             {
-                // Select all workable users, exclude the streamer, then grab their UserData
                 Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
                 allUsersDictionary.Remove(ChannelSession.Channel.user.id);
 
                 IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+                allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
                     if (this.ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
@@ -162,7 +163,7 @@ namespace MixItUp.Base.Util
                         int userPosition = 1;
                         foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(10))
                         {
-                            currencyUserList.Add($"#{userPosition}) @{currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                            currencyUserList.Add($"#{userPosition}) {currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
                             userPosition++;
                         }
 
@@ -183,7 +184,7 @@ namespace MixItUp.Base.Util
                     int userPosition = 1;
                     foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(10))
                     {
-                        timeUserList.Add($"#{userPosition}) @{timeUser.UserName} - {timeUser.ViewingTimeShortString}");
+                        timeUserList.Add($"#{userPosition}) {timeUser.UserName} - {timeUser.ViewingTimeShortString}");
                         userPosition++;
                     }
 

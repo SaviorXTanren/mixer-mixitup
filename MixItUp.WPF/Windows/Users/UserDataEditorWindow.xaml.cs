@@ -205,6 +205,11 @@ namespace MixItUp.WPF.Windows.Users
         private void CurrencyRankExemptToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             this.user.Data.IsCurrencyRankExempt = this.CurrencyRankExemptToggleButton.IsChecked.GetValueOrDefault();
+            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+            {
+                this.user.Data.ResetCurrencyAmount(currency);
+            }
+            ChannelSession.Settings.UserData.ManualValueChanged(this.user.ID);
         }
 
         private void SparkExemptToggleButton_Checked(object sender, RoutedEventArgs e)
