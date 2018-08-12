@@ -63,7 +63,7 @@ namespace MixItUp.Base.Commands
 
         public InteractiveCommand() { }
 
-        protected InteractiveCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveControlModel control, string command, RequirementViewModel requirements)
+        protected InteractiveCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveControlModel control, string command, RequirementViewModel requirements)
             : base(control.controlID, CommandTypeEnum.Interactive, command, requirements)
         {
             this.GameID = game.id;
@@ -86,7 +86,7 @@ namespace MixItUp.Base.Commands
 
         public InteractiveButtonCommand() { }
 
-        public InteractiveButtonCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
+        public InteractiveButtonCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveButtonControlModel control, InteractiveButtonCommandTriggerType eventType, RequirementViewModel requirements)
             : base(game, scene, control, EnumHelper.GetEnumName(eventType), requirements)
         {
             this.Trigger = eventType;
@@ -275,7 +275,7 @@ namespace MixItUp.Base.Commands
             this.MappedKeys = new List<InputKeyEnum?>();
         }
 
-        public InteractiveJoystickCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control, RequirementViewModel requirements)
+        public InteractiveJoystickCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveJoystickControlModel control, RequirementViewModel requirements)
             : base(game, scene, control, string.Empty, requirements)
         {
             this.MappedKeys = new List<InputKeyEnum?>();
@@ -335,7 +335,7 @@ namespace MixItUp.Base.Commands
     {
         public InteractiveTextBoxCommand() { }
 
-        public InteractiveTextBoxCommand(InteractiveGameListingModel game, InteractiveSceneModel scene, InteractiveTextBoxControlModel control, RequirementViewModel requirements)
+        public InteractiveTextBoxCommand(InteractiveGameModel game, InteractiveSceneModel scene, InteractiveTextBoxControlModel control, RequirementViewModel requirements)
             : base(game, scene, control, string.Empty, requirements)
         { }
 

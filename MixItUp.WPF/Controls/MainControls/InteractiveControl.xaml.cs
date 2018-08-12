@@ -111,8 +111,8 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class InteractiveControl : MainControlBase
     {
-        private ObservableCollection<InteractiveGameListingModel> interactiveGames = new ObservableCollection<InteractiveGameListingModel>();
-        private InteractiveGameListingModel selectedGame = null;
+        private ObservableCollection<InteractiveGameModel> interactiveGames = new ObservableCollection<InteractiveGameModel>();
+        private InteractiveGameModel selectedGame = null;
         public InteractiveGameVersionModel selectedGameVersion = null;
 
         private ObservableCollection<InteractiveSceneModel> interactiveScenes = new ObservableCollection<InteractiveSceneModel>();
@@ -138,7 +138,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (ChannelSession.Settings.DefaultInteractiveGame > 0)
             {
-                InteractiveGameListingModel game = this.interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
+                InteractiveGameModel game = this.interactiveGames.FirstOrDefault(g => g.id.Equals(ChannelSession.Settings.DefaultInteractiveGame));
                 if (game != null)
                 {
                     this.InteractiveGamesComboBox.SelectedItem = game;
@@ -156,17 +156,31 @@ namespace MixItUp.WPF.Controls.MainControls
             this.GroupsButton.IsEnabled = false;
             this.ConnectButton.IsEnabled = false;
 
-            IEnumerable<InteractiveGameListingModel> gameListings = await this.Window.RunAsyncOperation(async () =>
+            this.interactiveGames.Clear();
+
+            IEnumerable<InteractiveGameModel> gameListings = await this.Window.RunAsyncOperation(async () =>
             {
                 return await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
             });
 
             gameListings = gameListings.Where(g => !g.name.Equals("Soundwave Interactive Soundboard"));
 
-            this.interactiveGames.Clear();
-            foreach (InteractiveGameListingModel game in gameListings)
+            foreach (InteractiveGameModel game in gameListings)
             {
                 this.interactiveGames.Add(game);
+            }
+
+            foreach (uint projectID in ChannelSession.Settings.CustomInteractiveProjectIDs)
+            {
+                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(projectID);
+                if (version != null)
+                {
+                    InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                    if (game != null)
+                    {
+                        this.interactiveGames.Add(game);
+                    }
+                }
             }
 
             if (this.selectedGame != null)
@@ -192,7 +206,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.selectedGameVersion = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Connection.GetInteractiveGameVersion(this.selectedGame.versions.First());
+                IEnumerable<InteractiveGameVersionModel> versions = await ChannelSession.Connection.GetInteractiveGameVersions(this.selectedGame);
+                if (versions != null && versions.Count() > 0)
+                {
+                    return await ChannelSession.Connection.GetInteractiveGameVersion(versions.First());
+                }
+                return null;
             });
 
             this.interactiveScenes.Clear();
@@ -303,7 +322,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
-                this.selectedGame = (InteractiveGameListingModel)this.InteractiveGamesComboBox.SelectedItem;
+                this.selectedGame = (InteractiveGameModel)this.InteractiveGamesComboBox.SelectedItem;
                 await this.RefreshSelectedGame();
             }
         }
@@ -404,7 +423,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     await ChannelSession.Interactive.DisableAllControlsWithoutCommands(this.selectedGameVersion);
 
-                    return await ChannelSession.Interactive.Connect(this.selectedGame);
+                    return await ChannelSession.Interactive.Connect(this.selectedGame, this.selectedGameVersion);
                 });
 
                 if (result)
@@ -438,7 +457,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.InteractiveGameDisconnected();
         }
 
-        private void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameListingModel e)
+        private void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel e)
         {
             this.Dispatcher.Invoke(() => this.InteractiveGameConnected());
         }

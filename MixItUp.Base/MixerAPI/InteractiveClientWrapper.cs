@@ -134,7 +134,8 @@ namespace MixItUp.Base.MixerAPI
 
         public event EventHandler<Tuple<UserViewModel, InteractiveConnectedControlCommand>> OnInteractiveControlUsed = delegate { };
 
-        public InteractiveGameListingModel Game { get; private set; }
+        public InteractiveGameModel Game { get; private set; }
+        public InteractiveGameVersionModel Version { get; private set; }
         public InteractiveClient Client { get; private set; }
 
         public List<InteractiveConnectedSceneModel> Scenes { get; private set; }
@@ -151,6 +152,18 @@ namespace MixItUp.Base.MixerAPI
         public async Task<bool> Connect(InteractiveGameListingModel game)
         {
             this.Game = game;
+            this.Version = game.versions.First();
+
+            this.Scenes.Clear();
+            this.Controls.Clear();
+
+            return await this.AttemptConnect();
+        }
+
+        public async Task<bool> Connect(InteractiveGameModel game, InteractiveGameVersionModel version)
+        {
+            this.Game = game;
+            this.Version = version;
 
             this.Scenes.Clear();
             this.Controls.Clear();
@@ -295,7 +308,7 @@ namespace MixItUp.Base.MixerAPI
 
         protected override async Task<bool> ConnectInternal()
         {
-            this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game));
+            this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version));
             if (this.Client != null)
             {
                 this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
@@ -339,8 +352,8 @@ namespace MixItUp.Base.MixerAPI
             this.Scenes.Clear();
             this.Controls.Clear();
 
-            InteractiveGameVersionModel gameVersion = await ChannelSession.Connection.GetInteractiveGameVersion(this.Game.versions.OrderByDescending(v => v.createdAt.GetValueOrDefault()).First());
-            foreach (InteractiveSceneModel scene in gameVersion.controls.scenes)
+            this.Version = await ChannelSession.Connection.GetInteractiveGameVersion(this.Version);
+            foreach (InteractiveSceneModel scene in this.Version.controls.scenes)
             {
                 if (scene.allControls.Count() > 0)
                 {
@@ -359,7 +372,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 this.Scenes.Add(scene);
 
-                InteractiveSceneModel dataScene = gameVersion.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(scene.sceneID));
+                InteractiveSceneModel dataScene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(scene.sceneID));
 
                 foreach (InteractiveConnectedButtonControlModel button in scene.buttons)
                 {
@@ -634,7 +647,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 await Task.Delay(2500);
             }
-            while (!await this.Connect(this.Game));
+            while (!await this.Connect(this.Game, this.Version));
 
             ChannelSession.ReconnectionOccurred("Interactive");
         }

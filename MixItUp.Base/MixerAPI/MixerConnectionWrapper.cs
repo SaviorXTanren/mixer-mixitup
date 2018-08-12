@@ -119,9 +119,15 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<IEnumerable<InteractiveGameListingModel>> GetOwnedInteractiveGames(ChannelModel channel) { return await this.RunAsync(this.Connection.Interactive.GetOwnedInteractiveGames(channel)); }
 
+        public async Task<InteractiveGameModel> GetInteractiveGame(uint gameID) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGame(gameID)); }
+
         public async Task<InteractiveGameListingModel> CreateInteractiveGame(ChannelModel channel, UserModel user, string name, InteractiveSceneModel defaultScene) { return await this.RunAsync(InteractiveGameHelper.CreateInteractive2Game(this.Connection, channel, user, name, defaultScene)); }
 
+        public async Task<IEnumerable<InteractiveGameVersionModel>> GetInteractiveGameVersions(InteractiveGameModel game) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGameVersions(game)); }
+
         public async Task<InteractiveGameVersionModel> GetInteractiveGameVersion(InteractiveGameVersionModel version) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGameVersion(version)); }
+
+        public async Task<InteractiveGameVersionModel> GetInteractiveGameVersion(uint versionID) { return await this.RunAsync(this.Connection.Interactive.GetInteractiveGameVersion(versionID)); }
 
         public async Task UpdateInteractiveGameVersion(InteractiveGameVersionModel version) { await this.RunAsync(this.Connection.Interactive.UpdateInteractiveGameVersion(version)); }
 

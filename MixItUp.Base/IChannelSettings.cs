@@ -128,6 +128,8 @@ namespace MixItUp.Base
 
         bool AutoExportStatistics { get; set; }
 
+        List<uint> CustomInteractiveProjectIDs { get; set; }
+
         List<RemoteBoardModel> RemoteBoards { get; set; }
         List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
 
