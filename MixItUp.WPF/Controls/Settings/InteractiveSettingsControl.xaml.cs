@@ -33,6 +33,8 @@ namespace MixItUp.WPF.Controls.Settings
             if (game == null) { game = InteractiveSettingsControl.NoneInteractiveGame; }
             this.DefaultInteractiveGameComboBox.SelectedItem = game;
 
+            this.PreventUnknownInteractiveUsersToggleButton.IsChecked = ChannelSession.Settings.PreventUnknownInteractiveUsers;
+
             this.CustomInteractiveProjectsListView.ItemsSource = this.customInteractiveProjects;
             this.customInteractiveProjects.Clear();
             foreach (uint projectID in ChannelSession.Settings.CustomInteractiveProjectIDs)
@@ -55,6 +57,11 @@ namespace MixItUp.WPF.Controls.Settings
                 InteractiveGameListingModel game = (InteractiveGameListingModel)this.DefaultInteractiveGameComboBox.SelectedItem;
                 ChannelSession.Settings.DefaultInteractiveGame = game.id;
             }
+        }
+
+        private void PreventUnknownInteractiveUsersToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ChannelSession.Settings.PreventUnknownInteractiveUsers = this.PreventUnknownInteractiveUsersToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void AddCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)

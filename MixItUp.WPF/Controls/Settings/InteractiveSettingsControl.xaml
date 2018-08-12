@@ -19,14 +19,19 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Default Interactive Game To Connect:</TextBlock>
         <ComboBox x:Name="DefaultInteractiveGameComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="DefaultInteractiveGameComboBox_SelectionChanged" DisplayMemberPath="name" />
 
-        <Separator Grid.Row="2" Grid.ColumnSpan="2" Margin="10" />
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Prevent Unknown Interactive Users:</TextBlock>
+        <ToggleButton Grid.Row="2" Grid.Column="2" x:Name="PreventUnknownInteractiveUsersToggleButton" Checked="PreventUnknownInteractiveUsersToggleButton_Checked" Unchecked="PreventUnknownInteractiveUsersToggleButton_Checked" />
 
-        <Grid Grid.Row="4" Grid.ColumnSpan="2">
+        <Separator Grid.Row="4" Grid.ColumnSpan="2" Margin="10" />
+
+        <Grid Grid.Row="6" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />

@@ -97,6 +97,10 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public uint DefaultInteractiveGame { get; set; }
+        [JsonProperty]
+        public bool PreventUnknownInteractiveUsers { get; set; }
+        [JsonProperty]
+        public List<uint> CustomInteractiveProjectIDs { get; set; }
 
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
@@ -232,9 +236,6 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public bool AutoExportStatistics { get; set; }
-
-        [JsonProperty]
-        public List<uint> CustomInteractiveProjectIDs { get; set; }
 
         [JsonProperty]
         public List<RemoteBoardModel> RemoteBoards { get; set; }

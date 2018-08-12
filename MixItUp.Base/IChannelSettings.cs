@@ -54,6 +54,8 @@ namespace MixItUp.Base
         bool DeleteChatCommandsWhenRun { get; set; }
 
         uint DefaultInteractiveGame { get; set; }
+        bool PreventUnknownInteractiveUsers { get; set; }
+        List<uint> CustomInteractiveProjectIDs { get; set; }
 
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }
@@ -127,8 +129,6 @@ namespace MixItUp.Base
         int MaxMessagesInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }
-
-        List<uint> CustomInteractiveProjectIDs { get; set; }
 
         List<RemoteBoardModel> RemoteBoards { get; set; }
         List<RemoteDeviceModel> RemoteSavedDevices { get; set; }

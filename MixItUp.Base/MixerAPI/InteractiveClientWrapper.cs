@@ -605,6 +605,11 @@ namespace MixItUp.Base.MixerAPI
 
                         if (user == null)
                         {
+                            if (ChannelSession.Settings.PreventUnknownInteractiveUsers)
+                            {
+                                return;
+                            }
+
                             user = new UserViewModel(0, "Unknown User");
                             user.InteractiveID = e.participantID;
                         }
