@@ -84,5 +84,21 @@
             <ComboBox x:Name="InteractiveGameComboBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Game" DisplayMemberPath="name" />
         </Grid>
 
+        <Grid Grid.Row="2" x:Name="InteractiveUpdateControlGrid" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="InteractiveUpdateControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control Name" />
+
+            <ComboBox x:Name="InteractiveUpdateControlTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Field Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+
+            <TextBox x:Name="InteractiveUpdateControlValueTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Updated Value" />
+        </Grid>
+
     </Grid>
 </local:ActionControlBase>

@@ -30,6 +30,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.InteractiveTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionTypeEnum>().OrderBy(s => s);
             this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
             this.InteractiveMoveUserToScenePermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
+            this.InteractiveUpdateControlTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveActionUpdateControlTypeEnum>().OrderBy(s => s);
 
             this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedIndex = 0;
             this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedIndex = 0;
@@ -71,6 +72,12 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.InteractiveGameComboBox.SelectedItem = this.games.FirstOrDefault(g => g.id.Equals(this.action.InteractiveGameID));
                 }
+                else if (this.action.InteractiveType == InteractiveActionTypeEnum.UpdateControl)
+                {
+                    this.InteractiveUpdateControlNameTextBox.Text = this.action.ControlID;
+                    this.InteractiveUpdateControlTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.UpdateControlType);
+                    this.InteractiveUpdateControlValueTextBox.Text = this.action.UpdateValue;
+                }
             }
         }
 
@@ -83,28 +90,28 @@ namespace MixItUp.WPF.Controls.Actions
                 if (interactiveType == InteractiveActionTypeEnum.MoveUserToGroup && !string.IsNullOrEmpty(this.InteractiveMoveUserToGroupGroupNameTextBox.Text) &&
                     this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedIndex >= 0)
                 {
-                    return new InteractiveAction(interactiveType, this.InteractiveMoveUserToGroupGroupNameTextBox.Text, null,
+                    return InteractiveAction.CreateMoveUserToGroupAction(this.InteractiveMoveUserToGroupGroupNameTextBox.Text,
                         EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.InteractiveMoveUserToGroupPermissionsAllowedComboBox.SelectedItem),
                         this.InteractiveMoveUserToGroupUserNameTextBox.Text);
-                }
-                else if (interactiveType == InteractiveActionTypeEnum.MoveGroupToScene && !string.IsNullOrEmpty(this.InteractiveMoveGroupToSceneGroupNameTextBox.Text) &&
-                    !string.IsNullOrEmpty(this.InteractiveMoveGroupToSceneSceneIDTextBox.Text))
-                {
-                    return new InteractiveAction(interactiveType, this.InteractiveMoveGroupToSceneGroupNameTextBox.Text, this.InteractiveMoveGroupToSceneSceneIDTextBox.Text);
                 }
                 else if (interactiveType == InteractiveActionTypeEnum.MoveUserToScene && this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedIndex >= 0 &&
                     !string.IsNullOrEmpty(this.InteractiveMoveUserToSceneSceneIDTextBox.Text))
                 {
-                    return new InteractiveAction(interactiveType, this.InteractiveMoveUserToSceneSceneIDTextBox.Text, this.InteractiveMoveUserToSceneSceneIDTextBox.Text,
+                    return InteractiveAction.CreateMoveUserToSceneAction(this.InteractiveMoveUserToSceneSceneIDTextBox.Text,
                         EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedItem),
                         this.InteractiveMoveUserToSceneUserNameTextBox.Text);
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.MoveGroupToScene && !string.IsNullOrEmpty(this.InteractiveMoveGroupToSceneGroupNameTextBox.Text) &&
+                    !string.IsNullOrEmpty(this.InteractiveMoveGroupToSceneSceneIDTextBox.Text))
+                {
+                    return InteractiveAction.CreateMoveGroupToSceneAction(this.InteractiveMoveGroupToSceneGroupNameTextBox.Text, this.InteractiveMoveGroupToSceneSceneIDTextBox.Text);
                 }
                 else if (interactiveType == InteractiveActionTypeEnum.CooldownButton || interactiveType == InteractiveActionTypeEnum.CooldownGroup ||
                     interactiveType == InteractiveActionTypeEnum.CooldownScene)
                 {
                     if (!string.IsNullOrEmpty(this.InteractiveCooldownNameTextBox.Text) && int.TryParse(this.InteractiveCooldownAmountTextBox.Text, out int cooldownAmount) && cooldownAmount > 0)
                     {
-                        return new InteractiveAction(interactiveType, this.InteractiveCooldownNameTextBox.Text, cooldownAmount);
+                        return InteractiveAction.CreateCooldownAction(interactiveType, this.InteractiveCooldownNameTextBox.Text, cooldownAmount);
                     }
                 }
                 else if (interactiveType == InteractiveActionTypeEnum.Connect)
@@ -112,12 +119,22 @@ namespace MixItUp.WPF.Controls.Actions
                     if (this.InteractiveGameComboBox.SelectedIndex >= 0)
                     {
                         InteractiveGameListingModel game = (InteractiveGameListingModel)this.InteractiveGameComboBox.SelectedItem;
-                        return new InteractiveAction(interactiveType, game.id);
+                        return InteractiveAction.CreateConnectAction(game);
                     }
                 }
                 else if (interactiveType == InteractiveActionTypeEnum.Disconnect)
                 {
-                    return new InteractiveAction(interactiveType, 0);
+                    return new InteractiveAction(interactiveType);
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.UpdateControl)
+                {
+                    if (!string.IsNullOrEmpty(this.InteractiveUpdateControlNameTextBox.Text) && this.InteractiveUpdateControlTypeComboBox.SelectedIndex >= 0 &&
+                        !string.IsNullOrEmpty(this.InteractiveUpdateControlValueTextBox.Text))
+                    {
+                        return InteractiveAction.CreateUpdateControlAction(
+                            EnumHelper.GetEnumValueFromString<InteractiveActionUpdateControlTypeEnum>((string)this.InteractiveUpdateControlTypeComboBox.SelectedItem),
+                            this.InteractiveUpdateControlNameTextBox.Text, this.InteractiveUpdateControlValueTextBox.Text);
+                    }
                 }
             }
             return null;
@@ -130,6 +147,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.InteractiveMoveUserToSceneGrid.Visibility = Visibility.Collapsed;
             this.InteractiveCooldownGrid.Visibility = Visibility.Collapsed;
             this.InteractiveConnectGrid.Visibility = Visibility.Collapsed;
+            this.InteractiveUpdateControlGrid.Visibility = Visibility.Collapsed;
             if (this.InteractiveTypeComboBox.SelectedIndex >= 0)
             {
                 InteractiveActionTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveActionTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
@@ -153,6 +171,10 @@ namespace MixItUp.WPF.Controls.Actions
                 else if (interactiveType == InteractiveActionTypeEnum.Connect)
                 {
                     this.InteractiveConnectGrid.Visibility = Visibility.Visible;
+                }
+                else if (interactiveType == InteractiveActionTypeEnum.UpdateControl)
+                {
+                    this.InteractiveUpdateControlGrid.Visibility = Visibility.Visible;
                 }
             }
         }

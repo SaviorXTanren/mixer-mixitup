@@ -35,11 +35,80 @@ namespace MixItUp.Base.Actions
         Connect,
         [Name("Disconnect")]
         Disconnect,
+
+        [Name("Update Control")]
+        UpdateControl,
+    }
+
+    public enum InteractiveActionUpdateControlTypeEnum
+    {
+        Text,
+        [Name("Text Color")]
+        TextColor,
+        [Name("Text Size")]
+        TextSize,
+        Tooltip,
     }
 
     [DataContract]
     public class InteractiveAction : ActionBase
     {
+        public static InteractiveAction CreateMoveUserToGroupAction(string groupName, MixerRoleEnum requiredRole, string username = null)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.MoveUserToGroup)
+            {
+                GroupName = groupName,
+                RoleRequirement = requiredRole,
+                OptionalUserName = username,
+            };
+        }
+
+        public static InteractiveAction CreateMoveUserToSceneAction(string sceneID, MixerRoleEnum requiredRole, string username = null)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.MoveUserToScene)
+            {
+                SceneID = sceneID,
+                RoleRequirement = requiredRole,
+                OptionalUserName = username,
+            };
+        }
+
+        public static InteractiveAction CreateMoveGroupToSceneAction(string groupName, string sceneID)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.MoveGroupToScene)
+            {
+                GroupName = groupName,
+                SceneID = sceneID,
+            };
+        }
+
+        public static InteractiveAction CreateCooldownAction(InteractiveActionTypeEnum type, string cooldownID, int cooldownAmount)
+        {
+            return new InteractiveAction(type)
+            {
+                CooldownID = cooldownID,
+                CooldownAmount = cooldownAmount,
+            };
+        }
+
+        public static InteractiveAction CreateConnectAction(InteractiveGameListingModel game)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.Connect)
+            {
+                InteractiveGameID = game.id
+            };
+        }
+
+        public static InteractiveAction CreateUpdateControlAction(InteractiveActionUpdateControlTypeEnum updateControlType, string controlID, string updateValue)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.UpdateControl)
+            {
+                UpdateControlType = updateControlType,
+                ControlID = controlID,
+                UpdateValue = updateValue
+            };
+        }
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveAction.asyncSemaphore; } }
@@ -67,36 +136,23 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string OptionalUserName { get; set; }
 
+        [DataMember]
+        public string ControlID { get; set; }
+        [DataMember]
+        public InteractiveActionUpdateControlTypeEnum UpdateControlType { get; set; }
+        [DataMember]
+        public string UpdateValue { get; set; }
+
         public InteractiveAction()
             : base(ActionTypeEnum.Interactive)
         {
             this.RoleRequirement = MixerRoleEnum.User;
         }
 
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string groupName = null, string sceneID = null, MixerRoleEnum roleRequirement = MixerRoleEnum.User, string username = null)
+        public InteractiveAction(InteractiveActionTypeEnum interactiveType)
             : this()
         {
             this.InteractiveType = interactiveType;
-            this.GroupName = groupName;
-            this.SceneID = sceneID;
-            this.RoleRequirement = roleRequirement;
-            this.OptionalUserName = username;
-        }
-
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string cooldownID, int cooldownAmount)
-            : this()
-        {
-            this.InteractiveType = interactiveType;
-            this.CooldownID = cooldownID;
-            this.CooldownAmount = cooldownAmount;
-        }
-
-
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, uint interactiveGameID)
-            : this()
-        {
-            this.InteractiveType = interactiveType;
-            this.InteractiveGameID = interactiveGameID;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -198,6 +254,67 @@ namespace MixItUp.Base.Actions
                                 button.cooldown = timestamp;
                             }
                             await ChannelSession.Interactive.UpdateControls(scene, buttons);
+                        }
+                    }
+                    else if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl)
+                    {
+                        InteractiveConnectedSceneModel scene = null;
+                        InteractiveControlModel control = null;
+
+                        foreach (InteractiveConnectedSceneModel s in ChannelSession.Interactive.Scenes)
+                        {
+                            foreach (InteractiveControlModel c in s.allControls)
+                            {
+                                if (c.controlID.Equals(this.ControlID))
+                                {
+                                    scene = s;
+                                    control = c;
+                                    break;
+                                }
+                            }
+
+                            if (control != null)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (scene != null && control != null)
+                        {
+                            string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
+
+                            if (control is InteractiveButtonControlModel)
+                            {
+                                InteractiveButtonControlModel button = (InteractiveButtonControlModel)control;
+                                switch (this.UpdateControlType)
+                                {
+                                    case InteractiveActionUpdateControlTypeEnum.Text: button.text = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.TextSize: button.textSize = replacementValue + "px"; break;
+                                    case InteractiveActionUpdateControlTypeEnum.TextColor: button.textColor = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.Tooltip: button.tooltip = replacementValue; break;
+                                }
+                            }
+                            else if (control is InteractiveLabelControlModel)
+                            {
+                                InteractiveLabelControlModel label = (InteractiveLabelControlModel)control;
+                                switch (this.UpdateControlType)
+                                {
+                                    case InteractiveActionUpdateControlTypeEnum.Text: label.text = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.TextSize: label.textSize = replacementValue + "px"; break;
+                                    case InteractiveActionUpdateControlTypeEnum.TextColor: label.textColor = replacementValue; break;
+                                }
+                            }
+                            else if (control is InteractiveTextBoxControlModel)
+                            {
+                                InteractiveTextBoxControlModel textbox = (InteractiveTextBoxControlModel)control;
+                                switch (this.UpdateControlType)
+                                {
+                                    case InteractiveActionUpdateControlTypeEnum.Text: textbox.submitText = replacementValue; break;
+                                    case InteractiveActionUpdateControlTypeEnum.Tooltip: textbox.placeholder = replacementValue; break;
+                                }
+                            }
+
+                            await ChannelSession.Interactive.UpdateControls(scene, new List<InteractiveControlModel>() { control });
                         }
                     }
                 }
