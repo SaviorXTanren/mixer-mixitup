@@ -12,6 +12,12 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Actions
 {
+    public class CustomMetadataPair
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
+
     /// <summary>
     /// Interaction logic for InteractiveActionControl.xaml
     /// </summary>
@@ -20,6 +26,8 @@ namespace MixItUp.WPF.Controls.Actions
         private InteractiveAction action;
 
         private ObservableCollection<InteractiveGameListingModel> games = new ObservableCollection<InteractiveGameListingModel>();
+
+        private ObservableCollection<CustomMetadataPair> customMetadataPairs = new ObservableCollection<CustomMetadataPair>();
 
         public InteractiveActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
 
@@ -36,6 +44,9 @@ namespace MixItUp.WPF.Controls.Actions
             this.InteractiveMoveUserToScenePermissionsAllowedComboBox.SelectedIndex = 0;
 
             this.InteractiveGameComboBox.ItemsSource = games;
+
+            this.CustomMetadataItemsControl.ItemsSource = this.customMetadataPairs;
+            this.customMetadataPairs.Add(new CustomMetadataPair());
 
             foreach (InteractiveGameListingModel game in await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel))
             {
@@ -77,6 +88,15 @@ namespace MixItUp.WPF.Controls.Actions
                     this.InteractiveUpdateControlNameTextBox.Text = this.action.ControlID;
                     this.InteractiveUpdateControlTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.UpdateControlType);
                     this.InteractiveUpdateControlValueTextBox.Text = this.action.UpdateValue;
+                }
+                else if (this.action.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata)
+                {
+                    this.CustomMetadataControlIDTextBox.Text = this.action.ControlID;
+                    this.customMetadataPairs.Clear();
+                    foreach (var kvp in this.action.CustomMetadata)
+                    {
+                        this.customMetadataPairs.Add(new CustomMetadataPair() { Name = kvp.Key, Value = kvp.Value });
+                    }
                 }
             }
         }
@@ -136,6 +156,20 @@ namespace MixItUp.WPF.Controls.Actions
                             this.InteractiveUpdateControlNameTextBox.Text, this.InteractiveUpdateControlValueTextBox.Text);
                     }
                 }
+                else if (interactiveType == InteractiveActionTypeEnum.SetCustomMetadata)
+                {
+                    if (!string.IsNullOrEmpty(this.CustomMetadataControlIDTextBox.Text) && this.customMetadataPairs.Count > 0)
+                    {
+                        foreach (CustomMetadataPair pair in this.customMetadataPairs)
+                        {
+                            if (string.IsNullOrEmpty(pair.Name) || string.IsNullOrEmpty(pair.Value))
+                            {
+                                return null;
+                            }
+                        }
+                        return InteractiveAction.CreateSetCustomMetadataAction(this.CustomMetadataControlIDTextBox.Text, this.customMetadataPairs.ToDictionary(p => p.Name, p => p.Value));
+                    }
+                }
             }
             return null;
         }
@@ -148,6 +182,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.InteractiveCooldownGrid.Visibility = Visibility.Collapsed;
             this.InteractiveConnectGrid.Visibility = Visibility.Collapsed;
             this.InteractiveUpdateControlGrid.Visibility = Visibility.Collapsed;
+            this.InteractiveSetCustomMetadataGrid.Visibility = Visibility.Collapsed;
             if (this.InteractiveTypeComboBox.SelectedIndex >= 0)
             {
                 InteractiveActionTypeEnum interactiveType = EnumHelper.GetEnumValueFromString<InteractiveActionTypeEnum>((string)this.InteractiveTypeComboBox.SelectedItem);
@@ -176,7 +211,23 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.InteractiveUpdateControlGrid.Visibility = Visibility.Visible;
                 }
+                else if (interactiveType == InteractiveActionTypeEnum.SetCustomMetadata)
+                {
+                    this.InteractiveSetCustomMetadataGrid.Visibility = Visibility.Visible;
+                }
             }
+        }
+
+        private void AddCustomMetadataButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.customMetadataPairs.Add(new CustomMetadataPair());
+        }
+
+        private void DeleteCustomMetadataButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            CustomMetadataPair pair = (CustomMetadataPair)button.DataContext;
+            this.customMetadataPairs.Remove(pair);
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Mixer.Base.Model.Interactive;
-using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +36,9 @@ namespace MixItUp.Base.Actions
 
         [Name("Update Control")]
         UpdateControl,
+
+        [Name("Set Custom Metadata")]
+        SetCustomMetadata,
     }
 
     public enum InteractiveActionUpdateControlTypeEnum
@@ -109,6 +110,15 @@ namespace MixItUp.Base.Actions
             };
         }
 
+        public static InteractiveAction CreateSetCustomMetadataAction(string controlID, Dictionary<string, string> customMetadata)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.SetCustomMetadata)
+            {
+                ControlID = controlID,
+                CustomMetadata = customMetadata
+            };
+        }
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveAction.asyncSemaphore; } }
@@ -138,10 +148,14 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public string ControlID { get; set; }
+
         [DataMember]
         public InteractiveActionUpdateControlTypeEnum UpdateControlType { get; set; }
         [DataMember]
         public string UpdateValue { get; set; }
+
+        [DataMember]
+        public Dictionary<string, string> CustomMetadata { get; set; }
 
         public InteractiveAction()
             : base(ActionTypeEnum.Interactive)
@@ -256,7 +270,7 @@ namespace MixItUp.Base.Actions
                             await ChannelSession.Interactive.UpdateControls(scene, buttons);
                         }
                     }
-                    else if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl)
+                    else if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl || this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata)
                     {
                         InteractiveConnectedSceneModel scene = null;
                         InteractiveControlModel control = null;
@@ -281,36 +295,62 @@ namespace MixItUp.Base.Actions
 
                         if (scene != null && control != null)
                         {
-                            string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
+                            if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl)
+                            {
+                                string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
 
-                            if (control is InteractiveButtonControlModel)
-                            {
-                                InteractiveButtonControlModel button = (InteractiveButtonControlModel)control;
-                                switch (this.UpdateControlType)
+                                if (control is InteractiveButtonControlModel)
                                 {
-                                    case InteractiveActionUpdateControlTypeEnum.Text: button.text = replacementValue; break;
-                                    case InteractiveActionUpdateControlTypeEnum.TextSize: button.textSize = replacementValue + "px"; break;
-                                    case InteractiveActionUpdateControlTypeEnum.TextColor: button.textColor = replacementValue; break;
-                                    case InteractiveActionUpdateControlTypeEnum.Tooltip: button.tooltip = replacementValue; break;
+                                    InteractiveButtonControlModel button = (InteractiveButtonControlModel)control;
+                                    switch (this.UpdateControlType)
+                                    {
+                                        case InteractiveActionUpdateControlTypeEnum.Text: button.text = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.TextSize: button.textSize = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.TextColor: button.textColor = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.Tooltip: button.tooltip = replacementValue; break;
+                                    }
+                                }
+                                else if (control is InteractiveLabelControlModel)
+                                {
+                                    InteractiveLabelControlModel label = (InteractiveLabelControlModel)control;
+                                    switch (this.UpdateControlType)
+                                    {
+                                        case InteractiveActionUpdateControlTypeEnum.Text: label.text = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.TextSize: label.textSize = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.TextColor: label.textColor = replacementValue; break;
+                                    }
+                                }
+                                else if (control is InteractiveTextBoxControlModel)
+                                {
+                                    InteractiveTextBoxControlModel textbox = (InteractiveTextBoxControlModel)control;
+                                    switch (this.UpdateControlType)
+                                    {
+                                        case InteractiveActionUpdateControlTypeEnum.Text: textbox.submitText = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.Tooltip: textbox.placeholder = replacementValue; break;
+                                    }
                                 }
                             }
-                            else if (control is InteractiveLabelControlModel)
+                            else if (this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata)
                             {
-                                InteractiveLabelControlModel label = (InteractiveLabelControlModel)control;
-                                switch (this.UpdateControlType)
+                                control.meta["userID"] = user.ID;
+                                foreach (var kvp in this.CustomMetadata)
                                 {
-                                    case InteractiveActionUpdateControlTypeEnum.Text: label.text = replacementValue; break;
-                                    case InteractiveActionUpdateControlTypeEnum.TextSize: label.textSize = replacementValue + "px"; break;
-                                    case InteractiveActionUpdateControlTypeEnum.TextColor: label.textColor = replacementValue; break;
-                                }
-                            }
-                            else if (control is InteractiveTextBoxControlModel)
-                            {
-                                InteractiveTextBoxControlModel textbox = (InteractiveTextBoxControlModel)control;
-                                switch (this.UpdateControlType)
-                                {
-                                    case InteractiveActionUpdateControlTypeEnum.Text: textbox.submitText = replacementValue; break;
-                                    case InteractiveActionUpdateControlTypeEnum.Tooltip: textbox.placeholder = replacementValue; break;
+                                    if (bool.TryParse(kvp.Value, out bool boolValue))
+                                    {
+                                        control.meta[kvp.Key] = boolValue;
+                                    }
+                                    else if (int.TryParse(kvp.Value, out int intValue))
+                                    {
+                                        control.meta[kvp.Key] = intValue;
+                                    }
+                                    else if (double.TryParse(kvp.Value, out double doubleValue))
+                                    {
+                                        control.meta[kvp.Key] = doubleValue;
+                                    }
+                                    else
+                                    {
+                                        control.meta[kvp.Key] = kvp.Value;
+                                    }
                                 }
                             }
 

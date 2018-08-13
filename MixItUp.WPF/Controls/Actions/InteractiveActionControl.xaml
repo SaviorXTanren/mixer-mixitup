@@ -93,11 +93,53 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="InteractiveUpdateControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control Name" />
+            <TextBox x:Name="InteractiveUpdateControlNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Control ID" />
 
             <ComboBox x:Name="InteractiveUpdateControlTypeComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Field Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
             <TextBox x:Name="InteractiveUpdateControlValueTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Updated Value" />
+        </Grid>
+
+        <Grid x:Name="InteractiveSetCustomMetadataGrid" Grid.Row="2" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Center" Margin="0,10,0,-10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="130" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Grid.Column="0" x:Name="CustomMetadataControlIDTextBox" Width="150" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Interactive Control ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Button x:Name="AddCustomMetadataButton" Grid.Column="2" Width="130" Click="AddCustomMetadataButton_Click">Add New Pair</Button>
+            </Grid>
+
+            <ItemsControl x:Name="CustomMetadataItemsControl" Grid.Row="2">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" x:Name="CustomMetadataNameTextBox" Width="300" Text="{Binding Name}" MaterialDesign:HintAssist.Hint="Metadata Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                            <TextBox Grid.Column="2" x:Name="CustomMetadataValueTextBox" Width="320" Text="{Binding Value}" MaterialDesign:HintAssist.Hint="Metadata Value" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  />
+
+                            <Button Grid.Column="4" x:Name="DeleteCustomMetadataButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteCustomMetadataButton_Click" ToolTip="Delete" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
 
     </Grid>
