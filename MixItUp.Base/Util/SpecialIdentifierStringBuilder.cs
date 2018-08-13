@@ -37,6 +37,7 @@ namespace MixItUp.Base.Util
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
         public const string RandomNumberSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
+        public const string CostreamUsersSpecialIdentifier = "costreamusers";
 
         public const string StreamTitleSpecialIdentifier = "streamtitle";
         public const string StreamFollowCountSpecialIdentifier = "streamfollowcount";
@@ -257,6 +258,11 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "minutes", duration.ToString("mm"));
                     this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "seconds", duration.ToString("ss"));
                 }
+            }
+
+            if (this.ContainsSpecialIdentifier(CostreamUsersSpecialIdentifier))
+            {
+                this.ReplaceSpecialIdentifier(CostreamUsersSpecialIdentifier, await CostreamChatCommand.GetCostreamUsers());
             }
 
             if (ChannelSession.Services.Twitter != null && this.ContainsSpecialIdentifier("tweet"))

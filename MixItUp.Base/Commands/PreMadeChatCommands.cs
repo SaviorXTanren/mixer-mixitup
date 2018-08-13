@@ -262,6 +262,29 @@ namespace MixItUp.Base.Commands
 
     public class CostreamChatCommand : PreMadeChatCommand
     {
+        public static async Task<string> GetCostreamUsers()
+        {
+            CostreamModel costream = await ChannelSession.Connection.GetCurrentCostream();
+            if (costream != null && costream.channels != null)
+            {
+                List<UserModel> costreamUsers = new List<UserModel>();
+                foreach (CostreamChannelModel channel in costream.channels)
+                {
+                    UserModel user = await ChannelSession.Connection.GetUser(channel.userId);
+                    if (user != null)
+                    {
+                        costreamUsers.Add(user);
+                    }
+                }
+
+                if (costreamUsers.Count > 0)
+                {
+                    return string.Join(", ", costreamUsers.Select(u => "@" + u.username));
+                }
+            }
+            return "@" + ChannelSession.User.username;
+        }
+
         public CostreamChatCommand()
             : base("Costream", "costream", 5, MixerRoleEnum.User)
         {
@@ -269,30 +292,7 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    CostreamModel costream = await ChannelSession.Connection.GetCurrentCostream();
-                    if (costream != null && costream.channels != null)
-                    {
-                        List<UserModel> costreamUsers = new List<UserModel>();
-                        foreach (CostreamChannelModel channel in costream.channels)
-                        {
-                            costreamUsers.Add(await ChannelSession.Connection.GetUser(channel.userId));
-                        }
-
-                        if (costreamUsers.Count > 0)
-                        {
-                            StringBuilder message = new StringBuilder();
-
-                            message.Append("Costream Users: ");
-
-                            IEnumerable<string> costreamUserStrings = costreamUsers.Select(u => "@" + u.username);
-                            message.Append(string.Join(",", costreamUserStrings));
-
-                            await ChannelSession.Chat.SendMessage(message.ToString());
-                            return;
-                        }
-                    }
-
-                    await ChannelSession.Chat.SendMessage("A costream is currently not active");
+                    await ChannelSession.Chat.SendMessage("Costream Users: " + await CostreamChatCommand.GetCostreamUsers());
                 }
             }));
         }
