@@ -33,6 +33,8 @@ namespace MixItUp.Base.MixerAPI
         public string EventTypeString { get { return (this.Command != null) ? this.Command.EventTypeString : string.Empty; } }
 
         public abstract int SparkCost { get; }
+
+        public abstract bool HasCooldown { get; }
         public abstract long CooldownTimestamp { get; }
 
         public bool DoesInputMatchCommand(InteractiveGiveInputModel input)
@@ -55,11 +57,16 @@ namespace MixItUp.Base.MixerAPI
         public InteractiveButtonCommand ButtonCommand { get { return (InteractiveButtonCommand)this.Command; } }
 
         public override int SparkCost { get { return this.Button.cost.GetValueOrDefault(); } }
+
+        public override bool HasCooldown { get { return this.ButtonCommand.HasCooldown; } }
         public override long CooldownTimestamp { get { return this.ButtonCommand.GetCooldownTimestamp(); } }
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            this.Button.cooldown = this.CooldownTimestamp;
+            if (this.HasCooldown)
+            {
+                this.Button.cooldown = this.CooldownTimestamp;
+            }
 
             List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
             if (!string.IsNullOrEmpty(this.ButtonCommand.CooldownGroupName))
@@ -90,6 +97,8 @@ namespace MixItUp.Base.MixerAPI
         public InteractiveConnectedJoystickControlModel Joystick { get { return (InteractiveConnectedJoystickControlModel)this.Control; } set { this.Control = value; } }
 
         public override int SparkCost { get { return 0; } }
+
+        public override bool HasCooldown { get { return false; } }
         public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
@@ -107,6 +116,8 @@ namespace MixItUp.Base.MixerAPI
         public InteractiveTextBoxCommand TextBoxCommand { get { return (InteractiveTextBoxCommand)this.Command; } }
 
         public override int SparkCost { get { return this.TextBox.cost.GetValueOrDefault(); } }
+
+        public override bool HasCooldown { get { return false; } }
         public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)

@@ -109,6 +109,9 @@ namespace MixItUp.Base.Commands
         }
 
         [JsonIgnore]
+        public bool HasCooldown { get { return this.CooldownAmount > 0; } }
+
+        [JsonIgnore]
         public string CooldownGroupName
         {
             get
