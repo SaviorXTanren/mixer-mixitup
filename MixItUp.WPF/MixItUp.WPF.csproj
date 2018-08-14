@@ -401,6 +401,10 @@
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
+    <Compile Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml.cs">
+      <DependentUpon>FortniteDropMapInteractiveControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
     </Compile>
@@ -900,6 +904,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\SongRequestControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1373,6 +1381,9 @@
     <Resource Include="Assets\Images\Discord.png" />
     <Resource Include="Assets\Images\Youtube.png" />
     <Resource Include="Assets\Images\Wiki.png" />
+    <Resource Include="..\MixPlay\fortnite-drop-map\src\map.png">
+      <Link>Assets\Images\FortniteDropMap\map.png</Link>
+    </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

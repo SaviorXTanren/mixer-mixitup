@@ -7,6 +7,7 @@ using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
+using MixItUp.WPF.Controls.Interactive;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
 using System;
@@ -111,6 +112,8 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class InteractiveControl : MainControlBase
     {
+        private const int FortniteDropMapGameID = 249946;
+
         private ObservableCollection<InteractiveGameModel> interactiveGames = new ObservableCollection<InteractiveGameModel>();
         private InteractiveGameModel selectedGame = null;
         public InteractiveGameVersionModel selectedGameVersion = null;
@@ -127,6 +130,8 @@ namespace MixItUp.WPF.Controls.MainControls
             GlobalEvents.OnInteractiveConnected += GlobalEvents_OnInteractiveConnected;
             GlobalEvents.OnInteractiveDisconnected += GlobalEvents_OnInteractiveDisconnected;
         }
+
+        public bool IsCustomInteractiveGame { get { return (this.CustomInteractiveContentControl.Content != null); } }
 
         protected override async Task InitializeInternal()
         {
@@ -147,7 +152,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (ChannelSession.Interactive.IsConnected())
             {
-                this.InteractiveGameConnected();
+                await this.InteractiveGameConnected();
             }
         }
 
@@ -214,25 +219,45 @@ namespace MixItUp.WPF.Controls.MainControls
                 return null;
             });
 
-            this.interactiveScenes.Clear();
-            if (this.selectedGameVersion != null)
+            if (this.selectedGame.id == FortniteDropMapGameID)
             {
-                foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
-                {
-                    this.interactiveScenes.Add(scene);
-                }
-            }
+                this.CustomInteractiveContentControl.Visibility = Visibility.Visible;
+                this.InteractiveControlsGridView.Visibility = Visibility.Collapsed;
 
-            if (this.selectedScene != null && this.interactiveScenes.Any(s => s.sceneID.Equals(this.selectedScene.sceneID)))
-            {
-                this.InteractiveScenesComboBox.SelectedItem = this.interactiveScenes.First(s => s.sceneID.Equals(this.selectedScene.sceneID));
+                this.CustomInteractiveContentControl.Content = new FortniteDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion);
+
+                this.InteractiveScenesComboBox.IsEnabled = false;
+                this.GroupsButton.IsEnabled = false;
             }
             else
             {
-                this.InteractiveScenesComboBox.SelectedIndex = 0;
+                this.CustomInteractiveContentControl.Visibility = Visibility.Collapsed;
+                this.InteractiveControlsGridView.Visibility = Visibility.Visible;
+
+                this.CustomInteractiveContentControl.Content = null;
+
+                this.interactiveScenes.Clear();
+                if (this.selectedGameVersion != null)
+                {
+                    foreach (InteractiveSceneModel scene in this.selectedGameVersion.controls.scenes)
+                    {
+                        this.interactiveScenes.Add(scene);
+                    }
+                }
+
+                if (this.selectedScene != null && this.interactiveScenes.Any(s => s.sceneID.Equals(this.selectedScene.sceneID)))
+                {
+                    this.InteractiveScenesComboBox.SelectedItem = this.interactiveScenes.First(s => s.sceneID.Equals(this.selectedScene.sceneID));
+                }
+                else
+                {
+                    this.InteractiveScenesComboBox.SelectedIndex = 0;
+                }
+
+                this.InteractiveScenesComboBox.IsEnabled = true;
+                this.GroupsButton.IsEnabled = true;
             }
 
-            this.GroupsButton.IsEnabled = true;
             this.ConnectButton.IsEnabled = true;
         }
 
@@ -421,14 +446,16 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 bool result = await this.Window.RunAsyncOperation(async () =>
                 {
-                    await ChannelSession.Interactive.DisableAllControlsWithoutCommands(this.selectedGameVersion);
-
+                    if (!this.IsCustomInteractiveGame)
+                    {
+                        await ChannelSession.Interactive.DisableAllControlsWithoutCommands(this.selectedGameVersion);
+                    }
                     return await ChannelSession.Interactive.Connect(this.selectedGame, this.selectedGameVersion);
                 });
 
                 if (result)
                 {
-                    this.InteractiveGameConnected();
+                    await this.InteractiveGameConnected();
                     return;
                 }
                 else
@@ -457,9 +484,9 @@ namespace MixItUp.WPF.Controls.MainControls
             this.InteractiveGameDisconnected();
         }
 
-        private void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel e)
+        private async void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel e)
         {
-            this.Dispatcher.Invoke(() => this.InteractiveGameConnected());
+            await this.Dispatcher.InvokeAsync(async () => await this.InteractiveGameConnected());
         }
 
         private void GlobalEvents_OnInteractiveDisconnected(object sender, EventArgs e)
@@ -475,7 +502,7 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private void InteractiveGameConnected()
+        private async Task InteractiveGameConnected()
         {
             this.InteractiveGamesComboBox.IsEnabled = false;
             this.GroupsButton.IsEnabled = false;
@@ -483,6 +510,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ConnectButton.Visibility = Visibility.Collapsed;
             this.DisconnectButton.Visibility = Visibility.Visible;
+
+            if (this.IsCustomInteractiveGame)
+            {
+                CustomInteractiveGameControl gameControl = (CustomInteractiveGameControl)this.CustomInteractiveContentControl.Content;
+                await gameControl.GameConnected();
+            }
         }
 
         private void InteractiveGameDisconnected()
@@ -493,6 +526,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ConnectButton.Visibility = Visibility.Visible;
             this.DisconnectButton.Visibility = Visibility.Collapsed;
+
+            if (this.IsCustomInteractiveGame)
+            {
+                CustomInteractiveGameControl gameControl = (CustomInteractiveGameControl)this.CustomInteractiveContentControl.Content;
+                gameControl.GameDisconnected();
+            }
         }
     }
 }

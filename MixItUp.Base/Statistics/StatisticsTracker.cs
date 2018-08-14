@@ -105,9 +105,12 @@ namespace MixItUp.Base.Statistics
             this.resubscriberTracker.OnStatisticEventOccurred(e.Item1.UserName);
         }
 
-        private void Interactive_OnInteractiveControlUsed(object sender, Tuple<UserViewModel, InteractiveConnectedControlCommand> e)
+        private void Interactive_OnInteractiveControlUsed(object sender, InteractiveInputEvent e)
         {
-            this.interactiveTracker.OnStatisticEventOccurred(e.Item2.Name, e.Item1.UserName);
+            if (e.Command != null && e.User != null)
+            {
+                this.interactiveTracker.OnStatisticEventOccurred(e.Command.Name, e.User.UserName);
+            }
         }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)

@@ -6,42 +6,49 @@
         {
           "controls": [
             {
+              "accentColor": null,
+              "backgroundColor": null,
+              "backgroundImage": null,
+              "borderColor": null,
               "controlID": "position",
-              "cost": 1,
+              "cost": 0,
               "disabled": false,
+              "etag": null,
+              "focusColor": null,
+              "keyCode": null,
               "kind": "button",
-              "position": [
-                {
-                  "height": 8,
-                  "size": "large",
-                  "width": 10,
-                  "x": 0,
-                  "y": 0
-                },
-                {
-                  "height": 8,
-                  "size": "medium",
-                  "width": 10,
-                  "x": 0,
-                  "y": 0
-                },
-                {
-                  "height": 8,
-                  "size": "small",
-                  "width": 10,
-                  "x": 0,
-                  "y": 0
-                }
-              ],
-              "progress": 0,
-              "text": "Position"
+              "meta": {},
+              "position": null,
+              "text": "position",
+              "textColor": null,
+              "textSize": null,
+              "tooltip": null
+            },
+            {
+              "accentColor": null,
+              "backgroundColor": null,
+              "backgroundImage": null,
+              "borderColor": null,
+              "controlID": "winner",
+              "cost": 0,
+              "disabled": false,
+              "etag": null,
+              "focusColor": null,
+              "keyCode": null,
+              "kind": "button",
+              "meta": {},
+              "position": null,
+              "text": "winner",
+              "textColor": null,
+              "textSize": null,
+              "tooltip": null
             }
           ],
           "sceneID": "default"
         }
       ]
     },
-    "savedAt": 1533359115805
+    "savedAt": 1534238284957
   },
   {
     "name": "Save from 6/06 23:34",

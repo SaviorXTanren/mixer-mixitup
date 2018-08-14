@@ -20,7 +20,7 @@
         "width": 25
       },
       {
-        "activeItemIndex": 2,
+        "activeItemIndex": 0,
         "content": [
           {
             "componentName": "Controls",
@@ -35,13 +35,6 @@
             "isClosable": true,
             "reorderEnabled": true,
             "title": "Control Output Console",
-            "type": "component"
-          },
-          {
-            "componentName": "WebpackConsole",
-            "isClosable": true,
-            "reorderEnabled": true,
-            "title": "Webpack Console",
             "type": "component"
           }
         ],

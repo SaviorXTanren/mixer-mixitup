@@ -570,11 +570,11 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void Interactive_OnInteractiveControlUsed(object sender, Tuple<UserViewModel, InteractiveConnectedControlCommand> e)
+        private async void Interactive_OnInteractiveControlUsed(object sender, InteractiveInputEvent e)
         {
-            if (ChannelSession.Settings.ChatShowInteractiveAlerts)
+            if (ChannelSession.Settings.ChatShowInteractiveAlerts && e.User != null && e.Command != null)
             {
-                await this.AddAlertMessage(string.Format("{0} Used The \"{1}\" Interactive Control", e.Item1.UserName, e.Item2.Name), e.Item1, ChannelSession.Settings.ChatInteractiveAlertsColorScheme);
+                await this.AddAlertMessage(string.Format("{0} Used The \"{1}\" Interactive Control", e.User.UserName, e.Command.Name), e.User, ChannelSession.Settings.ChatInteractiveAlertsColorScheme);
             }
         }
 
