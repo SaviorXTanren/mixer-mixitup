@@ -112,7 +112,7 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class InteractiveControl : MainControlBase
     {
-        private const int FortniteDropMapGameID = 249946;
+        private const int FortniteDropMapGameID = 271086;
 
         private ObservableCollection<InteractiveGameModel> interactiveGames = new ObservableCollection<InteractiveGameModel>();
         private InteractiveGameModel selectedGame = null;
