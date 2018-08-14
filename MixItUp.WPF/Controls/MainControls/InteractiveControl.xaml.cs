@@ -187,6 +187,20 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
             }
 
+            foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
+            {
+                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                if (version != null)
+                {
+                    InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                    if (game != null)
+                    {
+                        game.name += " (MixPlay)";
+                        this.interactiveGames.Add(game);
+                    }
+                }
+            }
+
             if (this.selectedGame != null)
             {
                 this.InteractiveGamesComboBox.SelectedItem = this.interactiveGames.FirstOrDefault(g => g.id.Equals(this.selectedGame.id));
@@ -222,7 +236,15 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.SetCustomInteractiveGame(new FortniteDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
-            if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.PUBGDropMap.GameID)
+            {
+                this.SetCustomInteractiveGame(new PUBGDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+            }
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.RealmRoyaleDropMap.GameID)
+            {
+                this.SetCustomInteractiveGame(new RealmRoyaleDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+            }
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
             {
                 this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
@@ -487,9 +509,9 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 await ChannelSession.Interactive.Disconnect();
-            });
 
-            this.InteractiveGameDisconnected();
+                await this.InteractiveGameDisconnected();
+            });
         }
 
         private async void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel e)
@@ -497,9 +519,9 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Dispatcher.InvokeAsync(async () => await this.InteractiveGameConnected());
         }
 
-        private void GlobalEvents_OnInteractiveDisconnected(object sender, EventArgs e)
+        private async void GlobalEvents_OnInteractiveDisconnected(object sender, EventArgs e)
         {
-            this.Dispatcher.Invoke(() => this.InteractiveGameDisconnected());
+            await this.Dispatcher.InvokeAsync(async () => await this.InteractiveGameDisconnected());
         }
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -526,7 +548,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void InteractiveGameDisconnected()
+        private async Task InteractiveGameDisconnected()
         {
             this.InteractiveGamesComboBox.IsEnabled = true;
             this.GroupsButton.IsEnabled = true;
@@ -538,7 +560,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.IsCustomInteractiveGame)
             {
                 CustomInteractiveGameControl gameControl = (CustomInteractiveGameControl)this.CustomInteractiveContentControl.Content;
-                gameControl.GameDisconnected();
+                await gameControl.GameDisconnected();
             }
         }
     }

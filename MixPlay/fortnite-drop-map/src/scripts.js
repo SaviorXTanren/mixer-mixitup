@@ -1,11 +1,6 @@
-//InteractiveConnectedButtonControlModel button = this.buttons.FirstOrDefault(b => b.controlID.Equals(e.input.controlID));
-//button.meta["x"] = e.input.meta["x"];
-//button.meta["y"] = e.input.meta["y"];
-//button.meta["userID"] = e.participantID;
-
-
 var mapDiv;
 var mapImage;
+var mapPointsDiv;
 
 var timerDiv;
 var timerText;
@@ -53,16 +48,28 @@ function handleControlUpdate(update) {
 
                     pointsMap.set(control.meta.userID, otherPoint);
 
-                    mapDiv.appendChild(otherPoint);
+                    mapPointsDiv.appendChild(otherPoint);
                 }
 
                 otherPoint.style.left = xPos + 'px';
                 otherPoint.style.top = yPos + 'px';
             }
+
+            if (control.meta.map != null) {
+                mapImage.src = control.meta.map;
+            }
         }
         else if (control.controlID === 'winner') {
             if (control.meta.userID != null && control.meta.username != null && control.meta.location != null) {
                 timerDiv.style.visibility = 'hidden';
+
+                while (mapPointsDiv.firstChild) {
+                    mapPointsDiv.removeChild(mapPointsDiv.firstChild);
+                }
+
+                if (pointsMap.has(control.meta.userID)) {
+                    mapPointsDiv.appendChild(pointsMap.get(control.meta.userID));
+                }
 
                 var winnerImage = document.getElementById('winnerImage');
                 winnerImage.src = "https://mixer.com/api/v1/users/" + control.meta.userID + "/avatar";
@@ -100,6 +107,7 @@ window.addEventListener('load', function initMixer() {
 
     mapDiv = document.getElementById('mapDiv');
     mapImage = document.getElementById('mapImage');
+    mapPointsDiv = document.getElementById('mapPointsDiv');
 
     timerDiv = document.getElementById('timerDiv');
     timerText = document.getElementById('timerText');

@@ -402,11 +402,18 @@
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
+    <Compile Include="Controls\Interactive\DropMapInterativeGameControl.cs" />
     <Compile Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml.cs">
       <DependentUpon>FortniteDropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Interactive\MixerPaintInteractiveControl.xaml.cs">
       <DependentUpon>MixerPaintInteractiveControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Interactive\PUBGDropMapInteractiveControl.xaml.cs">
+      <DependentUpon>PUBGDropMapInteractiveControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml.cs">
+      <DependentUpon>RealmRoyaleDropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
@@ -915,6 +922,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Interactive\PUBGDropMapInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Interactive\RealmRoyaleDropMapInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainControls\SongRequestControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1390,6 +1405,18 @@
     <Resource Include="Assets\Images\Wiki.png" />
     <Resource Include="..\MixPlay\fortnite-drop-map\src\map.png">
       <Link>Assets\Images\FortniteDropMap\map.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map1.png">
+      <Link>Assets\Images\PUBGDropMap\map1.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map2.png">
+      <Link>Assets\Images\PUBGDropMap\map2.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\pubg-drop-map\src\map3.png">
+      <Link>Assets\Images\PUBGDropMap\map3.png</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\realm-royale-drop-map\src\map.jpg">
+      <Link>Assets\Images\RealmRoyaleDropMap\map.jpg</Link>
     </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

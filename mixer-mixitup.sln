@@ -89,6 +89,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mixer Paint", "Mixer Paint"
 		MixPlay\mixer-paint\src\scripts.js = MixPlay\mixer-paint\src\scripts.js
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PUBG Drop Map", "PUBG Drop Map", "{43B09B9A-43EE-486E-A79D-B0FB81DE4607}"
+	ProjectSection(SolutionItems) = preProject
+		MixPlay\pubg-drop-map\src\index.html = MixPlay\pubg-drop-map\src\index.html
+		MixPlay\pubg-drop-map\src\scripts.js = MixPlay\pubg-drop-map\src\scripts.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Realm Royale Drop Map", "Realm Royale Drop Map", "{43600005-B26E-4441-82AD-E3A43D7AD316}"
+	ProjectSection(SolutionItems) = preProject
+		MixPlay\realm-royale-drop-map\src\index.html = MixPlay\realm-royale-drop-map\src\index.html
+		MixPlay\realm-royale-drop-map\src\scripts.js = MixPlay\realm-royale-drop-map\src\scripts.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -263,6 +275,8 @@ Global
 		{CE3896DC-CC98-42BA-9BF7-4073DCC6A393} = {3C89ACB2-D917-48C0-84FD-974FC6E17A89}
 		{8AD4D3FB-64BE-4003-8A72-FEA6289E1854} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
 		{B487623D-9C82-4846-80AB-5A75D2A8F8A5} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
+		{43B09B9A-43EE-486E-A79D-B0FB81DE4607} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
+		{43600005-B26E-4441-82AD-E3A43D7AD316} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56FA5777-5A3B-4E2B-B0A5-8EA45A5251F6}

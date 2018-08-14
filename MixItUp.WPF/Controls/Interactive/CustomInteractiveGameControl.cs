@@ -16,6 +16,8 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             this.Game = game;
             this.Version = version;
+
+            this.Loaded += CustomInteractiveGameControl_Loaded;
         }
 
         public async Task GameConnected()
@@ -24,14 +26,24 @@ namespace MixItUp.WPF.Controls.Interactive
             await this.GameConnectedInternal();
         }
 
-        public void GameDisconnected()
+        public async Task GameDisconnected()
         {
             ChannelSession.Interactive.OnInteractiveControlUsed -= Interactive_OnInteractiveControlUsed;
+            await this.GameDisconnectedInternal();
         }
+
+        protected virtual Task OnLoaded() { return Task.FromResult(0); }
 
         protected virtual Task GameConnectedInternal() { return Task.FromResult(0); }
 
+        protected virtual Task GameDisconnectedInternal() { return Task.FromResult(0); }
+
         protected virtual Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command) { return Task.FromResult(0); }
+
+        private async void CustomInteractiveGameControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await this.OnLoaded();
+        }
 
         private async void Interactive_OnInteractiveControlUsed(object sender, InteractiveInputEvent e)
         {

@@ -15,7 +15,7 @@
         h1 {
             font-family: 'Luckiest Guy', cursive;
             color: #3F77B2;
-            text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
             white-space: nowrap;
         }
 
@@ -23,8 +23,8 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
-            width: 700px;
-            height: 700px;
+            display: block;
+            height: 90%;
             object-fit: contain;
         }
 
@@ -51,7 +51,7 @@
 <body>
     <script src="./scripts.js"></script>
 
-    <div id="locationDiv" style="position: absolute; left: 10%; top: 20%; visibility: hidden">
+    <div id="locationDiv" style="position: absolute; left: 10%; top: 23%; visibility: hidden">
         <h1 id="locationText" style="position: absolute; left: 50%; transform: translate(-50%, -50%); font-size: 80px;"></h1>
         <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 115px;">DROP</h1>
         <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 150px;">LOCATION</h1>
@@ -59,6 +59,7 @@
 
     <div id="mapDiv">
         <img id="mapImage" class="mapImage" src="map.png" />
+        <div id="mapPointsDiv" />
     </div>
 
     <div id="timerDiv" style="position: absolute; left: 90%; top: 25%; visibility: hidden">
@@ -68,7 +69,7 @@
     </div>
 
     <div id="winnerDiv" style="position: absolute; left: 90%; top: 20%; visibility: hidden">
-        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); ">WINNER</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%);">WINNER</h1>
         <div style="border-radius: 50%; overflow: hidden; width: 80px; height: 80px; position: absolute; transform: translate(-50%, -50%); margin-top: 95px;">
             <img id="winnerImage" class="userAvatarImage" />
         </div>
