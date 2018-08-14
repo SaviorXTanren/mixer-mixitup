@@ -631,7 +631,7 @@ namespace MixItUp.Base.MixerAPI
                         }
 
                         user = new UserViewModel(0, "Unknown User");
-                        user.InteractiveID = e.participantID;
+                        user.InteractiveIDs.Add(e.participantID);
                     }
 
                     InteractiveConnectedControlCommand connectedControl = null;

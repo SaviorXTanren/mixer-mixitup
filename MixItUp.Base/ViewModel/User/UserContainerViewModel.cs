@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             return await this.LockWrapper(() =>
             {
-                return Task.FromResult(this.users.Values.FirstOrDefault(u => interactiveParticipantID.Equals(u.InteractiveID)));
+                return Task.FromResult(this.users.Values.FirstOrDefault(u => u.InteractiveIDs.Contains(interactiveParticipantID)));
             });
         }
 
@@ -127,7 +127,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.users.ContainsKey(interactiveUser.userID))
                 {
                     UserViewModel user = this.users[interactiveUser.userID];
-                    user.RemoveInteractiveDetails();
+                    user.RemoveInteractiveDetails(interactiveUser);
                 }
                 return Task.FromResult(0);
             });
