@@ -6,49 +6,27 @@
         {
           "controls": [
             {
-              "accentColor": null,
-              "backgroundColor": null,
-              "backgroundImage": null,
-              "borderColor": null,
               "controlID": "position",
               "cost": 0,
               "disabled": false,
-              "etag": null,
-              "focusColor": null,
-              "keyCode": null,
               "kind": "button",
               "meta": {},
-              "position": null,
-              "text": "position",
-              "textColor": null,
-              "textSize": null,
-              "tooltip": null
+              "text": "position"
             },
             {
-              "accentColor": null,
-              "backgroundColor": null,
-              "backgroundImage": null,
-              "borderColor": null,
               "controlID": "winner",
               "cost": 0,
               "disabled": false,
-              "etag": null,
-              "focusColor": null,
-              "keyCode": null,
               "kind": "button",
               "meta": {},
-              "position": null,
-              "text": "winner",
-              "textColor": null,
-              "textSize": null,
-              "tooltip": null
+              "text": "winner"
             }
           ],
           "sceneID": "default"
         }
       ]
     },
-    "savedAt": 1534238284957
+    "savedAt": 1534269239347
   },
   {
     "name": "Save from 6/06 23:34",

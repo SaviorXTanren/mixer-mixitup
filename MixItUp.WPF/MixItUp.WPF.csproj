@@ -405,6 +405,9 @@
     <Compile Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml.cs">
       <DependentUpon>FortniteDropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Interactive\MixerPaintInteractiveControl.xaml.cs">
+      <DependentUpon>MixerPaintInteractiveControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainControls\SongRequestControl.xaml.cs">
       <DependentUpon>SongRequestControl.xaml</DependentUpon>
     </Compile>
@@ -905,6 +908,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Interactive\MixerPaintInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

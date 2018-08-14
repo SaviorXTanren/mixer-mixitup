@@ -113,8 +113,6 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class InteractiveControl : MainControlBase
     {
-        private const int FortniteDropMapGameID = 271086;
-
         private ObservableCollection<InteractiveGameModel> interactiveGames = new ObservableCollection<InteractiveGameModel>();
         private InteractiveGameModel selectedGame = null;
         public InteractiveGameVersionModel selectedGameVersion = null;
@@ -220,15 +218,13 @@ namespace MixItUp.WPF.Controls.MainControls
                 return null;
             });
 
-            if (this.selectedGame.id == FortniteDropMapGameID)
+            if (this.selectedGame.id == InteractiveSharedProjectModel.FortniteDropMap.GameID)
             {
-                this.CustomInteractiveContentControl.Visibility = Visibility.Visible;
-                this.InteractiveControlsGridView.Visibility = Visibility.Collapsed;
-
-                this.CustomInteractiveContentControl.Content = new FortniteDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion);
-
-                this.InteractiveScenesComboBox.IsEnabled = false;
-                this.GroupsButton.IsEnabled = false;
+                this.SetCustomInteractiveGame(new FortniteDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+            }
+            if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
+            {
+                this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
             else
             {
@@ -260,6 +256,17 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             this.ConnectButton.IsEnabled = true;
+        }
+
+        private void SetCustomInteractiveGame(CustomInteractiveGameControl control)
+        {
+            this.CustomInteractiveContentControl.Visibility = Visibility.Visible;
+            this.InteractiveControlsGridView.Visibility = Visibility.Collapsed;
+
+            this.CustomInteractiveContentControl.Content = control;
+
+            this.InteractiveScenesComboBox.IsEnabled = false;
+            this.GroupsButton.IsEnabled = false;
         }
 
         private void RefreshSelectedScene()
