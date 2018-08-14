@@ -42,7 +42,7 @@
 
             <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Custom Interactive Projects:</TextBlock>
 
-            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="230">
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="390">
                 <ListView x:Name="CustomInteractiveProjectsListView" HorizontalAlignment="Center">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -50,12 +50,16 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="10" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding}" />
+                                <TextBlock Grid.Column="0" Text="{Binding VersionID}" />
 
-                                <Button Grid.Column="2" x:Name="DeleteCustomInteractiveProjectButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteCustomInteractiveProjectButton_Click" ToolTip="Delete" />
+                                <TextBlock Grid.Column="2" Text="{Binding ShareCode}" />
+
+                                <Button Grid.Column="4" x:Name="DeleteCustomInteractiveProjectButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteCustomInteractiveProjectButton_Click" ToolTip="Delete" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -67,11 +71,15 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="AddCustomInteractiveProjectTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Interactive Version ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="140" />
+                <TextBox x:Name="CustomInteractiveProjectVersionIDTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Version ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                <Button x:Name="AddCustomInteractiveProjectButton" Grid.Column="2" Click="AddCustomInteractiveProjectButton_Click">Add</Button>
+                <TextBox x:Name="CustomInteractiveProjectShareCodeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Share Code" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+
+                <Button x:Name="AddCustomInteractiveProjectButton" Grid.Column="4" Click="AddCustomInteractiveProjectButton_Click">Add</Button>
             </Grid>
         </Grid>
 

@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
@@ -175,9 +176,9 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.interactiveGames.Add(game);
             }
 
-            foreach (uint projectID in ChannelSession.Settings.CustomInteractiveProjectIDs)
+            foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
             {
-                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(projectID);
+                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
                 if (version != null)
                 {
                     InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);

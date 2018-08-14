@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
@@ -332,7 +333,16 @@ namespace MixItUp.Base.MixerAPI
 
         protected override async Task<bool> ConnectInternal()
         {
-            this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version));
+            InteractiveSharedProjectModel sharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
+            if (sharedProject != null)
+            {
+                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version, sharedProject.ShareCode));
+            }
+            else
+            {
+                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version));
+            }
+            
             if (this.Client != null)
             {
                 this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();

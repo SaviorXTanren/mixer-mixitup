@@ -5,6 +5,7 @@ using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
+using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Services;
 using MixItUp.Base.Themes;
@@ -100,7 +101,7 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool PreventUnknownInteractiveUsers { get; set; }
         [JsonProperty]
-        public List<uint> CustomInteractiveProjectIDs { get; set; }
+        public List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
 
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
@@ -298,7 +299,7 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
-            this.CustomInteractiveProjectIDs = new List<uint>();
+            this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
             this.RemoteBoards = new List<RemoteBoardModel>();
             this.RemoteSavedDevices = new List<RemoteDeviceModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();

@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
+using MixItUp.Base.Model.Interactive;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace MixItUp.WPF.Controls.Settings
     {
         private static readonly InteractiveGameListingModel NoneInteractiveGame = new InteractiveGameListingModel() { id = 0, name = "NONE" };
 
-        private ObservableCollection<uint> customInteractiveProjects = new ObservableCollection<uint>();
+        private ObservableCollection<InteractiveSharedProjectModel> customInteractiveProjects = new ObservableCollection<InteractiveSharedProjectModel>();
 
         public InteractiveSettingsControl()
         {
@@ -37,9 +38,9 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.CustomInteractiveProjectsListView.ItemsSource = this.customInteractiveProjects;
             this.customInteractiveProjects.Clear();
-            foreach (uint projectID in ChannelSession.Settings.CustomInteractiveProjectIDs)
+            foreach (InteractiveSharedProjectModel sharedProject in ChannelSession.Settings.CustomInteractiveProjectIDs)
             {
-                this.customInteractiveProjects.Add(projectID);
+                this.customInteractiveProjects.Add(sharedProject);
             }
 
             await base.InitializeInternal();
@@ -66,23 +67,25 @@ namespace MixItUp.WPF.Controls.Settings
 
         private void AddCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.AddCustomInteractiveProjectTextBox.Text))
+            if (!string.IsNullOrEmpty(this.CustomInteractiveProjectVersionIDTextBox.Text) && !string.IsNullOrEmpty(this.CustomInteractiveProjectShareCodeTextBox.Text))
             {
-                if (uint.TryParse(this.AddCustomInteractiveProjectTextBox.Text, out uint projectID) && !ChannelSession.Settings.CustomInteractiveProjectIDs.Contains(projectID))
+                if (uint.TryParse(this.CustomInteractiveProjectVersionIDTextBox.Text, out uint versionID) && !ChannelSession.Settings.CustomInteractiveProjectIDs.Any(p => p.VersionID == versionID))
                 {
-                    ChannelSession.Settings.CustomInteractiveProjectIDs.Add(projectID);
-                    this.customInteractiveProjects.Add(projectID);
+                    InteractiveSharedProjectModel project = new InteractiveSharedProjectModel(versionID, this.CustomInteractiveProjectShareCodeTextBox.Text);
+                    ChannelSession.Settings.CustomInteractiveProjectIDs.Add(project);
+                    this.customInteractiveProjects.Add(project);
                 }
             }
-            this.AddCustomInteractiveProjectTextBox.Text = string.Empty;
+            this.CustomInteractiveProjectVersionIDTextBox.Text = string.Empty;
+            this.CustomInteractiveProjectShareCodeTextBox.Text = string.Empty;
         }
 
         private void DeleteCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Button button = (Button)sender;
-            uint projectID = (uint)button.DataContext;
-            ChannelSession.Settings.CustomInteractiveProjectIDs.Remove(projectID);
-            this.customInteractiveProjects.Remove(projectID);
+            InteractiveSharedProjectModel project = (InteractiveSharedProjectModel)button.DataContext;
+            ChannelSession.Settings.CustomInteractiveProjectIDs.Remove(project);
+            this.customInteractiveProjects.Remove(project);
         }
     }
 }
