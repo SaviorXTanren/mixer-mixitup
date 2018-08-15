@@ -4,7 +4,6 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Dialogs;
@@ -162,43 +161,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.interactiveGames.Clear();
 
-            IEnumerable<InteractiveGameModel> gameListings = await this.Window.RunAsyncOperation(async () =>
+            IEnumerable<InteractiveGameModel> games = await this.Window.RunAsyncOperation(async () =>
             {
-                return await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
+                return await ChannelSession.Interactive.GetAllConnectableGames();
             });
 
-            gameListings = gameListings.Where(g => !g.name.Equals("Soundwave Interactive Soundboard"));
-
-            foreach (InteractiveGameModel game in gameListings)
+            foreach (InteractiveGameModel game in games)
             {
                 this.interactiveGames.Add(game);
-            }
-
-            foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
-            {
-                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
-                if (version != null)
-                {
-                    InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
-                    if (game != null)
-                    {
-                        this.interactiveGames.Add(game);
-                    }
-                }
-            }
-
-            foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
-            {
-                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
-                if (version != null)
-                {
-                    InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
-                    if (game != null)
-                    {
-                        game.name += " (MixPlay)";
-                        this.interactiveGames.Add(game);
-                    }
-                }
             }
 
             if (this.selectedGame != null)
@@ -378,7 +348,10 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
                 this.selectedGame = (InteractiveGameModel)this.InteractiveGamesComboBox.SelectedItem;
-                await this.RefreshSelectedGame();
+                if (!ChannelSession.Interactive.IsConnected())
+                {
+                    await this.RefreshSelectedGame();
+                }
             }
         }
 
@@ -387,7 +360,10 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.InteractiveScenesComboBox.SelectedIndex >= 0)
             {
                 this.selectedScene = (InteractiveSceneModel)this.InteractiveScenesComboBox.SelectedItem;
-                this.RefreshSelectedScene();
+                if (!ChannelSession.Interactive.IsConnected())
+                {
+                    this.RefreshSelectedScene();
+                }
             }
         }
 
@@ -514,9 +490,14 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel e)
+        private async void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel game)
         {
-            await this.Dispatcher.InvokeAsync(async () => await this.InteractiveGameConnected());
+            await this.Dispatcher.InvokeAsync(async () =>
+            {
+                this.InteractiveGamesComboBox.SelectedItem = this.interactiveGames.FirstOrDefault(g => g.id.Equals(game.id));
+                await this.RefreshSelectedGame();
+                await this.InteractiveGameConnected();
+            });
         }
 
         private async void GlobalEvents_OnInteractiveDisconnected(object sender, EventArgs e)

@@ -129,23 +129,28 @@ namespace MixItUp.WPF.Controls.Interactive
                     control.meta["y"] = point.Y;
                     await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
 
-                    double xPosition = ((point.X / 100.0) * this.canvas.ActualWidth);
-                    double yPosition = ((point.Y / 100.0) * this.canvas.ActualHeight);
-
-                    UserProfileAvatarControl avatarControl = null;
-                    if (!this.userAvatars.ContainsKey(user.ID))
+                    await this.Dispatcher.InvokeAsync(async () =>
                     {
-                        avatarControl = new UserProfileAvatarControl();
-                        await avatarControl.SetImageUrl("https://mixer.com/api/v1/users/" + user.ID + "/avatar");
-                        avatarControl.SetSize(20);
+                        UserProfileAvatarControl avatarControl = null;
 
-                        this.canvas.Children.Add(avatarControl);
-                        this.userAvatars[user.ID] = avatarControl;
-                    }
-                    avatarControl = this.userAvatars[user.ID];
+                        if (!this.userAvatars.ContainsKey(user.ID))
+                        {
+                            avatarControl = new UserProfileAvatarControl();
+                            await avatarControl.SetImageUrl("https://mixer.com/api/v1/users/" + user.ID + "/avatar");
+                            avatarControl.SetSize(20);
 
-                    Canvas.SetLeft(avatarControl, xPosition - 10);
-                    Canvas.SetTop(avatarControl, yPosition - 10);
+                            this.canvas.Children.Add(avatarControl);
+                            this.userAvatars[user.ID] = avatarControl;
+                        }
+
+                        avatarControl = this.userAvatars[user.ID];
+
+                        double canvasX = ((point.X / 100.0) * this.canvas.Width);
+                        double canvasY = ((point.Y / 100.0) * this.canvas.Height);
+
+                        Canvas.SetLeft(avatarControl, canvasX - 10);
+                        Canvas.SetTop(avatarControl, canvasY - 10);
+                    });
                 }
             }
         }

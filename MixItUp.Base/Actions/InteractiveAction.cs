@@ -92,7 +92,7 @@ namespace MixItUp.Base.Actions
             };
         }
 
-        public static InteractiveAction CreateConnectAction(InteractiveGameListingModel game)
+        public static InteractiveAction CreateConnectAction(InteractiveGameModel game)
         {
             return new InteractiveAction(InteractiveActionTypeEnum.Connect)
             {
@@ -175,8 +175,8 @@ namespace MixItUp.Base.Actions
             {
                 if (this.InteractiveType == InteractiveActionTypeEnum.Connect)
                 {
-                    IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                    InteractiveGameListingModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
+                    IEnumerable<InteractiveGameModel> games = await ChannelSession.Interactive.GetAllConnectableGames();
+                    InteractiveGameModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
                     if (game != null)
                     {
                         if (await ChannelSession.Interactive.Connect(game))

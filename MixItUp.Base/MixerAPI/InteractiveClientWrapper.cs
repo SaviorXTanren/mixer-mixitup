@@ -180,9 +180,52 @@ namespace MixItUp.Base.MixerAPI
             this.Controls = new Dictionary<string, InteractiveConnectedControlCommand>();
         }
 
+        public async Task<IEnumerable<InteractiveGameModel>> GetAllConnectableGames()
+        {
+            List<InteractiveGameModel> games = new List<InteractiveGameModel>();
+
+            games.AddRange(await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel));
+            games.RemoveAll(g => g.name.Equals("Soundwave Interactive Soundboard"));
+
+            foreach (InteractiveSharedProjectModel project in ChannelSession.Settings.CustomInteractiveProjectIDs)
+            {
+                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                if (version != null)
+                {
+                    InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                    if (game != null)
+                    {
+                        games.Add(game);
+                    }
+                }
+            }
+
+            foreach (InteractiveSharedProjectModel project in InteractiveSharedProjectModel.AllMixPlayProjects)
+            {
+                InteractiveGameVersionModel version = await ChannelSession.Connection.GetInteractiveGameVersion(project.VersionID);
+                if (version != null)
+                {
+                    InteractiveGameModel game = await ChannelSession.Connection.GetInteractiveGame(version.gameId);
+                    if (game != null)
+                    {
+                        game.name += " (MixPlay)";
+                        games.Add(game);
+                    }
+                }
+            }
+
+            return games;
+        }
+
         public async Task<bool> Connect(InteractiveGameListingModel game)
         {
             return await this.Connect(game, game.versions.First());
+        }
+
+        public async Task<bool> Connect(InteractiveGameModel game)
+        {
+            IEnumerable<InteractiveGameVersionModel> versions = await ChannelSession.Connection.GetInteractiveGameVersions(game);
+            return await this.Connect(game, versions.First());
         }
 
         public async Task<bool> Connect(InteractiveGameModel game, InteractiveGameVersionModel version)

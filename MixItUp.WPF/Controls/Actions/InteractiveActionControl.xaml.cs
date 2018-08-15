@@ -25,7 +25,7 @@ namespace MixItUp.WPF.Controls.Actions
     {
         private InteractiveAction action;
 
-        private ObservableCollection<InteractiveGameListingModel> games = new ObservableCollection<InteractiveGameListingModel>();
+        private ObservableCollection<InteractiveGameModel> games = new ObservableCollection<InteractiveGameModel>();
 
         private ObservableCollection<CustomMetadataPair> customMetadataPairs = new ObservableCollection<CustomMetadataPair>();
 
@@ -48,7 +48,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.CustomMetadataItemsControl.ItemsSource = this.customMetadataPairs;
             this.customMetadataPairs.Add(new CustomMetadataPair());
 
-            foreach (InteractiveGameListingModel game in await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel))
+            foreach (InteractiveGameModel game in await ChannelSession.Interactive.GetAllConnectableGames())
             {
                 this.games.Add(game);
             }
@@ -138,7 +138,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (this.InteractiveGameComboBox.SelectedIndex >= 0)
                     {
-                        InteractiveGameListingModel game = (InteractiveGameListingModel)this.InteractiveGameComboBox.SelectedItem;
+                        InteractiveGameModel game = (InteractiveGameModel)this.InteractiveGameComboBox.SelectedItem;
                         return InteractiveAction.CreateConnectAction(game);
                     }
                 }

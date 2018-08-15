@@ -38,6 +38,8 @@ namespace MixItUp.WPF.Controls.Interactive
             this.MapComboBox.SelectedIndex = 0;
 
             this.MaxTimeTextBox.Text = "30";
+
+            this.Initialize(this.LocationPointsCanvas);
         }
 
         protected override void UpdateTimerUI(int timeLeft)
@@ -64,25 +66,22 @@ namespace MixItUp.WPF.Controls.Interactive
             this.WinnerStackPanel.Visibility = Visibility.Visible;
         }
 
-        protected override Task OnLoaded()
-        {
-            this.Initialize(this.LocationPointsCanvas);
-            return Task.FromResult(0);
-        }
-
         protected override async Task GameConnectedInternal()
         {
-            this.MapComboBox.IsEnabled = false;
-            this.MaxTimeTextBox.IsEnabled = false;
+            this.Dispatcher.Invoke(() =>
+            {
+                this.MapComboBox.IsEnabled = false;
+                this.MaxTimeTextBox.IsEnabled = false;
 
-            this.TimerStackPanel.Visibility = Visibility.Collapsed;
-            this.DropLocationStackPanel.Visibility = Visibility.Collapsed;
-            this.WinnerStackPanel.Visibility = Visibility.Collapsed;
+                this.TimerStackPanel.Visibility = Visibility.Collapsed;
+                this.DropLocationStackPanel.Visibility = Visibility.Collapsed;
+                this.WinnerStackPanel.Visibility = Visibility.Collapsed;
 
-            this.TimerTextBlock.Text = string.Empty;
-            this.DropLocationTextBlock.Text = string.Empty;
-            this.WinnerAvatar.SetSize(80);
-            this.WinnerTextBlock.Text = string.Empty;
+                this.TimerTextBlock.Text = string.Empty;
+                this.DropLocationTextBlock.Text = string.Empty;
+                this.WinnerAvatar.SetSize(80);
+                this.WinnerTextBlock.Text = string.Empty;
+            });
 
             await base.GameConnectedInternal();
 
