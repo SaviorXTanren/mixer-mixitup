@@ -143,7 +143,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<bool> CanClipBeMade(BroadcastModel broadcast) { return await this.RunAsync(this.Connection.Clips.CanClipBeMade(broadcast)); }
 
-        public async Task<bool> CreateClip(ClipRequestModel clipRequest) { return await this.RunAsync(this.Connection.Clips.CreateClip(clipRequest)); }
+        public async Task<ClipModel> CreateClip(ClipRequestModel clipRequest) { return await this.RunAsync(this.Connection.Clips.CreateClip(clipRequest)); }
 
         public async Task<ClipModel> GetClip(string shareableID) { return await this.RunAsync(this.Connection.Clips.GetClip(shareableID)); }
 
