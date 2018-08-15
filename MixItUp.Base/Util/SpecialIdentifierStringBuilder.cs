@@ -47,6 +47,13 @@ namespace MixItUp.Base.Util
         public const string CurrentSongIdentifierHeader = "currentsong";
         public const string NextSongIdentifierHeader = "nextsong";
 
+        public const string DonationSourceSpecialIdentifier = "donationsource";
+        public const string DonationAmountNumberSpecialIdentifier = "donationamountnumber";
+        public const string DonationAmountNumberDigitsSpecialIdentifier = "donationamountnumberdigits";
+        public const string DonationAmountSpecialIdentifier = "donationamount";
+        public const string DonationMessageSpecialIdentifier = "donationmessage";
+        public const string DonationImageSpecialIdentifier = "donationimage";
+
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 

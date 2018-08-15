@@ -42,13 +42,7 @@ namespace MixItUp.Desktop.Services
                     EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.GawkBoxDonation));
                     if (command != null)
                     {
-                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
-                        specialIdentifiers["donationsource"] = EnumHelper.GetEnumName(donation.Source);
-                        specialIdentifiers["donationamount"] = donation.AmountText;
-                        specialIdentifiers["donationamountnumber"] = donation.Amount.ToString();
-                        specialIdentifiers["donationmessage"] = donation.Message;
-                        specialIdentifiers["donationimage"] = donation.ImageLink;
-                        await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                        await command.Perform(user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
                     }
                 }
             }
