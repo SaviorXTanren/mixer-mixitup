@@ -336,6 +336,11 @@ namespace MixItUp.Base.MixerAPI
             InteractiveSharedProjectModel sharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
             if (sharedProject != null)
             {
+                sharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id &&p.VersionID == this.Version.id);
+            }
+
+            if (sharedProject != null)
+            {
                 this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version, sharedProject.ShareCode));
             }
             else
