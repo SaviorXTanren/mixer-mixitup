@@ -334,7 +334,7 @@ namespace MixItUp.Base.MixerAPI
         protected override async Task<bool> ConnectInternal()
         {
             InteractiveSharedProjectModel sharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
-            if (sharedProject != null)
+            if (sharedProject == null)
             {
                 sharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id &&p.VersionID == this.Version.id);
             }
