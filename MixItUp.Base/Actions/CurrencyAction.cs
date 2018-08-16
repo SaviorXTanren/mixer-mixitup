@@ -95,10 +95,10 @@ namespace MixItUp.Base.Actions
 
                 UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
 
-                HashSet<UserDataViewModel> receiverDatas = new HashSet<UserDataViewModel>();
+                HashSet<UserDataViewModel> receiverUserData = new HashSet<UserDataViewModel>();
                 if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToUser)
                 {
-                    receiverDatas.Add(user.Data);
+                    receiverUserData.Add(user.Data);
                 }
                 else if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser)
                 {
@@ -109,7 +109,7 @@ namespace MixItUp.Base.Actions
                         UserModel receivingUser = await ChannelSession.Connection.GetUser(usernameString);
                         if (receivingUser != null)
                         {
-                            receiverDatas.Add(ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataViewModel(new UserViewModel(receivingUser))));
+                            receiverUserData.Add(ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataViewModel(new UserViewModel(receivingUser))));
                         }
                         else
                         {
@@ -122,12 +122,12 @@ namespace MixItUp.Base.Actions
                 {
                     foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                     {
-                        receiverDatas.Add(chatUser.Data);
+                        receiverUserData.Add(chatUser.Data);
                     }
-                    receiverDatas.Add((await ChannelSession.GetCurrentUser()).Data);
+                    receiverUserData.Add((await ChannelSession.GetCurrentUser()).Data);
                 }
 
-                if ((this.DeductFromUser && receiverDatas.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)
+                if ((this.DeductFromUser && receiverUserData.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)
                 {
                     if (this.CurrencyActionType != CurrencyActionTypeEnum.SubtractFromUser && user.Data.HasCurrencyAmount(currency, amountValue))
                     {
@@ -137,17 +137,17 @@ namespace MixItUp.Base.Actions
                     user.Data.SubtractCurrencyAmount(currency, amountValue);
                 }
 
-                if (receiverDatas.Count > 0)
+                if (receiverUserData.Count > 0)
                 {
-                    foreach (UserDataViewModel receiverCurrencyData in receiverDatas)
+                    foreach (UserDataViewModel receiverUser in receiverUserData)
                     {
                         if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                         {
-                            user.Data.SubtractCurrencyAmount(currency, amountValue);
+                            receiverUser.SubtractCurrencyAmount(currency, amountValue);
                         }
                         else
                         {
-                            user.Data.AddCurrencyAmount(currency, amountValue);
+                            receiverUser.AddCurrencyAmount(currency, amountValue);
                         }
                     }
                 }
