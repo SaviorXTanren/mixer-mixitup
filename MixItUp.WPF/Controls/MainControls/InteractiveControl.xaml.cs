@@ -147,13 +147,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.InteractiveGamesComboBox.SelectedItem = game;
                 }
             }
-
-            if (ChannelSession.Interactive.IsConnected())
-            {
-                await this.RefreshSelectedGame();
-                this.RefreshSelectedScene();
-                await this.InteractiveGameConnected();
-            }
         }
 
         private async Task RefreshAllInteractiveGames()
@@ -250,6 +243,11 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             this.ConnectButton.IsEnabled = true;
+
+            if (ChannelSession.Interactive.IsConnected())
+            {
+                await this.InteractiveGameConnected();
+            }
         }
 
         private void SetCustomInteractiveGame(CustomInteractiveGameControl control)
@@ -350,10 +348,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
                 this.selectedGame = (InteractiveGameModel)this.InteractiveGamesComboBox.SelectedItem;
-                if (!ChannelSession.Interactive.IsConnected())
-                {
-                    await this.RefreshSelectedGame();
-                }
+                await this.RefreshSelectedGame();
             }
         }
 
@@ -362,10 +357,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.InteractiveScenesComboBox.SelectedIndex >= 0)
             {
                 this.selectedScene = (InteractiveSceneModel)this.InteractiveScenesComboBox.SelectedItem;
-                if (!ChannelSession.Interactive.IsConnected())
-                {
-                    this.RefreshSelectedScene();
-                }
+                this.RefreshSelectedScene();
             }
         }
 
@@ -497,9 +489,6 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Dispatcher.InvokeAsync(async () =>
             {
                 this.InteractiveGamesComboBox.SelectedItem = this.interactiveGames.FirstOrDefault(g => g.id.Equals(game.id));
-                await this.RefreshSelectedGame();
-                this.RefreshSelectedScene();
-                await this.InteractiveGameConnected();
             });
         }
 
