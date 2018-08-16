@@ -150,6 +150,8 @@ namespace MixItUp.WPF.Controls.MainControls
 
             if (ChannelSession.Interactive.IsConnected())
             {
+                await this.RefreshSelectedGame();
+                this.RefreshSelectedScene();
                 await this.InteractiveGameConnected();
             }
         }
@@ -496,6 +498,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.InteractiveGamesComboBox.SelectedItem = this.interactiveGames.FirstOrDefault(g => g.id.Equals(game.id));
                 await this.RefreshSelectedGame();
+                this.RefreshSelectedScene();
                 await this.InteractiveGameConnected();
             });
         }
