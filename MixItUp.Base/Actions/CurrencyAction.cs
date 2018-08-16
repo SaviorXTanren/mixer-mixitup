@@ -129,7 +129,7 @@ namespace MixItUp.Base.Actions
 
                 if ((this.DeductFromUser && receiverUserData.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)
                 {
-                    if (this.CurrencyActionType != CurrencyActionTypeEnum.SubtractFromUser && user.Data.HasCurrencyAmount(currency, amountValue))
+                    if (!user.Data.HasCurrencyAmount(currency, amountValue))
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
                         return;
