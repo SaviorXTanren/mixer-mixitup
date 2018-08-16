@@ -46,6 +46,8 @@ namespace MixItUp.WPF.Windows.Currency
 
         private ObservableCollection<UserRankViewModel> ranks = new ObservableCollection<UserRankViewModel>();
 
+        private string CurrencyRankIdentifierString { get { return (this.IsRankToggleButton.IsChecked.GetValueOrDefault()) ? "rank" : "currency"; } }
+
         public CurrencyWindow()
         {
             InitializeComponent();
@@ -60,6 +62,7 @@ namespace MixItUp.WPF.Windows.Currency
 
             InitializeComponent();
 
+            this.RetroactivelyGivePointsButton.IsEnabled = true;
             this.ExportToFileButton.IsEnabled = true;
             this.ImportFromFileButton.IsEnabled = true;
 
@@ -304,11 +307,52 @@ namespace MixItUp.WPF.Windows.Currency
         {
             await this.RunAsyncOperation(async () =>
             {
-                if (await MessageBoxHelper.ShowConfirmationDialog("Do you want to reset all currency?"))
+                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("Do you want to reset all {0} points?", this.CurrencyRankIdentifierString)))
                 {
                     if (this.currency != null)
                     {
                         await this.currency.Reset();
+                    }
+                }
+            });
+        }
+
+        private async void RetroactivelyGivePointsButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.RunAsyncOperation(async () =>
+            {
+                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This option will reset all {0} points for this {0} & assign an amount to each user that directly equals the SAVED online rate, not the currently edited online rate. Before using this option, please save all edits to this {0}, re-edit it, then select this option." +
+                    Environment.NewLine + Environment.NewLine + "EX: If the Online Rate for this {0} is set to \"1 Per Hour\" and a user has 16 viewing hours, then that user's {0} points will be set to 16." +
+                    Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
+                {
+                    if (this.currency != null)
+                    {
+                        await this.currency.Reset();
+
+                        HashSet<uint> subscriberIDs = new HashSet<uint>();
+                        foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Subscriber))
+                        {
+                            subscriberIDs.Add(user.id);
+                        }
+                        foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Mod))
+                        {
+                            subscriberIDs.Add(user.id);
+                        }
+                        foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.ChannelEditor))
+                        {
+                            subscriberIDs.Add(user.id);
+                        }
+
+                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+                        {
+                            int intervalsToGive = userData.ViewingMinutes / this.currency.AcquireInterval;
+                            userData.AddCurrencyAmount(this.currency, this.currency.AcquireAmount * intervalsToGive);
+                            if (subscriberIDs.Contains(userData.ID))
+                            {
+                                userData.AddCurrencyAmount(this.currency, this.currency.SubscriberBonus * intervalsToGive);
+                            }
+                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                        }
                     }
                 }
             });
@@ -320,8 +364,8 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 this.userImportData.Clear();
 
-                if (await MessageBoxHelper.ShowConfirmationDialog("This will allow you to import the total amounts that each user had, assign them to this currency/rank, and will overwrite any amounts that each user has." +
-                    Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?"))
+                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will allow you to import the total amounts that each user had, assign them to this {0}, and will overwrite any amounts that each user has." +
+                    Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
                 {
                     try
                     {
@@ -442,7 +486,7 @@ namespace MixItUp.WPF.Windows.Currency
             {
                 if (string.IsNullOrEmpty(this.NameTextBox.Text))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("A currency name must be specified");
+                    await MessageBoxHelper.ShowMessageDialog(string.Format("A {0} name must be specified", this.CurrencyRankIdentifierString));
                     return;
                 }
 
