@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
 using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Util;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -65,19 +66,26 @@ namespace MixItUp.WPF.Controls.Settings
             ChannelSession.Settings.PreventUnknownInteractiveUsers = this.PreventUnknownInteractiveUsersToggleButton.IsChecked.GetValueOrDefault();
         }
 
-        private void AddCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private async void AddCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(this.CustomInteractiveProjectVersionIDTextBox.Text) && !string.IsNullOrEmpty(this.CustomInteractiveProjectShareCodeTextBox.Text))
+            await this.Window.RunAsyncOperation(() =>
             {
-                if (uint.TryParse(this.CustomInteractiveProjectVersionIDTextBox.Text, out uint versionID) && !ChannelSession.Settings.CustomInteractiveProjectIDs.Any(p => p.VersionID == versionID))
+                if (!string.IsNullOrEmpty(this.CustomInteractiveProjectVersionIDTextBox.Text) && !string.IsNullOrEmpty(this.CustomInteractiveProjectShareCodeTextBox.Text))
                 {
-                    InteractiveSharedProjectModel project = new InteractiveSharedProjectModel(versionID, this.CustomInteractiveProjectShareCodeTextBox.Text);
-                    ChannelSession.Settings.CustomInteractiveProjectIDs.Add(project);
-                    this.customInteractiveProjects.Add(project);
+                    if (uint.TryParse(this.CustomInteractiveProjectVersionIDTextBox.Text, out uint versionID) && !ChannelSession.Settings.CustomInteractiveProjectIDs.Any(p => p.VersionID == versionID))
+                    {
+                        InteractiveSharedProjectModel project = new InteractiveSharedProjectModel(versionID, this.CustomInteractiveProjectShareCodeTextBox.Text);
+                        ChannelSession.Settings.CustomInteractiveProjectIDs.Add(project);
+                        this.customInteractiveProjects.Add(project);
+
+                        GlobalEvents.InteractiveSharedProjectAdded(project);
+                    }
                 }
-            }
-            this.CustomInteractiveProjectVersionIDTextBox.Text = string.Empty;
-            this.CustomInteractiveProjectShareCodeTextBox.Text = string.Empty;
+                this.CustomInteractiveProjectVersionIDTextBox.Text = string.Empty;
+                this.CustomInteractiveProjectShareCodeTextBox.Text = string.Empty;
+
+                return Task.FromResult(0);
+            });
         }
 
         private void DeleteCustomInteractiveProjectButton_Click(object sender, System.Windows.RoutedEventArgs e)

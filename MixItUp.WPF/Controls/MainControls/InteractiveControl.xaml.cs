@@ -125,6 +125,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             InitializeComponent();
 
+            GlobalEvents.OnInteractiveSharedProjectAdded += GlobalEvents_OnInteractiveSharedProjectAdded;
             GlobalEvents.OnInteractiveConnected += GlobalEvents_OnInteractiveConnected;
             GlobalEvents.OnInteractiveDisconnected += GlobalEvents_OnInteractiveDisconnected;
         }
@@ -481,6 +482,14 @@ namespace MixItUp.WPF.Controls.MainControls
                 await ChannelSession.Interactive.Disconnect();
 
                 await this.InteractiveGameDisconnected();
+            });
+        }
+
+        private async void GlobalEvents_OnInteractiveSharedProjectAdded(object sender, InteractiveSharedProjectModel e)
+        {
+            await this.Dispatcher.InvokeAsync(async () =>
+            {
+                await this.RefreshAllInteractiveGames();
             });
         }
 
