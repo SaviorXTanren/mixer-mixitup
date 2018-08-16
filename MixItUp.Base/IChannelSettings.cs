@@ -3,6 +3,7 @@ using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
+using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -54,6 +55,8 @@ namespace MixItUp.Base
         bool DeleteChatCommandsWhenRun { get; set; }
 
         uint DefaultInteractiveGame { get; set; }
+        bool PreventUnknownInteractiveUsers { get; set; }
+        List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
 
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }

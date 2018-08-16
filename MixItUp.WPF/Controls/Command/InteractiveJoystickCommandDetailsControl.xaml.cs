@@ -18,14 +18,14 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class InteractiveJoystickCommandDetailsControl : CommandDetailsControlBase
     {
-        public InteractiveGameListingModel Game { get; private set; }
+        public InteractiveGameModel Game { get; private set; }
         public InteractiveGameVersionModel Version { get; private set; }
         public InteractiveSceneModel Scene { get; private set; }
         public InteractiveJoystickControlModel Control { get; private set; }
 
         private InteractiveJoystickCommand command;
 
-        public InteractiveJoystickCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveJoystickCommand command)
+        public InteractiveJoystickCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveJoystickCommand command)
         {
             this.Game = game;
             this.Version = version;
@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public InteractiveJoystickCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveJoystickControlModel control)
+        public InteractiveJoystickCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveJoystickControlModel control)
         {
             this.Game = game;
             this.Version = version;

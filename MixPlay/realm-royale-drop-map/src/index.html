@@ -1,0 +1,87 @@
+﻿<!-- Bulletproof Font from https://fontmeme.com/fonts/bulletproof-font/ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Realm Royale Drop Map</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
+
+    <script src="https://mixercc.azureedge.net/lib/std-v0.2.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <style>
+        @font-face {
+            font-family: Bulletproof;
+            src: url(Bulletproof.ttf);
+        }
+
+        h1 {
+            font-family: Bulletproof;
+            color: #4799fd;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+            white-space: nowrap;
+        }
+
+        img.mapImage {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            height: 90%;
+            object-fit: contain;
+        }
+
+        div.roundImage {
+            border-radius: 50%;
+            overflow: hidden;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+
+        img.userAvatarImage {
+            height: 100%;
+            width: 100%;
+            min-width: 100%;
+            min-height: 100%;
+            position: absolute;
+            pointer-events: none;
+            z-index: 1
+        }
+    </style>
+</head>
+<body>
+    <script src="./scripts.js"></script>
+
+    <div id="locationDiv" style="position: absolute; left: 10%; top: 23%; visibility: hidden">
+        <h1 id="locationText" style="position: absolute; left: 50%; transform: translate(-50%, -50%); font-size: 80px;"></h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 115px;">DROP</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 150px;">LOCATION</h1>
+    </div>
+
+    <div id="mapDiv">
+        <img id="mapImage" class="mapImage" src="map.jpg" />
+        <div id="mapPointsDiv" />
+    </div>
+
+    <div id="timerDiv" style="position: absolute; left: 90%; top: 25%; visibility: hidden">
+        <h1 id="timerText" style="position: absolute; left: 50%; transform: translate(-50%, -50%); font-size: 80px;">30</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 115px;">SECONDS</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 150px;">LEFT</h1>
+    </div>
+
+    <div id="winnerDiv" style="position: absolute; left: 90%; top: 20%; visibility: hidden">
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%);">WINNER</h1>
+        <div style="border-radius: 50%; overflow: hidden; width: 80px; height: 80px; position: absolute; transform: translate(-50%, -50%); margin-top: 95px;">
+            <img id="winnerImage" class="userAvatarImage" />
+        </div>
+        <h1 id="winnerUsername" style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 170px;"></h1>
+
+    </div>
+</body>
+</html>

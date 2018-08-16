@@ -37,6 +37,7 @@ namespace MixItUp.Base.Util
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
         public const string RandomNumberSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
+        public const string CostreamUsersSpecialIdentifier = "costreamusers";
 
         public const string StreamTitleSpecialIdentifier = "streamtitle";
         public const string StreamFollowCountSpecialIdentifier = "streamfollowcount";
@@ -45,6 +46,13 @@ namespace MixItUp.Base.Util
 
         public const string CurrentSongIdentifierHeader = "currentsong";
         public const string NextSongIdentifierHeader = "nextsong";
+
+        public const string DonationSourceSpecialIdentifier = "donationsource";
+        public const string DonationAmountNumberSpecialIdentifier = "donationamountnumber";
+        public const string DonationAmountNumberDigitsSpecialIdentifier = "donationamountnumberdigits";
+        public const string DonationAmountSpecialIdentifier = "donationamount";
+        public const string DonationMessageSpecialIdentifier = "donationmessage";
+        public const string DonationImageSpecialIdentifier = "donationimage";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
@@ -149,11 +157,12 @@ namespace MixItUp.Base.Util
 
             if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
             {
-                // Select all workable users, exclude the streamer, then grab their UserData
                 Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
                 allUsersDictionary.Remove(ChannelSession.Channel.user.id);
 
                 IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+                allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
                     if (this.ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
@@ -162,7 +171,7 @@ namespace MixItUp.Base.Util
                         int userPosition = 1;
                         foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(10))
                         {
-                            currencyUserList.Add($"#{userPosition}) @{currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                            currencyUserList.Add($"#{userPosition}) {currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
                             userPosition++;
                         }
 
@@ -183,7 +192,7 @@ namespace MixItUp.Base.Util
                     int userPosition = 1;
                     foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(10))
                     {
-                        timeUserList.Add($"#{userPosition}) @{timeUser.UserName} - {timeUser.ViewingTimeShortString}");
+                        timeUserList.Add($"#{userPosition}) {timeUser.UserName} - {timeUser.ViewingTimeShortString}");
                         userPosition++;
                     }
 
@@ -256,6 +265,11 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "minutes", duration.ToString("mm"));
                     this.ReplaceSpecialIdentifier(UptimeSpecialIdentifierHeader + "seconds", duration.ToString("ss"));
                 }
+            }
+
+            if (this.ContainsSpecialIdentifier(CostreamUsersSpecialIdentifier))
+            {
+                this.ReplaceSpecialIdentifier(CostreamUsersSpecialIdentifier, await CostreamChatCommand.GetCostreamUsers());
             }
 
             if (ChannelSession.Services.Twitter != null && this.ContainsSpecialIdentifier("tweet"))

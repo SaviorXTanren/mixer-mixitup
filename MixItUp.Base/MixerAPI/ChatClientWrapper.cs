@@ -126,6 +126,9 @@ namespace MixItUp.Base.MixerAPI
 
                 await this.RunAsync(this.GetBotClient(sendAsStreamer).SendMessage(message));
 
+                // Adding delay to prevent messages from arriving in wrong order
+                await Task.Delay(250);
+
                 if (!string.IsNullOrEmpty(subMessage))
                 {
                     await this.SendMessage(subMessage, sendAsStreamer: sendAsStreamer);
@@ -140,6 +143,9 @@ namespace MixItUp.Base.MixerAPI
                 message = this.SplitLargeMessage(message, out string subMessage);
 
                 await this.RunAsync(this.GetBotClient(sendAsStreamer).Whisper(username, message));
+
+                // Adding delay to prevent messages from arriving in wrong order
+                await Task.Delay(250);
 
                 if (!string.IsNullOrEmpty(subMessage))
                 {

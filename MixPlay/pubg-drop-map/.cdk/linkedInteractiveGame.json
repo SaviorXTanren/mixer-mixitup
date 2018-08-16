@@ -1,0 +1,26 @@
+{
+  "coverUrl": null,
+  "createdAt": "2018-08-14T18:18:22.000Z",
+  "deletedAt": null,
+  "description": null,
+  "hasPublishedVersions": false,
+  "id": 271188,
+  "installation": null,
+  "isShared": false,
+  "name": "PUBG Drop Map",
+  "ownerId": 7207866,
+  "typeId": 267073,
+  "updatedAt": "2018-08-14T18:18:22.000Z",
+  "versions": [
+    {
+      "changelog": "Initial release",
+      "createdAt": "2018-08-14T18:18:22.000Z",
+      "id": 277104,
+      "installation": null,
+      "state": "draft",
+      "updatedAt": "2018-08-14T18:18:25.000Z",
+      "version": "0.1.0",
+      "versionOrder": 256
+    }
+  ]
+}

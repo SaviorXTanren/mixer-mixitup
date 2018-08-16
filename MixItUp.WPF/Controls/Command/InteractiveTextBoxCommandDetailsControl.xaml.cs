@@ -4,7 +4,6 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.WPF.Util;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,14 +14,14 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class InteractiveTextBoxCommandDetailsControl : CommandDetailsControlBase
     {
-        public InteractiveGameListingModel Game { get; private set; }
+        public InteractiveGameModel Game { get; private set; }
         public InteractiveGameVersionModel Version { get; private set; }
         public InteractiveSceneModel Scene { get; private set; }
         public InteractiveTextBoxControlModel Control { get; private set; }
 
         private InteractiveTextBoxCommand command;
 
-        public InteractiveTextBoxCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveTextBoxCommand command)
+        public InteractiveTextBoxCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveTextBoxCommand command)
         {
             this.Game = game;
             this.Version = version;
@@ -32,7 +31,7 @@ namespace MixItUp.WPF.Controls.Command
             InitializeComponent();
         }
 
-        public InteractiveTextBoxCommandDetailsControl(InteractiveGameListingModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveTextBoxControlModel control)
+        public InteractiveTextBoxCommandDetailsControl(InteractiveGameModel game, InteractiveGameVersionModel version, InteractiveSceneModel scene, InteractiveTextBoxControlModel control)
         {
             this.Game = game;
             this.Version = version;

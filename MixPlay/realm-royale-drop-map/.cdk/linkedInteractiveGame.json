@@ -1,0 +1,26 @@
+{
+  "coverUrl": null,
+  "createdAt": "2018-08-14T20:10:44.000Z",
+  "deletedAt": null,
+  "description": null,
+  "hasPublishedVersions": false,
+  "id": 271221,
+  "installation": null,
+  "isShared": false,
+  "name": "Realm Royale Drop Map",
+  "ownerId": 7207866,
+  "typeId": 549160,
+  "updatedAt": "2018-08-14T20:10:44.000Z",
+  "versions": [
+    {
+      "changelog": "Initial release",
+      "createdAt": "2018-08-14T20:10:44.000Z",
+      "id": 277137,
+      "installation": null,
+      "state": "draft",
+      "updatedAt": "2018-08-14T20:11:11.000Z",
+      "version": "0.1.0",
+      "versionOrder": 256
+    }
+  ]
+}

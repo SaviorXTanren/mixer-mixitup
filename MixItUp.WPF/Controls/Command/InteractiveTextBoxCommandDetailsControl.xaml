@@ -24,25 +24,25 @@
         <Grid Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
+            <Grid Grid.Row="0" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="SparkCostTextBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+                <TextBox x:Name="SparkCostTextBox" Grid.Column="0" Margin="0,0,0,8" IsEnabled="False" MaterialDesign:HintAssist.Hint="Spark Cost" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-                <TextBlock Grid.Column="2" Margin="0,0,0,5" VerticalAlignment="Center">Use Chat Moderation:</TextBlock>
-                <CheckBox x:Name="UseChatModerationCheckBox" Grid.Column="4" Margin="0,-8,0,0" />
+                <TextBlock Grid.Column="2" Margin="0,7,0,5" VerticalAlignment="Center">Use Chat Moderation:</TextBlock>
+                <CheckBox x:Name="UseChatModerationCheckBox" Grid.Column="4" Margin="0,2,0,0" />
 
                 <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="6" HorizontalAlignment="Center" />
             </Grid>

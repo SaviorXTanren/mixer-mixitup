@@ -88,11 +88,17 @@ namespace MixItUp.Base.Actions
                     return;
                 }
 
-                UserCurrencyDataViewModel senderCurrencyData = user.Data.GetCurrency(this.CurrencyID);
-                HashSet<UserCurrencyDataViewModel> receiverCurrencyDatas = new HashSet<UserCurrencyDataViewModel>();
+                if (!ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+                {
+                    return;
+                }
+
+                UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+
+                HashSet<UserDataViewModel> receiverDatas = new HashSet<UserDataViewModel>();
                 if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToUser)
                 {
-                    receiverCurrencyDatas.Add(senderCurrencyData);
+                    receiverDatas.Add(user.Data);
                 }
                 else if (this.CurrencyActionType == CurrencyActionTypeEnum.AddToSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser)
                 {
@@ -103,8 +109,7 @@ namespace MixItUp.Base.Actions
                         UserModel receivingUser = await ChannelSession.Connection.GetUser(usernameString);
                         if (receivingUser != null)
                         {
-                            UserDataViewModel userData = ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataViewModel(new UserViewModel(receivingUser)));
-                            receiverCurrencyDatas.Add(userData.GetCurrency(this.CurrencyID));
+                            receiverDatas.Add(ChannelSession.Settings.UserData.GetValueIfExists(receivingUser.id, new UserDataViewModel(new UserViewModel(receivingUser))));
                         }
                         else
                         {
@@ -117,32 +122,32 @@ namespace MixItUp.Base.Actions
                 {
                     foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                     {
-                        receiverCurrencyDatas.Add(chatUser.Data.GetCurrency(this.CurrencyID));
+                        receiverDatas.Add(chatUser.Data);
                     }
-                    receiverCurrencyDatas.Add((await ChannelSession.GetCurrentUser()).Data.GetCurrency(this.CurrencyID));
+                    receiverDatas.Add((await ChannelSession.GetCurrentUser()).Data);
                 }
 
-                if ((this.DeductFromUser && receiverCurrencyDatas.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)
+                if ((this.DeductFromUser && receiverDatas.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)
                 {
-                    if (this.CurrencyActionType != CurrencyActionTypeEnum.SubtractFromUser && senderCurrencyData.Amount < amountValue)
+                    if (this.CurrencyActionType != CurrencyActionTypeEnum.SubtractFromUser && user.Data.HasCurrencyAmount(currency, amountValue))
                     {
                         await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
                         return;
                     }
-                    senderCurrencyData.Amount = Math.Max(senderCurrencyData.Amount - amountValue, 0);
+                    user.Data.SubtractCurrencyAmount(currency, amountValue);
                 }
 
-                if (receiverCurrencyDatas.Count > 0)
+                if (receiverDatas.Count > 0)
                 {
-                    foreach (UserCurrencyDataViewModel receiverCurrencyData in receiverCurrencyDatas)
+                    foreach (UserDataViewModel receiverCurrencyData in receiverDatas)
                     {
                         if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
                         {
-                            receiverCurrencyData.Amount = Math.Max(receiverCurrencyData.Amount - amountValue, 0);
+                            user.Data.SubtractCurrencyAmount(currency, amountValue);
                         }
                         else
                         {
-                            receiverCurrencyData.Amount += amountValue;
+                            user.Data.AddCurrencyAmount(currency, amountValue);
                         }
                     }
                 }

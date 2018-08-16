@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -74,7 +73,7 @@ namespace MixItUp.Base.Actions
                 string clipName = await this.ReplaceStringWithSpecialModifiers(this.ClipName, user, arguments);
                 if (!string.IsNullOrEmpty(clipName) && MixerClipsAction.MinimumLength <= this.ClipLength && this.ClipLength <= MixerClipsAction.MaximumLength)
                 {
-                    bool clipCreated = false;
+                    ClipModel clip = null;
                     DateTimeOffset clipCreationTime = DateTimeOffset.Now;
 
                     BroadcastModel broadcast = await ChannelSession.Connection.GetCurrentBroadcast();
@@ -82,7 +81,7 @@ namespace MixItUp.Base.Actions
                     {
                         if (await ChannelSession.Connection.CanClipBeMade(broadcast))
                         {
-                            clipCreated = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
+                            clip = await ChannelSession.Connection.CreateClip(new ClipRequestModel()
                             {
                                 broadcastId = broadcast.id.ToString(),
                                 highlightTitle = clipName,
@@ -91,76 +90,81 @@ namespace MixItUp.Base.Actions
                         }
                     }
 
-                    if (clipCreated)
+                    if (clip == null)
                     {
                         for (int i = 0; i < 10; i++)
                         {
                             await Task.Delay(2000);
 
                             IEnumerable<ClipModel> clips = await ChannelSession.Connection.GetChannelClips(ChannelSession.Channel);
-                            ClipModel clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
+                            clip = clips.OrderByDescending(c => c.uploadDate).FirstOrDefault();
                             if (clip != null && clip.uploadDate.ToLocalTime() >= clipCreationTime && clip.title.Equals(clipName))
                             {
-                                string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.User.username, clip.shareableId);
-
-                                if (this.ShowClipInfoInChat)
-                                {
-                                    await ChannelSession.Chat.SendMessage("Clip Created: " + clipUrl);
-                                }
-
-                                this.extraSpecialIdentifiers[MixerClipURLSpecialIdentifier] = clipUrl;
-
-                                if (this.DownloadClip)
-                                {
-                                    if (!Directory.Exists(this.DownloadDirectory))
-                                    {
-                                        string error = "ERROR: The download folder specified for Mixer Clips does not exist";
-                                        Logger.Log(error);
-                                        await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
-                                        return;
-                                    }
-
-                                    if (!ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath()))
-                                    {
-                                        string error = "ERROR: FFMPEG could not be found and the Mixer Clip can not be converted without it";
-                                        Logger.Log(error);
-                                        await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
-                                        return;
-                                    }
-
-                                    ClipLocatorModel clipLocator = clip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(VideoFileContentLocatorType));
-                                    if (clipLocator != null)
-                                    {
-                                        string destinationFile = Path.Combine(this.DownloadDirectory, clipName + ".mp4");
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                                        Task.Run(async () =>
-                                        {
-                                            Process process = new Process();
-                                            process.StartInfo.FileName = MixerClipsAction.GetFFMPEGExecutablePath();
-                                            process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile.ToFilePathString());
-                                            process.StartInfo.RedirectStandardOutput = true;
-                                            process.StartInfo.UseShellExecute = false;
-                                            process.StartInfo.CreateNoWindow = true;
-
-                                            process.Start();
-                                            while (!process.HasExited)
-                                            {
-                                                await Task.Delay(500);
-                                            }
-                                        });
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                                    }
-                                }
+                                await this.ProcessClip(clip, clipName);
                                 return;
                             }
                         }
-                        await ChannelSession.Chat.SendMessage("Clip was created, but could not be retrieved at this time");
+                        await ChannelSession.Chat.SendMessage("ERROR: Unable to create clip or could not find clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
                     }
                     else
                     {
-                        await ChannelSession.Chat.SendMessage("Unable to create clip, please verify that clips can be created by ensuring the Clips button on your stream is not grayed out.");
+                        await this.ProcessClip(clip, clipName);
                     }
+                }
+            }
+        }
+
+        private async Task ProcessClip(ClipModel clip, string clipName)
+        {
+            string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.User.username, clip.shareableId);
+
+            if (this.ShowClipInfoInChat)
+            {
+                await ChannelSession.Chat.SendMessage("Clip Created: " + clipUrl);
+            }
+
+            this.extraSpecialIdentifiers[MixerClipURLSpecialIdentifier] = clipUrl;
+
+            if (this.DownloadClip)
+            {
+                if (!Directory.Exists(this.DownloadDirectory))
+                {
+                    string error = "ERROR: The download folder specified for Mixer Clips does not exist";
+                    Logger.Log(error);
+                    await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                    return;
+                }
+
+                if (!ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath()))
+                {
+                    string error = "ERROR: FFMPEG could not be found and the Mixer Clip can not be converted without it";
+                    Logger.Log(error);
+                    await ChannelSession.Chat.Whisper(ChannelSession.User.username, error);
+                    return;
+                }
+
+                ClipLocatorModel clipLocator = clip.contentLocators.FirstOrDefault(cl => cl.locatorType.Equals(VideoFileContentLocatorType));
+                if (clipLocator != null)
+                {
+                    string destinationFile = Path.Combine(this.DownloadDirectory, clipName + ".mp4");
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                    Task.Run(async () =>
+                    {
+                        Process process = new Process();
+                        process.StartInfo.FileName = MixerClipsAction.GetFFMPEGExecutablePath();
+                        process.StartInfo.Arguments = string.Format("-i {0} -c copy -bsf:a aac_adtstoasc \"{1}\"", clipLocator.uri, destinationFile.ToFilePathString());
+                        process.StartInfo.RedirectStandardOutput = true;
+                        process.StartInfo.UseShellExecute = false;
+                        process.StartInfo.CreateNoWindow = true;
+
+                        process.Start();
+                        while (!process.HasExited)
+                        {
+                            await Task.Delay(500);
+                        }
+                    });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
             }
         }

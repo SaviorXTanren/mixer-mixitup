@@ -124,14 +124,17 @@ namespace MixItUp.Base.ViewModel.User
             {
                 foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                 {
-                    int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
-                    int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
-                    if (interval > 0 && (minutes % interval) == 0)
+                    if (!user.Data.IsCurrencyRankExempt)
                     {
-                        user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
-                        if (user.IsSubscriber && (ChannelSession.Channel.online || (this.OfflineAcquireAmount > 0)))
+                        int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                        int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                        if (interval > 0 && (minutes % interval) == 0)
                         {
-                            user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                            user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                            if (user.IsSubscriber && (ChannelSession.Channel.online || (this.OfflineAcquireAmount > 0)))
+                            {
+                                user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                            }
                         }
                     }
                 }

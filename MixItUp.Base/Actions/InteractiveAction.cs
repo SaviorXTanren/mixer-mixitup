@@ -4,7 +4,6 @@ using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,11 +33,92 @@ namespace MixItUp.Base.Actions
         Connect,
         [Name("Disconnect")]
         Disconnect,
+
+        [Name("Update Control")]
+        UpdateControl,
+
+        [Name("Set Custom Metadata")]
+        SetCustomMetadata,
+    }
+
+    public enum InteractiveActionUpdateControlTypeEnum
+    {
+        Text,
+        [Name("Text Color")]
+        TextColor,
+        [Name("Text Size")]
+        TextSize,
+        Tooltip,
     }
 
     [DataContract]
     public class InteractiveAction : ActionBase
     {
+        public static InteractiveAction CreateMoveUserToGroupAction(string groupName, MixerRoleEnum requiredRole, string username = null)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.MoveUserToGroup)
+            {
+                GroupName = groupName,
+                RoleRequirement = requiredRole,
+                OptionalUserName = username,
+            };
+        }
+
+        public static InteractiveAction CreateMoveUserToSceneAction(string sceneID, MixerRoleEnum requiredRole, string username = null)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.MoveUserToScene)
+            {
+                SceneID = sceneID,
+                RoleRequirement = requiredRole,
+                OptionalUserName = username,
+            };
+        }
+
+        public static InteractiveAction CreateMoveGroupToSceneAction(string groupName, string sceneID)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.MoveGroupToScene)
+            {
+                GroupName = groupName,
+                SceneID = sceneID,
+            };
+        }
+
+        public static InteractiveAction CreateCooldownAction(InteractiveActionTypeEnum type, string cooldownID, int cooldownAmount)
+        {
+            return new InteractiveAction(type)
+            {
+                CooldownID = cooldownID,
+                CooldownAmount = cooldownAmount,
+            };
+        }
+
+        public static InteractiveAction CreateConnectAction(InteractiveGameModel game)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.Connect)
+            {
+                InteractiveGameID = game.id
+            };
+        }
+
+        public static InteractiveAction CreateUpdateControlAction(InteractiveActionUpdateControlTypeEnum updateControlType, string controlID, string updateValue)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.UpdateControl)
+            {
+                UpdateControlType = updateControlType,
+                ControlID = controlID,
+                UpdateValue = updateValue
+            };
+        }
+
+        public static InteractiveAction CreateSetCustomMetadataAction(string controlID, Dictionary<string, string> customMetadata)
+        {
+            return new InteractiveAction(InteractiveActionTypeEnum.SetCustomMetadata)
+            {
+                ControlID = controlID,
+                CustomMetadata = customMetadata
+            };
+        }
+
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
         protected override SemaphoreSlim AsyncSemaphore { get { return InteractiveAction.asyncSemaphore; } }
@@ -63,35 +143,30 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public uint InteractiveGameID { get; set; }
 
+        [DataMember]
+        public string OptionalUserName { get; set; }
+
+        [DataMember]
+        public string ControlID { get; set; }
+
+        [DataMember]
+        public InteractiveActionUpdateControlTypeEnum UpdateControlType { get; set; }
+        [DataMember]
+        public string UpdateValue { get; set; }
+
+        [DataMember]
+        public Dictionary<string, string> CustomMetadata { get; set; }
+
         public InteractiveAction()
             : base(ActionTypeEnum.Interactive)
         {
             this.RoleRequirement = MixerRoleEnum.User;
         }
 
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string groupName = null, string sceneID = null, MixerRoleEnum roleRequirement = MixerRoleEnum.User)
+        public InteractiveAction(InteractiveActionTypeEnum interactiveType)
             : this()
         {
             this.InteractiveType = interactiveType;
-            this.GroupName = groupName;
-            this.SceneID = sceneID;
-            this.RoleRequirement = roleRequirement;
-        }
-
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, string cooldownID, int cooldownAmount)
-            : this()
-        {
-            this.InteractiveType = interactiveType;
-            this.CooldownID = cooldownID;
-            this.CooldownAmount = cooldownAmount;
-        }
-
-
-        public InteractiveAction(InteractiveActionTypeEnum interactiveType, uint interactiveGameID)
-            : this()
-        {
-            this.InteractiveType = interactiveType;
-            this.InteractiveGameID = interactiveGameID;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -100,8 +175,8 @@ namespace MixItUp.Base.Actions
             {
                 if (this.InteractiveType == InteractiveActionTypeEnum.Connect)
                 {
-                    IEnumerable<InteractiveGameListingModel> games = await ChannelSession.Connection.GetOwnedInteractiveGames(ChannelSession.Channel);
-                    InteractiveGameListingModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
+                    IEnumerable<InteractiveGameModel> games = await ChannelSession.Interactive.GetAllConnectableGames();
+                    InteractiveGameModel game = games.FirstOrDefault(g => g.id.Equals(this.InteractiveGameID));
                     if (game != null)
                     {
                         if (await ChannelSession.Interactive.Connect(game))
@@ -134,7 +209,19 @@ namespace MixItUp.Base.Actions
                     }
                     else if (this.InteractiveType == InteractiveActionTypeEnum.MoveUserToGroup || this.InteractiveType == InteractiveActionTypeEnum.MoveUserToScene)
                     {
-                        await ChannelSession.Interactive.AddUserToGroup(user, this.GroupName);
+                        if (!string.IsNullOrEmpty(this.OptionalUserName))
+                        {
+                            string optionalUserName = await this.ReplaceStringWithSpecialModifiers(this.OptionalUserName, user, arguments);
+                            UserViewModel optionalUser = await ChannelSession.ActiveUsers.GetUserByUsername(optionalUserName);
+                            if (optionalUser != null)
+                            {
+                                await ChannelSession.Interactive.AddUserToGroup(optionalUser, this.GroupName);
+                            }
+                        }
+                        else
+                        {
+                            await ChannelSession.Interactive.AddUserToGroup(user, this.GroupName);
+                        }
                     }
                     else if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton || this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup ||
                         this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
@@ -181,6 +268,93 @@ namespace MixItUp.Base.Actions
                                 button.cooldown = timestamp;
                             }
                             await ChannelSession.Interactive.UpdateControls(scene, buttons);
+                        }
+                    }
+                    else if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl || this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata)
+                    {
+                        InteractiveConnectedSceneModel scene = null;
+                        InteractiveControlModel control = null;
+
+                        foreach (InteractiveConnectedSceneModel s in ChannelSession.Interactive.Scenes)
+                        {
+                            foreach (InteractiveControlModel c in s.allControls)
+                            {
+                                if (c.controlID.Equals(this.ControlID))
+                                {
+                                    scene = s;
+                                    control = c;
+                                    break;
+                                }
+                            }
+
+                            if (control != null)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (scene != null && control != null)
+                        {
+                            if (this.InteractiveType == InteractiveActionTypeEnum.UpdateControl)
+                            {
+                                string replacementValue = await this.ReplaceStringWithSpecialModifiers(this.UpdateValue, user, arguments);
+
+                                if (control is InteractiveButtonControlModel)
+                                {
+                                    InteractiveButtonControlModel button = (InteractiveButtonControlModel)control;
+                                    switch (this.UpdateControlType)
+                                    {
+                                        case InteractiveActionUpdateControlTypeEnum.Text: button.text = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.TextSize: button.textSize = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.TextColor: button.textColor = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.Tooltip: button.tooltip = replacementValue; break;
+                                    }
+                                }
+                                else if (control is InteractiveLabelControlModel)
+                                {
+                                    InteractiveLabelControlModel label = (InteractiveLabelControlModel)control;
+                                    switch (this.UpdateControlType)
+                                    {
+                                        case InteractiveActionUpdateControlTypeEnum.Text: label.text = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.TextSize: label.textSize = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.TextColor: label.textColor = replacementValue; break;
+                                    }
+                                }
+                                else if (control is InteractiveTextBoxControlModel)
+                                {
+                                    InteractiveTextBoxControlModel textbox = (InteractiveTextBoxControlModel)control;
+                                    switch (this.UpdateControlType)
+                                    {
+                                        case InteractiveActionUpdateControlTypeEnum.Text: textbox.submitText = replacementValue; break;
+                                        case InteractiveActionUpdateControlTypeEnum.Tooltip: textbox.placeholder = replacementValue; break;
+                                    }
+                                }
+                            }
+                            else if (this.InteractiveType == InteractiveActionTypeEnum.SetCustomMetadata)
+                            {
+                                control.meta["userID"] = user.ID;
+                                foreach (var kvp in this.CustomMetadata)
+                                {
+                                    if (bool.TryParse(kvp.Value, out bool boolValue))
+                                    {
+                                        control.meta[kvp.Key] = boolValue;
+                                    }
+                                    else if (int.TryParse(kvp.Value, out int intValue))
+                                    {
+                                        control.meta[kvp.Key] = intValue;
+                                    }
+                                    else if (double.TryParse(kvp.Value, out double doubleValue))
+                                    {
+                                        control.meta[kvp.Key] = doubleValue;
+                                    }
+                                    else
+                                    {
+                                        control.meta[kvp.Key] = kvp.Value;
+                                    }
+                                }
+                            }
+
+                            await ChannelSession.Interactive.UpdateControls(scene, new List<InteractiveControlModel>() { control });
                         }
                     }
                 }

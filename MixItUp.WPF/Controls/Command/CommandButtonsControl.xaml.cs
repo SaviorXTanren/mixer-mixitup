@@ -1,5 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
@@ -162,11 +164,24 @@ namespace MixItUp.WPF.Controls.Command
                         case OtherEventTypeEnum.StreamlabsDonation:
                         case OtherEventTypeEnum.GawkBoxDonation:
                         case OtherEventTypeEnum.TiltifyDonation:
-                            extraSpecialIdentifiers["donationsource"] = "Test Source";
-                            extraSpecialIdentifiers["donationamountnumber"] = "12.34";
-                            extraSpecialIdentifiers["donationamount"] = "$12.34";
-                            extraSpecialIdentifiers["donationmessage"] = "Test donation message.";
-                            extraSpecialIdentifiers["donationimage"] = currentUser.AvatarLink;
+                            UserDonationModel donation = new UserDonationModel()
+                            {
+                                Amount = 12.34,
+                                Message = "Test donation message",
+                                ImageLink = currentUser.AvatarLink
+                            };
+
+                            switch (eventCommand.OtherEventType)
+                            {
+                                case OtherEventTypeEnum.StreamlabsDonation: donation.Source = UserDonationSourceEnum.Streamlabs; break;
+                                case OtherEventTypeEnum.GawkBoxDonation: donation.Source = UserDonationSourceEnum.GawkBox; break;
+                                case OtherEventTypeEnum.TiltifyDonation: donation.Source = UserDonationSourceEnum.Tiltify; break;
+                            }
+
+                            foreach (var kvp in donation.GetSpecialIdentifiers())
+                            {
+                                extraSpecialIdentifiers[kvp.Key] = kvp.Value;
+                            }
                             break;
                     }
                 }

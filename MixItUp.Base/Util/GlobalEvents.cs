@@ -54,8 +54,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<InteractiveGameListingModel> OnInteractiveConnected;
-        public static void InteractiveConnected(InteractiveGameListingModel game)
+        public static event EventHandler<InteractiveGameModel> OnInteractiveConnected;
+        public static void InteractiveConnected(InteractiveGameModel game)
         {
             if (GlobalEvents.OnInteractiveConnected != null)
             {

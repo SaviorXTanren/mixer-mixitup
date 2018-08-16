@@ -14,6 +14,9 @@ namespace MixItUp.Base.ViewModel.User
     {
         public const string HypeBotUserName = "HypeBot";
         public const string BoomTVUserName = "boomtvmod";
+        public const string StreamJarUserName = "StreamJar";
+        public const string PretzelRocksUserName = "PretzelRocks";
+        public const string ScottyBotUserName = "ScottyBot";
 
         private Dictionary<uint, UserViewModel> users = new Dictionary<uint, UserViewModel>();
 
@@ -53,7 +56,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             return await this.LockWrapper(() =>
             {
-                return Task.FromResult(this.users.Values.FirstOrDefault(u => interactiveParticipantID.Equals(u.InteractiveID)));
+                return Task.FromResult(this.users.Values.FirstOrDefault(u => u.InteractiveIDs.Contains(interactiveParticipantID)));
             });
         }
 
@@ -124,7 +127,7 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.users.ContainsKey(interactiveUser.userID))
                 {
                     UserViewModel user = this.users[interactiveUser.userID];
-                    user.RemoveInteractiveDetails();
+                    user.RemoveInteractiveDetails(interactiveUser);
                 }
                 return Task.FromResult(0);
             });
@@ -156,6 +159,9 @@ namespace MixItUp.Base.ViewModel.User
                 List<UserViewModel> users = this.users.Values.ToList();
                 users.RemoveAll(u => UserContainerViewModel.HypeBotUserName.Equals(u.UserName));
                 users.RemoveAll(u => UserContainerViewModel.BoomTVUserName.Equals(u.UserName));
+                users.RemoveAll(u => UserContainerViewModel.StreamJarUserName.Equals(u.UserName));
+                users.RemoveAll(u => UserContainerViewModel.PretzelRocksUserName.Equals(u.UserName));
+                users.RemoveAll(u => UserContainerViewModel.ScottyBotUserName.Equals(u.UserName));
                 if (ChannelSession.BotUser != null)
                 {
                     users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
