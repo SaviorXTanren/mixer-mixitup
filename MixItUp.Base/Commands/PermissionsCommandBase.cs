@@ -44,7 +44,7 @@ namespace MixItUp.Base.Commands
             }
         }
 
-        public async Task<bool> CheckCooldownRequirement(UserViewModel user)
+        public virtual async Task<bool> CheckCooldownRequirement(UserViewModel user)
         {
             if (!this.Requirements.DoesMeetCooldownRequirement(user))
             {
@@ -54,7 +54,7 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
-        public async Task<bool> CheckUserRoleRequirement(UserViewModel user)
+        public virtual async Task<bool> CheckUserRoleRequirement(UserViewModel user)
         {
             if (!await this.Requirements.DoesMeetUserRoleRequirement(user))
             {
@@ -64,7 +64,7 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
-        public async Task<bool> CheckRankRequirement(UserViewModel user)
+        public virtual async Task<bool> CheckRankRequirement(UserViewModel user)
         {
             if (this.Requirements.Rank != null && this.Requirements.Rank.GetCurrency() != null)
             {
@@ -77,7 +77,7 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
-        public async Task<bool> CheckCurrencyRequirement(UserViewModel user)
+        public virtual async Task<bool> CheckCurrencyRequirement(UserViewModel user)
         {
             if (this.Requirements.Currency != null && this.Requirements.Currency.GetCurrency() != null)
             {
