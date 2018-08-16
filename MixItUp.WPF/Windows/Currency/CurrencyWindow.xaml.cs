@@ -322,7 +322,7 @@ namespace MixItUp.WPF.Windows.Currency
             await this.RunAsyncOperation(async () =>
             {
                 if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This option will reset all {0} points for this {0} & assign an amount to each user that directly equals the SAVED online rate, not the currently edited online rate. Before using this option, please save all edits to this {0}, re-edit it, then select this option." +
-                    Environment.NewLine + Environment.NewLine + "EX: If the Online Rate for this {0} is set to \"1 Per Hour\" and a user has 16 viewing hours, then that user's {0} points will be set to 16." +
+                    Environment.NewLine + Environment.NewLine + "EX: If the Online Rate is \"1 Per Hour\" and a user has 16 viewing hours, then that user's {0} points will be set to 16." +
                     Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
                 {
                     if (this.currency != null)
