@@ -69,6 +69,7 @@ namespace MixItUp.Input
     {
         private const int INPUT_KEYBOARD = 1;
 
+        private const int KEYEVENTF_EXTENDEDKEY = 0x0001;
         private const int KEYEVENTF_KEYUP = 0x0002;
         private const int KEYEVENTF_SCANCODE = 0x0008;
 
@@ -85,6 +86,10 @@ namespace MixItUp.Input
         {
             InputContainer input = new InputContainer { Type = INPUT_KEYBOARD };
             input.Data.Keyboard = new KeyboardInput() { Scan = (ushort)key, Flags = KEYEVENTF_SCANCODE };
+            if (key == InputKeyEnum.Up || key == InputKeyEnum.Down || key == InputKeyEnum.Left || key == InputKeyEnum.Right)
+            {
+                input.Data.Keyboard.Flags |= KEYEVENTF_EXTENDEDKEY;
+            }
             InputContainer[] inputs = new InputContainer[] { input };
             uint result = SendInput(1, inputs, Marshal.SizeOf(typeof(InputContainer)));
         }
@@ -93,6 +98,10 @@ namespace MixItUp.Input
         {
             InputContainer input = new InputContainer { Type = INPUT_KEYBOARD };
             input.Data.Keyboard = new KeyboardInput() { Scan = (ushort)key, Flags = KEYEVENTF_KEYUP | KEYEVENTF_SCANCODE };
+            if (key == InputKeyEnum.Up || key == InputKeyEnum.Down || key == InputKeyEnum.Left || key == InputKeyEnum.Right)
+            {
+                input.Data.Keyboard.Flags |= KEYEVENTF_EXTENDEDKEY;
+            }
             InputContainer[] inputs = new InputContainer[] { input };
             uint result = SendInput(1, inputs, Marshal.SizeOf(typeof(InputContainer)));
         }
