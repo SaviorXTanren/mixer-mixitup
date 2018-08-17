@@ -5,6 +5,7 @@ using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Interactive;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -334,7 +335,7 @@ namespace MixItUp.Base.ViewModel.User
             this.InteractiveIDs.Remove(participant.sessionID);
             if (this.InteractiveIDs.Count == 0)
             {
-                this.InteractiveGroupID = null;
+                this.InteractiveGroupID = InteractiveUserGroupViewModel.DefaultName;
             }
         }
 

@@ -283,16 +283,19 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<bool> AddGroup(string groupName, string sceneID)
         {
-            InteractiveGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
-            if (groups != null && groups.groups != null)
+            if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(sceneID))
             {
-                if (!groups.groups.Any(g => g.groupID.Equals(groupName)))
+                InteractiveGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
+                if (groups != null && groups.groups != null)
                 {
-                    return await this.RunAsync(this.Client.CreateGroupsWithResponse(new List<InteractiveGroupModel>() { new InteractiveGroupModel() { groupID = groupName, sceneID = sceneID } }));
+                    if (!groups.groups.Any(g => g.groupID.Equals(groupName)))
+                    {
+                        return await this.RunAsync(this.Client.CreateGroupsWithResponse(new List<InteractiveGroupModel>() { new InteractiveGroupModel() { groupID = groupName, sceneID = sceneID } }));
+                    }
+                    return true;
                 }
-                return true;
+                return false;
             }
-            return false;
         }
 
         public async Task<InteractiveGroupCollectionModel> GetGroups() { return await this.RunAsync(this.Client.GetGroups()); }
@@ -349,7 +352,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task AddUserToGroup(UserViewModel user, string groupName)
         {
-            if (user.IsInteractiveParticipant)
+            if (!string.IsNullOrEmpty(groupName) && user.IsInteractiveParticipant)
             {
                 user.InteractiveGroupID = groupName;
                 foreach (InteractiveParticipantModel participant in user.GetParticipantModels())
