@@ -385,7 +385,7 @@ namespace MixItUp.Base.MixerAPI
             InteractiveSharedProjectModel sharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
             if (sharedProject == null)
             {
-                sharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id &&p.VersionID == this.Version.id);
+                sharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id && p.VersionID == this.Version.id);
             }
 
             if (sharedProject != null)
@@ -426,6 +426,11 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnParticipantJoin += Client_OnParticipantJoin;
                     this.Client.OnParticipantLeave += Client_OnParticipantLeave;
                     this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
+
+                    if (sharedProject != null && InteractiveSharedProjectModel.AllMixPlayProjects.Contains(sharedProject))
+                    {
+                        ChannelSession.Services.Telemetry.TrackInteractiveGame(this.Game);
+                    }
 
                     return await this.Initialize();
                 }

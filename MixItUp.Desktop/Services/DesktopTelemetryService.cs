@@ -1,13 +1,11 @@
 ﻿using Microsoft.ApplicationInsights;
+using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
@@ -46,6 +44,14 @@ namespace MixItUp.Desktop.Services
             if (!ChannelSession.Settings.OptOutTracking)
             {
                 this.telemetryClient.TrackEvent("Login");
+            }
+        }
+
+        public void TrackInteractiveGame(InteractiveGameModel game)
+        {
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                this.telemetryClient.TrackEvent("InteractiveGame", new Dictionary<string, string> { { "Name", game.name } });
             }
         }
 
