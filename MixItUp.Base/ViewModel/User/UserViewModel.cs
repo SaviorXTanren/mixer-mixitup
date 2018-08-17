@@ -101,7 +101,7 @@ namespace MixItUp.Base.ViewModel.User
         public int Sparks { get; set; }
 
         [DataMember]
-        public HashSet<string> InteractiveIDs { get; set; }
+        public string InteractiveID { get; set; }
 
         [DataMember]
         public string InteractiveGroupID { get; set; }
@@ -112,7 +112,6 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel()
         {
             this.CustomRoles = new HashSet<string>();
-            this.InteractiveIDs = new HashSet<string>();
             this.AvatarLink = UserViewModel.DefaultAvatarLink;
         }
 
@@ -233,7 +232,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public bool IsInteractiveParticipant { get { return this.InteractiveIDs.Count > 0 && !string.IsNullOrEmpty(this.InteractiveGroupID); } }
+        public bool IsInteractiveParticipant { get { return !string.IsNullOrEmpty(this.InteractiveID); } }
 
         [JsonIgnore]
         public GameWispTier GameWispTier
@@ -325,17 +324,14 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SetInteractiveDetails(InteractiveParticipantModel participant)
         {
-            this.InteractiveIDs.Add(participant.sessionID);
+            this.InteractiveID = participant.sessionID;
             this.InteractiveGroupID = participant.groupID;
         }
 
         public void RemoveInteractiveDetails(InteractiveParticipantModel participant)
         {
-            this.InteractiveIDs.Remove(participant.sessionID);
-            if (this.InteractiveIDs.Count == 0)
-            {
-                this.InteractiveGroupID = null;
-            }
+            this.InteractiveID = null;
+            this.InteractiveGroupID = null;
         }
 
         public async Task SetGameWispSubscriber()
@@ -399,7 +395,7 @@ namespace MixItUp.Base.ViewModel.User
             {
                 userID = this.ID,
                 username = this.UserName,
-                sessionID = (this.InteractiveIDs.Count > 0) ? this.InteractiveIDs.First() : null,
+                sessionID = this.InteractiveID,
                 groupID = this.InteractiveGroupID,
             };
         }
