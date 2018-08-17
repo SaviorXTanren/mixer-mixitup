@@ -56,7 +56,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             return await this.LockWrapper(() =>
             {
-                return Task.FromResult(this.users.Values.FirstOrDefault(u => string.Equals(u.InteractiveID, interactiveParticipantID)));
+                return Task.FromResult(this.users.Values.FirstOrDefault(u => u.InteractiveIDs.Contains(interactiveParticipantID)));
             });
         }
 
