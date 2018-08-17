@@ -467,7 +467,12 @@ namespace MixItUp.Base.Actions
                 if (this.Effect is OverlayImageEffect)
                 {
                     OverlayImageEffect imageEffect = (OverlayImageEffect)this.Effect;
-                    string imageFilePath = (await this.ReplaceStringWithSpecialModifiers(imageEffect.FilePath, user, arguments)).ToFilePathString();
+                    string imageFilePath = await this.ReplaceStringWithSpecialModifiers(imageEffect.FilePath, user, arguments);
+                    if (!Uri.IsWellFormedUriString(imageFilePath, UriKind.RelativeOrAbsolute))
+                    {
+                        imageFilePath = imageFilePath.ToFilePathString();
+                    }
+
                     if (!string.IsNullOrEmpty(imageFilePath))
                     {
                         OverlayImageEffect copy = imageEffect.Copy<OverlayImageEffect>();
@@ -490,7 +495,12 @@ namespace MixItUp.Base.Actions
                 else if (this.Effect is OverlayVideoEffect)
                 {
                     OverlayVideoEffect videoEffect = (OverlayVideoEffect)this.Effect;
-                    string videoFilePath = (await this.ReplaceStringWithSpecialModifiers(videoEffect.FilePath, user, arguments)).ToFilePathString();
+                    string videoFilePath = await this.ReplaceStringWithSpecialModifiers(videoEffect.FilePath, user, arguments);
+                    if (!Uri.IsWellFormedUriString(videoFilePath, UriKind.RelativeOrAbsolute))
+                    {
+                        videoFilePath = videoFilePath.ToFilePathString();
+                    }
+
                     if (!string.IsNullOrEmpty(videoFilePath))
                     {
                         OverlayVideoEffect copy = videoEffect.Copy<OverlayVideoEffect>();
