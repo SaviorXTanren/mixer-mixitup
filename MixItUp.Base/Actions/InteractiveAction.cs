@@ -68,6 +68,7 @@ namespace MixItUp.Base.Actions
         {
             return new InteractiveAction(InteractiveActionTypeEnum.MoveUserToScene)
             {
+                GroupName = sceneID,
                 SceneID = sceneID,
                 RoleRequirement = requiredRole,
                 OptionalUserName = username,
