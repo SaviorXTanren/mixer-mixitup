@@ -294,8 +294,8 @@ namespace MixItUp.Base.MixerAPI
                     }
                     return true;
                 }
-                return false;
             }
+            return false;
         }
 
         public async Task<InteractiveGroupCollectionModel> GetGroups() { return await this.RunAsync(this.Client.GetGroups()); }
