@@ -352,7 +352,10 @@ namespace MixItUp.Base.MixerAPI
             if (user.IsInteractiveParticipant)
             {
                 user.InteractiveGroupID = groupName;
-                await ChannelSession.Interactive.UpdateParticipant(user.GetParticipantModel());
+                foreach (InteractiveParticipantModel participant in user.GetParticipantModels())
+                {
+                    await ChannelSession.Interactive.UpdateParticipant(participant);
+                }
             }
         }
 
@@ -576,7 +579,7 @@ namespace MixItUp.Base.MixerAPI
                                     user.InteractiveGroupID = group.GroupName;
                                     if (updateParticipant)
                                     {
-                                        participantsToUpdate.Add(user.GetParticipantModel());
+                                        participantsToUpdate.AddRange(user.GetParticipantModels());
                                     }
                                 }
                             }
@@ -679,7 +682,7 @@ namespace MixItUp.Base.MixerAPI
                         }
 
                         user = new UserViewModel(0, "Unknown User");
-                        user.InteractiveID = e.participantID;
+                        user.InteractiveIDs.Add(e.participantID);
                     }
 
                     InteractiveConnectedControlCommand connectedControl = null;

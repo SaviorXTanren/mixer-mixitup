@@ -493,11 +493,12 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel game)
+        private void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel game)
         {
-            await this.Dispatcher.InvokeAsync(async () =>
+            this.Dispatcher.InvokeAsync(() =>
             {
                 this.InteractiveGamesComboBox.SelectedItem = this.interactiveGames.FirstOrDefault(g => g.id.Equals(game.id));
+                return Task.FromResult(0);
             });
         }
 
