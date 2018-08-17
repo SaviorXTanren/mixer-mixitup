@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Interactive;
+using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
@@ -51,6 +52,15 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnChatCommandMessageReceived != null)
             {
                 GlobalEvents.OnChatCommandMessageReceived(null, chatMessage);
+            }
+        }
+
+        public static event EventHandler<InteractiveSharedProjectModel> OnInteractiveSharedProjectAdded;
+        public static void InteractiveSharedProjectAdded(InteractiveSharedProjectModel sharedProject)
+        {
+            if (GlobalEvents.OnInteractiveSharedProjectAdded != null)
+            {
+                GlobalEvents.OnInteractiveSharedProjectAdded(null, sharedProject);
             }
         }
 

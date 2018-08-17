@@ -125,6 +125,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             InitializeComponent();
 
+            GlobalEvents.OnInteractiveSharedProjectAdded += GlobalEvents_OnInteractiveSharedProjectAdded;
             GlobalEvents.OnInteractiveConnected += GlobalEvents_OnInteractiveConnected;
             GlobalEvents.OnInteractiveDisconnected += GlobalEvents_OnInteractiveDisconnected;
         }
@@ -146,11 +147,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     this.InteractiveGamesComboBox.SelectedItem = game;
                 }
-            }
-
-            if (ChannelSession.Interactive.IsConnected())
-            {
-                await this.InteractiveGameConnected();
             }
         }
 
@@ -248,6 +244,11 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             this.ConnectButton.IsEnabled = true;
+
+            if (ChannelSession.Interactive.IsConnected())
+            {
+                await this.InteractiveGameConnected();
+            }
         }
 
         private void SetCustomInteractiveGame(CustomInteractiveGameControl control)
@@ -348,10 +349,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.InteractiveGamesComboBox.SelectedIndex >= 0)
             {
                 this.selectedGame = (InteractiveGameModel)this.InteractiveGamesComboBox.SelectedItem;
-                if (!ChannelSession.Interactive.IsConnected())
-                {
-                    await this.RefreshSelectedGame();
-                }
+                await this.RefreshSelectedGame();
             }
         }
 
@@ -360,10 +358,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.InteractiveScenesComboBox.SelectedIndex >= 0)
             {
                 this.selectedScene = (InteractiveSceneModel)this.InteractiveScenesComboBox.SelectedItem;
-                if (!ChannelSession.Interactive.IsConnected())
-                {
-                    this.RefreshSelectedScene();
-                }
+                this.RefreshSelectedScene();
             }
         }
 
@@ -490,13 +485,20 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel game)
+        private async void GlobalEvents_OnInteractiveSharedProjectAdded(object sender, InteractiveSharedProjectModel e)
         {
             await this.Dispatcher.InvokeAsync(async () =>
             {
+                await this.RefreshAllInteractiveGames();
+            });
+        }
+
+        private void GlobalEvents_OnInteractiveConnected(object sender, InteractiveGameModel game)
+        {
+            this.Dispatcher.InvokeAsync(() =>
+            {
                 this.InteractiveGamesComboBox.SelectedItem = this.interactiveGames.FirstOrDefault(g => g.id.Equals(game.id));
-                await this.RefreshSelectedGame();
-                await this.InteractiveGameConnected();
+                return Task.FromResult(0);
             });
         }
 

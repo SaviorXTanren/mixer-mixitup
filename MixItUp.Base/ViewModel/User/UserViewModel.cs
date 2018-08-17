@@ -5,6 +5,7 @@ using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Interactive;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -334,7 +335,7 @@ namespace MixItUp.Base.ViewModel.User
             this.InteractiveIDs.Remove(participant.sessionID);
             if (this.InteractiveIDs.Count == 0)
             {
-                this.InteractiveGroupID = null;
+                this.InteractiveGroupID = InteractiveUserGroupViewModel.DefaultName;
             }
         }
 
@@ -393,15 +394,20 @@ namespace MixItUp.Base.ViewModel.User
             };
         }
 
-        public InteractiveParticipantModel GetParticipantModel()
+        public IEnumerable<InteractiveParticipantModel> GetParticipantModels()
         {
-            return new InteractiveParticipantModel()
+            List<InteractiveParticipantModel> participants = new List<InteractiveParticipantModel>();
+            foreach (string interactiveID in this.InteractiveIDs)
             {
-                userID = this.ID,
-                username = this.UserName,
-                sessionID = (this.InteractiveIDs.Count > 0) ? this.InteractiveIDs.First() : null,
-                groupID = this.InteractiveGroupID,
-            };
+                participants.Add(new InteractiveParticipantModel()
+                {
+                    userID = this.ID,
+                    username = this.UserName,
+                    sessionID = interactiveID,
+                    groupID = this.InteractiveGroupID,
+                });
+            }
+            return participants;
         }
 
         public override bool Equals(object obj)

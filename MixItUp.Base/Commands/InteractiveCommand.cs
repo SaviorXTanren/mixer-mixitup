@@ -74,6 +74,15 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public virtual string EventTypeString { get { return string.Empty; } }
 
+        public override async Task<bool> CheckCooldownRequirement(UserViewModel user)
+        {
+            if (this.Requirements.Cooldown != null && this.Requirements.Cooldown.Type == CooldownTypeEnum.PerPerson)
+            {
+                return await base.CheckCooldownRequirement(user);
+            }
+            return true;
+        }
+
         public void UpdateWithLatestControl(InteractiveControlModel control) { this.Control = control; }
     }
 

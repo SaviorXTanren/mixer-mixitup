@@ -466,7 +466,7 @@ namespace MixItUp.Base.Commands
             List<UserViewModel> users = new List<UserViewModel>();
             foreach (UserViewModel activeUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
             {
-                if (!user.Equals(activeUser) && activeUser.Data.IsCurrencyRankExempt && activeUser.Data.HasCurrencyAmount(currency, betAmount))
+                if (!user.Equals(activeUser) && (activeUser.Data.IsCurrencyRankExempt || activeUser.Data.HasCurrencyAmount(currency, betAmount)))
                 {
                     users.Add(activeUser);
                 }
@@ -495,7 +495,7 @@ namespace MixItUp.Base.Commands
                 return null;
             }
 
-            if (targetUser.Data.HasCurrencyAmount(currency, betAmount))
+            if (!targetUser.Data.HasCurrencyAmount(currency, betAmount))
             {
                 await ChannelSession.Chat.Whisper(user.UserName, string.Format("@{0} does not have {1} {2}", targetUser.UserName, betAmount, currency.Name));
                 user.Data.AddCurrencyAmount(currency, betAmount);

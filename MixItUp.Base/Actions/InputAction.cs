@@ -74,8 +74,6 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            await Task.Delay(3000);
-
             if (this.Shift) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftShift); }
             if (this.Control) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftControl); }
             if (this.Alt) { ChannelSession.Services.InputService.KeyDown(InputKeyEnum.LeftAlt); }

@@ -231,23 +231,39 @@
                 <Grid Grid.Row="8" HorizontalAlignment="Center">
                     <GroupBox Header="Data" Grid.Column="2">
                         <Grid Margin="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Automatic Reset" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
+                            <Grid Grid.Row="0" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                            <Button x:Name="ManualResetButton" Grid.Column="2" Click="ManualResetButton_Click">Manual Reset</Button>
+                                <ComboBox x:Name="AutomaticResetComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Automatic Reset" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-                            <Button x:Name="ImportFromFileButton" Grid.Column="4" Click="ImportFromFileButton_Click" IsEnabled="False">Import From File</Button>
+                                <Button x:Name="ManualResetButton" Grid.Column="2" Click="ManualResetButton_Click">Manual Reset</Button>
 
-                            <Button x:Name="ExportToFileButton" Grid.Column="6" Click="ExportToFileButton_Click" IsEnabled="False">Export To File</Button>
+                                <Button x:Name="RetroactivelyGivePointsButton" Grid.Column="4" Click="RetroactivelyGivePointsButton_Click" IsEnabled="False">Retroactively Give Points</Button>
+                            </Grid>
+
+                            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button x:Name="ImportFromFileButton" Grid.Column="0" Click="ImportFromFileButton_Click" IsEnabled="False">Import From File</Button>
+
+                                <Button x:Name="ExportToFileButton" Grid.Column="2" Click="ExportToFileButton_Click" IsEnabled="False">Export To File</Button>
+                            </Grid>
                         </Grid>
                     </GroupBox>
                 </Grid>

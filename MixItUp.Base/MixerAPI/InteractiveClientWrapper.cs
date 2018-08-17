@@ -283,14 +283,17 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<bool> AddGroup(string groupName, string sceneID)
         {
-            InteractiveGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
-            if (groups != null && groups.groups != null)
+            if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(sceneID))
             {
-                if (!groups.groups.Any(g => g.groupID.Equals(groupName)))
+                InteractiveGroupCollectionModel groups = await ChannelSession.Interactive.GetGroups();
+                if (groups != null && groups.groups != null)
                 {
-                    return await this.RunAsync(this.Client.CreateGroupsWithResponse(new List<InteractiveGroupModel>() { new InteractiveGroupModel() { groupID = groupName, sceneID = sceneID } }));
+                    if (!groups.groups.Any(g => g.groupID.Equals(groupName)))
+                    {
+                        return await this.RunAsync(this.Client.CreateGroupsWithResponse(new List<InteractiveGroupModel>() { new InteractiveGroupModel() { groupID = groupName, sceneID = sceneID } }));
+                    }
+                    return true;
                 }
-                return true;
             }
             return false;
         }
@@ -349,10 +352,13 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task AddUserToGroup(UserViewModel user, string groupName)
         {
-            if (user.IsInteractiveParticipant)
+            if (!string.IsNullOrEmpty(groupName) && user.IsInteractiveParticipant)
             {
                 user.InteractiveGroupID = groupName;
-                await ChannelSession.Interactive.UpdateParticipant(user.GetParticipantModel());
+                foreach (InteractiveParticipantModel participant in user.GetParticipantModels())
+                {
+                    await ChannelSession.Interactive.UpdateParticipant(participant);
+                }
             }
         }
 
@@ -379,7 +385,7 @@ namespace MixItUp.Base.MixerAPI
             InteractiveSharedProjectModel sharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
             if (sharedProject == null)
             {
-                sharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id &&p.VersionID == this.Version.id);
+                sharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id && p.VersionID == this.Version.id);
             }
 
             if (sharedProject != null)
@@ -420,6 +426,11 @@ namespace MixItUp.Base.MixerAPI
                     this.Client.OnParticipantJoin += Client_OnParticipantJoin;
                     this.Client.OnParticipantLeave += Client_OnParticipantLeave;
                     this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
+
+                    if (sharedProject != null && InteractiveSharedProjectModel.AllMixPlayProjects.Contains(sharedProject))
+                    {
+                        ChannelSession.Services.Telemetry.TrackInteractiveGame(this.Game);
+                    }
 
                     return await this.Initialize();
                 }
@@ -576,7 +587,7 @@ namespace MixItUp.Base.MixerAPI
                                     user.InteractiveGroupID = group.GroupName;
                                     if (updateParticipant)
                                     {
-                                        participantsToUpdate.Add(user.GetParticipantModel());
+                                        participantsToUpdate.AddRange(user.GetParticipantModels());
                                     }
                                 }
                             }

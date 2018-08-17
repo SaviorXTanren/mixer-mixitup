@@ -20,9 +20,9 @@ namespace MixItUp.WPF.Windows.Store
     public partial class UploadStoreListingWindow : LoadingWindowBase
     {
         private static readonly string IncludeAssetsTooltip =
-            "This option will upload the additional files used" + Environment.NewLine +
-            "in the actions for this command (Images, Sounds)." + Environment.NewLine +
-            "Some files are not support by this (Videos, HTML).";
+            "This option will upload the additional files used in" + Environment.NewLine +
+            "the actions for this command (Images, Sounds). Some" + Environment.NewLine +
+            "files are not support by this (Files, Videos, HTML).";
 
         private CommandBase command;
 
