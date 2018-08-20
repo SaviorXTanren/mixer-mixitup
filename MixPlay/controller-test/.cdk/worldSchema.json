@@ -1,0 +1,62 @@
+[
+  {
+    "name": "$working",
+    "world": {
+      "scenes": [
+        {
+          "controls": [
+            {
+              "controlID": "my_first_button",
+              "cost": 100,
+              "disabled": true,
+              "kind": "button",
+              "position": [
+                {
+                  "height": 8,
+                  "size": "large",
+                  "width": 10,
+                  "x": 0,
+                  "y": 0
+                },
+                {
+                  "height": 8,
+                  "size": "medium",
+                  "width": 10,
+                  "x": 0,
+                  "y": 0
+                }
+              ],
+              "progress": 0.5,
+              "text": "My First Button"
+            },
+            {
+              "angle": 0.7,
+              "controlID": "my_awesome_joystick",
+              "disabled": true,
+              "intensity": 0.5,
+              "kind": "joystick",
+              "position": [
+                {
+                  "height": 7,
+                  "size": "large",
+                  "width": 7,
+                  "x": 11,
+                  "y": 0
+                },
+                {
+                  "height": 7,
+                  "size": "medium",
+                  "width": 7,
+                  "x": 11,
+                  "y": 0
+                }
+              ]
+            }
+          ],
+          "sceneID": "default"
+        }
+      ]
+    },
+    "savedAt": 1534712384772
+  }
+]
