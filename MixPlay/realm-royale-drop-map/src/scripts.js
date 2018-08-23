@@ -96,6 +96,11 @@ function handleControlUpdate(update) {
             }
 
             if (control.meta.map != null) {
+                mapImage.addEventListener('load', function () {
+                    var selectorImage = document.getElementById('selectorImage');
+                    selectorImage.style.width = Math.round((mapImage.width / 15)) + "px";
+                    selectorImage.style.height = Math.round((mapImage.height / 15)) + "px";
+                });
                 mapImage.src = control.meta.map;
             }
         }
@@ -164,6 +169,8 @@ function removegamepad(gamepad) {
 function updateStatus() {
     scangamepads();
     for (j in controllers) {
+        selectorDiv.style.visibility = 'visible';
+
         var controller = controllers[j];
         if (controller.id == XboxControllerID) {
 

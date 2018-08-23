@@ -96,6 +96,11 @@ function handleControlUpdate(update) {
             }
 
             if (control.meta.map != null) {
+                mapImage.addEventListener('load', function () {
+                    var selectorImage = document.getElementById('selectorImage');
+                    selectorImage.style.width = Math.round((mapImage.width / 15)) + "px";
+                    selectorImage.style.height = Math.round((mapImage.height / 15)) + "px";
+                });
                 mapImage.src = control.meta.map;
             }
         }
@@ -164,6 +169,8 @@ function removegamepad(gamepad) {
 function updateStatus() {
     scangamepads();
     for (j in controllers) {
+        selectorDiv.style.visibility = 'visible';
+
         var controller = controllers[j];
         if (controller.id == XboxControllerID) {
 
@@ -186,8 +193,7 @@ function updateStatus() {
             }
 
             if (isButtonPressed(controller, AButtonID) || isButtonPressed(controller, XButtonID) ||
-                isButtonPressed(controller, LeftTriggerID) || isButtonPressed(controller, RightTriggerID))
-            {
+                isButtonPressed(controller, LeftTriggerID) || isButtonPressed(controller, RightTriggerID)) {
                 pointPlaced(xGamepadCoordinate, yGamepadCoordinate);
             }
 
@@ -257,10 +263,10 @@ window.addEventListener('load', function initMixer() {
     timerDiv = document.getElementById('timerDiv');
     timerText = document.getElementById('timerText');
 
-    $(mapImage).mousemove(function(event) {
+    $(mapImage).mousemove(function (event) {
         xMouseCoordinate = event.pageX;
         yMouseCoordinate = event.pageY;
-    }).mouseleave(function() {
+    }).mouseleave(function () {
         xMouseCoordinate = 0;
         yMouseCoordinate = 0;
     }).click(function () {
