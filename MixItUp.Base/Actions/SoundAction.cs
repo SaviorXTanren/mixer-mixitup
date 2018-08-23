@@ -1,4 +1,6 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -44,7 +46,14 @@ namespace MixItUp.Base.Actions
                 {
                     audioDevice = await ChannelSession.Services.AudioService.GetOutputDevice(this.OutputDevice);
                 }
-                await ChannelSession.Services.AudioService.Play(this.FilePath, this.VolumeScale, audioDevice);
+
+                string audioFilePath = await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, arguments);
+                if (!Uri.IsWellFormedUriString(audioFilePath, UriKind.RelativeOrAbsolute))
+                {
+                    audioFilePath = audioFilePath.ToFilePathString();
+                }
+
+                await ChannelSession.Services.AudioService.Play(audioFilePath, this.VolumeScale, audioDevice);
             }
         }
     }
