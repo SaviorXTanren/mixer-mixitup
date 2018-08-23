@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.User;
-using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using System;
