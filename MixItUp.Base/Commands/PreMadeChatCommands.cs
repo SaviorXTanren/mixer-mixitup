@@ -897,6 +897,8 @@ namespace MixItUp.Base.Commands
                             ChannelSession.Channel.typeId = newGame.id;
                             await ChannelSession.Connection.UpdateChannel(ChannelSession.Channel);
                             await ChannelSession.RefreshChannel();
+
+                            await ChannelSession.Chat.Whisper(user.UserName, "Game Updated: " + newGame.name);
                         }
                         else
                         {
