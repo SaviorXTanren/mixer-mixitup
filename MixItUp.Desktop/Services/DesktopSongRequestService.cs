@@ -730,7 +730,7 @@ namespace MixItUp.Desktop.Services
                         await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
                     }
                 }
-                else
+                else if (this.currentSong != null)
                 {
                     SpotifySong song = await ChannelSession.Services.Spotify.GetSong(this.currentSong.ID);
                     if (song != null)
