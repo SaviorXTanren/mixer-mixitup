@@ -380,21 +380,21 @@ namespace MixItUp.Desktop.Services
         {
             List<JObject> results = new List<JObject>();
 
-            int offset = 0;
             int total = 1;
-            while (offset < total)
+            while (results.Count < total)
             {
-                JObject result = await this.GetJObjectAsync(endpointURL + "?offset=" + offset);
-                if (result != null)
+                JObject result = await this.GetJObjectAsync(endpointURL + "?offset=" + results.Count);
+                if (result == null)
                 {
-                    offset += 20;
-                    total = int.Parse(result["total"].ToString());
+                    break;
+                }
 
-                    JArray arrayResults = (JArray)result["items"];
-                    foreach (JToken arrayResult in arrayResults)
-                    {
-                        results.Add((JObject)arrayResult);
-                    }
+                total = int.Parse(result["total"].ToString());
+
+                JArray arrayResults = (JArray)result["items"];
+                foreach (JToken arrayResult in arrayResults)
+                {
+                    results.Add((JObject)arrayResult);
                 }
             }
 
