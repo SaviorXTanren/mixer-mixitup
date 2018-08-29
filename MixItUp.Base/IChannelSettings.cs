@@ -5,6 +5,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Remote;
+using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -130,6 +131,8 @@ namespace MixItUp.Base
         int MaxMessagesInChat { get; set; }
 
         bool AutoExportStatistics { get; set; }
+
+        List<SerialDeviceModel> SerialDevices { get; set; }
 
         List<RemoteBoardModel> RemoteBoards { get; set; }
         List<RemoteDeviceModel> RemoteSavedDevices { get; set; }

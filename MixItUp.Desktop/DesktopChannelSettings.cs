@@ -7,6 +7,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Remote;
+using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
 using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
@@ -239,6 +240,9 @@ namespace MixItUp.Desktop
         public bool AutoExportStatistics { get; set; }
 
         [JsonProperty]
+        public List<SerialDeviceModel> SerialDevices { get; set; }
+
+        [JsonProperty]
         public List<RemoteBoardModel> RemoteBoards { get; set; }
         [JsonProperty]
         public List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
@@ -300,6 +304,7 @@ namespace MixItUp.Desktop
         public DesktopSavableChannelSettings()
         {
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
+            this.SerialDevices = new List<SerialDeviceModel>();
             this.RemoteBoards = new List<RemoteBoardModel>();
             this.RemoteSavedDevices = new List<RemoteDeviceModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();
