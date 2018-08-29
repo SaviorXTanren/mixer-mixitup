@@ -26,7 +26,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             this.PortNameComboBox.ItemsSource = this.portNames;
             this.portNames.Clear();
-            foreach (string portName in SerialPort.GetPortNames().Distinct().OrderBy(x => x).ToList())
+            foreach (string portName in await ChannelSession.Services.SerialService.GetCurrentPortNames())
             {
                 this.portNames.Add(portName);
             }

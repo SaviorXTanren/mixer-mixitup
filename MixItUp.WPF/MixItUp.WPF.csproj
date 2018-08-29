@@ -252,6 +252,9 @@
     <Compile Include="Controls\Actions\CommandActionControl.xaml.cs">
       <DependentUpon>CommandActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\SerialActionControl.xaml.cs">
+      <DependentUpon>SerialActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\StreamlabsActionControl.xaml.cs">
       <DependentUpon>StreamlabsActionControl.xaml</DependentUpon>
     </Compile>
@@ -720,6 +723,10 @@
     <Page Include="Controls\Actions\CommandActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Actions\SerialActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\StreamlabsActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
