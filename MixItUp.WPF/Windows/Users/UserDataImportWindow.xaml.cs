@@ -163,7 +163,7 @@ namespace MixItUp.WPF.Windows.Users
                         catch (Exception ex)
                         {
                             Logger.Log(ex);
-                            await MessageBoxHelper.ShowMessageDialog("We were unable to read data from the file. Please make sure it is not already opened in another program.");
+                            await this.Dispatcher.InvokeAsync(async () => { await MessageBoxHelper.ShowMessageDialog("We were unable to read data from the file. Please make sure it is not already opened in another program."); })
                         }
                     });
                 }
