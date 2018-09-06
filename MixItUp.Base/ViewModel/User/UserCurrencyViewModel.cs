@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public bool IsActive { get { return this.AcquireAmount != 0 && this.AcquireInterval != 0; } }
+        public bool IsActive { get { return this.AcquireInterval != 0; } }
 
         [JsonIgnore]
         public bool IsOnlineIntervalMinutes { get { return this.AcquireAmount == 1 && this.AcquireInterval == 1; } }
