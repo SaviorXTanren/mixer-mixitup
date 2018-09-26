@@ -15,8 +15,8 @@ namespace MixItUp.WPF.Controls.Command
     /// </summary>
     public partial class ChatCommandDetailsControl : CommandDetailsControlBase
     {
-        private const string ChatTriggersNoExclamationHintAssist = "Trigger(s) in Chat (EX: \"!follow\") (No \"!\" needed, space seperated)";
-        private const string ChatTriggersHintAssist = "Trigger(s) in Chat (EX: \"!follow\") (Space seperated)";
+        private const string ChatTriggersNoExclamationHintAssist = "Chat Trigger(s) (No \"!\" needed, space seperated, semi-colon for multi-word)";
+        private const string ChatTriggersHintAssist = "Chat Trigger(s) (Space seperated, semi-colon for multi-word)";
 
         private ChatCommand command;
 
@@ -66,10 +66,14 @@ namespace MixItUp.WPF.Controls.Command
                 return false;
             }
 
-            if (!CommandBase.IsValidCommandString(this.ChatCommandTextBox.Text))
+            IEnumerable<string> commandTriggers = this.GetCommandStrings();
+            foreach (string trigger in commandTriggers)
             {
-                await MessageBoxHelper.ShowMessageDialog("Triggers contain an invalid character");
-                return false;
+                if (!CommandBase.IsValidCommandString(trigger))
+                {
+                    await MessageBoxHelper.ShowMessageDialog("Triggers contain an invalid character");
+                    return false;
+                }
             }
 
             foreach (PermissionsCommandBase command in ChannelSession.AllEnabledChatCommands)
@@ -138,12 +142,20 @@ namespace MixItUp.WPF.Controls.Command
 
         private IEnumerable<string> GetCommandStrings()
         {
-            string commandStrings = this.ChatCommandTextBox.Text;
+            string commandStrings = this.ChatCommandTextBox.Text.ToLower();
             if (this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault())
             {
                 commandStrings = commandStrings.Replace("!", "");
             }
-            return new List<string>(commandStrings.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+
+            if (commandStrings.Contains(";"))
+            {
+                return new List<string>(commandStrings.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries));
+            }
+            else
+            {
+                return new List<string>(commandStrings.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+            }
         }
 
         private void IncludeExclamationInCommandsToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)

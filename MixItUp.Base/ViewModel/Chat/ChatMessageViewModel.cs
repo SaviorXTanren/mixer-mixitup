@@ -125,24 +125,6 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsUserTagged { get { return this.Message.Contains("@" + ChannelSession.User.username); } }
 
-        public string CommandName
-        {
-            get
-            {
-                string commandName = this.CommandPieces.FirstOrDefault();
-                if (commandName == null)
-                {
-                    return string.Empty;
-                }
-
-                return commandName.ToLower();
-            }
-        }
-
-        public IEnumerable<string> CommandArguments { get { return this.CommandPieces.Skip(1); } }
-
-        private IEnumerable<string> CommandPieces { get { return this.Message.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries); } }
-
         public async Task<string> ShouldBeModerated()
         {
             if (this.IsWhisper)

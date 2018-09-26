@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.ViewModel.Import;
 using MixItUp.Base.ViewModel.Requirement;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,14 +37,18 @@ namespace MixItUp.Base.Commands
             this.IsEnabled = command.Enabled;
         }
 
-        public override bool ContainsCommand(string command)
+        [JsonIgnore]
+        public override IEnumerable<string> CommandTriggers
         {
-            var commandsToCheck = this.Commands;
-            if (this.IncludeExclamationInCommands)
+            get
             {
-                commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
+                var commandsToCheck = this.Commands;
+                if (this.IncludeExclamationInCommands)
+                {
+                    commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
+                }
+                return commandsToCheck;
             }
-            return commandsToCheck.Contains(command, StringComparer.InvariantCultureIgnoreCase);
         }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }

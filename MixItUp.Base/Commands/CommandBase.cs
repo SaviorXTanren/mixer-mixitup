@@ -118,9 +118,26 @@ namespace MixItUp.Base.Commands
         public virtual bool IsEditable { get { return true; } }
 
         [JsonIgnore]
-        public string CommandsString { get { return string.Join(" ", this.Commands); } }
+        public string CommandsString
+        {
+            get
+            {
+                if (this.Commands.Count > 0 && this.Commands.Any(s => s.Contains(" ")))
+                {
+                    if (this.Commands.Count > 1)
+                    {
+                        return string.Join(";", this.Commands);
+                    }
+                    return this.Commands.First() + ";";
+                }
+                return string.Join(" ", this.Commands);
+            }
+        }
 
-        public virtual bool ContainsCommand(string command) { return this.Commands.Count() > 0 && this.Commands.Contains(command, StringComparer.InvariantCultureIgnoreCase); }
+        [JsonIgnore]
+        public virtual IEnumerable<string> CommandTriggers { get { return this.Commands; } }
+
+        public bool ContainsCommand(string command) { return this.CommandTriggers.Count() > 0 && this.CommandTriggers.Any(c => command.StartsWith(c, StringComparison.InvariantCultureIgnoreCase)); }
 
         public async Task Perform() { await this.Perform(null); }
 
@@ -194,6 +211,14 @@ namespace MixItUp.Base.Commands
             }
         }
 
+        public void StopCurrentRun()
+        {
+            if (this.currentCancellationTokenSource != null)
+            {
+                this.currentCancellationTokenSource.Cancel();
+            }
+        }
+
         protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             List<ActionBase> actionsToRun = new List<ActionBase>();
@@ -224,14 +249,6 @@ namespace MixItUp.Base.Commands
                         await ChannelSession.Services.OverlayServer.EndBatching();
                     }
                 }
-            }
-        }
-
-        public void StopCurrentRun()
-        {
-            if (this.currentCancellationTokenSource != null)
-            {
-                this.currentCancellationTokenSource.Cancel();
             }
         }
 

@@ -153,10 +153,8 @@ namespace MixItUp.Base.Commands
 
         public GameCommandBase(string name, IEnumerable<string> commands, RequirementViewModel requirements) : base(name, CommandTypeEnum.Game, commands, requirements) { }
 
-        public override bool ContainsCommand(string command)
-        {
-            return this.Commands.Select(c => "!" + c).Contains(command);
-        }
+        [JsonIgnore]
+        public override IEnumerable<string> CommandTriggers { get { return this.Commands.Select(c => "!" + c); } }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return GameCommandBase.gameCommandPerformSemaphore; } }
 

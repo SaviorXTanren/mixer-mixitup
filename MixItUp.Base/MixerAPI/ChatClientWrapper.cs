@@ -418,10 +418,20 @@ namespace MixItUp.Base.MixerAPI
 
                 List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllEnabledChatCommands);
                 commandsToCheck.AddRange(message.User.Data.CustomCommands);
-                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.CommandName));
+                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.Message));
                 if (command != null)
                 {
-                    await command.Perform(message.User, message.CommandArguments);
+                    string messageText = message.Message;
+                    foreach (string commandTrigger in command.CommandTriggers)
+                    {
+                        if (messageText.StartsWith(commandTrigger, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            messageText = messageText.Substring(commandTrigger.Length);
+                            break;
+                        }
+                    }
+
+                    await command.Perform(message.User, messageText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
 
                     if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
                     {
