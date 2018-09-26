@@ -312,7 +312,6 @@ namespace MixItUp.WPF.Controls.MainControls
             if (e.Key == Key.Enter)
             {
                 this.SendChatMessageButton_Click(this, new RoutedEventArgs());
-                this.ChatMessageTextBox.Focus();
             }
         }
 
@@ -391,6 +390,8 @@ namespace MixItUp.WPF.Controls.MainControls
                         await ChannelSession.Chat.SendMessage(message, (this.SendChatAsComboBox.SelectedIndex == 0));
                     }));
                 }
+
+                this.ChatMessageTextBox.Focus();
             }
         }
 
