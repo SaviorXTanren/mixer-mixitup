@@ -5,6 +5,7 @@ using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -102,13 +103,47 @@ namespace MixItUp.Desktop.Services
 
         public async Task Save(IChannelSettings settings, string fileName) { await this.SaveSettings(settings, fileName); }
 
-        public async Task SaveBackup(IChannelSettings settings)
+        public async Task SaveBackup(IChannelSettings settings, string filePath)
         {
-            string filePath = this.GetFilePath(settings);
-            await this.SaveSettings(settings, filePath + DesktopSettingsService.BackupFileExtension);
+            await this.Save(ChannelSession.Settings);
 
+            string settingsFilePath = this.GetFilePath(settings);
             DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
-            File.Copy(desktopSettings.DatabasePath, desktopSettings.DatabasePath + DesktopSettingsService.BackupFileExtension, overwrite: true);
+
+            if (Directory.Exists(Path.GetDirectoryName(filePath)))
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
+                {
+                    zipFile.CreateEntryFromFile(settingsFilePath, Path.GetFileName(settingsFilePath));
+                    zipFile.CreateEntryFromFile(desktopSettings.DatabasePath, Path.GetFileName(desktopSettings.DatabasePath));
+                }
+            }
+        }
+
+        public async Task PerformBackupIfApplicable(IChannelSettings settings)
+        {
+            if (settings.SettingsBackupRate != SettingsBackupRateEnum.None)
+            {
+                DateTimeOffset newResetDate = settings.SettingsLastBackup;
+
+                if (settings.SettingsBackupRate == SettingsBackupRateEnum.Daily) { newResetDate = newResetDate.AddDays(1); }
+                else if (settings.SettingsBackupRate == SettingsBackupRateEnum.Weekly) { newResetDate = newResetDate.AddDays(7); }
+                else if (settings.SettingsBackupRate == SettingsBackupRateEnum.Monthly) { newResetDate = newResetDate.AddMonths(1); }
+
+                if (newResetDate < DateTimeOffset.Now)
+                {
+                    string filePath = Path.Combine(settings.SettingsBackupLocation, settings.Channel.id + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + ".mixitup");
+
+                    await this.SaveBackup(settings, filePath);
+
+                    settings.SettingsLastBackup = DateTimeOffset.Now;
+                }
+            }
         }
 
         public string GetFilePath(IChannelSettings settings)
@@ -120,24 +155,6 @@ namespace MixItUp.Desktop.Services
         {
             DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
             await desktopSettings.DatabaseWrapper.RunWriteCommand("DELETE FROM Users");
-        }
-
-        private async Task<IChannelSettings> LoadSettings(string filePath)
-        {
-            string data = File.ReadAllText(filePath);
-            if (!data.Contains("\"Version\":"))
-            {
-                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(0, filePath);
-            }
-
-            DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-
-            if (settings.ShouldBeUpgraded())
-            {
-                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(settings.Version, filePath);
-                settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-            }
-            return settings;
         }
 
         public async Task SaveSettings(IChannelSettings settings, string filePath)
@@ -157,6 +174,24 @@ namespace MixItUp.Desktop.Services
         public string GetDatabaseFilePath(IChannelSettings settings)
         {
             return Path.Combine(SettingsDirectoryName, string.Format("{0}.{1}.sqlite", settings.Channel.id.ToString(), (settings.IsStreamer) ? "Streamer" : "Moderator"));
+        }
+
+        private async Task<IChannelSettings> LoadSettings(string filePath)
+        {
+            string data = File.ReadAllText(filePath);
+            if (!data.Contains("\"Version\":"))
+            {
+                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(0, filePath);
+            }
+
+            DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+
+            if (settings.ShouldBeUpgraded())
+            {
+                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(settings.Version, filePath);
+                settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+            }
+            return settings;
         }
     }
 }

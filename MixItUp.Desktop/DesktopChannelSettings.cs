@@ -261,6 +261,13 @@ namespace MixItUp.Desktop
         public string TelemetryUserId { get; set; }
 
         [JsonProperty]
+        public string SettingsBackupLocation { get; set; }
+        [JsonProperty]
+        public SettingsBackupRateEnum SettingsBackupRate { get; set; }
+        [JsonProperty]
+        public DateTimeOffset SettingsLastBackup { get; set; }
+
+        [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
 
         [JsonProperty]

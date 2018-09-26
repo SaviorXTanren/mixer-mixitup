@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
              xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="20">
@@ -45,24 +46,35 @@
         <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Restore your settings from a zip file:</TextBlock>
         <Button x:Name="RestoreSettingsButton" Grid.Row="4" Grid.Column="2" Content="Restore Settings" Click="RestoreSettingsButton_Click" />
 
-        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Re-run the New User Wizard to re-import your data:</TextBlock>
-        <Button x:Name="ReRunWizardSettingsButton" Grid.Row="6" Grid.Column="2" Content="New User Wizard" Click="ReRunWizardSettingsButton_Click" />
+        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Automated settings backup:</TextBlock>
+        <Grid Grid.Row="6" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox x:Name="SettingsBackupRateComboBox" Grid.Column="0" Width="90" MaterialDesign:HintAssist.Hint="Backup Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="SettingsBackupRateComboBox_SelectionChanged" />
+
+            <Button x:Name="SettingsBackupLocationButton" Grid.Column="2" Content="{MaterialDesign:PackIcon Folder}" Click="SettingsBackupLocationButton_Click" />
+        </Grid>
 
         <Separator Grid.Row="8" Grid.ColumnSpan="2" Margin="10" />
 
-        <TextBlock Grid.Row="10" Grid.Column="0" x:Name="UnlockAllCommandsTextBlock" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Unlock all commands types:</TextBlock>
-        <ToggleButton Grid.Row="10" Grid.Column="2" x:Name="UnlockAllCommandsToggleButton" Checked="UnlockAllCommandsToggleButton_Checked" Unchecked="UnlockAllCommandsToggleButton_Checked" />
+        <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Re-run the New User Wizard to re-import your data:</TextBlock>
+        <Button x:Name="ReRunWizardSettingsButton" Grid.Row="10" Grid.Column="2" Content="New User Wizard" Click="ReRunWizardSettingsButton_Click" />
 
-        <TextBlock Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Un-ban all users from your channel:</TextBlock>
-        <Button x:Name="UnbanAllUsersButton" Grid.Row="12" Grid.Column="2" Content="Unban All Users" Click="UnbanAllUsersButton_Click" />
+        <TextBlock Grid.Row="12" Grid.Column="0" x:Name="UnlockAllCommandsTextBlock" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Unlock all commands types:</TextBlock>
+        <ToggleButton Grid.Row="12" Grid.Column="2" x:Name="UnlockAllCommandsToggleButton" Checked="UnlockAllCommandsToggleButton_Checked" Unchecked="UnlockAllCommandsToggleButton_Checked" />
+
+        <TextBlock Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Un-ban all users from your channel:</TextBlock>
+        <Button x:Name="UnbanAllUsersButton" Grid.Row="14" Grid.Column="2" Content="Unban All Users" Click="UnbanAllUsersButton_Click" />
         
-        <Separator Grid.Row="14" Grid.ColumnSpan="2" Margin="10" />
+        <Separator Grid.Row="16" Grid.ColumnSpan="2" Margin="10" />
 
-        <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Enable/Disable Diagnostic logging for finding issues:</TextBlock>
-        <Button x:Name="EnableDiagnosticLogsButton" Grid.Row="16" Grid.Column="2" Content="Enable Diagnostics" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
-        <Button x:Name="DisableDiagnosticLogsButton" Grid.Row="16" Grid.Column="2" Content="Disable Diagnostics" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
-
-        <Separator Grid.Row="18" Grid.ColumnSpan="2" Margin="10" />
+        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Enable/Disable Diagnostic logging for finding issues:</TextBlock>
+        <Button x:Name="EnableDiagnosticLogsButton" Grid.Row="18" Grid.Column="2" Content="Enable Diagnostics" Click="EnableDiagnosticLogsButton_Click" Visibility="Collapsed" />
+        <Button x:Name="DisableDiagnosticLogsButton" Grid.Row="18" Grid.Column="2" Content="Disable Diagnostics" Click="DisableDiagnosticLogsButton_Click" Visibility="Collapsed" />
 
         <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Clear all User data (Hours, Currency, Rank, etc):</TextBlock>
         <Button x:Name="ClearAllUserDataButton" Grid.Row="20" Grid.Column="2" Content="Clear User Data" Click="ClearAllUserDataButton_Click" />

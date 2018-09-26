@@ -142,6 +142,10 @@ namespace MixItUp.Base
         int SongRequestVolume { get; set; }
 
         string TelemetryUserId { get; set; }
+
+        string SettingsBackupLocation { get; set; }
+        SettingsBackupRateEnum SettingsBackupRate { get; set; }
+        DateTimeOffset SettingsLastBackup { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings

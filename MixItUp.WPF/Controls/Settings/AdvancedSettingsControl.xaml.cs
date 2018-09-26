@@ -1,5 +1,7 @@
 ﻿using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop;
 using MixItUp.WPF.Util;
@@ -32,9 +34,11 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
+            this.SettingsBackupRateComboBox.ItemsSource = EnumHelper.GetEnumNames<SettingsBackupRateEnum>();
             this.UnlockAllCommandsTextBlock.ToolTip = UnlockedAllTooltip;
             this.UnlockAllCommandsToggleButton.ToolTip = UnlockedAllTooltip;
 
+            this.SettingsBackupRateComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.SettingsBackupRate);
             this.UnlockAllCommandsToggleButton.IsChecked = ChannelSession.Settings.UnlockAllCommands;
             this.DisableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Visible : Visibility.Collapsed;
             this.EnableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Collapsed : Visibility.Visible;
@@ -59,21 +63,7 @@ namespace MixItUp.WPF.Controls.Settings
                 string filePath = ChannelSession.Services.FileService.ShowSaveFileDialog(ChannelSession.Settings.Channel.user.username + ".mixitup");
                 if (!string.IsNullOrEmpty(filePath))
                 {
-                    await ChannelSession.Services.Settings.Save(ChannelSession.Settings);
-
-                    DesktopChannelSettings desktopSettings = (DesktopChannelSettings)ChannelSession.Settings;
-                    string settingsFilePath = ChannelSession.Services.Settings.GetFilePath(desktopSettings);
-
-                    if (File.Exists(filePath))
-                    {
-                        File.Delete(filePath);
-                    }
-
-                    using (ZipArchive zipFile = ZipFile.Open(filePath, ZipArchiveMode.Create))
-                    {
-                        zipFile.CreateEntryFromFile(settingsFilePath, Path.GetFileName(settingsFilePath));
-                        zipFile.CreateEntryFromFile(desktopSettings.DatabasePath, Path.GetFileName(desktopSettings.DatabasePath));
-                    }
+                    await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings, filePath);
                 }
             });
         }
@@ -88,6 +78,23 @@ namespace MixItUp.WPF.Controls.Settings
                     ((MainWindow)this.Window).RestoredSettingsFilePath = filePath;
                     ((MainWindow)this.Window).Restart();
                 }
+            }
+        }
+
+        private void SettingsBackupRateComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.SettingsBackupRateComboBox.SelectedIndex >= 0)
+            {
+                ChannelSession.Settings.SettingsBackupRate = EnumHelper.GetEnumValueFromString<SettingsBackupRateEnum>((string)this.SettingsBackupRateComboBox.SelectedItem);
+            }
+        }
+
+        private void SettingsBackupLocationButton_Click(object sender, RoutedEventArgs e)
+        {
+            string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
+            if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
+            {
+                ChannelSession.Settings.SettingsBackupLocation = folderPath;
             }
         }
 
