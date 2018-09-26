@@ -121,7 +121,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(this.GameNameComboBox.Text) || (this.GameNameComboBox.SelectedIndex == -1))
+            if (string.IsNullOrWhiteSpace(this.GameNameComboBox.Text))
             {
                 await MessageBoxHelper.ShowMessageDialog("A valid & existing game name must be selected");
                 return;
