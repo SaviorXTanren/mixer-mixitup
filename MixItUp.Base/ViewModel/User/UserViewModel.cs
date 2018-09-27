@@ -102,6 +102,9 @@ namespace MixItUp.Base.ViewModel.User
         public int Sparks { get; set; }
 
         [DataMember]
+        public bool IsInChat { get; set; }
+
+        [DataMember]
         public HashSet<string> InteractiveIDs { get; set; }
 
         [DataMember]
@@ -125,11 +128,9 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(ChannelModel channel) : this(channel.id, channel.token) { }
 
-        public UserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { }
+        public UserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { this.IsInChat = true; }
 
-        public UserViewModel(ChatUserEventModel userEvent) : this(userEvent.id, userEvent.username, userEvent.roles) { }
-
-        public UserViewModel(ChatMessageEventModel messageEvent) : this(messageEvent.user_id, messageEvent.user_name, messageEvent.user_roles) { }
+        public UserViewModel(ChatMessageEventModel messageEvent) : this(messageEvent.user_id, messageEvent.user_name, messageEvent.user_roles) { this.IsInChat = true; }
 
         public UserViewModel(InteractiveParticipantModel participant) : this(participant.userID, participant.username) { this.SetInteractiveDetails(participant); }
 
@@ -321,7 +322,13 @@ namespace MixItUp.Base.ViewModel.User
             if (this.ID > 0 && chatUser != null)
             {
                 this.SetMixerRoles(chatUser.userRoles);
+                this.IsInChat = true;
             }
+        }
+
+        public void RemoveChatDetails(ChatUserModel chatUser)
+        {
+            this.IsInChat = false;
         }
 
         public void SetInteractiveDetails(InteractiveParticipantModel participant)

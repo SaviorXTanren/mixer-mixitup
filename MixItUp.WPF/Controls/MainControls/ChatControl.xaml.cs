@@ -147,7 +147,10 @@ namespace MixItUp.WPF.Controls.MainControls
             users = users.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
             foreach (UserViewModel user in users)
             {
-                this.UserControls.Add(new ChatUserControl(user));
+                if (user.IsInChat)
+                {
+                    this.UserControls.Add(new ChatUserControl(user));
+                }
             }
 
             this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
