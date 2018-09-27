@@ -204,11 +204,15 @@ namespace MixItUp.Base.Commands
 
         public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
-            await this.Perform(user, arguments, extraSpecialIdentifiers);
-            if (this.currentTaskRun != null && !this.currentTaskRun.IsCompleted)
+            try
             {
-                await this.currentTaskRun;
+                await this.Perform(user, arguments, extraSpecialIdentifiers);
+                if (this.currentTaskRun != null && !this.currentTaskRun.IsCompleted)
+                {
+                    await this.currentTaskRun;
+                }
             }
+            catch (Exception ex) { Util.Logger.Log(ex); }
         }
 
         public void StopCurrentRun()
