@@ -168,7 +168,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DesktopServicesHandler.cs" />
     <Compile Include="Services\DesktopSettingsUpgrader.cs" />
-    <Compile Include="Services\DesktopSongRequestService.cs" />
     <Compile Include="Services\DesktopTelemetryService.cs" />
     <Compile Include="Services\DiscordService.cs" />
     <Compile Include="Services\GameWispService.cs" />
@@ -176,6 +175,7 @@
     <Compile Include="Services\RemoteService.cs" />
     <Compile Include="Services\OBSService.cs" />
     <Compile Include="Services\OverlayWebServer.cs" />
+    <Compile Include="Services\SongRequestService.cs" />
     <Compile Include="Services\SpotifyService.cs" />
     <Compile Include="Services\StreamlabsOBSService.cs" />
     <Compile Include="Services\StreamDeckService.cs" />

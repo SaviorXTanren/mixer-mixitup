@@ -1,13 +1,23 @@
 ﻿using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public enum SongRequestStateEnum
+    {
+        NotStarted = 0,
+        Playing = 1,
+        Paused = 2,
+        Ended = 3,
+    }
+
     public enum SongRequestServiceTypeEnum
     {
         Spotify,
         YouTube,
+        [Obsolete]
         SoundCloud,
 
         All = 10
@@ -17,8 +27,13 @@ namespace MixItUp.Base.Services
     {
         public string ID { get; set; }
         public string Name { get; set; }
+
         public SongRequestServiceTypeEnum Type { get; set; }
         public UserViewModel User { get; set; }
+
+        public SongRequestStateEnum State { get; set; }
+        public long Progress { get; set; }
+        public long Length { get; set; }
     }
 
     public interface ISongRequestService
@@ -42,5 +57,7 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<SongRequestItem>> GetAllRequests();
         Task ClearAllRequests();
+
+        Task StatusUpdate(SongRequestItem item);
     }
 }

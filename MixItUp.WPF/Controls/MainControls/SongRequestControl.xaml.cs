@@ -3,7 +3,9 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -44,7 +46,6 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.SpotifyToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify);
             this.YouTubeToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube);
-            this.SoundCloudToggleButton.IsChecked = ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.SoundCloud);
 
             this.SpotifyAllowExplicitSongToggleButton.IsChecked = ChannelSession.Settings.SpotifyAllowExplicit;
 
@@ -59,8 +60,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                if (!this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && !this.YouTubeToggleButton.IsChecked.GetValueOrDefault() &&
-                    !this.SoundCloudToggleButton.IsChecked.GetValueOrDefault())
+                if (!this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && !this.YouTubeToggleButton.IsChecked.GetValueOrDefault())
                 {
                     await MessageBoxHelper.ShowMessageDialog("At least 1 song request service must be set");
                     this.EnableSongRequestsToggleButton.IsChecked = false;
@@ -81,17 +81,9 @@ namespace MixItUp.WPF.Controls.MainControls
                     return;
                 }
 
-                if (this.SoundCloudToggleButton.IsChecked.GetValueOrDefault() && ChannelSession.Services.OverlayServer == null)
-                {
-                    await MessageBoxHelper.ShowMessageDialog("You must enable & use the Mix It Up Overlay for SoundCloud song requests");
-                    this.EnableSongRequestsToggleButton.IsChecked = false;
-                    return;
-                }
-
                 ChannelSession.Settings.SongRequestServiceTypes.Clear();
                 if (this.SpotifyToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.Spotify); }
                 if (this.YouTubeToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.YouTube); }
-                if (this.SoundCloudToggleButton.IsChecked.GetValueOrDefault()) { ChannelSession.Settings.SongRequestServiceTypes.Add(SongRequestServiceTypeEnum.SoundCloud); }
 
                 ChannelSession.Settings.SpotifyAllowExplicit = this.SpotifyAllowExplicitSongToggleButton.IsChecked.GetValueOrDefault();
 
@@ -179,12 +171,18 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.EnableSongRequestsToggleButton.IsChecked = ChannelSession.Services.SongRequestService.IsEnabled;
             this.SongRequestServicesGrid.IsEnabled = !ChannelSession.Services.SongRequestService.IsEnabled;
+            this.DefaultPlaylistURL.IsEnabled = !ChannelSession.Services.SongRequestService.IsEnabled;
             this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
+            this.ClearQueueButton.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
 
             this.requestPlaylist.Clear();
-            foreach (SongRequestItem item in await ChannelSession.Services.SongRequestService.GetAllRequests())
+            IEnumerable<SongRequestItem> requests = await ChannelSession.Services.SongRequestService.GetAllRequests();
+            if (requests.Count() > 0)
             {
-                this.requestPlaylist.Add(item);
+                foreach (SongRequestItem item in requests.Skip(1))
+                {
+                    this.requestPlaylist.Add(item);
+                }
             }
 
             SongRequestItem song = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
@@ -198,19 +196,6 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             SongRequestControl.songListLock.Release();
-        }
-
-        private async void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            ChannelSession.Settings.SongRequestVolume = (int)this.VolumeSlider.Value;
-            this.VolumeAmountTextBlock.Text = ChannelSession.Settings.SongRequestVolume.ToString();
-            await this.Window.RunAsyncOperation(async () =>
-            {
-                if (ChannelSession.Services.SongRequestService != null)
-                {
-                    await ChannelSession.Services.SongRequestService.RefreshVolume();
-                }
-            });
         }
 
         private void DefaultPlaylistURL_TextChanged(object sender, TextChangedEventArgs e)
@@ -245,5 +230,18 @@ namespace MixItUp.WPF.Controls.MainControls
             Dispose(true);
         }
         #endregion
+
+        private async void VolumeSlider_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ChannelSession.Settings.SongRequestVolume = (int)this.VolumeSlider.Value;
+            this.VolumeAmountTextBlock.Text = ChannelSession.Settings.SongRequestVolume.ToString();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                if (ChannelSession.Services.SongRequestService != null)
+                {
+                    await ChannelSession.Services.SongRequestService.RefreshVolume();
+                }
+            });
+        }
     }
 }

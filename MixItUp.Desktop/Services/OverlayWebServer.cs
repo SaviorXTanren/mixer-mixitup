@@ -253,11 +253,17 @@ namespace MixItUp.Overlay
                 JObject packetObj = JObject.Parse(packetJSON);
                 if (packetObj["type"] != null)
                 {
-                    if (packetObj["type"].ToString().Equals("songRequestComplete"))
+                    if (packetObj["type"].ToString().Equals("songRequestStatus"))
                     {
                         if (ChannelSession.Services.SongRequestService != null)
                         {
-                            await ChannelSession.Services.SongRequestService.SkipToNextSong();
+                            SongRequestItem item = null;
+                            if (packetObj["data"] != null)
+                            {
+                                item = packetObj["data"].ToObject<SongRequestItem>();
+                            }
+
+                            await ChannelSession.Services.SongRequestService.StatusUpdate(item);
                         }
                     }
                 }

@@ -301,8 +301,6 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                await this.RefreshVolume();
-
                 JObject payload = new JObject();
                 payload["context_uri"] = playlist.Uri;
 
@@ -333,8 +331,6 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                await this.RefreshVolume();
-
                 JArray songArray = new JArray();
                 songArray.Add(uri);
                 JObject payload = new JObject();
@@ -348,12 +344,13 @@ namespace MixItUp.Desktop.Services
             return false;
         }
 
-        public Task RefreshVolume()
+        public async Task SetVolume(int volume)
         {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            this.PutAsync($"me/player/volume?volume_percent={ChannelSession.Settings.SongRequestVolume}", null);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            return Task.FromResult(0);
+            try
+            {
+                await this.PutAsync("me/player/volume?volume_percent=" + volume, null);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         protected override async Task RefreshOAuthToken()
