@@ -175,24 +175,38 @@ namespace MixItUp.WPF.Controls.MainControls
             this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
             this.ClearQueueButton.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
 
+            SongRequestItem currentSong = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+            if (currentSong != null)
+            {
+                CurrentSongName.Text = currentSong.Name;
+            }
+            else
+            {
+                CurrentSongName.Text = "None";
+            }
+
             this.requestPlaylist.Clear();
             IEnumerable<SongRequestItem> requests = await ChannelSession.Services.SongRequestService.GetAllRequests();
             if (requests.Count() > 0)
             {
+                if (!requests.First().Equals(currentSong))
+                {
+                    this.requestPlaylist.Add(requests.First());
+                }
+
                 foreach (SongRequestItem item in requests.Skip(1))
                 {
                     this.requestPlaylist.Add(item);
                 }
             }
 
-            SongRequestItem song = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
-            if (song != null)
+            if (currentSong != null && (requests.Count() == 0 || !requests.First().Equals(currentSong)))
             {
-                CurrentSongName.Text = song.Name;
+                this.SongTypeIdentifierTextBlock.Text = "Playlist Song:";
             }
             else
             {
-                CurrentSongName.Text = "None";
+                this.SongTypeIdentifierTextBlock.Text = "Current Song:";
             }
 
             SongRequestControl.songListLock.Release();

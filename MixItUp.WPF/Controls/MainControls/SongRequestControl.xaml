@@ -123,7 +123,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Current Song:</TextBlock>
+                <TextBlock Grid.Column="0" x:Name="SongTypeIdentifierTextBlock" VerticalAlignment="Center">Current Song:</TextBlock>
                 <TextBlock Grid.Column="2" x:Name="CurrentSongName" VerticalAlignment="Center">None</TextBlock>
 
                 <Button x:Name="PlayPauseButton" Grid.Column="4" Click="PlayPauseButton_Click" Content="{MaterialDesign:PackIcon PlayPause}" MaterialDesign:HintAssist.Hint="Play/Pause Playlist" />
