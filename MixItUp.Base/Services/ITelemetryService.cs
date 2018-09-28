@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Interactive;
+using MixItUp.Base.Actions;
 using System;
 
 namespace MixItUp.Base.Services
@@ -8,6 +9,7 @@ namespace MixItUp.Base.Services
         void TrackException(Exception ex);
         void TrackPageView(string pageName);
         void TrackLogin();
+        void TrackAction(ActionTypeEnum type);
         void TrackInteractiveGame(InteractiveGameModel game);
         void TrackSongRequest(SongRequestServiceTypeEnum songService);
 

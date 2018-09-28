@@ -99,6 +99,8 @@ namespace MixItUp.Base.Actions
             {
                 this.extraSpecialIdentifiers = extraSpecialIdentifiers;
 
+                ChannelSession.Services.Telemetry.TrackAction(this.Type);
+
                 await this.PerformInternal(user, arguments);
             }
             catch (Exception ex) { Util.Logger.Log(ex); }
