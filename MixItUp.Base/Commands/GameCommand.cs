@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -358,8 +359,9 @@ namespace MixItUp.Base.Commands
 
         protected int GenerateRandomNumber(int minValue, int maxValue)
         {
-            this.randomSeed -= 123;
             Random random = new Random(this.randomSeed);
+            this.randomSeed -= random.Next(100);
+            random = new Random(this.randomSeed);
             return random.Next(minValue, maxValue);
         }
 
@@ -762,6 +764,123 @@ namespace MixItUp.Base.Commands
         public VendingMachineGameCommand() { }
 
         public VendingMachineGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<GameOutcome> outcomes) : base(name, commands, requirements, outcomes) { }
+    }
+
+    #region SlotsGameOutcome
+
+    public class SlotsGameOutcome : GameOutcome
+    {
+        [DataMember]
+        public string Symbol1 { get; set; }
+        [DataMember]
+        public string Symbol2 { get; set; }
+        [DataMember]
+        public string Symbol3 { get; set; }
+
+        [DataMember]
+        public bool AnyOrder { get; set; }
+
+        public SlotsGameOutcome() { }
+
+        public SlotsGameOutcome(string name, string symbol1, string symbol2, string symbol3, Dictionary<MixerRoleEnum, double> rolePayouts, CustomCommand command, bool anyOrder)
+            : base(name, rolePayouts, new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } }, command)
+        {
+            this.Symbol1 = symbol1;
+            this.Symbol2 = symbol2;
+            this.Symbol3 = symbol3;
+            this.AnyOrder = anyOrder;
+        }
+    }
+
+    #endregion SlotsGameOutcome
+
+    [DataContract]
+    public class SlotMachineGameCommand : SinglePlayerOutcomeGameCommand
+    {
+        public const string GameSlotsOutcomeSpecialIdentifier = "gameslotsoutcome";
+
+        [DataMember]
+        public List<string> AllSymbols { get; set; }
+
+        [DataMember]
+        public CustomCommand FailureOutcomeCommand { get; set; }
+
+        private string lastOutcome = null;
+
+        public SlotMachineGameCommand() { }
+
+        public SlotMachineGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, IEnumerable<SlotsGameOutcome> outcomes, IEnumerable<string> allSymbols,
+            CustomCommand failureOutcomeCommand)
+            : base(name, commands, requirements, outcomes)
+        {
+            this.AllSymbols = new List<string>(allSymbols);
+            this.FailureOutcomeCommand = failureOutcomeCommand;
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (await this.PerformUsageChecks(user, arguments))
+            {
+                int betAmount = await this.GetBetAmount(user, this.GetBetAmountArgument(arguments));
+                if (betAmount >= 0)
+                {
+                    if (await this.PerformRequirementChecks(user) && await this.PerformCurrencyChecks(user, betAmount))
+                    {
+                        string symbol1 = this.AllSymbols[this.GenerateRandomNumber(this.AllSymbols.Count)];
+                        string symbol2 = this.AllSymbols[this.GenerateRandomNumber(this.AllSymbols.Count)];
+                        string symbol3 = this.AllSymbols[this.GenerateRandomNumber(this.AllSymbols.Count)];
+                        this.lastOutcome = symbol1 + " " + symbol2 + " " + symbol3;
+
+                        SlotsGameOutcome winningOutcome = null;
+                        foreach (GameOutcome outcome in this.Outcomes)
+                        {
+                            SlotsGameOutcome slotsOutcome = (SlotsGameOutcome)outcome;
+                            if (slotsOutcome.Symbol1.Equals(symbol1) && slotsOutcome.Symbol2.Equals(symbol2) && slotsOutcome.Symbol3.Equals(symbol3))
+                            {
+                                winningOutcome = slotsOutcome;
+                                break;
+                            }
+                            else if (slotsOutcome.AnyOrder)
+                            {
+                                if ((slotsOutcome.Symbol1.Equals(symbol2) && slotsOutcome.Symbol2.Equals(symbol1) && slotsOutcome.Symbol3.Equals(symbol3)) ||
+                                    (slotsOutcome.Symbol1.Equals(symbol3) && slotsOutcome.Symbol2.Equals(symbol1) && slotsOutcome.Symbol3.Equals(symbol2)) ||
+                                    (slotsOutcome.Symbol1.Equals(symbol1) && slotsOutcome.Symbol2.Equals(symbol3) && slotsOutcome.Symbol3.Equals(symbol2)) ||
+                                    (slotsOutcome.Symbol1.Equals(symbol2) && slotsOutcome.Symbol2.Equals(symbol3) && slotsOutcome.Symbol3.Equals(symbol1)) ||
+                                    (slotsOutcome.Symbol1.Equals(symbol3) && slotsOutcome.Symbol2.Equals(symbol2) && slotsOutcome.Symbol3.Equals(symbol1)))
+                                {
+                                    winningOutcome = slotsOutcome;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (winningOutcome != null)
+                        {
+                            await this.PerformOutcome(user, arguments, winningOutcome, betAmount);
+                        }
+                        else
+                        {
+                            await this.PerformCommand(this.FailureOutcomeCommand, user, arguments, betAmount, 0);
+                        }
+                        this.ResetData(user);
+                    }
+                }
+            }
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (!string.IsNullOrEmpty(this.lastOutcome))
+            {
+                specialIdentifiers[GameSlotsOutcomeSpecialIdentifier] = this.lastOutcome;
+            }
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.lastOutcome = null;
+            base.ResetData(user);
+        }
     }
 
     [DataContract]

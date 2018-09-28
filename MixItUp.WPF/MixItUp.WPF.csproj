@@ -389,6 +389,9 @@
     <Compile Include="Controls\Games\RussianRouletteGameEditorControl.xaml.cs">
       <DependentUpon>RussianRouletteGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\SlotMachineGameEditorControl.xaml.cs">
+      <DependentUpon>SlotMachineGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\SpinGameEditorControl.xaml.cs">
       <DependentUpon>SpinGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -895,6 +898,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\RussianRouletteGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\SlotMachineGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

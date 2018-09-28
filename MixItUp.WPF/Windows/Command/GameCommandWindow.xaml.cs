@@ -46,6 +46,7 @@ namespace MixItUp.WPF.Windows.Command
             if (this.command != null)
             {
                 if (this.command is SpinGameCommand) { this.SetGameEditorControl(new SpinGameEditorControl((SpinGameCommand)this.command)); }
+                if (this.command is SlotMachineGameCommand) { this.SetGameEditorControl(new SlotMachineGameEditorControl((SlotMachineGameCommand)this.command)); }
                 if (this.command is VendingMachineGameCommand) { this.SetGameEditorControl(new VendingMachineGameEditorControl((VendingMachineGameCommand)this.command)); }
                 if (this.command is StealGameCommand) { this.SetGameEditorControl(new StealGameEditorControl((StealGameCommand)this.command)); }
                 if (this.command is PickpocketGameCommand) { this.SetGameEditorControl(new PickpocketGameEditorControl((PickpocketGameCommand)this.command)); }
@@ -66,6 +67,9 @@ namespace MixItUp.WPF.Windows.Command
 
                 this.gameListings.Add(new GameTypeListing("Spin", "The Spin game picks a random number and selects an outcome based on that number. Besides selecting a payout for each outcome, you can also run a customized command for each outcome."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !spin 100", new SpinGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Slot Machine", "The Slot Machine game picks a random set of 3 symbols from a pre-defined list and selects any outcome that matches those symbols. Besides selecting a payout for each outcome, you can also run a customized command for each outcome."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !slots 100", new SlotMachineGameEditorControl()));
 
                 this.gameListings.Add(new GameTypeListing("Vending Machine", "The Vending Machine game picks a random number and selects an outcome based on that number. Unlike the Spin game, the Vending Machine game doesn't have a payout for each outcome and instead is more focused on an \"action\" occurring with each outcome, such as a sound effect, image, or a specialized effect."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !vend" + Environment.NewLine + Environment.NewLine + "Game Designed By: https://mixer.com/InsertCoinTheater", new VendingMachineGameEditorControl()));
