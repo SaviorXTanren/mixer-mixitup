@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Interactive;
 using Mixer.Base.Model.Interactive;
-using Mixer.Base.Model.OAuth;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -84,10 +83,15 @@ namespace MixItUp.WPF.Windows.Wizard
 
         private void BackButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
+            if (this.BotLoginPageGrid.Visibility == System.Windows.Visibility.Visible)
+            {
+                this.BotLoginPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
+            }
+            else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
             {
                 this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Collapsed;
-                this.IntroPageGrid.Visibility = System.Windows.Visibility.Visible;
+                this.BotLoginPageGrid.Visibility = System.Windows.Visibility.Visible;
             }
             else if (this.ImportScorpBotSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
             {
@@ -121,6 +125,11 @@ namespace MixItUp.WPF.Windows.Wizard
                 {
                     this.BackButton.IsEnabled = true;
                     this.IntroPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                    this.BotLoginPageGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+                else if (this.BotLoginPageGrid.Visibility == System.Windows.Visibility.Visible)
+                {
+                    this.BotLoginPageGrid.Visibility = System.Windows.Visibility.Collapsed;
                     this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Visible;
                 }
                 else if (this.ExternalServicesPageGrid.Visibility == System.Windows.Visibility.Visible)
@@ -239,6 +248,25 @@ namespace MixItUp.WPF.Windows.Wizard
                     await ChannelSession.Services.DisconnectXSplitServer();
                 });
                 await MessageBoxHelper.ShowMessageDialog("Could not connect to XSplit. Please make sure XSplit is running, the Mix It Up plugin is installed, and is running");
+            }
+        }
+
+        private async void ConnectToSLOBSButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            bool result = await this.RunAsyncOperation(async () =>
+            {
+                return await ChannelSession.Services.InitializeStreamlabsOBSService();
+            });
+
+            if (result)
+            {
+                ChannelSession.Settings.EnableStreamlabsOBSConnection = true;
+                this.SLOBSConnectedSuccessfulTextBlock.Visibility = System.Windows.Visibility.Visible;
+                this.ConnectToSLOBSButton.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                await MessageBoxHelper.ShowMessageDialog("Could not connect to Streamlabs OBS, please make sure Streamlabs OBS is running.");
             }
         }
 

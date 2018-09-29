@@ -47,28 +47,26 @@
                     <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">This wizard that will walk you through getting start with Mix It Up and getting some initial settings in place. If you wish to, you can skip this wizard by simply closing this window.</TextBlock>
                 </Grid>
 
-                <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed" Margin="20,0">
+                <Grid x:Name="BotLoginPageGrid" Visibility="Collapsed" Margin="20,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
+                        <RowDefinition Height="40" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Connect To Other Services</TextBlock>
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Connect Mixer Bot Acount</TextBlock>
 
-                    <GroupBox Grid.Row="2" Header="Mixer Bot Account" Margin="0,8">
-                        <Grid Grid.Row="2" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Row="2" Header="Mixer Bot Account">
+                        <Grid Grid.Row="2" HorizontalAlignment="Center" Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Width="400" TextWrapping="Wrap">This will allow you to log in with a Mixer account that you use as your Bot in your stream. If you do not have a Bot account, you can ignore this.</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Width="550" TextWrapping="Wrap">This will allow you to log in with a Mixer account that you use as your Bot in your stream. If you do not have a Bot account, you can create one now or you can ignore this.</TextBlock>
 
-                            <Grid Grid.Column="2" x:Name="BotLogInGrid" Visibility="Visible" HorizontalAlignment="Right">
+                            <Grid Grid.Row="2" x:Name="BotLogInGrid" Visibility="Visible" HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
@@ -76,7 +74,7 @@
                                 <Button Grid.Column="0" x:Name="BotLogInButton" Click="BotLogInButton_Click">Bot Log In</Button>
                             </Grid>
 
-                            <Grid Grid.Column="2" x:Name="BotLoggedInGrid" Visibility="Hidden" HorizontalAlignment="Right">
+                            <Grid Grid.Row="2" x:Name="BotLoggedInGrid" Visibility="Hidden" HorizontalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="10" />
@@ -92,67 +90,88 @@
                         </Grid>
                     </GroupBox>
 
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="20" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                </Grid>
 
-                        <GroupBox Grid.Column="0" Header="OBS Studio" Margin="0,8">
-                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="15" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="15" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="15" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                <Grid x:Name="ExternalServicesPageGrid" Visibility="Collapsed" Margin="20,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Row="0" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">Requires OBS 21.1 or higher</TextBlock>
-                                <TextBlock Grid.Row="1" TextWrapping="Wrap" FontWeight="Bold" HorizontalAlignment="Center">(OBS-FTL NOT supported)</TextBlock>
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Connect To A Streaming Software</TextBlock>
 
-                                <TextBlock Grid.Row="3" TextWrapping="Wrap">To connect OBS Studio, install the websocket plugin and enable it in OBS Studio under Tools > Websocket server settings.</TextBlock>
+                    <GroupBox Grid.Row="2" Header="OBS Studio (OBS 21.1 or higher, OBS-FTL NOT supported)">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                                <Button Grid.Row="5" x:Name="InstallOBSStudioPlugin" Click="InstallOBSStudioPlugin_Click" Width="120">Install Plugin</Button>
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect OBS Studio, install the websocket plugin and enable it in OBS Studio under Tools > Websocket server settings. Once done, you can connect to the OBS Studio with the default settings:</TextBlock>
 
-                                <TextBlock Grid.Row="7" TextWrapping="Wrap">Once done, you can connect to the OBS Studio with the default settings:</TextBlock>
+                            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                                <Button Grid.Row="9" x:Name="ConnectToOBSStudioButton" Click="ConnectToOBSStudioButton_Click" Width="200">Connect To OBS Studio</Button>
-                                <TextBlock Grid.Row="9" x:Name="OBSStudioConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
+                                <Button Grid.Column="0" x:Name="InstallOBSStudioPlugin" Click="InstallOBSStudioPlugin_Click" Width="120">Install Plugin</Button>
 
+                                <Button Grid.Column="2" x:Name="ConnectToOBSStudioButton" Click="ConnectToOBSStudioButton_Click" Width="200">Connect To OBS Studio</Button>
+                                <TextBlock Grid.Column="2" x:Name="OBSStudioConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
                             </Grid>
-                        </GroupBox>
 
-                        <GroupBox Grid.Column="2" Header="XSplit" Margin="0,8">
-                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="20" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="20" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="20" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                        </Grid>
+                    </GroupBox>
 
-                                <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect to XSplit, you must install the Mix It Up extension. Navigate to "Extensions" -> "Add custom extension" in XSplit and select the following file:</TextBlock>
+                    <GroupBox Grid.Row="4" Header="XSplit">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                                <TextBox Grid.Row="2" x:Name="XSplitExtensionPathTextBox" IsReadOnly="True" MaterialDesign:HintAssist.Hint="XSplit Mix It Up Extension" Style="{StaticResource MaterialDesignFloatingHintTextBox}"></TextBox>
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap">In XSplit, navigate to "Extensions" -> "Add custom extension" in XSplit and select the file path listed below. Start the extension by selecting it from the Extensions menu, then you can connect to XSplit:</TextBlock>
 
-                                <TextBlock Grid.Row="4" TextWrapping="Wrap">Start the extension by selecting it from the Extensions menu, then you can connect to XSplit:</TextBlock>
+                            <Grid Grid.Row="2" Margin="10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                                <Button Grid.Row="6" x:Name="ConnectToXSplitButton" Click="ConnectToXSplitButton_Click" Width="200">Connect To XSplit</Button>
-                                <TextBlock Grid.Row="6" x:Name="XSplitConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
+                                <TextBox Grid.Column="0" x:Name="XSplitExtensionPathTextBox" IsReadOnly="True" MaterialDesign:HintAssist.Hint="XSplit Mix It Up Extension" Style="{StaticResource MaterialDesignFloatingHintTextBox}"></TextBox>
 
+                                <Button Grid.Column="2" x:Name="ConnectToXSplitButton" Click="ConnectToXSplitButton_Click" Width="200">Connect To XSplit</Button>
+                                <TextBlock Grid.Column="2" x:Name="XSplitConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
                             </Grid>
-                        </GroupBox>
-                    </Grid>
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Grid.Row="6" Header="Streamlabs OBS">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" TextWrapping="Wrap">To connect to Streamlabs OBS, click the button below to enable connection:</TextBlock>
+
+                            <Button Grid.Row="2" x:Name="ConnectToSLOBSButton" Click="ConnectToSLOBSButton_Click" Width="200">Connect To SLOBS</Button>
+                            <TextBlock Grid.Row="2" x:Name="SLOBSConnectedSuccessfulTextBlock" Visibility="Collapsed" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">Connection Successful!</TextBlock>
+
+                        </Grid>
+                    </GroupBox>
 
                 </Grid>
 
