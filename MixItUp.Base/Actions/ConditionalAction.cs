@@ -24,6 +24,10 @@ namespace MixItUp.Base.Actions
         LessThan,
         [Name("<=")]
         LessThanOrEqual,
+        [Name("Contains")]
+        Contains,
+        [Name("<> Contain")]
+        DoesNotContain
     }
 
     [DataContract]
@@ -66,38 +70,47 @@ namespace MixItUp.Base.Actions
             string v1 = await this.ReplaceStringWithSpecialModifiers(this.Value1, user, arguments);
             string v2 = await this.ReplaceStringWithSpecialModifiers(this.Value2, user, arguments);
 
-            int compareResult = 0;
-            if (double.TryParse(v1, out double v1num) && double.TryParse(v2, out double v2num))
+            bool result = false;
+            if (this.ComparisionType == ConditionalComparisionTypeEnum.Contains || this.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain)
             {
-                if (v1num < v2num)
-                {
-                    compareResult = -1;
-                }
-                else if (v1num > v2num)
-                {
-                    compareResult = 1;
-                }
+                bool contains = v1.Contains(v2);
+                result = ((this.ComparisionType == ConditionalComparisionTypeEnum.Contains && contains) ||
+                    (this.ComparisionType == ConditionalComparisionTypeEnum.DoesNotContain && !contains));
             }
             else
             {
-                compareResult = string.Compare(v1, v2, this.IgnoreCase);
-            }
+                int compareResult = 0;
+                if (double.TryParse(v1, out double v1num) && double.TryParse(v2, out double v2num))
+                {
+                    if (v1num < v2num)
+                    {
+                        compareResult = -1;
+                    }
+                    else if (v1num > v2num)
+                    {
+                        compareResult = 1;
+                    }
+                }
+                else
+                {
+                    compareResult = string.Compare(v1, v2, this.IgnoreCase);
+                }
 
-            bool result = false;
-            if (compareResult == 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.Equals || this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThanOrEqual ||
-                this.ComparisionType == ConditionalComparisionTypeEnum.LessThanOrEqual))
-            {
-                result = true;
-            }
-            else if (compareResult < 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || this.ComparisionType == ConditionalComparisionTypeEnum.LessThan ||
-                this.ComparisionType == ConditionalComparisionTypeEnum.LessThanOrEqual))
-            {
-                result = true;
-            }
-            if (compareResult > 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThan ||
-                this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThan))
-            {
-                result = true;
+                if (compareResult == 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.Equals || this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThanOrEqual ||
+                    this.ComparisionType == ConditionalComparisionTypeEnum.LessThanOrEqual))
+                {
+                    result = true;
+                }
+                else if (compareResult < 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || this.ComparisionType == ConditionalComparisionTypeEnum.LessThan ||
+                    this.ComparisionType == ConditionalComparisionTypeEnum.LessThanOrEqual))
+                {
+                    result = true;
+                }
+                else if (compareResult > 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThan ||
+                    this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThan))
+                {
+                    result = true;
+                }
             }
 
             if (result)
