@@ -54,6 +54,8 @@ namespace MixItUp.Base.Util
         public const string DonationMessageSpecialIdentifier = "donationmessage";
         public const string DonationImageSpecialIdentifier = "donationimage";
 
+        public const string UnicodeSpecialIdentifierHeader = "unicode";
+
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 
@@ -428,42 +430,22 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
                 {
-                    int startIndex = 0;
-                    do
+                    this.ReplaceNumberBasedSpecialIdentifier(RandomNumberSpecialIdentifier, (maxNumber) =>
                     {
-                        startIndex = this.GetFirstInstanceOfSpecialIdentifier(RandomNumberSpecialIdentifier, startIndex);
-                        if (startIndex >= 0)
-                        {
-                            int endIndex = 0;
-                            for (endIndex = startIndex + RandomNumberSpecialIdentifier.Length + 1; endIndex < this.text.Length; endIndex++)
-                            {
-                                if (!char.IsDigit(this.text[endIndex]))
-                                {
-                                    break;
-                                }
-                            }
-
-                            if (endIndex <= this.text.Length)
-                            {
-                                string randomSI = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
-                                if (int.TryParse(randomSI.Replace(RandomNumberSpecialIdentifier, ""), out int randomNumberMax) && randomNumberMax > 0)
-                                {
-                                    Random random = new Random();
-                                    int randomNumber = (random.Next() % randomNumberMax) + 1;
-                                    this.ReplaceSpecialIdentifier(randomSI, randomNumber.ToString());
-                                }
-                                else
-                                {
-                                    startIndex = endIndex;
-                                }
-                            }
-                            else
-                            {
-                                startIndex = endIndex;
-                            }
-                        }
-                    } while (startIndex > 0);
+                        Random random = new Random();
+                        int number = (random.Next() % maxNumber) + 1;
+                        return number.ToString();
+                    });
                 }
+            }
+
+            if (this.ContainsSpecialIdentifier(UnicodeSpecialIdentifierHeader))
+            {
+                this.ReplaceNumberBasedSpecialIdentifier(UnicodeSpecialIdentifierHeader, (number) =>
+                {
+                    char uChar = (char)number;
+                    return uChar.ToString();
+                });
             }
         }
 
@@ -551,6 +533,43 @@ namespace MixItUp.Base.Util
                 return new UserViewModel(argUserModel);
             }
             return null;
+        }
+
+        private void ReplaceNumberBasedSpecialIdentifier(string header, Func<int, string> replacer)
+        {
+            int startIndex = 0;
+            do
+            {
+                startIndex = this.GetFirstInstanceOfSpecialIdentifier(header, startIndex);
+                if (startIndex >= 0)
+                {
+                    int endIndex = 0;
+                    for (endIndex = startIndex + header.Length + 1; endIndex < this.text.Length; endIndex++)
+                    {
+                        if (!char.IsDigit(this.text[endIndex]))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (endIndex <= this.text.Length)
+                    {
+                        string specialIdentifier = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
+                        if (int.TryParse(specialIdentifier.Replace(header, ""), out int number) && number > 0)
+                        {
+                            this.ReplaceSpecialIdentifier(specialIdentifier, replacer(number));
+                        }
+                        else
+                        {
+                            startIndex = endIndex;
+                        }
+                    }
+                    else
+                    {
+                        startIndex = endIndex;
+                    }
+                }
+            } while (startIndex > 0);
         }
     }
 }
