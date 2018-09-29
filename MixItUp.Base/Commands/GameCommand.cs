@@ -1,5 +1,4 @@
-﻿using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -736,11 +735,6 @@ namespace MixItUp.Base.Commands
         protected abstract Task<bool> ShouldPerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount);
 
         protected abstract Task PerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount);
-
-        protected override void ResetData(UserViewModel user)
-        {
-            base.ResetData(user);
-        }
 
         protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
         {
@@ -1868,6 +1862,191 @@ namespace MixItUp.Base.Commands
             user.Data.AddCurrencyAmount(currency, payout);
 
             await this.PerformCommand(command, user, arguments, betAmount, payout);
+        }
+    }
+
+    [DataContract]
+    public class LockBoxGameCommand : LongRunningGameCommand
+    {
+        public const string GameHitmanHintSpecialIdentifier = "gamelockboxhint";
+        public const string GameHitmanInspectionSpecialIdentifier = "gamelockboxinspection";
+
+        [DataMember]
+        public CustomCommand StatusCommand { get; set; }
+
+        [DataMember]
+        public int CombinationLength { get; set; }
+
+        [DataMember]
+        public int InitialAmount { get; set; }
+
+        [DataMember]
+        public CustomCommand SuccessfulGuessCommand { get; set; }
+        [DataMember]
+        public CustomCommand FailedGuessCommand { get; set; }
+
+        [DataMember]
+        public string InspectionArgument { get; set; }
+        [DataMember]
+        public int InspectionCost { get; set; }
+        [DataMember]
+        public CustomCommand InspectionCommand { get; set; }
+
+        [DataMember]
+        public string CurrentCombination { get; set; }
+
+        private string lastHint = null;
+        private string lastInspection = null;
+
+        public LockBoxGameCommand() { }
+
+        public LockBoxGameCommand(string name, IEnumerable<string> commands, RequirementViewModel requirements, string statusArgument, CustomCommand statusCommand, int combinationLength,
+            int initialAmount, CustomCommand successfulGuessCommand, CustomCommand failedGuessCommand, string inspectionArgument, int inspectionCost, CustomCommand inspectionCommand)
+            : base(name, commands, requirements, statusArgument)
+        {
+            this.StatusCommand = statusCommand;
+            this.CombinationLength = combinationLength;
+            this.InitialAmount = initialAmount;
+            this.SuccessfulGuessCommand = successfulGuessCommand;
+            this.FailedGuessCommand = failedGuessCommand;
+            this.InspectionArgument = inspectionArgument;
+            this.InspectionCost = inspectionCost;
+            this.InspectionCommand = inspectionCommand;
+
+            this.ResetCombination();
+        }
+
+        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        {
+            if (arguments.Count() == 1 && arguments.ElementAt(0).Equals(this.InspectionArgument))
+            {
+                if (await this.PerformNonCooldownRequirementChecks(user))
+                {
+                    if (this.Requirements.Currency != null && this.Requirements.Currency.GetCurrency() != null)
+                    {
+                        UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+                        if (!user.Data.HasCurrencyAmount(currency, this.InspectionCost))
+                        {
+                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", this.InspectionCost, currency.Name));
+                            return;
+                        }
+
+                        await this.ReportInspection(user, arguments);
+                    }
+                }
+            }
+            else
+            {
+                await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            }
+        }
+
+        protected override async Task<bool> PerformUsageChecks(UserViewModel user, IEnumerable<string> arguments)
+        {
+            if (arguments.Count() != 1)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("USAGE: !{0} <GUESS> -or- !{0} {1} -or- !{0} {2}", this.Commands.First(), this.StatusArgument, this.InspectionArgument));
+                return false;
+            }
+
+            if (!int.TryParse(arguments.ElementAt(0), out int guess) || guess < 0)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("The guess must a valid combination of the digits 0 - 9", this.CombinationLength));
+                return false;
+            }
+
+            if (arguments.ElementAt(0).Length != this.CombinationLength)
+            {
+                await ChannelSession.Chat.Whisper(user.UserName, string.Format("The guess must be exactly {0} numbers", this.CombinationLength));
+                return false;
+            }
+
+            return true;
+        }
+
+        protected override async Task ReportStatus(UserViewModel user, IEnumerable<string> arguments)
+        {
+            await this.PerformCommand(this.StatusCommand, user, arguments, 0, 0);
+        }
+
+        protected override async Task<bool> ShouldPerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            if (arguments.Count() == 1 && this.CurrentCombination.Equals(arguments.ElementAt(0)))
+            {
+                return true;
+            }
+
+            int guess = int.Parse(arguments.ElementAt(0));
+            int combo = int.Parse(this.CurrentCombination);
+
+            if (guess < combo)
+            {
+                this.lastHint = "low";
+            }
+            else if (guess > combo)
+            {
+                this.lastHint = "high";
+            }
+
+            await this.PerformCommand(this.FailedGuessCommand, user, arguments, betAmount, 0);
+
+            return false;
+        }
+
+        protected override async Task PerformPayout(UserViewModel user, IEnumerable<string> arguments, int betAmount)
+        {
+            this.totalPayout = this.TotalAmount;
+
+            UserCurrencyViewModel currency = this.Requirements.Currency.GetCurrency();
+            if (currency == null)
+            {
+                return;
+            }
+            user.Data.AddCurrencyAmount(currency, this.totalPayout);
+
+            await this.PerformCommand(this.SuccessfulGuessCommand, user, arguments, betAmount, this.totalPayout);
+
+            this.ResetData(user);
+        }
+
+        protected override void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers)
+        {
+            if (!string.IsNullOrEmpty(this.lastHint))
+            {
+                specialIdentifiers[GameHitmanHintSpecialIdentifier] = this.lastHint;
+            }
+
+            if (!string.IsNullOrEmpty(this.lastInspection))
+            {
+                specialIdentifiers[GameHitmanInspectionSpecialIdentifier] = this.lastInspection;
+            }
+
+            base.AddAdditionalSpecialIdentifiers(user, arguments, specialIdentifiers);
+        }
+
+        protected override void ResetData(UserViewModel user)
+        {
+            this.ResetCombination();
+            base.ResetData(user);
+        }
+
+        private async Task ReportInspection(UserViewModel user, IEnumerable<string> arguments)
+        {
+            this.TotalAmount += this.InspectionCost;
+            int index = this.GenerateRandomNumber(this.CurrentCombination.Length);
+            this.lastInspection = this.CurrentCombination.ElementAt(index).ToString();
+            await this.PerformCommand(this.InspectionCommand, user, arguments, 0, 0);
+        }
+
+        private void ResetCombination()
+        {
+            this.TotalAmount = this.InitialAmount;
+
+            this.CurrentCombination = string.Empty;
+            for (int i = 0; i < this.CombinationLength; i++)
+            {
+                this.CurrentCombination += this.GenerateRandomNumber(10).ToString();
+            }
         }
     }
 }

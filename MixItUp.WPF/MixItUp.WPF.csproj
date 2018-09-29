@@ -380,6 +380,9 @@
     <Compile Include="Controls\Games\HitmanGameEditorControl.xaml.cs">
       <DependentUpon>HitmanGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\LockBoxGameEditorControl.xaml.cs">
+      <DependentUpon>LockBoxGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\PickpocketGameEditorControl.xaml.cs">
       <DependentUpon>PickpocketGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -886,6 +889,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\HitmanGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\LockBoxGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

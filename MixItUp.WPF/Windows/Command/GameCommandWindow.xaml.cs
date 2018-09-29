@@ -58,6 +58,7 @@ namespace MixItUp.WPF.Windows.Command
                 if (this.command is HitmanGameCommand) { this.SetGameEditorControl(new HitmanGameEditorControl((HitmanGameCommand)this.command)); }
                 if (this.command is CoinPusherGameCommand) { this.SetGameEditorControl(new CoinPusherGameEditorControl((CoinPusherGameCommand)this.command)); }
                 if (this.command is VolcanoGameCommand) { this.SetGameEditorControl(new VolcanoGameEditorControl((VolcanoGameCommand)this.command)); }
+                if (this.command is LockBoxGameCommand) { this.SetGameEditorControl(new LockBoxGameEditorControl((LockBoxGameCommand)this.command)); }
             }
             else
             {
@@ -104,6 +105,10 @@ namespace MixItUp.WPF.Windows.Command
                 this.gameListings.Add(new GameTypeListing("Volcano", "The Volcano game allows a user to deposit a specific amount of currency into a volcano with the chance for a personal payout and a payout for all users in chat. The volcano goes through 3 stages as more and more currency is deposited into it and a different set of Deposit & Status commands are used depending on what stage the Volcano is at." + Environment.NewLine + Environment.NewLine +
                     "Once the volcano reaches stage 3, each subsequent deposit has a chance to trigger an eruption. When an eruption occurs, the user who triggered it gets a specialized payout for them. After the eruption, all users have a chance to collect erupted currency during the collection time limit. After the collection is done, the volcano contents resets back to 0."
                     + Environment.NewLine + Environment.NewLine + "\tEX: !volcano 100" + Environment.NewLine + Environment.NewLine + "Game Designed By: https://mixer.com/InsertCoinTheater", new VolcanoGameEditorControl()));
+
+                this.gameListings.Add(new GameTypeListing("Lock Box", "The Lock Box game allows you to guess the combination of a locked box using the numbers 0 - 9 that contains a large amount of currency. Every failed guess puts the required currency amount into the box and gives a hint to the combination, while a correct guess gets all the currency inside." + Environment.NewLine + Environment.NewLine +
+                    "Users have the ability to see the status of the lock box to see how much is in it and inspect the lock box for a hint as to the combination."
+                    + Environment.NewLine + Environment.NewLine + "\tEX: !lockbox 100", new LockBoxGameEditorControl()));
             }
 
             return Task.FromResult(0);
