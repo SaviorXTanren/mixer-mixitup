@@ -42,20 +42,23 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
-            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyActionTypeComboBox.SelectedIndex >= 0 && !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text))
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyActionTypeComboBox.SelectedIndex >= 0)
             {
                 UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
                 CurrencyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<CurrencyActionTypeEnum>((string)this.CurrencyActionTypeComboBox.SelectedItem);
-                
-                if (actionType == CurrencyActionTypeEnum.AddToSpecificUser)
-                {
-                    if (string.IsNullOrEmpty(this.CurrencyUsernameTextBox.Text))
-                    {
-                        return null;
-                    }
-                }
 
-                return new CurrencyAction(currency, actionType, this.CurrencyAmountTextBox.Text, this.CurrencyUsernameTextBox.Text, this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
+                if (actionType == CurrencyActionTypeEnum.Reset || !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text))
+                {
+                    if (actionType == CurrencyActionTypeEnum.AddToSpecificUser)
+                    {
+                        if (string.IsNullOrEmpty(this.CurrencyUsernameTextBox.Text))
+                        {
+                            return null;
+                        }
+                    }
+
+                    return new CurrencyAction(currency, actionType, this.CurrencyAmountTextBox.Text, this.CurrencyUsernameTextBox.Text, this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
+                }
             }
             return null;
         }
@@ -83,6 +86,8 @@ namespace MixItUp.WPF.Controls.Actions
 
                 this.DeductFromUserTextBlock.IsEnabled = this.DeductFromUserToggleButton.IsEnabled =
                     (actionType == CurrencyActionTypeEnum.AddToSpecificUser || actionType == CurrencyActionTypeEnum.AddToAllChatUsers) ? true : false;
+
+                this.CurrencyAmountTextBox.IsEnabled = (actionType != CurrencyActionTypeEnum.Reset);
             }
         }
     }
