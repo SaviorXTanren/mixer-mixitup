@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Themes;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -94,23 +95,63 @@ namespace MixItUp.WPF.Controls.Chat
             }
 
             this.UpdateSizing();
+
+            if (!string.IsNullOrEmpty(this.Message.ModerationReason))
+            {
+                this.DeleteMessage();
+            }
         }
 
-        public void DeleteMessage(string reason = null)
+        public void DeleteMessage(string deletedBy = null)
         {
             this.Dispatcher.Invoke(() =>
             {
+                TextBlock textBlock = new TextBlock();
+                textBlock.VerticalAlignment = VerticalAlignment.Center;
+
                 this.messageHeader.DeleteMessage();
-                if (!string.IsNullOrEmpty(reason))
+
+                if (!string.IsNullOrEmpty(deletedBy))
                 {
-                    this.Message.AddToMessage(" (Auto-Moderated: " + reason + ")");
-                    this.DataContext = null;
-                    this.DataContext = this.Message;
+                    string text = " (Deleted By: " + deletedBy + ")";
+                    textBlock.Text += text;
+                    this.Message.AddToMessage(text);
+                    this.Message.DeletedBy = deletedBy;
                 }
-                this.Message.IsDeleted = true;
-                foreach (TextBlock textBlock in this.textBlocks)
+
+                if (this.Message.IsAlertMessage)
                 {
-                    textBlock.TextDecorations = TextDecorations.Strikethrough;
+                    textBlock.FontWeight = FontWeights.Bold;
+                    if (!string.IsNullOrEmpty(this.Message.AlertMessageBrush) && !this.Message.AlertMessageBrush.Equals(ColorSchemes.DefaultColorScheme))
+                    {
+                        textBlock.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom(this.Message.AlertMessageBrush));
+                    }
+                    else
+                    {
+                        textBlock.Foreground = (App.AppSettings.IsDarkColoring) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
+                    }
+                }
+
+                this.Message.IsDeleted = true;
+                foreach (TextBlock tb in this.textBlocks)
+                {
+                    tb.TextDecorations = TextDecorations.Strikethrough;
+                }
+
+                this.textBlocks.Add(textBlock);
+                this.MessageWrapPanel.Children.Add(textBlock);
+
+                if (!string.IsNullOrEmpty(this.Message.ModerationReason))
+                {
+                    textBlock = new TextBlock();
+                    textBlock.VerticalAlignment = VerticalAlignment.Center;
+
+                    string text = " (Auto-Moderated: " + this.Message.ModerationReason + ")";
+                    textBlock.Text += text;
+                    this.Message.AddToMessage(text);
+
+                    this.textBlocks.Add(textBlock);
+                    this.MessageWrapPanel.Children.Add(textBlock);
                 }
             });
         }

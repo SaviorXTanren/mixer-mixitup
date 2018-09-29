@@ -40,6 +40,10 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsDeleted { get; set; }
 
+        public string DeletedBy { get; set; }
+
+        public string ModerationReason { get; set; }
+
         public ChatMessageEventModel ChatMessageEvent { get; private set; }
 
         public List<ChatMessageDataModel> MessageComponents = new List<ChatMessageDataModel>();

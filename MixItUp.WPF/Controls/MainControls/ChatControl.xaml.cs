@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Model.Chat;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
@@ -453,34 +454,34 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
+        private async void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel deleteEvent)
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
                 await this.messageUpdateLock.WaitAsync();
 
-                ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(messageID));
+                ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
                 if (message != null)
                 {
-                    message.DeleteMessage();
+                    message.DeleteMessage(deleteEvent.moderator?.user_name);
                 }
 
                 this.messageUpdateLock.Release();
             });
         }
 
-        private async void ChatClient_OnUserPurgeOccurred(object sender, UserViewModel user)
+        private async void ChatClient_OnUserPurgeOccurred(object sender, Tuple<UserViewModel, string> purgeEvent)
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
                 await this.messageUpdateLock.WaitAsync();
 
-                IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(user.ID));
+                IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(purgeEvent.Item1.ID));
                 if (userMessages != null)
                 {
                     foreach (ChatMessageControl message in userMessages)
                     {
-                        message.DeleteMessage();
+                        message.DeleteMessage(purgeEvent.Item2);
                     }
                 }
 

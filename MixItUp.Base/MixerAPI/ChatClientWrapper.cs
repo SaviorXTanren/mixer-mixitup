@@ -21,13 +21,13 @@ namespace MixItUp.Base.MixerAPI
         private Dictionary<uint, int> whisperMap = new Dictionary<uint, int>();
 
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
-        public event EventHandler<Guid> OnDeleteMessageOccurred = delegate { };
+        public event EventHandler<ChatDeleteMessageEventModel> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
 
         public event EventHandler<UserViewModel> OnUserJoinOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserUpdateOccurred = delegate { };
         public event EventHandler<UserViewModel> OnUserLeaveOccurred = delegate { };
-        public event EventHandler<UserViewModel> OnUserPurgeOccurred = delegate { };
+        public event EventHandler<Tuple<UserViewModel, string>> OnUserPurgeOccurred = delegate { };
 
         public Dictionary<Guid, ChatMessageViewModel> Messages { get; private set; }
 
@@ -352,6 +352,8 @@ namespace MixItUp.Base.MixerAPI
             string moderationReason = await message.ShouldBeModerated();
             if (!string.IsNullOrEmpty(moderationReason))
             {
+                message.ModerationReason = moderationReason;
+
                 await this.DeleteMessage(message.ID);
 
                 await ModerationHelper.SendModerationWhisper(user, moderationReason);
@@ -577,11 +579,9 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        private async void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
+        private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
-            await this.DeleteMessage(e.id);
-
-            this.OnDeleteMessageOccurred(sender, e.id);
+            this.OnDeleteMessageOccurred(sender, e);
         }
 
         private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
@@ -589,7 +589,7 @@ namespace MixItUp.Base.MixerAPI
             UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(e.user_id);
             if (user != null)
             {
-                this.OnUserPurgeOccurred(sender, user);
+                this.OnUserPurgeOccurred(sender, new Tuple<UserViewModel, string>(user, e.moderator?.user_name));
 
                 if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserPurge)))
                 {
