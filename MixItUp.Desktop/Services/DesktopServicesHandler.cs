@@ -26,6 +26,7 @@ namespace MixItUp.Desktop.Services
             this.TextToSpeechService = new WindowsTextToSpeechService();
             this.SongRequestService = new SongRequestService();
             this.TranslationService = new TranslationService();
+            this.SerialService = new SerialService();
         }
 
         public override async Task Close()

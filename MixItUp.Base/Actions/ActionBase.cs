@@ -58,6 +58,7 @@ namespace MixItUp.Base.Actions
         [Name("Mixer Clips")]
         MixerClips,
         Command,
+        Serial,
 
         Custom = 99,
     }
