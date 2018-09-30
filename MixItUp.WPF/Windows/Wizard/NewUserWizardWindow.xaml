@@ -235,7 +235,7 @@
                         <TextBlock Margin="0,20,0,0" TextWrapping="Wrap">NOTE: Streamlabs Chat Bot does not export its settings, only the data. This means that you will still need to set up certain things afterwards. This includes, but is not limited to:</TextBlock>
                         <TextBlock Margin="20,10,0,0">- Timer Frequency</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Counters</TextBlock>
-                        <TextBlock Margin="20,0,0,0">- Currency/Rank Rates</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Currency/Rank Name, Rates, &amp; Bonuses</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Moderation Rules</TextBlock>
 
                         <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, click on the person icon in the bottom-left corner of Streamlabs Chat Bot, then select the Cloud option. Pick a folder for the Cloud Service Folder option, click Save Settings, then click Create Excel Files. Navigate to the folder you just selected by clicking the Browse button below this and select the file Data.xlsx. You can also skip this by clicking Next:</TextBlock>

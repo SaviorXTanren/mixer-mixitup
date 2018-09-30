@@ -73,16 +73,31 @@ namespace MixItUp.Base.Util
             text = text.Replace("$user", "@$username");
             text = text.Replace("$url", "$userurl");
             text = text.Replace("$hours", "$userhours");
+            text = text.Replace("$game", "$usergame");
 
-            text = text.Replace("$target", "@$arg1username");
             for (int i = 1; i < 10; i++)
             {
                 text = text.Replace("$target" + i, "@$arg" + i + "username");
             }
+            text = text.Replace("$target", "@$targetusername");
 
             text = text.Replace("$randuser", "@$randomusername");
 
             text = text.Replace("$msg", "$allargs");
+
+            text = text.Replace("$mygame", "$streamerusergame");
+            text = text.Replace("$title", "$streamtitle");
+            text = text.Replace("$status", "$streamtitle");
+
+            if (text.Contains("$randnum("))
+            {
+                text = ReplaceParameterVariablesEntries(text, "$randnum(", "$randomnumber");
+            }
+
+            if (text.Contains("$tophours("))
+            {
+                text = ReplaceParameterVariablesEntries(text, "$tophours(", "$top", "time");
+            }
 
             return text;
         }
@@ -107,21 +122,22 @@ namespace MixItUp.Base.Util
                 text = text.Replace("$num" + i, "$arg" + i + "text");
             }
 
-            text = text.Replace("$randnum", "$randomnumber");
-
             text = text.Replace("$points", "$userpoints");
             text = text.Replace("$pointstext", "$userpoints");
 
+            if (text.Contains("$randnum("))
+            {
+                text = ReplaceParameterVariablesEntries(text, "$randnum(", "$randomnumber");
+            }
+
             if (text.Contains("$toppoints("))
             {
-                text = text.Replace("$toppoints(", "$top");
-                text = text.Replace(")", "points");
+                text = ReplaceParameterVariablesEntries(text, "$toppoints(", "$top", "points");
             }
 
             if (text.Contains("$tophours("))
             {
-                text = text.Replace("$tophours(", "$top");
-                text = text.Replace(")", "time");
+                text = ReplaceParameterVariablesEntries(text, "$tophours(", "$top", "time");
             }
 
             text = text.Replace("$rank", "$userrankname");
@@ -181,6 +197,26 @@ namespace MixItUp.Base.Util
         }
 
         public static void ClearRandomUserSpecialIdentifierGroup(Guid id) { SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups.Remove(id); }
+
+        public static string ReplaceParameterVariablesEntries(string text, string pattern, string preReplacement, string postReplacement = null)
+        {
+            int startIndex = 0;
+            do
+            {
+                startIndex = text.IndexOf(pattern);
+                if (startIndex >= 0)
+                {
+                    int endIndex = text.IndexOf(")", startIndex);
+                    if (endIndex >= 0)
+                    {
+                        string fullEntry = text.Substring(startIndex, endIndex - startIndex + 1);
+                        string leftOver = fullEntry.Replace(pattern, "").Replace(")", "");
+                        text = text.Replace(fullEntry, preReplacement + leftOver + (!string.IsNullOrEmpty(postReplacement) ? postReplacement : string.Empty));
+                    }
+                }
+            } while (startIndex >= 0);
+            return text;
+        }
 
         private string text;
         private Guid randomUserSpecialIdentifierGroupID;
