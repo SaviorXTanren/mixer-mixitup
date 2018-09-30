@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Import;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -133,6 +133,12 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
+        {
+            this.ViewingMinutes = (int)(viewer.Hours * 60.0);
+        }
+
+        public UserDataViewModel(StreamlabsChatBotViewer viewer)
+            : this(viewer.ID, viewer.Name)
         {
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }

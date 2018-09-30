@@ -184,7 +184,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">ScorpBot Settings</TextBlock>
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import ScorpBot Data</TextBlock>
                     
                     <StackPanel Grid.Row="2" Width="675">
                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,20">If you previously used ScorpBot, we can import several things from your settings to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
@@ -209,6 +209,48 @@
                         <TextBox Grid.Row="2" x:Name="ScorpBotDirectoryTextBox" MaterialDesign:HintAssist.Hint="ScorpBot Installation Directory" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <Button Grid.Column="2" Grid.Row="0" x:Name="ScorpBotDirectoryBrowseButton" Click="ScorpBotDirectoryBrowseButton_Click">Browse</Button>
+                    </Grid>
+                </Grid>
+
+                <Grid x:Name="ImportStreamlabsChatBotSettingsPageGrid" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Streamlabs Chat Bot Data</TextBlock>
+
+                    <StackPanel Grid.Row="2" Width="675">
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">If you previously used Streamlabs Chat Bot, we can import several things from your data to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
+
+                        <TextBlock Margin="20,10,0,0">- Chat Commands</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Timers</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Quotes</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- User Join Events</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Viewer Data (Currency, Rank, &amp; Hours)</TextBlock>
+
+                        <TextBlock Margin="0,20,0,0" TextWrapping="Wrap">NOTE: Streamlabs Chat Bot does not export its settings, only the data. This means that you will still need to set up certain things afterwards. This includes, but is not limited to:</TextBlock>
+                        <TextBlock Margin="20,10,0,0">- Timer Frequency</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Counters</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Currency/Rank Rates</TextBlock>
+                        <TextBlock Margin="20,0,0,0">- Moderation Rules</TextBlock>
+
+                        <TextBlock TextWrapping="Wrap" Margin="0,20,0,0">To get started, click on the person icon in the bottom-left corner of Streamlabs Chat Bot, then select the Cloud option. Pick a folder for the Cloud Service Folder option, click Save Settings, then click Create Excel Files. Navigate to the folder you just selected by clicking the Browse button below this and select the file Data.xlsx. You can also skip this by clicking Next:</TextBlock>
+                    </StackPanel>
+
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Row="2" x:Name="StreamlabsChatBotDataFilePathTextBox" MaterialDesign:HintAssist.Hint="Streamlabs Chat Bot Data File" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                        <Button Grid.Column="2" Grid.Row="0" x:Name="StreamlabsChatBotDataFileBrowseButton" Click="StreamlabsChatBotDataFileBrowseButton_Click">Browse</Button>
                     </Grid>
                 </Grid>
 

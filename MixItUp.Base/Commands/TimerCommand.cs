@@ -1,5 +1,5 @@
 ﻿using MixItUp.Base.Actions;
-using MixItUp.Base.ViewModel.Import;
+using MixItUp.Base.Model.Import;
 using System.Threading;
 
 namespace MixItUp.Base.Commands
@@ -18,6 +18,13 @@ namespace MixItUp.Base.Commands
             : this(timer.Name)
         {
             this.Actions.Add(new ChatAction(timer.Text));
+            this.IsEnabled = timer.Enabled;
+        }
+
+        public TimerCommand(StreamlabsChatBotTimer timer)
+            : this(timer.Name)
+        {
+            this.Actions.AddRange(timer.Actions);
             this.IsEnabled = timer.Enabled;
         }
 

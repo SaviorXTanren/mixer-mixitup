@@ -87,6 +87,59 @@ namespace MixItUp.Base.Util
             return text;
         }
 
+        public static string ConvertStreamlabsChatBotText(string text)
+        {
+            text = text.Replace("$targetid", "$targetuserid");
+            text = text.Replace("$targetname", "$targetusername");
+            text = text.Replace("$touserid", "$targetuserid");
+            text = text.Replace("$tousername", "$targetusername");
+
+            text = text.Replace("$randuserid", "$randomuserid");
+            text = text.Replace("$randusername", "$randomusername");
+
+            text = text.Replace("$mychannel", "$streameruserid");
+            text = text.Replace("$mychannelname", "$streamerusername");
+
+            for (int i = 1; i < 10; i++)
+            {
+                text = text.Replace("$arg" + i, "$arg" + i + "text");
+                text = text.Replace("$argl" + i, "$arg" + i + "text");
+                text = text.Replace("$num" + i, "$arg" + i + "text");
+            }
+
+            text = text.Replace("$randnum", "$randomnumber");
+
+            text = text.Replace("$points", "$userpoints");
+            text = text.Replace("$pointstext", "$userpoints");
+
+            if (text.Contains("$toppoints("))
+            {
+                text = text.Replace("$toppoints(", "$top");
+                text = text.Replace(")", "points");
+            }
+
+            if (text.Contains("$tophours("))
+            {
+                text = text.Replace("$tophours(", "$top");
+                text = text.Replace(")", "time");
+            }
+
+            text = text.Replace("$rank", "$userrankname");
+            text = text.Replace("$hours", "$userhours");
+
+            text = text.Replace("$url", "$targetuserurl");
+            text = text.Replace("$game", "$targetusergame");
+
+            text = text.Replace("$myurl", "$streameruserurl");
+            text = text.Replace("$mygame", "$streamerusergame");
+
+            text = text.Replace("$uptime", "$uptimetotal");
+            text = text.Replace("$followercount", "$streameruserfollowers");
+            text = text.Replace("$subcount", "$streamsubcount");
+
+            return text;
+        }
+
         public static bool IsValidSpecialIdentifier(string text)
         {
             return !string.IsNullOrEmpty(text) && text.All(c => Char.IsLetterOrDigit(c));

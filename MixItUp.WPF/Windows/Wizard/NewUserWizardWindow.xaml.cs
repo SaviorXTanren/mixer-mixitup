@@ -1,10 +1,11 @@
 ﻿using Mixer.Base.Interactive;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Import;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Import;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
@@ -45,6 +46,8 @@ namespace MixItUp.WPF.Windows.Wizard
         private IEnumerable<InteractiveGameListingModel> interactiveGames;
 
         private ScorpBotData scorpBotData;
+
+        private StreamlabsChatBotData streamlabsChatBotData;
 
         private SoundwaveSettings soundwaveData;
         private List<SoundwaveProfileItem> soundwaveProfiles;
@@ -98,10 +101,15 @@ namespace MixItUp.WPF.Windows.Wizard
                 this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
                 this.ExternalServicesPageGrid.Visibility = System.Windows.Visibility.Visible;
             }
+            else if (this.ImportStreamlabsChatBotSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
+            {
+                this.ImportStreamlabsChatBotSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
+            }
             else if (this.ImportSoundwaveInteractiveSettingsGrid.Visibility == System.Windows.Visibility.Visible)
             {
                 this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Collapsed;
-                this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
+                this.ImportStreamlabsChatBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
             }
             else if (this.SetupCompletePageGrid.Visibility == System.Windows.Visibility.Visible)
             {
@@ -145,12 +153,28 @@ namespace MixItUp.WPF.Windows.Wizard
                         this.scorpBotData = await this.GatherScorpBotData(this.ScorpBotDirectoryTextBox.Text);
                         if (this.scorpBotData == null)
                         {
-                            await MessageBoxHelper.ShowMessageDialog("Failed to import ScorpBot settings, please ensure that you have selected the correct directory. If this continues to fail, please contact Mix it Up support for assitance.");
+                            await MessageBoxHelper.ShowMessageDialog("Failed to import ScorpBot data, please ensure that you have selected the correct directory. If this continues to fail, please contact Mix it Up support for assitance.");
                             return;
                         }
                     }
 
                     this.ImportScorpBotSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
+                    this.ImportStreamlabsChatBotSettingsPageGrid.Visibility = System.Windows.Visibility.Visible;
+                }
+                else if (this.ImportStreamlabsChatBotSettingsPageGrid.Visibility == System.Windows.Visibility.Visible)
+                {
+                    this.StatusMessageTextBlock.Text = "Gathering Streamlabs Chat Bot Data...";
+                    if (!string.IsNullOrEmpty(this.StreamlabsChatBotDataFilePathTextBox.Text))
+                    {
+                        this.streamlabsChatBotData = await this.GatherStreamlabsChatBotSettings(this.StreamlabsChatBotDataFilePathTextBox.Text);
+                        if (this.streamlabsChatBotData == null)
+                        {
+                            await MessageBoxHelper.ShowMessageDialog("Failed to import Streamlabs Chat Bot data, please ensure that you have selected the data file. If this continues to fail, please contact Mix it Up support for assitance.");
+                            return;
+                        }
+                    }
+
+                    this.ImportStreamlabsChatBotSettingsPageGrid.Visibility = System.Windows.Visibility.Collapsed;
                     if (this.soundwaveData != null)
                     {
                         this.ImportSoundwaveInteractiveSettingsGrid.Visibility = System.Windows.Visibility.Visible;
@@ -279,6 +303,15 @@ namespace MixItUp.WPF.Windows.Wizard
             }
         }
 
+        private void StreamlabsChatBotDataFileBrowseButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog("Excel File|*.xlsx");
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                this.StreamlabsChatBotDataFilePathTextBox.Text = filePath;
+            }
+        }
+
         private void SoundwaveProfileCheckBox_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
             CheckBox checkBox = (CheckBox)sender;
@@ -374,6 +407,103 @@ namespace MixItUp.WPF.Windows.Wizard
             return null;
         }
 
+        private async Task<StreamlabsChatBotData> GatherStreamlabsChatBotSettings(string filePath)
+        {
+            try
+            {
+                StreamlabsChatBotData data = new StreamlabsChatBotData();
+                await Task.Run(() =>
+                {
+                    using (NetOffice.ExcelApi.Application application = new NetOffice.ExcelApi.Application())
+                    {
+                        application.DisplayAlerts = false;
+
+                        NetOffice.ExcelApi.Workbook workbook = application.Workbooks.Open(filePath);
+                        if (workbook != null)
+                        {
+                            foreach (NetOffice.ExcelApi.Worksheet worksheet in workbook.Worksheets.AsEnumerable())
+                            {
+                                if (worksheet != null)
+                                {
+                                    List<List<string>> dataValues = new List<List<string>>();
+
+                                    int totalColumns = 0;
+                                    bool hasValue = false;
+                                    do
+                                    {
+                                        hasValue = false;
+                                        NetOffice.ExcelApi.Range range = worksheet.Cells[1, totalColumns + 1];
+                                        if (range.Value != null)
+                                        {
+                                            totalColumns++;
+                                            hasValue = true;
+                                        }
+                                    } while (hasValue);
+
+                                    int currentRow = 2;
+                                    List<string> values = new List<string>();
+                                    do
+                                    {
+                                        values = new List<string>();
+                                        for (int i = 1; i <= totalColumns; i++)
+                                        {
+                                            NetOffice.ExcelApi.Range range = worksheet.Cells[currentRow, i];
+                                            if (range.Value != null)
+                                            {
+                                                values.Add(range.Value.ToString());
+                                            }
+                                            else
+                                            {
+                                                values.Add(string.Empty);
+                                            }
+                                        }
+
+                                        if (!values.All(v => string.IsNullOrEmpty(v)))
+                                        {
+                                            dataValues.Add(values);
+                                        }
+                                        currentRow++;
+                                    } while (!values.All(v => string.IsNullOrEmpty(v)));
+
+                                    if (worksheet.Name.Equals("Commands"))
+                                    {
+                                        data.AddCommands(dataValues);
+                                    }
+                                    else if (worksheet.Name.Equals("Timers"))
+                                    {
+                                        data.AddTimers(dataValues);
+                                    }
+                                    else if (worksheet.Name.Equals("Quotes") || worksheet.Name.Equals("Extra Quotes"))
+                                    {
+                                        data.AddQuotes(dataValues);
+                                    }
+                                    else if (worksheet.Name.Equals("Ranks"))
+                                    {
+                                        data.AddRanks(dataValues);
+                                    }
+                                    else if (worksheet.Name.Equals("Currency"))
+                                    {
+                                        data.AddViewers(dataValues);
+                                    }
+                                    else if (worksheet.Name.Equals("Events"))
+                                    {
+                                        data.AddEvents(dataValues);
+                                    }
+                                }
+                            }
+                        }
+                        application.Quit();
+                    }
+                });
+                return data;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return null;
+        }
+
         private async Task GatherSoundwaveSettings()
         {
             if (Directory.Exists(SoundwaveInteractiveAppDataSettingsFolder))
@@ -416,7 +546,7 @@ namespace MixItUp.WPF.Windows.Wizard
 
                 UserCurrencyViewModel rankCurrency = null;
                 UserCurrencyViewModel rankPointsCurrency = null;
-                if (rankEnabled == 1 && !string.IsNullOrEmpty(rankName))
+                if (!string.IsNullOrEmpty(rankName))
                 {
                     if (rankAccumulationType == 1)
                     {
@@ -479,7 +609,7 @@ namespace MixItUp.WPF.Windows.Wizard
                 string currencyCommandResponse = this.scorpBotData.GetSettingsValue("currency2", "response", "");
 
                 UserCurrencyViewModel currency = null;
-                if (currencyEnabled == 1 && !string.IsNullOrEmpty(currencyName) && currencyInterval >= 0 && currencyAmount >= 0)
+                if (!string.IsNullOrEmpty(currencyName) && currencyInterval >= 0 && currencyAmount >= 0)
                 {
                     currency = new UserCurrencyViewModel()
                     {
@@ -615,6 +745,75 @@ namespace MixItUp.WPF.Windows.Wizard
                 ChannelSession.Settings.ModerationBlockLinksExcempt = this.scorpBotData.GetUserRoleSettingsValue("settings", "chatlinkalertsdelperm");
             }
 
+            if (this.streamlabsChatBotData != null)
+            {
+                UserCurrencyViewModel rank = new UserCurrencyViewModel()
+                {
+                    Name = "Rank",
+                    SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier("rank"),
+                    AcquireInterval = 60,
+                    AcquireAmount = 1
+                };
+                
+                foreach (StreamlabsChatBotRank slrank in this.streamlabsChatBotData.Ranks)
+                {
+                    rank.Ranks.Add(new UserRankViewModel(slrank.Name, slrank.Requirement));
+                }
+
+                UserCurrencyViewModel currency = new UserCurrencyViewModel()
+                {
+                    Name = "Points",
+                    SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier("points"),
+                    AcquireInterval = 1,
+                    AcquireAmount = 1
+                };
+
+                ChannelSession.Settings.Currencies[rank.ID] = rank;
+                ChannelSession.Settings.Currencies[currency.ID] = currency;
+
+                this.AddCurrencyRankCommands(rank);
+                this.AddCurrencyRankCommands(currency);
+
+                foreach (StreamlabsChatBotViewer viewer in this.streamlabsChatBotData.Viewers)
+                {
+                    UserModel user = await ChannelSession.Connection.GetUser(viewer.Name);
+                    if (user != null)
+                    {
+                        viewer.ID = user.id;
+                        ChannelSession.Settings.UserData[viewer.ID] = new UserDataViewModel(viewer);
+                        ChannelSession.Settings.UserData[viewer.ID].SetCurrencyAmount(rank, viewer.Hours);
+                        ChannelSession.Settings.UserData[viewer.ID].SetCurrencyAmount(currency, viewer.Points);
+                    }
+                }
+
+                foreach (StreamlabsChatBotCommand command in this.streamlabsChatBotData.Commands)
+                {
+                    command.ProcessData(currency, rank);
+                    ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
+                }
+
+                foreach (StreamlabsChatBotTimer timer in this.streamlabsChatBotData.Timers)
+                {
+                    StreamlabsChatBotCommand command = new StreamlabsChatBotCommand() { Command = timer.Name, Response = timer.Response, Enabled = timer.Enabled };
+                    command.ProcessData(currency, rank);
+                    ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
+
+                    timer.Actions = command.Actions;
+
+                    ChannelSession.Settings.TimerCommands.Add(new TimerCommand(timer));
+                }
+
+                foreach (string quote in this.streamlabsChatBotData.Quotes)
+                {
+                    ChannelSession.Settings.UserQuotes.Add(new UserQuoteViewModel(quote));
+                }
+
+                if (ChannelSession.Settings.UserQuotes.Count > 0)
+                {
+                    ChannelSession.Settings.QuotesEnabled = true;
+                }
+            }
+
             if (this.soundwaveData != null && this.soundwaveProfiles != null && this.soundwaveProfiles.Count(p => p.AddProfile) > 0)
             {
                 if (this.soundwaveData.StaticCooldown)
@@ -692,6 +891,40 @@ namespace MixItUp.WPF.Windows.Wizard
                 e.Handled = true;
             }
             catch (Exception ex) { Logger.Log(ex); }
+        }
+
+        private void AddCurrencyRankCommands(UserCurrencyViewModel currency)
+        {
+            ChatCommand statusCommand = new ChatCommand("User " + currency.Name, currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+            string statusChatText = string.Empty;
+            if (currency.IsRank)
+            {
+                statusChatText = string.Format("@$username is a ${0} with ${1} {2}!", currency.UserRankNameSpecialIdentifier, currency.UserAmountSpecialIdentifier, currency.Name);
+            }
+            else
+            {
+                statusChatText = string.Format("@$username has ${0} {1}!", currency.UserAmountSpecialIdentifier, currency.Name);
+            }
+            statusCommand.Actions.Add(new ChatAction(statusChatText));
+            ChannelSession.Settings.ChatCommands.Add(statusCommand);
+
+            ChatCommand addCommand = new ChatCommand("Add " + currency.Name, "add" + currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.Mod, 5));
+            addCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", "$targetusername"));
+            addCommand.Actions.Add(new ChatAction(string.Format("@$targetusername received $arg2text {0}!", currency.Name)));
+            ChannelSession.Settings.ChatCommands.Add(addCommand);
+
+            ChatCommand addAllCommand = new ChatCommand("Add All " + currency.Name, "addall" + currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.Mod, 5));
+            addAllCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToAllChatUsers, "$arg1text"));
+            addAllCommand.Actions.Add(new ChatAction(string.Format("Everyone got $arg1text {0}!", currency.Name)));
+            ChannelSession.Settings.ChatCommands.Add(addAllCommand);
+
+            if (!currency.IsRank)
+            {
+                ChatCommand giveCommand = new ChatCommand("Give " + currency.Name, "give" + currency.SpecialIdentifier, new RequirementViewModel(MixerRoleEnum.User, 5));
+                giveCommand.Actions.Add(new CurrencyAction(currency, CurrencyActionTypeEnum.AddToSpecificUser, "$arg2text", "$targetusername", deductFromUser: true));
+                giveCommand.Actions.Add(new ChatAction(string.Format("@$username gave @$targetusername $arg2text {0}!", currency.Name)));
+                ChannelSession.Settings.ChatCommands.Add(giveCommand);
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using MixItUp.Base.ViewModel.Import;
+﻿using MixItUp.Base.Model.Import;
 using MixItUp.Base.ViewModel.Requirement;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -34,6 +33,14 @@ namespace MixItUp.Base.Commands
         {
             this.Actions.AddRange(command.Actions);
             this.IncludeExclamationInCommands = command.ContainsExclamation;
+            this.IsEnabled = command.Enabled;
+        }
+
+        public ChatCommand(StreamlabsChatBotCommand command)
+            : this(command.Command, command.Command, command.Requirements)
+        {
+            this.Actions.AddRange(command.Actions);
+            this.IncludeExclamationInCommands = false;
             this.IsEnabled = command.Enabled;
         }
 

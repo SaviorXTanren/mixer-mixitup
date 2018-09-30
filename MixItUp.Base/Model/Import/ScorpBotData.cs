@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.Import
+namespace MixItUp.Base.Model.Import
 {
     [DataContract]
     public class ScorpBotData

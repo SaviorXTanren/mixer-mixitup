@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.Import
+namespace MixItUp.Base.Model.Import
 {
     [DataContract]
     public class SoundwaveSettings

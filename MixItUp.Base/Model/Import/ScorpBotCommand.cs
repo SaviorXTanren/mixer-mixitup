@@ -2,15 +2,14 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.Import
+namespace MixItUp.Base.Model.Import
 {
     [DataContract]
-    public class ScorpBotCommand
+    public class ScorpBotCommand : ImportDataViewModelBase
     {
         public const string SFXRegexHeaderPattern = "$sfx(";
         public const string ReadAPIRegexHeaderPattern = "$readapi(";
@@ -54,14 +53,14 @@ namespace MixItUp.Base.ViewModel.Import
 
             this.Text = SpecialIdentifierStringBuilder.ConvertScorpBotText(text);
 
-            this.GetRegexEntries(SFXRegexHeaderPattern, (string entry) =>
+            this.Text = this.GetRegexEntries(this.Text, SFXRegexHeaderPattern, (string entry) =>
             {
                 this.Actions.Add(new SoundAction(entry, 100));
                 return string.Empty;
             });
 
             int webRequestCount = 1;
-            this.GetRegexEntries(ReadAPIRegexHeaderPattern, (string entry) =>
+            this.Text = this.GetRegexEntries(this.Text, ReadAPIRegexHeaderPattern, (string entry) =>
             {
                 string si = "webrequest" + webRequestCount;
                 this.Actions.Add(WebRequestAction.CreateForSpecialIdentifier(entry, si));
@@ -93,30 +92,6 @@ namespace MixItUp.Base.ViewModel.Import
 
             this.Requirements.Cooldown.Amount = (int)reader["Cooldown"];
             this.Enabled = ((string)reader["Enabled"]).Equals("True");
-        }
-
-        private IEnumerable<string> GetRegexEntries(string pattern, Func<string, string> replacement)
-        {
-            List<string> entries = new List<string>();
-
-            int startIndex = 0;
-            do
-            {
-                startIndex = this.Text.IndexOf(pattern);
-                if (startIndex >= 0)
-                {
-                    int endIndex = this.Text.IndexOf(")", startIndex);
-                    if (endIndex >= 0)
-                    {
-                        string fullEntry = this.Text.Substring(startIndex, endIndex - startIndex + 1);
-                        string entry = fullEntry.Replace(pattern, "").Replace(")", "");
-                        entries.Add(entry);
-                        this.Text = this.Text.Replace(fullEntry, replacement(entry));
-                    }
-                }
-            } while (startIndex >= 0);
-
-            return entries;
         }
     }
 }
