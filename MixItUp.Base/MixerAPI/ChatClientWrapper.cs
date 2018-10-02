@@ -420,7 +420,13 @@ namespace MixItUp.Base.MixerAPI
 
                 List<PermissionsCommandBase> commandsToCheck = new List<PermissionsCommandBase>(ChannelSession.AllEnabledChatCommands);
                 commandsToCheck.AddRange(message.User.Data.CustomCommands);
-                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.Message));
+
+                PermissionsCommandBase command = commandsToCheck.FirstOrDefault(c => c.MatchesCommand(message.Message));
+                if (command == null)
+                {
+                    command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.Message));
+                }
+
                 if (command != null)
                 {
                     string messageText = message.Message;
