@@ -54,9 +54,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="SettingsBackupRateComboBox" Grid.Column="0" Width="90" MaterialDesign:HintAssist.Hint="Backup Rate" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="SettingsBackupRateComboBox_SelectionChanged" />
+            <Button x:Name="SettingsBackupLocationButton" Grid.Column="0" Content="Set Location" Click="SettingsBackupLocationButton_Click" />
 
-            <Button x:Name="SettingsBackupLocationButton" Grid.Column="2" Content="{MaterialDesign:PackIcon Folder}" Click="SettingsBackupLocationButton_Click" />
+            <ComboBox x:Name="SettingsBackupRateComboBox" Grid.Column="2" Width="90" MaterialDesign:HintAssist.Hint="Backup Rate" IsEnabled="False" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="SettingsBackupRateComboBox_SelectionChanged" />
         </Grid>
 
         <Separator Grid.Row="8" Grid.ColumnSpan="2" Margin="10" />

@@ -39,6 +39,11 @@ namespace MixItUp.WPF.Controls.Settings
             this.UnlockAllCommandsToggleButton.ToolTip = UnlockedAllTooltip;
 
             this.SettingsBackupRateComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.SettingsBackupRate);
+            if (!string.IsNullOrEmpty(ChannelSession.Settings.SettingsBackupLocation))
+            {
+                this.SettingsBackupRateComboBox.IsEnabled = true;
+            }
+
             this.UnlockAllCommandsToggleButton.IsChecked = ChannelSession.Settings.UnlockAllCommands;
             this.DisableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Visible : Visibility.Collapsed;
             this.EnableDiagnosticLogsButton.Visibility = (ChannelSession.Settings.DiagnosticLogging) ? Visibility.Collapsed : Visibility.Visible;
@@ -81,20 +86,21 @@ namespace MixItUp.WPF.Controls.Settings
             }
         }
 
-        private void SettingsBackupRateComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.SettingsBackupRateComboBox.SelectedIndex >= 0)
-            {
-                ChannelSession.Settings.SettingsBackupRate = EnumHelper.GetEnumValueFromString<SettingsBackupRateEnum>((string)this.SettingsBackupRateComboBox.SelectedItem);
-            }
-        }
-
         private void SettingsBackupLocationButton_Click(object sender, RoutedEventArgs e)
         {
             string folderPath = ChannelSession.Services.FileService.ShowOpenFolderDialog();
             if (!string.IsNullOrEmpty(folderPath) && Directory.Exists(folderPath))
             {
                 ChannelSession.Settings.SettingsBackupLocation = folderPath;
+                this.SettingsBackupRateComboBox.IsEnabled = true;
+            }
+        }
+
+        private void SettingsBackupRateComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.SettingsBackupRateComboBox.SelectedIndex >= 0)
+            {
+                ChannelSession.Settings.SettingsBackupRate = EnumHelper.GetEnumValueFromString<SettingsBackupRateEnum>((string)this.SettingsBackupRateComboBox.SelectedItem);
             }
         }
 
