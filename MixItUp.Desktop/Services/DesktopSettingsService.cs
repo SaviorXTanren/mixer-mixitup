@@ -127,7 +127,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task PerformBackupIfApplicable(IChannelSettings settings)
         {
-            if (settings.SettingsBackupRate != SettingsBackupRateEnum.None)
+            if (settings.SettingsBackupRate != SettingsBackupRateEnum.None && !string.IsNullOrEmpty(settings.SettingsBackupLocation))
             {
                 DateTimeOffset newResetDate = settings.SettingsLastBackup;
 
