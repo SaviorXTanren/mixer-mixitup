@@ -5,6 +5,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -169,7 +170,13 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (httpMethod.Equals(PutHttpMethod) || httpMethod.Equals(PatchHttpMethod))
                 {
-                    UserDeveloperAPIModel updatedUserData = SerializerHelper.DeserializeFromString<UserDeveloperAPIModel>(data);
+                    UserDeveloperAPIModel updatedUserData = null;
+                    try
+                    {
+                        updatedUserData = SerializerHelper.DeserializeFromString<UserDeveloperAPIModel>(data);
+                    }
+                    catch (JsonReaderException) { }
+
                     if (updatedUserData != null && updatedUserData.ID.Equals(user.ID))
                     {
                         user.ViewingMinutes = updatedUserData.ViewingMinutes;
