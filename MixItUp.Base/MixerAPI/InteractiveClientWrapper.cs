@@ -78,7 +78,8 @@ namespace MixItUp.Base.MixerAPI
                 this.Button.cooldown = this.CooldownTimestamp;
             }
 
-            List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
+            Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>> sceneButtons = new Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>>();
+
             if (!string.IsNullOrEmpty(this.ButtonCommand.CooldownGroupName))
             {
                 var otherButtons = ChannelSession.Interactive.Controls.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
@@ -86,15 +87,23 @@ namespace MixItUp.Base.MixerAPI
                 foreach (var otherItem in otherButtons)
                 {
                     otherItem.Button.cooldown = this.Button.cooldown;
-                    buttons.Add(otherItem.Button);
+                    if (!sceneButtons.ContainsKey(otherItem.Scene))
+                    {
+                        sceneButtons[otherItem.Scene] = new List<InteractiveConnectedButtonCommand>();
+                    }
+                    sceneButtons[otherItem.Scene].Add(otherItem);
                 }
             }
             else
             {
-                buttons.Add(this.Button);
+                sceneButtons[this.Scene] = new List<InteractiveConnectedButtonCommand>();
+                sceneButtons[this.Scene].Add(this);
             }
 
-            await ChannelSession.Interactive.UpdateControls(this.Scene, buttons);
+            foreach (var kvp in sceneButtons)
+            {
+                await ChannelSession.Interactive.UpdateControls(kvp.Key, kvp.Value.Select(b => b.Button));
+            }
         }
     }
 
