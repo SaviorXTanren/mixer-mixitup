@@ -13,6 +13,8 @@ namespace MixItUp.Installer
     {
         private static readonly Version minimumOSVersion = new Version(6, 2, 0, 0);
 
+        private static bool? response = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,12 +31,28 @@ namespace MixItUp.Installer
                 return;
             }
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 try
                 {
                     if (InstallerHelpers.DownloadMixItUp())
                     {
+                        if (InstallerHelpers.IsMixItUpAlreadyInstalled())
+                        {
+                            this.ShowMessage("We've detected that Mix It Up is already installed. Would you like us to keep your existing settings?");
+
+                            do
+                            {
+                                await Task.Delay(1000);
+                            } while (response == null);
+
+                            this.ShowRegularView();
+
+                            InstallerHelpers.DeleteExistingInstallation(response.GetValueOrDefault());
+                        }
+
+                        InstallerHelpers.InstallMixItUp();
+
                         if (InstallerHelpers.CreateMixItUpShortcut())
                         {
                             Process.Start(Path.Combine(InstallerHelpers.StartMenuDirectory, InstallerHelpers.ShortcutFileName));
@@ -52,6 +70,20 @@ namespace MixItUp.Installer
             });
         }
 
+        private void ShowMessage(string message)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                this.InstallProgressBar.Visibility = Visibility.Collapsed;
+                this.InstallingTextBlock1.Visibility = Visibility.Collapsed;
+                this.InstallingTextBlock2.Visibility = Visibility.Collapsed;
+
+                this.MessageTextBlock.Visibility = Visibility.Visible;
+                this.MessageTextBlock.Text = message;
+                this.MessageYesNoGrid.Visibility = Visibility.Visible;
+            });
+        }
+
         private void ShowError(string message)
         {
             this.Dispatcher.Invoke(() =>
@@ -63,6 +95,30 @@ namespace MixItUp.Installer
                 this.ErrorTextBlock.Visibility = Visibility.Visible;
                 this.ErrorTextBlock.Text = message;
             });
+        }
+
+        private void ShowRegularView()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                this.ErrorTextBlock.Visibility = Visibility.Collapsed;
+                this.MessageTextBlock.Visibility = Visibility.Collapsed;
+                this.MessageYesNoGrid.Visibility = Visibility.Collapsed;
+
+                this.InstallProgressBar.Visibility = Visibility.Visible;
+                this.InstallingTextBlock1.Visibility = Visibility.Visible;
+                this.InstallingTextBlock2.Visibility = Visibility.Visible;
+            });
+        }
+
+        private void YesButton_Click(object sender, RoutedEventArgs e)
+        {
+            response = true;
+        }
+
+        private void NoButton_Click(object sender, RoutedEventArgs e)
+        {
+            response = false;
         }
     }
 }

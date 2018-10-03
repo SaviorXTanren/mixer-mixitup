@@ -50,7 +50,24 @@
 
             <TextBlock Grid.Row="6" x:Name="InstallingTextBlock2" HorizontalAlignment="Center" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" Width="350">Once this is done, we will automatically launch Mix It Up and a shortcut will be placed on the Start Menu.</TextBlock>
 
+            
+            
             <TextBlock Grid.Row="4" x:Name="ErrorTextBlock" Width="325" HorizontalAlignment="Center" TextAlignment="Center" Foreground="White" TextWrapping="Wrap" />
+
+
+            <TextBlock Grid.Row="4" x:Name="MessageTextBlock" Width="350" HorizontalAlignment="Center" Text="Center" Foreground="White" TextWrapping="Wrap" Visibility="Collapsed" />
+
+            <Grid x:Name="MessageYesNoGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" x:Name="YesButton" Click="YesButton_Click" Background="DarkBlue">Yes</Button>
+
+                <Button Grid.Column="2" x:Name="NoButton" Click="NoButton_Click" Background="DarkBlue">No</Button>
+            </Grid>
 
         </Grid>
     </Grid>

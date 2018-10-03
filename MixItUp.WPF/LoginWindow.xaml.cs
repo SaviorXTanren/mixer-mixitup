@@ -83,7 +83,7 @@ namespace MixItUp.WPF
                         {
                             try
                             {
-                                return InstallerHelpers.DownloadMixItUp() && InstallerHelpers.CreateMixItUpShortcut();
+                                return InstallerHelpers.DownloadMixItUp() && InstallerHelpers.InstallMixItUp() && InstallerHelpers.CreateMixItUpShortcut();
                             }
                             catch (Exception ex) { Logger.Log(ex); }
                             return false;
