@@ -51,7 +51,11 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveConnectedButtonCommand : InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedButtonCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedButtonControlModel button, InteractiveCommand command) : base(scene, button, command) { }
+        public InteractiveConnectedButtonCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedButtonControlModel button, InteractiveCommand command)
+            : base(scene, button, command)
+        {
+            this.ButtonCommand.OnActionsStarted += ButtonCommand_OnActionsStarted;
+        }
 
         public InteractiveConnectedButtonControlModel Button { get { return (InteractiveConnectedButtonControlModel)this.Control; } set { this.Control = value; } }
 
@@ -63,6 +67,11 @@ namespace MixItUp.Base.MixerAPI
         public override long CooldownTimestamp { get { return this.ButtonCommand.GetCooldownTimestamp(); } }
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
+        {
+            await base.Perform(user, arguments);
+        }
+
+        private async void ButtonCommand_OnActionsStarted(object sender, EventArgs e)
         {
             if (this.HasCooldown)
             {
@@ -86,8 +95,6 @@ namespace MixItUp.Base.MixerAPI
             }
 
             await ChannelSession.Interactive.UpdateControls(this.Scene, buttons);
-
-            await base.Perform(user, arguments);
         }
     }
 
