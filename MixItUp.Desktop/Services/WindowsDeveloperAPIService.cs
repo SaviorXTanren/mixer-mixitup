@@ -26,6 +26,16 @@ namespace MixItUp.Desktop.Services
     }
 
     [DataContract]
+    public class UserCurrencyGiveDeveloperAPIModel
+    {
+        [DataMember]
+        public int Amount { get; set; }
+
+        [DataMember]
+        public string UsernameOrID { get; set; }
+    }
+
+    [DataContract]
     public class UserCurrencyDeveloperAPIModel
     {
         [DataMember]
@@ -162,6 +172,33 @@ namespace MixItUp.Desktop.Services
     [RoutePrefix("api/users")]
     public class UserController : ApiController
     {
+        [Route]
+        [HttpPost]
+        public IEnumerable<UserDeveloperAPIModel> BulkGet([FromBody] IEnumerable<string> usernamesOrIDs)
+        {
+            List<UserDeveloperAPIModel> users = new List<UserDeveloperAPIModel>();
+            foreach (var usernameOrID in usernamesOrIDs)
+            {
+                UserDataViewModel user = null;
+                if (uint.TryParse(usernameOrID, out uint userID))
+                {
+                    user = ChannelSession.Settings.UserData[userID];
+                }
+
+                if (user == null)
+                {
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
+                }
+
+                if (user != null)
+                {
+                    users.Add(new UserDeveloperAPIModel(user));
+                }
+            }
+
+            return users;
+        }
+
         [Route("{userID:int:min(0)}")]
         public UserDeveloperAPIModel Get(uint userID)
         {
@@ -290,8 +327,6 @@ namespace MixItUp.Desktop.Services
 
             return new UserDeveloperAPIModel(user);
         }
-
-        // TODO: Add GiveAll
     }
 
     [RoutePrefix("api/currency")]
@@ -345,6 +380,46 @@ namespace MixItUp.Desktop.Services
                 currencyUserList.Add(new UserDeveloperAPIModel(currencyUser));
             }
             return currencyUserList;
+        }
+
+        [Route("{currencyID:guid}/give")]
+        [HttpPost]
+        public IEnumerable<UserDeveloperAPIModel> BulkGive(Guid currencyID, [FromBody] IEnumerable<UserCurrencyGiveDeveloperAPIModel> giveDatas)
+        {
+            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (giveDatas == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+
+            List<UserDeveloperAPIModel> users = new List<UserDeveloperAPIModel>();
+            foreach (var giveData in giveDatas)
+            {
+                UserDataViewModel user = null;
+                if (uint.TryParse(giveData.UsernameOrID, out uint userID))
+                {
+                    user = ChannelSession.Settings.UserData[userID];
+                }
+
+                if (user == null)
+                {
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
+                }
+
+                if (user != null && giveData.Amount > 0)
+                {
+                    user.AddCurrencyAmount(currency, giveData.Amount);
+                    users.Add(new UserDeveloperAPIModel(user));
+                }
+            }
+
+            return users;
         }
     }
 
