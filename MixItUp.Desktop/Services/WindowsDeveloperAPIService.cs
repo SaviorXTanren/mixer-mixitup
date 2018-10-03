@@ -111,18 +111,18 @@ namespace MixItUp.Desktop.Services
     }
 
     [RoutePrefix("api/mixer/users")]
-    public class MixerController : ApiController
+    public class MixerUserController : ApiController
     {
         [Route("{userID:int:min(0)}")]
         public UserModel Get(uint userID)
         {
             UserModel user = ChannelSession.Connection.GetUser(userID).Result;
-            if (user != null)
+            if (user == null)
             {
-                return user;
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            throw new HttpResponseException(HttpStatusCode.NotFound);
+            return user;
         }
 
         [Route("{username}")]
@@ -130,12 +130,12 @@ namespace MixItUp.Desktop.Services
         public UserModel Get(string username)
         {
             UserModel user = ChannelSession.Connection.GetUser(username).Result;
-            if (user != null)
+            if (user == null)
             {
-                return user;
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            throw new HttpResponseException(HttpStatusCode.NotFound);
+            return user;
         }
     }
 
@@ -300,92 +300,6 @@ namespace MixItUp.Desktop.Services
             allCommands.AddRange(ChannelSession.Settings.ActionGroupCommands);
             allCommands.AddRange(ChannelSession.Settings.GameCommands);
             return allCommands;
-        }
-    }
-
-    [RoutePrefix("api/spotify")]
-    public class SpotifyController : ApiController
-    {
-        [Route("current")]
-        [HttpGet]
-        public Task<SpotifyCurrentlyPlaying> GetCurrent()
-        {
-            if (ChannelSession.Services.Spotify == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
-            }
-
-            return ChannelSession.Services.Spotify.GetCurrentlyPlaying();
-        }
-
-        [Route("play")]
-        [HttpPost]
-        public async Task Play(string data)
-        {
-            if (ChannelSession.Services.Spotify == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
-            }
-
-            if (string.IsNullOrEmpty(data))
-            {
-                await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
-            }
-            else
-            {
-                if (!(await ChannelSession.Services.Spotify.PlaySong(data)))
-                {
-                    throw new HttpResponseException(HttpStatusCode.BadRequest);
-                }
-            }
-        }
-
-        [Route("pause")]
-        [HttpPost]
-        public async Task Pause()
-        {
-            if (ChannelSession.Services.Spotify == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
-            }
-
-            await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
-        }
-
-        [Route("next")]
-        [HttpPost]
-        public async Task Next()
-        {
-            if (ChannelSession.Services.Spotify == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
-            }
-
-            await ChannelSession.Services.Spotify.NextCurrentlyPlaying();
-        }
-
-        [Route("previous")]
-        [HttpPost]
-        public async Task Previous()
-        {
-            if (ChannelSession.Services.Spotify == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
-            }
-
-            await ChannelSession.Services.Spotify.PreviousCurrentlyPlaying();
-        }
-
-        [Route("search")]
-        [HttpGet]
-        public Task<IEnumerable<SpotifySong>> Get(string query)
-        {
-            if (ChannelSession.Services.Spotify == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.ServiceUnavailable);
-            }
-
-            return ChannelSession.Services.Spotify.SearchSongs(query);
         }
     }
 }
