@@ -40,6 +40,14 @@ namespace MixItUp.Base.Util
             catch (Exception) { }
         }
 
+        public static void LogDiagnostic(string message)
+        {
+            if (ChannelSession.Settings.DiagnosticLogging)
+            {
+                Logger.Log(message);
+            }
+        }
+
         public static void Log(Exception ex, bool includeFullStackTrace = false, bool isCrashing = false)
         {
             string exString = ex.ToString();

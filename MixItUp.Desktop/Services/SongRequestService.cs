@@ -183,7 +183,10 @@ namespace MixItUp.Desktop.Services
                                 }
                             }
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                            Logger.Log(ex);
+                        }
                     }
                 }
 
@@ -462,6 +465,10 @@ namespace MixItUp.Desktop.Services
                 await this.LockWrapper(async () =>
                 {
                     this.spotifyStatus = await this.GetSpotifyStatus();
+
+                    Logger.LogDiagnostic("Current Song: " + this.currentSong);
+                    Logger.LogDiagnostic("Spotify Status: " + this.spotifyStatus);
+                    Logger.LogDiagnostic("YouTube Status: " + this.youTubeStatus);
 
                     if (this.currentSong == null)
                     {
