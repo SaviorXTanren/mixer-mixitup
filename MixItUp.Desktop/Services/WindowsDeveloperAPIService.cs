@@ -9,13 +9,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace MixItUp.Desktop.Services
 {
+    [DataContract]
+    public class UserCurrencyUpdateDeveloperAPIModel
+    {
+        [DataMember]
+        public int Amount { get; set; }
+    }
+
     [DataContract]
     public class UserCurrencyDeveloperAPIModel
     {
@@ -71,6 +80,16 @@ namespace MixItUp.Desktop.Services
         }
     }
 
+    public class NoCacheHeader : DelegatingHandler
+    {
+        async protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+            response.Headers.Add("Cache-Control", "no-cache");
+            return response;
+        }
+    }
+
     public class WindowsDeveloperAPIServiceStartup
     {
         public void Configuration(IAppBuilder appBuilder)
@@ -81,6 +100,7 @@ namespace MixItUp.Desktop.Services
             config.Formatters.Add(new JsonMediaTypeFormatter());
 
             config.MapHttpAttributeRoutes();
+            config.MessageHandlers.Add(new NoCacheHeader());
 
             appBuilder.UseWebApi(config);
         }
@@ -158,7 +178,7 @@ namespace MixItUp.Desktop.Services
         [HttpGet]
         public UserDeveloperAPIModel Get(string username)
         {
-            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.ToLower().Equals(username));
+            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -184,7 +204,7 @@ namespace MixItUp.Desktop.Services
         [HttpPut, HttpPatch]
         public UserDeveloperAPIModel Update(string username, [FromBody] UserDeveloperAPIModel updatedUserData)
         {
-            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.ToLower().Equals(username));
+            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -211,6 +231,67 @@ namespace MixItUp.Desktop.Services
 
             return new UserDeveloperAPIModel(user);
         }
+
+        [Route("{userID:int:min(0)}/currency/{currencyID:guid}/adjust")]
+        [HttpPut, HttpPatch]
+        public UserDeveloperAPIModel AdjustCurrency(uint userID, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData[userID];
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return AdjustCurrency(user, currencyID, currencyUpdate);
+        }
+
+        [Route("{username}/currency/{currencyID:guid}/adjust")]
+        [HttpPut, HttpPatch]
+        public UserDeveloperAPIModel AdjustCurrency(string username, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return AdjustCurrency(user, currencyID, currencyUpdate);
+        }
+
+        private UserDeveloperAPIModel AdjustCurrency(UserDataViewModel user, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        {
+            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (currencyUpdate == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+
+            if (currencyUpdate.Amount < 0)
+            {
+                int quantityToRemove = currencyUpdate.Amount * -1;
+                if (!user.HasCurrencyAmount(currency, quantityToRemove))
+                {
+                    // If the request is to remove currency, but user doesn't have enough, fail
+                    throw new HttpResponseException(HttpStatusCode.Forbidden);
+                }
+
+                user.SubtractCurrencyAmount(currency, quantityToRemove);
+            }
+            else if (currencyUpdate.Amount > 0)
+            {
+                user.AddCurrencyAmount(currency, currencyUpdate.Amount);
+            }
+
+            return new UserDeveloperAPIModel(user);
+        }
+
+        // TODO: Add GiveAll
     }
 
     [RoutePrefix("api/currency")]
@@ -233,6 +314,37 @@ namespace MixItUp.Desktop.Services
             }
 
             return ChannelSession.Settings.Currencies[currencyID];
+        }
+
+        [Route("{currencyID:guid}/top")]
+        [HttpGet]
+        public IEnumerable<UserDeveloperAPIModel> Get(Guid currencyID, int count = 10)
+        {
+            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (count < 1)
+            {
+                // TODO: Consider checking or a max # too? (100?)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+
+            Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            allUsersDictionary.Remove(ChannelSession.Channel.user.id);
+
+            IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+            allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+
+            List<UserDeveloperAPIModel> currencyUserList = new List<UserDeveloperAPIModel>();
+            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(count))
+            {
+                currencyUserList.Add(new UserDeveloperAPIModel(currencyUser));
+            }
+            return currencyUserList;
         }
     }
 
