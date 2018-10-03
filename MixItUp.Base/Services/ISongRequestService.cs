@@ -34,6 +34,11 @@ namespace MixItUp.Base.Services
         public SongRequestStateEnum State { get; set; }
         public long Progress { get; set; }
         public long Length { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} - {1} - {2} - {3} - {4} / {5}", this.ID, this.Name, this.Type, this.State, this.Progress, this.Length);
+        }
     }
 
     public interface ISongRequestService
