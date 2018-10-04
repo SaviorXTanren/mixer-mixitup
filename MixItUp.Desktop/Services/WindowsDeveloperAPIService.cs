@@ -1,20 +1,40 @@
-﻿using Mixer.Base.Model.User;
-using Mixer.Base.Web;
+﻿using Microsoft.Owin.Hosting;
+using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
+using System.Web.Http;
 
 namespace MixItUp.Desktop.Services
 {
+    [DataContract]
+    public class UserCurrencyUpdateDeveloperAPIModel
+    {
+        [DataMember]
+        public int Amount { get; set; }
+    }
+
+    [DataContract]
+    public class UserCurrencyGiveDeveloperAPIModel
+    {
+        [DataMember]
+        public int Amount { get; set; }
+
+        [DataMember]
+        public string UsernameOrID { get; set; }
+    }
+
     [DataContract]
     public class UserCurrencyDeveloperAPIModel
     {
@@ -70,294 +90,403 @@ namespace MixItUp.Desktop.Services
         }
     }
 
-    public class WindowsDeveloperAPIService : HttpListenerServerBase, IDeveloperAPIService
+    public class NoCacheHeader : DelegatingHandler
     {
-        public const string GetHttpMethod = "GET";
-        public const string PostHttpMethod = "POST";
-        public const string PutHttpMethod = "PUT";
-        public const string PatchHttpMethod = "PATCH";
-
-        public const string DeveloperAPIHttpListenerServerAddress = "http://localhost:8911/api/";
-
-        public WindowsDeveloperAPIService() : base(WindowsDeveloperAPIService.DeveloperAPIHttpListenerServerAddress) { }
-
-        protected override async Task ProcessConnection(HttpListenerContext listenerContext)
+        async protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (!string.IsNullOrEmpty(listenerContext.Request.RawUrl))
-            {
-                string url = listenerContext.Request.RawUrl.ToLower();
-                string httpMethod = listenerContext.Request.HttpMethod;
-                if (url.StartsWith("/api"))
-                {
-                    List<string> urlSegments = new List<string>(url.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries));
-                    urlSegments.RemoveAt(0);
-                    if (urlSegments.Count() == 0)
-                    {
-                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, "Welcome to the Mix It Up Developer API! More detailed documentation about this service, please visit https://github.com/SaviorXTanren/mixer-mixitup/wiki/Developer-API");
-                        return;
-                    }
-                    else
-                    {
-                        string data = await this.GetRequestData(listenerContext);
-                        await this.ProcessDeveloperAPIRequest(listenerContext, httpMethod, urlSegments, data);
-                        return;
-                    }
-                }
-            }
-            await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "This is not a valid API");
+            HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+            response.Headers.Add("Cache-Control", "no-cache");
+            return response;
+        }
+    }
+
+    public class WindowsDeveloperAPIServiceStartup
+    {
+        public void Configuration(IAppBuilder appBuilder)
+        {
+            HttpConfiguration config = new HttpConfiguration();
+
+            config.Formatters.Clear();
+            config.Formatters.Add(new JsonMediaTypeFormatter());
+
+            config.MapHttpAttributeRoutes();
+            config.MessageHandlers.Add(new NoCacheHeader());
+
+            appBuilder.UseWebApi(config);
+        }
+    }
+
+    public class WindowsDeveloperAPIService : IDeveloperAPIService
+    {
+        private IDisposable webApp;
+        public const string DeveloperAPIHttpListenerServerAddress = "http://localhost:8911/";
+
+        public bool Start()
+        {
+            // Ensure it is cleaned up first
+            End();
+
+            this.webApp = WebApp.Start<WindowsDeveloperAPIServiceStartup>(DeveloperAPIHttpListenerServerAddress);
+            return true;
         }
 
-        private async Task ProcessDeveloperAPIRequest(HttpListenerContext listenerContext, string httpMethod, List<string> urlSegments, string data)
+        public void End()
         {
-            if (urlSegments[0].Equals("mixer"))
+            if (this.webApp != null)
             {
-                if (urlSegments.Count() == 3 && urlSegments[1].Equals("users"))
-                {
-                    if (httpMethod.Equals(GetHttpMethod))
-                    {
-                        string identifier = urlSegments[2];
-
-                        UserModel user = null;
-                        if (uint.TryParse(identifier, out uint userID))
-                        {
-                            user = ChannelSession.Connection.GetUser(userID).Result;
-                        }
-                        else
-                        {
-                            user = ChannelSession.Connection.GetUser(identifier).Result;
-                        }
-
-                        if (user != null)
-                        {
-                            await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(user));
-                            return;
-                        }
-                        else
-                        {
-                            await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the user specified");
-                            return;
-                        }
-                    }
-                }
+                this.webApp.Dispose();
+                this.webApp = null;
             }
-            else if (urlSegments[0].Equals("users") && urlSegments.Count() >= 2)
-            {
-                string identifier = urlSegments[1];
+        }
+    }
 
+    [RoutePrefix("api/mixer/users")]
+    public class MixerUserController : ApiController
+    {
+        [Route("{userID:int:min(0)}")]
+        public UserModel Get(uint userID)
+        {
+            UserModel user = ChannelSession.Connection.GetUser(userID).Result;
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return user;
+        }
+
+        [Route("{username}")]
+        [HttpGet]
+        public UserModel Get(string username)
+        {
+            UserModel user = ChannelSession.Connection.GetUser(username).Result;
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return user;
+        }
+    }
+
+    [RoutePrefix("api/users")]
+    public class UserController : ApiController
+    {
+        [Route]
+        [HttpPost]
+        public IEnumerable<UserDeveloperAPIModel> BulkGet([FromBody] IEnumerable<string> usernamesOrIDs)
+        {
+            List<UserDeveloperAPIModel> users = new List<UserDeveloperAPIModel>();
+            foreach (var usernameOrID in usernamesOrIDs)
+            {
                 UserDataViewModel user = null;
-                if (uint.TryParse(identifier, out uint userID) && ChannelSession.Settings.UserData.ContainsKey(userID))
+                if (uint.TryParse(usernameOrID, out uint userID))
                 {
                     user = ChannelSession.Settings.UserData[userID];
                 }
-                else
+
+                if (user == null)
                 {
-                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.ToLower().Equals(identifier));
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(usernameOrID, StringComparison.InvariantCultureIgnoreCase));
                 }
 
-                if (httpMethod.Equals(GetHttpMethod))
+                if (user != null)
                 {
-                    if (user != null)
-                    {
-                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(new UserDeveloperAPIModel(user)));
-                        return;
-                    }
-                    else
-                    {
-                        await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the user specified");
-                        return;
-                    }
-                }
-                else if (httpMethod.Equals(PutHttpMethod) || httpMethod.Equals(PatchHttpMethod))
-                {
-                    UserDeveloperAPIModel updatedUserData = SerializerHelper.DeserializeFromString<UserDeveloperAPIModel>(data);
-                    if (updatedUserData != null && updatedUserData.ID.Equals(user.ID))
-                    {
-                        user.ViewingMinutes = updatedUserData.ViewingMinutes;
-                        foreach (UserCurrencyDeveloperAPIModel currencyData in updatedUserData.CurrencyAmounts)
-                        {
-                            if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
-                            {
-                                user.SetCurrencyAmount(ChannelSession.Settings.Currencies[currencyData.ID], currencyData.Amount);
-                            }
-                        }
-
-                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(new UserDeveloperAPIModel(user)));
-                        return;
-                    }
-                    else
-                    {
-                        await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Invalid data/could not find matching user");
-                        return;
-                    }
+                    users.Add(new UserDeveloperAPIModel(user));
                 }
             }
-            else if (urlSegments[0].Equals("currency") && urlSegments.Count() == 2)
+
+            return users;
+        }
+
+        [Route("{userID:int:min(0)}")]
+        public UserDeveloperAPIModel Get(uint userID)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData[userID];
+            if (user == null)
             {
-                if (httpMethod.Equals(GetHttpMethod))
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return new UserDeveloperAPIModel(user);
+        }
+
+        [Route("{username}")]
+        [HttpGet]
+        public UserDeveloperAPIModel Get(string username)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return new UserDeveloperAPIModel(user);
+        }
+
+        [Route("{userID:int:min(0)}")]
+        [HttpPut, HttpPatch]
+        public UserDeveloperAPIModel Update(uint userID, [FromBody] UserDeveloperAPIModel updatedUserData)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData[userID];
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return UpdateUser(user, updatedUserData);
+        }
+
+        [Route("{username}")]
+        [HttpPut, HttpPatch]
+        public UserDeveloperAPIModel Update(string username, [FromBody] UserDeveloperAPIModel updatedUserData)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return UpdateUser(user, updatedUserData);
+        }
+
+        private UserDeveloperAPIModel UpdateUser(UserDataViewModel user, UserDeveloperAPIModel updatedUserData)
+        {
+            if (updatedUserData == null || !updatedUserData.ID.Equals(user.ID))
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            user.ViewingMinutes = updatedUserData.ViewingMinutes;
+            foreach (UserCurrencyDeveloperAPIModel currencyData in updatedUserData.CurrencyAmounts)
+            {
+                if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
                 {
-                    string identifier = urlSegments[1];
-                    if (Guid.TryParse(identifier, out Guid currencyID) && ChannelSession.Settings.Currencies.ContainsKey(currencyID))
-                    {
-                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(ChannelSession.Settings.Currencies[currencyID]));
-                        return;
-                    }
-                    else
-                    {
-                        await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the currency specified");
-                        return;
-                    }
+                    user.SetCurrencyAmount(ChannelSession.Settings.Currencies[currencyData.ID], currencyData.Amount);
                 }
             }
-            else if (urlSegments[0].Equals("commands"))
-            {
-                List<CommandBase> allCommands = new List<CommandBase>();
-                allCommands.AddRange(ChannelSession.Settings.ChatCommands);
-                allCommands.AddRange(ChannelSession.Settings.InteractiveCommands);
-                allCommands.AddRange(ChannelSession.Settings.EventCommands);
-                allCommands.AddRange(ChannelSession.Settings.TimerCommands);
-                allCommands.AddRange(ChannelSession.Settings.ActionGroupCommands);
-                allCommands.AddRange(ChannelSession.Settings.GameCommands);
 
-                if (httpMethod.Equals(GetHttpMethod))
+            return new UserDeveloperAPIModel(user);
+        }
+
+        [Route("{userID:int:min(0)}/currency/{currencyID:guid}/adjust")]
+        [HttpPut, HttpPatch]
+        public UserDeveloperAPIModel AdjustCurrency(uint userID, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData[userID];
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return AdjustCurrency(user, currencyID, currencyUpdate);
+        }
+
+        [Route("{username}/currency/{currencyID:guid}/adjust")]
+        [HttpPut, HttpPatch]
+        public UserDeveloperAPIModel AdjustCurrency(string username, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        {
+            UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
+            if (user == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return AdjustCurrency(user, currencyID, currencyUpdate);
+        }
+
+        private UserDeveloperAPIModel AdjustCurrency(UserDataViewModel user, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        {
+            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (currencyUpdate == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+
+            if (currencyUpdate.Amount < 0)
+            {
+                int quantityToRemove = currencyUpdate.Amount * -1;
+                if (!user.HasCurrencyAmount(currency, quantityToRemove))
                 {
-                    if (urlSegments.Count() == 1)
-                    {
-                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(allCommands));
-                        return;
-                    }
-                    else if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
-                    {
-                        CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
-                        if (command != null)
-                        {
-                            await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(command));
-                            return;
-                        }
-                        else
-                        {
-                            await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the command specified");
-                            return;
-                        }
-                    }
+                    // If the request is to remove currency, but user doesn't have enough, fail
+                    throw new HttpResponseException(HttpStatusCode.Forbidden);
                 }
-                else if (httpMethod.Equals(PostHttpMethod))
+
+                user.SubtractCurrencyAmount(currency, quantityToRemove);
+            }
+            else if (currencyUpdate.Amount > 0)
+            {
+                user.AddCurrencyAmount(currency, currencyUpdate.Amount);
+            }
+
+            return new UserDeveloperAPIModel(user);
+        }
+    }
+
+    [RoutePrefix("api/currency")]
+    public class CurrencyController : ApiController
+    {
+        [Route]
+        [HttpGet]
+        public IEnumerable<UserCurrencyViewModel> Get()
+        {
+            return ChannelSession.Settings.Currencies.Values;
+        }
+
+        [Route("{currencyID:guid}")]
+        [HttpGet]
+        public UserCurrencyViewModel Get(Guid currencyID)
+        {
+            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return ChannelSession.Settings.Currencies[currencyID];
+        }
+
+        [Route("{currencyID:guid}/top")]
+        [HttpGet]
+        public IEnumerable<UserDeveloperAPIModel> Get(Guid currencyID, int count = 10)
+        {
+            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (count < 1)
+            {
+                // TODO: Consider checking or a max # too? (100?)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+
+            Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            allUsersDictionary.Remove(ChannelSession.Channel.user.id);
+
+            IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+            allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+
+            List<UserDeveloperAPIModel> currencyUserList = new List<UserDeveloperAPIModel>();
+            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(count))
+            {
+                currencyUserList.Add(new UserDeveloperAPIModel(currencyUser));
+            }
+            return currencyUserList;
+        }
+
+        [Route("{currencyID:guid}/give")]
+        [HttpPost]
+        public IEnumerable<UserDeveloperAPIModel> BulkGive(Guid currencyID, [FromBody] IEnumerable<UserCurrencyGiveDeveloperAPIModel> giveDatas)
+        {
+            if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            if (giveDatas == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[currencyID];
+
+            List<UserDeveloperAPIModel> users = new List<UserDeveloperAPIModel>();
+            foreach (var giveData in giveDatas)
+            {
+                UserDataViewModel user = null;
+                if (uint.TryParse(giveData.UsernameOrID, out uint userID))
                 {
-                    if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
-                    {
-                        CommandBase command = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
-                        if (command != null)
-                        {
+                    user = ChannelSession.Settings.UserData[userID];
+                }
+
+                if (user == null)
+                {
+                    user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(giveData.UsernameOrID, StringComparison.InvariantCultureIgnoreCase));
+                }
+
+                if (user != null && giveData.Amount > 0)
+                {
+                    user.AddCurrencyAmount(currency, giveData.Amount);
+                    users.Add(new UserDeveloperAPIModel(user));
+                }
+            }
+
+            return users;
+        }
+    }
+
+    [RoutePrefix("api/commands")]
+    public class CommandController : ApiController
+    {
+        [Route]
+        [HttpGet]
+        public IEnumerable<CommandBase> Get()
+        {
+            return GetAllCommands();
+        }
+
+        [Route("{commandID:guid}")]
+        [HttpGet]
+        public CommandBase Get(Guid commandID)
+        {
+            CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
+            if (selectedCommand == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return selectedCommand;
+        }
+
+        [Route("{commandID:guid}")]
+        [HttpPost]
+        public CommandBase Run(Guid commandID)
+        {
+            CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
+            if (selectedCommand == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            command.Perform();
+            selectedCommand.Perform();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                            await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(command));
-                            return;
-                        }
-                        else
-                        {
-                            await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Could not find the command specified");
-                            return;
-                        }
-                    }
-                }
-                else if (httpMethod.Equals(PutHttpMethod) || httpMethod.Equals(PatchHttpMethod))
-                {
-                    if (urlSegments.Count() == 2 && Guid.TryParse(urlSegments[1], out Guid ID))
-                    {
-                        CommandBase commandData = SerializerHelper.DeserializeAbstractFromString<CommandBase>(data);
-                        CommandBase matchedCommand = allCommands.FirstOrDefault(c => c.ID.Equals(ID));
-                        if (matchedCommand != null)
-                        {
-                            matchedCommand.IsEnabled = commandData.IsEnabled;
+            return selectedCommand;
+        }
 
-                            await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(matchedCommand));
-                            return;
-                        }
-                        else
-                        {
-                            await this.CloseConnection(listenerContext, HttpStatusCode.NotFound, "Invalid data/could not find matching command");
-                            return;
-                        }
-                    }
-                }
-            }
-            else if (urlSegments[0].Equals("spotify") && urlSegments.Count() >= 2)
+        [Route("{commandID:guid}")]
+        [HttpPut, HttpPatch]
+        public CommandBase Update(Guid commandID, [FromBody] CommandBase commandData)
+        {
+            CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
+            if (selectedCommand == null)
             {
-                if (ChannelSession.Services.Spotify != null)
-                {
-                    if (httpMethod.Equals(GetHttpMethod))
-                    {
-                        if (urlSegments.Count() == 2)
-                        {
-                            if (urlSegments[1].Equals("current"))
-                            {
-                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(await ChannelSession.Services.Spotify.GetCurrentlyPlaying()));
-                                return;
-                            }
-                            else if (urlSegments[1].StartsWith("search?query="))
-                            {
-                                string search = urlSegments[1].Replace("search?query=", "");
-                                search = HttpUtility.UrlDecode(search);
-
-                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, SerializerHelper.SerializeToString(await ChannelSession.Services.Spotify.SearchSongs(search)));
-                                return;
-                            }
-                        }
-                    }
-                    else if (httpMethod.Equals(PostHttpMethod))
-                    {
-                        if (urlSegments.Count() == 2)
-                        {
-                            if (urlSegments[1].Equals("play"))
-                            {
-                                if (string.IsNullOrEmpty(data))
-                                {
-                                    await ChannelSession.Services.Spotify.PlayCurrentlyPlaying();
-                                    await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
-                                    return;
-                                }
-                                else
-                                {
-                                    if (await ChannelSession.Services.Spotify.PlaySong(data))
-                                    {
-                                        await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
-                                    }
-                                    else
-                                    {
-                                        await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "We were unable to play the uri you specified. If your uri is correct, please try again in a moment");
-                                    }
-                                    return;
-                                }
-                            }
-                            else if (urlSegments[1].Equals("pause"))
-                            {
-                                await ChannelSession.Services.Spotify.PauseCurrentlyPlaying();
-                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
-                                return;
-                            }
-                            else if (urlSegments[1].Equals("next"))
-                            {
-                                await ChannelSession.Services.Spotify.NextCurrentlyPlaying();
-                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
-                                return;
-                            }
-                            else if (urlSegments[1].Equals("previous"))
-                            {
-                                await ChannelSession.Services.Spotify.PreviousCurrentlyPlaying();
-                                await this.CloseConnection(listenerContext, HttpStatusCode.OK, string.Empty);
-                                return;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    await this.CloseConnection(listenerContext, HttpStatusCode.ServiceUnavailable, "The Spotify service is not currently connected in Mix It Up");
-                }
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            await this.CloseConnection(listenerContext, HttpStatusCode.BadRequest, "This is not a valid API");
+            selectedCommand.IsEnabled = commandData.IsEnabled;
+            return selectedCommand;
+        }
+
+        private List<CommandBase> GetAllCommands()
+        {
+            List<CommandBase> allCommands = new List<CommandBase>();
+            allCommands.AddRange(ChannelSession.Settings.ChatCommands);
+            allCommands.AddRange(ChannelSession.Settings.InteractiveCommands);
+            allCommands.AddRange(ChannelSession.Settings.EventCommands);
+            allCommands.AddRange(ChannelSession.Settings.TimerCommands);
+            allCommands.AddRange(ChannelSession.Settings.ActionGroupCommands);
+            allCommands.AddRange(ChannelSession.Settings.GameCommands);
+            return allCommands;
         }
     }
 }
