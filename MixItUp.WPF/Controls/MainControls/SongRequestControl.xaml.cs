@@ -50,6 +50,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.SpotifyAllowExplicitSongToggleButton.IsChecked = ChannelSession.Settings.SpotifyAllowExplicit;
 
             this.VolumeSlider.Value = ChannelSession.Settings.SongRequestVolume;
+            this.VolumeAmountTextBlock.Text = ChannelSession.Settings.SongRequestVolume.ToString();
 
             await this.RefreshRequestsList();
 

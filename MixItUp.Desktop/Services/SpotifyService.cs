@@ -353,6 +353,24 @@ namespace MixItUp.Desktop.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
+        public async Task<int> GetVolume()
+        {
+            try
+            {
+                JObject jobj = await this.GetJObjectAsync("me/player");
+                if (jobj != null && jobj.ContainsKey("device"))
+                {
+                    jobj = (JObject)jobj["device"];
+                    if (jobj.ContainsKey("volume_percent"))
+                    {
+                        return (int)jobj["volume_percent"];
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            return -1;
+        }
+
         protected override async Task RefreshOAuthToken()
         {
             if (this.token != null)

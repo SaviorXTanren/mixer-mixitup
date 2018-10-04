@@ -233,6 +233,8 @@ namespace MixItUp.Base.Services
 
         Task SetVolume(int volume);
 
+        Task<int> GetVolume();
+
         OAuthTokenModel GetOAuthTokenCopy();
     }
 }
