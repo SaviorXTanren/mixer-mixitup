@@ -54,8 +54,7 @@ namespace MixItUp.Desktop.Services
         private const string SpotifyPlaylistRegex = @"spotify:user:\w+:playlist:";
         private const string SpotifyPlaylistUriFormat = "spotify:user:{0}:playlist:{1}";
 
-        private const string YouTubeStatusLinkRegex = @"https://www.youtube.com/watch\?t=\w+&v=";
-
+        private const string YouTubeFullLinkPrefix = "https://www.youtube.com/watch?v=";
         private const string YouTubeLongLinkPrefix = "www.youtube.com/watch?v=";
         private const string YouTubeShortLinkPrefix = "youtu.be/";
         private const string YouTubeHost = "youtube.com";
@@ -397,20 +396,17 @@ namespace MixItUp.Desktop.Services
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
-        public async Task StatusUpdate(SongRequestItem item)
+        public Task StatusUpdate(SongRequestItem item)
         {
-            await this.LockWrapper(() =>
+            if (item != null)
             {
-                if (item != null)
+                if (item.Type == SongRequestServiceTypeEnum.YouTube)
                 {
-                    if (item.Type == SongRequestServiceTypeEnum.YouTube)
-                    {
-                        this.youTubeStatus = item;
-                        this.youTubeStatus.ID = Regex.Replace(this.youTubeStatus.ID, YouTubeStatusLinkRegex, "", RegexOptions.IgnoreCase);
-                    }
+                    this.youTubeStatus = item;
+                    this.youTubeStatus.ID = this.youTubeStatus.ID.Replace(YouTubeFullLinkPrefix, "");
                 }
-                return Task.FromResult(0);
-            });
+            }
+            return Task.FromResult(0);
         }
 
         #endregion Interaction Methods
@@ -464,7 +460,9 @@ namespace MixItUp.Desktop.Services
 
                 await this.LockWrapper(async () =>
                 {
-                    this.spotifyStatus = await this.GetSpotifyStatus();
+                    Logger.LogDiagnostic("Current Song: " + this.currentSong);
+                    Logger.LogDiagnostic("Spotify Status: " + this.spotifyStatus);
+                    Logger.LogDiagnostic("YouTube Status: " + this.youTubeStatus);
 
                     Logger.LogDiagnostic("Current Song: " + this.currentSong);
                     Logger.LogDiagnostic("Spotify Status: " + this.spotifyStatus);
@@ -480,17 +478,25 @@ namespace MixItUp.Desktop.Services
                         SongRequestItem status = null;
                         if (this.currentSong.Type == SongRequestServiceTypeEnum.Spotify)
                         {
-                            status = this.spotifyStatus;
+                            status = this.spotifyStatus = await this.GetSpotifyStatus();
                         }
                         else if (this.currentSong.Type == SongRequestServiceTypeEnum.YouTube)
                         {
-                            status = this.youTubeStatus;
+                            status = await this.GetYouTubeStatus();
                         }
 
-                        if (status != null && this.currentSong.Type == status.Type && this.currentSong.ID.Equals(status.ID))
+                        if (status != null)
                         {
-                            this.currentSong.Progress = status.Progress;
-                            this.currentSong.State = status.State;
+                            if (status.Volume != ChannelSession.Settings.SongRequestVolume)
+                            {
+                                await this.RefreshVolumeInternal();
+                            }
+
+                            if (this.currentSong.Type == status.Type && this.currentSong.ID.Equals(status.ID))
+                            {
+                                this.currentSong.Progress = status.Progress;
+                                this.currentSong.State = status.State;
+                            }
                         }
 
                         if (currentSong.State == SongRequestStateEnum.NotStarted)
@@ -508,14 +514,10 @@ namespace MixItUp.Desktop.Services
                     }
                 });
 
-                if (ChannelSession.Services.OverlayServer != null)
-                {
-                    await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "status" });
-                }
-
                 if (changeOccurred)
                 {
                     GlobalEvents.SongRequestsChangedOccurred();
+                    await Task.Delay(2000, tokenSource.Token);
                 }
 
                 await Task.Delay(1000, tokenSource.Token);
@@ -793,7 +795,10 @@ namespace MixItUp.Desktop.Services
 
         private async Task RefreshVolumeInternal()
         {
-            await ChannelSession.Services.Spotify.SetVolume(ChannelSession.Settings.SongRequestVolume);
+            if (ChannelSession.Services.Spotify != null)
+            {
+                await ChannelSession.Services.Spotify.SetVolume(ChannelSession.Settings.SongRequestVolume);
+            }
             if (ChannelSession.Services.OverlayServer != null)
             {
                 await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "volume", Volume = ChannelSession.Settings.SongRequestVolume });
@@ -812,7 +817,6 @@ namespace MixItUp.Desktop.Services
                         if (song != null)
                         {
                             await ChannelSession.Services.Spotify.PlaySong(song);
-                            item.State = SongRequestStateEnum.Playing;
                             this.currentSong = item;
                         }
                     }
@@ -822,7 +826,6 @@ namespace MixItUp.Desktop.Services
                     if (ChannelSession.Services.OverlayServer != null)
                     {
                         await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "song", Source = item.ID, Volume = ChannelSession.Settings.SongRequestVolume });
-                        item.State = SongRequestStateEnum.Playing;
                         this.currentSong = item;
                     }
                 }
@@ -884,10 +887,26 @@ namespace MixItUp.Desktop.Services
                         result.State = SongRequestStateEnum.Ended;
                     }
 
+                    result.Volume = await ChannelSession.Services.Spotify.GetVolume();
+
                     return result;
                 }
             }
             return null;
+        }
+
+        private async Task<SongRequestItem> GetYouTubeStatus()
+        {
+            if (ChannelSession.Services.OverlayServer != null)
+            {
+                this.youTubeStatus = null;
+                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "status" });
+                for (int i = 0; i < 10 && this.youTubeStatus == null; i++)
+                {
+                    await Task.Delay(500);
+                }
+            }
+            return this.youTubeStatus;
         }
 
         #endregion Interaction Internal Methods

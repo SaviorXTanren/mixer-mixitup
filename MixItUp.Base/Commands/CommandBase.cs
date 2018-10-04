@@ -56,6 +56,8 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
+        public event EventHandler OnActionsStarted = delegate { };
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -227,6 +229,8 @@ namespace MixItUp.Base.Commands
 
         protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
+            this.OnActionsStarted(this, new EventArgs());
+
             List<ActionBase> actionsToRun = new List<ActionBase>();
             if (this.IsRandomized)
             {

@@ -217,14 +217,15 @@
                 if (data.Type == 'YouTube' && youtubePlayerReady) {
                     if (data.Action == 'status') {
                         var data = {};
+                        data.Type = 1;
+                        data.State = 0;
 
                         var playerState = youtubePlayer.getPlayerState();
                         if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
-                            data.Type = 1;
                             data.ID = youtubePlayer.getVideoUrl();
-                            data.State = 0;
                             data.Progress = youtubePlayer.getCurrentTime();
                             data.Length = youtubePlayer.getDuration();
+                            data.Volume = youtubePlayer.getVolume();
 
                             if (playerState == YT.PlayerState.PLAYING) {
                                 data.State = 1;
@@ -235,9 +236,6 @@
                             else if (playerState == YT.PlayerState.ENDED) {
                                 data.State = 3;
                             }
-                        }
-                        else {
-                            data = null;
                         }
 
                         sendPacket('songRequestStatus', data);
