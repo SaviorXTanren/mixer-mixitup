@@ -1513,7 +1513,6 @@
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.xml
 
 rmdir /Q /S $(TargetDir)Settings\
-mkdir $(TargetDir)Settings\
 
 rmdir /Q /S $(TargetDir)Logs\</PostBuildEvent>
   </PropertyGroup>
