@@ -180,12 +180,12 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool Equals(UserCurrencyViewModel other)
         {
-            return (!string.IsNullOrEmpty(this.Name)) ? this.Name.Equals(other.Name) : false;
+            return this.ID.Equals(other.ID);
         }
 
         public override int GetHashCode()
         {
-            return (!string.IsNullOrEmpty(this.Name)) ? this.Name.GetHashCode() : string.Empty.GetHashCode();
+            return this.ID.GetHashCode();
         }
     }
 }
