@@ -291,9 +291,6 @@
     <Compile Include="Controls\Actions\SpecialIdentifierActionControl.xaml.cs">
       <DependentUpon>SpecialIdentifierActionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Actions\SpotifyActionControl.xaml.cs">
-      <DependentUpon>SpotifyActionControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\Actions\StreamingSoftwareActionControl.xaml.cs">
       <DependentUpon>StreamingSoftwareActionControl.xaml</DependentUpon>
     </Compile>
@@ -778,10 +775,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\SpecialIdentifierActionControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Actions\SpotifyActionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
