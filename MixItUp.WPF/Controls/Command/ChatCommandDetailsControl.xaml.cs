@@ -117,19 +117,19 @@ namespace MixItUp.WPF.Controls.Command
 
                 RequirementViewModel requirements = this.Requirements.GetRequirements();
 
-                if (this.command == null || !ChannelSession.Settings.ChatCommands.Contains(this.command))
-                {
-                    this.command = new ChatCommand(this.NameTextBox.Text, commands, requirements);
-                    if (this.autoAddToChatCommands)
-                    {
-                        ChannelSession.Settings.ChatCommands.Add(this.command);
-                    }
-                }
-                else
+                if (this.command != null)
                 {
                     this.command.Name = this.NameTextBox.Text;
                     this.command.Commands = commands.ToList();
                     this.command.Requirements = requirements;
+                }
+                else
+                {
+                    this.command = new ChatCommand(this.NameTextBox.Text, commands, requirements);
+                    if (this.autoAddToChatCommands && !ChannelSession.Settings.ChatCommands.Contains(this.command))
+                    {
+                        ChannelSession.Settings.ChatCommands.Add(this.command);
+                    }
                 }
 
                 this.command.IncludeExclamationInCommands = this.IncludeExclamationInCommandsToggleButton.IsChecked.GetValueOrDefault();
