@@ -55,6 +55,7 @@ namespace MixItUp.Desktop.Services
         private const string SpotifyPlaylistUriFormat = "spotify:user:{0}:playlist:{1}";
 
         private const string YouTubeFullLinkPrefix = "https://www.youtube.com/watch?v=";
+        private const string YouTubeFullLinkWithTimePattern = @"https://www.youtube.com/watch\?t=\w+&v=";
         private const string YouTubeLongLinkPrefix = "www.youtube.com/watch?v=";
         private const string YouTubeShortLinkPrefix = "youtu.be/";
         private const string YouTubeHost = "youtube.com";
@@ -403,6 +404,7 @@ namespace MixItUp.Desktop.Services
                 if (item.Type == SongRequestServiceTypeEnum.YouTube)
                 {
                     this.youTubeStatus = item;
+                    this.youTubeStatus.ID = Regex.Replace(this.youTubeStatus.ID, YouTubeFullLinkWithTimePattern, "");
                     this.youTubeStatus.ID = this.youTubeStatus.ID.Replace(YouTubeFullLinkPrefix, "");
                 }
             }
