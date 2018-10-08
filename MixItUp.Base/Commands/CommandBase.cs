@@ -56,7 +56,7 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
-        public event EventHandler OnActionsStarted = delegate { };
+        public event EventHandler OnCommandStart = delegate { };
 
         [DataMember]
         public Guid ID { get; set; }
@@ -147,7 +147,7 @@ namespace MixItUp.Base.Commands
 
         public async Task Perform(IEnumerable<string> arguments) { await this.Perform(await ChannelSession.GetCurrentUser(), arguments); }
 
-        public Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (this.IsEnabled)
             {
@@ -159,6 +159,11 @@ namespace MixItUp.Base.Commands
                 if (extraSpecialIdentifiers == null)
                 {
                     extraSpecialIdentifiers = new Dictionary<string, string>();
+                }
+
+                if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
+                {
+                    return;
                 }
 
                 try
@@ -173,6 +178,8 @@ namespace MixItUp.Base.Commands
                     }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+
+                this.OnCommandStart(this, new EventArgs());
 
                 this.currentCancellationTokenSource = new CancellationTokenSource();
                 this.currentTaskRun = Task.Run(async () =>
@@ -203,7 +210,6 @@ namespace MixItUp.Base.Commands
                     }
                 }, this.currentCancellationTokenSource.Token);
             }
-            return Task.FromResult(0);
         }
 
         public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
@@ -227,10 +233,13 @@ namespace MixItUp.Base.Commands
             }
         }
 
+        protected virtual Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            return Task.FromResult(true);
+        }
+
         protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
-            this.OnActionsStarted(this, new EventArgs());
-
             List<ActionBase> actionsToRun = new List<ActionBase>();
             if (this.IsRandomized)
             {

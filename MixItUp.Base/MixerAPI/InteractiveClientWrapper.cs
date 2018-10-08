@@ -54,7 +54,7 @@ namespace MixItUp.Base.MixerAPI
         public InteractiveConnectedButtonCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedButtonControlModel button, InteractiveCommand command)
             : base(scene, button, command)
         {
-            this.ButtonCommand.OnActionsStarted += ButtonCommand_OnActionsStarted;
+            this.ButtonCommand.OnCommandStart += ButtonCommand_OnCommandStart;
         }
 
         public InteractiveConnectedButtonControlModel Button { get { return (InteractiveConnectedButtonControlModel)this.Control; } set { this.Control = value; } }
@@ -71,7 +71,7 @@ namespace MixItUp.Base.MixerAPI
             await base.Perform(user, arguments);
         }
 
-        private async void ButtonCommand_OnActionsStarted(object sender, EventArgs e)
+        private async void ButtonCommand_OnCommandStart(object sender, EventArgs e)
         {
             if (this.HasCooldown)
             {
