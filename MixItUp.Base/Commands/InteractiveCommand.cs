@@ -331,11 +331,6 @@ namespace MixItUp.Base.Commands
             this.Actions.Add(new InteractiveJoystickAction(this));
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
-        {
-            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
-        }
-
         [OnDeserialized]
         internal void OnDeserialized(StreamingContext streamingContext)
         {
