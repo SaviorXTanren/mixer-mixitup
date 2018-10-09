@@ -1,8 +1,12 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Interactive;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Database;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -52,7 +56,6 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version20Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version21Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version22Upgrade(version, filePath);
-            await DesktopSettingsUpgrader.Version23Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -282,32 +285,6 @@ namespace MixItUp.Desktop.Services
                 foreach (CommandBase command in commands)
                 {
                     StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(command.Actions);
-                }
-
-                await ChannelSession.Services.Settings.Save(settings);
-            }
-        }
-
-        private static async Task Version23Upgrade(int version, string filePath)
-        {
-            if (version < 23)
-            {
-                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-                await ChannelSession.Services.Settings.Initialize(settings);
-
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.EventCommands);
-                commands.AddRange(settings.InteractiveCommands);
-                commands.AddRange(settings.TimerCommands);
-                commands.AddRange(settings.ActionGroupCommands);
-                commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
-                foreach (CommandBase command in commands)
-                {
-#pragma warning disable CS0612 // Type or member is obsolete
-                    command.Actions.RemoveAll(a => a.Type == ActionTypeEnum.Spotify);
-#pragma warning restore CS0612 // Type or member is obsolete
                 }
 
                 await ChannelSession.Services.Settings.Save(settings);
