@@ -11,22 +11,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Actions
 {
-    #region Obsolete Actions
-
-    [DataContract]
-    [Obsolete]
-    public class SpotifyAction : ActionBase
-    {
-        protected override SemaphoreSlim AsyncSemaphore => throw new NotImplementedException();
-
-        protected override Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    #endregion Obsolete Actions
-
     public enum ActionTypeEnum
     {
         Chat,
@@ -60,7 +44,6 @@ namespace MixItUp.Base.Actions
         File,
         [Name("Song Request")]
         SongRequest,
-        [Obsolete]
         Spotify,
         Discord,
         Translation,
