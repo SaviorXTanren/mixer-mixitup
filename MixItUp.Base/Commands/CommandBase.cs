@@ -240,6 +240,11 @@ namespace MixItUp.Base.Commands
             return Task.FromResult(true);
         }
 
+        protected virtual Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            return Task.FromResult(true);
+        }
+
         protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
         {
             List<ActionBase> actionsToRun = new List<ActionBase>();
