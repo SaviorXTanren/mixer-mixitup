@@ -212,6 +212,11 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
+        protected override Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            return Task.FromResult(true);
+        }
+
         protected virtual string GetBetAmountArgument(IEnumerable<string> arguments)
         {
             return arguments.FirstOrDefault();
