@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Desktop.Services.DeveloperAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,22 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
     {
         [Route]
         [HttpGet]
-        public IEnumerable<CommandBase> Get()
+        public IEnumerable<CommandDeveloperAPIModel> Get()
         {
-            return GetAllCommands();
+            var allCommands = GetAllCommands();
+
+            List<CommandDeveloperAPIModel> commands = new List<CommandDeveloperAPIModel>();
+            foreach (var command in allCommands)
+            {
+                commands.Add(new CommandDeveloperAPIModel(command));
+            }
+
+            return commands;
         }
 
         [Route("{commandID:guid}")]
         [HttpGet]
-        public CommandBase Get(Guid commandID)
+        public CommandDeveloperAPIModel Get(Guid commandID)
         {
             CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
             if (selectedCommand == null)
@@ -28,12 +37,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return selectedCommand;
+            return new CommandDeveloperAPIModel(selectedCommand);
         }
 
         [Route("{commandID:guid}")]
         [HttpPost]
-        public CommandBase Run(Guid commandID)
+        public CommandDeveloperAPIModel Run(Guid commandID)
         {
             CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
             if (selectedCommand == null)
@@ -45,12 +54,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             selectedCommand.Perform();
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            return selectedCommand;
+            return new CommandDeveloperAPIModel(selectedCommand);
         }
 
         [Route("{commandID:guid}")]
         [HttpPut, HttpPatch]
-        public CommandBase Update(Guid commandID, [FromBody] CommandBase commandData)
+        public CommandDeveloperAPIModel Update(Guid commandID, [FromBody] CommandBase commandData)
         {
             CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
             if (selectedCommand == null)
@@ -59,7 +68,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             }
 
             selectedCommand.IsEnabled = commandData.IsEnabled;
-            return selectedCommand;
+            return new CommandDeveloperAPIModel(selectedCommand);
         }
 
         private List<CommandBase> GetAllCommands()

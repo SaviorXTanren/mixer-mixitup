@@ -135,6 +135,30 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return AdjustCurrency(user, currencyID, currencyUpdate);
         }
 
+        [Route("top")]
+        [HttpGet]
+        public IEnumerable<UserDeveloperAPIModel> Get(Guid currencyID, int count = 10)
+        {
+            if (count < 1)
+            {
+                // TODO: Consider checking or a max # too? (100?)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+
+            Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
+            allUsersDictionary.Remove(ChannelSession.Channel.user.id);
+
+            IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
+            allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
+
+            List<UserDeveloperAPIModel> userList = new List<UserDeveloperAPIModel>();
+            foreach (UserDataViewModel user in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(count))
+            {
+                userList.Add(new UserDeveloperAPIModel(user));
+            }
+            return userList;
+        }
+
         private UserDeveloperAPIModel AdjustCurrency(UserDataViewModel user, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))

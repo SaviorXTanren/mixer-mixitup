@@ -18,6 +18,8 @@ tags:
     description: Operations related to Mix It Up User data
   - name: Currency
     description: Operations related to Mix It Up Currency data
+  - name: Chat
+    description: Operations related to Mix It Up Chat
   - name: Commands
     description: Operations related to Mix It Up Commands
   - name: Mixer
@@ -62,6 +64,8 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/MixItUpUser'
+        '400':
+          description: Bad request was sent in
         '404':
           description: User not found
           
@@ -83,6 +87,8 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/ListOfMixItUpUsers'
+        '400':
+          description: Bad request was sent in
 
   '/users/{usernameOrID}/currency/{currencyID}/adjust':
     parameters:
@@ -115,11 +121,34 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/MixItUpUser'
+        '400':
+          description: Bad request was sent in
         '403':
           description: User does not have enough of the chosen currency to remove
         '404':
           description: User not found
-          
+
+  '/users/top':
+    parameters:
+      - name: count
+        in: query
+        description: 'The number of users to retrieve. **Default: 10**'
+        required: false
+        type: integer
+        default: 10
+    get:
+      tags:
+        - User
+      summary: Gets a list users ordered by viewing time descending
+      operationId: topUserByViewingTime
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpUsers'
+
   '/currency':
     get:
       tags:
@@ -150,6 +179,7 @@ paths:
         format: uuid
     get:
       tags:
+        - User
         - Currency
       summary: Gets a list users ordered by currency quantity descending
       operationId: topUserOfCurrency
@@ -190,9 +220,47 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/ListOfMixItUpUsers'
+        '400':
+          description: Bad request was sent in
         '404':
           description: The currency could not be found.
-            
+
+  '/chat/users':
+    get:
+      tags:
+        - User
+        - Chat
+      summary: Gets a list of all users currently active in chat.
+      operationId: getAllChatUsers
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpUsers'
+
+  '/chat/message':
+    post:
+      tags:
+        - Chat
+      summary: Sends a message to the chat
+      operationId: sendChatMessage
+      parameters:
+        - name: chatMessage
+          description: 'The chat message to send'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/MixItUpChatMessage'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request was sent in
+
   '/commands':
     get:
       tags:
@@ -260,6 +328,8 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/MixItUpCommand'
+        '400':
+          description: Bad request was sent in
         '404':
           description: The command could not be found.
             
@@ -294,16 +364,20 @@ definitions:
       ID:
         description: The Mixer User ID.
         type: integer
+        required: true
         example: 7207866
       UserName:
         description: The Mixer Username.
         type: string
+        required: false
         example: SaviorXTanren
       ViewingMinutes:
         description: The number of minutes the user has been in the stream.
         type: integer
+        required: true
         example: 3244
       CurrrencyAmounts:
+        required: true
         type: array
         items:
           $ref: '#/definitions/MixItUpCurrency'
@@ -313,32 +387,39 @@ definitions:
     properties:
       ID:
         description: The Mixer User ID.
+        required: true
         type: integer
         example: 7207866
       ViewingMinutes:
         description: The number of minutes the user has been in the stream.
+        required: true
         type: integer
         example: 3244
       CurrrencyAmounts:
+        required: true
         type: array
         items:
           $ref: '#/definitions/UpdateMixItUpCurrency'
           
   ListOfMixItUpUsernamesOrIDs:
+    required: true
     type: array
     items:
       type: string
           
   ListOfMixItUpUsers:
+    required: true
     type: array
     items:
       $ref: '#/definitions/MixItUpUser'
       
   AdjustUserCurrency:
+    required: true
     type: object
     properties:
       Amount:
         description: The amount to adjust the user's currency.  This amount may be positive or negative.
+        required: true
         type: integer
 
   MixItUpCurrency:
@@ -346,72 +427,105 @@ definitions:
     properties:
       ID:
         description: The Mix It Up currency ID.
+        required: true
         type: string
         format: uuid
         example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
       Name:
         description: The Mix It Up currency name.
+        required: true
         type: string
         example: Influence
       Amount:
-        description: The number of minutes the user has been in the stream.
+        description: The amount of currency the user has.
+        required: true
         type: integer
         example: 2751
 
   ListOfMixItUpCurrency:
+    required: true
     type: array
     items:
       $ref: '#/definitions/MixItUpCurrency'
       
   MixItUpCommand:
+    required: true
     type: object
     properties:
       ID:
-        description: The Mix It Up currency ID.
+        description: The Mix It Up command ID.
+        required: true
         type: string
         format: uuid
         example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
       Name:
-        description: The Mix It Up currency name.
+        description: The Mix It Up command name.
+        required: true
         type: string
       IsEnabled:
         description: True if enabled, false otherwise
+        required: true
         type: boolean
 
   ListOfMixItUpCommands:
+    required: true
     type: array
     items:
       $ref: '#/definitions/MixItUpCommand'
       
   UpdateMixItUpCurrency:
+    required: true
     type: object
     properties:
       ID:
         description: The Mix It Up currency ID.
+        required: true
         type: string
         format: uuid
         example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
       Amount:
-        description: The number of minutes the user has been in the stream.
+        description: The amount of currency the user has.
+        required: true
         type: integer
         example: 2751
 
   GiveUserCurrency:
+    required: true
     type: object
     properties:
       Amount:
         description: The amount to adjust the user's currency.  This amount may be positive or negative.
+        required: true
         type: integer
         minimum: 1
       UsernameOrID:
         description: The username or ID to adjust.
+        required: true
         type: string
 
   BulkGiveUsersCurrency:
+    required: true
     type: array
     items:
       $ref: '#/definitions/GiveUserCurrency'
-      
+
+  MixItUpChatMessage:
+    required: true
+    type: object
+    properties:
+      Message:
+        description: The message to send to chat.
+        type: string
+        example: This is a test of the emergency broadcast system!
+        required: true
+      SendAsStreamer:
+        description: True will force the message to send as the streamer. False will try to send as the registered bot, if available.
+        type: boolean
+        example: false
+        required: false
+        default: false
+
   MixerUser:
+    required: true
     type: object
     description: See Mixer docs
