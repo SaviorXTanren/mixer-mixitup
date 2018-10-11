@@ -364,6 +364,12 @@
     <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\CalendarDialogControl.xaml.cs">
+      <DependentUpon>CalendarDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\ClockDialogControl.xaml.cs">
+      <DependentUpon>ClockDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
       <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
@@ -877,6 +883,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CalendarDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\ClockDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
