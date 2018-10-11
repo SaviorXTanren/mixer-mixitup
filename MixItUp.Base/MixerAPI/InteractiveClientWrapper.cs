@@ -396,6 +396,37 @@ namespace MixItUp.Base.MixerAPI
             await ChannelSession.Connection.UpdateInteractiveGameVersion(version);
         }
 
+        public async Task TimeoutUser(UserViewModel user, int amountInSeconds)
+        {
+            await ChannelSession.Interactive.SetUserDisabledState(user, disabled: true);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(amountInSeconds * 1000);
+                    if (ChannelSession.Interactive != null)
+                    {
+                        await ChannelSession.Interactive.SetUserDisabledState(user, disabled: false);
+                    }
+                }
+                catch (Exception ex) { Util.Logger.Log(ex); }
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        public async Task SetUserDisabledState(UserViewModel user, bool disabled)
+        {
+            if (user != null && user.IsInteractiveParticipant)
+            {
+                user.IsInInteractiveTimeout = disabled;
+                foreach (InteractiveParticipantModel participant in user.GetParticipantModels())
+                {
+                    await ChannelSession.Interactive.UpdateParticipant(participant);
+                }
+            }
+        }
+
         protected override async Task<bool> ConnectInternal()
         {
             InteractiveSharedProjectModel sharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
@@ -707,6 +738,11 @@ namespace MixItUp.Base.MixerAPI
 
                         user = new UserViewModel(0, "Unknown User");
                         user.InteractiveIDs.Add(e.participantID);
+                    }
+
+                    if (user.IsInInteractiveTimeout)
+                    {
+                        return;
                     }
 
                     InteractiveConnectedControlCommand connectedControl = null;

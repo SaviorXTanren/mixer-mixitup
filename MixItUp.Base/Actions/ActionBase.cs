@@ -59,6 +59,7 @@ namespace MixItUp.Base.Actions
         MixerClips,
         Command,
         Serial,
+        Moderation,
 
         Custom = 99,
     }

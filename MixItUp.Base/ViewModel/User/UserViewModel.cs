@@ -111,6 +111,9 @@ namespace MixItUp.Base.ViewModel.User
         public string InteractiveGroupID { get; set; }
 
         [DataMember]
+        public bool IsInInteractiveTimeout { get; set; }
+
+        [DataMember]
         public GameWispSubscriber GameWispUser { get; set; }
 
         public UserViewModel()
@@ -412,6 +415,7 @@ namespace MixItUp.Base.ViewModel.User
                     username = this.UserName,
                     sessionID = interactiveID,
                     groupID = this.InteractiveGroupID,
+                    disabled = this.IsInInteractiveTimeout,
                 });
             }
             return participants;
