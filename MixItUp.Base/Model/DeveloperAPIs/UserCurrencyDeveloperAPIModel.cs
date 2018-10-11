@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Desktop.Services.DeveloperAPI.Models
+namespace MixItUp.Base.Model.DeveloperAPIs
 {
     [DataContract]
     public class UserCurrencyDeveloperAPIModel

@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
-using MixItUp.Desktop.Services.DeveloperAPI.Models;
+using MixItUp.Base.Model.DeveloperAPIs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

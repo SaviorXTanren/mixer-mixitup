@@ -1,11 +1,9 @@
 ﻿using MixItUp.Base.Commands;
-using MixItUp.Base.ViewModel.User;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Desktop.Services.DeveloperAPI.Models
+namespace MixItUp.Base.Model.DeveloperAPIs
 {
     [DataContract]
     public class CommandDeveloperAPIModel

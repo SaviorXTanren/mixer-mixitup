@@ -1,7 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.DeveloperAPIs;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop.Services.DeveloperAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
