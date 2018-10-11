@@ -10,14 +10,20 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
     public class WindowsDeveloperAPIService : IDeveloperAPIService
     {
         private IDisposable webApp;
-        public const string DeveloperAPIHttpListenerServerAddress = "http://localhost:8911/";
+        public readonly string[] DeveloperAPIHttpListenerServerAddresses = new string[] { "http://localhost:8911/", "http://127.0.0.1:8911/" };
 
         public bool Start()
         {
             // Ensure it is cleaned up first
             End();
 
-            this.webApp = WebApp.Start<WindowsDeveloperAPIServiceStartup>(DeveloperAPIHttpListenerServerAddress);
+            StartOptions opts = new StartOptions();
+            foreach(var url in DeveloperAPIHttpListenerServerAddresses)
+            {
+                opts.Urls.Add(url);
+            }
+
+            this.webApp = WebApp.Start<WindowsDeveloperAPIServiceStartup>(opts);
             return true;
         }
 
