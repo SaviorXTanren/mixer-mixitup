@@ -464,6 +464,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (message != null)
                 {
                     message.DeleteMessage(deleteEvent.moderator?.user_name);
+                    if (ChannelSession.Settings.HideDeletedMessages)
+                    {
+                        this.MessageControls.Remove(message);
+                    }
                 }
 
                 this.messageUpdateLock.Release();
@@ -482,6 +486,10 @@ namespace MixItUp.WPF.Controls.MainControls
                     foreach (ChatMessageControl message in userMessages)
                     {
                         message.DeleteMessage(purgeEvent.Item2);
+                        if (ChannelSession.Settings.HideDeletedMessages)
+                        {
+                            this.MessageControls.Remove(message);
+                        }
                     }
                 }
 
