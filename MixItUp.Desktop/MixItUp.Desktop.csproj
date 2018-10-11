@@ -190,6 +190,15 @@
     <Compile Include="Services\DesktopServicesHandler.cs" />
     <Compile Include="Services\DesktopSettingsUpgrader.cs" />
     <Compile Include="Services\DesktopTelemetryService.cs" />
+    <Compile Include="Services\DeveloperAPI\CommandController.cs" />
+    <Compile Include="Services\DeveloperAPI\CurrencyController.cs" />
+    <Compile Include="Services\DeveloperAPI\MixerUserController.cs" />
+    <Compile Include="Services\DeveloperAPI\NoCacheHeader.cs" />
+    <Compile Include="Services\DeveloperAPI\UserController.cs" />
+    <Compile Include="Services\DeveloperAPI\Models\UserCurrencyUpdateDeveloperAPIModel.cs" />
+    <Compile Include="Services\DeveloperAPI\Models\UserCurrencyGiveDeveloperAPIModel.cs" />
+    <Compile Include="Services\DeveloperAPI\Models\UserCurrencyDeveloperAPIModel.cs" />
+    <Compile Include="Services\DeveloperAPI\Models\UserDeveloperAPIModel.cs" />
     <Compile Include="Services\DiscordService.cs" />
     <Compile Include="Services\GameWispService.cs" />
     <Compile Include="Services\GawkBoxService.cs" />
@@ -206,7 +215,7 @@
     <Compile Include="Services\TranslationService.cs" />
     <Compile Include="Services\TwitterService.cs" />
     <Compile Include="Services\AudioService.cs" />
-    <Compile Include="Services\WindowsDeveloperAPIService.cs" />
+    <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />
     <Compile Include="Services\WindowsFileService.cs" />
     <Compile Include="Services\WindowsInputService.cs" />
     <Compile Include="Services\DesktopSettingsService.cs" />
