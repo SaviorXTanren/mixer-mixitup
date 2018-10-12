@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
+using MixItUp.Desktop.Services.DeveloperAPI;
 using MixItUp.Input;
 using MixItUp.OBS;
 using MixItUp.Overlay;
