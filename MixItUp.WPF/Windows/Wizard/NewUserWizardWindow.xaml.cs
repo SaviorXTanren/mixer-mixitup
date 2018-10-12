@@ -680,6 +680,7 @@ namespace MixItUp.WPF.Windows.Wizard
 
                 foreach (ScorpBotCommand command in this.scorpBotData.Commands)
                 {
+                    command.ProcessData(currency, rankCurrency);
                     ChannelSession.Settings.ChatCommands.Add(new ChatCommand(command));
                 }
 
@@ -732,13 +733,6 @@ namespace MixItUp.WPF.Windows.Wizard
                 else
                 {
                     ChannelSession.Settings.ModerationCapsBlockCount = this.scorpBotData.GetIntSettingsValue("settings", "chatmincaps");
-                }
-
-                ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = Math.Max(this.scorpBotData.GetIntSettingsValue("settings", "filtwordspercautotimenum"),
-                    this.scorpBotData.GetIntSettingsValue("settings", "chatperccapsautotimenum"));
-                if (ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount > 0)
-                {
-                    ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount = ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount + 2;
                 }
 
                 ChannelSession.Settings.ModerationBlockLinks = this.scorpBotData.GetBoolSettingsValue("settings", "chatlinkalertsdel");
