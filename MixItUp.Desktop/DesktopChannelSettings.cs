@@ -79,6 +79,8 @@ namespace MixItUp.Desktop
         public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
         [JsonProperty]
         public string DefaultAudioOutput { get; set; }
+        [JsonProperty]
+        public bool SaveChatEventLogs { get; set; }
 
         [JsonProperty]
         public bool WhisperAllAlerts { get; set; }
@@ -86,6 +88,8 @@ namespace MixItUp.Desktop
         public bool LatestChatAtTop { get; set; }
         [JsonProperty]
         public bool HideViewerAndChatterNumbers { get; set; }
+        [JsonProperty]
+        public bool HideDeletedMessages { get; set; }
         [JsonProperty]
         public bool TrackWhispererNumber { get; set; }
         [JsonProperty]
@@ -96,8 +100,6 @@ namespace MixItUp.Desktop
         public bool CommandsOnlyInYourStream { get; set; }
         [JsonProperty]
         public bool DeleteChatCommandsWhenRun { get; set; }
-        [JsonProperty]
-        public bool HideDeletedMessages { get; set; }
 
         [JsonProperty]
         public uint DefaultInteractiveGame { get; set; }

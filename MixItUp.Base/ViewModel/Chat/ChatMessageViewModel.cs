@@ -162,6 +162,20 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 
-        public override string ToString() { return string.Format("{0}: {1}", this.User, this.Message); }
+        public override string ToString()
+        {
+            if (this.IsAlertMessage)
+            {
+                return this.Message;
+            }
+            else if (this.IsWhisper)
+            {
+                return string.Format("{0} -> {1}: {2}", this.User, this.TargetUsername, this.Message);
+            }
+            else
+            {
+                return string.Format("{0}: {1}", this.User, this.Message);
+            }
+        }
     }
 }

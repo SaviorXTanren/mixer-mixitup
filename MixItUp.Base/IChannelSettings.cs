@@ -45,16 +45,17 @@ namespace MixItUp.Base
         bool FeatureMe { get; set; }
         StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
         string DefaultAudioOutput { get; set; }
+        bool SaveChatEventLogs { get; set; }
 
         bool WhisperAllAlerts { get; set; }
         bool LatestChatAtTop { get; set; }
         bool HideViewerAndChatterNumbers { get; set; }
+        bool HideDeletedMessages { get; set; }
         bool TrackWhispererNumber { get; set; }
         bool AllowCommandWhispering { get; set; }
         bool IgnoreBotAccountCommands { get; set; }
         bool CommandsOnlyInYourStream { get; set; }
         bool DeleteChatCommandsWhenRun { get; set; }
-        bool HideDeletedMessages { get; set; }
 
         uint DefaultInteractiveGame { get; set; }
         bool PreventUnknownInteractiveUsers { get; set; }

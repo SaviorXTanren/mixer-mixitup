@@ -11,6 +11,7 @@ using MixItUp.WPF.Windows.PopOut;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -186,6 +187,8 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.MessageControls.RemoveAt(0);
                 }
             }
+
+            Logger.LogChatEvent(message.ToString());
 
             messageUpdateLock.Release();
         }

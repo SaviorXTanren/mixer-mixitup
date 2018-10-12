@@ -69,6 +69,7 @@ namespace MixItUp.WPF.Controls.Settings
             {
                 this.DefaultAudioOutputComboBox.SelectedItem = SoundAction.DefaultAudioDevice;
             }
+            this.SaveChatEventLogsToggleButton.IsChecked = ChannelSession.Settings.SaveChatEventLogs;
 
             this.CheckFFMPEGInstallation();
 
@@ -158,6 +159,11 @@ namespace MixItUp.WPF.Controls.Settings
             bool mmpegExists = ChannelSession.Services.FileService.FileExists(MixerClipsAction.GetFFMPEGExecutablePath());
             this.DownloadAndInstallFFMPEGButton.Visibility = (mmpegExists) ? Visibility.Collapsed : Visibility.Visible;
             this.FFMPEGInstalledTextBlock.Visibility = (mmpegExists) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void SaveChatEventLogsToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.SaveChatEventLogs = this.SaveChatEventLogsToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }
