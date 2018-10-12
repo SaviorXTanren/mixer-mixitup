@@ -349,6 +349,15 @@ namespace MixItUp.Base.MixerAPI
                 return message;
             }
 
+            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
+            {
+                await this.DeleteMessage(message.ID);
+
+                await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isChat: true);
+
+                return message;
+            }
+
             string moderationReason = await message.ShouldBeModerated();
             if (!string.IsNullOrEmpty(moderationReason))
             {
@@ -356,7 +365,7 @@ namespace MixItUp.Base.MixerAPI
 
                 await this.DeleteMessage(message.ID);
 
-                await ModerationHelper.SendModerationWhisper(user, moderationReason);
+                await user.AddModerationStrike(moderationReason);
 
                 return message;
             }

@@ -31,7 +31,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 22;
+        public const int LatestVersion = 23;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -161,14 +161,6 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool ModerationPunctuationBlockIsPercentage { get; set; }
         [JsonProperty]
-        public int ModerationEmoteBlockCount { get; set; }
-        [JsonProperty]
-        public bool ModerationEmoteBlockIsPercentage { get; set; }
-        [JsonProperty]
-        public int ModerationChatTextTimeout1MinuteOffenseCount { get; set; }
-        [JsonProperty]
-        public int ModerationChatTextTimeout5MinuteOffenseCount { get; set; }
-        [JsonProperty]
         public MixerRoleEnum ModerationChatTextExcempt { get; set; }
 
         [JsonProperty]
@@ -177,11 +169,14 @@ namespace MixItUp.Desktop
         public MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
 
         [JsonProperty]
-        public int ModerationTimeout1MinuteOffenseCount { get; set; }
+        public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
+
         [JsonProperty]
-        public int ModerationTimeout5MinuteOffenseCount { get; set; }
+        public CustomCommand ModerationStrike1Command { get; set; }
         [JsonProperty]
-        public MixerRoleEnum ModerationTimeoutExempt { get; set; }
+        public CustomCommand ModerationStrike2Command { get; set; }
+        [JsonProperty]
+        public CustomCommand ModerationStrike3Command { get; set; }
 
         [JsonProperty]
         public bool EnableOverlay { get; set; }
@@ -426,11 +421,11 @@ namespace MixItUp.Desktop
             this.ModerationFilteredWordsExcempt = MixerRoleEnum.Mod;
             this.ModerationChatTextExcempt = MixerRoleEnum.Mod;
             this.ModerationBlockLinksExcempt = MixerRoleEnum.Mod;
-            this.ModerationTimeoutExempt = MixerRoleEnum.Mod;
-
             this.ModerationCapsBlockIsPercentage = true;
             this.ModerationPunctuationBlockIsPercentage = true;
-            this.ModerationEmoteBlockIsPercentage = true;
+            this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+            this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+            this.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
 
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();

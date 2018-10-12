@@ -114,6 +114,9 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public uint GameWispUserID { get; set; }
 
+        [DataMember]
+        public uint ModerationStrikes { get; set; }
+
         public UserDataViewModel()
         {
             this.CurrencyAmounts = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
@@ -178,6 +181,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.IsSparkExempt = this.GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
                 this.IsCurrencyRankExempt = this.GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
                 this.GameWispUserID = this.GetOptionValue<uint>(optionsJObj, "GameWispUserID");
+                this.ModerationStrikes = this.GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
             }
         }
 
@@ -356,6 +360,7 @@ namespace MixItUp.Base.ViewModel.User
             options["IsSparkExempt"] = this.IsSparkExempt;
             options["IsCurrencyRankExempt"] = this.IsCurrencyRankExempt;
             options["GameWispUserID"] = this.GameWispUserID;
+            options["ModerationStrikes"] = this.ModerationStrikes;
             return options.ToString();
         }
 

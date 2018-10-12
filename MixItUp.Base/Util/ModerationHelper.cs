@@ -1,5 +1,7 @@
-﻿using MixItUp.Base.Actions;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Actions;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -7,12 +9,37 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Util
 {
+    public enum ModerationChatInteractiveParticipationEnum
+    {
+        None = 0,
+        [Name("Account Is 1 Hour Old")]
+        AccountHour = 1,
+        [Name("Account Is 1 Day Old")]
+        AccountDay = 2,
+        [Name("Account Is 1 Week Old")]
+        AccountWeek = 3,
+        [Name("Watched For 10 Minutes")]
+        ViewingTenMinutes = 10,
+        [Name("Watched For 30 Minutes")]
+        ViewingThirtyMinutes = 11,
+        [Name("Watched For 1 Hour")]
+        ViewingOneHour = 12,
+        [Name("Watched For 2 Hour")]
+        ViewingTwoHours = 13,
+        [Name("Subscriber Only")]
+        Subscriber = 20,
+        [Name("Moderator Only")]
+        Moderator = 30,
+    }
+
     public static class ModerationHelper
     {
-        public static readonly string BannedWordRegexFormat = "(^|[^\\w]){0}([^\\w]|$)";
-        public static readonly string BannedWordWildcardRegexFormat = "\\S*";
+        public const string ModerationReasonSpecialIdentifier = "moderationreason";
 
-        private static readonly int MinimumMessageLengthForPercentageModeration = 5;
+        public const string BannedWordRegexFormat = "(^|[^\\w]){0}([^\\w]|$)";
+        public const string BannedWordWildcardRegexFormat = "\\S*";
+
+        private const int MinimumMessageLengthForPercentageModeration = 5;
 
         private static readonly Regex EmoteRegex = new Regex(":\\w+ ");
         private static readonly Regex EmojiRegex = new Regex(@"\uD83D[\uDC00-\uDFFF]|\uD83C[\uDC00-\uDFFF]|\uFFFD");
@@ -90,7 +117,7 @@ namespace MixItUp.Base.Util
                     int count = text.Count(c => char.IsUpper(c));
                     if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
                     {
-                        count = ConvertCountToPercentage(text, count);
+                        count = ConvertCountToPercentage(text.Count(), count);
                     }
 
                     if (count >= ChannelSession.Settings.ModerationCapsBlockCount)
@@ -101,56 +128,34 @@ namespace MixItUp.Base.Util
 
                 if (ChannelSession.Settings.ModerationPunctuationBlockCount > 0)
                 {
-                    int count = text.Count(c => char.IsSymbol(c) || char.IsPunctuation(c));
+                    string leftOverText = text.ToString();
+                    List<string> messageSegments = new List<string>();
+                    int count = 0;
+
+                    foreach (Match match in EmoteRegex.Matches(text))
+                    {
+                        messageSegments.Add(match.Value);
+                        leftOverText = leftOverText.Replace(match.Value, "");
+                        count++;
+                    }
+                    foreach (Match match in EmojiRegex.Matches(text))
+                    {
+                        messageSegments.Add(match.Value);
+                        leftOverText = leftOverText.Replace(match.Value, "");
+                        count++;
+                    }
+
+                    count += leftOverText.Count(c => char.IsSymbol(c) || char.IsPunctuation(c));
+                    messageSegments.AddRange(leftOverText.ToCharArray().Select(c => c.ToString()));
+                    
                     if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
                     {
-                        count = ConvertCountToPercentage(text, count);
+                        count = ConvertCountToPercentage(messageSegments.Count, count);
                     }
 
                     if (count >= ChannelSession.Settings.ModerationPunctuationBlockCount)
                     {
-                        return "Too Many Punctuation/Symbols";
-                    }
-                }
-
-                if (ChannelSession.Settings.ModerationEmoteBlockCount > 0)
-                {
-                    MatchCollection emoteMatches = EmoteRegex.Matches(text);
-                    MatchCollection emojiMatches = EmojiRegex.Matches(text);
-                    int count = emoteMatches.Count + emojiMatches.Count;
-                    if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
-                    {
-                        List<Match> matches = new List<Match>();
-                        foreach (Match match in emoteMatches)
-                        {
-                            matches.Add(match);
-                        }
-                        foreach (Match match in emojiMatches)
-                        {
-                            matches.Add(match);
-                        }
-
-                        string leftOverText = text.ToString();
-                        foreach (Match match in matches)
-                        {
-                            leftOverText = leftOverText.Replace(match.Value, "");
-                        }
-
-                        int messageLength = leftOverText.Count() + matches.Count;
-
-                        if (messageLength >= MinimumMessageLengthForPercentageModeration)
-                        {
-                            count = (int)(((double)count) / ((double)messageLength) * 100.0);
-                        }
-                        else
-                        {
-                            count = 0;
-                        }
-                    }
-
-                    if (count >= ChannelSession.Settings.ModerationEmoteBlockCount)
-                    {
-                        return "Too Many Emotes";
+                        return "Too Many Punctuation/Symbols/Emotes";
                     }
                 }
             }
@@ -173,34 +178,105 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        public static async Task SendModerationWhisper(UserViewModel user, string moderationReason)
+        public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user)
+        {
+            if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
+            {
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.IsSubscriber)
+                {
+                    return false;
+                }
+
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Moderator && user.PrimaryRole < MixerRoleEnum.Mod)
+                {
+                    return false;
+                }
+
+                TimeSpan accountLength = user.MixerAccountDate.HasValue ? (DateTimeOffset.Now - user.MixerAccountDate.GetValueOrDefault()) : new TimeSpan();
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour && accountLength.TotalHours < 1)
+                {
+                    return false;
+                }
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountDay && accountLength.TotalDays < 1)
+                {
+                    return false;
+                }
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountWeek && accountLength.TotalDays < 7)
+                {
+                    return false;
+                }
+
+                TimeSpan viewingLength = TimeSpan.FromMinutes(user.Data.ViewingMinutes);
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenMinutes && viewingLength.TotalMinutes < 10)
+                {
+                    return false;
+                }
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingThirtyMinutes && viewingLength.TotalMinutes < 30)
+                {
+                    return false;
+                }
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingOneHour && viewingLength.TotalHours < 1)
+                {
+                    return false;
+                }
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTwoHours && viewingLength.TotalHours < 2)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static async Task SendChatInteractiveParticipationWhisper(UserViewModel user, bool isChat = false, bool isInteractive = false)
         {
             if (user != null)
             {
-                if (moderationReason == null)
+                string reason = string.Empty;
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber)
                 {
-                    moderationReason = "Rule Violation";
+                    reason = "Subscribers";
                 }
-                string whisperMessage = " due to chat moderation for the following reason: " + moderationReason + ". Please watch what you type in chat or further actions may be taken.";
-
-                if (user.PrimaryRole < ChannelSession.Settings.ModerationTimeoutExempt)
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Moderator)
                 {
-                    user.ChatOffenses++;
-                    if (ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount > 0 && user.ChatOffenses >= ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount)
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "You have been timed out from chat for 5 minutes" + whisperMessage);
-                        await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
-                        return;
-                    }
-                    else if (ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount > 0 && user.ChatOffenses >= ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount)
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "You have been timed out from chat for 1 minute" + whisperMessage);
-                        await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
-                        return;
-                    }
+                    reason = "Moderators";
+                }
+                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour)
+                {
+                    reason = "accounts older than 1 hour";
+                }
+                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountDay)
+                {
+                    reason = "accounts older than 1 day";
+                }
+                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountWeek)
+                {
+                    reason = "accounts older than 1 week";
+                }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenMinutes)
+                {
+                    reason = "viewers who have watched for 10 minutes";
+                }
+                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingThirtyMinutes)
+                {
+                    reason = "viewers who have watched for 30 minutes";
+                }
+                else if(ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingOneHour)
+                {
+                    reason = "viewers who have watched for 1 hour";
+                }
+                else if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTwoHours)
+                {
+                    reason = "viewers who have watched for 2 hours";
                 }
 
-                await ChannelSession.Chat.Whisper(user.UserName, "Your message has been deleted" + whisperMessage);
+                if (isChat)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("Your message has been deleted because only {0} can participate currently.", reason));
+                }
+                else if (isInteractive)
+                {
+                    await ChannelSession.Chat.Whisper(user.UserName, string.Format("Your interactive selection has been ignored because only {0} can participate currently.", reason));
+                }
             }
         }
 
@@ -211,11 +287,11 @@ namespace MixItUp.Base.Util
             return result;
         }
 
-        private static int ConvertCountToPercentage(string text, int count)
+        private static int ConvertCountToPercentage(int length, int count)
         {
-            if (text.Count() >= MinimumMessageLengthForPercentageModeration)
+            if (length >= MinimumMessageLengthForPercentageModeration)
             {
-                return (int)(((double)count) / ((double)text.Count()) * 100.0);
+                return (int)(((double)count) / ((double)length) * 100.0);
             }
             else
             {

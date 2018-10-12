@@ -20,6 +20,10 @@ namespace MixItUp.Base.Actions
         BanUser,
         [Name("Clear Chat")]
         ClearChat,
+        [Name("Add Moderation Strike")]
+        AddModerationStrike,
+        [Name("Remove Moderation Strike")]
+        RemoveModerationStrike,
     }
 
     [DataContract]
@@ -61,13 +65,27 @@ namespace MixItUp.Base.Actions
                     UserModel targetUserModel = await ChannelSession.Connection.GetUser(username);
                     if (targetUserModel != null)
                     {
+                        UserViewModel targetUser = await ChannelSession.ActiveUsers.GetUserByID(targetUserModel.id);
+                        if (targetUser == null)
+                        {
+                            targetUser = new UserViewModel(targetUserModel);
+                        }
+
                         if (this.ModerationType == ModerationActionTypeEnum.PurgeUser)
                         {
-                            await ChannelSession.Chat.PurgeUser(targetUserModel.username);
+                            await ChannelSession.Chat.PurgeUser(targetUser.UserName);
                         }
                         else if (this.ModerationType == ModerationActionTypeEnum.BanUser)
                         {
-                            await ChannelSession.Chat.BanUser(new UserViewModel(targetUserModel));
+                            await ChannelSession.Chat.BanUser(targetUser);
+                        }
+                        else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
+                        {
+                            await targetUser.AddModerationStrike("Manual Moderation Strike");
+                        }
+                        else if (this.ModerationType == ModerationActionTypeEnum.RemoveModerationStrike)
+                        {
+                            await targetUser.RemoveModerationStrike();
                         }
                         else if (!string.IsNullOrEmpty(this.TimeAmount))
                         {
@@ -76,11 +94,10 @@ namespace MixItUp.Base.Actions
                             {
                                 if (this.ModerationType == ModerationActionTypeEnum.ChatTimeout)
                                 {
-                                    await ChannelSession.Chat.TimeoutUser(targetUserModel.username, timeAmount);
+                                    await ChannelSession.Chat.TimeoutUser(targetUser.UserName, timeAmount);
                                 }
                                 else if (this.ModerationType == ModerationActionTypeEnum.InteractiveTimeout)
                                 {
-                                    UserViewModel targetUser = await ChannelSession.ActiveUsers.GetUserByID(targetUserModel.id);
                                     if (targetUser != null && ChannelSession.Interactive != null)
                                     {
                                         await ChannelSession.Interactive.TimeoutUser(targetUser, (int)timeAmount);

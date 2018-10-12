@@ -87,16 +87,16 @@ namespace MixItUp.Base
         bool ModerationCapsBlockIsPercentage { get; set; }
         int ModerationPunctuationBlockCount { get; set; }
         bool ModerationPunctuationBlockIsPercentage { get; set; }
-        int ModerationEmoteBlockCount { get; set; }
-        bool ModerationEmoteBlockIsPercentage { get; set; }
         MixerRoleEnum ModerationChatTextExcempt { get; set; }
 
         bool ModerationBlockLinks { get; set; }
         MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
 
-        int ModerationTimeout1MinuteOffenseCount { get; set; }
-        int ModerationTimeout5MinuteOffenseCount { get; set; }
-        MixerRoleEnum ModerationTimeoutExempt { get; set; }
+        ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
+
+        CustomCommand ModerationStrike1Command { get; set; }
+        CustomCommand ModerationStrike2Command { get; set; }
+        CustomCommand ModerationStrike3Command { get; set; }
 
         bool EnableOverlay { get; set; }
         string OverlaySourceName { get; set; }

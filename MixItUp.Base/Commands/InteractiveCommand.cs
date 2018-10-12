@@ -388,7 +388,7 @@ namespace MixItUp.Base.Commands
                 string moderationReason = await ModerationHelper.ShouldBeModerated(user, arguments.ElementAt(0));
                 if (!string.IsNullOrEmpty(moderationReason))
                 {
-                    await ModerationHelper.SendModerationWhisper(user, moderationReason);
+                    await user.AddModerationStrike(moderationReason);
                     return;
                 }
             }

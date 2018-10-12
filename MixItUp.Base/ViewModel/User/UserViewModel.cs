@@ -373,6 +373,41 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        public async Task AddModerationStrike(string moderationReason = null)
+        {
+            Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+            extraSpecialIdentifiers.Add(ModerationHelper.ModerationReasonSpecialIdentifier, moderationReason);
+
+            this.Data.ModerationStrikes++;
+            if (this.Data.ModerationStrikes == 1)
+            {
+                if (ChannelSession.Settings.ModerationStrike1Command != null)
+                {
+                    await ChannelSession.Settings.ModerationStrike1Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                }
+            }
+            else if (this.Data.ModerationStrikes == 2)
+            {
+                if (ChannelSession.Settings.ModerationStrike2Command != null)
+                {
+                    await ChannelSession.Settings.ModerationStrike2Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                }
+            }
+            else if (this.Data.ModerationStrikes >= 3)
+            {
+                if (ChannelSession.Settings.ModerationStrike3Command != null)
+                {
+                    await ChannelSession.Settings.ModerationStrike3Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                }
+            }
+        }
+
+        public Task RemoveModerationStrike()
+        {
+            this.Data.ModerationStrikes--;
+            return Task.FromResult(0);
+        }
+
         public void UpdateMinuteData()
         {
             if (ChannelSession.Channel.online)

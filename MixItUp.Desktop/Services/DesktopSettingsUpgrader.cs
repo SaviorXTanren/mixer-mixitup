@@ -56,6 +56,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version20Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version21Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version22Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version23Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -286,6 +287,21 @@ namespace MixItUp.Desktop.Services
                 {
                     StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(command.Actions);
                 }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version23Upgrade(int version, string filePath)
+        {
+            if (version < 23)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+                settings.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+                settings.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
