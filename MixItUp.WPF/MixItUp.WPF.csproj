@@ -422,6 +422,9 @@
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Interactive\BlackOps4DropMapInteractiveControl.xaml.cs">
+      <DependentUpon>BlackOps4DropMapInteractiveControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
     <Compile Include="Controls\Interactive\DropMapInterativeGameControl.cs" />
     <Compile Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml.cs">
@@ -962,6 +965,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Interactive\BlackOps4DropMapInteractiveControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Interactive\FortniteDropMapInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1469,6 +1476,9 @@
     </Resource>
     <Resource Include="..\MixPlay\realm-royale-drop-map\src\map.jpg">
       <Link>Assets\Images\RealmRoyaleDropMap\map.jpg</Link>
+    </Resource>
+    <Resource Include="..\MixPlay\black-ops-4-drop-map\src\map.jpg">
+      <Link>Assets\Images\BlackOps4DropMap\map.jpg</Link>
     </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

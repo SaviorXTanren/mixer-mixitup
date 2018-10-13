@@ -1,0 +1,26 @@
+{
+  "coverUrl": null,
+  "createdAt": "2018-10-13T22:23:30.000Z",
+  "deletedAt": null,
+  "description": null,
+  "hasPublishedVersions": false,
+  "id": 286365,
+  "installation": null,
+  "isShared": false,
+  "name": "COD: Black Ops 4 Drop Map",
+  "ownerId": 7207866,
+  "typeId": 550441,
+  "updatedAt": "2018-10-13T22:23:30.000Z",
+  "versions": [
+    {
+      "changelog": "Initial release",
+      "createdAt": "2018-10-13T22:23:30.000Z",
+      "id": 292278,
+      "installation": null,
+      "state": "draft",
+      "updatedAt": "2018-10-13T22:24:23.000Z",
+      "version": "0.1.0",
+      "versionOrder": 256
+    }
+  ]
+}
