@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -178,20 +179,16 @@ namespace MixItUp.Desktop.Services
 
         private async Task<IChannelSettings> LoadSettings(string filePath)
         {
-            string data = File.ReadAllText(filePath);
-            if (!data.Contains("\"Version\":"))
+            string fileData = await ChannelSession.Services.FileService.ReadFile(filePath);
+            JObject settingsJObj = JObject.Parse(fileData);
+            int currentVersion = (int)settingsJObj["Version"];
+
+            if (currentVersion < DesktopChannelSettings.LatestVersion)
             {
-                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(0, filePath);
+                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(currentVersion, filePath);
             }
 
-            DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-
-            if (settings.ShouldBeUpgraded())
-            {
-                await DesktopSettingsUpgrader.UpgradeSettingsToLatest(settings.Version, filePath);
-                settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
-            }
-            return settings;
+            return await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
         }
     }
 }
