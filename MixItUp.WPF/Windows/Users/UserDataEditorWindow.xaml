@@ -63,12 +63,12 @@
                         <TextBlock Grid.Row="0" Grid.Column="6">Roles:</TextBlock>
                         <TextBlock x:Name="RolesTextBlock" Grid.Row="0" Grid.Column="8" Text="{Binding RolesDisplayString}" />
 
-                        <TextBlock Grid.Row="2" Grid.Column="0">Watch Time:</TextBlock>
-                        <TextBox x:Name="ViewingHoursTextBox" Grid.Row="2" Grid.Column="2" Text="{Binding Data.ViewingHoursPart}" MaterialDesign:HintAssist.Hint="Hours" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
-                        <TextBox x:Name="ViewingMinutesTextBox" Grid.Row="2" Grid.Column="4" Text="{Binding Data.ViewingMinutesPart}" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Watch Time:</TextBlock>
+                        <TextBox x:Name="ViewingHoursTextBox" Grid.Row="2" Grid.Column="2" Width="50" Text="{Binding Data.ViewingHoursPart}" MaterialDesign:HintAssist.Hint="Hours" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        <TextBox x:Name="ViewingMinutesTextBox" Grid.Row="2" Grid.Column="4" Width="50" Text="{Binding Data.ViewingMinutesPart}" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
-                        <TextBlock Grid.Row="2" Grid.Column="6">Follow Age:</TextBlock>
-                        <TextBlock x:Name="FollowAgeTextBlock" Grid.Row="2" Grid.Column="8" Text="{Binding FollowAgeString}" />
+                        <TextBlock Grid.Row="2" Grid.Column="6" VerticalAlignment="Center">Follow Age:</TextBlock>
+                        <TextBlock x:Name="FollowAgeTextBlock" VerticalAlignment="Center" Grid.Row="2" Grid.Column="8" Text="{Binding FollowAgeString}" />
                     </Grid>
                 </GroupBox>
 
