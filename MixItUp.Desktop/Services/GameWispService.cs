@@ -9,7 +9,6 @@ using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Quobject.SocketIoClientDotNet.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;

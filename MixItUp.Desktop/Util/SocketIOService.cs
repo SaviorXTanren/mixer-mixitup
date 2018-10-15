@@ -31,14 +31,17 @@ namespace MixItUp.Desktop.Util
 
         protected void SocketReceiveWrapper(string eventString, Action<object> processEvent)
         {
-            this.socket.On(eventString, (eventData) =>
+            if (!this.socket.HasListeners(eventString))
             {
-                try
+                this.socket.On(eventString, (eventData) =>
                 {
-                    processEvent(eventData);
-                }
-                catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
-            });
+                    try
+                    {
+                        processEvent(eventData);
+                    }
+                    catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+                });
+            }
         }
 
         protected void SocketEventReceiverWrapper<T>(string eventString, Action<T> processEvent)
