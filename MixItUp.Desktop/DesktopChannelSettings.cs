@@ -404,11 +404,7 @@ namespace MixItUp.Desktop
             this.IsStreamer = isStreamer;
 
             this.Version = DesktopChannelSettings.LatestVersion;
-        }
 
-        public DesktopChannelSettings()
-            : base()
-        {
             this.DefaultStreamingSoftware = StreamingSoftwareTypeEnum.OBSStudio;
 
             this.TimerCommandsInterval = 10;
@@ -437,7 +433,11 @@ namespace MixItUp.Desktop
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
             this.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+        }
 
+        public DesktopChannelSettings()
+            : base()
+        {
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
             this.CooldownGroups = new LockedDictionary<string, int>();
