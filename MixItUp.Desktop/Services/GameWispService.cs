@@ -456,7 +456,10 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                return await this.GetAsync<T>(requestUri + (requestUri.Contains("?") ? "&" : "?") + string.Format("access_token={0}", this.token.accessToken));
+                if (this.token != null && this.token.accessToken != null)
+                {
+                    return await this.GetAsync<T>(requestUri + (requestUri.Contains("?") ? "&" : "?") + string.Format("access_token={0}", this.token.accessToken));
+                }
             }
             catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             return default(T);
