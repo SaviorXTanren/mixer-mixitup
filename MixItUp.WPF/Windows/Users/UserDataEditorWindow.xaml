@@ -61,8 +61,8 @@
                         <TextBlock Grid.Row="0" Grid.Column="4">Roles:</TextBlock>
                         <TextBlock x:Name="RolesTextBlock" Grid.Row="0" Grid.Column="6" Text="{Binding RolesDisplayString}" />
 
-                        <TextBlock Grid.Row="2" Grid.Column="0">Watch Time:</TextBlock>
-                        <TextBlock x:Name="ViewingHoursTextBlock" Grid.Row="2" Grid.Column="2" Text="{Binding Data.ViewingTimeString}" />
+                        <TextBlock Grid.Row="2" Grid.Column="0">Watch Time (mins):</TextBlock>
+                        <TextBox x:Name="ViewingHoursTextBlock" Grid.Row="2" Grid.Column="2" Text="{Binding Data.ViewingMinutes}" />
 
                         <TextBlock Grid.Row="2" Grid.Column="4">Follow Age:</TextBlock>
                         <TextBlock x:Name="FollowAgeTextBlock" Grid.Row="2" Grid.Column="6" Text="{Binding FollowAgeString}" />
