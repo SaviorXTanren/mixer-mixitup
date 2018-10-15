@@ -82,7 +82,7 @@ namespace MixItUp.Base.ViewModel.User
     }
 
     [DataContract]
-    public class UserDataViewModel : IEquatable<UserDataViewModel>
+    public class UserDataViewModel : NotifyPropertyChangedBase, IEquatable<UserDataViewModel>
     {
         [DataMember]
         public uint ID { get; set; }
@@ -190,6 +190,35 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public string ViewingMinutesString { get { return (this.ViewingMinutes % 60).ToString(); } }
+
+        [JsonIgnore]
+        public int ViewingHoursPart
+        {
+            get
+            {
+                return this.ViewingMinutes / 60;
+            }
+            set
+            {
+                this.ViewingMinutes = value * 60 + this.ViewingMinutesPart;
+            }
+        }
+
+        [JsonIgnore]
+        public int ViewingMinutesPart
+        {
+            get
+            {
+                return this.ViewingMinutes % 60;
+            }
+            set
+            {
+                int extraHours = value / 60;
+                this.ViewingHoursPart += extraHours;
+                this.ViewingMinutes = ViewingHoursPart * 60 + (value % 60);
+                this.NotifyPropertyChanged(nameof(ViewingHoursPart));
+            }
+        }
 
         [JsonIgnore]
         public string ViewingTimeString { get { return string.Format("{0} Hours & {1} Mins", this.ViewingHoursString, this.ViewingMinutesString); } }
