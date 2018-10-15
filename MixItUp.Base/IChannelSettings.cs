@@ -76,9 +76,12 @@ namespace MixItUp.Base
         bool GiveawayDonationRequiredAmount { get; set; }
         double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }
+        int GiveawayMaximumEntries { get; set; }
         RequirementViewModel GiveawayRequirements { get; set; }
         int GiveawayReminderInterval { get; set; }
         bool GiveawayRequireClaim { get; set; }
+        CustomCommand GiveawayUserJoinedCommand { get; set; }
+        CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
         bool ModerationUseCommunityFilteredWords { get; set; }
         MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }

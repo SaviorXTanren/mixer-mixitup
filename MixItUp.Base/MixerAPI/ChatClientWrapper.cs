@@ -438,17 +438,7 @@ namespace MixItUp.Base.MixerAPI
 
                 if (command != null)
                 {
-                    string messageText = message.Message;
-                    foreach (string commandTrigger in command.CommandTriggers)
-                    {
-                        if (messageText.StartsWith(commandTrigger, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            messageText = messageText.Substring(commandTrigger.Length);
-                            break;
-                        }
-                    }
-
-                    await command.Perform(message.User, messageText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                    await command.Perform(message.User, command.GetArgumentsFromText(message.Message));
 
                     if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
                     {

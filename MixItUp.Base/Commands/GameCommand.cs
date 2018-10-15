@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.ViewModel.Chat;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
@@ -145,9 +146,6 @@ namespace MixItUp.Base.Commands
         protected HashSet<UserViewModel> winners = new HashSet<UserViewModel>();
         [JsonIgnore]
         protected int totalPayout = 0;
-
-        [JsonIgnore]
-        private int randomSeed = (int)DateTime.Now.Ticks;
 
         public GameCommandBase() { }
 
@@ -357,17 +355,11 @@ namespace MixItUp.Base.Commands
 
         protected virtual void AddAdditionalSpecialIdentifiers(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> specialIdentifiers) { }
 
-        protected int GenerateProbability() { return this.GenerateRandomNumber(100) + 1; }
+        protected int GenerateProbability() { return RandomHelper.GenerateProbability(); }
 
-        protected int GenerateRandomNumber(int maxValue) { return this.GenerateRandomNumber(0, maxValue); }
+        protected int GenerateRandomNumber(int maxValue) { return RandomHelper.GenerateRandomNumber(maxValue); }
 
-        protected int GenerateRandomNumber(int minValue, int maxValue)
-        {
-            Random random = new Random(this.randomSeed);
-            this.randomSeed -= random.Next(100);
-            random = new Random(this.randomSeed);
-            return random.Next(minValue, maxValue);
-        }
+        protected int GenerateRandomNumber(int minValue, int maxValue) { return RandomHelper.GenerateRandomNumber(minValue, maxValue); }
 
         protected virtual void ResetData(UserViewModel user)
         {

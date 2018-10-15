@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -35,7 +36,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
@@ -44,11 +45,18 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" HorizontalAlignment="Center" x:Name="ItemTextBox" Width="200" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" HorizontalAlignment="Center" x:Name="ItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <ComboBox x:Name="EntryMethodTypeComboBox" Grid.Column="2" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Entry Method" Width="150" SelectionChanged="EntryMethodTypeComboBox_SelectionChanged" />
+
+                <TextBlock Grid.Column="4" VerticalAlignment="Center">Require "!claim":</TextBlock>
+                <CheckBox x:Name="RequireClaimCheckBox" Grid.Column="6" />
             </Grid>
 
             <Grid x:Name="GiveawayTimersGrid" Grid.Row="2" HorizontalAlignment="Center">
@@ -56,37 +64,30 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="TimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" x:Name="TimerTextBox" Width="100" MaterialDesign:HintAssist.Hint="Total Time (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="2" x:Name="ReminderTextBox" Width="175" MaterialDesign:HintAssist.Hint="Reminder Message (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="2" x:Name="ReminderTextBox" Width="100" MaterialDesign:HintAssist.Hint="Reminder (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="4" x:Name="MaximumEntriesTextBox" Width="100" MaterialDesign:HintAssist.Hint="Maximum Entries" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
-            <Grid x:Name="GiveawayRequireClaimGrid" Grid.Row="4" HorizontalAlignment="Center">
+            <Grid x:Name="CommandEntryGrid" Grid.Row="4" HorizontalAlignment="Center" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Require "!claim":</TextBlock>
-                <CheckBox x:Name="RequireClaimCheckBox" Grid.Column="2" />
+                <TextBox x:Name="CommandTextBox" Grid.Column="0" Width="120" MaterialDesign:HintAssist.Hint="Command (No '!' needed)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
+
+                <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
             </Grid>
 
-            <Grid x:Name="CommandEntryGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <TextBox x:Name="CommandTextBox" Grid.Row="0" Width="200" MaterialDesign:HintAssist.Hint="Command (No '!' needed)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                <RequirementControls:RequirementControl x:Name="Requirements" Grid.Row="2" />
-            </Grid>
-
-            <Grid x:Name="DonationEntryGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
+            <Grid x:Name="DonationEntryGrid" Grid.Row="4" HorizontalAlignment="Center" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
@@ -96,6 +97,22 @@
                 <ComboBox x:Name="DonationEntryQualifierComboBox" Grid.Column="0" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Entry Qualification" Width="200" SelectionChanged="DonationEntryQualifierComboBox_SelectionChanged" />
 
                 <TextBox x:Name="DonationEntryQualifierAmountTextBox" Grid.Column="2" Width="175" MaterialDesign:HintAssist.Hint="Required Amount (EX: 1.00)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
+            </Grid>
+
+            <Grid x:Name="GiveawayCommandsGrid" Grid.Row="6" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <GroupBox Grid.Column="0" Header="User Joined" Width="150">
+                    <CommandControls:CommandButtonsControl x:Name="GiveawayUserJoinedCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                </GroupBox>
+
+                <GroupBox Grid.Column="2" Header="Winner Selected" Width="150">
+                    <CommandControls:CommandButtonsControl x:Name="GiveawayWinnerSelectedCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                </GroupBox>
             </Grid>
 
             <Grid Grid.Row="8" HorizontalAlignment="Center">

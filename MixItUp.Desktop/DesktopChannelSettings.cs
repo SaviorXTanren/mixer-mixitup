@@ -136,11 +136,17 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int GiveawayTimer { get; set; }
         [JsonProperty]
+        public int GiveawayMaximumEntries { get; set; }
+        [JsonProperty]
         public RequirementViewModel GiveawayRequirements { get; set; }
         [JsonProperty]
         public int GiveawayReminderInterval { get; set; }
         [JsonProperty]
         public bool GiveawayRequireClaim { get; set; }
+        [JsonProperty]
+        public CustomCommand GiveawayUserJoinedCommand { get; set; }
+        [JsonProperty]
+        public CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
         [JsonProperty]
         public bool ModerationUseCommunityFilteredWords { get; set; }
@@ -410,9 +416,12 @@ namespace MixItUp.Desktop
 
             this.GiveawayCommand = "giveaway";
             this.GiveawayTimer = 1;
+            this.GiveawayMaximumEntries = 1;
             this.GiveawayRequirements = new RequirementViewModel();
             this.GiveawayReminderInterval = 5;
             this.GiveawayRequireClaim = true;
+            this.GiveawayUserJoinedCommand = CustomCommand.BasicChatCommand("Giveaway User Joined", "You have been entered into the giveaway, stay tuned to see who wins!", isWhisper: true);
+            this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", isWhisper: true);
 
             this.MaxMessagesInChat = 100;
             this.ChatFontSize = 13;
@@ -577,8 +586,6 @@ namespace MixItUp.Desktop
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }
-
-        public bool ShouldBeUpgraded() { return this.Version < DesktopChannelSettings.LatestVersion; }
 
         public async Task RemoveDuplicateUsers()
         {
