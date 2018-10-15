@@ -26,13 +26,15 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
@@ -45,18 +47,11 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" HorizontalAlignment="Center" x:Name="ItemTextBox" Width="150" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" HorizontalAlignment="Center" x:Name="ItemTextBox" Width="200" MaterialDesign:HintAssist.Hint="Giveaway Item" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                 <ComboBox x:Name="EntryMethodTypeComboBox" Grid.Column="2" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Entry Method" Width="150" SelectionChanged="EntryMethodTypeComboBox_SelectionChanged" />
-
-                <TextBlock Grid.Column="4" VerticalAlignment="Center">Require "!claim":</TextBlock>
-                <CheckBox x:Name="RequireClaimCheckBox" Grid.Column="6" />
             </Grid>
 
             <Grid x:Name="GiveawayTimersGrid" Grid.Row="2" HorizontalAlignment="Center">
@@ -75,7 +70,25 @@
                 <TextBox Grid.Column="4" x:Name="MaximumEntriesTextBox" Width="100" MaterialDesign:HintAssist.Hint="Maximum Entries" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
-            <Grid x:Name="CommandEntryGrid" Grid.Row="4" HorizontalAlignment="Center" Visibility="Collapsed">
+            <Grid x:Name="OptionsGrid" Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Require "!claim":</TextBlock>
+                <CheckBox x:Name="RequireClaimCheckBox" Grid.Column="2" />
+
+                <TextBlock Grid.Column="4" VerticalAlignment="Center">Allow Past Winners:</TextBlock>
+                <CheckBox x:Name="AllowPastWinnersCheckBox" Grid.Column="6" />
+            </Grid>
+
+            <Grid x:Name="CommandEntryGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
@@ -87,7 +100,7 @@
                 <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
             </Grid>
 
-            <Grid x:Name="DonationEntryGrid" Grid.Row="4" HorizontalAlignment="Center" Visibility="Collapsed">
+            <Grid x:Name="DonationEntryGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
@@ -99,7 +112,7 @@
                 <TextBox x:Name="DonationEntryQualifierAmountTextBox" Grid.Column="2" Width="175" MaterialDesign:HintAssist.Hint="Required Amount (EX: 1.00)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
             </Grid>
 
-            <Grid x:Name="GiveawayCommandsGrid" Grid.Row="6" HorizontalAlignment="Center">
+            <Grid x:Name="GiveawayCommandsGrid" Grid.Row="8" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
@@ -115,12 +128,12 @@
                 </GroupBox>
             </Grid>
 
-            <Grid Grid.Row="8" HorizontalAlignment="Center">
+            <Grid Grid.Row="10" HorizontalAlignment="Center">
                 <Button x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
                 <Button x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Cancel Giveaway</Button>
             </Grid>
 
-            <Grid Grid.Row="10" HorizontalAlignment="Center">
+            <Grid Grid.Row="12" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
@@ -132,7 +145,7 @@
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" x:Name="TimeLeftTextBlock" />
             </Grid>
 
-            <Grid Grid.Row="12" HorizontalAlignment="Center">
+            <Grid Grid.Row="14" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
@@ -157,7 +170,7 @@
             <DataGrid x:Name="EnteredUsersListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding User.UserName}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Binding="{Binding Entries}" IsReadOnly="True" Width="75" />
+                    <DataGridTextColumn Header="Total" Binding="{Binding Entries}" IsReadOnly="True" Width="75" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

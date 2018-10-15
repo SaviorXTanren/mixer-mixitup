@@ -58,6 +58,8 @@ namespace MixItUp.WPF.Controls.MainControls
         private ObservableCollection<GiveawayUser> enteredUsersUICollection = new ObservableCollection<GiveawayUser>();
         private LockedDictionary<uint, GiveawayUser> enteredUsers = new LockedDictionary<uint, GiveawayUser>();
 
+        private List<uint> pastWinners = new List<uint>();
+
         private ChatCommand giveawayCommand = null;
 
         private int timeLeft = 0;
@@ -83,6 +85,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.TimerTextBox.Text = ChannelSession.Settings.GiveawayTimer.ToString();
             this.ReminderTextBox.Text = ChannelSession.Settings.GiveawayReminderInterval.ToString();
 
+            this.AllowPastWinnersCheckBox.IsChecked = ChannelSession.Settings.GiveawayAllowPastWinners;
             this.RequireClaimCheckBox.IsChecked = ChannelSession.Settings.GiveawayRequireClaim;
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.GiveawayCommand))
@@ -255,10 +258,15 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Settings.GiveawayTimer = this.timeLeft;
             ChannelSession.Settings.GiveawayReminderInterval = this.reminder;
             ChannelSession.Settings.GiveawayMaximumEntries = maxEntries;
+            ChannelSession.Settings.GiveawayAllowPastWinners = this.AllowPastWinnersCheckBox.IsChecked.GetValueOrDefault();
             ChannelSession.Settings.GiveawayRequireClaim = this.RequireClaimCheckBox.IsChecked.GetValueOrDefault();
             await ChannelSession.SaveSettings();
 
             this.giveawayCommand = new ChatCommand("Giveaway Command", ChannelSession.Settings.GiveawayCommand, new RequirementViewModel());
+            if (ChannelSession.Settings.GiveawayAllowPastWinners)
+            {
+                this.pastWinners.Clear();
+            }
 
             this.timeLeft = this.timeLeft * 60;
             this.reminder = this.reminder * 60;
@@ -301,6 +309,11 @@ namespace MixItUp.WPF.Controls.MainControls
         private async Task EndGiveaway()
         {
             this.backgroundThreadCancellationTokenSource.Cancel();
+
+            if (!ChannelSession.Settings.GiveawayAllowPastWinners && this.selectedWinner != null)
+            {
+                pastWinners.Add(this.selectedWinner.ID);
+            }
 
             this.timeLeft = 0;
             this.selectedWinner = null;
@@ -426,6 +439,12 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.timeLeft > 0 && this.selectedWinner == null && this.giveawayCommand.MatchesOrContainsCommand(message.Message))
             {
                 int entries = 1;
+
+                if (pastWinners.Contains(message.User.ID))
+                {
+                    await ChannelSession.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
+                    return;
+                }
 
                 IEnumerable<string> arguments = this.giveawayCommand.GetArgumentsFromText(message.Message);
                 if (arguments.Count() > 0)

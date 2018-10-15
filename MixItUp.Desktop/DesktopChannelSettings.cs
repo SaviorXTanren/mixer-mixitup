@@ -144,6 +144,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool GiveawayRequireClaim { get; set; }
         [JsonProperty]
+        public bool GiveawayAllowPastWinners { get; set; }
+        [JsonProperty]
         public CustomCommand GiveawayUserJoinedCommand { get; set; }
         [JsonProperty]
         public CustomCommand GiveawayWinnerSelectedCommand { get; set; }

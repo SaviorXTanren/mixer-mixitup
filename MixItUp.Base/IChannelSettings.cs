@@ -80,6 +80,7 @@ namespace MixItUp.Base
         RequirementViewModel GiveawayRequirements { get; set; }
         int GiveawayReminderInterval { get; set; }
         bool GiveawayRequireClaim { get; set; }
+        bool GiveawayAllowPastWinners { get; set; }
         CustomCommand GiveawayUserJoinedCommand { get; set; }
         CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
