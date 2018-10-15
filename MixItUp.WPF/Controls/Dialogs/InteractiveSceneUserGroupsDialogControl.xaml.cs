@@ -1,8 +1,8 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -34,11 +34,11 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         public void NotifyProperties()
         {
-            this.NotifyPropertyChanged("GroupName");
-            this.NotifyPropertyChanged("DefaultScene");
-            this.NotifyPropertyChanged("IsCustomGroup");
-            this.NotifyPropertyChanged("CanBeToggled");
-            this.NotifyPropertyChanged("SetAsDefault");
+            this.NotifyPropertyChanged(nameof(GroupName));
+            this.NotifyPropertyChanged(nameof(DefaultScene));
+            this.NotifyPropertyChanged(nameof(IsCustomGroup));
+            this.NotifyPropertyChanged(nameof(CanBeToggled));
+            this.NotifyPropertyChanged(nameof(SetAsDefault));
         }
     }
 
