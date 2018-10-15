@@ -56,6 +56,8 @@ namespace MixItUp.Base.Commands
             return false;
         }
 
+        public event EventHandler OnCommandStart = delegate { };
+
         [DataMember]
         public Guid ID { get; set; }
 
@@ -118,15 +120,50 @@ namespace MixItUp.Base.Commands
         public virtual bool IsEditable { get { return true; } }
 
         [JsonIgnore]
-        public string CommandsString { get { return string.Join(" ", this.Commands); } }
+        public string CommandsString
+        {
+            get
+            {
+                if (this.Commands.Count > 0 && this.Commands.Any(s => s.Contains(" ")))
+                {
+                    if (this.Commands.Count > 1)
+                    {
+                        return string.Join(";", this.Commands);
+                    }
+                    return this.Commands.First() + ";";
+                }
+                return string.Join(" ", this.Commands);
+            }
+        }
 
-        public virtual bool ContainsCommand(string command) { return this.Commands.Count() > 0 && this.Commands.Contains(command, StringComparer.InvariantCultureIgnoreCase); }
+        [JsonIgnore]
+        public virtual IEnumerable<string> CommandTriggers { get { return this.Commands; } }
+
+        public bool MatchesOrContainsCommand(string command) { return this.MatchesCommand(command) || this.ContainsCommand(command); }
+
+        public bool MatchesCommand(string command) { return this.CommandTriggers.Count() > 0 && this.CommandTriggers.Any(c => command.Equals(c, StringComparison.InvariantCultureIgnoreCase)); }
+
+        public bool ContainsCommand(string command) { return this.CommandTriggers.Count() > 0 && this.CommandTriggers.Any(c => command.StartsWith(c + " ", StringComparison.InvariantCultureIgnoreCase)); }
+
+        public IEnumerable<string> GetArgumentsFromText(string text)
+        {
+            string messageText = text;
+            foreach (string commandTrigger in this.CommandTriggers)
+            {
+                if (messageText.StartsWith(commandTrigger, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    messageText = messageText.Substring(commandTrigger.Length);
+                    break;
+                }
+            }
+            return messageText.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+        }
 
         public async Task Perform() { await this.Perform(null); }
 
         public async Task Perform(IEnumerable<string> arguments) { await this.Perform(await ChannelSession.GetCurrentUser(), arguments); }
 
-        public Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
             if (this.IsEnabled)
             {
@@ -138,6 +175,11 @@ namespace MixItUp.Base.Commands
                 if (extraSpecialIdentifiers == null)
                 {
                     extraSpecialIdentifiers = new Dictionary<string, string>();
+                }
+
+                if (!await this.PerformPreChecks(user, arguments, extraSpecialIdentifiers))
+                {
+                    return;
                 }
 
                 try
@@ -152,6 +194,10 @@ namespace MixItUp.Base.Commands
                     }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+
+                ChannelSession.Services.Telemetry.TrackCommand(this.Type);
+
+                this.OnCommandStart(this, new EventArgs());
 
                 this.currentCancellationTokenSource = new CancellationTokenSource();
                 this.currentTaskRun = Task.Run(async () =>
@@ -182,16 +228,32 @@ namespace MixItUp.Base.Commands
                     }
                 }, this.currentCancellationTokenSource.Token);
             }
-            return Task.FromResult(0);
         }
 
         public async Task PerformAndWait(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
         {
-            await this.Perform(user, arguments, extraSpecialIdentifiers);
-            if (this.currentTaskRun != null && !this.currentTaskRun.IsCompleted)
+            try
             {
-                await this.currentTaskRun;
+                await this.Perform(user, arguments, extraSpecialIdentifiers);
+                if (this.currentTaskRun != null && !this.currentTaskRun.IsCompleted)
+                {
+                    await this.currentTaskRun;
+                }
             }
+            catch (Exception ex) { Util.Logger.Log(ex); }
+        }
+
+        public void StopCurrentRun()
+        {
+            if (this.currentCancellationTokenSource != null)
+            {
+                this.currentCancellationTokenSource.Cancel();
+            }
+        }
+
+        protected virtual Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            return Task.FromResult(true);
         }
 
         protected virtual async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
@@ -224,14 +286,6 @@ namespace MixItUp.Base.Commands
                         await ChannelSession.Services.OverlayServer.EndBatching();
                     }
                 }
-            }
-        }
-
-        public void StopCurrentRun()
-        {
-            if (this.currentCancellationTokenSource != null)
-            {
-                this.currentCancellationTokenSource.Cancel();
             }
         }
 

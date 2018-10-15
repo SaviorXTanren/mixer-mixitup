@@ -106,13 +106,20 @@ namespace MixItUp.WPF.Windows.Users
                 if (extension.Equals(".txt") || extension.Equals(".csv"))
                 {
                     string fileContents = await ChannelSession.Services.FileService.ReadFile(filepath);
-                    await Task.Run(async () =>
+                    if (!string.IsNullOrEmpty(fileContents))
                     {
-                        foreach (string line in fileContents.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                        await Task.Run(async () =>
                         {
-                            await this.AddUserData(line.Split(new char[] { ' ', '\t', ',' }, StringSplitOptions.RemoveEmptyEntries));
-                        }
-                    });
+                            foreach (string line in fileContents.Split(new string[] { "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                await this.AddUserData(line.Split(new char[] { ' ', '\t', ',' }, StringSplitOptions.RemoveEmptyEntries));
+                            }
+                        });
+                    }
+                    else
+                    {
+                        await MessageBoxHelper.ShowMessageDialog("We were unable to read data from the file. Please make sure it is not already opened in another program.");
+                    }
                 }
                 else if (extension.Equals(".xls") || extension.Equals(".xlsx"))
                 {
@@ -156,6 +163,7 @@ namespace MixItUp.WPF.Windows.Users
                         catch (Exception ex)
                         {
                             Logger.Log(ex);
+                            await this.Dispatcher.InvokeAsync(async () => { await MessageBoxHelper.ShowMessageDialog("We were unable to read data from the file. Please make sure it is not already opened in another program."); });
                         }
                     });
                 }

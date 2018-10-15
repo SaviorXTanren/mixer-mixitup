@@ -111,9 +111,9 @@ namespace MixItUp.WPF.Controls.Games
             int.TryParse(this.SubscriberPercentageTextBox.Text, out int subscriberChance);
             int.TryParse(this.ModPercentageTextBox.Text, out int modChance);
 
-            userPayout = userPayout / 100;
-            subscriberPayout = subscriberPayout / 100;
-            modPayout = modPayout / 100;
+            userPayout = userPayout / 100.0;
+            subscriberPayout = subscriberPayout / 100.0;
+            modPayout = modPayout / 100.0;
 
             Dictionary<MixerRoleEnum, double> successRolePayouts = new Dictionary<MixerRoleEnum, double>() { { MixerRoleEnum.User, userPayout }, { MixerRoleEnum.Subscriber, subscriberPayout }, { MixerRoleEnum.Mod, modPayout } };
             Dictionary<MixerRoleEnum, int> successRoleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, userChance }, { MixerRoleEnum.Subscriber, subscriberChance }, { MixerRoleEnum.Mod, modChance } };

@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Import;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Import;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -82,7 +82,7 @@ namespace MixItUp.Base.ViewModel.User
     }
 
     [DataContract]
-    public class UserDataViewModel : IEquatable<UserDataViewModel>
+    public class UserDataViewModel : NotifyPropertyChangedBase, IEquatable<UserDataViewModel>
     {
         [DataMember]
         public uint ID { get; set; }
@@ -114,6 +114,9 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public uint GameWispUserID { get; set; }
 
+        [DataMember]
+        public uint ModerationStrikes { get; set; }
+
         public UserDataViewModel()
         {
             this.CurrencyAmounts = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
@@ -133,6 +136,12 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserDataViewModel(ScorpBotViewer viewer)
             : this(viewer.ID, viewer.UserName)
+        {
+            this.ViewingMinutes = (int)(viewer.Hours * 60.0);
+        }
+
+        public UserDataViewModel(StreamlabsChatBotViewer viewer)
+            : this(viewer.ID, viewer.Name)
         {
             this.ViewingMinutes = (int)(viewer.Hours * 60.0);
         }
@@ -172,6 +181,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.IsSparkExempt = this.GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
                 this.IsCurrencyRankExempt = this.GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
                 this.GameWispUserID = this.GetOptionValue<uint>(optionsJObj, "GameWispUserID");
+                this.ModerationStrikes = this.GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
             }
         }
 
@@ -180,6 +190,35 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public string ViewingMinutesString { get { return (this.ViewingMinutes % 60).ToString(); } }
+
+        [JsonIgnore]
+        public int ViewingHoursPart
+        {
+            get
+            {
+                return this.ViewingMinutes / 60;
+            }
+            set
+            {
+                this.ViewingMinutes = value * 60 + this.ViewingMinutesPart;
+            }
+        }
+
+        [JsonIgnore]
+        public int ViewingMinutesPart
+        {
+            get
+            {
+                return this.ViewingMinutes % 60;
+            }
+            set
+            {
+                int extraHours = value / 60;
+                this.ViewingHoursPart += extraHours;
+                this.ViewingMinutes = ViewingHoursPart * 60 + (value % 60);
+                this.NotifyPropertyChanged(nameof(ViewingHoursPart));
+            }
+        }
 
         [JsonIgnore]
         public string ViewingTimeString { get { return string.Format("{0} Hours & {1} Mins", this.ViewingHoursString, this.ViewingMinutesString); } }
@@ -350,6 +389,7 @@ namespace MixItUp.Base.ViewModel.User
             options["IsSparkExempt"] = this.IsSparkExempt;
             options["IsCurrencyRankExempt"] = this.IsCurrencyRankExempt;
             options["GameWispUserID"] = this.GameWispUserID;
+            options["ModerationStrikes"] = this.ModerationStrikes;
             return options.ToString();
         }
 

@@ -20,6 +20,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -72,8 +74,6 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock x:Name="SpotifyTextBlock" Grid.Column="0" Grid.Row="0">Spotify:</TextBlock>
@@ -92,9 +92,6 @@
                     <TextBlock Grid.Column="0" Grid.Row="2">YouTube*:</TextBlock>
                     <ToggleButton x:Name="YouTubeToggleButton" Grid.Column="2" Grid.Row="2" />
 
-                    <TextBlock Grid.Column="0" Grid.Row="4">SoundCloud*:</TextBlock>
-                    <ToggleButton x:Name="SoundCloudToggleButton" Grid.Column="2" Grid.Row="4" />
-
                     <TextBlock Grid.Column="3" Grid.Row="2" Grid.RowSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource HeaderTextBlock}">* = Requires Overlay</TextBlock>
                 </Grid>
 
@@ -107,8 +104,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
@@ -128,14 +123,14 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Current Song:</TextBlock>
+                <TextBlock Grid.Column="0" x:Name="SongTypeIdentifierTextBlock" VerticalAlignment="Center">Current Song:</TextBlock>
                 <TextBlock Grid.Column="2" x:Name="CurrentSongName" VerticalAlignment="Center">None</TextBlock>
 
                 <Button x:Name="PlayPauseButton" Grid.Column="4" Click="PlayPauseButton_Click" Content="{MaterialDesign:PackIcon PlayPause}" MaterialDesign:HintAssist.Hint="Play/Pause Playlist" />
                 <Button x:Name="NextSongButton" Grid.Column="6" Click="NextSongButton_Click" Content="{MaterialDesign:PackIcon SkipNext}" MaterialDesign:HintAssist.Hint="Next Song" />
 
                 <TextBlock Grid.Column="8" VerticalAlignment="Center">Volume:</TextBlock>
-                <Slider x:Name="VolumeSlider" VerticalAlignment="Center" Grid.Column="10" Minimum="0" Maximum="100" Width="100" ValueChanged="VolumeSlider_ValueChanged" />
+                <Slider x:Name="VolumeSlider" VerticalAlignment="Center" Grid.Column="10" Minimum="0" Maximum="100" Width="100" PreviewMouseLeftButtonUp="VolumeSlider_PreviewMouseLeftButtonUp" />
                 <TextBlock Grid.Column="12" x:Name="VolumeAmountTextBlock" VerticalAlignment="Center" Width="30" HorizontalAlignment="Center" />
             </Grid>
 
@@ -156,18 +151,18 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Grid Grid.Row="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                
-                <TextBox Grid.Column="0" x:Name="DefaultPlaylistURL" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Backup Playlist Full URL (Spotify / YouTube / SoundCloud Link)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="DefaultPlaylistURL_TextChanged" />
+        </Grid>
 
-                <Button x:Name="ClearQueueButton" Grid.Column="2" Width="110" Click="ClearQueueButton_Click">Clear Queue</Button>
-            </Grid>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
+            <TextBox Grid.Column="0" x:Name="DefaultPlaylistURL" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Backup Playlist Full URL (Spotify / YouTube Link)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="DefaultPlaylistURL_TextChanged" IsEnabled="True" />
+
+            <Button x:Name="ClearQueueButton" Grid.Column="2" IsEnabled="False" Width="110" Click="ClearQueueButton_Click">Clear Queue</Button>
         </Grid>
     </Grid>
 </local:MainControlBase>

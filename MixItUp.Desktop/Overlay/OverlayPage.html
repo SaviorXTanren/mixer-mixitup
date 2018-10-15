@@ -11,8 +11,6 @@
         <script src="webSocketWrapper.js"></script>
 
         <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
-
-        <script src="https://w.soundcloud.com/player/api.js"></script>
     </head>
     <body style="background-color: transparent; overflow: hidden;">
         <div id="mainOverlay"></div>
@@ -29,8 +27,6 @@
         </div>
 
         <div id="youtubePlayerDiv" style="position: relative; left: -1000px"></div>
-
-        <iframe id="soundcloudPlayerIFrame" width="300" height="166" style="position: relative; left: -1000px" scrolling="no" frameBorder="0" src="https://w.soundcloud.com/player/?visual=true"></iframe>
 
         <script>
             $.fn.extend({
@@ -80,13 +76,6 @@
             youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(youtubePlayerScript, firstScriptTag);
-
-            // SoundCloud player
-
-            var soundCloudPlayer = SC.Widget(document.getElementById('soundcloudPlayerIFrame'));
-            var soundCloudPlayerReady = false;
-            var soundCloudPlayerSongPlaying = false;
-            var soundCloudPlayerSongIsPaused = false;
 
             function connectionOpened() {
                 noConnectionDiv.style.visibility = 'hidden';
@@ -226,7 +215,32 @@
 
             function songRequestPacket(data) {
                 if (data.Type == 'YouTube' && youtubePlayerReady) {
-                    if (data.Action == 'playpause' && youtubeSongPlaying) {
+                    if (data.Action == 'status') {
+                        var data = {};
+                        data.Type = 1;
+                        data.State = 0;
+
+                        var playerState = youtubePlayer.getPlayerState();
+                        if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
+                            data.ID = youtubePlayer.getVideoUrl();
+                            data.Progress = youtubePlayer.getCurrentTime();
+                            data.Length = youtubePlayer.getDuration();
+                            data.Volume = youtubePlayer.getVolume();
+
+                            if (playerState == YT.PlayerState.PLAYING) {
+                                data.State = 1;
+                            }
+                            else if (playerState == YT.PlayerState.PAUSED) {
+                                data.State = 2;
+                            }
+                            else if (playerState == YT.PlayerState.ENDED) {
+                                data.State = 3;
+                            }
+                        }
+
+                        sendPacket('songRequestStatus', data);
+                    }
+                    else if (data.Action == 'playpause' && youtubeSongPlaying) {
                         if (youtubePlayer.getPlayerState() == YT.PlayerState.PLAYING) {
                             youtubePlayer.pauseVideo();
                         }
@@ -256,39 +270,6 @@
                     }
                     else if (data.Action == 'volume') {
                         youtubePlayer.setVolume(data.Volume);
-                    }
-                }
-                else if (data.Type == 'SoundCloud' && soundCloudPlayerReady) {
-                    if (data.Action == 'playpause' && soundCloudPlayerSongPlaying) {
-                        if (soundCloudPlayerSongIsPaused) {
-                            soundCloudPlayer.play();
-                        }
-                        else {
-                            soundCloudPlayer.pause();
-                        }
-                    }
-                    else if (data.Action == 'stop') {
-                        soundCloudPlayerSongPlaying = false;
-                        soundCloudPlayer.seekTo(3600000);
-                    }
-                    else if (data.Action == 'next') {
-                        soundCloudPlayer.next();
-                    }
-                    else if (data.Action == 'song') {
-                        soundCloudPlayer.setVolume(data.Volume);
-                        soundCloudPlayer.load(data.Source, { auto_play: true });
-                    }
-                    else if (data.Action == 'playlist') {
-                        soundCloudPlayer.setVolume(data.Volume);
-                        soundCloudPlayer.load(
-                            data.Source,
-                            {
-                                auto_play: true,
-                                callback: () => soundCloudPlayer.skip(getRandom(0, 10000))
-                            });
-                    }
-                    else if (data.Action == 'volume') {
-                        soundCloudPlayer.setVolume(data.Volume);
                     }
                 }
             }
@@ -357,27 +338,6 @@
                     youtubeSongPlaying = false;
                 }
             }
-
-            soundCloudPlayer.bind(SC.Widget.Events.READY, function () {
-                soundCloudPlayerReady = true;
-            });
-
-            soundCloudPlayer.bind(SC.Widget.Events.PLAY, function () {
-                soundCloudPlayerSongPlaying = true;
-                soundCloudPlayerSongIsPaused = false;
-            });
-
-            soundCloudPlayer.bind(SC.Widget.Events.PAUSE, function () {
-                soundCloudPlayerSongIsPaused = true;
-            });
-
-            soundCloudPlayer.bind(SC.Widget.Events.FINISH, function () {
-                if (soundCloudPlayerSongPlaying) {
-                    sendPacket('songRequestComplete', '');
-                }
-                soundCloudPlayerSongPlaying = false;
-                soundCloudPlayerSongIsPaused = false;
-            });
 
             openWebsocketConnection("8111");
         </script>

@@ -117,7 +117,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             if (input.input.controlID.Equals("position") && user != null && input.input.meta.ContainsKey("x") && input.input.meta.ContainsKey("y"))
             {
-                if (this.scene != null && this.positionButton != null)
+                if (this.scene != null && this.positionButton != null && input.input.meta["x"] != null && input.input.meta["y"] != null)
                 {
                     Point point = new Point() { X = (double)input.input.meta["x"], Y = (double)input.input.meta["y"] };
 

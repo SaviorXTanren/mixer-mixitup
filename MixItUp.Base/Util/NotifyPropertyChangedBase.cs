@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace MixItUp.WPF.Util
+namespace MixItUp.Base.Util
 {
     public class NotifyPropertyChangedBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void NotifyPropertyChanged(string propertyName)
+        public void NotifyPropertyChanged([CallerMemberName]string propertyName = "")
         {
             if (this.PropertyChanged != null)
             {

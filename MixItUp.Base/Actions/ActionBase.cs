@@ -58,6 +58,8 @@ namespace MixItUp.Base.Actions
         [Name("Mixer Clips")]
         MixerClips,
         Command,
+        Serial,
+        Moderation,
 
         Custom = 99,
     }
@@ -98,6 +100,8 @@ namespace MixItUp.Base.Actions
             try
             {
                 this.extraSpecialIdentifiers = extraSpecialIdentifiers;
+
+                ChannelSession.Services.Telemetry.TrackAction(this.Type);
 
                 await this.PerformInternal(user, arguments);
             }

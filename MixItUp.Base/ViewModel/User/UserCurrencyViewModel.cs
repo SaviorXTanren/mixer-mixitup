@@ -75,7 +75,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public bool IsActive { get { return this.AcquireAmount != 0 && this.AcquireInterval != 0; } }
+        public bool IsActive { get { return this.AcquireInterval != 0; } }
 
         [JsonIgnore]
         public bool IsOnlineIntervalMinutes { get { return this.AcquireAmount == 1 && this.AcquireInterval == 1; } }
@@ -180,12 +180,12 @@ namespace MixItUp.Base.ViewModel.User
 
         public bool Equals(UserCurrencyViewModel other)
         {
-            return (!string.IsNullOrEmpty(this.Name)) ? this.Name.Equals(other.Name) : false;
+            return this.ID.Equals(other.ID);
         }
 
         public override int GetHashCode()
         {
-            return (!string.IsNullOrEmpty(this.Name)) ? this.Name.GetHashCode() : string.Empty.GetHashCode();
+            return this.ID.GetHashCode();
         }
     }
 }

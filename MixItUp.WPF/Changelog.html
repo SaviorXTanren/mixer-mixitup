@@ -5,6 +5,89 @@
     <body>
         <h1 style="color: #5e9ca0;">Changelog</h1>
 
+        <h2 style="color: #2e6c80;">v0.4.14.8:</h2>
+        <ul>
+            <li>Fixing bug where imported ScorpBot commands did not have any actions inside of them</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.14.7:</h2>
+        <ul>
+            <li>Fixing bug where game commands were removing too much currency</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.14.6:</h2>
+        <ul>
+            <li>Tweaking when permissions-based checks are done to prevent spamming of commands</li>
+            <li>Fixing bug where custom user commands were not saving edits</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.14.5:</h2>
+        <ul>
+            <li>Fixing bug where YouTube song requests were not being detected as completed</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.14.4:</h2>
+        <ul>
+            <li>Adding support for multi-scene interactive cooldowns</li>
+            <li>Preventing cooldown of interactive controls if all usage requirements are not meant (EX: If currency requirement is not met, button/group will not cooldown)</li>
+            <li>Improvements to Song Request state detection for playlists, songs, & volume</li>
+            <li>Large scale revision/improvement to the Developer API endpoints</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.14.3:</h2>
+        <ul>
+            <li>Fixing bug where users would be unable to log in if automatic backups where enabled, but no folder location was set</li>
+            <li>Adding prevention of automatic backups from being enabled until a folder location has been set</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.14.2:</h2>
+        <ul>
+            <li>Fixing bug where some command would get called due to chat triggers that contained other ones inside of them (EX: running "!giveaway" would trigger "!give" instead)</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.14.1:</h2>
+        <ul>
+            <li>Fixing bug where some Event commands had gotten out of order</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.14.0:</h2>
+        <ul>
+            <li>Adding import process for Streamlabs Chat Bot data</li>
+            <li>Adding support for multi-work chat triggers by using the semi-colon ";" character to separate them</li>
+            <li>Adding automated backup option in Settings to backup your data on a timed interval</li>
+            <li>Large-scale rework of the Song Requests system to improve the reliability of songs playing and transitioning correctly (Third times the charm, right?)</li>
+            <li>Adding Slot Machine &amp; Lock Box game types</li>
+            <li>Adding Serial Action for interacting with Serial IO devices</li>
+            <li>Adding information to Chat page to show who has deleted a message &amp; the reason for its deletion of it was auto-moderated</li>
+            <li>Adding "Contains" &amp; "<> Contain" options to Conditional Action</li>
+            <li>Adding "Reset" option to Currency/Rank Action</li>
+            <li>Adding $unicode Special Identifier for displaying Unicode characters</li>
+            <li>Removing SoundCloud as a Song Request service due to low usage numbers &amp; inability to function with new Song Request changes</li>
+            <li>Improving ScorpBot importing process</li>
+            <li>Fixing donation amount bug with GawkBox donations</li>
+            <li>Various quality of life & bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.13.9:</h2>
+        <ul>
+            <li>Fix issue where subscriber only currencies/ranks wouldn't be awarded</li>
+            <li>Various quality of life & bug fixes</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.13.8:</h2>
+        <ul>
+            <li>Fixing bug where moderators could not log in</li>
+        </ul>
+
+        <h2 style="color: #2e6c80;">v0.4.13.7:</h2>
+        <ul>
+            <li>Sound action file paths now support Special Identifiers</li>
+            <li>!setgame now displays the name of the game it has been set to</li>
+            <li>An error message will now appear when the currently logged in Mixer account does not match the account in Mix It Up</li>
+            <li>The "Global" cooldown type is now called "Individual"</li>
+            <li>Various quality of life & bug fixes</li>
+        </ul>
+
         <h2 style="color: #2e6c80;">v0.4.13.4-6:</h2>
         <ul>
             <li>Fixing bug where Interactive scene transitions would not work consistently</li>

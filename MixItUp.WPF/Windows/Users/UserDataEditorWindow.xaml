@@ -49,6 +49,8 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
@@ -56,16 +58,17 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Row="0" Grid.Column="0">Username:</TextBlock>
-                        <TextBlock x:Name="UserNameTextBlock" Grid.Row="0" Grid.Column="2" Text="{Binding UserName}" />
+                        <TextBlock x:Name="UserNameTextBlock" Grid.Row="0" Grid.Column="2" Text="{Binding UserName}" Grid.ColumnSpan="3" />
 
-                        <TextBlock Grid.Row="0" Grid.Column="4">Roles:</TextBlock>
-                        <TextBlock x:Name="RolesTextBlock" Grid.Row="0" Grid.Column="6" Text="{Binding RolesDisplayString}" />
+                        <TextBlock Grid.Row="0" Grid.Column="6">Roles:</TextBlock>
+                        <TextBlock x:Name="RolesTextBlock" Grid.Row="0" Grid.Column="8" Text="{Binding RolesDisplayString}" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0">Watch Time:</TextBlock>
-                        <TextBlock x:Name="ViewingHoursTextBlock" Grid.Row="2" Grid.Column="2" Text="{Binding Data.ViewingTimeString}" />
+                        <TextBox x:Name="ViewingHoursTextBox" Grid.Row="2" Grid.Column="2" Text="{Binding Data.ViewingHoursPart}" MaterialDesign:HintAssist.Hint="Hours" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        <TextBox x:Name="ViewingMinutesTextBox" Grid.Row="2" Grid.Column="4" Text="{Binding Data.ViewingMinutesPart}" MaterialDesign:HintAssist.Hint="Minutes" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
-                        <TextBlock Grid.Row="2" Grid.Column="4">Follow Age:</TextBlock>
-                        <TextBlock x:Name="FollowAgeTextBlock" Grid.Row="2" Grid.Column="6" Text="{Binding FollowAgeString}" />
+                        <TextBlock Grid.Row="2" Grid.Column="6">Follow Age:</TextBlock>
+                        <TextBlock x:Name="FollowAgeTextBlock" Grid.Row="2" Grid.Column="8" Text="{Binding FollowAgeString}" />
                     </Grid>
                 </GroupBox>
 

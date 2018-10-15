@@ -125,6 +125,12 @@ namespace MixItUp.WPF.Controls.Actions
                     case ActionTypeEnum.Command:
                         this.actionControl = (this.action != null) ? new CommandActionControl(this, (CommandAction)this.action) : new CommandActionControl(this);
                         break;
+                    case ActionTypeEnum.Serial:
+                        this.actionControl = (this.action != null) ? new SerialActionControl(this, (SerialAction)this.action) : new SerialActionControl(this);
+                        break;
+                    case ActionTypeEnum.Moderation:
+                        this.actionControl = (this.action != null) ? new ModerationActionControl(this, (ModerationAction)this.action) : new ModerationActionControl(this);
+                        break;
                 }
 
                 if (this.action != null && !string.IsNullOrEmpty(this.action.Label))

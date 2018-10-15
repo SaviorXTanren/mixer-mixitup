@@ -58,6 +58,27 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Date/Time" IsReadOnly="True" Width="115">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button x:Name="DateButton" Grid.Column="0" Click="DateButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Date">
+                                    <MaterialDesign:PackIcon Kind="Calendar" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+
+                                <Button x:Name="TimeButton" Grid.Column="2" Click="TimeButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Time">
+                                    <MaterialDesign:PackIcon Kind="Clock" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Width="65">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

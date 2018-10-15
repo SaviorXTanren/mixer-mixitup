@@ -1,6 +1,8 @@
-﻿using MixItUp.Base.ViewModel.Requirement;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading;
@@ -92,7 +94,7 @@ namespace MixItUp.Base.Commands
 
         public void ResetCooldown(UserViewModel user) { this.Requirements.ResetCooldown(user); }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
+        protected override async Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             try
             {
@@ -100,14 +102,14 @@ namespace MixItUp.Base.Commands
 
                 if (!await this.CheckAllRequirements(user))
                 {
-                    return;
+                    return false;
                 }
 
                 IEnumerable<UserViewModel> triggeringUsers = await this.Requirements.GetTriggeringUsers(this.Name, user);
                 if (triggeringUsers == null)
                 {
                     // The action did not trigger due to threshold requirements not being met
-                    return;
+                    return false;
                 }
 
                 foreach (UserViewModel triggeringUser in triggeringUsers)
@@ -117,10 +119,13 @@ namespace MixItUp.Base.Commands
 
                     this.Requirements.UpdateCooldown(triggeringUser);
                 }
+
+                return true;
             }
+            catch (Exception ex) { Logger.Log(ex); }
             finally { this.permissionsCheckSemaphore.Release(); }
 
-            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
+            return false;
         }
 
         protected async Task<bool> CheckAllRequirements(UserViewModel user)

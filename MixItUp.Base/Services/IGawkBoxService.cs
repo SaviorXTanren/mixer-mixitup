@@ -45,7 +45,8 @@ namespace MixItUp.Base.Services
                 Message = this.Message,
                 ImageLink = this.Gifts.FirstOrDefault().ImageLink,
 
-                Amount = Math.Round(this.TotalAmount, 2),
+                // The units of GawkBox donations is "G-Bucks" and 5000 G-Bucks = $5.00 USD
+                Amount = Math.Round(this.TotalAmount / 1000.0, 2),
 
                 DateTime = DateTimeOffset.Now,
             };

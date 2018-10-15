@@ -1,4 +1,5 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Model.Chat;
+using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
@@ -10,6 +11,7 @@ using MixItUp.WPF.Windows.PopOut;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -147,7 +149,10 @@ namespace MixItUp.WPF.Controls.MainControls
             users = users.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
             foreach (UserViewModel user in users)
             {
-                this.UserControls.Add(new ChatUserControl(user));
+                if (user.IsInChat)
+                {
+                    this.UserControls.Add(new ChatUserControl(user));
+                }
             }
 
             this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
@@ -182,6 +187,8 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.MessageControls.RemoveAt(0);
                 }
             }
+
+            Logger.LogChatEvent(message.ToString());
 
             messageUpdateLock.Release();
         }
@@ -312,7 +319,6 @@ namespace MixItUp.WPF.Controls.MainControls
             if (e.Key == Key.Enter)
             {
                 this.SendChatMessageButton_Click(this, new RoutedEventArgs());
-                this.ChatMessageTextBox.Focus();
             }
         }
 
@@ -391,6 +397,8 @@ namespace MixItUp.WPF.Controls.MainControls
                         await ChannelSession.Chat.SendMessage(message, (this.SendChatAsComboBox.SelectedIndex == 0));
                     }));
                 }
+
+                this.ChatMessageTextBox.Focus();
             }
         }
 
@@ -449,34 +457,42 @@ namespace MixItUp.WPF.Controls.MainControls
             });
         }
 
-        private async void ChatClient_OnDeleteMessageOccurred(object sender, Guid messageID)
+        private async void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel deleteEvent)
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
                 await this.messageUpdateLock.WaitAsync();
 
-                ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(messageID));
+                ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
                 if (message != null)
                 {
-                    message.DeleteMessage();
+                    message.DeleteMessage(deleteEvent.moderator?.user_name);
+                    if (ChannelSession.Settings.HideDeletedMessages)
+                    {
+                        this.MessageControls.Remove(message);
+                    }
                 }
 
                 this.messageUpdateLock.Release();
             });
         }
 
-        private async void ChatClient_OnUserPurgeOccurred(object sender, UserViewModel user)
+        private async void ChatClient_OnUserPurgeOccurred(object sender, Tuple<UserViewModel, string> purgeEvent)
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
                 await this.messageUpdateLock.WaitAsync();
 
-                IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(user.ID));
+                IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(purgeEvent.Item1.ID));
                 if (userMessages != null)
                 {
                     foreach (ChatMessageControl message in userMessages)
                     {
-                        message.DeleteMessage();
+                        message.DeleteMessage(purgeEvent.Item2);
+                        if (ChannelSession.Settings.HideDeletedMessages)
+                        {
+                            this.MessageControls.Remove(message);
+                        }
                     }
                 }
 

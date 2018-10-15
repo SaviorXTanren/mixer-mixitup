@@ -7,6 +7,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Remote;
+using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
 using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
@@ -30,7 +31,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 22;
+        public const int LatestVersion = 23;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -78,6 +79,8 @@ namespace MixItUp.Desktop
         public StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
         [JsonProperty]
         public string DefaultAudioOutput { get; set; }
+        [JsonProperty]
+        public bool SaveChatEventLogs { get; set; }
 
         [JsonProperty]
         public bool WhisperAllAlerts { get; set; }
@@ -85,6 +88,8 @@ namespace MixItUp.Desktop
         public bool LatestChatAtTop { get; set; }
         [JsonProperty]
         public bool HideViewerAndChatterNumbers { get; set; }
+        [JsonProperty]
+        public bool HideDeletedMessages { get; set; }
         [JsonProperty]
         public bool TrackWhispererNumber { get; set; }
         [JsonProperty]
@@ -131,11 +136,19 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public int GiveawayTimer { get; set; }
         [JsonProperty]
+        public int GiveawayMaximumEntries { get; set; }
+        [JsonProperty]
         public RequirementViewModel GiveawayRequirements { get; set; }
         [JsonProperty]
         public int GiveawayReminderInterval { get; set; }
         [JsonProperty]
         public bool GiveawayRequireClaim { get; set; }
+        [JsonProperty]
+        public bool GiveawayAllowPastWinners { get; set; }
+        [JsonProperty]
+        public CustomCommand GiveawayUserJoinedCommand { get; set; }
+        [JsonProperty]
+        public CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
         [JsonProperty]
         public bool ModerationUseCommunityFilteredWords { get; set; }
@@ -156,14 +169,6 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool ModerationPunctuationBlockIsPercentage { get; set; }
         [JsonProperty]
-        public int ModerationEmoteBlockCount { get; set; }
-        [JsonProperty]
-        public bool ModerationEmoteBlockIsPercentage { get; set; }
-        [JsonProperty]
-        public int ModerationChatTextTimeout1MinuteOffenseCount { get; set; }
-        [JsonProperty]
-        public int ModerationChatTextTimeout5MinuteOffenseCount { get; set; }
-        [JsonProperty]
         public MixerRoleEnum ModerationChatTextExcempt { get; set; }
 
         [JsonProperty]
@@ -172,11 +177,14 @@ namespace MixItUp.Desktop
         public MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
 
         [JsonProperty]
-        public int ModerationTimeout1MinuteOffenseCount { get; set; }
+        public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
+
         [JsonProperty]
-        public int ModerationTimeout5MinuteOffenseCount { get; set; }
+        public CustomCommand ModerationStrike1Command { get; set; }
         [JsonProperty]
-        public MixerRoleEnum ModerationTimeoutExempt { get; set; }
+        public CustomCommand ModerationStrike2Command { get; set; }
+        [JsonProperty]
+        public CustomCommand ModerationStrike3Command { get; set; }
 
         [JsonProperty]
         public bool EnableOverlay { get; set; }
@@ -239,6 +247,9 @@ namespace MixItUp.Desktop
         public bool AutoExportStatistics { get; set; }
 
         [JsonProperty]
+        public List<SerialDeviceModel> SerialDevices { get; set; }
+
+        [JsonProperty]
         public List<RemoteBoardModel> RemoteBoards { get; set; }
         [JsonProperty]
         public List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
@@ -259,6 +270,13 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public string TelemetryUserId { get; set; }
+
+        [JsonProperty]
+        public string SettingsBackupLocation { get; set; }
+        [JsonProperty]
+        public SettingsBackupRateEnum SettingsBackupRate { get; set; }
+        [JsonProperty]
+        public DateTimeOffset SettingsLastBackup { get; set; }
 
         [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
@@ -300,6 +318,7 @@ namespace MixItUp.Desktop
         public DesktopSavableChannelSettings()
         {
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
+            this.SerialDevices = new List<SerialDeviceModel>();
             this.RemoteBoards = new List<RemoteBoardModel>();
             this.RemoteSavedDevices = new List<RemoteDeviceModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();
@@ -399,9 +418,12 @@ namespace MixItUp.Desktop
 
             this.GiveawayCommand = "giveaway";
             this.GiveawayTimer = 1;
+            this.GiveawayMaximumEntries = 1;
             this.GiveawayRequirements = new RequirementViewModel();
             this.GiveawayReminderInterval = 5;
             this.GiveawayRequireClaim = true;
+            this.GiveawayUserJoinedCommand = CustomCommand.BasicChatCommand("Giveaway User Joined", "You have been entered into the giveaway, stay tuned to see who wins!", isWhisper: true);
+            this.GiveawayWinnerSelectedCommand = CustomCommand.BasicChatCommand("Giveaway Winner Selected", "Congratulations @$username, you won! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", isWhisper: true);
 
             this.MaxMessagesInChat = 100;
             this.ChatFontSize = 13;
@@ -410,11 +432,11 @@ namespace MixItUp.Desktop
             this.ModerationFilteredWordsExcempt = MixerRoleEnum.Mod;
             this.ModerationChatTextExcempt = MixerRoleEnum.Mod;
             this.ModerationBlockLinksExcempt = MixerRoleEnum.Mod;
-            this.ModerationTimeoutExempt = MixerRoleEnum.Mod;
-
             this.ModerationCapsBlockIsPercentage = true;
             this.ModerationPunctuationBlockIsPercentage = true;
-            this.ModerationEmoteBlockIsPercentage = true;
+            this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+            this.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+            this.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
 
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
@@ -566,8 +588,6 @@ namespace MixItUp.Desktop
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }
-
-        public bool ShouldBeUpgraded() { return this.Version < DesktopChannelSettings.LatestVersion; }
 
         public async Task RemoveDuplicateUsers()
         {

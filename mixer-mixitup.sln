@@ -101,6 +101,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Realm Royale Drop Map", "Re
 		MixPlay\realm-royale-drop-map\src\scripts.js = MixPlay\realm-royale-drop-map\src\scripts.js
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{45F199EA-C77B-48E3-8A5E-84B14F25BEA5}"
+	ProjectSection(SolutionItems) = preProject
+		docs\swagger.yaml = docs\swagger.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -277,6 +282,7 @@ Global
 		{B487623D-9C82-4846-80AB-5A75D2A8F8A5} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
 		{43B09B9A-43EE-486E-A79D-B0FB81DE4607} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
 		{43600005-B26E-4441-82AD-E3A43D7AD316} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
+		{45F199EA-C77B-48E3-8A5E-84B14F25BEA5} = {DB6A7130-8AA5-43FB-B65E-BAE1C5551C79}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56FA5777-5A3B-4E2B-B0A5-8EA45A5251F6}

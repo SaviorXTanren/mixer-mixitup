@@ -4,6 +4,14 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
+    public enum SettingsBackupRateEnum
+    {
+        None = 0,
+        Daily,
+        Weekly,
+        Monthly,
+    }
+
     public interface ISettingsService
     {
         Task<IEnumerable<IChannelSettings>> GetAllSettings();
@@ -18,7 +26,9 @@ namespace MixItUp.Base.Services
 
         Task<bool> SaveAndValidate(IChannelSettings settings);
 
-        Task SaveBackup(IChannelSettings settings);
+        Task SaveBackup(IChannelSettings settings, string filePath);
+
+        Task PerformBackupIfApplicable(IChannelSettings settings);
 
         string GetFilePath(IChannelSettings settings);
 

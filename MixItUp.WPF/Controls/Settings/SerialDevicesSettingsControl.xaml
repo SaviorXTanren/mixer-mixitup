@@ -1,0 +1,95 @@
+﻿<local:SettingsControlBase x:Class="MixItUp.WPF.Controls.Settings.SerialDevicesSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Settings"
+             xmlns:MainControls="clr-namespace:MixItUp.WPF.Controls.MainControls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Serial Devices:</TextBlock>
+
+            <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="500">
+                <ListView x:Name="SerialDevicesListView" HorizontalAlignment="Center">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="10" />
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding PortName}" />
+
+                                <TextBlock Grid.Column="2" Text="{Binding BaudRate}" />
+
+                                <TextBlock Grid.Column="4" Text="{Binding DTREnabled}" />
+
+                                <TextBlock Grid.Column="6" Text="{Binding RTSEnabled}" />
+
+                                <Button Grid.Column="8" x:Name="DeleteSerialDeviceButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteSerialDeviceButton_Click" ToolTip="Delete" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Border>
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox x:Name="PortNameComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Port Name" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" IsEditable="True" />
+
+                <TextBox x:Name="BaudRateTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Baud Rate" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+
+                <TextBlock Grid.Column="4" VerticalAlignment="Center">DTR:</TextBlock>
+                <CheckBox Grid.Column="6" x:Name="DTREnabledCheckBox" VerticalAlignment="Center" />
+
+                <TextBlock Grid.Column="8" VerticalAlignment="Center">RTS:</TextBlock>
+                <CheckBox Grid.Column="10" x:Name="RTSEnabledCheckBox" VerticalAlignment="Center" />
+
+                <Button x:Name="AddSerialDeviceButton" Grid.Column="12" Click="AddSerialDeviceButton_Click">Add</Button>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</local:SettingsControlBase>

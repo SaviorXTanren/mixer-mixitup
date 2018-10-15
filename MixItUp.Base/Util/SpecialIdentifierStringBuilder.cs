@@ -54,6 +54,8 @@ namespace MixItUp.Base.Util
         public const string DonationMessageSpecialIdentifier = "donationmessage";
         public const string DonationImageSpecialIdentifier = "donationimage";
 
+        public const string UnicodeSpecialIdentifierHeader = "unicode";
+
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
 
@@ -71,16 +73,85 @@ namespace MixItUp.Base.Util
             text = text.Replace("$user", "@$username");
             text = text.Replace("$url", "$userurl");
             text = text.Replace("$hours", "$userhours");
+            text = text.Replace("$game", "$usergame");
 
-            text = text.Replace("$target", "@$arg1username");
             for (int i = 1; i < 10; i++)
             {
                 text = text.Replace("$target" + i, "@$arg" + i + "username");
             }
+            text = text.Replace("$target", "@$targetusername");
 
             text = text.Replace("$randuser", "@$randomusername");
 
             text = text.Replace("$msg", "$allargs");
+
+            text = text.Replace("$mygame", "$streamerusergame");
+            text = text.Replace("$title", "$streamtitle");
+            text = text.Replace("$status", "$streamtitle");
+
+            if (text.Contains("$randnum("))
+            {
+                text = ReplaceParameterVariablesEntries(text, "$randnum(", "$randomnumber");
+            }
+
+            if (text.Contains("$tophours("))
+            {
+                text = ReplaceParameterVariablesEntries(text, "$tophours(", "$top", "time");
+            }
+
+            return text;
+        }
+
+        public static string ConvertStreamlabsChatBotText(string text)
+        {
+            text = text.Replace("$targetid", "$targetuserid");
+            text = text.Replace("$targetname", "$targetusername");
+            text = text.Replace("$touserid", "$targetuserid");
+            text = text.Replace("$tousername", "$targetusername");
+
+            text = text.Replace("$randuserid", "$randomuserid");
+            text = text.Replace("$randusername", "$randomusername");
+
+            text = text.Replace("$mychannel", "$streameruserid");
+            text = text.Replace("$mychannelname", "$streamerusername");
+
+            for (int i = 1; i < 10; i++)
+            {
+                text = text.Replace("$arg" + i, "$arg" + i + "text");
+                text = text.Replace("$argl" + i, "$arg" + i + "text");
+                text = text.Replace("$num" + i, "$arg" + i + "text");
+            }
+
+            text = text.Replace("$points", "$userpoints");
+            text = text.Replace("$pointstext", "$userpoints");
+
+            if (text.Contains("$randnum("))
+            {
+                text = ReplaceParameterVariablesEntries(text, "$randnum(", "$randomnumber");
+            }
+
+            if (text.Contains("$toppoints("))
+            {
+                text = ReplaceParameterVariablesEntries(text, "$toppoints(", "$top", "points");
+            }
+
+            if (text.Contains("$tophours("))
+            {
+                text = ReplaceParameterVariablesEntries(text, "$tophours(", "$top", "time");
+            }
+
+            text = text.Replace("$rank", "$userrankname");
+            text = text.Replace("$hours", "$userhours");
+
+            text = text.Replace("$url", "$targetuserurl");
+            text = text.Replace("$game", "$targetusergame");
+
+            text = text.Replace("$myurl", "$streameruserurl");
+            text = text.Replace("$mygame", "$streamerusergame");
+
+            text = text.Replace("$uptime", "$uptimetotal");
+            text = text.Replace("$followercount", "$streameruserfollowers");
+            text = text.Replace("$subcount", "$streamsubcount");
 
             return text;
         }
@@ -126,6 +197,26 @@ namespace MixItUp.Base.Util
         }
 
         public static void ClearRandomUserSpecialIdentifierGroup(Guid id) { SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups.Remove(id); }
+
+        public static string ReplaceParameterVariablesEntries(string text, string pattern, string preReplacement, string postReplacement = null)
+        {
+            int startIndex = 0;
+            do
+            {
+                startIndex = text.IndexOf(pattern);
+                if (startIndex >= 0)
+                {
+                    int endIndex = text.IndexOf(")", startIndex);
+                    if (endIndex >= 0)
+                    {
+                        string fullEntry = text.Substring(startIndex, endIndex - startIndex + 1);
+                        string leftOver = fullEntry.Replace(pattern, "").Replace(")", "");
+                        text = text.Replace(fullEntry, preReplacement + leftOver + (!string.IsNullOrEmpty(postReplacement) ? postReplacement : string.Empty));
+                    }
+                }
+            } while (startIndex >= 0);
+            return text;
+        }
 
         private string text;
         private Guid randomUserSpecialIdentifierGroupID;
@@ -428,42 +519,22 @@ namespace MixItUp.Base.Util
 
                 if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
                 {
-                    int startIndex = 0;
-                    do
+                    this.ReplaceNumberBasedSpecialIdentifier(RandomNumberSpecialIdentifier, (maxNumber) =>
                     {
-                        startIndex = this.GetFirstInstanceOfSpecialIdentifier(RandomNumberSpecialIdentifier, startIndex);
-                        if (startIndex >= 0)
-                        {
-                            int endIndex = 0;
-                            for (endIndex = startIndex + RandomNumberSpecialIdentifier.Length + 1; endIndex < this.text.Length; endIndex++)
-                            {
-                                if (!char.IsDigit(this.text[endIndex]))
-                                {
-                                    break;
-                                }
-                            }
-
-                            if (endIndex <= this.text.Length)
-                            {
-                                string randomSI = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
-                                if (int.TryParse(randomSI.Replace(RandomNumberSpecialIdentifier, ""), out int randomNumberMax) && randomNumberMax > 0)
-                                {
-                                    Random random = new Random();
-                                    int randomNumber = (random.Next() % randomNumberMax) + 1;
-                                    this.ReplaceSpecialIdentifier(randomSI, randomNumber.ToString());
-                                }
-                                else
-                                {
-                                    startIndex = endIndex;
-                                }
-                            }
-                            else
-                            {
-                                startIndex = endIndex;
-                            }
-                        }
-                    } while (startIndex > 0);
+                        Random random = new Random();
+                        int number = (random.Next() % maxNumber) + 1;
+                        return number.ToString();
+                    });
                 }
+            }
+
+            if (this.ContainsSpecialIdentifier(UnicodeSpecialIdentifierHeader))
+            {
+                this.ReplaceNumberBasedSpecialIdentifier(UnicodeSpecialIdentifierHeader, (number) =>
+                {
+                    char uChar = (char)number;
+                    return uChar.ToString();
+                });
             }
         }
 
@@ -510,6 +581,8 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", userData.ViewingTimeString);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "hours", userData.ViewingHoursString);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mins", userData.ViewingMinutesString);
+
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "moderationstrikes", userData.ModerationStrikes.ToString());
                 }
 
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game"))
@@ -551,6 +624,43 @@ namespace MixItUp.Base.Util
                 return new UserViewModel(argUserModel);
             }
             return null;
+        }
+
+        private void ReplaceNumberBasedSpecialIdentifier(string header, Func<int, string> replacer)
+        {
+            int startIndex = 0;
+            do
+            {
+                startIndex = this.GetFirstInstanceOfSpecialIdentifier(header, startIndex);
+                if (startIndex >= 0)
+                {
+                    int endIndex = 0;
+                    for (endIndex = startIndex + header.Length + 1; endIndex < this.text.Length; endIndex++)
+                    {
+                        if (!char.IsDigit(this.text[endIndex]))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (endIndex <= this.text.Length)
+                    {
+                        string specialIdentifier = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
+                        if (int.TryParse(specialIdentifier.Replace(header, ""), out int number) && number > 0)
+                        {
+                            this.ReplaceSpecialIdentifier(specialIdentifier, replacer(number));
+                        }
+                        else
+                        {
+                            startIndex = endIndex;
+                        }
+                    }
+                    else
+                    {
+                        startIndex = endIndex;
+                    }
+                }
+            } while (startIndex > 0);
         }
     }
 }

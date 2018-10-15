@@ -51,7 +51,11 @@ namespace MixItUp.Base.MixerAPI
 
     public class InteractiveConnectedButtonCommand : InteractiveConnectedControlCommand
     {
-        public InteractiveConnectedButtonCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedButtonControlModel button, InteractiveCommand command) : base(scene, button, command) { }
+        public InteractiveConnectedButtonCommand(InteractiveConnectedSceneModel scene, InteractiveConnectedButtonControlModel button, InteractiveCommand command)
+            : base(scene, button, command)
+        {
+            this.ButtonCommand.OnCommandStart += ButtonCommand_OnCommandStart;
+        }
 
         public InteractiveConnectedButtonControlModel Button { get { return (InteractiveConnectedButtonControlModel)this.Control; } set { this.Control = value; } }
 
@@ -64,12 +68,18 @@ namespace MixItUp.Base.MixerAPI
 
         public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
+            await base.Perform(user, arguments);
+        }
+
+        private async void ButtonCommand_OnCommandStart(object sender, EventArgs e)
+        {
             if (this.HasCooldown)
             {
                 this.Button.cooldown = this.CooldownTimestamp;
             }
 
-            List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
+            Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>> sceneButtons = new Dictionary<InteractiveConnectedSceneModel, List<InteractiveConnectedButtonCommand>>();
+
             if (!string.IsNullOrEmpty(this.ButtonCommand.CooldownGroupName))
             {
                 var otherButtons = ChannelSession.Interactive.Controls.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
@@ -77,17 +87,23 @@ namespace MixItUp.Base.MixerAPI
                 foreach (var otherItem in otherButtons)
                 {
                     otherItem.Button.cooldown = this.Button.cooldown;
-                    buttons.Add(otherItem.Button);
+                    if (!sceneButtons.ContainsKey(otherItem.Scene))
+                    {
+                        sceneButtons[otherItem.Scene] = new List<InteractiveConnectedButtonCommand>();
+                    }
+                    sceneButtons[otherItem.Scene].Add(otherItem);
                 }
             }
             else
             {
-                buttons.Add(this.Button);
+                sceneButtons[this.Scene] = new List<InteractiveConnectedButtonCommand>();
+                sceneButtons[this.Scene].Add(this);
             }
 
-            await ChannelSession.Interactive.UpdateControls(this.Scene, buttons);
-
-            await base.Perform(user, arguments);
+            foreach (var kvp in sceneButtons)
+            {
+                await ChannelSession.Interactive.UpdateControls(kvp.Key, kvp.Value.Select(b => b.Button));
+            }
         }
     }
 
@@ -378,6 +394,37 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
             await ChannelSession.Connection.UpdateInteractiveGameVersion(version);
+        }
+
+        public async Task TimeoutUser(UserViewModel user, int amountInSeconds)
+        {
+            await ChannelSession.Interactive.SetUserDisabledState(user, disabled: true);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(amountInSeconds * 1000);
+                    if (ChannelSession.Interactive != null)
+                    {
+                        await ChannelSession.Interactive.SetUserDisabledState(user, disabled: false);
+                    }
+                }
+                catch (Exception ex) { Util.Logger.Log(ex); }
+            });
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        }
+
+        public async Task SetUserDisabledState(UserViewModel user, bool disabled)
+        {
+            if (user != null && user.IsInteractiveParticipant)
+            {
+                user.IsInInteractiveTimeout = disabled;
+                foreach (InteractiveParticipantModel participant in user.GetParticipantModels())
+                {
+                    await ChannelSession.Interactive.UpdateParticipant(participant);
+                }
+            }
         }
 
         protected override async Task<bool> ConnectInternal()
@@ -691,6 +738,17 @@ namespace MixItUp.Base.MixerAPI
 
                         user = new UserViewModel(0, "Unknown User");
                         user.InteractiveIDs.Add(e.participantID);
+                    }
+
+                    if (user.IsInInteractiveTimeout)
+                    {
+                        return;
+                    }
+
+                    if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
+                    {
+                        await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isInteractive: true);
+                        return;
                     }
 
                     InteractiveConnectedControlCommand connectedControl = null;

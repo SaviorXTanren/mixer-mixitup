@@ -1,6 +1,8 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Dialogs;
+using MixItUp.WPF.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -109,6 +111,38 @@ namespace MixItUp.WPF.Controls.MainControls
             TextBox textBox = (TextBox)sender;
             QuoteListing quote = (QuoteListing)textBox.DataContext;
             quote.Quote.GameName = textBox.Text;
+        }
+
+        private async void DateButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                Button button = (Button)sender;
+                QuoteListing quote = (QuoteListing)button.DataContext;
+
+                CalendarDialogControl calendarControl = new CalendarDialogControl(quote.Quote.DateTime);
+                string result = await MessageBoxHelper.ShowCustomDialog(calendarControl);
+                if (!string.IsNullOrEmpty(result) && result.Equals("True"))
+                {
+                    quote.Quote.DateTime = calendarControl.SelectedDate.Date + quote.Quote.DateTime.TimeOfDay;
+                }
+            });
+        }
+
+        private async void TimeButton_Click(object sender, RoutedEventArgs e)
+        {
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                Button button = (Button)sender;
+                QuoteListing quote = (QuoteListing)button.DataContext;
+
+                ClockDialogControl calendarControl = new ClockDialogControl(quote.Quote.DateTime);
+                string result = await MessageBoxHelper.ShowCustomDialog(calendarControl);
+                if (!string.IsNullOrEmpty(result) && result.Equals("True"))
+                {
+                    quote.Quote.DateTime = quote.Quote.DateTime.Date + calendarControl.SelectedTime.TimeOfDay;
+                }
+            });
         }
     }
 }

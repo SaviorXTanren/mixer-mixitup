@@ -1,11 +1,15 @@
 ﻿using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
+using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Util;
+using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,7 +40,7 @@ namespace MixItUp.WPF.Controls.MainControls
         [Name("Minimum Amount Required")]
         MinimumAmountRequired,
     }
-    
+
     public class GiveawayUser
     {
         public UserViewModel User { get; set; }
@@ -49,24 +53,25 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class GiveawayControl : MainControlBase, IDisposable
     {
-        public bool giveawayEnabled;
-        public string giveawayItem;
+        private string giveawayItem;
 
-        private ObservableCollection<GiveawayUser> enteredUsers = new ObservableCollection<GiveawayUser>();
-        private LockedDictionary<uint, GiveawayUser> enteredUsersDictionary = new LockedDictionary<uint, GiveawayUser>();
+        private ObservableCollection<GiveawayUser> enteredUsersUICollection = new ObservableCollection<GiveawayUser>();
+        private LockedDictionary<uint, GiveawayUser> enteredUsers = new LockedDictionary<uint, GiveawayUser>();
+
+        private List<uint> pastWinners = new List<uint>();
+
+        private ChatCommand giveawayCommand = null;
+
+        private int timeLeft = 0;
+        private int reminder = 0;
 
         private UserViewModel selectedWinner = null;
 
-        private int timeLeft = 2;
-        private int reminder = 5;
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
         public GiveawayControl()
         {
             InitializeComponent();
-
-            GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
-            GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
         }
 
         protected override Task InitializeInternal()
@@ -74,11 +79,13 @@ namespace MixItUp.WPF.Controls.MainControls
             this.EntryMethodTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<GiveawayEntryTypeEnum>();
             this.DonationEntryQualifierComboBox.ItemsSource = EnumHelper.GetEnumNames<GiveawayDonationEntryQualificationTypeEnum>();
 
-            this.EnteredUsersListView.ItemsSource = this.enteredUsers;
+            this.EnteredUsersListView.ItemsSource = this.enteredUsersUICollection;
 
+            this.MaximumEntriesTextBox.Text = ChannelSession.Settings.GiveawayMaximumEntries.ToString();
             this.TimerTextBox.Text = ChannelSession.Settings.GiveawayTimer.ToString();
             this.ReminderTextBox.Text = ChannelSession.Settings.GiveawayReminderInterval.ToString();
 
+            this.AllowPastWinnersCheckBox.IsChecked = ChannelSession.Settings.GiveawayAllowPastWinners;
             this.RequireClaimCheckBox.IsChecked = ChannelSession.Settings.GiveawayRequireClaim;
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.GiveawayCommand))
@@ -119,6 +126,9 @@ namespace MixItUp.WPF.Controls.MainControls
                     this.DonationEntryQualifierComboBox.SelectedItem = EnumHelper.GetEnumName(GiveawayDonationEntryQualificationTypeEnum.OneEntryPerUser);
                 }
             }
+
+            this.GiveawayUserJoinedCommand.DataContext = ChannelSession.Settings.GiveawayUserJoinedCommand;
+            this.GiveawayWinnerSelectedCommand.DataContext = ChannelSession.Settings.GiveawayWinnerSelectedCommand;
 
             return base.InitializeInternal();
         }
@@ -174,6 +184,12 @@ namespace MixItUp.WPF.Controls.MainControls
             if (string.IsNullOrEmpty(this.ReminderTextBox.Text) || !int.TryParse(this.ReminderTextBox.Text, out this.reminder) || this.reminder <= 0)
             {
                 await MessageBoxHelper.ShowMessageDialog("Reminder must be greater than 0");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(this.MaximumEntriesTextBox.Text) || !int.TryParse(this.MaximumEntriesTextBox.Text, out int maxEntries) || maxEntries <= 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("Maximum Entries must be greater than 0");
                 return;
             }
 
@@ -241,23 +257,30 @@ namespace MixItUp.WPF.Controls.MainControls
 
             ChannelSession.Settings.GiveawayTimer = this.timeLeft;
             ChannelSession.Settings.GiveawayReminderInterval = this.reminder;
+            ChannelSession.Settings.GiveawayMaximumEntries = maxEntries;
+            ChannelSession.Settings.GiveawayAllowPastWinners = this.AllowPastWinnersCheckBox.IsChecked.GetValueOrDefault();
             ChannelSession.Settings.GiveawayRequireClaim = this.RequireClaimCheckBox.IsChecked.GetValueOrDefault();
             await ChannelSession.SaveSettings();
+
+            this.giveawayCommand = new ChatCommand("Giveaway Command", ChannelSession.Settings.GiveawayCommand, new RequirementViewModel());
+            if (ChannelSession.Settings.GiveawayAllowPastWinners)
+            {
+                this.pastWinners.Clear();
+            }
 
             this.timeLeft = this.timeLeft * 60;
             this.reminder = this.reminder * 60;
 
-            this.giveawayEnabled = true;
             this.giveawayItem = this.ItemTextBox.Text;
 
-            this.enteredUsersDictionary.Clear();
             this.enteredUsers.Clear();
+            this.enteredUsersUICollection.Clear();
 
             this.WinnerTextBlock.Text = "";
             this.EnableGiveawayButton.Visibility = Visibility.Collapsed;
             this.DisableGiveawayButton.Visibility = Visibility.Visible;
 
-            this.GiveawayBasicsGrid.IsEnabled = this.GiveawayTimersGrid.IsEnabled = this.GiveawayRequireClaimGrid.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = false;
+            this.GiveawayBasicsGrid.IsEnabled = this.GiveawayTimersGrid.IsEnabled = this.GiveawayCommandsGrid.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = false;
 
             await ChannelSession.Chat.SendMessage(string.Format("A giveaway for {0} has started! {1} in the next {2} minute(s)", this.giveawayItem, this.GetEntryInstructions(), ChannelSession.Settings.GiveawayTimer));
 
@@ -272,193 +295,223 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.EndGiveaway();
         }
 
+        private void GiveawayCommand_EditClicked(object sender, RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                window.Show();
+            }
+        }
+
         private async Task EndGiveaway()
         {
             this.backgroundThreadCancellationTokenSource.Cancel();
 
-            this.giveawayEnabled = false;
+            if (!ChannelSession.Settings.GiveawayAllowPastWinners && this.selectedWinner != null)
+            {
+                pastWinners.Add(this.selectedWinner.ID);
+            }
+
+            this.timeLeft = 0;
+            this.selectedWinner = null;
+            this.giveawayCommand = null;
+
+            GlobalEvents.OnChatCommandMessageReceived -= GlobalEvents_OnChatCommandMessageReceived;
+            GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
+
             await this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                this.selectedWinner = null;
                 this.TimeLeftTextBlock.Text = "";
 
-                this.GiveawayBasicsGrid.IsEnabled = this.GiveawayTimersGrid.IsEnabled = this.GiveawayRequireClaimGrid.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = true;
+                this.GiveawayBasicsGrid.IsEnabled = this.GiveawayTimersGrid.IsEnabled = this.GiveawayCommandsGrid.IsEnabled = this.CommandEntryGrid.IsEnabled = this.DonationEntryGrid.IsEnabled = true;
 
                 this.DisableGiveawayButton.Visibility = Visibility.Collapsed;
                 this.EnableGiveawayButton.Visibility = Visibility.Visible;
 
-                this.enteredUsersDictionary.Clear();
                 this.enteredUsers.Clear();
+                this.enteredUsersUICollection.Clear();
             }));
         }
 
         private async Task GiveawayTimerBackground()
         {
-            while (this.timeLeft > 0)
+            GlobalEvents.OnChatCommandMessageReceived += GlobalEvents_OnChatCommandMessageReceived;
+            GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+
+            try
             {
-                await Task.Delay(1000);
-                this.timeLeft--;
-                await this.Dispatcher.BeginInvoke(new Action(() =>
+                while (this.timeLeft > 0)
                 {
+                    await Task.Delay(1000);
+                    this.timeLeft--;
+
                     string timeLeftUIText = (this.timeLeft % 60).ToString() + " Seconds";
                     if (this.timeLeft > 60)
                     {
                         timeLeftUIText = (this.timeLeft / 60).ToString() + " Minutes " + timeLeftUIText;
                     }
-                    this.TimeLeftTextBlock.Text = timeLeftUIText;
-                }));
-
-                string timeLeftText = null;
-                if (this.timeLeft > 60 && (this.timeLeft % this.reminder) == 0)
-                {
-                    int minutesLeft = this.timeLeft / 60;
-                    timeLeftText = minutesLeft + " minutes";
-                }
-                else if (this.timeLeft == 60 || this.timeLeft == 30 || this.timeLeft == 10)
-                {
-                    timeLeftText = this.timeLeft + " seconds";
-                }
-
-                if (!string.IsNullOrEmpty(timeLeftText))
-                {
-                    await ChannelSession.Chat.SendMessage(string.Format("The giveaway will end in {0}. {1}!", timeLeftText, this.GetEntryInstructions()));
-                }
-
-                if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
-                {
-                    await this.EndGiveaway();
-                    return;
-                }
-            }
-
-            Dictionary<UserViewModel, int> giveawayUsers = new Dictionary<UserViewModel, int>();
-            if (this.enteredUsersDictionary.Count > 0)
-            {
-                foreach (GiveawayUser gUser in this.enteredUsersDictionary.Values)
-                {
-                    if (gUser.Entries > 0)
-                    {
-                        giveawayUsers[gUser.User] = gUser.Entries;
-                    }
-                }
-            }
-
-            while (true)
-            {
-                if (giveawayUsers.Count > 0)
-                {
-                    Random random = new Random();
-                    int entryNumber = random.Next(giveawayUsers.Select(gu => gu.Value).Sum(e => e));
-                    int totalEntries = 0;
-                    foreach (var kvp in giveawayUsers)
-                    {
-                        totalEntries += kvp.Value;
-                        if (entryNumber < totalEntries)
-                        {
-                            this.selectedWinner = kvp.Key;
-                            break;
-                        }
-                    }
-
-                    giveawayUsers.Remove(this.selectedWinner);
 
                     await this.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        this.WinnerTextBlock.Text = this.selectedWinner.UserName;
+                        this.TimeLeftTextBlock.Text = timeLeftUIText;
                     }));
 
-                    if (!ChannelSession.Settings.GiveawayRequireClaim)
+                    string timeLeftText = null;
+                    if (this.timeLeft > 60 && (this.timeLeft % this.reminder) == 0)
                     {
-                        await ChannelSession.Chat.SendMessage(string.Format("Congratulations @{0}, you won {1}!", this.selectedWinner.UserName, this.giveawayItem));
+                        int minutesLeft = this.timeLeft / 60;
+                        timeLeftText = minutesLeft + " minutes";
+                    }
+                    else if (this.timeLeft == 60 || this.timeLeft == 30 || this.timeLeft == 10)
+                    {
+                        timeLeftText = this.timeLeft + " seconds";
+                    }
+
+                    if (!string.IsNullOrEmpty(timeLeftText))
+                    {
+                        await ChannelSession.Chat.SendMessage(string.Format("The giveaway will end in {0}. {1}!", timeLeftText, this.GetEntryInstructions()));
+                    }
+
+                    if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
+                    {
                         await this.EndGiveaway();
                         return;
                     }
+                }
 
-                    await ChannelSession.Chat.SendMessage(string.Format("Congratulations @{0}, you won {1}! Type \"!claim\" in chat in the next 60 seconds to claim your prize!", this.selectedWinner.UserName, this.giveawayItem));
-
-                    this.timeLeft = 60;
-                    while (this.timeLeft > 0)
+                while (true)
+                {
+                    this.selectedWinner = this.SelectWinner();
+                    if (this.selectedWinner != null)
                     {
-                        await Task.Delay(1000);
-                        this.timeLeft--;
                         await this.Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            this.TimeLeftTextBlock.Text = this.timeLeft.ToString();
+                            this.WinnerTextBlock.Text = this.selectedWinner.UserName;
                         }));
 
-                        if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
+                        await ChannelSession.Settings.GiveawayWinnerSelectedCommand.Perform(this.selectedWinner);
+
+                        if (!ChannelSession.Settings.GiveawayRequireClaim)
                         {
                             await this.EndGiveaway();
                             return;
                         }
-                    }
-                }
-                else
-                {
-                    await ChannelSession.Chat.SendMessage("There are no users that entered/left in the giveaway");
-                    await this.EndGiveaway();
-                    return;
-                }
-            }
-        }
-
-        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel e)
-        {
-            if (this.giveawayEnabled)
-            {
-                if (this.selectedWinner == null && !string.IsNullOrEmpty(ChannelSession.Settings.GiveawayCommand) && e.CommandName.Equals("!" + ChannelSession.Settings.GiveawayCommand))
-                {
-                    if (this.enteredUsersDictionary.ContainsKey(e.User.ID))
-                    {
-                        await ChannelSession.Chat.Whisper(e.User.UserName, "You have already entered into this giveaway, stay tuned to see who wins!");
-                        return;
-                    }
-
-                    if (await ChannelSession.Settings.GiveawayRequirements.DoesMeetUserRoleRequirement(e.User))
-                    {
-                        if (ChannelSession.Settings.GiveawayRequirements.Rank != null && ChannelSession.Settings.GiveawayRequirements.Rank.GetCurrency() != null)
+                        else
                         {
-                            if (!ChannelSession.Settings.GiveawayRequirements.DoesMeetRankRequirement(e.User))
+                            int claimTime = 60;
+                            while (claimTime > 0)
                             {
-                                await ChannelSession.Settings.GiveawayRequirements.Rank.SendRankNotMetWhisper(e.User);
-                                return;
+                                await Task.Delay(1000);
+                                claimTime--;
+
+                                await this.Dispatcher.BeginInvoke(new Action(() =>
+                                {
+                                    this.TimeLeftTextBlock.Text = claimTime.ToString();
+                                }));
+
+                                if (this.backgroundThreadCancellationTokenSource.Token.IsCancellationRequested)
+                                {
+                                    await this.EndGiveaway();
+                                    return;
+                                }
                             }
                         }
-
-                        if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
-                        {
-                            if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(e.User))
-                            {
-                                await ChannelSession.Settings.GiveawayRequirements.Currency.SendCurrencyNotMetWhisper(e.User);
-                                return;
-                            }
-                        }
-
-                        await ChannelSession.Chat.Whisper(e.User.UserName, "You have been entered into the giveaway, stay tuned to see who wins!");
-
-                        enteredUsersDictionary[e.User.ID] = new GiveawayUser() { User = e.User, Entries = 1 };
-
-                        await this.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            this.enteredUsers.Add(enteredUsersDictionary[e.User.ID]);
-                        }));
                     }
                     else
                     {
-                        await ChannelSession.Chat.Whisper(e.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.Role.RoleNameString));
+                        await ChannelSession.Chat.SendMessage("There are no users that entered/left in the giveaway");
+                        await this.EndGiveaway();
+                        return;
                     }
                 }
-                else if (this.selectedWinner != null && e.CommandName.Equals("!claim") && this.selectedWinner.Equals(e.User))
+            }
+            catch (Exception ex)
+            {
+                MixItUp.Base.Util.Logger.Log(ex);
+            }
+        }
+
+        private async void GlobalEvents_OnChatCommandMessageReceived(object sender, ChatMessageViewModel message)
+        {
+            if (this.timeLeft > 0 && this.selectedWinner == null && this.giveawayCommand.MatchesOrContainsCommand(message.Message))
+            {
+                int entries = 1;
+
+                if (pastWinners.Contains(message.User.ID))
                 {
-                    await ChannelSession.Chat.SendMessage(string.Format("@{0} has claimed their prize! Listen closely to the streamer for instructions on getting your prize.", e.User.UserName));
-                    await this.EndGiveaway();
+                    await ChannelSession.Chat.Whisper(message.User.UserName, "You have already won a giveaway and can not enter this one");
+                    return;
                 }
+
+                IEnumerable<string> arguments = this.giveawayCommand.GetArgumentsFromText(message.Message);
+                if (arguments.Count() > 0)
+                {
+                    int.TryParse(arguments.ElementAt(0), out entries);
+                }
+
+                int currentEntries = 0;
+                if (this.enteredUsers.ContainsKey(message.User.ID))
+                {
+                    currentEntries = this.enteredUsers[message.User.ID].Entries;
+                }
+
+                if ((entries + currentEntries) > ChannelSession.Settings.GiveawayMaximumEntries)
+                {
+                    await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You may only enter {0} time(s), you currently have entered {1} time(s)", ChannelSession.Settings.GiveawayMaximumEntries, currentEntries));
+                    return;
+                }
+
+                if (await ChannelSession.Settings.GiveawayRequirements.DoesMeetUserRoleRequirement(message.User))
+                {
+                    if (ChannelSession.Settings.GiveawayRequirements.Rank != null && ChannelSession.Settings.GiveawayRequirements.Rank.GetCurrency() != null)
+                    {
+                        if (!ChannelSession.Settings.GiveawayRequirements.DoesMeetRankRequirement(message.User))
+                        {
+                            await ChannelSession.Settings.GiveawayRequirements.Rank.SendRankNotMetWhisper(message.User);
+                            return;
+                        }
+                    }
+
+                    if (ChannelSession.Settings.GiveawayRequirements.Currency != null && ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency() != null)
+                    {
+                        int totalAmount = ChannelSession.Settings.GiveawayRequirements.Currency.RequiredAmount * entries;
+                        if (!ChannelSession.Settings.GiveawayRequirements.TrySubtractCurrencyAmount(message.User, totalAmount))
+                        {
+                            await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You do not have the required {0} {1} to do this", totalAmount, ChannelSession.Settings.GiveawayRequirements.Currency.GetCurrency().Name));
+                            return;
+                        }
+                    }
+
+                    if (!this.enteredUsers.ContainsKey(message.User.ID))
+                    {
+                        this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };
+                    }
+                    GiveawayUser giveawayUser = this.enteredUsers[message.User.ID];
+
+                    giveawayUser.Entries += entries;
+
+                    await this.RefreshUserList();
+
+                    await ChannelSession.Settings.GiveawayUserJoinedCommand.Perform(message.User);
+                }
+                else
+                {
+                    await ChannelSession.Chat.Whisper(message.User.UserName, string.Format("You are not able to enter this giveaway as it is only for {0}s", ChannelSession.Settings.GiveawayRequirements.Role.RoleNameString));
+                }
+            }
+            else if (this.selectedWinner != null && message.Message.Equals("!claim", StringComparison.InvariantCultureIgnoreCase) && this.selectedWinner.Equals(message.User))
+            {
+                await ChannelSession.Chat.SendMessage(string.Format("@{0} has claimed their prize! Listen closely to the streamer for instructions on getting your prize.", message.User.UserName));
+                await this.EndGiveaway();
             }
         }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)
         {
-            if (this.giveawayEnabled && this.selectedWinner == null)
+            if (this.timeLeft > 0 && this.selectedWinner == null)
             {
                 if  ((ChannelSession.Settings.GiveawayGawkBoxTrigger && e.Source == UserDonationSourceEnum.GawkBox) ||
                     (ChannelSession.Settings.GiveawayStreamlabsTrigger && e.Source == UserDonationSourceEnum.Streamlabs) ||
@@ -469,22 +522,24 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         UserViewModel user = new UserViewModel(userModel);
 
-                        if (!this.enteredUsersDictionary.ContainsKey(user.ID))
+                        if (!this.enteredUsers.ContainsKey(user.ID))
                         {
-                            this.enteredUsersDictionary[user.ID] = new GiveawayUser() { User = user, Entries = 0 };
+                            this.enteredUsers[user.ID] = new GiveawayUser() { User = user, Entries = 0 };
                         }
-                        this.enteredUsersDictionary[user.ID].DonationAmount += e.Amount;
+                        GiveawayUser giveawayUser = this.enteredUsers[user.ID];
+
+                        giveawayUser.DonationAmount += e.Amount;
 
                         int newEntryAmount = 0;
                         if (ChannelSession.Settings.GiveawayDonationAmount > 0.0)
                         {
-                            if (ChannelSession.Settings.GiveawayDonationRequiredAmount && this.enteredUsersDictionary[user.ID].DonationAmount >= ChannelSession.Settings.GiveawayDonationAmount)
+                            if (ChannelSession.Settings.GiveawayDonationRequiredAmount && giveawayUser.DonationAmount >= ChannelSession.Settings.GiveawayDonationAmount)
                             {
                                 newEntryAmount = 1;
                             }
                             else
                             {
-                                newEntryAmount = (int)(this.enteredUsersDictionary[user.ID].DonationAmount / ChannelSession.Settings.GiveawayDonationAmount);
+                                newEntryAmount = (int)(giveawayUser.DonationAmount / ChannelSession.Settings.GiveawayDonationAmount);
                             }
                         }
                         else
@@ -492,23 +547,30 @@ namespace MixItUp.WPF.Controls.MainControls
                             newEntryAmount = 1;
                         }
 
-                        if (newEntryAmount > this.enteredUsersDictionary[user.ID].Entries)
+                        newEntryAmount = Math.Min(newEntryAmount, ChannelSession.Settings.GiveawayMaximumEntries);
+
+                        if (newEntryAmount > giveawayUser.Entries)
                         {
                             await ChannelSession.Chat.Whisper(user.UserName, "You've gotten an entry into the giveaway, stay tuned to see who wins!");
                         }
-                        this.enteredUsersDictionary[user.ID].Entries = newEntryAmount;
+                        giveawayUser.Entries = newEntryAmount;
 
-                        await this.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            this.enteredUsers.Clear();
-                            foreach (GiveawayUser gUser in this.enteredUsersDictionary.Values)
-                            {
-                                this.enteredUsers.Add(gUser);
-                            }
-                        }));
+                        await this.RefreshUserList();
                     }
                 }
             }
+        }
+
+        private async Task RefreshUserList()
+        {
+            await this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                this.enteredUsersUICollection.Clear();
+                foreach (GiveawayUser gUser in this.enteredUsers.Values)
+                {
+                    this.enteredUsersUICollection.Add(gUser);
+                }
+            }));
         }
 
         private string GetEntryInstructions()
@@ -516,7 +578,12 @@ namespace MixItUp.WPF.Controls.MainControls
             string entryInstructions = string.Empty;
             if (!string.IsNullOrEmpty(ChannelSession.Settings.GiveawayCommand))
             {
-                entryInstructions = string.Format("Type \"!{0}\" in chat to enter", ChannelSession.Settings.GiveawayCommand);
+                string bonusEntriesText = string.Empty;
+                if (ChannelSession.Settings.GiveawayMaximumEntries > 1)
+                {
+                    bonusEntriesText += string.Format("or \"!{0} <AMOUNT>\" ", ChannelSession.Settings.GiveawayCommand);
+                }
+                entryInstructions = string.Format("Type \"!{0}\" {1}in chat to enter", ChannelSession.Settings.GiveawayCommand, bonusEntriesText);
             }
             else
             {
@@ -529,25 +596,50 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     service = "Streamlabs";
                 }
+                else if (ChannelSession.Settings.GiveawayTiltifyTrigger)
+                {
+                    service = "Tiltify";
+                }
 
                 string requiredAmount = string.Empty;
                 if (ChannelSession.Settings.GiveawayDonationAmount > 0.0)
                 {
                     if (ChannelSession.Settings.GiveawayDonationRequiredAmount)
                     {
-                        entryInstructions = string.Format("All tips over ${0} through {1} get an entry to win", ChannelSession.Settings.GiveawayDonationRequiredAmount, service);
+                        entryInstructions = string.Format("All donations/tips over ${0} through {1} get an entry to win", ChannelSession.Settings.GiveawayDonationRequiredAmount, service);
                     }
                     else
                     {
-                        entryInstructions = string.Format("Every ${0} in tip(s) through {1} get an entry to win", ChannelSession.Settings.GiveawayDonationRequiredAmount, service);
+                        entryInstructions = string.Format("Every ${0} in donation(s)/tip(s) through {1} get an entry to win", ChannelSession.Settings.GiveawayDonationRequiredAmount, service);
                     }
                 }
                 else
                 {
-                    entryInstructions = string.Format("Any tips through {0} get an entry to win", service);
+                    entryInstructions = string.Format("Any donations/tips through {0} get an entry to win", service);
                 }
             }
             return entryInstructions;
+        }
+
+        private UserViewModel SelectWinner()
+        {
+            if (this.enteredUsers.Count > 0)
+            {
+                int totalEntries = this.enteredUsers.Values.Sum(u => u.Entries);
+                int entryNumber = RandomHelper.GenerateRandomNumber(totalEntries);
+
+                int currentEntry = 0;
+                foreach (var kvp in this.enteredUsers.Values)
+                {
+                    currentEntry += kvp.Entries;
+                    if (entryNumber < currentEntry)
+                    {
+                        this.enteredUsers.Remove(kvp.User.ID);
+                        return kvp.User;
+                    }
+                }
+            }
+            return null;
         }
 
         #region IDisposable Support

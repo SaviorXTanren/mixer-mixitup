@@ -2,6 +2,8 @@
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Actions;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
 using System;
 using System.Collections.Generic;
@@ -44,6 +46,22 @@ namespace MixItUp.Desktop.Services
             if (!ChannelSession.Settings.OptOutTracking)
             {
                 this.telemetryClient.TrackEvent("Login");
+            }
+        }
+
+        public void TrackCommand(CommandTypeEnum type)
+        {
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                this.telemetryClient.TrackEvent("Command", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } });
+            }
+        }
+
+        public void TrackAction(ActionTypeEnum type)
+        {
+            if (!ChannelSession.Settings.OptOutTracking)
+            {
+                this.telemetryClient.TrackEvent("Action", new Dictionary<string, string> { { "Type", EnumHelper.GetEnumName(type) } });
             }
         }
 

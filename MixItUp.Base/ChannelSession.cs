@@ -384,6 +384,13 @@ namespace MixItUp.Base
                         ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, (channelName == null));
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
+
+                    if (string.IsNullOrEmpty(channelName) && ChannelSession.Settings.Channel != null && ChannelSession.User.id != ChannelSession.Settings.Channel.userId)
+                    {
+                        GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
+                        return false;
+                    }
+
                     ChannelSession.Settings.Channel = channel;
 
                     ChannelSession.Services.Telemetry.SetUserId(ChannelSession.Settings.TelemetryUserId);
@@ -484,7 +491,8 @@ namespace MixItUp.Base
                     }
 
                     await ChannelSession.SaveSettings();
-                    await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
+
+                    await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
 
                     ChannelSession.Services.Telemetry.TrackLogin();
                     if (!Util.Logger.IsDebug)

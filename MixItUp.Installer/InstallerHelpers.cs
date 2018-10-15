@@ -12,12 +12,18 @@ namespace MixItUp.Installer
         public static readonly string InstallDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MixItUp");
         public static readonly string StartMenuDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Mix It Up");
 
+        public static string InstallSettingsDirectory { get { return Path.Combine(InstallerHelpers.InstallSettingsDirectory, "Settings"); } }
+
+        public static string ZipDownloadFilePath { get { return Path.Combine(Path.GetTempPath(), "MixItUp.zip"); } }
+
+        public static bool IsMixItUpAlreadyInstalled() { return Directory.Exists(InstallDirectory); }
+
         public static bool DownloadMixItUp()
         {
             string autoUpdaterFile = null;
             using (WebClient client = new WebClient())
             {
-                autoUpdaterFile = client.DownloadString(new System.Uri("https://updates.mixitupapp.com/AutoUpdater.xml"));
+                autoUpdaterFile = client.DownloadString(new System.Uri("https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/MixItUp.WPF/AutoUpdater.xml"));
             }
 
             if (!string.IsNullOrEmpty(autoUpdaterFile))
@@ -27,25 +33,50 @@ namespace MixItUp.Installer
                 updateURL = updateURL.Replace("<url>", "");
                 updateURL = updateURL.Substring(0, updateURL.IndexOf("</url>"));
 
-                string updateFilePath = Path.Combine(Path.GetTempPath(), "MixItUp.zip");
                 using (WebClient client = new WebClient())
                 {
-                    client.DownloadFile(updateURL, updateFilePath);
+                    client.DownloadFile(updateURL, ZipDownloadFilePath);
                 }
+            }
+            return System.IO.File.Exists(ZipDownloadFilePath);
+        }
 
-                if (System.IO.File.Exists(updateFilePath))
+        public static bool DeleteExistingInstallation(bool keepSettings)
+        {
+            if (Directory.Exists(InstallDirectory))
+            {
+                if (keepSettings)
                 {
-                    if (Directory.Exists(InstallDirectory))
+                    foreach (string directory in Directory.GetDirectories(InstallDirectory))
                     {
-                        Directory.Delete(InstallDirectory, recursive: true);
+                        if (!directory.EndsWith("Settings"))
+                        {
+                            Directory.Delete(directory, recursive: true);
+                        }
                     }
 
-                    Directory.CreateDirectory(InstallDirectory);
-                    if (Directory.Exists(InstallDirectory))
+                    foreach (string file in Directory.GetFiles(InstallDirectory))
                     {
-                        ZipFile.ExtractToDirectory(updateFilePath, InstallDirectory);
-                        return true;
+                        File.Delete(file);
                     }
+                }
+                else
+                {
+                    Directory.Delete(InstallDirectory, recursive: true);
+                }
+            }
+            return true;
+        }
+
+        public static bool InstallMixItUp()
+        {
+            if (System.IO.File.Exists(ZipDownloadFilePath))
+            {
+                Directory.CreateDirectory(InstallDirectory);
+                if (Directory.Exists(InstallDirectory))
+                {
+                    ZipFile.ExtractToDirectory(ZipDownloadFilePath, InstallDirectory);
+                    return true;
                 }
             }
             return false;

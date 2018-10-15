@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Desktop.Audio;
 using MixItUp.Desktop.Files;
+using MixItUp.Desktop.Services.DeveloperAPI;
 using MixItUp.Input;
 using MixItUp.OBS;
 using MixItUp.Overlay;
@@ -24,8 +25,9 @@ namespace MixItUp.Desktop.Services
             this.InputService = new WindowsInputService();
             this.AudioService = new AudioService();
             this.TextToSpeechService = new WindowsTextToSpeechService();
-            this.SongRequestService = new DesktopSongRequestService();
+            this.SongRequestService = new SongRequestService();
             this.TranslationService = new TranslationService();
+            this.SerialService = new SerialService();
         }
 
         public override async Task Close()

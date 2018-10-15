@@ -12,14 +12,19 @@ namespace MixItUp.WPF
 
         public static ApplicationSettings Load()
         {
+            ApplicationSettings settings = new ApplicationSettings();
             if (File.Exists(ApplicationSettingsFileName))
             {
                 using (StreamReader reader = new StreamReader(File.OpenRead(ApplicationSettingsFileName)))
                 {
-                    return SerializerHelper.DeserializeFromString<ApplicationSettings>(reader.ReadToEnd());
+                    settings = SerializerHelper.DeserializeFromString<ApplicationSettings>(reader.ReadToEnd());
+                    if (settings == null)
+                    {
+                        settings = new ApplicationSettings();
+                    }
                 }
             }
-            return new ApplicationSettings();
+            return settings;
         }
 
         [JsonIgnore]

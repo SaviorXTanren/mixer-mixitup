@@ -172,7 +172,7 @@ namespace MixItUp.WPF.Controls.Command
                 RequirementViewModel requirements = new RequirementViewModel();
                 if (this.CooldownTypeComboBox.SelectedIndex == 0)
                 {
-                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Global, cooldown);
+                    requirements.Cooldown = new CooldownRequirementViewModel(CooldownTypeEnum.Individual, cooldown);
                 }
                 else
                 {

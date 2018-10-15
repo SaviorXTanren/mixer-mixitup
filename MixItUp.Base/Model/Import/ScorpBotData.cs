@@ -1,9 +1,11 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.Import
+namespace MixItUp.Base.Model.Import
 {
     [DataContract]
     public class ScorpBotData
@@ -52,17 +54,25 @@ namespace MixItUp.Base.ViewModel.Import
 
         public int GetIntSettingsValue(string key, string value)
         {
-            BigInteger bigInt = BigInteger.Parse(this.GetSettingsValue(key, value, "0"));
-            if (bigInt > int.MaxValue)
+            try
             {
-                return int.MaxValue;
-            }
+                BigInteger bigInt = BigInteger.Parse(this.GetSettingsValue(key, value, "0"));
+                if (bigInt > int.MaxValue)
+                {
+                    return int.MaxValue;
+                }
 
-            if (bigInt < int.MinValue)
-            {
-                return int.MinValue;
+                if (bigInt < int.MinValue)
+                {
+                    return int.MinValue;
+                }
+                return (int)bigInt;
             }
-            return (int)bigInt;
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            return 0;
         }
 
         public bool GetBoolSettingsValue(string key, string value)

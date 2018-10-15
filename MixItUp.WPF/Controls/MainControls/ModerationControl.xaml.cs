@@ -4,6 +4,8 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Windows.Command;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,13 +31,11 @@ namespace MixItUp.WPF.Controls.MainControls
             this.isLoaded = false;
 
             this.MaxCapsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
-            this.MaxPunctuationSymbolsTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
-            this.MaxEmotesTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
+            this.MaxPunctuationSymbolsEmotesTypeComboBox.ItemsSource = ModerationControl.ChatTextModerationSliderTypes;
 
             this.FilteredWordsExemptComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
             this.ChatTextModerationExemptComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
             this.BlockLinksExemptComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
-            this.ModerationTimeoutExemptComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
 
             this.CommunityBannedWordsToggleButton.IsChecked = ChannelSession.Settings.ModerationUseCommunityFilteredWords;
 
@@ -45,18 +45,19 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.MaxCapsSlider.Value = ChannelSession.Settings.ModerationCapsBlockCount;
             this.MaxCapsTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationCapsBlockIsPercentage ? 0 : 1;
-            this.MaxPunctuationSymbolsSlider.Value = ChannelSession.Settings.ModerationPunctuationBlockCount;
-            this.MaxPunctuationSymbolsTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationPunctuationBlockIsPercentage ? 0 : 1;
-            this.MaxEmotesSlider.Value = ChannelSession.Settings.ModerationEmoteBlockCount;
-            this.MaxEmotesTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationEmoteBlockIsPercentage ? 0 : 1;
+            this.MaxPunctuationSymbolsEmotesSlider.Value = ChannelSession.Settings.ModerationPunctuationBlockCount;
+            this.MaxPunctuationSymbolsEmotesTypeComboBox.SelectedIndex = ChannelSession.Settings.ModerationPunctuationBlockIsPercentage ? 0 : 1;
             this.ChatTextModerationExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationChatTextExcempt);
 
             this.BlockLinksToggleButton.IsChecked = ChannelSession.Settings.ModerationBlockLinks;
             this.BlockLinksExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationBlockLinksExcempt);
 
-            this.ModerationTimeout1MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount;
-            this.ModerationTimeout5MinAfterSlider.Value = ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount;
-            this.ModerationTimeoutExemptComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationChatTextExcempt);
+            this.ChatInteractiveParticipationComboBox.ItemsSource = EnumHelper.GetEnumNames<ModerationChatInteractiveParticipationEnum>();
+            this.ChatInteractiveParticipationComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationChatInteractiveParticipation);
+
+            this.Strike1Command.DataContext = ChannelSession.Settings.ModerationStrike1Command;
+            this.Strike2Command.DataContext = ChannelSession.Settings.ModerationStrike2Command;
+            this.Strike3Command.DataContext = ChannelSession.Settings.ModerationStrike3Command;
 
             this.isLoaded = true;
 
@@ -77,18 +78,14 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     ChannelSession.Settings.ModerationCapsBlockCount = (int)this.MaxCapsSlider.Value;
                     ChannelSession.Settings.ModerationCapsBlockIsPercentage = (this.MaxCapsTypeComboBox.SelectedIndex == 0);
-                    ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationSymbolsSlider.Value;
-                    ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsTypeComboBox.SelectedIndex == 0);
-                    ChannelSession.Settings.ModerationEmoteBlockCount = (int)this.MaxEmotesSlider.Value;
-                    ChannelSession.Settings.ModerationEmoteBlockIsPercentage = (this.MaxEmotesTypeComboBox.SelectedIndex == 0);
+                    ChannelSession.Settings.ModerationPunctuationBlockCount = (int)this.MaxPunctuationSymbolsEmotesSlider.Value;
+                    ChannelSession.Settings.ModerationPunctuationBlockIsPercentage = (this.MaxPunctuationSymbolsEmotesTypeComboBox.SelectedIndex == 0);
                     ChannelSession.Settings.ModerationChatTextExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.ChatTextModerationExemptComboBox.SelectedItem);
 
                     ChannelSession.Settings.ModerationBlockLinks = this.BlockLinksToggleButton.IsChecked.GetValueOrDefault();
                     ChannelSession.Settings.ModerationBlockLinksExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.BlockLinksExemptComboBox.SelectedItem);
 
-                    ChannelSession.Settings.ModerationTimeout1MinuteOffenseCount = (int)this.ModerationTimeout1MinAfterSlider.Value;
-                    ChannelSession.Settings.ModerationTimeout5MinuteOffenseCount = (int)this.ModerationTimeout5MinAfterSlider.Value;
-                    ChannelSession.Settings.ModerationTimeoutExempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.ModerationTimeoutExemptComboBox.SelectedItem);
+                    ChannelSession.Settings.ModerationChatInteractiveParticipation = EnumHelper.GetEnumValueFromString<ModerationChatInteractiveParticipationEnum>((string)this.ChatInteractiveParticipationComboBox.SelectedItem);
 
                     await ChannelSession.SaveSettings();
                 });
@@ -134,6 +131,17 @@ namespace MixItUp.WPF.Controls.MainControls
             foreach (string split in text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
             {
                 list.Add(split);
+            }
+        }
+
+        private void StrikeCommand_EditClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            CommandButtonsControl commandButtonsControl = (CommandButtonsControl)sender;
+            CustomCommand command = commandButtonsControl.GetCommandFromCommandButtons<CustomCommand>(sender);
+            if (command != null)
+            {
+                CommandWindow window = new CommandWindow(new CustomCommandDetailsControl(command));
+                window.Show();
             }
         }
     }

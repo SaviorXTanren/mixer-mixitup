@@ -1,0 +1,531 @@
+swagger: '2.0'
+schemes:
+  - http
+host: localhost:8911
+basePath: /api
+info:
+  description: |
+    # Introduction
+    The Developer API allows our more advanced users to interact with Mix It Up using external or customized programs. To use this feature, ensure the Developer API is enabled on the Services page. All APIs are REST-like endpoints that you can perform calls receiving/using JSON text. All endpoints begin with the base address of http://localhost:8911/api/
+  version: '1.0.0'
+  title: Mix It Up Developer
+produces:
+  - application/json
+consumes:
+  - application/json
+tags:
+  - name: User
+    description: Operations related to Mix It Up User data
+  - name: Currency
+    description: Operations related to Mix It Up Currency data
+  - name: Chat
+    description: Operations related to Mix It Up Chat
+  - name: Commands
+    description: Operations related to Mix It Up Commands
+  - name: Mixer
+    description: Mixer Passthrough APIs
+
+paths:
+  '/users/{usernameOrID}':
+    parameters:
+      - name: usernameOrID
+        in: path
+        description: 'The name or ID that needs to be fetched'
+        required: true
+        type: string
+    get:
+      tags:
+        - User
+      summary: Get user data by username
+      operationId: getUserByNameOrID
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpUser'
+        '404':
+          description: User not found
+    put:
+      summary: This API can be used to set user's ViewingMinutes or Currency Amount.  This API can be used with a PATCH as well.
+      tags:
+        - User
+      parameters:
+        - name: updatedUserData
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/UpdateMixItUpUser'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpUser'
+        '400':
+          description: Bad request was sent in
+        '404':
+          description: User not found
+          
+  '/users':
+    post:
+      summary: This API can be used to lookup multiple users at once.
+      tags:
+        - User
+      parameters:
+        - name: usernameOrIDList
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ListOfMixItUpUsernamesOrIDs'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpUsers'
+        '400':
+          description: Bad request was sent in
+
+  '/users/{usernameOrID}/currency/{currencyID}/adjust':
+    parameters:
+      - name: usernameOrID
+        in: path
+        description: 'The name or ID that needs to be adjusted'
+        required: true
+        type: string
+      - name: currencyID
+        in: path
+        description: 'The currency ID that needs to be adjusted'
+        required: true
+        type: string
+        format: uuid
+    put:
+      summary: This API can be used to add or subtract currency from a user.  This API can be used with a PATCH as well.
+      tags:
+        - User
+        - Currency
+      parameters:
+        - name: adjustUserCurrency
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/AdjustUserCurrency'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpUser'
+        '400':
+          description: Bad request was sent in
+        '403':
+          description: User does not have enough of the chosen currency to remove
+        '404':
+          description: User not found
+
+  '/users/top':
+    parameters:
+      - name: count
+        in: query
+        description: 'The number of users to retrieve. **Default: 10**'
+        required: false
+        type: integer
+        default: 10
+    get:
+      tags:
+        - User
+      summary: Gets a list users ordered by viewing time descending
+      operationId: topUserByViewingTime
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpUsers'
+
+  '/currency':
+    get:
+      tags:
+        - Currency
+      summary: Gets a list of all currencies available.
+      operationId: getAllCurrencies
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpCurrency'
+
+  '/currency/{currencyID}/top':
+    parameters:
+      - name: count
+        in: query
+        description: 'The number of users to retrieve. **Default: 10**'
+        required: false
+        type: integer
+        default: 10
+      - name: currencyID
+        in: path
+        description: 'The currency ID to query'
+        required: true
+        type: string
+        format: uuid
+    get:
+      tags:
+        - User
+        - Currency
+      summary: Gets a list users ordered by currency quantity descending
+      operationId: topUserOfCurrency
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpUsers'
+        '404':
+          description: The currency could not be found.
+
+  '/currency/{currencyID}/give':
+    parameters:
+      - name: currencyID
+        in: path
+        description: 'The currency ID to query'
+        required: true
+        type: string
+        format: uuid
+    put:
+      tags:
+        - Currency
+      summary: Gets a list users ordered by currency quantity descending
+      operationId: bulkGiveUsersCurrency
+      parameters:
+        - name: listOfUsersWithAmounts
+          description: 'The list of users and the amounts to give.  Amounts MUST be positive only. Negative values will be ignored.'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/BulkGiveUsersCurrency'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpUsers'
+        '400':
+          description: Bad request was sent in
+        '404':
+          description: The currency could not be found.
+
+  '/chat/users':
+    get:
+      tags:
+        - User
+        - Chat
+      summary: Gets a list of all users currently active in chat.
+      operationId: getAllChatUsers
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpUsers'
+
+  '/chat/message':
+    post:
+      tags:
+        - Chat
+      summary: Sends a message to the chat
+      operationId: sendChatMessage
+      parameters:
+        - name: chatMessage
+          description: 'The chat message to send'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/MixItUpChatMessage'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad request was sent in
+
+  '/commands':
+    get:
+      tags:
+        - Commands
+      summary: Gets a list of all commands available.
+      operationId: getAllCommands
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ListOfMixItUpCommands'
+            
+  '/commands/{commandID}':
+    parameters:
+      - name: commandID
+        in: path
+        description: 'The command ID to query'
+        required: true
+        type: string
+        format: uuid
+    get:
+      tags:
+        - Commands
+      summary: Gets the requested command.
+      operationId: getCommand
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpCommand'
+        '404':
+          description: The command could not be found.
+    post:
+      tags:
+        - Commands
+      summary: Used to run the requested command.
+      operationId: runCommand
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: The command could not be found.
+    put:
+      tags:
+        - Commands
+      summary: Used to enable or disable the requested command.
+      operationId: updateCommand
+      parameters:
+        - name: updatedCommand
+          description: 'The updated command. Note that only IsEnabled can be changed.'
+          in: body
+          required: true
+          schema:
+           $ref: '#/definitions/MixItUpCommand'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixItUpCommand'
+        '400':
+          description: Bad request was sent in
+        '404':
+          description: The command could not be found.
+            
+  '/mixer/users/{usernameOrID}':
+    get:
+      tags:
+        - Mixer
+      summary: Get Mixer user data by username
+      description: | 
+        This API can be used to get Mixer data directly from the Mixer service.
+      operationId: getMixerUserByNameOrID
+      parameters:
+        - name: usernameOrID
+          in: path
+          description: 'The username or ID that needs to be fetched'
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/MixerUser'
+        '404':
+          description: User not found
+
+definitions:
+  MixItUpUser:
+    type: object
+    properties:
+      ID:
+        description: The Mixer User ID.
+        type: integer
+        required: true
+        example: 7207866
+      UserName:
+        description: The Mixer Username.
+        type: string
+        required: false
+        example: SaviorXTanren
+      ViewingMinutes:
+        description: The number of minutes the user has been in the stream.
+        type: integer
+        required: true
+        example: 3244
+      CurrrencyAmounts:
+        required: true
+        type: array
+        items:
+          $ref: '#/definitions/MixItUpCurrency'
+
+  UpdateMixItUpUser:
+    type: object
+    properties:
+      ID:
+        description: The Mixer User ID.
+        required: true
+        type: integer
+        example: 7207866
+      ViewingMinutes:
+        description: The number of minutes the user has been in the stream.
+        required: true
+        type: integer
+        example: 3244
+      CurrrencyAmounts:
+        required: true
+        type: array
+        items:
+          $ref: '#/definitions/UpdateMixItUpCurrency'
+          
+  ListOfMixItUpUsernamesOrIDs:
+    required: true
+    type: array
+    items:
+      type: string
+          
+  ListOfMixItUpUsers:
+    required: true
+    type: array
+    items:
+      $ref: '#/definitions/MixItUpUser'
+      
+  AdjustUserCurrency:
+    required: true
+    type: object
+    properties:
+      Amount:
+        description: The amount to adjust the user's currency.  This amount may be positive or negative.
+        required: true
+        type: integer
+
+  MixItUpCurrency:
+    type: object
+    properties:
+      ID:
+        description: The Mix It Up currency ID.
+        required: true
+        type: string
+        format: uuid
+        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
+      Name:
+        description: The Mix It Up currency name.
+        required: true
+        type: string
+        example: Influence
+      Amount:
+        description: The amount of currency the user has.
+        required: true
+        type: integer
+        example: 2751
+
+  ListOfMixItUpCurrency:
+    required: true
+    type: array
+    items:
+      $ref: '#/definitions/MixItUpCurrency'
+      
+  MixItUpCommand:
+    required: true
+    type: object
+    properties:
+      ID:
+        description: The Mix It Up command ID.
+        required: true
+        type: string
+        format: uuid
+        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
+      Name:
+        description: The Mix It Up command name.
+        required: true
+        type: string
+      IsEnabled:
+        description: True if enabled, false otherwise
+        required: true
+        type: boolean
+
+  ListOfMixItUpCommands:
+    required: true
+    type: array
+    items:
+      $ref: '#/definitions/MixItUpCommand'
+      
+  UpdateMixItUpCurrency:
+    required: true
+    type: object
+    properties:
+      ID:
+        description: The Mix It Up currency ID.
+        required: true
+        type: string
+        format: uuid
+        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
+      Amount:
+        description: The amount of currency the user has.
+        required: true
+        type: integer
+        example: 2751
+
+  GiveUserCurrency:
+    required: true
+    type: object
+    properties:
+      Amount:
+        description: The amount to adjust the user's currency.  This amount may be positive or negative.
+        required: true
+        type: integer
+        minimum: 1
+      UsernameOrID:
+        description: The username or ID to adjust.
+        required: true
+        type: string
+
+  BulkGiveUsersCurrency:
+    required: true
+    type: array
+    items:
+      $ref: '#/definitions/GiveUserCurrency'
+
+  MixItUpChatMessage:
+    required: true
+    type: object
+    properties:
+      Message:
+        description: The message to send to chat.
+        type: string
+        example: This is a test of the emergency broadcast system!
+        required: true
+      SendAsStreamer:
+        description: True will force the message to send as the streamer. False will try to send as the registered bot, if available.
+        type: boolean
+        example: false
+        required: false
+        default: false
+
+  MixerUser:
+    required: true
+    type: object
+    description: See Mixer docs

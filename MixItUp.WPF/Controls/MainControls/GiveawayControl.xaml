@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:CommandControls="clr-namespace:MixItUp.WPF.Controls.Command"
              xmlns:RequirementControls="clr-namespace:MixItUp.WPF.Controls.Requirement"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
@@ -25,17 +26,19 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="15" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
@@ -56,34 +59,45 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" x:Name="TimerTextBox" Width="150" MaterialDesign:HintAssist.Hint="Time To Enter (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="0" x:Name="TimerTextBox" Width="100" MaterialDesign:HintAssist.Hint="Total Time (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-                <TextBox Grid.Column="2" x:Name="ReminderTextBox" Width="175" MaterialDesign:HintAssist.Hint="Reminder Message (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                <TextBox Grid.Column="2" x:Name="ReminderTextBox" Width="100" MaterialDesign:HintAssist.Hint="Reminder (Mins)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <TextBox Grid.Column="4" x:Name="MaximumEntriesTextBox" Width="100" MaterialDesign:HintAssist.Hint="Maximum Entries" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
             </Grid>
 
-            <Grid x:Name="GiveawayRequireClaimGrid" Grid.Row="4" HorizontalAlignment="Center">
+            <Grid x:Name="OptionsGrid" Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">Require "!claim":</TextBlock>
+                <CheckBox x:Name="RequireClaimCheckBox" Grid.Column="2" />
+
+                <TextBlock Grid.Column="4" VerticalAlignment="Center">Allow Past Winners:</TextBlock>
+                <CheckBox x:Name="AllowPastWinnersCheckBox" Grid.Column="6" />
+            </Grid>
+
+            <Grid x:Name="CommandEntryGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="20" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center">Require "!claim":</TextBlock>
-                <CheckBox x:Name="RequireClaimCheckBox" Grid.Column="2" />
-            </Grid>
+                <TextBox x:Name="CommandTextBox" Grid.Column="0" Width="120" MaterialDesign:HintAssist.Hint="Command (No '!' needed)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" VerticalAlignment="Center" />
 
-            <Grid x:Name="CommandEntryGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="20" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <TextBox x:Name="CommandTextBox" Grid.Row="0" Width="200" MaterialDesign:HintAssist.Hint="Command (No '!' needed)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-
-                <RequirementControls:RequirementControl x:Name="Requirements" Grid.Row="2" />
+                <RequirementControls:RequirementControl x:Name="Requirements" Grid.Column="2" />
             </Grid>
 
             <Grid x:Name="DonationEntryGrid" Grid.Row="6" HorizontalAlignment="Center" Visibility="Collapsed">
@@ -98,12 +112,28 @@
                 <TextBox x:Name="DonationEntryQualifierAmountTextBox" Grid.Column="2" Width="175" MaterialDesign:HintAssist.Hint="Required Amount (EX: 1.00)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
             </Grid>
 
-            <Grid Grid.Row="8" HorizontalAlignment="Center">
+            <Grid x:Name="GiveawayCommandsGrid" Grid.Row="8" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <GroupBox Grid.Column="0" Header="User Joined" Width="150">
+                    <CommandControls:CommandButtonsControl x:Name="GiveawayUserJoinedCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                </GroupBox>
+
+                <GroupBox Grid.Column="2" Header="Winner Selected" Width="150">
+                    <CommandControls:CommandButtonsControl x:Name="GiveawayWinnerSelectedCommand" HorizontalAlignment="Center" EditClicked="GiveawayCommand_EditClicked" RemoveDeleteButton="True" RemoveEnableDisableToggle="True" />
+                </GroupBox>
+            </Grid>
+
+            <Grid Grid.Row="10" HorizontalAlignment="Center">
                 <Button x:Name="EnableGiveawayButton" Click="EnableGiveawayButton_Click" HorizontalAlignment="Center" Width="150">Start Giveaway</Button>
                 <Button x:Name="DisableGiveawayButton" Click="DisableGiveawayButton_Click" HorizontalAlignment="Center" Width="150" Visibility="Collapsed">Cancel Giveaway</Button>
             </Grid>
 
-            <Grid Grid.Row="10" HorizontalAlignment="Center">
+            <Grid Grid.Row="12" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
@@ -115,7 +145,7 @@
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" x:Name="TimeLeftTextBlock" />
             </Grid>
 
-            <Grid Grid.Row="12" HorizontalAlignment="Center">
+            <Grid Grid.Row="14" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
@@ -140,7 +170,7 @@
             <DataGrid x:Name="EnteredUsersListView" Grid.Row="2" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding User.UserName}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Binding="{Binding Entries}" IsReadOnly="True" Width="75" />
+                    <DataGridTextColumn Header="Total" Binding="{Binding Entries}" IsReadOnly="True" Width="75" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

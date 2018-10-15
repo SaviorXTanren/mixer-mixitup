@@ -93,7 +93,7 @@ namespace MixItUp.Base.Services
 
     public class SpotifySong : SpotifyItemBase
     {
-        public int Duration { get; set; }
+        public long Duration { get; set; }
         public bool IsLocal { get; set; }
         public bool Explicit { get; set; }
 
@@ -109,7 +109,7 @@ namespace MixItUp.Base.Services
         {
             if (data != null)
             {
-                this.Duration = int.Parse(data["duration_ms"].ToString());
+                this.Duration = long.Parse(data["duration_ms"].ToString());
                 if (data["is_local"] != null)
                 {
                     this.IsLocal = bool.Parse(data["is_local"].ToString());
@@ -231,8 +231,10 @@ namespace MixItUp.Base.Services
 
         Task<bool> PlayPlaylist(SpotifyPlaylist playlist, bool random = false);
 
-        OAuthTokenModel GetOAuthTokenCopy();
+        Task SetVolume(int volume);
 
-        Task RefreshVolume();
+        Task<int> GetVolume();
+
+        OAuthTokenModel GetOAuthTokenCopy();
     }
 }

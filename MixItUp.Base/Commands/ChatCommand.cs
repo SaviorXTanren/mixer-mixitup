@@ -1,6 +1,6 @@
-﻿using MixItUp.Base.ViewModel.Import;
+﻿using MixItUp.Base.Model.Import;
 using MixItUp.Base.ViewModel.Requirement;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -36,14 +36,26 @@ namespace MixItUp.Base.Commands
             this.IsEnabled = command.Enabled;
         }
 
-        public override bool ContainsCommand(string command)
+        public ChatCommand(StreamlabsChatBotCommand command)
+            : this(command.Command, command.Command, command.Requirements)
         {
-            var commandsToCheck = this.Commands;
-            if (this.IncludeExclamationInCommands)
+            this.Actions.AddRange(command.Actions);
+            this.IncludeExclamationInCommands = false;
+            this.IsEnabled = command.Enabled;
+        }
+
+        [JsonIgnore]
+        public override IEnumerable<string> CommandTriggers
+        {
+            get
             {
-                commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
+                var commandsToCheck = this.Commands;
+                if (this.IncludeExclamationInCommands)
+                {
+                    commandsToCheck = commandsToCheck.Select(c => "!" + c).ToList();
+                }
+                return commandsToCheck;
             }
-            return commandsToCheck.Contains(command, StringComparer.InvariantCultureIgnoreCase);
         }
 
         protected override SemaphoreSlim AsyncSemaphore { get { return ChatCommand.chatCommandPerformSemaphore; } }

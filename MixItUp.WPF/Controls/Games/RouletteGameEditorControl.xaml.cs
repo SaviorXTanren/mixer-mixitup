@@ -146,9 +146,9 @@ namespace MixItUp.WPF.Controls.Games
                 }
             }
 
-            userPayout = userPayout / 100;
-            subscriberPayout = subscriberPayout / 100;
-            modPayout = modPayout / 100;
+            userPayout = userPayout / 100.0;
+            subscriberPayout = subscriberPayout / 100.0;
+            modPayout = modPayout / 100.0;
 
             Dictionary<MixerRoleEnum, double> successRolePayouts = new Dictionary<MixerRoleEnum, double>() { { MixerRoleEnum.User, userPayout }, { MixerRoleEnum.Subscriber, subscriberPayout }, { MixerRoleEnum.Mod, modPayout } };
             Dictionary<MixerRoleEnum, int> roleProbabilities = new Dictionary<MixerRoleEnum, int>() { { MixerRoleEnum.User, 0 }, { MixerRoleEnum.Subscriber, 0 }, { MixerRoleEnum.Mod, 0 } };

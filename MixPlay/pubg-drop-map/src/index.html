@@ -6,8 +6,6 @@
 
     <title>PUBG Drop Map</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
-
     <script src="https://mixercc.azureedge.net/lib/std-v0.2.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
@@ -52,6 +50,23 @@
 <body>
     <script src="./scripts.js"></script>
 
+    <div id="pcExplanationDiv" style="position: absolute; left: 10%; top: 10%;">
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%);">PC / PHONE:</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 70px;">CLICK ON</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 100px;">THE MAP</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 130px;">FOR YOUR</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 160px;">DROP POINT</h1>
+    </div>
+
+    <div id="xboxExplanationDiv" style="position: absolute; left: 10%; top: 50%;">
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%);">XBOX:</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 70px;">MOVE STICK</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 100px;">AND PRESS</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 130px;">A BUTTON</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 160px;">FOR YOUR</h1>
+        <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 190px;">DROP POINT</h1>
+    </div>
+
     <div id="locationDiv" style="position: absolute; left: 10%; top: 21%; visibility: hidden">
         <h1 id="locationText" style="position: absolute; left: 50%; transform: translate(-50%, -50%); font-size: 80px;"></h1>
         <h1 style="position: absolute; left: 50%; transform: translate(-50%, -50%); margin-top: 115px;">DROP</h1>
@@ -61,6 +76,10 @@
     <div id="mapDiv">
         <img id="mapImage" class="mapImage" />
         <div id="mapPointsDiv" />
+    </div>
+
+    <div id="selectorDiv" style="position: absolute; left: 0px; top: 0px; visibility: hidden">
+        <img id="selectorImage" style="position: absolute; transform: translate(-50%, -50%);" src="selector.png" />
     </div>
 
     <div id="timerDiv" style="position: absolute; left: 90%; top: 25%; visibility: hidden">

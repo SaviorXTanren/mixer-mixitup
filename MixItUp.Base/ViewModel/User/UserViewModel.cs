@@ -102,10 +102,16 @@ namespace MixItUp.Base.ViewModel.User
         public int Sparks { get; set; }
 
         [DataMember]
+        public bool IsInChat { get; set; }
+
+        [DataMember]
         public HashSet<string> InteractiveIDs { get; set; }
 
         [DataMember]
         public string InteractiveGroupID { get; set; }
+
+        [DataMember]
+        public bool IsInInteractiveTimeout { get; set; }
 
         [DataMember]
         public GameWispSubscriber GameWispUser { get; set; }
@@ -125,11 +131,9 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(ChannelModel channel) : this(channel.id, channel.token) { }
 
-        public UserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { }
+        public UserViewModel(ChatUserModel user) : this(user.userId.GetValueOrDefault(), user.userName, user.userRoles) { this.IsInChat = true; }
 
-        public UserViewModel(ChatUserEventModel userEvent) : this(userEvent.id, userEvent.username, userEvent.roles) { }
-
-        public UserViewModel(ChatMessageEventModel messageEvent) : this(messageEvent.user_id, messageEvent.user_name, messageEvent.user_roles) { }
+        public UserViewModel(ChatMessageEventModel messageEvent) : this(messageEvent.user_id, messageEvent.user_name, messageEvent.user_roles) { this.IsInChat = true; }
 
         public UserViewModel(InteractiveParticipantModel participant) : this(participant.userID, participant.username) { this.SetInteractiveDetails(participant); }
 
@@ -321,7 +325,13 @@ namespace MixItUp.Base.ViewModel.User
             if (this.ID > 0 && chatUser != null)
             {
                 this.SetMixerRoles(chatUser.userRoles);
+                this.IsInChat = true;
             }
+        }
+
+        public void RemoveChatDetails(ChatUserModel chatUser)
+        {
+            this.IsInChat = false;
         }
 
         public void SetInteractiveDetails(InteractiveParticipantModel participant)
@@ -361,6 +371,41 @@ namespace MixItUp.Base.ViewModel.User
                     this.Data.GameWispUserID = subscriber.UserID;
                 }
             }
+        }
+
+        public async Task AddModerationStrike(string moderationReason = null)
+        {
+            Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+            extraSpecialIdentifiers.Add(ModerationHelper.ModerationReasonSpecialIdentifier, moderationReason);
+
+            this.Data.ModerationStrikes++;
+            if (this.Data.ModerationStrikes == 1)
+            {
+                if (ChannelSession.Settings.ModerationStrike1Command != null)
+                {
+                    await ChannelSession.Settings.ModerationStrike1Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                }
+            }
+            else if (this.Data.ModerationStrikes == 2)
+            {
+                if (ChannelSession.Settings.ModerationStrike2Command != null)
+                {
+                    await ChannelSession.Settings.ModerationStrike2Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                }
+            }
+            else if (this.Data.ModerationStrikes >= 3)
+            {
+                if (ChannelSession.Settings.ModerationStrike3Command != null)
+                {
+                    await ChannelSession.Settings.ModerationStrike3Command.Perform(this, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                }
+            }
+        }
+
+        public Task RemoveModerationStrike()
+        {
+            this.Data.ModerationStrikes--;
+            return Task.FromResult(0);
         }
 
         public void UpdateMinuteData()
@@ -405,6 +450,7 @@ namespace MixItUp.Base.ViewModel.User
                     username = this.UserName,
                     sessionID = interactiveID,
                     groupID = this.InteractiveGroupID,
+                    disabled = this.IsInInteractiveTimeout,
                 });
             }
             return participants;

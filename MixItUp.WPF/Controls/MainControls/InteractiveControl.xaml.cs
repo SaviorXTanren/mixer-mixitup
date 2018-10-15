@@ -210,6 +210,10 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.SetCustomInteractiveGame(new RealmRoyaleDropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
             }
+            else if (this.selectedGame.id == InteractiveSharedProjectModel.BlackOps4DropMap.GameID)
+            {
+                this.SetCustomInteractiveGame(new BlackOps4DropMapInteractiveControl(this.selectedGame, this.selectedGameVersion));
+            }
             else if (this.selectedGame.id == InteractiveSharedProjectModel.MixerPaint.GameID)
             {
                 this.SetCustomInteractiveGame(new MixerPaintInteractiveControl(this.selectedGame, this.selectedGameVersion));

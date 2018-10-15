@@ -5,6 +5,7 @@ using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Remote;
+using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -44,10 +45,12 @@ namespace MixItUp.Base
         bool FeatureMe { get; set; }
         StreamingSoftwareTypeEnum DefaultStreamingSoftware { get; set; }
         string DefaultAudioOutput { get; set; }
+        bool SaveChatEventLogs { get; set; }
 
         bool WhisperAllAlerts { get; set; }
         bool LatestChatAtTop { get; set; }
         bool HideViewerAndChatterNumbers { get; set; }
+        bool HideDeletedMessages { get; set; }
         bool TrackWhispererNumber { get; set; }
         bool AllowCommandWhispering { get; set; }
         bool IgnoreBotAccountCommands { get; set; }
@@ -73,9 +76,13 @@ namespace MixItUp.Base
         bool GiveawayDonationRequiredAmount { get; set; }
         double GiveawayDonationAmount { get; set; }
         int GiveawayTimer { get; set; }
+        int GiveawayMaximumEntries { get; set; }
         RequirementViewModel GiveawayRequirements { get; set; }
         int GiveawayReminderInterval { get; set; }
         bool GiveawayRequireClaim { get; set; }
+        bool GiveawayAllowPastWinners { get; set; }
+        CustomCommand GiveawayUserJoinedCommand { get; set; }
+        CustomCommand GiveawayWinnerSelectedCommand { get; set; }
 
         bool ModerationUseCommunityFilteredWords { get; set; }
         MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
@@ -84,16 +91,16 @@ namespace MixItUp.Base
         bool ModerationCapsBlockIsPercentage { get; set; }
         int ModerationPunctuationBlockCount { get; set; }
         bool ModerationPunctuationBlockIsPercentage { get; set; }
-        int ModerationEmoteBlockCount { get; set; }
-        bool ModerationEmoteBlockIsPercentage { get; set; }
         MixerRoleEnum ModerationChatTextExcempt { get; set; }
 
         bool ModerationBlockLinks { get; set; }
         MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
 
-        int ModerationTimeout1MinuteOffenseCount { get; set; }
-        int ModerationTimeout5MinuteOffenseCount { get; set; }
-        MixerRoleEnum ModerationTimeoutExempt { get; set; }
+        ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
+
+        CustomCommand ModerationStrike1Command { get; set; }
+        CustomCommand ModerationStrike2Command { get; set; }
+        CustomCommand ModerationStrike3Command { get; set; }
 
         bool EnableOverlay { get; set; }
         string OverlaySourceName { get; set; }
@@ -131,6 +138,8 @@ namespace MixItUp.Base
 
         bool AutoExportStatistics { get; set; }
 
+        List<SerialDeviceModel> SerialDevices { get; set; }
+
         List<RemoteBoardModel> RemoteBoards { get; set; }
         List<RemoteDeviceModel> RemoteSavedDevices { get; set; }
 
@@ -142,6 +151,10 @@ namespace MixItUp.Base
         int SongRequestVolume { get; set; }
 
         string TelemetryUserId { get; set; }
+
+        string SettingsBackupLocation { get; set; }
+        SettingsBackupRateEnum SettingsBackupRate { get; set; }
+        DateTimeOffset SettingsLastBackup { get; set; }
     }
 
     public interface IChannelSettings : ISavableChannelSettings

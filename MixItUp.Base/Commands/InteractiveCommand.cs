@@ -138,7 +138,7 @@ namespace MixItUp.Base.Commands
 
         public long GetCooldownTimestamp()
         {
-            if (this.Requirements.Cooldown != null && (this.Requirements.Cooldown.Type == CooldownTypeEnum.Global || this.Requirements.Cooldown.Type == CooldownTypeEnum.Group))
+            if (this.Requirements.Cooldown != null && (this.Requirements.Cooldown.Type == CooldownTypeEnum.Individual || this.Requirements.Cooldown.Type == CooldownTypeEnum.Group))
             {
                 return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now.AddSeconds(this.CooldownAmount));
             }
@@ -331,11 +331,6 @@ namespace MixItUp.Base.Commands
             this.Actions.Add(new InteractiveJoystickAction(this));
         }
 
-        protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers, CancellationToken token)
-        {
-            await base.PerformInternal(user, arguments, extraSpecialIdentifiers, token);
-        }
-
         [OnDeserialized]
         internal void OnDeserialized(StreamingContext streamingContext)
         {
@@ -393,7 +388,7 @@ namespace MixItUp.Base.Commands
                 string moderationReason = await ModerationHelper.ShouldBeModerated(user, arguments.ElementAt(0));
                 if (!string.IsNullOrEmpty(moderationReason))
                 {
-                    await ModerationHelper.SendModerationWhisper(user, moderationReason);
+                    await user.AddModerationStrike(moderationReason);
                     return;
                 }
             }

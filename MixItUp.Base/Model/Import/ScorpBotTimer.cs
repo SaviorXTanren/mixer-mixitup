@@ -2,7 +2,7 @@
 using System.Data.Common;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.ViewModel.Import
+namespace MixItUp.Base.Model.Import
 {
     [DataContract]
     public class ScorpBotTimer

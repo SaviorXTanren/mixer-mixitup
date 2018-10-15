@@ -89,8 +89,11 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.4.0.1044, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.4.0.1044\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.6.5.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.6.5.5-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Mixer.Base, Version=0.6.5.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.6.5.7-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
@@ -252,6 +255,12 @@
     <Compile Include="Controls\Actions\CommandActionControl.xaml.cs">
       <DependentUpon>CommandActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Actions\ModerationActionControl.xaml.cs">
+      <DependentUpon>ModerationActionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Actions\SerialActionControl.xaml.cs">
+      <DependentUpon>SerialActionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Actions\StreamlabsActionControl.xaml.cs">
       <DependentUpon>StreamlabsActionControl.xaml</DependentUpon>
     </Compile>
@@ -355,6 +364,12 @@
     <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\CalendarDialogControl.xaml.cs">
+      <DependentUpon>CalendarDialogControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Dialogs\ClockDialogControl.xaml.cs">
+      <DependentUpon>ClockDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml.cs">
       <DependentUpon>InteractiveJoystickSetupTestDialogControl.xaml</DependentUpon>
     </Compile>
@@ -380,6 +395,9 @@
     <Compile Include="Controls\Games\HitmanGameEditorControl.xaml.cs">
       <DependentUpon>HitmanGameEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Games\LockBoxGameEditorControl.xaml.cs">
+      <DependentUpon>LockBoxGameEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Games\PickpocketGameEditorControl.xaml.cs">
       <DependentUpon>PickpocketGameEditorControl.xaml</DependentUpon>
     </Compile>
@@ -388,6 +406,9 @@
     </Compile>
     <Compile Include="Controls\Games\RussianRouletteGameEditorControl.xaml.cs">
       <DependentUpon>RussianRouletteGameEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Games\SlotMachineGameEditorControl.xaml.cs">
+      <DependentUpon>SlotMachineGameEditorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Games\SpinGameEditorControl.xaml.cs">
       <DependentUpon>SpinGameEditorControl.xaml</DependentUpon>
@@ -400,6 +421,9 @@
     </Compile>
     <Compile Include="Controls\Games\VolcanoGameEditorControl.xaml.cs">
       <DependentUpon>VolcanoGameEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Interactive\BlackOps4DropMapInteractiveControl.xaml.cs">
+      <DependentUpon>BlackOps4DropMapInteractiveControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Interactive\CustomInteractiveGameControl.cs" />
     <Compile Include="Controls\Interactive\DropMapInterativeGameControl.cs" />
@@ -594,6 +618,9 @@
     <Compile Include="Controls\Settings\NotificationsSettingsControl.xaml.cs">
       <DependentUpon>NotificationsSettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Settings\SerialDevicesSettingsControl.xaml.cs">
+      <DependentUpon>SerialDevicesSettingsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Settings\SettingsControlBase.cs" />
     <Compile Include="Controls\Settings\ThemeSettingsControl.xaml.cs">
       <DependentUpon>ThemeSettingsControl.xaml</DependentUpon>
@@ -650,7 +677,6 @@
     </Compile>
     <Compile Include="Util\LocalizationConverter.cs" />
     <Compile Include="Util\MessageBoxHelper.cs" />
-    <Compile Include="Util\NotifyPropertyChangedBase.cs" />
     <Compile Include="Util\VisualTreeHelpers.cs" />
     <Compile Include="Windows\Command\CommandWindow.xaml.cs">
       <DependentUpon>CommandWindow.xaml</DependentUpon>
@@ -717,6 +743,14 @@
     <Page Include="Controls\Actions\CommandActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Actions\ModerationActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Actions\SerialActionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Actions\StreamlabsActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -854,6 +888,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Dialogs\CalendarDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\ClockDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Dialogs\InteractiveJoystickSetupTestDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -886,6 +928,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Games\LockBoxGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Games\PickpocketGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -895,6 +941,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\RussianRouletteGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Games\SlotMachineGameEditorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -911,6 +961,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Games\VolcanoGameEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Interactive\BlackOps4DropMapInteractiveControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1174,6 +1228,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Settings\SerialDevicesSettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Settings\ThemeSettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1418,6 +1476,9 @@
     <Resource Include="..\MixPlay\realm-royale-drop-map\src\map.jpg">
       <Link>Assets\Images\RealmRoyaleDropMap\map.jpg</Link>
     </Resource>
+    <Resource Include="..\MixPlay\black-ops-4-drop-map\src\map.jpg">
+      <Link>Assets\Images\BlackOps4DropMap\map.jpg</Link>
+    </Resource>
     <Content Include="Assets\Sounds\Ariel.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1482,7 +1543,6 @@
     <PostBuildEvent>del $(TargetDir)ApplicationSettings.xml
 
 rmdir /Q /S $(TargetDir)Settings\
-mkdir $(TargetDir)Settings\
 
 rmdir /Q /S $(TargetDir)Logs\</PostBuildEvent>
   </PropertyGroup>
