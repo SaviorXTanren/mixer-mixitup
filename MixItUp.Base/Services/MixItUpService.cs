@@ -21,7 +21,7 @@ namespace MixItUp.Base.Services
 
         Task<MixItUpUpdateModel> GetLatestUpdate();
 
-        Task SendLoginEvent(LoginEvent login);
+        Task SendUserFeatureEvent(UserFeatureEvent feature);
         Task SendIssueReport(IssueReportModel report);
 
         Task<StoreDetailListingModel> GetStoreListing(Guid ID);
@@ -67,11 +67,11 @@ namespace MixItUp.Base.Services
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
 
-        public async Task SendLoginEvent(LoginEvent login)
+        public async Task SendUserFeatureEvent(UserFeatureEvent feature)
         {
-            if (!ChannelSession.Settings.OptOutTracking)
+            if (!ChannelSession.Settings.OptOutTracking && ChannelSession.Settings.FeatureMe)
             {
-                await this.PostAsync("login", login);
+                await this.PostAsync("userfeature", feature);
             }
         }
 

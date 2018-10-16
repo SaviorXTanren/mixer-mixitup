@@ -495,10 +495,10 @@ namespace MixItUp.Base
                     await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
 
                     ChannelSession.Services.Telemetry.TrackLogin();
-                    if (!Util.Logger.IsDebug)
+                    if (ChannelSession.Settings.IsStreamer)
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendLoginEvent(new LoginEvent(ChannelSession.Settings.IsStreamer.ToString())); });
+                        Task.Run(async () => { await ChannelSession.Services.MixItUpService.SendUserFeatureEvent(new UserFeatureEvent(ChannelSession.User.id)); });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
 
