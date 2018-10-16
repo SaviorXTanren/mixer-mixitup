@@ -85,7 +85,7 @@ namespace MixItUp.WPF.Controls.Chat
                             }
                             else
                             {
-                                textBlock.Foreground = (App.AppSettings.IsDarkColoring) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
+                                textBlock.Foreground = (App.AppSettings.IsDarkBackground) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
                             }
                         }
                         this.textBlocks.Add(textBlock);
@@ -128,7 +128,7 @@ namespace MixItUp.WPF.Controls.Chat
                     }
                     else
                     {
-                        textBlock.Foreground = (App.AppSettings.IsDarkColoring) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
+                        textBlock.Foreground = (App.AppSettings.IsDarkBackground) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
                     }
                 }
 

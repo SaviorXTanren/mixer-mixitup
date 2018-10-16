@@ -1317,7 +1317,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Resource Include="Themes\MixItUpTheme.Light.xaml">
+    <Resource Include="Themes\MixItUpBackgroundColor.Light.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
@@ -1325,7 +1325,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
-    <Resource Include="Themes\MixItUpTheme.Dark.xaml">
+    <Resource Include="Themes\MixItUpBackgroundColor.Dark.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
@@ -1408,6 +1408,10 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="README.md" />
+    <Resource Include="Themes\MixItUpTheme.Sample.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

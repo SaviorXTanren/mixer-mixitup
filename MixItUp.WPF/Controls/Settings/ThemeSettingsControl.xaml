@@ -25,10 +25,15 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Color Scheme:</TextBlock>
-        <local:ColorSchemeComboBox x:Name="ColorSchemeComboBox" Grid.Row="0" Grid.Column="2" />
+        <local:ColorSchemeComboBox x:Name="ColorSchemeComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="ColorSchemeComboBox_SelectionChanged" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Theme Type:</TextBlock>
-        <ComboBox x:Name="ThemeNameComboBox" Grid.Row="2" Grid.Column="2" SelectionChanged="ThemeNameComboBox_SelectionChanged" />
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Background Color:</TextBlock>
+        <ComboBox x:Name="BackgroundColorComboBox" Grid.Row="2" Grid.Column="2" SelectionChanged="BackgroundColorComboBox_SelectionChanged" />
+
+        <Separator Grid.Row="4" Grid.ColumnSpan="3" />
+
+        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Full Theme:</TextBlock>
+        <ComboBox x:Name="FullThemeComboBox" Grid.Row="6" Grid.Column="2" SelectionChanged="FullThemeComboBox_SelectionChanged" />
 
     </Grid>
 </local:SettingsControlBase>

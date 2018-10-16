@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Runtime.Serialization;
 
@@ -22,6 +23,14 @@ namespace MixItUp.WPF
                     {
                         settings = new ApplicationSettings();
                     }
+
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (!string.IsNullOrEmpty(settings.ThemeName))
+                    {
+                        settings.BackgroundColor = settings.ThemeName;
+                        settings.ThemeName = null;
+                    }
+#pragma warning restore CS0612 // Type or member is obsolete
                 }
             }
             return settings;
@@ -37,21 +46,29 @@ namespace MixItUp.WPF
         public uint AutoLogInAccount { get; set; }
 
         [DataMember]
-        public string ThemeName { get; set; }
-        [JsonIgnore]
-        public bool IsDarkColoring { get { return App.AppSettings.ThemeName.Equals("Dark"); } }
+        public string ColorScheme { get; set; }
 
         [DataMember]
-        public string ColorScheme { get; set; }
+        [Obsolete]
+        public string ThemeName { get; set; }
+        [DataMember]
+        public string BackgroundColor { get; set; }
+
+        [DataMember]
+        public string FullThemeName { get; set; }
 
         [DataMember]
         public string Language { get; set; }
 
+        [JsonIgnore]
+        public bool IsDarkBackground { get { return App.AppSettings.BackgroundColor.Equals("Dark"); } }
+
         public ApplicationSettings()
         {
             this.AutoLogInAccount = 0;
-            this.ThemeName = "Light";
             this.ColorScheme = "Indigo";
+            this.BackgroundColor = "Light";
+            this.FullThemeName = "None";
             this.Language = "en";
         }
 

@@ -9,7 +9,9 @@ namespace MixItUp.WPF.Controls.Settings
     /// </summary>
     public partial class ThemeSettingsControl : SettingsControlBase
     {
-        private List<string> availableThemes = new List<string>() { "Light", "Dark" };
+        private List<string> availableBackgroundColors = new List<string>() { "Light", "Dark" };
+
+        private List<string> availableFullThemes = new List<string>() { "None" };
 
         public ThemeSettingsControl()
         {
@@ -18,12 +20,12 @@ namespace MixItUp.WPF.Controls.Settings
 
         protected override async Task InitializeInternal()
         {
-            this.ColorSchemeComboBox.SelectionChanged += ColorSchemeComboBox_SelectionChanged;
+            this.BackgroundColorComboBox.ItemsSource = this.availableBackgroundColors;
+            this.FullThemeComboBox.ItemsSource = this.availableFullThemes;
 
-            this.ThemeNameComboBox.ItemsSource = this.availableThemes;
-
-            this.ThemeNameComboBox.SelectedItem = App.AppSettings.ThemeName;
             this.ColorSchemeComboBox.SelectedItem = this.ColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(App.AppSettings.ColorScheme));
+            this.BackgroundColorComboBox.SelectedItem = App.AppSettings.BackgroundColor;
+            this.FullThemeComboBox.SelectedItem = App.AppSettings.FullThemeName;
 
             await base.InitializeInternal();
         }
@@ -31,18 +33,6 @@ namespace MixItUp.WPF.Controls.Settings
         protected override async Task OnVisibilityChanged()
         {
             await this.InitializeInternal();
-        }
-
-        private void ThemeNameComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.ThemeNameComboBox.SelectedIndex >= 0)
-            {
-                if (!this.ThemeNameComboBox.SelectedItem.Equals(App.AppSettings.ThemeName))
-                {
-                    App.AppSettings.SettingsChangeRestartRequired = true;
-                }
-                App.AppSettings.ThemeName = (string)this.ThemeNameComboBox.SelectedItem;
-            }
         }
 
         private void ColorSchemeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -56,6 +46,30 @@ namespace MixItUp.WPF.Controls.Settings
                     App.AppSettings.SettingsChangeRestartRequired = true;
                 }
                 App.AppSettings.ColorScheme = colorScheme.Name;
+            }
+        }
+
+        private void BackgroundColorComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.BackgroundColorComboBox.SelectedIndex >= 0)
+            {
+                if (!this.BackgroundColorComboBox.SelectedItem.Equals(App.AppSettings.BackgroundColor))
+                {
+                    App.AppSettings.SettingsChangeRestartRequired = true;
+                }
+                App.AppSettings.BackgroundColor = (string)this.BackgroundColorComboBox.SelectedItem;
+            }
+        }
+
+        private void FullThemeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.FullThemeComboBox.SelectedIndex >= 0)
+            {
+                if (!this.FullThemeComboBox.SelectedItem.Equals(App.AppSettings.FullThemeName))
+                {
+                    App.AppSettings.SettingsChangeRestartRequired = true;
+                }
+                App.AppSettings.FullThemeName = (string)this.FullThemeComboBox.SelectedItem;
             }
         }
     }

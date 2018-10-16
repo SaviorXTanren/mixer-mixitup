@@ -18,7 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListView.xaml" />
 
-                <ResourceDictionary Source="Themes/MixItUpTheme.Light.xaml" />
+                <ResourceDictionary Source="Themes/MixItUpBackgroundColor.Light.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
