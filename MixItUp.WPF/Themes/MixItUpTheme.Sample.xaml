@@ -7,4 +7,6 @@
   <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#DD0000FF" po:Freeze="True" />           <!-- Main Foreground -->
   <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#DDBF00FF" po:Freeze="True" />                    <!-- Highlight Background -->
   <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#DDFFBF00" po:Freeze="True" />          <!-- Unknown... -->
+
+  <SolidColorBrush x:Key="MainApplicationBackground" Color="White" po:Freeze="True" />                  <!-- Application Background -->
 </ResourceDictionary>

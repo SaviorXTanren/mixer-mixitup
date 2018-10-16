@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace MixItUp.WPF
@@ -25,6 +26,10 @@ namespace MixItUp.WPF
         public void SwitchTheme(string colorScheme, string backgroundColorName, string fullThemeName)
         {
             colorScheme = colorScheme.Replace(" ", "");
+            if (string.IsNullOrEmpty(fullThemeName) || fullThemeName.Equals("None"))
+            {
+                fullThemeName = null;
+            }
 
             // Change Material Design Color Scheme
             var existingMDCResourceDictionary = Application.Current.Resources.MergedDictionaries.Where(rd => rd.Source != null)
@@ -33,18 +38,19 @@ namespace MixItUp.WPF
             {
                 throw new ApplicationException("Unable to find Color scheme in Application resources.");
             }
+            Application.Current.Resources.MergedDictionaries.Remove(existingMDCResourceDictionary);
 
             var newMDCResourceDictionary = new ResourceDictionary();
-            if (!string.IsNullOrEmpty(fullThemeName) && !fullThemeName.Equals("None"))
+            if (!string.IsNullOrEmpty(fullThemeName))
             {
                 newMDCResourceDictionary.Source = new Uri($"Themes/MixItUpTheme.{fullThemeName}.xaml", UriKind.Relative);
+                SolidColorBrush mainApplicationBackground = (SolidColorBrush)newMDCResourceDictionary["MainApplicationBackground"];
+                backgroundColorName = (mainApplicationBackground.ToString().Equals("#FFFFFFFF")) ? "Light" : "Dark";
             }
             else
             {
                 newMDCResourceDictionary.Source = new Uri($"pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.{colorScheme}.xaml");
             }
-
-            Application.Current.Resources.MergedDictionaries.Remove(existingMDCResourceDictionary);
             Application.Current.Resources.MergedDictionaries.Add(newMDCResourceDictionary);
 
             // Change Material Design Light/Dark Theme
@@ -54,11 +60,11 @@ namespace MixItUp.WPF
             {
                 throw new ApplicationException("Unable to find Light/Dark base theme in Application resources.");
             }
+            Application.Current.Resources.MergedDictionaries.Remove(existingMDTResourceDictionary);
 
             var themeSource = $"pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.{backgroundColorName}.xaml";
             var newMDTResourceDictionary = new ResourceDictionary() { Source = new Uri(themeSource) };
 
-            Application.Current.Resources.MergedDictionaries.Remove(existingMDTResourceDictionary);
             Application.Current.Resources.MergedDictionaries.Add(newMDTResourceDictionary);
 
             // Change Mix It Up Light/Dark Theme
