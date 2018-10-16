@@ -979,4 +979,23 @@ namespace MixItUp.Base.Commands
             }));
         }
     }
+
+    #region Obsolete Pre-Made Commands
+
+    [Obsolete]
+    public class ObsoletePreMadeCommand : PreMadeChatCommand { public ObsoletePreMadeCommand() : base(string.Empty, string.Empty, 0, MixerRoleEnum.User) { } }
+
+    [Obsolete]
+    public class Timeout1ChatCommand : ObsoletePreMadeCommand {  }
+
+    [Obsolete]
+    public class Timeout5ChatCommand : ObsoletePreMadeCommand { }
+
+    [Obsolete]
+    public class PurgeChatCommand : ObsoletePreMadeCommand { }
+
+    [Obsolete]
+    public class BanChatCommand : ObsoletePreMadeCommand { }
+
+    #endregion Obsolete Pre-Made Commands
 }

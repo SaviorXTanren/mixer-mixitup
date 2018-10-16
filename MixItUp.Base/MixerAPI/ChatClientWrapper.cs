@@ -239,7 +239,12 @@ namespace MixItUp.Base.MixerAPI
                         ChannelSession.PreMadeChatCommands.Clear();
                         foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
                         {
-                            ChannelSession.PreMadeChatCommands.Add(command);
+#pragma warning disable CS0612 // Type or member is obsolete
+                            if (!(command is ObsoletePreMadeCommand))
+                            {
+                                ChannelSession.PreMadeChatCommands.Add(command);
+                            }
+#pragma warning restore CS0612 // Type or member is obsolete
                         }
 
                         foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
