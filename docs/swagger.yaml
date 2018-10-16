@@ -360,172 +360,149 @@ paths:
 definitions:
   MixItUpUser:
     type: object
+    required: [ ID, ViewingMinutes, CurrencyAmounts ]
     properties:
       ID:
         description: The Mixer User ID.
         type: integer
-        required: true
         example: 7207866
       UserName:
         description: The Mixer Username.
         type: string
-        required: false
         example: SaviorXTanren
       ViewingMinutes:
         description: The number of minutes the user has been in the stream.
         type: integer
-        required: true
         example: 3244
       CurrrencyAmounts:
-        required: true
         type: array
         items:
           $ref: '#/definitions/MixItUpCurrency'
 
   UpdateMixItUpUser:
     type: object
+    required: [ ID, ViewingMinutes, CurrencyAmounts ]
     properties:
       ID:
         description: The Mixer User ID.
-        required: true
         type: integer
         example: 7207866
       ViewingMinutes:
         description: The number of minutes the user has been in the stream.
-        required: true
         type: integer
         example: 3244
       CurrrencyAmounts:
-        required: true
         type: array
         items:
           $ref: '#/definitions/UpdateMixItUpCurrency'
           
   ListOfMixItUpUsernamesOrIDs:
-    required: true
     type: array
     items:
       type: string
           
   ListOfMixItUpUsers:
-    required: true
     type: array
     items:
       $ref: '#/definitions/MixItUpUser'
       
   AdjustUserCurrency:
-    required: true
     type: object
+    required: [ Amount ]
     properties:
       Amount:
         description: The amount to adjust the user's currency.  This amount may be positive or negative.
-        required: true
         type: integer
 
   MixItUpCurrency:
     type: object
+    required: [ ID, Name, Amount ]
     properties:
       ID:
         description: The Mix It Up currency ID.
-        required: true
         type: string
         format: uuid
         example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
       Name:
         description: The Mix It Up currency name.
-        required: true
         type: string
         example: Influence
       Amount:
         description: The amount of currency the user has.
-        required: true
         type: integer
         example: 2751
 
   ListOfMixItUpCurrency:
-    required: true
     type: array
     items:
       $ref: '#/definitions/MixItUpCurrency'
       
   MixItUpCommand:
-    required: true
+    required: [ ID, Name, IsEnabled ]
     type: object
     properties:
       ID:
         description: The Mix It Up command ID.
-        required: true
         type: string
         format: uuid
         example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
       Name:
         description: The Mix It Up command name.
-        required: true
         type: string
       IsEnabled:
         description: True if enabled, false otherwise
-        required: true
         type: boolean
 
   ListOfMixItUpCommands:
-    required: true
     type: array
     items:
       $ref: '#/definitions/MixItUpCommand'
       
   UpdateMixItUpCurrency:
-    required: true
+    required: [ ID, Amount ]
     type: object
     properties:
       ID:
         description: The Mix It Up currency ID.
-        required: true
         type: string
         format: uuid
         example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
       Amount:
         description: The amount of currency the user has.
-        required: true
         type: integer
         example: 2751
 
   GiveUserCurrency:
-    required: true
+    required: [ Amount, UsernameOrID ]
     type: object
     properties:
       Amount:
         description: The amount to adjust the user's currency.  This amount may be positive or negative.
-        required: true
         type: integer
         minimum: 1
       UsernameOrID:
         description: The username or ID to adjust.
-        required: true
         type: string
 
   BulkGiveUsersCurrency:
-    required: true
     type: array
     items:
       $ref: '#/definitions/GiveUserCurrency'
 
   MixItUpChatMessage:
-    required: true
+    required: [ Message ]
     type: object
     properties:
       Message:
         description: The message to send to chat.
         type: string
         example: This is a test of the emergency broadcast system!
-        required: true
       SendAsStreamer:
         description: True will force the message to send as the streamer. False will try to send as the registered bot, if available.
         type: boolean
         example: false
-        required: false
         default: false
 
   MixerUser:
-    required: true
     type: object
     description: See Mixer docs
