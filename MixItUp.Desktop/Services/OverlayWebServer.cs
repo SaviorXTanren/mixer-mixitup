@@ -230,9 +230,13 @@ namespace MixItUp.Overlay
                     }
 
                     byte[] imageData = File.ReadAllBytes(this.localFiles[fileID]);
-                    await listenerContext.Response.OutputStream.WriteAsync(imageData, 0, imageData.Length);
 
-                    listenerContext.Response.Close();
+                    try
+                    {
+                        await listenerContext.Response.OutputStream.WriteAsync(imageData, 0, imageData.Length);
+                    }
+                    catch (HttpListenerException ex) { Logger.LogDiagnostic(ex); }
+                    catch (Exception ex) {  Logger.Log(ex); }
                 }
             }
             else
