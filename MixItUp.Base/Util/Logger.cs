@@ -44,14 +44,6 @@ namespace MixItUp.Base.Util
             catch (Exception) { }
         }
 
-        public static void LogDiagnostic(string message)
-        {
-            if (ChannelSession.Settings.DiagnosticLogging)
-            {
-                Logger.Log(message);
-            }
-        }
-
         public static void Log(Exception ex, bool includeFullStackTrace = false, bool isCrashing = false)
         {
             string exString = ex.ToString();
@@ -62,6 +54,22 @@ namespace MixItUp.Base.Util
             }
 
             Logger.Log(exString);
+        }
+
+        public static void LogDiagnostic(string message)
+        {
+            if (ChannelSession.Settings.DiagnosticLogging)
+            {
+                Logger.Log(message);
+            }
+        }
+
+        public static void LogDiagnostic(Exception ex, bool includeFullStackTrace = false, bool isCrashing = false)
+        {
+            if (ChannelSession.Settings.DiagnosticLogging)
+            {
+                Logger.Log(ex, includeFullStackTrace, isCrashing);
+            }
         }
 
         public static void LogChatEvent(string message)
