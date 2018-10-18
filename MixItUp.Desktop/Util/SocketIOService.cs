@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
 using System;
 using System.Threading.Tasks;
@@ -21,10 +22,15 @@ namespace MixItUp.Desktop.Util
 
         public virtual Task Disconnect()
         {
-            if (this.socket != null)
+            try
             {
-                this.socket.Close();
+                if (this.socket != null)
+                {
+                    this.socket.Close();
+                }
             }
+            catch (Exception ex) { Logger.Log(ex); }
+
             this.socket = null;
             return Task.FromResult(0);
         }
