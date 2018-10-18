@@ -26,10 +26,6 @@ namespace MixItUp.WPF
         public void SwitchTheme(string colorScheme, string backgroundColorName, string fullThemeName)
         {
             colorScheme = colorScheme.Replace(" ", "");
-            if (string.IsNullOrEmpty(fullThemeName) || fullThemeName.Equals("None"))
-            {
-                fullThemeName = null;
-            }
 
             // Change Material Design Color Scheme
             var existingMDCResourceDictionary = Application.Current.Resources.MergedDictionaries.Where(rd => rd.Source != null)

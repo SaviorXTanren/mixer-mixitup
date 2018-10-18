@@ -110,7 +110,7 @@
                         <TextBox Grid.Column="6" x:Name="ChannelRaidGameTextBox" MaterialDesign:HintAssist.Hint="Game" Width="300" Style="{StaticResource MaterialDesignFloatingHintTextBox}" IsEnabled="False" />
 
                         <Button x:Name="HostChannelButton" Grid.Column="8" Click="HostChannelButton_Click" Width="40" HorizontalAlignment="Center" ToolTip="Host Channel">
-                            <MaterialDesign:PackIcon Kind="Satellite" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                            <MaterialDesign:PackIcon Kind="Satellite" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource PrimaryHueMidForegroundBrush}" />
                         </Button>
 
                     </Grid>

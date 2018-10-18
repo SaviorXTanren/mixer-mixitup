@@ -11,7 +11,7 @@ namespace MixItUp.WPF.Controls.Settings
     {
         private List<string> availableBackgroundColors = new List<string>() { "Light", "Dark" };
 
-        private List<string> availableFullThemes = new List<string>() { "None" };
+        private Dictionary<string, string> availableFullThemes = new Dictionary<string, string>() { { "None", string.Empty }, { "Azhtral's Cosmic Fire" , "AzhtralsCosmicFire" } };
 
         public ThemeSettingsControl()
         {
@@ -25,7 +25,7 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.ColorSchemeComboBox.SelectedItem = this.ColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(App.AppSettings.ColorScheme));
             this.BackgroundColorComboBox.SelectedItem = App.AppSettings.BackgroundColor;
-            this.FullThemeComboBox.SelectedItem = App.AppSettings.FullThemeName;
+            this.FullThemeComboBox.SelectedItem = this.availableFullThemes.FirstOrDefault(t => t.Value.Equals(App.AppSettings.FullThemeName));
 
             await base.InitializeInternal();
         }
@@ -69,7 +69,8 @@ namespace MixItUp.WPF.Controls.Settings
                 {
                     App.AppSettings.SettingsChangeRestartRequired = true;
                 }
-                App.AppSettings.FullThemeName = (string)this.FullThemeComboBox.SelectedItem;
+                KeyValuePair<string, string> selectedValue = (KeyValuePair<string, string>)this.FullThemeComboBox.SelectedItem;
+                App.AppSettings.FullThemeName = selectedValue.Value;
             }
         }
     }

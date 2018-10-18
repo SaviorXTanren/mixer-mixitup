@@ -68,7 +68,7 @@ namespace MixItUp.WPF
             this.AutoLogInAccount = 0;
             this.ColorScheme = "Indigo";
             this.BackgroundColor = "Light";
-            this.FullThemeName = "None";
+            this.FullThemeName = string.Empty;
             this.Language = "en";
         }
 

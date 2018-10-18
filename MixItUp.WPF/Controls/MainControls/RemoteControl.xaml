@@ -67,7 +67,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">The Mix It Up mobile app is currently in closed alpha for Android devices. The full, public version will be released at a later date on both iOS and <Hyperlink x:Name="SecretBetaAccess" Click="SecretBetaAccess_Click" Foreground="Black" FontWeight="Normal" TextDecorations="None">Android</Hyperlink>.</TextBlock>
+                <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">The Mix It Up mobile app is currently in closed alpha for Android devices. The full, public version will be released at a later date on both iOS and <Hyperlink x:Name="SecretBetaAccess" Click="SecretBetaAccess_Click" Foreground="{StaticResource MaterialDesignBody}" FontWeight="Normal" TextDecorations="None">Android</Hyperlink>.</TextBlock>
 
                 <TextBlock Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Center" Width="350">If you would like to participate in the closed alpha for Android, you can head to the <Hyperlink NavigateUri="https://discord.gg/taj4Gj4" RequestNavigate="Hyperlink_RequestNavigate">Mix It Up Discord</Hyperlink> and request more information.</TextBlock>
             </Grid>

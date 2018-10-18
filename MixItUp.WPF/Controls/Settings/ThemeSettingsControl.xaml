@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="20">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -33,7 +33,7 @@
         <Separator Grid.Row="4" Grid.ColumnSpan="3" />
 
         <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Full Theme:</TextBlock>
-        <ComboBox x:Name="FullThemeComboBox" Grid.Row="6" Grid.Column="2" SelectionChanged="FullThemeComboBox_SelectionChanged" />
+        <ComboBox x:Name="FullThemeComboBox" Grid.Row="6" Grid.Column="2" SelectionChanged="FullThemeComboBox_SelectionChanged" DisplayMemberPath="Key" />
 
     </Grid>
 </local:SettingsControlBase>

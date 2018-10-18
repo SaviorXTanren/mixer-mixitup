@@ -59,7 +59,7 @@
 
                                 <TextBlock Grid.Column="0" VerticalAlignment="Center">Pop Out</TextBlock>
 
-                                <MaterialDesign:PackIcon Grid.Column="2" Kind="Launch" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource PrimaryHueMidBrush}" />
+                                <MaterialDesign:PackIcon Grid.Column="2" Kind="Launch" Height="24" Width="24" VerticalAlignment="Center" Foreground="{StaticResource MaterialDesignBody}" />
                             </Grid>
                         </Button>
 
