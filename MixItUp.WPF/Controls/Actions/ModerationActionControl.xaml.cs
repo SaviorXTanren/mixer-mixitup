@@ -36,15 +36,6 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 ModerationActionTypeEnum moderationType = EnumHelper.GetEnumValueFromString<ModerationActionTypeEnum>((string)this.ModerationActionTypeComboBox.SelectedItem);
 
-                if (moderationType == ModerationActionTypeEnum.ChatTimeout || moderationType == ModerationActionTypeEnum.PurgeUser ||
-                    moderationType == ModerationActionTypeEnum.BanUser || moderationType == ModerationActionTypeEnum.InteractiveTimeout)
-                {
-                    if (string.IsNullOrEmpty(this.UserNameTextBox.Text))
-                    {
-                        return null;
-                    }
-                }
-
                 if (moderationType == ModerationActionTypeEnum.ChatTimeout || moderationType == ModerationActionTypeEnum.InteractiveTimeout)
                 {
                     if (string.IsNullOrEmpty(this.TimeAmountTextBox.Text))
@@ -68,7 +59,8 @@ namespace MixItUp.WPF.Controls.Actions
                 ModerationActionTypeEnum moderationType = EnumHelper.GetEnumValueFromString<ModerationActionTypeEnum>((string)this.ModerationActionTypeComboBox.SelectedItem);
 
                 if (moderationType == ModerationActionTypeEnum.ChatTimeout || moderationType == ModerationActionTypeEnum.PurgeUser ||
-                    moderationType == ModerationActionTypeEnum.BanUser || moderationType == ModerationActionTypeEnum.InteractiveTimeout)
+                    moderationType == ModerationActionTypeEnum.BanUser || moderationType == ModerationActionTypeEnum.InteractiveTimeout ||
+                    moderationType == ModerationActionTypeEnum.AddModerationStrike || moderationType == ModerationActionTypeEnum.RemoveModerationStrike)
                 {
                     this.UserNameTextBox.Visibility = Visibility.Visible;
                 }
