@@ -5,7 +5,7 @@ function openWebsocketConnection(port)
 {
     try
     {
-        connection = new WebSocket("ws://localhost:" + port + "/ws/");
+        connection = new WebSocket("ws://" + window.location.hostname + ":" + port + "/ws/");
 
         // When the connection is open, send some data to the server
         connection.onopen = function ()

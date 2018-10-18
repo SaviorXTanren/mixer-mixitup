@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.WebSockets;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -37,8 +38,11 @@ namespace MixItUp.Overlay
 
     public class OverlayWebServer : IOverlayService
     {
-        public const string OverlayHttpListenerServerAddress = "http://localhost:8111/overlay/";
-        public const string OverlayWebSocketServerAddress = "http://localhost:8111/ws/";
+        public const string RegularOverlayHttpListenerServerAddress = "http://localhost:8111/overlay/";
+        public const string RegularOverlayWebSocketServerAddress = "http://localhost:8111/ws/";
+
+        public const string AdministratorOverlayHttpListenerServerAddress = "http://*:8111/overlay/";
+        public const string AdministratorOverlayWebSocketServerAddress = "http://*:8111/ws/";
 
         public event EventHandler OnWebSocketConnectedOccurred { add { this.webSocketServer.OnConnectedOccurred += value; } remove { this.webSocketServer.OnConnectedOccurred -= value; } }
         public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred { add { this.webSocketServer.OnDisconnectOccurred += value; } remove { this.webSocketServer.OnDisconnectOccurred -= value; } }
@@ -49,10 +53,19 @@ namespace MixItUp.Overlay
         private List<OverlayPacket> batchPackets = new List<OverlayPacket>();
         private bool isBatching = false;
 
+        private static bool IsElevated
+        {
+            get
+            {
+                WindowsIdentity id = WindowsIdentity.GetCurrent();
+                return id.Owner != id.User;
+            }
+        }
+
         public OverlayWebServer()
         {
-            this.httpListenerServer = new OverlayHttpListenerServer(OverlayHttpListenerServerAddress);
-            this.webSocketServer = new OverlayWebSocketServer(OverlayWebSocketServerAddress);
+            this.httpListenerServer = new OverlayHttpListenerServer(IsElevated ? AdministratorOverlayHttpListenerServerAddress : RegularOverlayHttpListenerServerAddress);
+            this.webSocketServer = new OverlayWebSocketServer(IsElevated ? AdministratorOverlayWebSocketServerAddress : RegularOverlayWebSocketServerAddress);
         }
 
         public async Task<bool> Initialize()
@@ -67,21 +80,21 @@ namespace MixItUp.Overlay
                         if (ChannelSession.Services.OBSWebsocket != null)
                         {
                             await ChannelSession.Services.OBSWebsocket.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.OBSWebsocket.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.OBSWebsocket.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, RegularOverlayHttpListenerServerAddress);
                             await ChannelSession.Services.OBSWebsocket.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
                         if (ChannelSession.Services.XSplitServer != null)
                         {
                             await ChannelSession.Services.XSplitServer.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.XSplitServer.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.XSplitServer.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, RegularOverlayHttpListenerServerAddress);
                             await ChannelSession.Services.XSplitServer.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
                         if (ChannelSession.Services.StreamlabsOBSService != null)
                         {
                             await ChannelSession.Services.StreamlabsOBSService.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.StreamlabsOBSService.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, OverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.StreamlabsOBSService.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, RegularOverlayHttpListenerServerAddress);
                             await ChannelSession.Services.StreamlabsOBSService.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
                     }
