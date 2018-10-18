@@ -1337,6 +1337,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\MixItUpTheme.StarkContrast.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UpdateWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1416,6 +1420,10 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="README.md" />
+    <Page Include="Themes\MixItUpTheme.1YearAnniversary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Resource Include="Themes\MixItUpTheme.Sample.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
