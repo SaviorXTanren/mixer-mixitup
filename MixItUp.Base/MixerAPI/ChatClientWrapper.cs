@@ -330,8 +330,9 @@ namespace MixItUp.Base.MixerAPI
         private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
         {
             UserViewModel user = await this.AddUser(messageEvent);
+            ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
 
-            if (user != null && !this.userEntranceCommands.Contains(user.ID))
+            if (user != null && !message.IsWhisper && !this.userEntranceCommands.Contains(user.ID))
             {
                 this.userEntranceCommands.Add(user.ID);
                 if (user.Data.EntranceCommand != null)
@@ -339,8 +340,6 @@ namespace MixItUp.Base.MixerAPI
                     await user.Data.EntranceCommand.Perform(user);
                 }
             }
-
-            ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
 
             if (this.Messages.ContainsKey(message.ID))
             {
