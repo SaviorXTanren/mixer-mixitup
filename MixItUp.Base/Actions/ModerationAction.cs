@@ -55,53 +55,57 @@ namespace MixItUp.Base.Actions
         {
             if (ChannelSession.Chat != null)
             {
+                UserViewModel targetUser = null;
+                if (!string.IsNullOrEmpty(this.UserName))
+                {
+                    string username = await this.ReplaceStringWithSpecialModifiers(this.UserName, user, arguments);
+                    UserModel targetUserModel = await ChannelSession.Connection.GetUser(username);
+                    if (targetUser == null)
+                    {
+                        targetUser = new UserViewModel(targetUserModel);
+                    }
+                }
+                else
+                {
+                    targetUser = user;
+                }
+
                 if (this.ModerationType == ModerationActionTypeEnum.ClearChat)
                 {
                     await ChannelSession.Chat.ClearMessages();
                 }
-                else if (!string.IsNullOrEmpty(this.UserName))
+                else if (targetUser != null)
                 {
-                    string username = await this.ReplaceStringWithSpecialModifiers(this.UserName, user, arguments);
-                    UserModel targetUserModel = await ChannelSession.Connection.GetUser(username);
-                    if (targetUserModel != null)
+                    if (this.ModerationType == ModerationActionTypeEnum.PurgeUser)
                     {
-                        UserViewModel targetUser = await ChannelSession.ActiveUsers.GetUserByID(targetUserModel.id);
-                        if (targetUser == null)
+                        await ChannelSession.Chat.PurgeUser(targetUser.UserName);
+                    }
+                    else if (this.ModerationType == ModerationActionTypeEnum.BanUser)
+                    {
+                        await ChannelSession.Chat.BanUser(targetUser);
+                    }
+                    else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
+                    {
+                        await targetUser.AddModerationStrike("Manual Moderation Strike");
+                    }
+                    else if (this.ModerationType == ModerationActionTypeEnum.RemoveModerationStrike)
+                    {
+                        await targetUser.RemoveModerationStrike();
+                    }
+                    else if (!string.IsNullOrEmpty(this.TimeAmount))
+                    {
+                        string timeAmountString = await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, user, arguments);
+                        if (uint.TryParse(timeAmountString, out uint timeAmount))
                         {
-                            targetUser = new UserViewModel(targetUserModel);
-                        }
-
-                        if (this.ModerationType == ModerationActionTypeEnum.PurgeUser)
-                        {
-                            await ChannelSession.Chat.PurgeUser(targetUser.UserName);
-                        }
-                        else if (this.ModerationType == ModerationActionTypeEnum.BanUser)
-                        {
-                            await ChannelSession.Chat.BanUser(targetUser);
-                        }
-                        else if (this.ModerationType == ModerationActionTypeEnum.AddModerationStrike)
-                        {
-                            await targetUser.AddModerationStrike("Manual Moderation Strike");
-                        }
-                        else if (this.ModerationType == ModerationActionTypeEnum.RemoveModerationStrike)
-                        {
-                            await targetUser.RemoveModerationStrike();
-                        }
-                        else if (!string.IsNullOrEmpty(this.TimeAmount))
-                        {
-                            string timeAmountString = await this.ReplaceStringWithSpecialModifiers(this.TimeAmount, user, arguments);
-                            if (uint.TryParse(timeAmountString, out uint timeAmount))
+                            if (this.ModerationType == ModerationActionTypeEnum.ChatTimeout)
                             {
-                                if (this.ModerationType == ModerationActionTypeEnum.ChatTimeout)
+                                await ChannelSession.Chat.TimeoutUser(targetUser.UserName, timeAmount);
+                            }
+                            else if (this.ModerationType == ModerationActionTypeEnum.InteractiveTimeout)
+                            {
+                                if (targetUser != null && ChannelSession.Interactive != null)
                                 {
-                                    await ChannelSession.Chat.TimeoutUser(targetUser.UserName, timeAmount);
-                                }
-                                else if (this.ModerationType == ModerationActionTypeEnum.InteractiveTimeout)
-                                {
-                                    if (targetUser != null && ChannelSession.Interactive != null)
-                                    {
-                                        await ChannelSession.Interactive.TimeoutUser(targetUser, (int)timeAmount);
-                                    }
+                                    await ChannelSession.Interactive.TimeoutUser(targetUser, (int)timeAmount);
                                 }
                             }
                         }

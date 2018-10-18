@@ -28,7 +28,7 @@
 
         <ComboBox x:Name="ModerationActionTypeComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Moderation Action" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="ModerationActionTypeComboBox_SelectionChanged" />
 
-        <TextBox Grid.Column="2" x:Name="UserNameTextBox" VerticalAlignment="Center" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="User Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+        <TextBox Grid.Column="2" x:Name="UserNameTextBox" VerticalAlignment="Center" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="User Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
 
         <TextBox Grid.Column="4" x:Name="TimeAmountTextBox" VerticalAlignment="Center" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Amount (Seconds)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
     </Grid>
