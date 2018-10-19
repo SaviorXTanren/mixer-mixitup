@@ -64,19 +64,7 @@ namespace MixItUp.Base.ViewModel.Requirement
 
         public bool DoesMeetRequirement(UserViewModel user)
         {
-            if (user.PrimaryRole == MixerRoleEnum.Streamer)
-            {
-                return true;
-            }
-            else if (this.MixerRole == MixerRoleEnum.Follower)
-            {
-                return user.IsFollower;
-            }
-            else if (this.MixerRole == MixerRoleEnum.Subscriber)
-            {
-                return user.IsSubscriber;
-            }
-            else if (this.MixerRole == MixerRoleEnum.Custom && !string.IsNullOrEmpty(this.CustomRole))
+            if (this.MixerRole == MixerRoleEnum.Custom && !string.IsNullOrEmpty(this.CustomRole))
             {
                 if (this.CustomRole.StartsWith(GameWispTier.MIURolePrefix))
                 {
