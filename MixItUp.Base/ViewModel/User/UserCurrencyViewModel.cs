@@ -131,7 +131,7 @@ namespace MixItUp.Base.ViewModel.User
                         if (interval > 0 && (minutes % interval) == 0)
                         {
                             user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
-                            if (user.IsSubscriber && (ChannelSession.Channel.online || (this.OfflineAcquireAmount > 0)))
+                            if (user.GetsSubscriberBenefits && (ChannelSession.Channel.online || (this.OfflineAcquireAmount > 0)))
                             {
                                 user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
                             }

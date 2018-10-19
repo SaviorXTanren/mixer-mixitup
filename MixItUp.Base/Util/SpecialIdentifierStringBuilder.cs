@@ -187,7 +187,7 @@ namespace MixItUp.Base.Util
                 if (users.Count() > 0)
                 {
                     SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomFollower = users.ElementAt(random.Next(users.Count()));
-                    users = users.Where(u => u.IsSubscriber);
+                    users = users.Where(u => u.GetsSubscriberBenefits);
                     if (users.Count() > 0)
                     {
                         SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomSubscriber = users.ElementAt(random.Next(users.Count()));

@@ -100,9 +100,9 @@ namespace MixItUp.Base.Actions
 
                             if (ChannelSession.Settings.GameQueueSubPriority)
                             {
-                                if (user.IsSubscriber)
+                                if (user.GetsSubscriberBenefits)
                                 {
-                                    int totalSubs = ChannelSession.GameQueue.Count(u => u.IsSubscriber);
+                                    int totalSubs = ChannelSession.GameQueue.Count(u => u.GetsSubscriberBenefits);
                                     ChannelSession.GameQueue.Insert(totalSubs, user);
                                 }
                                 else
