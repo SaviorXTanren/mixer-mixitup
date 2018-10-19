@@ -244,7 +244,7 @@ namespace MixItUp.Base.Actions
             {
                 if (!Uri.IsWellFormedUriString(this.FilePath, UriKind.RelativeOrAbsolute))
                 {
-                    return string.Format("/overlay/files/{0}?nonce={1}", this.ID, Guid.NewGuid());
+                    return string.Format("http://localhost:8111/overlay/files/{0}?nonce={1}", this.ID, Guid.NewGuid());
                 }
                 return this.FilePath;
             }
@@ -287,7 +287,7 @@ namespace MixItUp.Base.Actions
             {
                 if (!Uri.IsWellFormedUriString(this.FilePath, UriKind.RelativeOrAbsolute))
                 {
-                    return string.Format("/overlay/files/{0}", this.ID);
+                    return string.Format("http://localhost:8111/overlay/files/{0}", this.ID);
                 }
                 return this.FilePath;
             }
