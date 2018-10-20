@@ -180,6 +180,8 @@ namespace MixItUp.Desktop
         public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
 
         [JsonProperty]
+        public bool ModerationResetStrikesOnLaunch { get; set; }
+        [JsonProperty]
         public CustomCommand ModerationStrike1Command { get; set; }
         [JsonProperty]
         public CustomCommand ModerationStrike2Command { get; set; }

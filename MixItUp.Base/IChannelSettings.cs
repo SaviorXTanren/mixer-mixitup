@@ -98,6 +98,7 @@ namespace MixItUp.Base
 
         ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
 
+        bool ModerationResetStrikesOnLaunch { get; set; }
         CustomCommand ModerationStrike1Command { get; set; }
         CustomCommand ModerationStrike2Command { get; set; }
         CustomCommand ModerationStrike3Command { get; set; }
