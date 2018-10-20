@@ -55,6 +55,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.ChatInteractiveParticipationComboBox.ItemsSource = EnumHelper.GetEnumNames<ModerationChatInteractiveParticipationEnum>();
             this.ChatInteractiveParticipationComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.ModerationChatInteractiveParticipation);
 
+            this.ResetStrikesOnLaunchToggleButton.IsChecked = ChannelSession.Settings.ModerationResetStrikesOnLaunch;
             this.Strike1Command.DataContext = ChannelSession.Settings.ModerationStrike1Command;
             this.Strike2Command.DataContext = ChannelSession.Settings.ModerationStrike2Command;
             this.Strike3Command.DataContext = ChannelSession.Settings.ModerationStrike3Command;
@@ -86,6 +87,8 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.Settings.ModerationBlockLinksExcempt = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.BlockLinksExemptComboBox.SelectedItem);
 
                     ChannelSession.Settings.ModerationChatInteractiveParticipation = EnumHelper.GetEnumValueFromString<ModerationChatInteractiveParticipationEnum>((string)this.ChatInteractiveParticipationComboBox.SelectedItem);
+
+                    ChannelSession.Settings.ModerationResetStrikesOnLaunch = this.ResetStrikesOnLaunchToggleButton.IsChecked.GetValueOrDefault();
 
                     await ChannelSession.SaveSettings();
                 });
