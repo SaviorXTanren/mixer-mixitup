@@ -168,26 +168,46 @@
                 </Grid>
 
                 <GroupBox Grid.Row="6" Header="Strike Commands">
-                    <Grid HorizontalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                    <Grid HorizontalAlignment="Center" Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                        <GroupBox Grid.Column="0" Header="1 Strike Command" Width="200">
-                            <CommandControls:CommandButtonsControl x:Name="Strike1Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
-                        </GroupBox>
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <GroupBox Grid.Column="2" Header="2 Strikes Command" Width="200">
-                            <CommandControls:CommandButtonsControl x:Name="Strike2Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
-                        </GroupBox>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Reset Strikes on Launch:</TextBlock>
+                            <ToggleButton x:Name="ResetStrikesOnLaunchToggleButton" Grid.Column="2" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Checked" />
 
-                        <GroupBox Grid.Column="4" Header="3+ Strikes Command" Width="200">
-                            <CommandControls:CommandButtonsControl x:Name="Strike3Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
-                        </GroupBox>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <GroupBox Grid.Column="0" Header="1 Strike Command" Width="200">
+                                <CommandControls:CommandButtonsControl x:Name="Strike1Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            </GroupBox>
+
+                            <GroupBox Grid.Column="2" Header="2 Strikes Command" Width="200">
+                                <CommandControls:CommandButtonsControl x:Name="Strike2Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            </GroupBox>
+
+                            <GroupBox Grid.Column="4" Header="3+ Strikes Command" Width="200">
+                                <CommandControls:CommandButtonsControl x:Name="Strike3Command" HorizontalAlignment="Center" EditClicked="StrikeCommand_EditClicked" RemoveDeleteButton="True" />
+                            </GroupBox>
+                        </Grid>
                     </Grid>
                 </GroupBox>
             </Grid>

@@ -320,7 +320,12 @@ namespace MixItUp.Desktop.Services
 
                 await this.PutAsync("me/player/shuffle?state=true", null);
                 await Task.Delay(250);
+
                 HttpResponseMessage playResponse = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
+                await Task.Delay(250);
+
+                await this.DisableRepeat();
+
                 return (playResponse.StatusCode == HttpStatusCode.NoContent);
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -337,7 +342,10 @@ namespace MixItUp.Desktop.Services
                 payload["uris"] = songArray;
 
                 HttpResponseMessage response = await this.PutAsync("me/player/play", this.CreateContentFromObject(payload));
-                await Task.Delay(1000);
+                await Task.Delay(250);
+
+                await this.DisableRepeat();
+
                 return (response.StatusCode == HttpStatusCode.NoContent);
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -389,6 +397,7 @@ namespace MixItUp.Desktop.Services
         private async Task InitializeInternal()
         {
             this.Profile = await this.GetCurrentProfile();
+            await this.DisableRepeat();
         }
 
         private async Task<IEnumerable<JObject>> GetPagedResult(string endpointURL)
@@ -414,6 +423,15 @@ namespace MixItUp.Desktop.Services
             }
 
             return results;
+        }
+
+        private async Task DisableRepeat()
+        {
+            try
+            {
+                await this.PutAsync("me/player/repeat?state=off", null);
+            }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         #region IDisposable Support

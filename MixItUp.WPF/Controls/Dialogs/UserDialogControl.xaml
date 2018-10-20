@@ -92,16 +92,23 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <MaterialDesign:PackIcon Kind="WeatherLightning" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="0" />
+            <MaterialDesign:PackIcon Kind="WeatherLightning" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="0" Margin="0,1,0,0" ToolTip="Sparks" />
             <TextBlock Grid.Column="2" Text="{Binding Sparks}" VerticalAlignment="Center" />
 
-            <MaterialDesign:PackIcon Kind="Coin" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="4" />
+            <MaterialDesign:PackIcon Kind="Coin" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="4" ToolTip="Primary Currency" />
             <TextBlock Grid.Column="6" Text="{Binding Data.PrimaryCurrency}" VerticalAlignment="Center" />
 
-            <MaterialDesign:PackIcon Kind="Wunderlist" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="8" />
+            <MaterialDesign:PackIcon Kind="Wunderlist" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="8" ToolTip="Primary Rank" />
             <TextBlock Grid.Column="10" Text="{Binding Data.PrimaryRankNameAndPoints}" VerticalAlignment="Center" />
+
+            <MaterialDesign:PackIcon Kind="Biohazard" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Grid.Column="12" Margin="0,-1,0,0" ToolTip="Moderation Strikes" />
+            <TextBlock Grid.Column="14" Text="{Binding Data.ModerationStrikes}" VerticalAlignment="Center" />
 
         </Grid>
 

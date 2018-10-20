@@ -148,6 +148,38 @@ namespace MixItUp.Base.Commands
         }
     }
 
+    public class GamesChatCommand : PreMadeChatCommand
+    {
+        public GamesChatCommand()
+            : base("Games", "games", 0, MixerRoleEnum.User)
+        {
+            this.Actions.Add(new CustomAction(async (UserViewModel user, IEnumerable<string> arguments) =>
+            {
+                if (ChannelSession.Chat != null)
+                {
+                    List<string> commandTriggers = new List<string>();
+                    foreach (GameCommandBase command in ChannelSession.Settings.GameCommands)
+                    {
+                        if (command.IsEnabled && await command.Requirements.DoesMeetUserRoleRequirement(user))
+                        {
+                            commandTriggers.AddRange(command.Commands.Select(c => $"!{c}"));
+                        }
+                    }
+
+                    if (commandTriggers.Count > 0)
+                    {
+                        string text = "Available Games: " + string.Join(", ", commandTriggers.OrderBy(c => c));
+                        await ChannelSession.Chat.Whisper(user.UserName, text);
+                    }
+                    else
+                    {
+                        await ChannelSession.Chat.Whisper(user.UserName, "There are no games available for you to use.");
+                    }
+                }
+            }));
+        }
+    }
+
     public class MixItUpCommandsChatCommand : PreMadeChatCommand
     {
         public MixItUpCommandsChatCommand()

@@ -490,6 +490,15 @@ namespace MixItUp.Base
                         }
                     }
 
+                    if (ChannelSession.Settings.ModerationResetStrikesOnLaunch)
+                    {
+                        foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
+                        {
+                            userData.ModerationStrikes = 0;
+                            ChannelSession.Settings.UserData.ManualValueChanged(userData.ID);
+                        }
+                    }
+
                     await ChannelSession.SaveSettings();
 
                     await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);

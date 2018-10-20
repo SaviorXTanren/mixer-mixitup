@@ -407,7 +407,10 @@ namespace MixItUp.Base.ViewModel.User
 
         public Task RemoveModerationStrike()
         {
-            this.Data.ModerationStrikes--;
+            if (this.Data.ModerationStrikes > 0)
+            {
+                this.Data.ModerationStrikes--;
+            }
             return Task.FromResult(0);
         }
 
