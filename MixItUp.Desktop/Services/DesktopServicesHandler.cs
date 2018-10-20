@@ -126,7 +126,7 @@ namespace MixItUp.Desktop.Services
         {
             if (this.XSplitServer == null)
             {
-                this.XSplitServer = new XSplitWebServer("http://localhost:8211/");
+                this.XSplitServer = new XSplitWebSocketHttpListenerServer("http://localhost:8211/");
                 if (await this.XSplitServer.Connect())
                 {
                     this.XSplitServer.Connected += XSplitServer_Connected;

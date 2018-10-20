@@ -48,7 +48,7 @@ namespace MixItUp.Overlay
         public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred { add { this.webSocketServer.OnDisconnectOccurred += value; } remove { this.webSocketServer.OnDisconnectOccurred -= value; } }
 
         private OverlayHttpListenerServer httpListenerServer;
-        private OverlayWebSocketServer webSocketServer;
+        private OverlayWebSocketHttpListenerServer webSocketServer;
 
         private List<OverlayPacket> batchPackets = new List<OverlayPacket>();
         private bool isBatching = false;
@@ -65,7 +65,7 @@ namespace MixItUp.Overlay
         public OverlayWebServer()
         {
             this.httpListenerServer = new OverlayHttpListenerServer(IsElevated ? AdministratorOverlayHttpListenerServerAddress : RegularOverlayHttpListenerServerAddress);
-            this.webSocketServer = new OverlayWebSocketServer(IsElevated ? AdministratorOverlayWebSocketServerAddress : RegularOverlayWebSocketServerAddress);
+            this.webSocketServer = new OverlayWebSocketHttpListenerServer(IsElevated ? AdministratorOverlayWebSocketServerAddress : RegularOverlayWebSocketServerAddress);
         }
 
         public async Task<bool> Initialize()
@@ -73,7 +73,7 @@ namespace MixItUp.Overlay
             try
             {
                 this.httpListenerServer.Start();
-                if (await this.webSocketServer.Initialize())
+                if (this.webSocketServer.Start())
                 {
                     if (!string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
                     {
@@ -108,7 +108,7 @@ namespace MixItUp.Overlay
         public async Task Disconnect()
         {
             this.httpListenerServer.End();
-            await this.webSocketServer.DisconnectServer();
+            await this.webSocketServer.End();
         }
 
         public void StartBatching()
@@ -259,9 +259,19 @@ namespace MixItUp.Overlay
         }
     }
 
+    public class OverlayWebSocketHttpListenerServer : WebSocketHttpListenerServerBase
+    {
+        public OverlayWebSocketHttpListenerServer(string address) : base(address) { }
+
+        protected override WebSocketServerBase CreateWebSocketServer(HttpListenerContext listenerContext)
+        {
+            return new OverlayWebSocketServer(listenerContext);
+        }
+    }
+
     public class OverlayWebSocketServer : WebSocketServerBase
     {
-        public OverlayWebSocketServer(string address) : base(address) { }
+        public OverlayWebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { }
 
         protected override async Task ProcessReceivedPacket(string packetJSON)
         {

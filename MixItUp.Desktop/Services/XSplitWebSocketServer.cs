@@ -4,6 +4,7 @@ using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Net;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -48,9 +49,59 @@ namespace MixItUp.XSplit
 
     #endregion Data Classes
 
-    public class XSplitWebServer : WebSocketServerBase, IStreamingSoftwareService
+    public class XSplitWebSocketHttpListenerServer : WebSocketHttpListenerServerBase, IStreamingSoftwareService
     {
-        public XSplitWebServer(string address) : base(address) { this.OnDisconnectOccurred += XSplitWebServer_OnDisconnectOccurred; }
+        public event EventHandler Connected { add { base.OnConnectedOccurred += value; } remove { base.OnConnectedOccurred -= value; } }
+        public event EventHandler Disconnected;
+
+        public XSplitWebSocketHttpListenerServer(string address) : base(address) { }
+
+        public Task<bool> Connect()
+        {
+            this.Start();
+            return Task.FromResult(true);
+        }
+
+        public async Task Disconnect() { await this.End(); }
+
+        public async Task ShowScene(string sceneName)
+        {
+            await this.Send(new XSplitPacket("sceneTransition", JObject.FromObject(new XSplitScene() { sceneName = sceneName })));
+        }
+
+        public async Task SetSourceVisibility(string sourceName, bool visibility)
+        {
+            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitSource() { sourceName = sourceName, sourceVisible = visibility })));
+        }
+
+        public async Task SetWebBrowserSourceURL(string sourceName, string url)
+        {
+            await this.Send(new XSplitPacket("sourceUpdate", JObject.FromObject(new XSplitWebBrowserSource() { sourceName = sourceName, webBrowserUrl = url })));
+        }
+
+        public Task SetSourceDimensions(string sourceName, StreamingSourceDimensions dimensions) { return Task.FromResult(0); }
+
+        public Task<StreamingSourceDimensions> GetSourceDimensions(string sourceName) { return Task.FromResult(new StreamingSourceDimensions()); }
+
+        public Task StartStopStream() { return Task.FromResult(0); }
+
+        public Task SaveReplayBuffer() { return Task.FromResult(0); }
+        public Task<bool> StartReplayBuffer() { return Task.FromResult(false); }
+
+        protected override WebSocketServerBase CreateWebSocketServer(HttpListenerContext listenerContext)
+        {
+            return new XSplitWebSocketServer(listenerContext);
+        }
+
+        private void XSplitWebServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
+        {
+            this.Disconnected(sender, new EventArgs());
+        }
+    }
+
+    public class XSplitWebSocketServer : WebSocketServerBase, IStreamingSoftwareService
+    {
+        public XSplitWebSocketServer(HttpListenerContext listenerContext) : base(listenerContext) { this.OnDisconnectOccurred += XSplitWebServer_OnDisconnectOccurred; }
 
         public event EventHandler Connected { add { this.OnConnectedOccurred += value; } remove { this.OnConnectedOccurred -= value; } }
         public event EventHandler Disconnected = delegate { };
