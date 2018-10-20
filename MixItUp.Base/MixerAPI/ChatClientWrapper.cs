@@ -365,13 +365,23 @@ namespace MixItUp.Base.MixerAPI
             string moderationReason = await message.ShouldBeModerated();
             if (!string.IsNullOrEmpty(moderationReason))
             {
-                message.ModerationReason = moderationReason;
+                bool shouldBeModerated = true;
+                PermissionsCommandBase command = this.CheckMessageForCommand(message);
+                if (command != null && string.IsNullOrEmpty(await ModerationHelper.ShouldBeFilteredWordModerated(user, message.Message)))
+                {
+                    shouldBeModerated = false;
+                }
 
-                await this.DeleteMessage(message.ID);
+                if (shouldBeModerated)
+                {
+                    message.ModerationReason = moderationReason;
 
-                await user.AddModerationStrike(moderationReason);
+                    await this.DeleteMessage(message.ID);
 
-                return message;
+                    await user.AddModerationStrike(moderationReason);
+
+                    return message;
+                }
             }
 
             if (!string.IsNullOrEmpty(ChannelSession.Settings.NotificationChatMessageSoundFilePath))
@@ -412,19 +422,30 @@ namespace MixItUp.Base.MixerAPI
 
         private async Task<bool> CheckMessageForCommandAndRun(ChatMessageViewModel message)
         {
+            PermissionsCommandBase command = this.CheckMessageForCommand(message);
+            if (command != null)
+            {
+                await this.RunMessageCommand(message, command);
+                return true;
+            }
+            return false;
+        }
+
+        private PermissionsCommandBase CheckMessageForCommand(ChatMessageViewModel message)
+        {
             if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
             {
-                return false;
+                return null;
             }
 
             if (ChannelSession.BotUser != null && ChannelSession.Settings.IgnoreBotAccountCommands && message.User != null && message.User.ID.Equals(ChannelSession.BotUser.id))
             {
-                return false;
+                return null;
             }
 
             if (ChannelSession.Settings.CommandsOnlyInYourStream && !message.IsInUsersChannel)
             {
-                return false;
+                return null;
             }
 
             if (ChannelSession.IsStreamer && !message.User.MixerRoles.Contains(MixerRoleEnum.Banned))
@@ -440,20 +461,20 @@ namespace MixItUp.Base.MixerAPI
                     command = commandsToCheck.FirstOrDefault(c => c.ContainsCommand(message.Message));
                 }
 
-                if (command != null)
-                {
-                    await command.Perform(message.User, command.GetArgumentsFromText(message.Message));
-
-                    if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
-                    {
-                        await this.DeleteMessage(message.ID);
-                    }
-
-                    return true;
-                }
+                return command;
             }
 
-            return false;
+            return null;
+        }
+
+        private async Task RunMessageCommand(ChatMessageViewModel message, PermissionsCommandBase command)
+        {
+            await command.Perform(message.User, command.GetArgumentsFromText(message.Message));
+
+            if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
+            {
+                await this.DeleteMessage(message.ID);
+            }
         }
 
         #endregion Chat Update Methods
