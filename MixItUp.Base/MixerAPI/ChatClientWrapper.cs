@@ -332,6 +332,8 @@ namespace MixItUp.Base.MixerAPI
             UserViewModel user = await this.AddUser(messageEvent);
             ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
 
+            Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
+
             if (user != null && !message.IsWhisper && !this.userEntranceCommands.Contains(user.ID))
             {
                 this.userEntranceCommands.Add(user.ID);
@@ -365,6 +367,8 @@ namespace MixItUp.Base.MixerAPI
             string moderationReason = await message.ShouldBeModerated();
             if (!string.IsNullOrEmpty(moderationReason))
             {
+                Util.Logger.LogDiagnostic(string.Format("Message Should Be Moderated - {0}", message.ToString()));
+
                 bool shouldBeModerated = true;
                 PermissionsCommandBase command = this.CheckMessageForCommand(message);
                 if (command != null && string.IsNullOrEmpty(await ModerationHelper.ShouldBeFilteredWordModerated(user, message.Message)))
@@ -374,6 +378,8 @@ namespace MixItUp.Base.MixerAPI
 
                 if (shouldBeModerated)
                 {
+                    Util.Logger.LogDiagnostic(string.Format("Moderation Being Performed - {0}", message.ToString()));
+
                     message.ModerationReason = moderationReason;
 
                     await this.DeleteMessage(message.ID);
@@ -425,6 +431,8 @@ namespace MixItUp.Base.MixerAPI
             PermissionsCommandBase command = this.CheckMessageForCommand(message);
             if (command != null)
             {
+                Util.Logger.LogDiagnostic(string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
+
                 await this.RunMessageCommand(message, command);
                 return true;
             }
@@ -433,6 +441,8 @@ namespace MixItUp.Base.MixerAPI
 
         private PermissionsCommandBase CheckMessageForCommand(ChatMessageViewModel message)
         {
+            Util.Logger.LogDiagnostic(string.Format("Checking Message For Command - {0}", message.ToString()));
+
             if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
             {
                 return null;
