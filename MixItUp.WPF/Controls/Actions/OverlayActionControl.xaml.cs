@@ -33,6 +33,7 @@ namespace MixItUp.WPF.Controls.Actions
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectTypeEnum>();
             this.FontSizeComboBox.ItemsSource = OverlayActionControl.sampleFontSize.Select(f => f.ToString());
             this.FontColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
+            this.VideoVolumeSlider.Value = 100;
             this.YoutubeStartTimeTextBox.Text = "0";
             this.YoutubeWidthTextBox.Text = this.VideoWidthTextBox.Text = OverlayVideoEffect.DefaultWidth.ToString();
             this.YoutubeHeightTextBox.Text = this.VideoHeightTextBox.Text = OverlayVideoEffect.DefaultHeight.ToString();
@@ -85,6 +86,7 @@ namespace MixItUp.WPF.Controls.Actions
                     this.VideoFilePathTextBox.Text = videoEffect.FilePath;
                     this.VideoWidthTextBox.Text = videoEffect.Width.ToString();
                     this.VideoHeightTextBox.Text = videoEffect.Height.ToString();
+                    this.VideoVolumeSlider.Value = videoEffect.Volume;
                 }
                 else if (this.action.Effect is OverlayWebPageEffect)
                 {
@@ -255,7 +257,7 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.VideoWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.VideoHeightTextBox.Text, out height) && height > 0)
                         {
-                            return new OverlayAction(new OverlayVideoEffect(this.VideoFilePathTextBox.Text, width, height, entrance, animation, exit, duration, horizontal, vertical));
+                            return new OverlayAction(new OverlayVideoEffect(this.VideoFilePathTextBox.Text, width, height, (int)this.VideoVolumeSlider.Value, entrance, animation, exit, duration, horizontal, vertical));
                         }
                     }
                 }

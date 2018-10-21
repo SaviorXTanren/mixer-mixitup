@@ -276,6 +276,8 @@ namespace MixItUp.Base.Actions
         public int Width { get; set; }
         [DataMember]
         public int Height { get; set; }
+        [DataMember]
+        public int Volume { get; set; }
 
         [DataMember]
         public string ID { get; set; }
@@ -294,15 +296,19 @@ namespace MixItUp.Base.Actions
             set { }
         }
 
-        public OverlayVideoEffect() { }
+        [DataMember]
+        public double VolumeDecimal { get { return ((double)this.Volume / 100.0); } }
 
-        public OverlayVideoEffect(string filepath, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
+        public OverlayVideoEffect() { this.Volume = 100; }
+
+        public OverlayVideoEffect(string filepath, int width, int height, int volume, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
             OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
             : base(OverlayEffectTypeEnum.Video, entrance, visible, exit, duration, horizontal, vertical)
         {
             this.FilePath = filepath;
             this.Width = width;
             this.Height = height;
+            this.Volume = volume;
             this.ID = Guid.NewGuid().ToString().Replace("-", string.Empty);
         }
     }
