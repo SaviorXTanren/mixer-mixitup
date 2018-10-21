@@ -12,7 +12,8 @@ namespace MixItUp.WPF.Controls.Settings
         private List<string> availableBackgroundColors = new List<string>() { "Light", "Dark" };
 
         private Dictionary<string, string> availableFullThemes = new Dictionary<string, string>() { { "None", string.Empty }, { "1 Year Anniversary", "1YearAnniversary" },
-            { "Azhtral's Cosmic Fire" , "AzhtralsCosmicFire" }, { "Insert Coin Theater", "InsertCoinTheater" }, { "Stark Contrast", "StarkContrast" } };
+            { "Azhtral's Cosmic Fire" , "AzhtralsCosmicFire" }, { "Dusty's Purple Potion", "DustysPurplePotion" }, { "Insert Coin Theater", "InsertCoinTheater" },
+            { "Stark Contrast", "StarkContrast" } };
 
         public ThemeSettingsControl()
         {
