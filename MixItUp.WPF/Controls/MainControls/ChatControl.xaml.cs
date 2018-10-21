@@ -460,7 +460,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.MessageLock(async () =>
+                await this.MessageLock(() =>
                 {
                     ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
                     if (message != null)
@@ -471,6 +471,7 @@ namespace MixItUp.WPF.Controls.MainControls
                             this.MessageControls.Remove(message);
                         }
                     }
+                    return Task.FromResult(0);
                 });
             });
         }
@@ -481,16 +482,23 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await this.MessageLock(() =>
                 {
+                    List<ChatMessageControl> messagesToDelete = new List<ChatMessageControl>();
+
                     IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(purgeEvent.Item1.ID));
                     if (userMessages != null)
                     {
                         foreach (ChatMessageControl message in userMessages)
                         {
                             message.DeleteMessage(purgeEvent.Item2);
-                            if (ChannelSession.Settings.HideDeletedMessages)
-                            {
-                                this.MessageControls.Remove(message);
-                            }
+                            messagesToDelete.Add(message);
+                        }
+                    }
+
+                    if (ChannelSession.Settings.HideDeletedMessages)
+                    {
+                        foreach (ChatMessageControl messageToDelete in messagesToDelete)
+                        {
+                            this.MessageControls.Remove(messageToDelete);
                         }
                     }
                     return Task.FromResult(0);
