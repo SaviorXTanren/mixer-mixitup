@@ -180,6 +180,11 @@ namespace MixItUp.Base.Util
 
         public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user)
         {
+            if (user == null)
+            {
+                return false;
+            }
+
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.GetsSubscriberBenefits)
@@ -192,16 +197,23 @@ namespace MixItUp.Base.Util
                     return false;
                 }
 
-                TimeSpan accountLength = user.MixerAccountDate.HasValue ? (DateTimeOffset.Now - user.MixerAccountDate.GetValueOrDefault()) : new TimeSpan();
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour && accountLength.TotalHours < 1)
+                if (user.MixerAccountDate.HasValue)
                 {
-                    return false;
+                    TimeSpan accountLength = DateTimeOffset.Now - user.MixerAccountDate.GetValueOrDefault();
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour && accountLength.TotalHours < 1)
+                    {
+                        return false;
+                    }
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountDay && accountLength.TotalDays < 1)
+                    {
+                        return false;
+                    }
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountWeek && accountLength.TotalDays < 7)
+                    {
+                        return false;
+                    }
                 }
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountDay && accountLength.TotalDays < 1)
-                {
-                    return false;
-                }
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountWeek && accountLength.TotalDays < 7)
+                else
                 {
                     return false;
                 }
