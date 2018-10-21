@@ -18,14 +18,18 @@ namespace MixItUp.Base.Util
         AccountDay = 2,
         [Name("Account Is 1 Week Old")]
         AccountWeek = 3,
+        [Name("Account Is 1 Month Old")]
+        AccountMonth = 4,
         [Name("Watched For 10 Minutes")]
         ViewingTenMinutes = 10,
         [Name("Watched For 30 Minutes")]
         ViewingThirtyMinutes = 11,
         [Name("Watched For 1 Hour")]
         ViewingOneHour = 12,
-        [Name("Watched For 2 Hour")]
+        [Name("Watched For 2 Hours")]
         ViewingTwoHours = 13,
+        [Name("Watched For 10 Hours")]
+        ViewingTenHours = 14,
         [Name("Subscriber Only")]
         Subscriber = 20,
         [Name("Moderator Only")]
@@ -212,6 +216,10 @@ namespace MixItUp.Base.Util
                     {
                         return false;
                     }
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountMonth && accountLength.TotalDays < 30)
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -232,6 +240,10 @@ namespace MixItUp.Base.Util
                     return false;
                 }
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTwoHours && viewingLength.TotalHours < 2)
+                {
+                    return false;
+                }
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenHours && viewingLength.TotalHours < 10)
                 {
                     return false;
                 }
