@@ -163,34 +163,33 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task AddMessage(ChatMessageViewModel message)
         {
-            await messageUpdateLock.WaitAsync();
-
-            ChatMessageControl messageControl = new ChatMessageControl(message);
-            if (ChannelSession.Settings.LatestChatAtTop)
+            await this.MessageLock(async () =>
             {
-                this.MessageControls.Insert(0, messageControl);
-            }
-            else
-            {
-                this.MessageControls.Add(messageControl);
-            }
-            this.totalMessages++;
-
-            while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
-            {
+                ChatMessageControl messageControl = new ChatMessageControl(message);
                 if (ChannelSession.Settings.LatestChatAtTop)
                 {
-                    this.MessageControls.RemoveAt(this.MessageControls.Count - 1);
+                    this.MessageControls.Insert(0, messageControl);
                 }
                 else
                 {
-                    this.MessageControls.RemoveAt(0);
+                    this.MessageControls.Add(messageControl);
                 }
-            }
+                this.totalMessages++;
 
-            Logger.LogChatEvent(message.ToString());
+                while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
+                {
+                    if (ChannelSession.Settings.LatestChatAtTop)
+                    {
+                        this.MessageControls.RemoveAt(this.MessageControls.Count - 1);
+                    }
+                    else
+                    {
+                        this.MessageControls.RemoveAt(0);
+                    }
+                }
 
-            messageUpdateLock.Release();
+                Logger.LogChatEvent(message.ToString());
+            });
         }
 
         private async Task ShowUserDialog(UserViewModel user)
@@ -461,19 +460,19 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.messageUpdateLock.WaitAsync();
-
-                ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
-                if (message != null)
+                await this.MessageLock(() =>
                 {
-                    message.DeleteMessage(deleteEvent.moderator?.user_name);
-                    if (ChannelSession.Settings.HideDeletedMessages)
+                    ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
+                    if (message != null)
                     {
-                        this.MessageControls.Remove(message);
+                        message.DeleteMessage(deleteEvent.moderator?.user_name);
+                        if (ChannelSession.Settings.HideDeletedMessages)
+                        {
+                            this.MessageControls.Remove(message);
+                        }
                     }
-                }
-
-                this.messageUpdateLock.Release();
+                    return Task.FromResult(0);
+                });
             });
         }
 
@@ -481,22 +480,29 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.messageUpdateLock.WaitAsync();
-
-                IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(purgeEvent.Item1.ID));
-                if (userMessages != null)
+                await this.MessageLock(() =>
                 {
-                    foreach (ChatMessageControl message in userMessages)
+                    List<ChatMessageControl> messagesToDelete = new List<ChatMessageControl>();
+
+                    IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(purgeEvent.Item1.ID));
+                    if (userMessages != null)
                     {
-                        message.DeleteMessage(purgeEvent.Item2);
-                        if (ChannelSession.Settings.HideDeletedMessages)
+                        foreach (ChatMessageControl message in userMessages)
                         {
-                            this.MessageControls.Remove(message);
+                            message.DeleteMessage(purgeEvent.Item2);
+                            messagesToDelete.Add(message);
                         }
                     }
-                }
 
-                this.messageUpdateLock.Release();
+                    if (ChannelSession.Settings.HideDeletedMessages)
+                    {
+                        foreach (ChatMessageControl messageToDelete in messagesToDelete)
+                        {
+                            this.MessageControls.Remove(messageToDelete);
+                        }
+                    }
+                    return Task.FromResult(0);
+                });
             });
         }
 
@@ -504,11 +510,11 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.messageUpdateLock.WaitAsync();
-
-                this.MessageControls.Clear();
-
-                this.messageUpdateLock.Release();
+                await this.MessageLock(() =>
+                {
+                    this.MessageControls.Clear();
+                    return Task.FromResult(0);
+                });
             });
         }
 
@@ -608,6 +614,21 @@ namespace MixItUp.WPF.Controls.MainControls
         }
 
         #endregion Chat Event Handlers
+
+        private async Task MessageLock(Func<Task> function)
+        {
+            try
+            {
+                await this.messageUpdateLock.WaitAsync();
+
+                await function();
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            finally
+            {
+                this.messageUpdateLock.Release();
+            }
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
