@@ -22,6 +22,12 @@ namespace MixItUp.Base.Actions
         WebPage
     }
 
+    public enum OverlayEffectPositionType
+    {
+        Percentage,
+        Pixel,
+    }
+
     public enum OverlayEffectEntranceAnimationTypeEnum
     {
         None,
@@ -215,8 +221,8 @@ namespace MixItUp.Base.Actions
         public OverlayTextEffect() { }
 
         public OverlayTextEffect(string text, string color, int size, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.Text, entrance, visible, exit, duration, horizontal, vertical)
+            OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.Text, entrance, visible, exit, duration, positionType, horizontal, vertical)
         {
             this.Text = text;
             this.Color = color;
@@ -254,8 +260,8 @@ namespace MixItUp.Base.Actions
         public OverlayImageEffect() { }
 
         public OverlayImageEffect(string filepath, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.Image, entrance, visible, exit, duration, horizontal, vertical)
+            OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.Image, entrance, visible, exit, duration, positionType, horizontal, vertical)
         {
             this.FilePath = filepath;
             this.Width = width;
@@ -302,8 +308,8 @@ namespace MixItUp.Base.Actions
         public OverlayVideoEffect() { this.Volume = 100; }
 
         public OverlayVideoEffect(string filepath, int width, int height, int volume, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.Video, entrance, visible, exit, duration, horizontal, vertical)
+            OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.Video, entrance, visible, exit, duration, positionType, horizontal, vertical)
         {
             this.FilePath = filepath;
             this.Width = width;
@@ -328,8 +334,8 @@ namespace MixItUp.Base.Actions
         public OverlayYoutubeEffect() { }
 
         public OverlayYoutubeEffect(string id, int startTime, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.YouTube, entrance, visible, exit, duration, horizontal, vertical)
+            OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.YouTube, entrance, visible, exit, duration, positionType, horizontal, vertical)
         {
             this.ID = id;
             this.StartTime = startTime;
@@ -347,8 +353,8 @@ namespace MixItUp.Base.Actions
         public OverlayHTMLEffect() { }
 
         public OverlayHTMLEffect(string htmlText, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible, OverlayEffectExitAnimationTypeEnum exit,
-            double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.HTML, entrance, visible, exit, duration, horizontal, vertical)
+            double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.HTML, entrance, visible, exit, duration, positionType, horizontal, vertical)
         {
             this.HTMLText = htmlText;
         }
@@ -367,8 +373,8 @@ namespace MixItUp.Base.Actions
         public OverlayWebPageEffect() { }
 
         public OverlayWebPageEffect(string url, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.WebPage, entrance, visible, exit, duration, horizontal, vertical)
+            OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
+            : base(OverlayEffectTypeEnum.WebPage, entrance, visible, exit, duration, positionType, horizontal, vertical)
         {
             this.URL = url;
             this.Width = width;
@@ -399,21 +405,30 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public double Duration;
+
+        [DataMember]
+        public OverlayEffectPositionType PositionType;
         [DataMember]
         public int Horizontal;
         [DataMember]
         public int Vertical;
 
+        [DataMember]
+        public bool IsPercentagePosition { get { return this.PositionType == OverlayEffectPositionType.Percentage; } }
+        [DataMember]
+        public bool IsPixelPosition { get { return this.PositionType == OverlayEffectPositionType.Pixel; } }
+
         public OverlayEffectBase() { }
 
         public OverlayEffectBase(OverlayEffectTypeEnum effectType, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
+            OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
         {
             this.EffectType = effectType;
             this.EntranceAnimation = entrance;
             this.VisibleAnimation = visible;
             this.ExitAnimation = exit;
             this.Duration = duration;
+            this.PositionType = positionType;
             this.Horizontal = horizontal;
             this.Vertical = vertical;
         }

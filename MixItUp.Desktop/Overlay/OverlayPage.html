@@ -277,7 +277,14 @@
 
             function addWaitRemoveElement(data, addedElement) {
                 if (addedElement != null) {
-                    addedElement.style.cssText += 'position: absolute; left: ' + data.Horizontal.toString() + '%; top: ' + data.Vertical.toString() + '%; transform: translate(-50%, -50%);'
+
+                    addedElement.style.cssText += 'position: absolute;'
+                    if (data.IsPercentagePosition) {
+                        addedElement.style.cssText += 'position: absolute; left: ' + data.Horizontal.toString() + '%; top: ' + data.Vertical.toString() + '%; transform: translate(-50%, -50%);'
+                    }
+                    else if (data.IsPixelPosition) {
+                        addedElement.style.cssText += 'position: absolute; left: ' + data.Horizontal.toString() + 'px; top: ' + data.Vertical.toString() + 'px;'
+                    }
 
                     var divContainer = document.createElement('div');
                     divContainer.style.cssText += 'position: absolute; width: 1920px; height: 1080px; max-width: 1920px; max-height: 1080px; min-width: 1920px; min-height: 1080px;';

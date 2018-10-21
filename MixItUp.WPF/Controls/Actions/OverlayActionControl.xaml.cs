@@ -39,6 +39,10 @@ namespace MixItUp.WPF.Controls.Actions
             this.YoutubeHeightTextBox.Text = this.VideoHeightTextBox.Text = OverlayVideoEffect.DefaultHeight.ToString();
 
             this.CenterPositionButton_Click(this, new RoutedEventArgs());
+            this.PixelsPositionButton.IsEnabled = true;
+            this.PercentagePositionButton.IsEnabled = true;
+            this.PixelPositionHorizontalTextBox.Text = "0";
+            this.PixelPositionVerticalTextBox.Text = "0";
 
             this.EntranceAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
             this.EntranceAnimationComboBox.SelectedIndex = 0;
@@ -103,21 +107,37 @@ namespace MixItUp.WPF.Controls.Actions
                     this.HTMLTextBox.Text = htmlEffect.HTMLText;
                 }
 
-                this.HorizontalSlider.Value = this.action.Effect.Horizontal;
-                this.VerticalSlider.Value = this.action.Effect.Vertical;
 
-                if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 25) { this.TopLeftPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 25) { this.TopPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 25) { this.TopRightPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 50) { this.LeftPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 50) { this.CenterPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 50) { this.RightPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 75) { this.BottomLeftPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 75) { this.BottomPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 75) { this.BottomRightPositionButton_Click(this, new RoutedEventArgs()); }
+
+                if (this.action.Effect.PositionType == OverlayEffectPositionType.Percentage)
+                {
+                    if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 25) { this.TopLeftPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 25) { this.TopPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 25) { this.TopRightPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 50) { this.LeftPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 50) { this.CenterPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 50) { this.RightPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 75) { this.BottomLeftPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 75) { this.BottomPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 75) { this.BottomRightPositionButton_Click(this, new RoutedEventArgs()); }
+                    else
+                    {
+                        this.SimplePositionButton.IsEnabled = true;
+                        this.PercentagePositionButton.IsEnabled = false;
+                        this.PixelsPositionButton.IsEnabled = true;
+                    }
+
+                    this.PercentagePositionHorizontalSlider.Value = this.action.Effect.Horizontal;
+                    this.PercentagePositionVerticalSlider.Value = this.action.Effect.Vertical;
+                }
                 else
                 {
-                    this.PositionSimpleAdvancedToggleButton.IsChecked = true;
+                    this.SimplePositionButton.IsEnabled = true;
+                    this.PercentagePositionButton.IsEnabled = true;
+                    this.PixelsPositionButton.IsEnabled = false;
+
+                    this.PixelPositionHorizontalTextBox.Text = this.action.Effect.Horizontal.ToString();
+                    this.PixelPositionVerticalTextBox.Text = this.action.Effect.Vertical.ToString();
                 }
 
                 this.DurationTextBox.Text = this.action.Effect.Duration.ToString();
@@ -140,10 +160,22 @@ namespace MixItUp.WPF.Controls.Actions
 
                 int horizontal = 0;
                 int vertical = 0;
-                if (this.PositionSimpleAdvancedToggleButton.IsChecked.GetValueOrDefault())
+                OverlayEffectPositionType positionType = OverlayEffectPositionType.Percentage;
+                if (this.PixelsPositionGrid.Visibility == Visibility.Visible)
                 {
-                    horizontal = (int)this.HorizontalSlider.Value;
-                    vertical = (int)this.VerticalSlider.Value;
+                    if (string.IsNullOrEmpty(this.PixelPositionHorizontalTextBox.Text) || !int.TryParse(this.PixelPositionHorizontalTextBox.Text, out horizontal) || horizontal < 0 ||
+                        string.IsNullOrEmpty(this.PixelPositionVerticalTextBox.Text) || !int.TryParse(this.PixelPositionVerticalTextBox.Text, out vertical) || vertical < 0)
+                    {
+                        return null;
+                    }
+                    positionType = OverlayEffectPositionType.Pixel;
+                    horizontal = (int)this.PercentagePositionHorizontalSlider.Value;
+                    vertical = (int)this.PercentagePositionVerticalSlider.Value;
+                }
+                if (this.PercentagePositionGrid.Visibility == Visibility.Visible)
+                {
+                    horizontal = (int)this.PercentagePositionHorizontalSlider.Value;
+                    vertical = (int)this.PercentagePositionVerticalSlider.Value;
                 }
                 else
                 {
@@ -204,7 +236,7 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.ImageWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.ImageHeightTextBox.Text, out height) && height > 0)
                         {
-                            return new OverlayAction(new OverlayImageEffect(this.ImageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, horizontal, vertical));
+                            return new OverlayAction(new OverlayImageEffect(this.ImageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }
@@ -220,7 +252,7 @@ namespace MixItUp.WPF.Controls.Actions
 
                         if (int.TryParse(this.FontSizeComboBox.Text, out int size) && size > 0)
                         {
-                            return new OverlayAction(new OverlayTextEffect(this.TextTextBox.Text, color, size, entrance, animation, exit, duration, horizontal, vertical));
+                            return new OverlayAction(new OverlayTextEffect(this.TextTextBox.Text, color, size, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }
@@ -243,7 +275,7 @@ namespace MixItUp.WPF.Controls.Actions
                             if (int.TryParse(this.YoutubeWidthTextBox.Text, out width) && width > 0 &&
                                 int.TryParse(this.YoutubeHeightTextBox.Text, out height) && height > 0)
                             {
-                                return new OverlayAction(new OverlayYoutubeEffect(videoID, startTime, width, height, entrance, animation, exit, duration, horizontal, vertical));
+                                return new OverlayAction(new OverlayYoutubeEffect(videoID, startTime, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
                             }
                         }
                     }
@@ -257,7 +289,7 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.VideoWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.VideoHeightTextBox.Text, out height) && height > 0)
                         {
-                            return new OverlayAction(new OverlayVideoEffect(this.VideoFilePathTextBox.Text, width, height, (int)this.VideoVolumeSlider.Value, entrance, animation, exit, duration, horizontal, vertical));
+                            return new OverlayAction(new OverlayVideoEffect(this.VideoFilePathTextBox.Text, width, height, (int)this.VideoVolumeSlider.Value, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }
@@ -270,7 +302,7 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.WebPageWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.WebPageHeightTextBox.Text, out height) && height > 0)
                         {
-                            return new OverlayAction(new OverlayWebPageEffect(this.WebPageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, horizontal, vertical));
+                            return new OverlayAction(new OverlayWebPageEffect(this.WebPageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }
@@ -278,7 +310,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (!string.IsNullOrEmpty(this.HTMLTextBox.Text))
                     {
-                        return new OverlayAction(new OverlayHTMLEffect(this.HTMLTextBox.Text, entrance, animation, exit, duration, horizontal, vertical));
+                        return new OverlayAction(new OverlayHTMLEffect(this.HTMLTextBox.Text, entrance, animation, exit, duration, positionType, horizontal, vertical));
                     }
                 }
             }
@@ -352,10 +384,37 @@ namespace MixItUp.WPF.Controls.Actions
             }
         }
 
-        private void PositionSimpleAdvancedToggleButton_Checked(object sender, RoutedEventArgs e)
+        private void SimplePositionButton_Click(object sender, RoutedEventArgs e)
         {
-            this.SimplePositionGrid.Visibility = (this.PositionSimpleAdvancedToggleButton.IsChecked.GetValueOrDefault()) ? Visibility.Hidden : Visibility.Visible;
-            this.AdvancedPositionGrid.Visibility = (this.PositionSimpleAdvancedToggleButton.IsChecked.GetValueOrDefault()) ? Visibility.Visible : Visibility.Hidden;
+            this.SimplePositionButton.IsEnabled = false;
+            this.PercentagePositionButton.IsEnabled = true;
+            this.PixelsPositionButton.IsEnabled = true;
+
+            this.SimplePositionGrid.Visibility = Visibility.Visible;
+            this.PercentagePositionGrid.Visibility = Visibility.Collapsed;
+            this.PixelsPositionGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void PercentagePositionButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.SimplePositionButton.IsEnabled = true;
+            this.PercentagePositionButton.IsEnabled = false;
+            this.PixelsPositionButton.IsEnabled = true;
+
+            this.SimplePositionGrid.Visibility = Visibility.Collapsed;
+            this.PercentagePositionGrid.Visibility = Visibility.Visible;
+            this.PixelsPositionGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void PixelsPositionButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.SimplePositionButton.IsEnabled = true;
+            this.PercentagePositionButton.IsEnabled = true;
+            this.PixelsPositionButton.IsEnabled = false;
+
+            this.SimplePositionGrid.Visibility = Visibility.Collapsed;
+            this.PercentagePositionGrid.Visibility = Visibility.Collapsed;
+            this.PixelsPositionGrid.Visibility = Visibility.Visible;
         }
 
         private void TopLeftPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.TopLeftPositionButton); }

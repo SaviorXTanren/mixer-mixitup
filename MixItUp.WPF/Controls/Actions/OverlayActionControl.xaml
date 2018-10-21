@@ -149,30 +149,29 @@
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10" Visibility="Visible">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0" HorizontalAlignment="Center">
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center">Screen Position:</TextBlock>
+
+                    <Grid Grid.Row="2" HorizontalAlignment="Center">
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0">Screen Position:</TextBlock>
-
-                        <TextBlock Grid.Column="2">Simple</TextBlock>
-                        <ToggleButton Grid.Column="4" x:Name="PositionSimpleAdvancedToggleButton" Checked="PositionSimpleAdvancedToggleButton_Checked" Unchecked="PositionSimpleAdvancedToggleButton_Checked" />
-                        <TextBlock Grid.Column="6">Advanced</TextBlock>
+                        <Button Grid.Column="0" x:Name="SimplePositionButton" Click="SimplePositionButton_Click" IsEnabled="False">Simple</Button>
+                        <Button Grid.Column="1" x:Name="PercentagePositionButton" Click="PercentagePositionButton_Click" IsEnabled="False">Percentage</Button>
+                        <Button Grid.Column="2" x:Name="PixelsPositionButton" Click="PixelsPositionButton_Click" IsEnabled="False">Pixels</Button>
 
                     </Grid>
 
-                    <Grid x:Name="SimplePositionGrid" Grid.Row="2" HorizontalAlignment="Center" Visibility="Visible">
+                    <Grid x:Name="SimplePositionGrid" Grid.Row="4" HorizontalAlignment="Center" Visibility="Visible">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
@@ -195,16 +194,28 @@
                         <Button x:Name="BottomRightPositionButton" Grid.Column="2" Grid.Row="2" Content="{MaterialDesign:PackIcon ArrowBottomRight}" Click="BottomRightPositionButton_Click" />
                     </Grid>
 
-                    <Grid x:Name="AdvancedPositionGrid" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden">
+                    <Grid x:Name="PercentagePositionGrid" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Visibility="Hidden">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Controls:SliderWithHeaderControl x:Name="HorizontalSlider" Grid.Column="0" Minimum="0" Maximum="100" Text="Position % From Left:" Width="150" />
+                        <Controls:SliderWithHeaderControl x:Name="PercentagePositionHorizontalSlider" Grid.Column="0" Minimum="0" Maximum="100" Text="Position % From Left:" Width="150" />
 
-                        <Controls:SliderWithHeaderControl x:Name="VerticalSlider" Grid.Column="2" Minimum="0" Maximum="100" Text="Position % From Top:" Width="150" />
+                        <Controls:SliderWithHeaderControl x:Name="PercentagePositionVerticalSlider" Grid.Column="2" Minimum="0" Maximum="100" Text="Position % From Top:" Width="150" />
+                    </Grid>
+
+                    <Grid x:Name="PixelsPositionGrid" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Visibility="Hidden">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="PixelPositionHorizontalTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Pixel Position From Left" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+
+                        <TextBox x:Name="PixelPositionVerticalTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Pixel Position From Top" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
                     </Grid>
                 </Grid>
             </Border>
