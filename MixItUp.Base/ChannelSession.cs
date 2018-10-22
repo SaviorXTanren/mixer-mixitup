@@ -240,7 +240,7 @@ namespace MixItUp.Base
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                    result = await ChannelSession.InitializeInternal(settings.Channel.user.username);
+                    result = await ChannelSession.InitializeInternal();
                 }
             }
             catch (RestServiceRequestException ex)
@@ -385,9 +385,12 @@ namespace MixItUp.Base
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
-                    if (string.IsNullOrEmpty(channelName) && ChannelSession.Settings.Channel != null && ChannelSession.User.id != ChannelSession.Settings.Channel.userId)
+                    if (ChannelSession.Settings.Channel != null && ChannelSession.User.id != ChannelSession.Settings.Channel.userId)
                     {
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
+                        ChannelSession.Settings.OAuthToken.accessToken = string.Empty;
+                        ChannelSession.Settings.OAuthToken.refreshToken = string.Empty;
+                        ChannelSession.Settings.OAuthToken.expiresIn = 0;
                         return false;
                     }
 
