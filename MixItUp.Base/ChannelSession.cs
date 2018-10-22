@@ -218,7 +218,7 @@ namespace MixItUp.Base
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                    return await ChannelSession.InitializeInternal(channelName);
+                    return await ChannelSession.InitializeInternal((channelName == null), channelName);
                 }
             }
             catch (Exception ex)
@@ -240,7 +240,7 @@ namespace MixItUp.Base
                 if (connection != null)
                 {
                     ChannelSession.Connection = new MixerConnectionWrapper(connection);
-                    result = await ChannelSession.InitializeInternal();
+                    result = await ChannelSession.InitializeInternal(ChannelSession.Settings.IsStreamer, ChannelSession.Settings.Channel.user.username);
                 }
             }
             catch (RestServiceRequestException ex)
@@ -366,7 +366,7 @@ namespace MixItUp.Base
             GlobalEvents.ServiceReconnect(serviceName);
         }
 
-        private static async Task<bool> InitializeInternal(string channelName = null)
+        private static async Task<bool> InitializeInternal(bool isStreamer, string channelName = null)
         {
             await ChannelSession.Services.InitializeTelemetryService();
 
@@ -381,11 +381,11 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings == null)
                     {
-                        ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, (channelName == null));
+                        ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, isStreamer);
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
-                    if (ChannelSession.Settings.Channel != null && ChannelSession.User.id != ChannelSession.Settings.Channel.userId)
+                    if (isStreamer && ChannelSession.Settings.Channel != null && ChannelSession.User.id != ChannelSession.Settings.Channel.userId)
                     {
                         GlobalEvents.ShowMessageBox("The account you are logged in as on Mixer does not match the account for this settings. Please log in as the correct account on Mixer.");
                         ChannelSession.Settings.OAuthToken.accessToken = string.Empty;
