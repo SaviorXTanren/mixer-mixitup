@@ -28,6 +28,8 @@ namespace MixItUp.Desktop.Services
             this.SongRequestService = new SongRequestService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
+
+            this.ExtraLife = new ExtraLifeService();
         }
 
         public override async Task Close()
@@ -369,6 +371,30 @@ namespace MixItUp.Desktop.Services
                 this.Tiltify = null;
                 ChannelSession.Settings.TiltifyOAuthToken = null;
                 ChannelSession.Settings.TiltifyCampaign = 0;
+            }
+        }
+
+        public override async Task<bool> InitializeExtraLife()
+        {
+            if (await this.ExtraLife.Connect(ChannelSession.Settings.ExtraLifeTeamID, ChannelSession.Settings.ExtraLifeParticipantID, ChannelSession.Settings.ExtraLifeIncludeTeamDonations))
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectExtraLife();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectExtraLife()
+        {
+            if (this.ExtraLife != null)
+            {
+                await this.ExtraLife.Disconnect();
+                ChannelSession.Settings.ExtraLifeTeamID = 0;
+                ChannelSession.Settings.ExtraLifeParticipantID = 0;
+                ChannelSession.Settings.ExtraLifeIncludeTeamDonations = false;
             }
         }
 

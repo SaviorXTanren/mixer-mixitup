@@ -560,6 +560,9 @@
     <Compile Include="Controls\Services\DiscordServiceControl.xaml.cs">
       <DependentUpon>DiscordServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\ExtraLifeServiceControl.xaml.cs">
+      <DependentUpon>ExtraLifeServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\GameWispServiceControl.xaml.cs">
       <DependentUpon>GameWispServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1149,6 +1152,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\DiscordServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\ExtraLifeServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

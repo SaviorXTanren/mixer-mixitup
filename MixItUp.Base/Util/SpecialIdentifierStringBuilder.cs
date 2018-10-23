@@ -54,6 +54,8 @@ namespace MixItUp.Base.Util
         public const string DonationMessageSpecialIdentifier = "donationmessage";
         public const string DonationImageSpecialIdentifier = "donationimage";
 
+        public const string ExtraLifeSpecialIdentifierHeader = "extralife";
+
         public const string UnicodeSpecialIdentifierHeader = "unicode";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
@@ -393,6 +395,21 @@ namespace MixItUp.Base.Util
                 {
                     this.ReplaceSpecialIdentifier("spotifycurrentlyplaying", currentlyPlaying.ToString());
                 }
+            }
+
+            if (ChannelSession.Services.ExtraLife.IsConnected() && this.ContainsSpecialIdentifier(ExtraLifeSpecialIdentifierHeader))
+            {
+                ExtraLifeTeam team = await ChannelSession.Services.ExtraLife.GetTeam();
+
+                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationgoal", team.fundraisingGoal.ToString());
+                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationcount", team.numDonations.ToString());
+                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "teamdonationamount", team.sumDonations.ToString());
+
+                ExtraLifeTeamParticipant participant = await ChannelSession.Services.ExtraLife.GetParticipant();
+
+                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationgoal", participant.fundraisingGoal.ToString());
+                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationcount", participant.numDonations.ToString());
+                this.ReplaceSpecialIdentifier(ExtraLifeSpecialIdentifierHeader + "userdonationamount", participant.sumDonations.ToString());
             }
 
             if (this.ContainsSpecialIdentifier(FeaturedChannelsSpecialIdentifer))

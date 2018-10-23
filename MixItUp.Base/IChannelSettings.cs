@@ -117,6 +117,10 @@ namespace MixItUp.Base
 
         int TiltifyCampaign { get; set; }
 
+        int ExtraLifeTeamID { get; set; }
+        int ExtraLifeParticipantID { get; set; }
+        bool ExtraLifeIncludeTeamDonations { get; set; }
+
         string DiscordServer { get; set; }
 
         bool UnlockAllCommands { get; set; }

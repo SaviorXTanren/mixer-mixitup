@@ -211,6 +211,13 @@ namespace MixItUp.Desktop
         public int TiltifyCampaign { get; set; }
 
         [JsonProperty]
+        public int ExtraLifeTeamID { get; set; }
+        [JsonProperty]
+        public int ExtraLifeParticipantID { get; set; }
+        [JsonProperty]
+        public bool ExtraLifeIncludeTeamDonations { get; set; }
+
+        [JsonProperty]
         public string DiscordServer { get; set; }
 
         [JsonProperty]

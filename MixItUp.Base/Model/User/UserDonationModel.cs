@@ -12,6 +12,8 @@ namespace MixItUp.Base.Model.User
         GawkBox,
         Streamlabs,
         Tiltify,
+        [Name("Extra Life")]
+        ExtraLife,
     }
 
     [DataContract]
