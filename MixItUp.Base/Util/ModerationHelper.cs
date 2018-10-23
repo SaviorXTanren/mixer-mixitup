@@ -148,7 +148,7 @@ namespace MixItUp.Base.Util
                     count += leftOverText.Count(c => char.IsSymbol(c) || char.IsPunctuation(c));
                     messageSegments.AddRange(leftOverText.ToCharArray().Select(c => c.ToString()));
                     
-                    if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
+                    if (ChannelSession.Settings.ModerationPunctuationBlockIsPercentage)
                     {
                         count = ConvertCountToPercentage(messageSegments.Count, count);
                     }
