@@ -19,6 +19,12 @@ namespace MixItUp.WPF.Controls.Chat
             InitializeComponent();
         }
 
+        public ChatUserControl(UserViewModel user) : this()
+        {
+            InitializeComponent();
+            this.DataContext = user;
+        }
+
         private void ChatUserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             this.UserNameTextBlock.Foreground = Application.Current.FindResource(this.User.PrimaryRoleColorName) as SolidColorBrush;
@@ -35,17 +41,6 @@ namespace MixItUp.WPF.Controls.Chat
                 this.SubscriberImage.Visibility = Visibility.Visible;
                 this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;
             }
-        }
-
-        public ChatUserControl(UserViewModel user) : this()
-        {
-            InitializeComponent();
-            this.DataContext = user;
-        }
-
-        private void ChatUserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-
         }
     }
 }

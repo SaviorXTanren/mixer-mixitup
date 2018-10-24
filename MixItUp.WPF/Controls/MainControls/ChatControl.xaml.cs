@@ -332,7 +332,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                 if (users.Count > 0)
                 {
-                    indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(userTag);
+                    this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(userTag);
                     UsernameIntellisenseListBox.ItemsSource = users;
 
                     // Select the bottom user
@@ -442,13 +442,13 @@ namespace MixItUp.WPF.Controls.MainControls
             UserViewModel user = UsernameIntellisenseListBox.SelectedItem as UserViewModel;
             if (user != null)
             {
-                if (indexOfTag == 0)
+                if (this.indexOfTag == 0)
                 {
                     this.ChatMessageTextBox.Text = "@" + user.UserName + " ";
                 }
                 else
                 {
-                    this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, indexOfTag) + "@" + user.UserName + " ";
+                    this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, this.indexOfTag) + "@" + user.UserName + " ";
                 }
 
                 this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
