@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.MainControls"
              xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:ChatControls="clr-namespace:MixItUp.WPF.Controls.Chat"
              xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
                           
@@ -128,7 +129,7 @@
 
                         <ComboBox x:Name="SendChatAsComboBox" Grid.Column="1" MaterialDesign:HintAssist.Hint="Send As" Width="80" />
 
-                        <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" PreviewKeyDown="ChatMessageTextBox_PreviewKeyDown" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                        <TextBox x:Name="ChatMessageTextBox" Grid.Column="3" TextChanged="ChatMessageTextBox_TextChanged" PreviewKeyDown="ChatMessageTextBox_PreviewKeyDown" KeyDown="ChatMessageTextBox_KeyDown" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
                         <Button x:Name="SendChatMessageButton" Grid.Column="4" Width="70" Click="SendChatMessageButton_Click">Send</Button>
                     </Grid>
@@ -140,5 +141,19 @@
             </Grid>
 
         </GroupBox>
+
+        <Canvas>
+            <MaterialDesign:PopupBox ToggleContent="" x:Name="UsernameIntellisense" StaysOpen="False">
+                <Grid Margin="2,0,2,0" x:Name="UsernameIntellisenseContent">
+                    <ListBox x:Name="UsernameIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="UsernameIntellisenseListBox_PreviewMouseUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ChatControls:ChatUserControl/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </MaterialDesign:PopupBox>
+        </Canvas>
     </Grid>
 </local:MainControlBase>
