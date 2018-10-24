@@ -14,7 +14,7 @@ namespace MixItUp.Base.Model.DeveloperAPIs
         public string UserName { get; set; }
 
         [DataMember]
-        public int ViewingMinutes { get; set; }
+        public int? ViewingMinutes { get; set; }
 
         [DataMember]
         public List<UserCurrencyDeveloperAPIModel> CurrencyAmounts { get; set; }
@@ -30,9 +30,9 @@ namespace MixItUp.Base.Model.DeveloperAPIs
             this.ID = userData.ID;
             this.UserName = userData.UserName;
             this.ViewingMinutes = userData.ViewingMinutes;
-            foreach (UserCurrencyDataViewModel currencyData in userData.CurrencyAmounts.Values)
+            foreach (UserCurrencyViewModel currencyData in ChannelSession.Settings.Currencies.Values)
             {
-                this.CurrencyAmounts.Add(new UserCurrencyDeveloperAPIModel(currencyData));
+                this.CurrencyAmounts.Add(new UserCurrencyDeveloperAPIModel(currencyData, userData.GetCurrencyAmount(currencyData)));
             }
         }
     }

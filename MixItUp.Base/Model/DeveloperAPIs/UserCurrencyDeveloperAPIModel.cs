@@ -18,11 +18,11 @@ namespace MixItUp.Base.Model.DeveloperAPIs
 
         public UserCurrencyDeveloperAPIModel() { }
 
-        public UserCurrencyDeveloperAPIModel(UserCurrencyDataViewModel currencyData)
+        public UserCurrencyDeveloperAPIModel(UserCurrencyViewModel currencyData, int amount)
         {
-            this.ID = currencyData.Currency.ID;
-            this.Name = currencyData.Currency.Name;
-            this.Amount = currencyData.Amount;
+            this.ID = currencyData.ID;
+            this.Name = currencyData.Name;
+            this.Amount = amount;
         }
     }
 }
