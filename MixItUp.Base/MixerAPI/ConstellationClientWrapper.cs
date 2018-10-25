@@ -155,10 +155,10 @@ namespace MixItUp.Base.MixerAPI
             bool? followed = null;
             ChannelModel channel = null;
 
-            JToken userToken;
-            if (e.payload.TryGetValue("user", out userToken))
+            JToken payloadToken;
+            if (e.payload.TryGetValue("user", out payloadToken))
             {
-                user = new UserViewModel(userToken.ToObject<UserModel>());
+                user = new UserViewModel(payloadToken.ToObject<UserModel>());
 
                 JToken subscribeStartToken;
                 if (e.payload.TryGetValue("since", out subscribeStartToken))
@@ -171,10 +171,10 @@ namespace MixItUp.Base.MixerAPI
                     followed = (bool)followedToken;
                 }
             }
-            else if (e.payload.TryGetValue("hoster", out userToken))
+            else if (e.payload.TryGetValue("hoster", out payloadToken))
             {
-                channel = userToken.ToObject<ChannelModel>();
-                user = new UserViewModel(channel.id, channel.token);
+                channel = payloadToken.ToObject<ChannelModel>();
+                user = new UserViewModel(channel.userId, channel.token);
             }
 
             if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
