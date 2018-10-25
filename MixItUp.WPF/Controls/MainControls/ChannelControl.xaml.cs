@@ -5,6 +5,7 @@ using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Model.Favorites;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Favorites;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Favorites;
@@ -13,7 +14,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -50,11 +53,10 @@ namespace MixItUp.WPF.Controls.MainControls
     /// </summary>
     public partial class ChannelControl : MainControlBase
     {
-        private ObservableCollection<GameTypeModel> relatedGames = new ObservableCollection<GameTypeModel>();
-
         private ObservableCollection<FavoriteGroupViewModel> favoritedGroups = new ObservableCollection<FavoriteGroupViewModel>();
 
         private ChannelModel channelToRaid;
+        private bool shouldShowIntellisense = false;
 
         public ChannelControl()
         {
@@ -63,18 +65,20 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task InitializeInternal()
         {
-            this.GameNameComboBox.ItemsSource = this.relatedGames;
             this.AgeRatingComboBox.ItemsSource = EnumHelper.GetEnumNames<AgeRatingEnum>();
 
             this.StreamTitleTextBox.Text = ChannelSession.Channel.name;
+
+            this.shouldShowIntellisense = false;
             if (ChannelSession.Channel?.type?.name != null)
             {
-                this.GameNameComboBox.Text = ChannelSession.Channel.type.name;
+                this.GameNameTextBox.Text = ChannelSession.Channel.type.name;
             }
             else
             {
-                this.GameNameComboBox.Text = "Web Show";
+                this.GameNameTextBox.Text = "Web Show";
             }
+            this.shouldShowIntellisense = true;
 
             List<string> ageRatingList = EnumHelper.GetEnumNames<AgeRatingEnum>().Select(s => s.ToLower()).ToList();
             this.AgeRatingComboBox.SelectedIndex = ageRatingList.IndexOf(ChannelSession.Channel.audience);
@@ -96,20 +100,113 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.RefreshFavoriteGroups();
         }
 
-        private async void GameNameComboBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private async void GameNameTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(this.GameNameComboBox.Text) && this.GameNameComboBox.SelectedIndex < 0)
+            HideIntellisense();
+            if (shouldShowIntellisense)
             {
-                this.relatedGames.Clear();
-                await this.GetRelatedGamesByName(this.GameNameComboBox.Text);
+                if (!string.IsNullOrEmpty(this.GameNameTextBox.Text))
+                {
+                    var games = (await ChannelSession.Connection.GetGameTypes(this.GameNameTextBox.Text, 5))
+                        .OrderBy(g => g.name)
+                        .Take(5)
+                        .ToList();
+                    if (games.Count > 0)
+                    {
+                        GameNameIntellisenseListBox.ItemsSource = games;
+
+                        // Select the first game
+                        GameNameIntellisenseListBox.SelectedIndex = 0;
+
+                        Rect positionOfCarat = this.GameNameTextBox.GetRectFromCharacterIndex(this.GameNameTextBox.CaretIndex, true);
+                        if (!positionOfCarat.IsEmpty)
+                        {
+                            Point topLeftOffset = this.GameNameTextBox.TransformToAncestor(MainGrid).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+                            ShowIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                        }
+                    }
+                }
             }
         }
 
-        private void GameNameTextBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        private void ShowIntellisense(double x, double y)
         {
-            if (!string.IsNullOrWhiteSpace(this.GameNameComboBox.Text) || this.GameNameComboBox.SelectedIndex < 0)
+            this.GameNameIntellisenseContent.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            Canvas.SetLeft(this.GameNameIntellisense, x + 10);
+            Canvas.SetTop(this.GameNameIntellisense, y - 10);
+            this.GameNameIntellisense.UpdateLayout();
+
+            if (!this.GameNameIntellisense.IsPopupOpen)
             {
-                this.GameNameComboBox.SelectedItem = ChannelSession.Channel.type;
+                this.GameNameIntellisense.IsPopupOpen = true;
+            }
+        }
+
+        private void GameNameTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (this.GameNameIntellisense.IsPopupOpen)
+            {
+                switch (e.Key)
+                {
+                    case Key.Escape:
+                        HideIntellisense();
+                        e.Handled = true;
+                        break;
+                    case Key.Tab:
+                    case Key.Enter:
+                        SelectIntellisenseGame();
+                        e.Handled = true;
+                        break;
+                    case Key.Up:
+                        GameNameIntellisenseListBox.SelectedIndex = MathHelper.Clamp(GameNameIntellisenseListBox.SelectedIndex - 1, 0, GameNameIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                    case Key.Down:
+                        GameNameIntellisenseListBox.SelectedIndex = MathHelper.Clamp(GameNameIntellisenseListBox.SelectedIndex + 1, 0, GameNameIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                }
+            }
+        }
+
+        private void GameNameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            SelectIntellisenseGame();
+        }
+
+        private async Task<GameTypeModel> GetValidGameType(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                var games = (await ChannelSession.Connection.GetGameTypes(name, 1)).ToList();
+                if ((games.Count > 0) && games[0].name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return games[0];
+                }
+            }
+
+            return null;
+        }
+
+        private void SelectIntellisenseGame()
+        {
+            this.shouldShowIntellisense = false;
+            GameTypeModel gameType = GameNameIntellisenseListBox.SelectedItem as GameTypeModel;
+            if (gameType != null)
+            {
+                this.GameNameTextBox.Text = gameType.name;
+                this.GameNameTextBox.CaretIndex = this.GameNameTextBox.Text.Length;
+            }
+            this.shouldShowIntellisense = true;
+
+            HideIntellisense();
+        }
+
+        private void HideIntellisense()
+        {
+            if (this.GameNameIntellisense.IsPopupOpen)
+            {
+                this.GameNameIntellisense.IsPopupOpen = false;
             }
         }
 
@@ -121,7 +218,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(this.GameNameComboBox.Text))
+            GameTypeModel gameType = await GetValidGameType(this.GameNameTextBox.Text);
+            if (gameType == null)
             {
                 await MessageBoxHelper.ShowMessageDialog("A valid & existing game name must be selected");
                 return;
@@ -136,10 +234,7 @@ namespace MixItUp.WPF.Controls.MainControls
             await this.Window.RunAsyncOperation(async () =>
             {
                 ChannelSession.Channel.name = this.StreamTitleTextBox.Text;
-                if (this.GameNameComboBox.SelectedIndex >= 0)
-                {
-                    ChannelSession.Channel.type = (GameTypeModel)this.GameNameComboBox.SelectedItem;
-                }
+                ChannelSession.Channel.type = gameType;
                 ChannelSession.Channel.typeId = ChannelSession.Channel.type.id;
                 ChannelSession.Channel.audience = ((string)this.AgeRatingComboBox.SelectedItem).ToLower();
 
@@ -224,27 +319,6 @@ namespace MixItUp.WPF.Controls.MainControls
                     await MessageBoxHelper.ShowMessageDialog("Unable to find a channel that met your search critera, please try selecting a different option");
                 }
             });
-        }
-
-        private async Task GetRelatedGamesByName(string gameName)
-        {
-            if (!string.IsNullOrEmpty(gameName))
-            {
-                var games = await ChannelSession.Connection.GetGameTypes(gameName, 10);
-
-                if (games.Count() == 0)
-                {
-                    // If we did a search and it didn't find any relevant games, let's
-                    // get something that is at least actionable.
-                    games = await ChannelSession.Connection.GetGameTypes("Web Show", 10);
-                }
-
-                this.relatedGames.Clear();
-                foreach (var game in games)
-                {
-                    this.relatedGames.Add(game);
-                }
-            }
         }
 
         private void AddFavoriteTypeComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
