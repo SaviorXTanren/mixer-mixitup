@@ -15,7 +15,7 @@
 
              d:DesignHeight="500" d:DesignWidth="600">
     <ScrollViewer>
-        <Grid Margin="10">
+        <Grid Margin="10" x:Name="MainGrid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10" />
@@ -57,7 +57,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" VerticalAlignment="Center">Game Name:</TextBlock>
-                        <ComboBox Grid.Column="2" x:Name="GameNameComboBox" IsEditable="True" TextBoxBase.TextChanged="GameNameComboBox_TextChanged" DisplayMemberPath="name" LostFocus="GameNameTextBox_LostFocus" />
+                        <TextBox Grid.Column="2" x:Name="GameNameTextBox" TextChanged="GameNameTextBox_TextChanged" PreviewKeyDown="GameNameTextBox_PreviewKeyDown" />
 
                         <TextBlock Grid.Column="4" VerticalAlignment="Center">Age Rating:</TextBlock>
                         <ComboBox Grid.Column="6" x:Name="AgeRatingComboBox" Width="60" HorizontalAlignment="Left" />
@@ -190,7 +190,20 @@
 
                 </Grid>
             </GroupBox>
-
+            
+            <Canvas>
+                <MaterialDesign:PopupBox ToggleContent="" x:Name="GameNameIntellisense" StaysOpen="False">
+                    <Grid Margin="2,0,2,0" x:Name="GameNameIntellisenseContent">
+                        <ListBox x:Name="GameNameIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="GameNameIntellisenseListBox_PreviewMouseUp">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding name}"></TextBlock>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </MaterialDesign:PopupBox>
+            </Canvas>
         </Grid>
     </ScrollViewer>
 </local:MainControlBase>
