@@ -381,7 +381,7 @@ definitions:
 
   UpdateMixItUpUser:
     type: object
-    required: [ ID, ViewingMinutes, CurrencyAmounts ]
+    required: [ ID, CurrencyAmounts ]
     properties:
       ID:
         description: The Mixer User ID.

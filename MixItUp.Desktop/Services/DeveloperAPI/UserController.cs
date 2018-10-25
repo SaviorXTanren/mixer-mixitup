@@ -97,7 +97,11 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            user.ViewingMinutes = updatedUserData.ViewingMinutes;
+            if (updatedUserData.ViewingMinutes.HasValue)
+            {
+                user.ViewingMinutes = updatedUserData.ViewingMinutes.Value;
+            }
+
             foreach (UserCurrencyDeveloperAPIModel currencyData in updatedUserData.CurrencyAmounts)
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
