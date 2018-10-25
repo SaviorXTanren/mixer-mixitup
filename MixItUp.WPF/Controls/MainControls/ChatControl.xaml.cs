@@ -326,9 +326,9 @@ namespace MixItUp.WPF.Controls.MainControls
                 List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
                 if (!string.IsNullOrEmpty(filter))
                 {
-                    users = users.Where(u => u.UserName.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
+                    users = users.Where(u => u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
                 }
-                users = users.OrderByDescending(u => u.UserName).Take(5).ToList();
+                users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
 
                 if (users.Count > 0)
                 {
