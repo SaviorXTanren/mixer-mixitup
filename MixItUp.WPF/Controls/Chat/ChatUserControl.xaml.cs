@@ -11,18 +11,21 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatUserControl : UserControl
     {
-        public UserViewModel User { get; private set; }
+        public UserViewModel User { get { return this.DataContext as UserViewModel; } }
 
-        public ChatUserControl(UserViewModel user)
+        public ChatUserControl()
         {
-            this.Loaded += ChatUserControl_Loaded;
-
+            this.DataContextChanged += ChatUserControl_DataContextChanged;
             InitializeComponent();
-
-            this.DataContext = this.User = user;
         }
 
-        private void ChatUserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        public ChatUserControl(UserViewModel user) : this()
+        {
+            InitializeComponent();
+            this.DataContext = user;
+        }
+
+        private void ChatUserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             this.UserNameTextBlock.Foreground = Application.Current.FindResource(this.User.PrimaryRoleColorName) as SolidColorBrush;
 
