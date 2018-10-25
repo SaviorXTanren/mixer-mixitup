@@ -112,6 +112,12 @@
                                 <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}, Path=ActualWidth}" />
                             </Style>
                         </ListView.Resources>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                     </ListView>
 
                     <Button x:Name="ChatLockButton" Margin="0,0,20,0" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" HorizontalAlignment="Right" Grid.Row="0" VerticalAlignment="Bottom" Opacity="0.3" Click="ChatLockButton_Click" MouseEnter="ChatLockButton_MouseEnter" MouseLeave="ChatLockButton_MouseLeave">
