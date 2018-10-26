@@ -108,7 +108,6 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (!string.IsNullOrEmpty(this.GameNameTextBox.Text))
                 {
                     var games = (await ChannelSession.Connection.GetGameTypes(this.GameNameTextBox.Text, 5))
-                        .OrderBy(g => g.name)
                         .Take(5)
                         .ToList();
                     if (games.Count > 0)
@@ -178,11 +177,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             if (!string.IsNullOrEmpty(name))
             {
-                var games = (await ChannelSession.Connection.GetGameTypes(name, 1)).ToList();
-                if ((games.Count > 0) && games[0].name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return games[0];
-                }
+                return (await ChannelSession.Connection.GetGameTypes(name, 15)).FirstOrDefault(g => g.name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             }
 
             return null;
@@ -392,7 +387,7 @@ namespace MixItUp.WPF.Controls.MainControls
                                     group = new FavoriteGroupModel(this.AddFavoriteUserGroupNameTextBox.Text);
                                     ChannelSession.Settings.FavoriteGroups.Add(group);
                                 }
-                                group.GroupUserIDs.Add(user.id);                              
+                                group.GroupUserIDs.Add(user.id);
                                 await ChannelSession.SaveSettings();
 
                                 await this.RefreshFavoriteGroups();
