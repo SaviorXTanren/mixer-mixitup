@@ -333,7 +333,7 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public int Volume { get; set; }
 
-        public OverlayYoutubeEffect() { }
+        public OverlayYoutubeEffect() { this.Volume = 100; }
 
         public OverlayYoutubeEffect(string id, int startTime, int width, int height, int volume, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
             OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
