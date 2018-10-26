@@ -70,12 +70,16 @@
 
         <Grid x:Name="YouTubeGrid" Grid.Row="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="350" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -83,9 +87,12 @@
 
             <TextBox x:Name="YoutubeStartTimeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Start Time (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <TextBox x:Name="YoutubeWidthTextBox" Grid.Column="4" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="4" x:Name="YouTubeWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
 
-            <TextBox x:Name="YoutubeHeightTextBox" Grid.Column="6" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox Grid.Column="6" x:Name="YouTubeHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
+
+            <TextBlock Grid.Column="8" VerticalAlignment="Center" Margin="0,20,0,0">Volume:</TextBlock>
+            <Slider x:Name="YouTubeVolumeSlider" VerticalAlignment="Center" Grid.Column="10" Width="120" Minimum="0" Maximum="100" Margin="0,-18,0,0" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Volume" />
         </Grid>
 
         <Grid x:Name="VideoGrid" Grid.Row="2" Visibility="Collapsed">

@@ -35,8 +35,9 @@ namespace MixItUp.WPF.Controls.Actions
             this.FontColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
             this.VideoVolumeSlider.Value = 100;
             this.YoutubeStartTimeTextBox.Text = "0";
-            this.YoutubeWidthTextBox.Text = this.VideoWidthTextBox.Text = OverlayVideoEffect.DefaultWidth.ToString();
-            this.YoutubeHeightTextBox.Text = this.VideoHeightTextBox.Text = OverlayVideoEffect.DefaultHeight.ToString();
+            this.YouTubeWidthTextBox.Text = this.VideoWidthTextBox.Text = OverlayVideoEffect.DefaultWidth.ToString();
+            this.YouTubeHeightTextBox.Text = this.VideoHeightTextBox.Text = OverlayVideoEffect.DefaultHeight.ToString();
+            this.YouTubeVolumeSlider.Value = 100;
 
             this.CenterPositionButton_Click(this, new RoutedEventArgs());
             this.PixelsPositionButton.IsEnabled = true;
@@ -80,8 +81,9 @@ namespace MixItUp.WPF.Controls.Actions
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.YouTube);
                     this.YoutubeVideoIDTextBox.Text = youtubeEffect.ID;
                     this.YoutubeStartTimeTextBox.Text = youtubeEffect.StartTime.ToString();
-                    this.YoutubeWidthTextBox.Text = youtubeEffect.Width.ToString();
-                    this.YoutubeHeightTextBox.Text = youtubeEffect.Height.ToString();
+                    this.YouTubeWidthTextBox.Text = youtubeEffect.Width.ToString();
+                    this.YouTubeHeightTextBox.Text = youtubeEffect.Height.ToString();
+                    this.YouTubeVolumeSlider.Value = youtubeEffect.Volume;
                 }
                 else if (this.action.Effect is OverlayVideoEffect)
                 {
@@ -272,10 +274,10 @@ namespace MixItUp.WPF.Controls.Actions
                         {
                             int width;
                             int height;
-                            if (int.TryParse(this.YoutubeWidthTextBox.Text, out width) && width > 0 &&
-                                int.TryParse(this.YoutubeHeightTextBox.Text, out height) && height > 0)
+                            if (int.TryParse(this.YouTubeWidthTextBox.Text, out width) && width > 0 &&
+                                int.TryParse(this.YouTubeHeightTextBox.Text, out height) && height > 0)
                             {
-                                return new OverlayAction(new OverlayYoutubeEffect(videoID, startTime, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
+                                return new OverlayAction(new OverlayYoutubeEffect(videoID, startTime, width, height, (int)this.YouTubeVolumeSlider.Value, entrance, animation, exit, duration, positionType, horizontal, vertical));
                             }
                         }
                     }

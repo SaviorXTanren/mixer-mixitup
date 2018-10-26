@@ -330,10 +330,12 @@ namespace MixItUp.Base.Actions
         public int Width { get; set; }
         [DataMember]
         public int Height { get; set; }
+        [DataMember]
+        public int Volume { get; set; }
 
         public OverlayYoutubeEffect() { }
 
-        public OverlayYoutubeEffect(string id, int startTime, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
+        public OverlayYoutubeEffect(string id, int startTime, int width, int height, int volume, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
             OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
             : base(OverlayEffectTypeEnum.YouTube, entrance, visible, exit, duration, positionType, horizontal, vertical)
         {
@@ -341,6 +343,7 @@ namespace MixItUp.Base.Actions
             this.StartTime = startTime;
             this.Width = width;
             this.Height = height;
+            this.Volume = volume;
         }
     }
 

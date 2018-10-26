@@ -26,7 +26,9 @@
             <h1 style="font-size: 100px; color: red; text-align: center">To Speech!</h1>
         </div>
 
-        <div id="youtubePlayerDiv" style="position: relative; left: -1000px"></div>
+        <div id="youtubeSongRequestPlayerDiv" style="position: relative; left: -1000px"></div>
+
+        <div id="youtubeVideoPlayerDiv" style="position: relative; left: -1000px"></div>
 
         <script>
             $.fn.extend({
@@ -67,10 +69,15 @@
 
             // YouTube player
 
-            var youtubePlayerDiv = document.getElementById('youtubePlayerDiv');
-            var youtubePlayer;
-            var youtubePlayerReady = false;
-            var youtubeSongPlaying = false;
+            var youtubeIFrameAPIReady = false;
+
+            var youtubeSongRequestPlayerDiv = document.getElementById('youtubeSongRequestPlayerDiv');
+            var youtubeSongRequestPlayer;
+            var youtubeSongRequestPlayerReady = false;
+            var youtubeSongRequestPlaying = false;
+
+            var youtubeVideoPlayerDiv = document.getElementById('youtubeVideoPlayerDiv');
+            var youtubeVideoPlayer;
 
             var youtubePlayerScript = document.createElement('script');
             youtubePlayerScript.src = "https://www.youtube.com/iframe_api";
@@ -149,16 +156,26 @@
             }
 
             function youtubePacket(data) {
-                var addedElement = document.createElement('iframe');
-                addedElement.width = data.Width;
-                addedElement.height = data.Height;
-                addedElement.frameBorder = 0;
-                addedElement.allow = "autoplay; encrypted-media";
-                addedElement.setAttribute('allowFullScreen', '');
-                addedElement.setAttribute('autoplay', '');
-                addedElement.src = "https://www.youtube.com/embed/" + data.ID + "?autoplay=1&rel=0&amp;controls=0&amp;showinfo=0&amp;start=" + data.StartTime;
+                if (youtubeIFrameAPIReady) {
+                    var addedElement = document.createElement('div');
+                    addedElement.id = 'youtubeVideo' + data.ID;
 
-                addWaitRemoveElement(data, addedElement);
+                    addWaitRemoveElement(data, addedElement);
+
+                    var youtubeVideoPlayer = new YT.Player(addedElement.id, {
+                        height: data.Height,
+                        width: data.Width,
+                        videoId: data.ID,
+                        playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
+                        events: {
+                            'onReady': function () {
+                                youtubeVideoPlayer.setVolume(data.Volume);
+                                youtubeVideoPlayer.setLoop(false);
+                                youtubeVideoPlayer.frameBorder = 0;
+                            }
+                        }
+                    });
+                }
             }
 
             function videoPacket(data) {
@@ -215,18 +232,18 @@
             }
 
             function songRequestPacket(data) {
-                if (data.Type == 'YouTube' && youtubePlayerReady) {
+                if (data.Type == 'YouTube' && youtubeSongRequestPlayerReady) {
                     if (data.Action == 'status') {
                         var data = {};
                         data.Type = 1;
                         data.State = 0;
 
-                        var playerState = youtubePlayer.getPlayerState();
+                        var playerState = youtubeSongRequestPlayer.getPlayerState();
                         if (playerState == YT.PlayerState.PLAYING || playerState == YT.PlayerState.PAUSED || playerState == YT.PlayerState.ENDED) {
-                            data.ID = youtubePlayer.getVideoUrl();
-                            data.Progress = youtubePlayer.getCurrentTime();
-                            data.Length = youtubePlayer.getDuration();
-                            data.Volume = youtubePlayer.getVolume();
+                            data.ID = youtubeSongRequestPlayer.getVideoUrl();
+                            data.Progress = youtubeSongRequestPlayer.getCurrentTime();
+                            data.Length = youtubeSongRequestPlayer.getDuration();
+                            data.Volume = youtubeSongRequestPlayer.getVolume();
 
                             if (playerState == YT.PlayerState.PLAYING) {
                                 data.State = 1;
@@ -241,41 +258,41 @@
 
                         sendPacket('songRequestStatus', data);
                     }
-                    else if (data.Action == 'playpause' && youtubeSongPlaying) {
-                        if (youtubePlayer.getPlayerState() == YT.PlayerState.PLAYING) {
-                            youtubePlayer.pauseVideo();
+                    else if (data.Action == 'playpause' && youtubeSongRequestPlaying) {
+                        if (youtubeSongRequestPlayer.getPlayerState() == YT.PlayerState.PLAYING) {
+                            youtubeSongRequestPlayer.pauseVideo();
                         }
-                        else if (youtubePlayer.getPlayerState() == YT.PlayerState.PAUSED) {
-                            youtubePlayer.playVideo();
+                        else if (youtubeSongRequestPlayer.getPlayerState() == YT.PlayerState.PAUSED) {
+                            youtubeSongRequestPlayer.playVideo();
                         }
                     }
                     else if (data.Action == 'stop') {
-                        youtubeSongPlaying = false;
-                        youtubePlayer.stopVideo();
+                        youtubeSongRequestPlaying = false;
+                        youtubeSongRequestPlayer.stopVideo();
                     }
                     else if (data.Action == 'next') {
-                        youtubePlayer.nextVideo();
+                        youtubeSongRequestPlayer.nextVideo();
                     }
                     else if (data.Action == 'song') {
-                        youtubeSongPlaying = true;
-                        youtubePlayer.setVolume(data.Volume);
-                        youtubePlayer.setLoop(false);
-                        youtubePlayer.loadVideoById(data.Source);
+                        youtubeSongRequestPlaying = true;
+                        youtubeSongRequestPlayer.setVolume(data.Volume);
+                        youtubeSongRequestPlayer.setLoop(false);
+                        youtubeSongRequestPlayer.loadVideoById(data.Source);
                     }
                     else if (data.Action == 'playlist') {
-                        youtubeSongPlaying = true;
-                        youtubePlayer.setVolume(data.Volume);
-                        youtubePlayer.setLoop(true);
-                        youtubePlayer.loadPlaylist({ list: data.Source, listType: 'playlist', index: 0 });
-                        youtubePlayer.setShuffle(true);
+                        youtubeSongRequestPlaying = true;
+                        youtubeSongRequestPlayer.setVolume(data.Volume);
+                        youtubeSongRequestPlayer.setLoop(true);
+                        youtubeSongRequestPlayer.loadPlaylist({ list: data.Source, listType: 'playlist', index: 0 });
+                        youtubeSongRequestPlayer.setShuffle(true);
                     }
                     else if (data.Action == 'volume') {
-                        youtubePlayer.setVolume(data.Volume);
+                        youtubeSongRequestPlayer.setVolume(data.Volume);
                     }
                 }
             }
 
-            function addWaitRemoveElement(data, addedElement) {
+            function addWaitRemoveElement(data, addedElement, addToDiv = true) {
                 if (addedElement != null) {
 
                     addedElement.style.cssText += 'position: absolute;'
@@ -324,11 +341,13 @@
             }
 
             function onYouTubeIframeAPIReady() {
-                youtubePlayer = new YT.Player('youtubePlayerDiv', {
+                youtubeIFrameAPIReady = true;
+
+                youtubeSongRequestPlayer = new YT.Player('youtubeSongRequestPlayerDiv', {
                     height: '390',
                     width: '640',
                     videoId: 'RvCVgu_MQpU',
-                    playerVars: { 'controls': 0, 'showinfo': 0 },
+                    playerVars: { 'controls': 0 },
                     events: {
                         'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange
@@ -337,13 +356,13 @@
             }
 
             function onPlayerReady(event) {
-                youtubePlayerReady = true;
+                youtubeSongRequestPlayerReady = true;
             }
 
             function onPlayerStateChange(event) {
-                if (event.data == YT.PlayerState.ENDED && youtubeSongPlaying) {
+                if (event.data == YT.PlayerState.ENDED && youtubeSongRequestPlaying) {
                     sendPacket('songRequestComplete', '');
-                    youtubeSongPlaying = false;
+                    youtubeSongRequestPlaying = false;
                 }
             }
 
