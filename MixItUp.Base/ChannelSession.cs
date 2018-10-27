@@ -381,7 +381,7 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings == null)
                     {
-                        ChannelSession.Settings = ChannelSession.Services.Settings.Create(channel, isStreamer);
+                        ChannelSession.Settings = await ChannelSession.Services.Settings.Create(channel, isStreamer);
                     }
                     await ChannelSession.Services.Settings.Initialize(ChannelSession.Settings);
 
