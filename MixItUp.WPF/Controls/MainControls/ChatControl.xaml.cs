@@ -164,7 +164,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task AddMessage(ChatMessageViewModel message)
         {
-            await this.MessageLock(async () =>
+            await this.MessageLock(() =>
             {
                 ChatMessageControl messageControl = new ChatMessageControl(message);
                 if (ChannelSession.Settings.LatestChatAtTop)
@@ -190,6 +190,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
 
                 Logger.LogChatEvent(message.ToString());
+
+                return Task.FromResult(0);
             });
         }
 
@@ -531,7 +533,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
                 if (!control.Message.IsWhisper)
                 {
-                    await ChannelSession.Chat.DeleteMessage(control.Message.ID);
+                    await ChannelSession.Chat.DeleteMessage(control.Message);
                 }
             }
         }

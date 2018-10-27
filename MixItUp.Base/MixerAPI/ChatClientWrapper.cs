@@ -29,7 +29,7 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<UserViewModel> OnUserLeaveOccurred = delegate { };
         public event EventHandler<Tuple<UserViewModel, string>> OnUserPurgeOccurred = delegate { };
 
-        public Dictionary<Guid, ChatMessageViewModel> Messages { get; private set; }
+        public LockedDictionary<Guid, ChatMessageViewModel> Messages { get; private set; } = new LockedDictionary<Guid, ChatMessageViewModel>();
 
         public bool DisableChat { get; set; }
 
@@ -38,10 +38,7 @@ namespace MixItUp.Base.MixerAPI
 
         private HashSet<uint> userEntranceCommands = new HashSet<uint>();
 
-        public ChatClientWrapper()
-        {
-            this.Messages = new Dictionary<Guid, ChatMessageViewModel>();
-        }
+        public ChatClientWrapper() { }
 
         public async Task<bool> Connect()
         {
