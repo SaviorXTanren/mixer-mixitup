@@ -154,11 +154,13 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        public async Task DeleteMessage(Guid id)
+        public async Task DeleteMessage(ChatMessageViewModel message)
         {
             if (this.Client != null)
             {
-                await this.RunAsync(this.Client.DeleteMessage(id));
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message - {0}", message.Message));
+
+                await this.RunAsync(this.Client.DeleteMessage(message.ID));
             }
         }
 
@@ -351,13 +353,13 @@ namespace MixItUp.Base.MixerAPI
 
             if (this.DisableChat && !message.ID.Equals(Guid.Empty))
             {
-                await this.DeleteMessage(message.ID);
+                await this.DeleteMessage(message);
                 return message;
             }
 
             if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
             {
-                await this.DeleteMessage(message.ID);
+                await this.DeleteMessage(message);
 
                 await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isChat: true);
 
@@ -382,7 +384,7 @@ namespace MixItUp.Base.MixerAPI
 
                     message.ModerationReason = moderationReason;
 
-                    await this.DeleteMessage(message.ID);
+                    await this.DeleteMessage(message);
 
                     await user.AddModerationStrike(moderationReason);
 
@@ -483,7 +485,7 @@ namespace MixItUp.Base.MixerAPI
 
             if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
             {
-                await this.DeleteMessage(message.ID);
+                await this.DeleteMessage(message);
             }
         }
 
