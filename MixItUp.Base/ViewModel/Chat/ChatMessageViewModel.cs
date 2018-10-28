@@ -11,19 +11,8 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Chat
 {
-    public class EmoticonImage
-    {
-        public string Name { get; set; }
-        public string FilePath { get; set; }
-        public CoordinatesModel Coordinates { get; set; }
-    }
-
     public class ChatMessageViewModel : IEquatable<ChatMessageViewModel>
     {
-        private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
-
-        public static Dictionary<string, EmoticonImage> EmoticonImages = new Dictionary<string, EmoticonImage>();
-
         public Guid ID { get; private set; }
 
         public UserViewModel User { get; private set; }
@@ -48,67 +37,46 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public List<ChatMessageDataModel> MessageComponents = new List<ChatMessageDataModel>();
 
-        public ChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
+        private ChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
         {
             this.ChatMessageEvent = chatMessageEvent;
             this.ID = this.ChatMessageEvent.id;
 
             this.User = (user != null) ? user : new UserViewModel(this.ChatMessageEvent);
             this.IsInUsersChannel = ChannelSession.Channel.id.Equals(this.ChatMessageEvent.channel);
-            
+
             this.TargetUsername = this.ChatMessageEvent.target;
             this.Timestamp = DateTimeOffset.Now;
             this.Message = string.Empty;
-            foreach (ChatMessageDataModel message in this.ChatMessageEvent.message.message)
+        }
+
+        public static async Task<ChatMessageViewModel> CreateChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
+        {
+            ChatMessageViewModel newChatMessageViewModel = new ChatMessageViewModel(chatMessageEvent, user);
+            
+            foreach (ChatMessageDataModel message in newChatMessageViewModel.ChatMessageEvent.message.message)
             {
-                this.MessageComponents.Add(message);
+                newChatMessageViewModel.MessageComponents.Add(message);
                 switch (message.type)
                 {
                     case "emoticon":
                         // Special code here to process emoticons
-                        string imageLink = null;
-                        if (message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
-                        {
-                            imageLink = message.pack;
-                        }
-                        else if (message.source.Equals("builtin"))
-                        {
-                            imageLink = string.Format(ChatMessageViewModel.DefaultEmoticonsLinkFormat, message.pack);
-                        }
-
-                        if (!string.IsNullOrEmpty(imageLink))
-                        {
-                            if (!ChatMessageViewModel.EmoticonImages.ContainsKey(message.text))
-                            {
-                                try
-                                {
-                                    string imageFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(imageLink));
-                                    if (!File.Exists(imageFilePath))
-                                    {
-                                        using (WebClient client = new WebClient())
-                                        {
-                                            client.DownloadFile(new Uri(imageLink), imageFilePath);
-                                        }
-                                    }
-                                    ChatMessageViewModel.EmoticonImages[message.text] = new EmoticonImage() { Name = message.text, FilePath = imageFilePath, Coordinates = message.coords };
-                                }
-                                catch (Exception ex) { Logger.Log(ex); }
-                            }
-                        }
-
-                        this.Message += message.text;
+                        await ChannelSession.EnsureEmoticonForMessageAsync(message);
+                        newChatMessageViewModel.Message += message.text;
                         break;
                     case "link":
-                        this.ContainsLink = true;
-                        this.Message += message.text;
+                        newChatMessageViewModel.ContainsLink = true;
+                        newChatMessageViewModel.Message += message.text;
                         break;
                     case "text":
                     case "tag":
                     default:
-                        this.Message += message.text;
+                        newChatMessageViewModel.Message += message.text;
                         break;
                 }
             }
+
+            return newChatMessageViewModel;
         }
 
         public ChatMessageViewModel(string alertText, UserViewModel user = null, string foregroundBrush = null)

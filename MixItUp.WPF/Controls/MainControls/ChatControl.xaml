@@ -160,6 +160,18 @@
                     </ListBox>
                 </Grid>
             </MaterialDesign:PopupBox>
+
+            <MaterialDesign:PopupBox ToggleContent="" x:Name="EmoticonIntellisense" StaysOpen="False">
+                <Grid Margin="2,0,2,0" x:Name="EmoticonIntellisenseContent">
+                    <ListBox x:Name="EmoticonIntellisenseListBox" ItemContainerStyle="{StaticResource BorderedListBoxItem}" SelectionMode="Single" PreviewMouseUp="EmoticonIntellisenseListBox_PreviewMouseUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ChatControls:EmoticonControl ShowText="True"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </MaterialDesign:PopupBox>
         </Canvas>
     </Grid>
 </local:MainControlBase>
