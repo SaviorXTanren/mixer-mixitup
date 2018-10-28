@@ -228,10 +228,7 @@ namespace MixItUp.Base.MixerAPI
                         this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
                     }
 
-                    foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
-                    {
-                        await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-                    }
+                    await ChannelSession.ActiveUsers.AddOrUpdateUsers(await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)));
 
                     if (ChannelSession.IsStreamer)
                     {
@@ -408,15 +405,15 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot())
                 {
-                    await this.whisperNumberLock.WaitAsync();
-
-                    if (!whisperMap.ContainsKey(message.User.ID))
+                    await this.whisperNumberLock.WaitAndRelease(() =>
                     {
-                        whisperMap[message.User.ID] = whisperMap.Count + 1;
-                    }
-                    message.User.WhispererNumber = whisperMap[message.User.ID];
-
-                    this.whisperNumberLock.Release();
+                        if (!whisperMap.ContainsKey(message.User.ID))
+                        {
+                            whisperMap[message.User.ID] = whisperMap.Count + 1;
+                        }
+                        message.User.WhispererNumber = whisperMap[message.User.ID];
+                        return Task.FromResult(0);
+                    });
 
                     await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{message.User.WhispererNumber}.", false);
                 }
@@ -550,12 +547,9 @@ namespace MixItUp.Base.MixerAPI
                     }
                 }
 
-                foreach (ChatUserModel chatUser in chatUsers.Values)
-                {
-                    await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-                }
+                await ChannelSession.ActiveUsers.AddOrUpdateUsers(chatUsers.Values);
 
-                await Task.Delay(30000, tokenSource.Token);
+                await Task.Delay(60000, tokenSource.Token);
             });
         }
 

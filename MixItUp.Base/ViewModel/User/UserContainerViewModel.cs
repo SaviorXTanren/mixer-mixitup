@@ -2,6 +2,7 @@
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<bool> HasUser(uint userID)
         {
-            return await this.LockWrapper(() =>
+            return await this.semaphore.WaitAndRelease(() =>
             {
                 return Task.FromResult<bool>(this.users.ContainsKey(userID));
             });
@@ -34,7 +35,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<UserViewModel> GetUserByUsername(string username)
         {
-            return await this.LockWrapper(() =>
+            return await this.semaphore.WaitAndRelease(() =>
             {
                 return Task.FromResult<UserViewModel>(this.users.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.CurrentCultureIgnoreCase)));
             });
@@ -42,7 +43,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<UserViewModel> GetUserByID(uint userID)
         {
-            return await this.LockWrapper(() =>
+            return await this.semaphore.WaitAndRelease(() =>
             {
                 if (this.users.ContainsKey(userID))
                 {
@@ -54,7 +55,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<UserViewModel> GetUserByID(string interactiveParticipantID)
         {
-            return await this.LockWrapper(() =>
+            return await this.semaphore.WaitAndRelease(() =>
             {
                 return Task.FromResult(this.users.Values.FirstOrDefault(u => u.InteractiveIDs.Contains(interactiveParticipantID)));
             });
@@ -64,7 +65,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (user.ID > 0)
             {
-                await this.LockWrapper(() =>
+                await this.semaphore.WaitAndRelease(() =>
                 {
                     this.users[user.ID] = user;
                     return Task.FromResult(0);
@@ -74,55 +75,48 @@ namespace MixItUp.Base.ViewModel.User
             return null;
         }
 
+        public async Task AddOrUpdateUsers(IEnumerable<ChatUserModel> chatUsers)
+        {
+            List<UserViewModel> users = new List<UserViewModel>();
+            foreach (ChatUserModel chatUser in chatUsers)
+            {
+                if (chatUser.userId.HasValue)
+                {
+                    UserViewModel user = new UserViewModel(chatUser);
+                    user.SetChatDetails(chatUser);
+                    users.Add(user);
+                }
+            }
+            await this.AddOrUpdateUsers(users);
+        }
+
         public async Task<UserViewModel> AddOrUpdateUser(ChatUserModel chatUser)
         {
-            if (chatUser.userId.HasValue)
+            await this.AddOrUpdateUsers(new List<ChatUserModel>() { chatUser });
+            return await this.GetUserByID(chatUser.userId.GetValueOrDefault());
+        }
+
+        public async Task AddOrUpdateUsers(IEnumerable<InteractiveParticipantModel> interactiveUsers)
+        {
+            List<UserViewModel> users = new List<UserViewModel>();
+            foreach (InteractiveParticipantModel interactiveUser in interactiveUsers)
             {
-                await this.LockWrapper(async () =>
-                {
-                    bool performFirstUserJoin = !ChannelSession.Settings.UserData.ContainsKey(chatUser.userId.GetValueOrDefault());
-
-                    if (!this.users.ContainsKey(chatUser.userId.GetValueOrDefault()))
-                    {
-                        this.users[chatUser.userId.GetValueOrDefault()] = new UserViewModel(chatUser);
-                        await this.users[chatUser.userId.GetValueOrDefault()].RefreshDetails(getChatDetails: false);
-                    }
-                    this.users[chatUser.userId.GetValueOrDefault()].SetChatDetails(chatUser);
-
-                    if (performFirstUserJoin)
-                    {
-                        await this.PerformUserFirstJoin(this.users[chatUser.userId.GetValueOrDefault()]);
-                    }
-                });
-                return await this.GetUserByID(chatUser.userId.GetValueOrDefault());
+                UserViewModel user = new UserViewModel(interactiveUser);
+                user.SetInteractiveDetails(interactiveUser);
+                users.Add(user);
             }
-            return null;
+            await this.AddOrUpdateUsers(users);
         }
 
         public async Task<UserViewModel> AddOrUpdateUser(InteractiveParticipantModel interactiveUser)
         {
-            await this.LockWrapper(async () =>
-            {
-                bool performFirstUserJoin = !ChannelSession.Settings.UserData.ContainsKey(interactiveUser.userID);
-
-                if (!this.users.ContainsKey(interactiveUser.userID))
-                {
-                    this.users[interactiveUser.userID] = new UserViewModel(interactiveUser);
-                    await this.users[interactiveUser.userID].RefreshDetails();
-                }
-                this.users[interactiveUser.userID].SetInteractiveDetails(interactiveUser);
-
-                if (performFirstUserJoin)
-                {
-                    await this.PerformUserFirstJoin(this.users[interactiveUser.userID]);
-                }
-            });
+            await this.AddOrUpdateUsers(new List<InteractiveParticipantModel>() { interactiveUser });
             return await this.GetUserByID(interactiveUser.userID);
         }
 
         public async Task RemoveInteractiveUser(InteractiveParticipantModel interactiveUser)
         {
-            await this.LockWrapper(() =>
+            await this.semaphore.WaitAndRelease(() =>
             {
                 if (this.users.ContainsKey(interactiveUser.userID))
                 {
@@ -135,7 +129,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<UserViewModel> RemoveUser(uint userID)
         {
-            return await this.LockWrapper(() =>
+            return await this.semaphore.WaitAndRelease(() =>
             {
                 UserViewModel user = null;
                 if (this.users.ContainsKey(userID))
@@ -149,12 +143,17 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
-            return await this.LockWrapper(() => Task.FromResult(this.users.Values.ToList()));
+            return await this.semaphore.WaitAndRelease(() => Task.FromResult(this.users.Values.ToList()));
+        }
+
+        public async Task<IEnumerable<UserViewModel>> GetAllUsersSorted()
+        {
+            return (await this.GetAllUsers()).OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName);
         }
 
         public async Task<IEnumerable<UserViewModel>> GetAllWorkableUsers()
         {
-            return await this.LockWrapper(() =>
+            return await this.semaphore.WaitAndRelease(() =>
             {
                 List<UserViewModel> users = this.users.Values.ToList();
                 users.RemoveAll(u => UserContainerViewModel.HypeBotUserName.Equals(u.UserName));
@@ -172,7 +171,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task Clear()
         {
-            await this.LockWrapper(() =>
+            await this.semaphore.WaitAndRelease(() =>
             {
                 this.users.Clear();
                 return Task.FromResult(0);
@@ -181,32 +180,42 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<int> Count()
         {
-            return await this.LockWrapper(() => Task.FromResult(this.users.Count));
+            return await this.semaphore.WaitAndRelease(() => Task.FromResult(this.users.Count));
         }
 
-        private async Task LockWrapper(Func<Task> function)
+        private async Task AddOrUpdateUsers(IEnumerable<UserViewModel> users)
         {
-            try
+            List<UserViewModel> firstJoinUsers = new List<UserViewModel>();
+            List<UserViewModel> refreshUsers = new List<UserViewModel>();
+
+            await this.semaphore.WaitAndRelease(() =>
             {
-                await this.semaphore.WaitAsync();
+                foreach (UserViewModel user in users)
+                {
+                    if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
+                    {
+                        firstJoinUsers.Add(user);
+                    }
 
-                await function();
-            }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
-            finally { this.semaphore.Release(); }
-        }
+                    if (!this.users.ContainsKey(user.ID))
+                    {
+                        this.users[user.ID] = user;
+                        refreshUsers.Add(user);
+                    }
+                }
 
-        private async Task<T> LockWrapper<T>(Func<Task<T>> function)
-        {
-            try
+                return Task.FromResult(0);
+            });
+
+            foreach (UserViewModel user in refreshUsers)
             {
-                await this.semaphore.WaitAsync();
-
-                return await function();
+                await user.RefreshDetails();
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
-            finally { this.semaphore.Release(); }
-            return default(T);
+
+            foreach (UserViewModel user in firstJoinUsers)
+            {
+                await this.PerformUserFirstJoin(user);
+            }
         }
 
         private async Task PerformUserFirstJoin(UserViewModel user)

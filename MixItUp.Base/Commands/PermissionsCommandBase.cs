@@ -96,10 +96,8 @@ namespace MixItUp.Base.Commands
 
         protected override async Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            try
+            return await this.permissionsCheckSemaphore.WaitAndRelease(async () =>
             {
-                await this.permissionsCheckSemaphore.WaitAsync();
-
                 if (!await this.CheckAllRequirements(user))
                 {
                     return false;
@@ -121,11 +119,7 @@ namespace MixItUp.Base.Commands
                 }
 
                 return true;
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally { this.permissionsCheckSemaphore.Release(); }
-
-            return false;
+            });
         }
 
         protected async Task<bool> CheckAllRequirements(UserViewModel user)

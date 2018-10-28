@@ -35,7 +35,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.TimerStackPanel.Visibility = Visibility.Collapsed;
 
             this.DropLocationTextBlock.Text = location;
-            await this.WinnerAvatar.SetImageUrl("https://mixer.com/api/v1/users/" + winner + "/avatar");
+            await this.WinnerAvatar.SetUserAvatarUrl(winner);
             this.WinnerAvatar.SetSize(80);
             this.WinnerTextBlock.Text = username;
 

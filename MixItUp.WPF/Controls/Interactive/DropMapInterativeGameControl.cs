@@ -139,7 +139,7 @@ namespace MixItUp.WPF.Controls.Interactive
                             if (!this.userAvatars.ContainsKey(user.ID))
                             {
                                 avatarControl = new UserProfileAvatarControl();
-                                await avatarControl.SetImageUrl("https://mixer.com/api/v1/users/" + user.ID + "/avatar");
+                                await avatarControl.SetUserAvatarUrl(user);
                                 avatarControl.SetSize(20);
 
                                 this.canvas.Children.Add(avatarControl);

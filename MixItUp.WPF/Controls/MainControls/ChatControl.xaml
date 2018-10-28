@@ -95,9 +95,9 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
@@ -141,9 +141,9 @@
                     </Grid>
                 </Grid>
 
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
+                <GridSplitter x:Name="ChatSplitter" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
 
-                <ListView x:Name="UserList" Grid.Column="2" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" />
+                <ListView x:Name="UserList" Grid.Column="2" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" Width="200" />
             </Grid>
 
         </GroupBox>

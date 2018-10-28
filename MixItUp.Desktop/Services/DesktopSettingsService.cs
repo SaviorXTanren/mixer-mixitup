@@ -165,16 +165,12 @@ namespace MixItUp.Desktop.Services
 
         public async Task SaveSettings(IChannelSettings settings, string filePath)
         {
-            try
+            await semaphore.WaitAndRelease(async () =>
             {
-                await semaphore.WaitAsync();
-
                 DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
                 await desktopSettings.CopyLatestValues();
                 await SerializerHelper.SerializeToFile(filePath, desktopSettings);
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally { semaphore.Release(); }
+            });
         }
 
         public string GetDatabaseFilePath(IChannelSettings settings)

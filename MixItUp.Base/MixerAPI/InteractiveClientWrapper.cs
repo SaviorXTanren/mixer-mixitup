@@ -583,13 +583,7 @@ namespace MixItUp.Base.MixerAPI
         {
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
-                foreach (InteractiveParticipantModel participant in await this.GetRecentParticipants())
-                {
-                    if (await ChannelSession.ActiveUsers.HasUser(participant.userID))
-                    {
-                        await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
-                    }
-                }
+                await ChannelSession.ActiveUsers.AddOrUpdateUsers(await this.GetRecentParticipants());
 
                 await Task.Delay(30000);
             });
@@ -621,11 +615,14 @@ namespace MixItUp.Base.MixerAPI
             if (participants != null && participants.Count() > 0)
             {
                 List<InteractiveParticipantModel> participantsToUpdate = new List<InteractiveParticipantModel>();
+
+                await ChannelSession.ActiveUsers.AddOrUpdateUsers(participants);
+
                 foreach (InteractiveParticipantModel participant in participants)
                 {
                     if (participant != null)
                     {
-                        UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
+                        UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(participant.userID);
                         if (user != null)
                         {
                             if (this.Client != null && this.Client.InteractiveGame != null && ChannelSession.Settings.InteractiveUserGroups.ContainsKey(this.Client.InteractiveGame.id))

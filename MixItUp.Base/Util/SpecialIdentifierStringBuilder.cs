@@ -602,19 +602,6 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "moderationstrikes", userData.ModerationStrikes.ToString());
                 }
 
-                if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game"))
-                {
-                    GameTypeModel game = await ChannelSession.Connection.GetGameType(user.GameTypeID);
-                    if (game != null)
-                    {
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", game.name.ToString());
-                    }
-                    else
-                    {
-                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", "Unknown");
-                    }
-                }
-
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followage", user.FollowAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "subage", user.SubscribeAgeString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "submonths", user.SubscribeMonths.ToString());
@@ -624,10 +611,20 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "name", user.UserName);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "id", user.ID.ToString());
 
-                if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers"))
+                if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game"))
                 {
                     ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(user.UserName);
+
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers", channel?.numFollowers.ToString() ?? "0");
+
+                    if (channel.type != null)
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", channel.type.name.ToString());
+                    }
+                    else
+                    {
+                        this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game", "Unknown");
+                    }
                 }
             }
         }

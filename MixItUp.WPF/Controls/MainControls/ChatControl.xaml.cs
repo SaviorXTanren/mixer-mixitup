@@ -11,7 +11,6 @@ using MixItUp.WPF.Windows.PopOut;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -98,9 +97,21 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
             }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.ChatRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            if (!ChannelSession.Settings.HideChatUserList)
+            {
+                await userUpdateLock.WaitAndRelease(async () =>
+                {
+                    foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsersSorted())
+                    {
+                        if (user.IsInChat)
+                        {
+                            this.UserControls.Add(new ChatUserControl(user));
+                        }
+                    }
+
+                    await this.RefreshViewerChatterCounts();
+                });
+            }
         }
 
         protected override Task OnVisibilityChanged()
@@ -118,53 +129,66 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ViewerChatterNumbersGrid.Visibility = (ChannelSession.Settings.HideViewerAndChatterNumbers) ? Visibility.Collapsed : Visibility.Visible;
 
+            this.ChatSplitter.Visibility = this.UserList.Visibility = (ChannelSession.Settings.HideChatUserList) ? Visibility.Collapsed : Visibility.Visible;
+
             return Task.FromResult(0);
-        }
-
-        private async Task ChatRefreshBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.RefreshUserList();
-                });
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await Task.Delay(1000 * 30);
-            });
         }
 
         #region Chat Update Methods
 
-        private async Task RefreshUserList()
+        private async Task RefreshSpecificUserInList(UserViewModel user)
         {
-            await userUpdateLock.WaitAsync();
-
-            this.UserControls.Clear();
-
-            List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
-            users = users.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
-            foreach (UserViewModel user in users)
+            if (!ChannelSession.Settings.HideChatUserList)
             {
-                if (user.IsInChat)
+                await userUpdateLock.WaitAndRelease(async () =>
                 {
-                    this.UserControls.Add(new ChatUserControl(user));
-                }
-            }
+                    if (user.IsInChat)
+                    {
+                        List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsersSorted()).ToList();
+                        ChatUserControl userControl = new ChatUserControl(user);
 
+                        int index = users.IndexOf(user);
+                        if (index >= 0)
+                        {
+                            this.UserControls.Insert(index, userControl);
+                        }
+                        else
+                        {
+                            this.UserControls.Add(userControl);
+                        }
+                    }
+
+                    await this.RefreshViewerChatterCounts();
+                });
+            }
+        }
+
+        private async Task RemoveSpecificUserInList(UserViewModel user)
+        {
+            if (!ChannelSession.Settings.HideChatUserList)
+            {
+                await userUpdateLock.WaitAndRelease(async () =>
+                {
+                    ChatUserControl control = this.UserControls.FirstOrDefault(u => u.MatchesUser(user));
+                    if (control != null)
+                    {
+                        this.UserControls.Remove(control);
+                    }
+
+                    await this.RefreshViewerChatterCounts();
+                });
+            }
+        }
+
+        private async Task RefreshViewerChatterCounts()
+        {
             this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
             this.ChatCountTextBlock.Text = (await ChannelSession.ActiveUsers.Count()).ToString();
-
-            userUpdateLock.Release();
         }
 
         private async Task AddMessage(ChatMessageViewModel message)
         {
-            await this.MessageLock(() =>
+            await this.messageUpdateLock.WaitAndRelease(() =>
             {
                 ChatMessageControl messageControl = new ChatMessageControl(message);
                 if (ChannelSession.Settings.LatestChatAtTop)
@@ -566,7 +590,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.MessageLock(() =>
+                await this.messageUpdateLock.WaitAndRelease(() =>
                 {
                     ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
                     if (message != null)
@@ -586,7 +610,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.MessageLock(() =>
+                await this.messageUpdateLock.WaitAndRelease(() =>
                 {
                     List<ChatMessageControl> messagesToDelete = new List<ChatMessageControl>();
 
@@ -616,7 +640,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.MessageLock(() =>
+                await this.messageUpdateLock.WaitAndRelease(() =>
                 {
                     this.MessageControls.Clear();
                     return Task.FromResult(0);
@@ -628,7 +652,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RefreshUserList();
+                await this.RefreshSpecificUserInList(user);
             });
 
             if (ChannelSession.Settings.ChatShowUserJoinLeave)
@@ -641,7 +665,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RefreshUserList();
+                await this.RefreshSpecificUserInList(user);
             });
         }
 
@@ -649,7 +673,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RefreshUserList();
+                await this.RemoveSpecificUserInList(user);
             });
 
             if (ChannelSession.Settings.ChatShowUserJoinLeave)
@@ -720,21 +744,6 @@ namespace MixItUp.WPF.Controls.MainControls
         }
 
         #endregion Chat Event Handlers
-
-        private async Task MessageLock(Func<Task> function)
-        {
-            try
-            {
-                await this.messageUpdateLock.WaitAsync();
-
-                await function();
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally
-            {
-                this.messageUpdateLock.Release();
-            }
-        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

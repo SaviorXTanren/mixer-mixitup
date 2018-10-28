@@ -26,8 +26,11 @@ namespace MixItUp.WPF.Controls.MainControls
         public async Task Initialize(LoadingWindowBase window)
         {
             this.Window = window;
-
-            await this.InitializeInternal();
+            await this.Window.RunAsyncOperation(async () =>
+            {
+                await this.InitializeInternal();
+                await this.OnVisibilityChanged();
+            });
         }
 
         public void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -55,7 +58,14 @@ namespace MixItUp.WPF.Controls.MainControls
                     ChannelSession.Services.Telemetry.TrackPageView(typeName);
                 }
             }
-            await this.OnVisibilityChanged();
+
+            if (this.Window != null)
+            {
+                await this.Window.RunAsyncOperation(async () =>
+                {
+                    await this.OnVisibilityChanged();
+                });
+            }
         }
     }
 }

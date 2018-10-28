@@ -13,8 +13,7 @@ namespace MixItUp.Desktop.Files
 {
     public class WindowsFileService : IFileService
     {
-        private static SemaphoreSlim createLock = new SemaphoreSlim(1);
-        private static SemaphoreSlim appendLock = new SemaphoreSlim(1);
+        private static SemaphoreSlim fileLock = new SemaphoreSlim(1);
 
         public string ImageFileFilter() { return "All Picture Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*"; }
         public string MusicFileFilter() { return "MP3 Files (*.mp3)|*.mp3|All files (*.*)|*.*"; }
@@ -96,9 +95,8 @@ namespace MixItUp.Desktop.Files
 
         public async Task SaveFile(string filePath, string data)
         {
-            try
+            await WindowsFileService.fileLock.WaitAndRelease(async () =>
             {
-                await WindowsFileService.createLock.WaitAsync();
                 using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
                 {
                     if (!string.IsNullOrEmpty(data))
@@ -107,13 +105,7 @@ namespace MixItUp.Desktop.Files
                     }
                     await writer.FlushAsync();
                 }
-                WindowsFileService.createLock.Release();
-            }
-            catch (Exception ex)
-            {
-                WindowsFileService.createLock.Release();
-                Logger.Log(ex);
-            }
+            });
         }
 
         public async Task SaveFileAsBytes(string filePath, byte[] data)
@@ -130,9 +122,8 @@ namespace MixItUp.Desktop.Files
 
         public async Task AppendFile(string filePath, string data)
         {
-            try
+            await WindowsFileService.fileLock.WaitAndRelease(async () =>
             {
-                await WindowsFileService.appendLock.WaitAsync();
                 using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Append)))
                 {
                     if (!string.IsNullOrEmpty(data))
@@ -141,13 +132,7 @@ namespace MixItUp.Desktop.Files
                     }
                     await writer.FlushAsync();
                 }
-                WindowsFileService.appendLock.Release();
-            }
-            catch (Exception ex)
-            {
-                WindowsFileService.appendLock.Release();
-                Logger.Log(ex);
-            }
+            });
         }
 
         public string ShowOpenFolderDialog()
