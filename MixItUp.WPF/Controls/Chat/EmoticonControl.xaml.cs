@@ -15,6 +15,21 @@ namespace MixItUp.WPF.Controls.Chat
         private static Dictionary<string, BitmapImage> emoticonBitmapImages = new Dictionary<string, BitmapImage>();
 
         public EmoticonImage Emoticon { get { return this.DataContext as EmoticonImage; } }
+        public bool ShowText
+        {
+            get { return EmoticonText.Visibility == Visibility.Visible; }
+            set
+            {
+                if (value)
+                {
+                    EmoticonText.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    EmoticonText.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
 
         public EmoticonControl()
         {

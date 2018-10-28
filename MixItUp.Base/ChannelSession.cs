@@ -471,7 +471,7 @@ namespace MixItUp.Base
                 matchedImages.AddRange(kvp.Value.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
             }
 
-            return matchedImages;
+            return matchedImages.Distinct();
         }
 
         private static async Task<bool> InitializeInternal(bool isStreamer, string channelName = null)

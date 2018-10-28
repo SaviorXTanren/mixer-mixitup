@@ -345,7 +345,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
                         Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
 
-                        ShowUserIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                        ShowUserIntellisense(topLeftOffset.X, topLeftOffset.Y, users.Count);
                     }
                 }
                 else
@@ -365,17 +365,17 @@ namespace MixItUp.WPF.Controls.MainControls
                         Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
                         Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
 
-                        ShowEmoticonIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                        ShowEmoticonIntellisense(topLeftOffset.X, topLeftOffset.Y, emoticonImages.Count);
                     }
                 }
             }
         }
 
-        private void ShowUserIntellisense(double x, double y)
+        private void ShowUserIntellisense(double x, double y, int count)
         {
-            this.UsernameIntellisenseContent.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            int itemHeight = count * 40;
             Canvas.SetLeft(this.UsernameIntellisense, x + 10);
-            Canvas.SetTop(this.UsernameIntellisense, y - this.UsernameIntellisenseContent.DesiredSize.Height - 40);
+            Canvas.SetTop(this.UsernameIntellisense, y - itemHeight - 40);
             this.UsernameIntellisense.UpdateLayout();
 
             if (!this.UsernameIntellisense.IsPopupOpen)
@@ -384,11 +384,11 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void ShowEmoticonIntellisense(double x, double y)
+        private void ShowEmoticonIntellisense(double x, double y, int count)
         {
-            this.EmoticonIntellisenseContent.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            int itemHeight = count * 40;
             Canvas.SetLeft(this.EmoticonIntellisense, x + 10);
-            Canvas.SetTop(this.EmoticonIntellisense, y - this.EmoticonIntellisenseContent.DesiredSize.Height - 40);
+            Canvas.SetTop(this.EmoticonIntellisense, y - itemHeight - 40);
             this.EmoticonIntellisense.UpdateLayout();
 
             if (!this.EmoticonIntellisense.IsPopupOpen)

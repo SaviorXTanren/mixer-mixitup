@@ -8,8 +8,10 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <Image x:Name="EmoticonImage" Grid.Column="0" ToolTip="{Binding Name}" />
+        <TextBlock x:Name="EmoticonText" Grid.Column="1" Visibility="Collapsed" Text="{Binding Name}" Margin="5,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>
