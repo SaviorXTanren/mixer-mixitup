@@ -158,10 +158,10 @@ namespace MixItUp.WPF.Controls.Chat
                     TextBlock textBlock = (TextBlock)item;
                     textBlock.FontSize = ChannelSession.Settings.ChatFontSize;
                 }
-                else if (item is Image)
+                else if (item is EmoticonControl)
                 {
-                    Image image = (Image)item;
-                    image.Height = image.Width = ChannelSession.Settings.ChatFontSize + 2;
+                    EmoticonControl emoticon = (EmoticonControl)item;
+                    emoticon.Height = emoticon.Width = ChannelSession.Settings.ChatFontSize + 2;
                 }
             }
         }

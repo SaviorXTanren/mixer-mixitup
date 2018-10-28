@@ -453,6 +453,11 @@ namespace MixItUp.Base
         private static IEnumerable<EmoticonImage> FindMatchingEmoticons(string text, Dictionary<string, Dictionary<string, EmoticonImage>> storage)
         {
             List<EmoticonImage> matchedImages = new List<EmoticonImage>();
+            if (text.Length == 1 && char.IsLetterOrDigit(text[0]))
+            {
+                // Short circuit for very short searches that start with letters or digits
+                return matchedImages;
+            }
 
             // User specific emoticons
             foreach (var kvp in storage)
