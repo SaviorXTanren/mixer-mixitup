@@ -274,31 +274,18 @@ namespace MixItUp.Base.ViewModel.User
             if (this.ID > 0)
             {
                 UserWithChannelModel user = await ChannelSession.Connection.GetUser(this.ID);
-                DateTimeOffset? followDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
-                DateTimeOffset? subscribeDate = null;
-                if (this.IsSubscriber)
-                {
-                    UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
-                    subscribeDate = userGroups.GetSubscriberDate();
-                }
-
-                await this.RefreshDetails(user, followDate, subscribeDate);
-            }
-        }
-
-        public async Task RefreshDetails(UserWithChannelModel user, DateTimeOffset? followDate, DateTimeOffset? subscribeDate)
-        {
-            if (this.ID > 0)
-            {
                 if (user != null)
                 {
                     this.MixerAccountDate = user.createdAt;
                     this.Sparks = (int)user.sparks;
+
+                    this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
+                    if (this.IsSubscriber)
+                    {
+                        UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
+                        this.SubscribeDate = userGroups.GetSubscriberDate();
+                    }
                 }
-
-                this.FollowDate = followDate;
-
-                this.SubscribeDate = subscribeDate;
 
                 await this.SetCustomRoles();
             }

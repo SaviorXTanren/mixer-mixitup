@@ -1,7 +1,6 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Interactive;
-using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
@@ -399,6 +398,8 @@ namespace MixItUp.Base
                     ChannelSession.Services.Telemetry.SetUserId(ChannelSession.Settings.TelemetryUserId);
 
                     ChannelSession.Connection.Initialize();
+
+                    await ChannelSession.ActiveUsers.Initialize();
 
                     if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect())
                     {
