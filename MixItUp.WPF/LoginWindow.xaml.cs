@@ -2,9 +2,7 @@
 using Mixer.Base;
 using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.User;
-using Mixer.Base.Web;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Model.API;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -13,15 +11,12 @@ using MixItUp.Installer;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows;
 using MixItUp.WPF.Windows.Wizard;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,6 +31,7 @@ namespace MixItUp.WPF
     {
         private static readonly Version minimumOSVersion = new Version(6, 2, 0, 0);
 
+        private MixItUpUpdateModel currentUpdate;
         private bool updateFound = false;
 
         private ObservableCollection<IChannelSettings> streamerSettings = new ObservableCollection<IChannelSettings>();
@@ -275,20 +271,20 @@ namespace MixItUp.WPF
 
         private async Task CheckForUpdates()
         {
-            MixItUpUpdateModel latestUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
+            this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
             if (App.AppSettings.PreviewProgram)
             {
                 MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
-                if (previewUpdate.SystemVersion > latestUpdate.SystemVersion)
+                if (previewUpdate.SystemVersion > this.currentUpdate.SystemVersion)
                 {
-                    latestUpdate = previewUpdate;
+                    this.currentUpdate = previewUpdate;
                 }
             }
 
-            if (latestUpdate != null)
+            if (this.currentUpdate != null)
             {
                 AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
-                AutoUpdater.Start(latestUpdate.AutoUpdaterLink);
+                AutoUpdater.Start(this.currentUpdate.AutoUpdaterLink);
             }
         }
 
