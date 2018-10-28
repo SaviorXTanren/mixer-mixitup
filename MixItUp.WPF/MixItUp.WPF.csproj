@@ -1336,6 +1336,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
+    <Page Include="Themes\MixItUpTheme.AmericaHeckYa.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\MixItUpTheme.TeamBoom.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1439,6 +1443,10 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="README.md" />
+    <Page Include="Themes\MixItUpTheme.NibblesCarrotPatch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\MixItUpTheme.1YearAnniversary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
