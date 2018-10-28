@@ -272,17 +272,17 @@ namespace MixItUp.WPF
         private async Task CheckForUpdates()
         {
             this.currentUpdate = await ChannelSession.Services.MixItUpService.GetLatestUpdate();
-            if (App.AppSettings.PreviewProgram)
-            {
-                MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
-                if (previewUpdate.SystemVersion > this.currentUpdate.SystemVersion)
-                {
-                    this.currentUpdate = previewUpdate;
-                }
-            }
-
             if (this.currentUpdate != null)
             {
+                if (App.AppSettings.PreviewProgram)
+                {
+                    MixItUpUpdateModel previewUpdate = await ChannelSession.Services.MixItUpService.GetLatestPreviewUpdate();
+                    if (previewUpdate != null && previewUpdate.SystemVersion >= this.currentUpdate.SystemVersion)
+                    {
+                        this.currentUpdate = previewUpdate;
+                    }
+                }
+
                 AutoUpdater.CheckForUpdateEvent += AutoUpdater_CheckForUpdateEvent;
                 AutoUpdater.Start(this.currentUpdate.AutoUpdaterLink);
             }
