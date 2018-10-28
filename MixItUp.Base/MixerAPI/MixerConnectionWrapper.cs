@@ -93,6 +93,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<IEnumerable<ExpandedChannelModel>> GetChannelsFromUsers(IEnumerable<uint> userIDs) { return await this.RunAsync(this.Connection.Channels.GetChannelsFromUsers(userIDs)); }
 
+        public async Task<IEnumerable<EmoticonPackModel>> GetEmoticons(ChannelModel channel, UserModel user = null) { return await this.RunAsync(this.Connection.Channels.GetEmoticons(channel, user)); }
+
         public async Task<IEnumerable<ExpandedChannelModel>> GetFeaturedChannels() { return await this.RunAsync(this.Connection.Channels.GetFeaturedChannels()); }
 
         public async Task<ChannelModel> UpdateChannel(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.UpdateChannel(channel)); }

@@ -320,35 +320,58 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             HideIntellisense();
 
-            string userTag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
-            if (!string.IsNullOrEmpty(userTag) && userTag.StartsWith("@"))
+            string tag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
+            if (!string.IsNullOrEmpty(tag))
             {
-                string filter = userTag.Substring(1);
-
-                List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
-                if (!string.IsNullOrEmpty(filter))
+                if (tag.StartsWith("@"))
                 {
-                    users = users.Where(u => u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                    string filter = tag.Substring(1);
+
+                    List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        users = users.Where(u => u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                    }
+                    users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
+
+                    if (users.Count > 0)
+                    {
+                        this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
+                        UsernameIntellisenseListBox.ItemsSource = users;
+
+                        // Select the bottom user
+                        UsernameIntellisenseListBox.SelectedIndex = users.Count - 1;
+
+                        Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+                        Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+
+                        ShowUserIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                    }
                 }
-                users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
-
-                if (users.Count > 0)
+                else
                 {
-                    this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(userTag);
-                    UsernameIntellisenseListBox.ItemsSource = users;
+                    List<EmoticonImage> emoticonImages = ShouldSendAsStreamer() ?
+                        ChannelSession.FindMatchingEmoticonsForUser(tag).ToList() :
+                        ChannelSession.FindMatchingEmoticonsForBot(tag).ToList();
+                    if (emoticonImages.Count > 0)
+                    {
+                        emoticonImages = emoticonImages.Take(5).Reverse().ToList();
+                        this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
+                        EmoticonIntellisenseListBox.ItemsSource = emoticonImages;
 
-                    // Select the bottom user
-                    UsernameIntellisenseListBox.SelectedIndex = users.Count - 1;
+                        // Select the bottom icon
+                        EmoticonIntellisenseListBox.SelectedIndex = emoticonImages.Count - 1;
 
-                    Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
-                    Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+                        Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+                        Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
 
-                    ShowIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                        ShowEmoticonIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                    }
                 }
             }
         }
 
-        private void ShowIntellisense(double x, double y)
+        private void ShowUserIntellisense(double x, double y)
         {
             this.UsernameIntellisenseContent.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             Canvas.SetLeft(this.UsernameIntellisense, x + 10);
@@ -361,11 +384,29 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private void ShowEmoticonIntellisense(double x, double y)
+        {
+            this.EmoticonIntellisenseContent.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            Canvas.SetLeft(this.EmoticonIntellisense, x + 10);
+            Canvas.SetTop(this.EmoticonIntellisense, y - this.EmoticonIntellisenseContent.DesiredSize.Height - 40);
+            this.EmoticonIntellisense.UpdateLayout();
+
+            if (!this.EmoticonIntellisense.IsPopupOpen)
+            {
+                this.EmoticonIntellisense.IsPopupOpen = true;
+            }
+        }
+
         private void HideIntellisense()
         {
             if (this.UsernameIntellisense.IsPopupOpen)
             {
                 this.UsernameIntellisense.IsPopupOpen = false;
+            }
+
+            if (this.EmoticonIntellisense.IsPopupOpen)
+            {
+                this.EmoticonIntellisense.IsPopupOpen = false;
             }
         }
 
@@ -398,6 +439,29 @@ namespace MixItUp.WPF.Controls.MainControls
                         break;
                     case Key.Down:
                         UsernameIntellisenseListBox.SelectedIndex = MathHelper.Clamp(UsernameIntellisenseListBox.SelectedIndex + 1, 0, UsernameIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                }
+            }
+            else if (this.EmoticonIntellisense.IsPopupOpen)
+            {
+                switch (e.Key)
+                {
+                    case Key.Escape:
+                        HideIntellisense();
+                        e.Handled = true;
+                        break;
+                    case Key.Tab:
+                    case Key.Enter:
+                        SelectIntellisenseEmoticon();
+                        e.Handled = true;
+                        break;
+                    case Key.Up:
+                        EmoticonIntellisenseListBox.SelectedIndex = MathHelper.Clamp(EmoticonIntellisenseListBox.SelectedIndex - 1, 0, EmoticonIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                    case Key.Down:
+                        EmoticonIntellisenseListBox.SelectedIndex = MathHelper.Clamp(EmoticonIntellisenseListBox.SelectedIndex + 1, 0, EmoticonIntellisenseListBox.Items.Count - 1);
                         e.Handled = true;
                         break;
                 }
@@ -439,6 +503,11 @@ namespace MixItUp.WPF.Controls.MainControls
             SelectIntellisenseUser();
         }
 
+        private void EmoticonIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            SelectIntellisenseEmoticon();
+        }
+
         private void SelectIntellisenseUser()
         {
             UserViewModel user = UsernameIntellisenseListBox.SelectedItem as UserViewModel;
@@ -451,6 +520,25 @@ namespace MixItUp.WPF.Controls.MainControls
                 else
                 {
                     this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, this.indexOfTag) + "@" + user.UserName + " ";
+                }
+
+                this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+            }
+            HideIntellisense();
+        }
+
+        private void SelectIntellisenseEmoticon()
+        {
+            EmoticonImage emoticon = EmoticonIntellisenseListBox.SelectedItem as EmoticonImage;
+            if (emoticon != null)
+            {
+                if (this.indexOfTag == 0)
+                {
+                    this.ChatMessageTextBox.Text = emoticon.Name + " ";
+                }
+                else
+                {
+                    this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, this.indexOfTag) + emoticon.Name + " ";
                 }
 
                 this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
@@ -488,7 +576,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.Whisper(username, message, (this.SendChatAsComboBox.SelectedIndex == 0));
+                        await ChannelSession.Chat.Whisper(username, message, ShouldSendAsStreamer());
                     }));
                 }
                 else if (ChatAction.ClearRegex.IsMatch(message))
@@ -499,12 +587,17 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.SendMessage(message, (this.SendChatAsComboBox.SelectedIndex == 0));
+                        await ChannelSession.Chat.SendMessage(message, ShouldSendAsStreamer());
                     }));
                 }
 
                 this.ChatMessageTextBox.Focus();
             }
+        }
+
+        private bool ShouldSendAsStreamer()
+        {
+            return this.SendChatAsComboBox.SelectedIndex == 0;
         }
 
         private async void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

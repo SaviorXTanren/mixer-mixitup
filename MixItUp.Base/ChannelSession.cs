@@ -1,7 +1,7 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Interactive;
-using Mixer.Base.Model.OAuth;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Actions;
@@ -11,10 +11,15 @@ using MixItUp.Base.Model.API;
 using MixItUp.Base.Services;
 using MixItUp.Base.Statistics;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -27,6 +32,15 @@ namespace MixItUp.Base
         public const string ClientID = "5e3140d0719f5842a09dd2700befbfc100b5a246e35f2690";
 
         public const string DefaultOBSStudioConnection = "ws://127.0.0.1:4444";
+
+        private const string DefaultEmoticonsManifest = "https://mixer.com/_latest/assets/emoticons/manifest.json";
+        private const string DefaultEmoticonsLinkFormat = "https://mixer.com/_latest/assets/emoticons/{0}.png";
+
+        //                                 Source             Text
+        private static readonly Dictionary<string, Dictionary<string, EmoticonImage>> builtinEmoticons = new Dictionary<string, Dictionary<string, EmoticonImage>>();
+        private static readonly Dictionary<string, Dictionary<string, EmoticonImage>> externalEmoticons = new Dictionary<string, Dictionary<string, EmoticonImage>>();
+        private static readonly Dictionary<string, Dictionary<string, EmoticonImage>> userEmoticons = new Dictionary<string, Dictionary<string, EmoticonImage>>();
+        private static readonly Dictionary<string, Dictionary<string, EmoticonImage>> botEmoticons = new Dictionary<string, Dictionary<string, EmoticonImage>>();
 
         public static readonly List<OAuthClientScopeEnum> StreamerScopes = new List<OAuthClientScopeEnum>()
         {
@@ -187,7 +201,8 @@ namespace MixItUp.Base
                 {
                     ChannelSession.SecretManager = (SecretManagerService)Activator.CreateInstance(mixItUpSecretsType);
                 }
-            } catch (Exception ex) { Util.Logger.Log(ex); }
+            }
+            catch (Exception ex) { Util.Logger.Log(ex); }
 
             if (ChannelSession.SecretManager == null)
             {
@@ -366,6 +381,94 @@ namespace MixItUp.Base
             GlobalEvents.ServiceReconnect(serviceName);
         }
 
+        public static async Task EnsureEmoticonForMessageAsync(ChatMessageDataModel message)
+        {
+            if (message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
+            {
+                string imageFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(message.pack));
+
+                if (!externalEmoticons.ContainsKey(message.pack))
+                {
+                    externalEmoticons.Add(message.pack, new Dictionary<string, EmoticonImage>());
+                    if (!File.Exists(imageFilePath))
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            await Task.Run(() =>
+                            {
+                                client.DownloadFile(new Uri(message.pack), imageFilePath);
+                            });
+                        }
+                    }
+                }
+
+                if (!externalEmoticons[message.pack].ContainsKey(message.text))
+                {
+                    externalEmoticons[message.pack][message.text] = new EmoticonImage
+                    {
+                        Name = message.text,
+                        FilePath = imageFilePath,
+                        X = message.coords.x,
+                        Y = message.coords.y,
+                        Width = message.coords.width,
+                        Height = message.coords.height,
+                    };
+                }
+            }
+        }
+
+        public static EmoticonImage GetEmoticonForMessage(ChatMessageDataModel message)
+        {
+            if (message.type.Equals("emoticon", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Dictionary<string, Dictionary<string, EmoticonImage>> emoticons = null;
+                switch (message.source.ToLower())
+                {
+                    case "external":
+                        emoticons = externalEmoticons;
+                        break;
+                    case "builtin":
+                        emoticons = builtinEmoticons;
+                        break;
+                }
+
+                if (emoticons != null && emoticons.ContainsKey(message.pack) && emoticons[message.pack].ContainsKey(message.text))
+                {
+                    return emoticons[message.pack][message.text];
+                }
+            }
+            return null;
+        }
+
+        public static IEnumerable<EmoticonImage> FindMatchingEmoticonsForUser(string text)
+        {
+            return FindMatchingEmoticons(text, userEmoticons);
+        }
+
+        public static IEnumerable<EmoticonImage> FindMatchingEmoticonsForBot(string text)
+        {
+            return FindMatchingEmoticons(text, botEmoticons);
+        }
+
+        private static IEnumerable<EmoticonImage> FindMatchingEmoticons(string text, Dictionary<string, Dictionary<string, EmoticonImage>> storage)
+        {
+            List<EmoticonImage> matchedImages = new List<EmoticonImage>();
+
+            // User specific emoticons
+            foreach (var kvp in storage)
+            {
+                matchedImages.AddRange(kvp.Value.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
+            }
+
+            // Builtin emoticons (added last to put them at the end)
+            foreach (var kvp in builtinEmoticons)
+            {
+                matchedImages.AddRange(kvp.Value.Where(v => v.Key.StartsWith(text, StringComparison.InvariantCultureIgnoreCase)).Select(v => v.Value));
+            }
+
+            return matchedImages;
+        }
+
         private static async Task<bool> InitializeInternal(bool isStreamer, string channelName = null)
         {
             await ChannelSession.Services.InitializeTelemetryService();
@@ -502,6 +605,8 @@ namespace MixItUp.Base
                         }
                     }
 
+                    await ChannelSession.LoadUserEmoticons();
+
                     await ChannelSession.SaveSettings();
 
                     await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
@@ -533,6 +638,8 @@ namespace MixItUp.Base
 
                 await ChannelSession.Chat.ConnectBot();
 
+                await ChannelSession.LoadBotEmoticons();
+
                 await ChannelSession.SaveSettings();
 
                 return true;
@@ -548,6 +655,109 @@ namespace MixItUp.Base
                 if (user != null)
                 {
                     await currency.Currency.RankChangedCommand.Perform(user);
+                }
+            }
+        }
+
+        private static async Task LoadUserEmoticons()
+        {
+            // Read Manifest (built in)
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Add("User-Agent", $"MixItUp/{System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString()} (Web call from Mix It Up; https://mixitupapp.com; support@mixitupapp.com)");
+
+                using (HttpResponseMessage response = await httpClient.GetAsync(ChannelSession.DefaultEmoticonsManifest))
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        Dictionary<string, BuiltinEmoticonPack> manifest = JsonConvert.DeserializeObject<Dictionary<string, BuiltinEmoticonPack>>(await response.Content.ReadAsStringAsync());
+
+                        foreach (KeyValuePair<string, BuiltinEmoticonPack> pack in manifest)
+                        {
+                            string imageLink = string.Format(ChannelSession.DefaultEmoticonsLinkFormat, pack.Key);
+                            string imageFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(imageLink));
+
+                            if (!builtinEmoticons.ContainsKey(pack.Key))
+                            {
+                                builtinEmoticons.Add(pack.Key, new Dictionary<string, EmoticonImage>());
+                                if (!File.Exists(imageFilePath))
+                                {
+                                    using (WebClient client = new WebClient())
+                                    {
+                                        await Task.Run(() =>
+                                        {
+                                            client.DownloadFile(new Uri(imageLink), imageFilePath);
+                                        });
+                                    }
+                                }
+                            }
+
+                            foreach (KeyValuePair<string, EmoticonGroupModel> emoticon in pack.Value.emoticons)
+                            {
+                                builtinEmoticons[pack.Key][emoticon.Key] = new EmoticonImage
+                                {
+                                    Name = emoticon.Key,
+                                    FilePath = imageFilePath,
+                                    X = emoticon.Value.x,
+                                    Y = emoticon.Value.y,
+                                    Width = emoticon.Value.width,
+                                    Height = emoticon.Value.height,
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+
+            await LoadEmoticons(ChannelSession.User, userEmoticons);
+        }
+
+        private static async Task LoadBotEmoticons()
+        {
+            await LoadEmoticons(ChannelSession.BotUser, botEmoticons);
+        }
+
+        private class BuiltinEmoticonPack
+        {
+            public string[] authors = null;
+            public bool @default = false;
+            public string name = null;
+            public Dictionary<string, EmoticonGroupModel> emoticons = new Dictionary<string, EmoticonGroupModel>();
+        }
+
+        private static async Task LoadEmoticons(UserModel user, Dictionary<string, Dictionary<string, EmoticonImage>> storage)
+        {
+            List<EmoticonPackModel> userPacks = (await ChannelSession.Connection.GetEmoticons(ChannelSession.Channel, user)).ToList();
+            foreach (EmoticonPackModel userPack in userPacks)
+            {
+                string imageFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(userPack.url));
+
+                if (!storage.ContainsKey(userPack.channelId.ToString()))
+                {
+                    storage.Add(userPack.channelId.ToString(), new Dictionary<string, EmoticonImage>());
+                    if (!File.Exists(imageFilePath))
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            await Task.Run(() =>
+                            {
+                                client.DownloadFile(new Uri(userPack.url), imageFilePath);
+                            });
+                        }
+                    }
+                }
+
+                foreach (KeyValuePair<string, EmoticonGroupModel> emoticon in userPack.emoticons)
+                {
+                    storage[userPack.channelId.ToString()][emoticon.Key] = new EmoticonImage
+                    {
+                        Name = emoticon.Key,
+                        FilePath = imageFilePath,
+                        X = emoticon.Value.x,
+                        Y = emoticon.Value.y,
+                        Width = emoticon.Value.width,
+                        Height = emoticon.Value.height,
+                    };
                 }
             }
         }

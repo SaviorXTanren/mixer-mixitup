@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mixer-client-csharp" Version="0.6.6-beta" />
+    <PackageReference Include="mixer-client-csharp" Version="0.7.0.1-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 

@@ -18,8 +18,6 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatMessageControl : UserControl
     {
-        private static Dictionary<string, BitmapImage> emoticonBitmapImages = new Dictionary<string, BitmapImage>();
-
         public ChatMessageViewModel Message { get; private set; }
 
         private ChatMessageHeaderControl messageHeader;
@@ -52,28 +50,11 @@ namespace MixItUp.WPF.Controls.Chat
 
             foreach (ChatMessageDataModel messageData in this.Message.MessageComponents)
             {
-                if (messageData.type.Equals("emoticon") && ChatMessageViewModel.EmoticonImages.ContainsKey(messageData.text))
+                EmoticonImage emoticon = ChannelSession.GetEmoticonForMessage(messageData);
+                if (emoticon != null)
                 {
-                    try
-                    {
-                        if (!ChatMessageControl.emoticonBitmapImages.ContainsKey(messageData.text))
-                        {
-                            ChatMessageControl.emoticonBitmapImages[messageData.text] = new BitmapImage(new Uri(ChatMessageViewModel.EmoticonImages[messageData.text].FilePath));
-                        }
-
-                        if (ChatMessageControl.emoticonBitmapImages.ContainsKey(messageData.text))
-                        {
-                            CoordinatesModel coords = ChatMessageViewModel.EmoticonImages[messageData.text].Coordinates;
-                            CroppedBitmap bitmap = new CroppedBitmap(ChatMessageControl.emoticonBitmapImages[messageData.text], new Int32Rect((int)coords.x, (int)coords.y, (int)coords.width, (int)coords.height));
-
-                            Image image = new Image();
-                            image.Source = bitmap;
-                            image.ToolTip = messageData.text;
-                            image.VerticalAlignment = VerticalAlignment.Center;
-                            this.MessageWrapPanel.Children.Add(image);
-                        }
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
+                    EmoticonControl image = new EmoticonControl(emoticon);
+                    this.MessageWrapPanel.Children.Add(image);
                 }
                 else
                 {
