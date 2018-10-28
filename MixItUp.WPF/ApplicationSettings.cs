@@ -43,6 +43,9 @@ namespace MixItUp.WPF
         public bool InstallerFolderUpgradeAsked { get; set; }
 
         [DataMember]
+        public bool PreviewProgram { get; set; }
+
+        [DataMember]
         public uint AutoLogInAccount { get; set; }
 
         [DataMember]
@@ -65,6 +68,7 @@ namespace MixItUp.WPF
 
         public ApplicationSettings()
         {
+            this.PreviewProgram = false;
             this.AutoLogInAccount = 0;
             this.ColorScheme = "Indigo";
             this.BackgroundColor = "Light";

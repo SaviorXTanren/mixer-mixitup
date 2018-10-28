@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.API
@@ -12,5 +13,8 @@ namespace MixItUp.Base.Model.API
         public string AutoUpdaterLink { get; set; }
         [JsonProperty]
         public string ChangelogLink { get; set; }
+
+        [JsonIgnore]
+        public Version SystemVersion { get { return new Version(this.Version); } }
     }
 }

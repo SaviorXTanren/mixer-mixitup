@@ -20,6 +20,7 @@ namespace MixItUp.Base.Services
         Task RefreshOAuthToken();
 
         Task<MixItUpUpdateModel> GetLatestUpdate();
+        Task<MixItUpUpdateModel> GetLatestPreviewUpdate();
 
         Task SendUserFeatureEvent(UserFeatureEvent feature);
         Task SendIssueReport(IssueReportModel report);
@@ -66,6 +67,7 @@ namespace MixItUp.Base.Services
         }
 
         public async Task<MixItUpUpdateModel> GetLatestUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates"); }
+        public async Task<MixItUpUpdateModel> GetLatestPreviewUpdate() { return await this.GetAsync<MixItUpUpdateModel>("updates/preview"); }
 
         public async Task SendUserFeatureEvent(UserFeatureEvent feature)
         {

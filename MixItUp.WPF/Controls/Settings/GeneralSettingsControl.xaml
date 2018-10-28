@@ -32,6 +32,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" x:Name="OptOutTrackingTextBlock" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Opt-Out of Data Tracking*:</TextBlock>
@@ -43,24 +45,27 @@
         <TextBlock Grid.Row="4" Grid.Column="0" x:Name="AutoLogInAccountTextBlock" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Auto Log-In Current Account:</TextBlock>
         <ToggleButton Grid.Row="4" Grid.Column="2" x:Name="AutoLogInAccountToggleButton" HorizontalAlignment="Left" Checked="AutoLogInAccountToggleButton_Checked" Unchecked="AutoLogInAccountToggleButton_Unchecked" />
 
-        <Separator Grid.Row="6" Grid.ColumnSpan="2" Margin="10" />
+        <TextBlock Grid.Row="6" Grid.Column="0" x:Name="UpdatePreviewProgramTextBlock" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Update Preview Program:</TextBlock>
+        <ToggleButton Grid.Row="6" Grid.Column="2" x:Name="UpdatePreviewProgramToggleButton" HorizontalAlignment="Left" Checked="UpdatePreviewProgramToggleButton_Checked" Unchecked="UpdatePreviewProgramToggleButton_Checked" />
 
-        <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Default Streaming Software:</TextBlock>
-        <ComboBox x:Name="DefaultStreamingSoftwareComboBox" Grid.Row="8" Grid.Column="2" SelectionChanged="DefaultStreamingSoftwareComboBox_SelectionChanged" />
+        <Separator Grid.Row="8" Grid.ColumnSpan="2" Margin="10" />
 
-        <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Default Audio Output:</TextBlock>
-        <ComboBox x:Name="DefaultAudioOutputComboBox" Grid.Row="10" Grid.Column="2" SelectionChanged="DefaultAudioOutputComboBox_SelectionChanged" />
+        <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Default Streaming Software:</TextBlock>
+        <ComboBox x:Name="DefaultStreamingSoftwareComboBox" Grid.Row="10" Grid.Column="2" SelectionChanged="DefaultStreamingSoftwareComboBox_SelectionChanged" />
 
-        <Separator Grid.Row="12" Grid.ColumnSpan="2" Margin="10" />
+        <TextBlock Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Default Audio Output:</TextBlock>
+        <ComboBox x:Name="DefaultAudioOutputComboBox" Grid.Row="12" Grid.Column="2" SelectionChanged="DefaultAudioOutputComboBox_SelectionChanged" />
 
-        <TextBlock Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Download &amp; Install ffmpeg:</TextBlock>
-        <Button x:Name="DownloadAndInstallFFMPEGButton" Grid.Row="14" Grid.Column="2" Click="DownloadAndInstallFFMPEGButton_Click" Width="160">Download &amp; Install</Button>
-        <TextBlock Grid.Row="14" Grid.Column="2" x:Name="FFMPEGInstalledTextBlock" HorizontalAlignment="Center">Already Installed</TextBlock>
+        <Separator Grid.Row="14" Grid.ColumnSpan="2" Margin="10" />
 
-        <Separator Grid.Row="16" Grid.ColumnSpan="2" Margin="10" />
+        <TextBlock Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Download &amp; Install ffmpeg:</TextBlock>
+        <Button x:Name="DownloadAndInstallFFMPEGButton" Grid.Row="16" Grid.Column="2" Click="DownloadAndInstallFFMPEGButton_Click" Width="160">Download &amp; Install</Button>
+        <TextBlock Grid.Row="16" Grid.Column="2" x:Name="FFMPEGInstalledTextBlock" HorizontalAlignment="Center">Already Installed</TextBlock>
 
-        <TextBlock Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Save Chat/Event Logs:</TextBlock>
-        <ToggleButton Grid.Row="18" Grid.Column="2" x:Name="SaveChatEventLogsToggleButton" HorizontalAlignment="Left" Checked="SaveChatEventLogsToggleButton_Checked" Unchecked="SaveChatEventLogsToggleButton_Checked" />
+        <Separator Grid.Row="18" Grid.ColumnSpan="2" Margin="10" />
+
+        <TextBlock Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Save Chat/Event Logs:</TextBlock>
+        <ToggleButton Grid.Row="20" Grid.Column="2" x:Name="SaveChatEventLogsToggleButton" HorizontalAlignment="Left" Checked="SaveChatEventLogsToggleButton_Checked" Unchecked="SaveChatEventLogsToggleButton_Checked" />
         
     </Grid>
 </local:SettingsControlBase>
