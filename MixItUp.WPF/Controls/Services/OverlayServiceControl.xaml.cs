@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System;
@@ -70,11 +71,12 @@ namespace MixItUp.WPF.Controls.Services
 
         private async void TestOverlayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ChannelSession.Services.OverlayServer != null)
+            if (ChannelSession.Services.OverlayServers != null)
             {
                 await this.groupBoxControl.window.RunAsyncOperation(async () =>
                 {
-                    if (await ChannelSession.Services.OverlayServer.TestConnection())
+                    IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
+                    if (overlay != null && await overlay.TestConnection())
                     {
                         await MessageBoxHelper.ShowMessageDialog("Overlay connection test successful!");
                     }
@@ -91,8 +93,19 @@ namespace MixItUp.WPF.Controls.Services
 
         private async Task<bool> ConnectOverlayService()
         {
-            if (!await ChannelSession.Services.InitializeOverlayServer())
+            bool overlaysAdded = true;
+            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
             {
+                if (!await ChannelSession.Services.OverlayServers.AddOverlay(kvp.Key, kvp.Value))
+                {
+                    overlaysAdded = false;
+                    break;
+                }
+            }
+
+            if (!overlaysAdded)
+            {
+                await ChannelSession.Services.OverlayServers.RemoveAllOverlays();
                 return false;
             }
 
@@ -113,7 +126,7 @@ namespace MixItUp.WPF.Controls.Services
             this.DisableOverlayButton.Visibility = Visibility.Collapsed;
             this.TestOverlayButton.IsEnabled = false;
 
-            await ChannelSession.Services.DisconnectOverlayServer();
+            await ChannelSession.Services.OverlayServers.RemoveAllOverlays();
 
             ChannelSession.Settings.EnableOverlay = false;
 

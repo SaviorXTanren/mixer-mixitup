@@ -104,6 +104,7 @@ namespace MixItUp.Base
         CustomCommand ModerationStrike3Command { get; set; }
 
         bool EnableOverlay { get; set; }
+        Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
         string OverlaySourceName { get; set; }
 
         string OBSStudioServerIP { get; set; }

@@ -191,6 +191,8 @@ namespace MixItUp.Desktop
         [JsonProperty]
         public bool EnableOverlay { get; set; }
         [JsonProperty]
+        public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
+        [JsonProperty]
         public string OverlaySourceName { get; set; }
 
         [JsonProperty]
@@ -319,6 +321,7 @@ namespace MixItUp.Desktop
 
         public DesktopSavableChannelSettings()
         {
+            this.OverlayCustomNameAndPorts = new Dictionary<string, int>();
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
             this.SerialDevices = new List<SerialDeviceModel>();
             this.RemoteBoards = new List<RemoteBoardModel>();

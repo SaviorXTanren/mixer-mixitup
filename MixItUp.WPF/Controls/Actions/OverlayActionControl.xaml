@@ -27,6 +27,7 @@
             <ComboBox x:Name="TypeComboBox" Grid.Column="0" SelectionChanged="OverlayTypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
             <TextBlock x:Name="OverlayNotEnabledWarningTextBlock" Grid.Column="2" Foreground="Red" HorizontalAlignment="Center" Visibility="Hidden">Please enable Mix It Up Overlay in the Services Section!</TextBlock>
+            <ComboBox x:Name="OverlayNameComboBox" Grid.Column="2" Margin="20,0,0,0" Width="200" HorizontalAlignment="Left" IsEnabled="False" Visibility="Hidden" MaterialDesign:HintAssist.Hint="Overlay To Use" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
         </Grid>
 
         <Grid x:Name="TextGrid" Grid.Row="2" Visibility="Collapsed">

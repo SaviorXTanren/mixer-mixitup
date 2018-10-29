@@ -166,6 +166,16 @@ namespace MixItUp.Base
             }
         }
 
+        public static IDictionary<string, int> AllOverlayNameAndPorts
+        {
+            get
+            {
+                Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
+                results.Add(ChannelSession.Services.OverlayServers.DefaultOverlayName, ChannelSession.Services.OverlayServers.DefaultOverlayPort);
+                return results;
+            }
+        }
+
         public static bool IsStreamer
         {
             get
@@ -417,7 +427,10 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.EnableOverlay)
                     {
-                        await ChannelSession.Services.InitializeOverlayServer();
+                        foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
+                        {
+                            await ChannelSession.Services.OverlayServers.AddOverlay(kvp.Key, kvp.Value);
+                        }
                     }
 
                     if (ChannelSession.Settings.EnableDeveloperAPI)

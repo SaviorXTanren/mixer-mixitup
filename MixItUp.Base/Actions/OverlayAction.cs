@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -474,19 +475,25 @@ namespace MixItUp.Base.Actions
         protected override SemaphoreSlim AsyncSemaphore { get { return OverlayAction.asyncSemaphore; } }
 
         [DataMember]
+        public string OverlayName { get; set; }
+
+        [DataMember]
         public OverlayEffectBase Effect { get; set; }
 
         public OverlayAction() : base(ActionTypeEnum.Overlay) { }
 
-        public OverlayAction(OverlayEffectBase effect)
+        public OverlayAction(string overlayName, OverlayEffectBase effect)
             : this()
         {
+            this.OverlayName = overlayName;
             this.Effect = effect;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (ChannelSession.Services.OverlayServer != null)
+            string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.OverlayServers.DefaultOverlayName : this.OverlayName;
+            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
+            if (overlay != null)
             {
                 if (this.Effect is OverlayImageEffect)
                 {
@@ -501,7 +508,7 @@ namespace MixItUp.Base.Actions
                     {
                         OverlayImageEffect copy = imageEffect.Copy<OverlayImageEffect>();
                         copy.FilePath = imageFilePath;
-                        await ChannelSession.Services.OverlayServer.SendImage(copy);
+                        await overlay.SendImage(copy);
                     }
                 }
                 else if (this.Effect is OverlayTextEffect)
@@ -510,11 +517,11 @@ namespace MixItUp.Base.Actions
                     string text = await this.ReplaceStringWithSpecialModifiers(textEffect.Text, user, arguments);
                     OverlayTextEffect copy = textEffect.Copy<OverlayTextEffect>();
                     copy.Text = text;
-                    await ChannelSession.Services.OverlayServer.SendText(copy);
+                    await overlay.SendText(copy);
                 }
                 else if (this.Effect is OverlayYoutubeEffect)
                 {
-                    await ChannelSession.Services.OverlayServer.SendYoutubeVideo((OverlayYoutubeEffect)this.Effect);
+                    await overlay.SendYoutubeVideo((OverlayYoutubeEffect)this.Effect);
                 }
                 else if (this.Effect is OverlayVideoEffect)
                 {
@@ -529,7 +536,7 @@ namespace MixItUp.Base.Actions
                     {
                         OverlayVideoEffect copy = videoEffect.Copy<OverlayVideoEffect>();
                         copy.FilePath = videoFilePath;
-                        await ChannelSession.Services.OverlayServer.SendLocalVideo(copy);
+                        await overlay.SendLocalVideo(copy);
                     }
                 }
                 else if (this.Effect is OverlayHTMLEffect)
@@ -538,7 +545,7 @@ namespace MixItUp.Base.Actions
                     string htmlText = await this.ReplaceStringWithSpecialModifiers(htmlEffect.HTMLText, user, arguments);
                     OverlayHTMLEffect copy = htmlEffect.Copy<OverlayHTMLEffect>();
                     copy.HTMLText = htmlText;
-                    await ChannelSession.Services.OverlayServer.SendHTML(copy);
+                    await overlay.SendHTML(copy);
                 }
                 else if (this.Effect is OverlayWebPageEffect)
                 {
@@ -546,7 +553,7 @@ namespace MixItUp.Base.Actions
                     string url = await this.ReplaceStringWithSpecialModifiers(webPageEffect.URL, user, arguments);
                     OverlayWebPageEffect copy = webPageEffect.Copy<OverlayWebPageEffect>();
                     copy.URL = url;
-                    await ChannelSession.Services.OverlayServer.SendWebPage(copy);
+                    await overlay.SendWebPage(copy);
                 }
             }
         }

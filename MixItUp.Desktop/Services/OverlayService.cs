@@ -36,22 +36,28 @@ namespace MixItUp.Overlay
         }
     }
 
-    public class OverlayWebServer : IOverlayService
+    public class OverlayService : IOverlayService
     {
-        public const string RegularOverlayHttpListenerServerAddress = "http://localhost:8111/overlay/";
-        public const string RegularOverlayWebSocketServerAddress = "http://localhost:8111/ws/";
+        public const string RegularOverlayHttpListenerServerAddressFormat = "http://localhost:{0}/overlay/";
+        public const string RegularOverlayWebSocketServerAddressFormat = "http://localhost:{0}/ws/";
 
-        public const string AdministratorOverlayHttpListenerServerAddress = "http://*:8111/overlay/";
-        public const string AdministratorOverlayWebSocketServerAddress = "http://*:8111/ws/";
+        public const string AdministratorOverlayHttpListenerServerAddressFormat = "http://*:{0}/overlay/";
+        public const string AdministratorOverlayWebSocketServerAddressFormat = "http://*:{0}/ws/";
 
-        public event EventHandler OnWebSocketConnectedOccurred { add { this.webSocketServer.OnConnectedOccurred += value; } remove { this.webSocketServer.OnConnectedOccurred -= value; } }
-        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred { add { this.webSocketServer.OnDisconnectOccurred += value; } remove { this.webSocketServer.OnDisconnectOccurred -= value; } }
+        public event EventHandler OnWebSocketConnectedOccurred = delegate { };
+        public event EventHandler<WebSocketCloseStatus> OnWebSocketDisconnectedOccurred = delegate { };
+
+        public string Name { get; private set; }
+        public int Port { get; private set; }
 
         private OverlayHttpListenerServer httpListenerServer;
         private OverlayWebSocketHttpListenerServer webSocketServer;
 
         private List<OverlayPacket> batchPackets = new List<OverlayPacket>();
         private bool isBatching = false;
+
+        public string HttpListenerServerAddress { get { return string.Format(OverlayService.IsElevated ? AdministratorOverlayHttpListenerServerAddressFormat : RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
+        public string WebSocketServerAddress { get { return string.Format(OverlayService.IsElevated ? AdministratorOverlayWebSocketServerAddressFormat : RegularOverlayWebSocketServerAddressFormat, this.Port); } }
 
         private static bool IsElevated
         {
@@ -62,10 +68,13 @@ namespace MixItUp.Overlay
             }
         }
 
-        public OverlayWebServer()
+        public OverlayService(string name, int port)
         {
-            this.httpListenerServer = new OverlayHttpListenerServer(IsElevated ? AdministratorOverlayHttpListenerServerAddress : RegularOverlayHttpListenerServerAddress);
-            this.webSocketServer = new OverlayWebSocketHttpListenerServer(IsElevated ? AdministratorOverlayWebSocketServerAddress : RegularOverlayWebSocketServerAddress);
+            this.Name = name;
+            this.Port = port;
+
+            this.httpListenerServer = new OverlayHttpListenerServer(this.HttpListenerServerAddress, this.Port);
+            this.webSocketServer = new OverlayWebSocketHttpListenerServer(this.WebSocketServerAddress);
         }
 
         public async Task<bool> Initialize()
@@ -75,26 +84,30 @@ namespace MixItUp.Overlay
                 this.httpListenerServer.Start();
                 if (this.webSocketServer.Start())
                 {
-                    if (!string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
+                    this.webSocketServer.OnConnectedOccurred += WebSocketServer_OnConnectedOccurred;
+                    this.webSocketServer.OnDisconnectOccurred += WebSocketServer_OnDisconnectOccurred;
+
+                    if (this.Name.Equals(ChannelSession.Services.OverlayServers.DefaultOverlayName) && !string.IsNullOrWhiteSpace(ChannelSession.Settings.OverlaySourceName))
                     {
+                        string overlayServerAddress = string.Format(OverlayService.RegularOverlayHttpListenerServerAddressFormat, this.Port);
                         if (ChannelSession.Services.OBSWebsocket != null)
                         {
                             await ChannelSession.Services.OBSWebsocket.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.OBSWebsocket.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, RegularOverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.OBSWebsocket.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
                             await ChannelSession.Services.OBSWebsocket.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
                         if (ChannelSession.Services.XSplitServer != null)
                         {
                             await ChannelSession.Services.XSplitServer.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.XSplitServer.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, RegularOverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.XSplitServer.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
                             await ChannelSession.Services.XSplitServer.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
 
                         if (ChannelSession.Services.StreamlabsOBSService != null)
                         {
                             await ChannelSession.Services.StreamlabsOBSService.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: false);
-                            await ChannelSession.Services.StreamlabsOBSService.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, RegularOverlayHttpListenerServerAddress);
+                            await ChannelSession.Services.StreamlabsOBSService.SetWebBrowserSourceURL(ChannelSession.Settings.OverlaySourceName, overlayServerAddress);
                             await ChannelSession.Services.StreamlabsOBSService.SetSourceVisibility(ChannelSession.Settings.OverlaySourceName, visibility: true);
                         }
                     }
@@ -107,6 +120,9 @@ namespace MixItUp.Overlay
 
         public async Task Disconnect()
         {
+            this.webSocketServer.OnConnectedOccurred -= WebSocketServer_OnConnectedOccurred;
+            this.webSocketServer.OnDisconnectOccurred -= WebSocketServer_OnDisconnectOccurred;
+
             this.httpListenerServer.End();
             await this.webSocketServer.End();
         }
@@ -119,9 +135,10 @@ namespace MixItUp.Overlay
         public async Task EndBatching()
         {
             this.isBatching = false;
-
-            await this.webSocketServer.Send(new OverlayPacket("batch", JArray.FromObject(this.batchPackets)));
-
+            if (batchPackets.Count > 0)
+            {
+                await this.webSocketServer.Send(new OverlayPacket("batch", JArray.FromObject(this.batchPackets)));
+            }
             this.batchPackets.Clear();
         }
 
@@ -163,6 +180,16 @@ namespace MixItUp.Overlay
                 await this.webSocketServer.Send(packet);
             }
         }
+
+        private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)
+        {
+            this.OnWebSocketConnectedOccurred(this, new EventArgs());
+        }
+
+        private void WebSocketServer_OnDisconnectOccurred(object sender, WebSocketCloseStatus closeStatus)
+        {
+            this.OnWebSocketDisconnectedOccurred(this, closeStatus);
+        }
     }
 
     public class OverlayHttpListenerServer : HttpListenerServerBase
@@ -178,15 +205,20 @@ namespace MixItUp.Overlay
         private const string WebSocketWrapperScriptReplacementString = "<script src=\"webSocketWrapper.js\"></script>";
         private const string WebSocketWrapperFilePath = OverlayFolderPath + "WebSocketWrapper.js";
 
+        private const string OverlayConnectionPortReplacementString = "openWebsocketConnection(\"0000\");";
+        private const string OverlayConnectionPortFormat = "openWebsocketConnection(\"{0}\");";
+
         private const string OverlayFilesWebPath = "overlay/files/";
 
+        private int port;
         private string webPageInstance;
 
         private Dictionary<string, string> localFiles = new Dictionary<string, string>();
 
-        public OverlayHttpListenerServer(string address)
+        public OverlayHttpListenerServer(string address, int port)
             : base(address)
         {
+            this.port = port;
             this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
 
             string[] splits = CSSIncludeReplacementStringFormat.Split(new string[] { ".*" }, StringSplitOptions.RemoveEmptyEntries);
@@ -206,6 +238,8 @@ namespace MixItUp.Overlay
 
             string webSocketWrapperText = File.ReadAllText(WebSocketWrapperFilePath);
             this.webPageInstance = this.webPageInstance.Replace(WebSocketWrapperScriptReplacementString, string.Format("<script>{0}</script>", webSocketWrapperText));
+
+            this.webPageInstance = this.webPageInstance.Replace(OverlayConnectionPortReplacementString, string.Format(OverlayConnectionPortFormat, this.port));
         }
 
         public void SetLocalFile(string id, string filepath)

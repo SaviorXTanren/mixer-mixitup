@@ -5,7 +5,6 @@ using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services.DeveloperAPI;
 using MixItUp.Input;
 using MixItUp.OBS;
-using MixItUp.Overlay;
 using MixItUp.XSplit;
 using System;
 using System.Net.WebSockets;
@@ -28,44 +27,17 @@ namespace MixItUp.Desktop.Services
             this.SongRequestService = new SongRequestService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
+            this.OverlayServers = new OverlayServiceManager();
         }
 
         public override async Task Close()
         {
-            await this.DisconnectOverlayServer();
+            await this.OverlayServers.RemoveAllOverlays();
             await this.DisconnectOBSStudio();
             await this.DisconnectStreamlabsOBSService();
             await this.DisconnectXSplitServer();
             await this.DisconnectDeveloperAPI();
             await this.DisconnectTelemetryService();
-        }
-
-        public override async Task<bool> InitializeOverlayServer()
-        {
-            if (this.OverlayServer == null)
-            {
-                this.OverlayServer = new OverlayWebServer();
-                if (await this.OverlayServer.Initialize())
-                {
-                    this.OverlayServer.OnWebSocketConnectedOccurred += OverlayServer_OnWebSocketConnectedOccurred;
-                    this.OverlayServer.OnWebSocketDisconnectedOccurred += OverlayServer_OnWebSocketDisconnectedOccurred;
-                    return true;
-                }
-            }
-            await this.DisconnectOverlayServer();
-            return false;
-        }
-
-        public override async Task DisconnectOverlayServer()
-        {
-            if (this.OverlayServer != null)
-            {
-                this.OverlayServer.OnWebSocketConnectedOccurred -= OverlayServer_OnWebSocketConnectedOccurred;
-                this.OverlayServer.OnWebSocketDisconnectedOccurred -= OverlayServer_OnWebSocketDisconnectedOccurred;
-
-                await this.OverlayServer.Disconnect();
-                this.OverlayServer = null;
-            }
         }
 
         public override async Task<bool> InitializeOBSWebsocket()

@@ -2,6 +2,7 @@
 using Mixer.Base.Web;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace MixItUp.Base.Util
         public event EventHandler OnConnectedOccurred = delegate { };
         public event EventHandler<WebSocketCloseStatus> OnDisconnectOccurred = delegate { };
 
-        private List<WebSocketServerBase> webSocketServers = new List<WebSocketServerBase>();
+        private LockedList<WebSocketServerBase> webSocketServers = new LockedList<WebSocketServerBase>();
 
         public WebSocketHttpListenerServerBase(string address) : base(address) { }
 

@@ -75,7 +75,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     return;
                 }
 
-                if (this.YouTubeToggleButton.IsChecked.GetValueOrDefault() && ChannelSession.Services.OverlayServer == null)
+                if (this.YouTubeToggleButton.IsChecked.GetValueOrDefault() && ChannelSession.Services.OverlayServers == null)
                 {
                     await MessageBoxHelper.ShowMessageDialog("You must enable & use the Mix It Up Overlay for YouTube song requests");
                     this.EnableSongRequestsToggleButton.IsChecked = false;

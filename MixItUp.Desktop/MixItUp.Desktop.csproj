@@ -199,9 +199,10 @@
     <Compile Include="Services\DiscordService.cs" />
     <Compile Include="Services\GameWispService.cs" />
     <Compile Include="Services\GawkBoxService.cs" />
+    <Compile Include="Services\OverlayServiceManager.cs" />
     <Compile Include="Services\RemoteService.cs" />
     <Compile Include="Services\OBSService.cs" />
-    <Compile Include="Services\OverlayWebServer.cs" />
+    <Compile Include="Services\OverlayService.cs" />
     <Compile Include="Services\SerialService.cs" />
     <Compile Include="Services\SongRequestService.cs" />
     <Compile Include="Services\SpotifyService.cs" />

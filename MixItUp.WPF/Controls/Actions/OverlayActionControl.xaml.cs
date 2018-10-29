@@ -25,7 +25,22 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            if (ChannelSession.Services.OverlayServer == null)
+            if (ChannelSession.Settings.EnableOverlay)
+            {
+                this.OverlayNameComboBox.Visibility = Visibility.Visible;
+                if (ChannelSession.Services.OverlayServers.GetOverlayNames().Count() > 1)
+                {
+                    this.OverlayNameComboBox.IsEnabled = true;
+                    this.OverlayNameComboBox.ItemsSource = ChannelSession.Services.OverlayServers.GetOverlayNames();
+                }
+                else
+                {
+                    this.OverlayNameComboBox.IsEnabled = false;
+                    this.OverlayNameComboBox.ItemsSource = new List<string>() { ChannelSession.Services.OverlayServers.DefaultOverlayName };
+                    this.OverlayNameComboBox.SelectedIndex = 0;
+                }
+            }
+            else
             {
                 this.OverlayNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
             }
@@ -54,6 +69,7 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.action != null)
             {
+                this.OverlayNameComboBox.SelectedItem = this.action.OverlayName;
                 if (this.action.Effect is OverlayImageEffect)
                 {
                     OverlayImageEffect imageEffect = (OverlayImageEffect)this.action.Effect;
@@ -152,6 +168,12 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override ActionBase GetAction()
         {
+            if (this.OverlayNameComboBox.SelectedIndex < 0)
+            {
+                return null;
+            }
+            string overlayName = (string)this.OverlayNameComboBox.SelectedItem;
+
             double duration;
             if (double.TryParse(this.DurationTextBox.Text, out duration) && duration > 0 && this.EntranceAnimationComboBox.SelectedIndex >= 0 &&
                 this.VisibleAnimationComboBox.SelectedIndex >= 0 && this.ExitAnimationComboBox.SelectedIndex >= 0)
@@ -238,7 +260,7 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.ImageWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.ImageHeightTextBox.Text, out height) && height > 0)
                         {
-                            return new OverlayAction(new OverlayImageEffect(this.ImageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
+                            return new OverlayAction(overlayName, new OverlayImageEffect(this.ImageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }
@@ -254,7 +276,7 @@ namespace MixItUp.WPF.Controls.Actions
 
                         if (int.TryParse(this.FontSizeComboBox.Text, out int size) && size > 0)
                         {
-                            return new OverlayAction(new OverlayTextEffect(this.TextTextBox.Text, color, size, entrance, animation, exit, duration, positionType, horizontal, vertical));
+                            return new OverlayAction(overlayName, new OverlayTextEffect(this.TextTextBox.Text, color, size, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }
@@ -277,7 +299,7 @@ namespace MixItUp.WPF.Controls.Actions
                             if (int.TryParse(this.YouTubeWidthTextBox.Text, out width) && width > 0 &&
                                 int.TryParse(this.YouTubeHeightTextBox.Text, out height) && height > 0)
                             {
-                                return new OverlayAction(new OverlayYoutubeEffect(videoID, startTime, width, height, (int)this.YouTubeVolumeSlider.Value, entrance, animation, exit, duration, positionType, horizontal, vertical));
+                                return new OverlayAction(overlayName, new OverlayYoutubeEffect(videoID, startTime, width, height, (int)this.YouTubeVolumeSlider.Value, entrance, animation, exit, duration, positionType, horizontal, vertical));
                             }
                         }
                     }
@@ -291,7 +313,7 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.VideoWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.VideoHeightTextBox.Text, out height) && height > 0)
                         {
-                            return new OverlayAction(new OverlayVideoEffect(this.VideoFilePathTextBox.Text, width, height, (int)this.VideoVolumeSlider.Value, entrance, animation, exit, duration, positionType, horizontal, vertical));
+                            return new OverlayAction(overlayName, new OverlayVideoEffect(this.VideoFilePathTextBox.Text, width, height, (int)this.VideoVolumeSlider.Value, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }
@@ -304,7 +326,7 @@ namespace MixItUp.WPF.Controls.Actions
                         if (int.TryParse(this.WebPageWidthTextBox.Text, out width) && width > 0 &&
                             int.TryParse(this.WebPageHeightTextBox.Text, out height) && height > 0)
                         {
-                            return new OverlayAction(new OverlayWebPageEffect(this.WebPageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
+                            return new OverlayAction(overlayName, new OverlayWebPageEffect(this.WebPageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }
@@ -312,7 +334,7 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     if (!string.IsNullOrEmpty(this.HTMLTextBox.Text))
                     {
-                        return new OverlayAction(new OverlayHTMLEffect(this.HTMLTextBox.Text, entrance, animation, exit, duration, positionType, horizontal, vertical));
+                        return new OverlayAction(overlayName, new OverlayHTMLEffect(this.HTMLTextBox.Text, entrance, animation, exit, duration, positionType, horizontal, vertical));
                     }
                 }
             }
