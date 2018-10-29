@@ -353,7 +353,7 @@ namespace MixItUp.Base.MixerAPI
                 return message;
             }
 
-            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
+            if (!await ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
             {
                 await this.DeleteMessage(message.ID);
 
