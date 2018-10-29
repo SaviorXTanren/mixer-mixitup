@@ -745,7 +745,7 @@ namespace MixItUp.Base.MixerAPI
                         return;
                     }
 
-                    if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
+                    if (!await ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
                     {
                         await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isInteractive: true);
                         return;
