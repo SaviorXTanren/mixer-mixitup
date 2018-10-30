@@ -15,7 +15,7 @@
     <body style="background-color: transparent; overflow: hidden;">
         <div id="mainOverlay"></div>
 
-        <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: visible">
+        <div id="noConnectionDiv" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); visibility: hidden">
             <h1 style="font-size: 100px; color: red; text-align: center">No Connection To</h1>
             <h1 style="font-size: 100px; color: red; text-align: center">Mix It Up Overlay!</h1>
         </div>
@@ -89,6 +89,7 @@
             }
 
             function connectionClosed() {
+                noConnectionDiv.style.visibility = 'visible';
             }
 
             function packetReceived(packet) {
@@ -148,9 +149,24 @@
             }
 
             function textPacket(data) {
-                var addedElement = document.createElement('h1');
+                var addedElement = document.createElement('p');
                 addedElement.innerHTML = data.Text;
-                addedElement.style.cssText += 'font-size: ' + data.Size + 'px; color: ' + data.Color + '; ' + 'text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; white-space: nowrap;';
+                addedElement.style.cssText += 'font-size: ' + data.Size + 'px; color: ' + data.Color + '; ' + ' white-space: nowrap;';
+                if (data.Font) {
+                    addedElement.style.cssText += 'font-family: \"' + data.Font + '\";';
+                }
+                if (data.Bold) {
+                    addedElement.style.cssText += 'font-weight: bold;';
+                }
+                if (data.Underline) {
+                    addedElement.style.cssText += 'text-decoration: underline;';
+                }
+                if (data.Italic) {
+                    addedElement.style.cssText += 'font-style: italic;';
+                }
+                if (data.ShadowColor) {
+                    addedElement.style.cssText += 'text-shadow: -1px 0 ' + data.ShadowColor + ', 0 1px ' + data.ShadowColor + ', 1px 0 ' + data.ShadowColor + ', 0 -1px ' + data.ShadowColor + ';';
+                }
 
                 addWaitRemoveElement(data, addedElement);
             }

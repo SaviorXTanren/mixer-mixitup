@@ -46,8 +46,8 @@ namespace MixItUp.WPF.Controls.Actions
             }
 
             this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectTypeEnum>();
-            this.FontSizeComboBox.ItemsSource = OverlayActionControl.sampleFontSize.Select(f => f.ToString());
-            this.FontColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
+            this.TextSizeComboBox.ItemsSource = OverlayActionControl.sampleFontSize.Select(f => f.ToString());
+            this.TextShadowColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
             this.VideoVolumeSlider.Value = 100;
             this.YoutubeStartTimeTextBox.Text = "0";
             this.YouTubeWidthTextBox.Text = this.VideoWidthTextBox.Text = OverlayVideoEffect.DefaultWidth.ToString();
@@ -83,13 +83,23 @@ namespace MixItUp.WPF.Controls.Actions
                     OverlayTextEffect textEffect = (OverlayTextEffect)this.action.Effect;
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Text);
                     this.TextTextBox.Text = textEffect.Text;
-                    this.FontSizeComboBox.Text = textEffect.Size.ToString();
+                    this.TextSizeComboBox.Text = textEffect.Size.ToString();
                     string color = textEffect.Color;
                     if (ColorSchemes.ColorSchemeDictionary.ContainsValue(color))
                     {
                         color = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(color)).Key;
                     }
-                    this.FontColorComboBox.Text = color;
+                    this.TextFontTextBox.Text = textEffect.Font;
+                    this.TextBoldCheckBox.IsSelected = textEffect.Bold;
+                    this.TextItalicCheckBox.IsSelected = textEffect.Italic;
+                    this.TextUnderlineCheckBox.IsSelected = textEffect.Underline;
+                    this.TextColorComboBox.Text = color;
+                    string shadowColor = textEffect.ShadowColor;
+                    if (ColorSchemes.ColorSchemeDictionary.ContainsValue(shadowColor))
+                    {
+                        shadowColor = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(shadowColor)).Key;
+                    }
+                    this.TextShadowColorComboBox.Text = shadowColor;
                 }
                 else if (this.action.Effect is OverlayYoutubeEffect)
                 {
@@ -266,17 +276,30 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else if (type == OverlayEffectTypeEnum.Text)
                 {
-                    if (!string.IsNullOrEmpty(this.TextTextBox.Text) && !string.IsNullOrEmpty(this.FontColorComboBox.Text))
+                    if (!string.IsNullOrEmpty(this.TextTextBox.Text) && !string.IsNullOrEmpty(this.TextColorComboBox.Text))
                     {
-                        string color = this.FontColorComboBox.Text;
+                        string color = this.TextColorComboBox.Text;
                         if (ColorSchemes.ColorSchemeDictionary.ContainsKey(color))
                         {
                             color = ColorSchemes.ColorSchemeDictionary[color];
                         }
 
-                        if (int.TryParse(this.FontSizeComboBox.Text, out int size) && size > 0)
+                        string font = this.TextFontTextBox.Text;
+                        if (string.IsNullOrEmpty(font))
                         {
-                            return new OverlayAction(overlayName, new OverlayTextEffect(this.TextTextBox.Text, color, size, entrance, animation, exit, duration, positionType, horizontal, vertical));
+                            font = null;
+                        }
+
+                        string shadowColor = this.TextShadowColorComboBox.Text;
+                        if (ColorSchemes.ColorSchemeDictionary.ContainsKey(shadowColor))
+                        {
+                            shadowColor = ColorSchemes.ColorSchemeDictionary[shadowColor];
+                        }
+
+                        if (int.TryParse(this.TextSizeComboBox.Text, out int size) && size > 0)
+                        {
+                            return new OverlayAction(overlayName, new OverlayTextEffect(this.TextTextBox.Text, color, size, font, this.TextBoldCheckBox.IsSelected, this.TextItalicCheckBox.IsSelected,
+                                this.TextUnderlineCheckBox.IsSelected, shadowColor, entrance, animation, exit, duration, positionType, horizontal, vertical));
                         }
                     }
                 }

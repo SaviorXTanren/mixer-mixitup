@@ -218,16 +218,31 @@ namespace MixItUp.Base.Actions
         public string Color { get; set; }
         [DataMember]
         public int Size { get; set; }
+        [DataMember]
+        public string Font { get; set; }
+        [DataMember]
+        public bool Bold { get; set; }
+        [DataMember]
+        public bool Underline { get; set; }
+        [DataMember]
+        public bool Italic { get; set; }
+        [DataMember]
+        public string ShadowColor { get; set; }
 
         public OverlayTextEffect() { }
 
-        public OverlayTextEffect(string text, string color, int size, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
+        public OverlayTextEffect(string text, string color, int size, string font, bool bold, bool italic, bool underline, string shadowColor, OverlayEffectEntranceAnimationTypeEnum entrance,
+            OverlayEffectVisibleAnimationTypeEnum visible, OverlayEffectExitAnimationTypeEnum exit, double duration, OverlayEffectPositionType positionType, int horizontal, int vertical)
             : base(OverlayEffectTypeEnum.Text, entrance, visible, exit, duration, positionType, horizontal, vertical)
         {
             this.Text = text;
             this.Color = color;
             this.Size = size;
+            this.Font = font;
+            this.Bold = bold;
+            this.Underline = underline;
+            this.Italic = italic;
+            this.ShadowColor = shadowColor;
         }
     }
 
