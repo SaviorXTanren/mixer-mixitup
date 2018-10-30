@@ -12,11 +12,7 @@ namespace MixItUp.Base.ViewModel.User
 {
     public class UserContainerViewModel
     {
-        public const string HypeBotUserName = "HypeBot";
-        public const string BoomTVUserName = "boomtvmod";
-        public const string StreamJarUserName = "StreamJar";
-        public const string PretzelRocksUserName = "PretzelRocks";
-        public const string ScottyBotUserName = "ScottyBot";
+        public static readonly List<string> SpecialUserAccounts = new List<string>() { "HypeBot", "boomtvmod", "StreamJar", "PretzelRocks", "ScottyBot" };
 
         private Dictionary<uint, UserViewModel> users = new Dictionary<uint, UserViewModel>();
 
@@ -157,11 +153,7 @@ namespace MixItUp.Base.ViewModel.User
             return await this.LockWrapper(() =>
             {
                 List<UserViewModel> users = this.users.Values.ToList();
-                users.RemoveAll(u => UserContainerViewModel.HypeBotUserName.Equals(u.UserName));
-                users.RemoveAll(u => UserContainerViewModel.BoomTVUserName.Equals(u.UserName));
-                users.RemoveAll(u => UserContainerViewModel.StreamJarUserName.Equals(u.UserName));
-                users.RemoveAll(u => UserContainerViewModel.PretzelRocksUserName.Equals(u.UserName));
-                users.RemoveAll(u => UserContainerViewModel.ScottyBotUserName.Equals(u.UserName));
+                users.RemoveAll(u => UserContainerViewModel.SpecialUserAccounts.Contains(u.UserName));
                 if (ChannelSession.BotUser != null)
                 {
                     users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
