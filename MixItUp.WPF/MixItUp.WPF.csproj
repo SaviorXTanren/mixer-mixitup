@@ -1343,7 +1343,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
-    <Page Include="Themes\MixItUpTheme.AmericaHeckYa.xaml">
+    <Page Include="Themes\MixItUpTheme.AwkwardTysonAmericana.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
