@@ -184,11 +184,6 @@ namespace MixItUp.Base.Util
 
         public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user)
         {
-            if (user == null)
-            {
-                return false;
-            }
-
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.GetsSubscriberBenefits)
