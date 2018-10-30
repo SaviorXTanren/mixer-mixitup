@@ -106,6 +106,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{45F199EA-C
 		docs\swagger.yaml = docs\swagger.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Black Ops 4 Drop Map", "Black Ops 4 Drop Map", "{BF216965-27C7-49EF-8DA7-F7AF6A2BF424}"
+	ProjectSection(SolutionItems) = preProject
+		MixPlay\black-ops-4-drop-map\src\index.html = MixPlay\black-ops-4-drop-map\src\index.html
+		MixPlay\black-ops-4-drop-map\src\scripts.js = MixPlay\black-ops-4-drop-map\src\scripts.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -283,6 +289,7 @@ Global
 		{43B09B9A-43EE-486E-A79D-B0FB81DE4607} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
 		{43600005-B26E-4441-82AD-E3A43D7AD316} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
 		{45F199EA-C77B-48E3-8A5E-84B14F25BEA5} = {DB6A7130-8AA5-43FB-B65E-BAE1C5551C79}
+		{BF216965-27C7-49EF-8DA7-F7AF6A2BF424} = {DCDE4977-7518-408B-8FE3-8760A488DA27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56FA5777-5A3B-4E2B-B0A5-8EA45A5251F6}
