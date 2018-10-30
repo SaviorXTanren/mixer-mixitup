@@ -51,6 +51,11 @@ namespace MixItUp.Base.Util
 
         public static async Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false)
         {
+            if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
+            {
+                return null;
+            }
+
             string reason = await ShouldBeFilteredWordModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
@@ -186,6 +191,11 @@ namespace MixItUp.Base.Util
         {
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
+                if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
+                {
+                    return true;
+                }
+
                 await user.RefreshDetails();
 
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.GetsSubscriberBenefits)
