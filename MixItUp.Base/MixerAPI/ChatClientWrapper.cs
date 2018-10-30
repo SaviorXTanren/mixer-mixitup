@@ -347,12 +347,15 @@ namespace MixItUp.Base.MixerAPI
 
             if (this.DisableChat && !message.ID.Equals(Guid.Empty))
             {
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Disabled - {0}", message.Message));
                 await this.DeleteMessage(message);
                 return message;
             }
 
             if (!await ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
             {
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {0}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
+
                 await this.DeleteMessage(message);
 
                 await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isChat: true);
@@ -479,6 +482,7 @@ namespace MixItUp.Base.MixerAPI
 
             if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
             {
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Command - {0}", message.Message));
                 await this.DeleteMessage(message);
             }
         }
