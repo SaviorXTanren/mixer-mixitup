@@ -329,11 +329,16 @@ namespace MixItUp.Base.MixerAPI
         private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
         {
             UserViewModel user = await this.AddUser(messageEvent);
+            if (user == null)
+            {
+                user = new UserViewModel(messageEvent);
+            }
+
             ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
 
             Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
 
-            if (user != null && !message.IsWhisper && !this.userEntranceCommands.Contains(user.ID))
+            if (!message.IsWhisper && !this.userEntranceCommands.Contains(user.ID))
             {
                 this.userEntranceCommands.Add(user.ID);
                 if (user.Data.EntranceCommand != null)
@@ -357,7 +362,7 @@ namespace MixItUp.Base.MixerAPI
 
             if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
             {
-                Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {0}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
 
                 await this.DeleteMessage(message);
 
