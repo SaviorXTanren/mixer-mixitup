@@ -429,28 +429,17 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(StreamFollowCountSpecialIdentifier))
+            if (this.ContainsSpecialIdentifier(StreamFollowCountSpecialIdentifier) || this.ContainsSpecialIdentifier(StreamSubCountSpecialIdentifier))
             {
                 ChannelDetailsModel details = await ChannelSession.Connection.GetChannelDetails(ChannelSession.Channel);
                 if (details != null)
                 {
-                    this.ReplaceSpecialIdentifier(StreamSubCountSpecialIdentifier, details.numFollowers.ToString());
-                }
-                else
-                {
-                    this.ReplaceSpecialIdentifier(StreamSubCountSpecialIdentifier, "0");
-                }
-            }
-
-            if (this.ContainsSpecialIdentifier(StreamSubCountSpecialIdentifier))
-            {
-                ChannelDetailsModel details = await ChannelSession.Connection.GetChannelDetails(ChannelSession.Channel);
-                if (details != null)
-                {
+                    this.ReplaceSpecialIdentifier(StreamFollowCountSpecialIdentifier, details.numFollowers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSubCountSpecialIdentifier, details.numSubscribers.ToString());
                 }
                 else
                 {
+                    this.ReplaceSpecialIdentifier(StreamFollowCountSpecialIdentifier, "0");
                     this.ReplaceSpecialIdentifier(StreamSubCountSpecialIdentifier, "0");
                 }
             }
