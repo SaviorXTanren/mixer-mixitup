@@ -148,7 +148,7 @@ namespace MixItUp.WPF.Controls.MainControls
                         ChatUserControl userControl = new ChatUserControl(user);
 
                         int index = users.IndexOf(user);
-                        if (index >= 0)
+                        if (0 <= index && index < this.UserControls.Count)
                         {
                             this.UserControls.Insert(index, userControl);
                         }
