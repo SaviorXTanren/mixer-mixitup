@@ -209,16 +209,19 @@ namespace MixItUp.Base.ViewModel.User
                 return Task.FromResult(0);
             });
 
-            Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, users.Select(u => u.GetModel()));
-            foreach (UserViewModel user in refreshUsers)
+            if (refreshUsers.Count() > 0)
             {
-                if (follows.ContainsKey(user.ID))
+                Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, refreshUsers.Select(u => u.GetModel()));
+                foreach (UserViewModel user in refreshUsers)
                 {
-                    user.FollowDate = follows[user.ID];
-                }
-                if (subscribers.ContainsKey(user.ID))
-                {
-                    user.SubscribeDate = subscribers[user.ID];
+                    if (follows.ContainsKey(user.ID))
+                    {
+                        user.FollowDate = follows[user.ID];
+                    }
+                    if (subscribers.ContainsKey(user.ID))
+                    {
+                        user.SubscribeDate = subscribers[user.ID];
+                    }
                 }
             }
 
