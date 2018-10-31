@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
   <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#DD00CC88" po:Freeze="True" />                   <!-- Emphasis Background -->
-  <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#DD535353" po:Freeze="True" />         <!-- Emphasis Text -->
+  <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#DDFFFFFF" po:Freeze="True" />         <!-- Emphasis Text -->
   <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#DDCC5500" po:Freeze="True" />                     <!-- Main Background -->
   <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#DD00CC55" po:Freeze="True" />           <!-- Main Foreground -->
   <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#DDCC5500" po:Freeze="True" />                    <!-- Highlight Background -->
