@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Matthew Olivo")]
 [assembly: AssemblyProduct("MixItUp.WPF")]
-[assembly: AssemblyCopyright("Copyright © 2017 Matthew Olivo")]
+[assembly: AssemblyCopyright("Copyright © 2018 Matthew Olivo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -48,4 +48,4 @@ using System.Windows;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("0.4.16.5")]
+[assembly: AssemblyVersion("0.4.16.6")]
