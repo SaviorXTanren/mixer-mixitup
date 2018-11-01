@@ -1,7 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
-using MixItUp.Base.Themes;
+using MixItUp.Base.Model.Overlay;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,13 +10,22 @@ using System.Windows.Controls;
 
 namespace MixItUp.WPF.Controls.Actions
 {
+    public enum OverlayActionTypeEnum
+    {
+        Text,
+        Image,
+        Video,
+        YouTube,
+        HTML,
+        [Name("Web Page")]
+        WebPage
+    }
+
     /// <summary>
     /// Interaction logic for ChatActionControl.xaml
     /// </summary>
     public partial class OverlayActionControl : ActionControlBase
     {
-        private static readonly List<int> sampleFontSize = new List<int>() { 12, 24, 36, 48, 60, 72, 84, 96, 108, 120 };
-
         private OverlayAction action;
 
         public OverlayActionControl(ActionContainerControl containerControl) : base(containerControl) { InitializeComponent(); }
@@ -45,21 +54,9 @@ namespace MixItUp.WPF.Controls.Actions
                 this.OverlayNotEnabledWarningTextBlock.Visibility = Visibility.Visible;
             }
 
-            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectTypeEnum>();
-            this.TextSizeComboBox.ItemsSource = OverlayActionControl.sampleFontSize.Select(f => f.ToString());
-            this.TextShadowColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
-            this.VideoVolumeSlider.Value = 100;
-            this.YoutubeStartTimeTextBox.Text = "0";
-            this.YouTubeWidthTextBox.Text = this.VideoWidthTextBox.Text = OverlayVideoEffect.DefaultWidth.ToString();
-            this.YouTubeHeightTextBox.Text = this.VideoHeightTextBox.Text = OverlayVideoEffect.DefaultHeight.ToString();
-            this.YouTubeVolumeSlider.Value = 100;
+            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayActionTypeEnum>();
 
-            this.CenterPositionButton_Click(this, new RoutedEventArgs());
-            this.PixelsPositionButton.IsEnabled = true;
-            this.PercentagePositionButton.IsEnabled = true;
-            this.PixelPositionHorizontalTextBox.Text = "0";
-            this.PixelPositionVerticalTextBox.Text = "0";
-
+            this.DurationTextBox.Text = "0";
             this.EntranceAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
             this.EntranceAnimationComboBox.SelectedIndex = 0;
             this.VisibleAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
@@ -69,109 +66,43 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.action != null)
             {
-                this.OverlayNameComboBox.SelectedItem = this.action.OverlayName;
-                if (this.action.Effect is OverlayImageEffect)
-                {
-                    OverlayImageEffect imageEffect = (OverlayImageEffect)this.action.Effect;
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Image);
-                    this.ImageFilePathTextBox.Text = imageEffect.FilePath;
-                    this.ImageWidthTextBox.Text = imageEffect.Width.ToString();
-                    this.ImageHeightTextBox.Text = imageEffect.Height.ToString();
-                }
-                else if (this.action.Effect is OverlayTextEffect)
-                {
-                    OverlayTextEffect textEffect = (OverlayTextEffect)this.action.Effect;
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Text);
-                    this.TextTextBox.Text = textEffect.Text;
-                    this.TextSizeComboBox.Text = textEffect.Size.ToString();
-                    string color = textEffect.Color;
-                    if (ColorSchemes.ColorSchemeDictionary.ContainsValue(color))
-                    {
-                        color = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(color)).Key;
-                    }
-                    this.TextFontTextBox.Text = textEffect.Font;
-                    this.TextBoldCheckBox.IsSelected = textEffect.Bold;
-                    this.TextItalicCheckBox.IsSelected = textEffect.Italic;
-                    this.TextUnderlineCheckBox.IsSelected = textEffect.Underline;
-                    this.TextColorComboBox.Text = color;
-                    string shadowColor = textEffect.ShadowColor;
-                    if (ColorSchemes.ColorSchemeDictionary.ContainsValue(shadowColor))
-                    {
-                        shadowColor = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(shadowColor)).Key;
-                    }
-                    this.TextShadowColorComboBox.Text = shadowColor;
-                }
-                else if (this.action.Effect is OverlayYoutubeEffect)
-                {
-                    OverlayYoutubeEffect youtubeEffect = (OverlayYoutubeEffect)this.action.Effect;
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.YouTube);
-                    this.YoutubeVideoIDTextBox.Text = youtubeEffect.ID;
-                    this.YoutubeStartTimeTextBox.Text = youtubeEffect.StartTime.ToString();
-                    this.YouTubeWidthTextBox.Text = youtubeEffect.Width.ToString();
-                    this.YouTubeHeightTextBox.Text = youtubeEffect.Height.ToString();
-                    this.YouTubeVolumeSlider.Value = youtubeEffect.Volume;
-                }
-                else if (this.action.Effect is OverlayVideoEffect)
-                {
-                    OverlayVideoEffect videoEffect = (OverlayVideoEffect)this.action.Effect;
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.Video);
-                    this.VideoFilePathTextBox.Text = videoEffect.FilePath;
-                    this.VideoWidthTextBox.Text = videoEffect.Width.ToString();
-                    this.VideoHeightTextBox.Text = videoEffect.Height.ToString();
-                    this.VideoVolumeSlider.Value = videoEffect.Volume;
-                }
-                else if (this.action.Effect is OverlayWebPageEffect)
-                {
-                    OverlayWebPageEffect webPageEffect = (OverlayWebPageEffect)this.action.Effect;
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.WebPage);
-                    this.WebPageFilePathTextBox.Text = webPageEffect.URL;
-                    this.WebPageWidthTextBox.Text = webPageEffect.Width.ToString();
-                    this.WebPageHeightTextBox.Text = webPageEffect.Height.ToString();
-                }
-                else if (this.action.Effect is OverlayHTMLEffect)
-                {
-                    OverlayHTMLEffect htmlEffect = (OverlayHTMLEffect)this.action.Effect;
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayEffectTypeEnum.HTML);
-                    this.HTMLTextBox.Text = htmlEffect.HTMLText;
-                }
-
-
-
-                if (this.action.Effect.PositionType == OverlayEffectPositionType.Percentage)
-                {
-                    if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 25) { this.TopLeftPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 25) { this.TopPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 25) { this.TopRightPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 50) { this.LeftPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 50) { this.CenterPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 50) { this.RightPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (this.action.Effect.Horizontal == 25 && this.action.Effect.Vertical == 75) { this.BottomLeftPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (this.action.Effect.Horizontal == 50 && this.action.Effect.Vertical == 75) { this.BottomPositionButton_Click(this, new RoutedEventArgs()); }
-                    else if (this.action.Effect.Horizontal == 75 && this.action.Effect.Vertical == 75) { this.BottomRightPositionButton_Click(this, new RoutedEventArgs()); }
-                    else
-                    {
-                        this.SimplePositionButton.IsEnabled = true;
-                        this.PercentagePositionButton.IsEnabled = false;
-                        this.PixelsPositionButton.IsEnabled = true;
-                    }
-
-                    this.PercentagePositionHorizontalSlider.Value = this.action.Effect.Horizontal;
-                    this.PercentagePositionVerticalSlider.Value = this.action.Effect.Vertical;
-                }
-                else
-                {
-                    this.SimplePositionButton.IsEnabled = true;
-                    this.PercentagePositionButton.IsEnabled = true;
-                    this.PixelsPositionButton.IsEnabled = false;
-
-                    this.PixelPositionHorizontalTextBox.Text = this.action.Effect.Horizontal.ToString();
-                    this.PixelPositionVerticalTextBox.Text = this.action.Effect.Vertical.ToString();
-                }
-
                 this.DurationTextBox.Text = this.action.Effect.Duration.ToString();
                 this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.EntranceAnimation);
                 this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.VisibleAnimation);
                 this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.ExitAnimation);
+
+                this.ItemPosition.SetPosition(this.action.Position);
+               
+                if (this.action.Item is OverlayImageItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayActionTypeEnum.Image);
+                    this.ImageItem.SetItem(this.action.Item);
+                }
+                else if (this.action.Item is OverlayTextItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayActionTypeEnum.Text);
+                    this.TextItem.SetItem(this.action.Item);
+                }
+                else if (this.action.Item is OverlayYouTubeItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayActionTypeEnum.YouTube);
+                    this.YouTubeItem.SetItem(this.action.Item);
+                }
+                else if (this.action.Item is OverlayVideoItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayActionTypeEnum.Video);
+                    this.VideoItem.SetItem(this.action.Item);
+                }
+                else if (this.action.Item is OverlayWebPageItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayActionTypeEnum.WebPage);
+                    this.WebPageItem.SetItem(this.action.Item);
+                }
+                else if (this.action.Item is OverlayHTMLItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayActionTypeEnum.HTML);
+                    this.HTMLItem.SetItem(this.action.Item);
+                }
             }
             return Task.FromResult(0);
         }
@@ -189,176 +120,44 @@ namespace MixItUp.WPF.Controls.Actions
                 this.VisibleAnimationComboBox.SelectedIndex >= 0 && this.ExitAnimationComboBox.SelectedIndex >= 0)
             {
                 OverlayEffectEntranceAnimationTypeEnum entrance = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.EntranceAnimationComboBox.SelectedItem);
-                OverlayEffectVisibleAnimationTypeEnum animation = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>((string)this.VisibleAnimationComboBox.SelectedItem);
+                OverlayEffectVisibleAnimationTypeEnum visible = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>((string)this.VisibleAnimationComboBox.SelectedItem);
                 OverlayEffectExitAnimationTypeEnum exit = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.ExitAnimationComboBox.SelectedItem);
 
-                int horizontal = 0;
-                int vertical = 0;
-                OverlayEffectPositionType positionType = OverlayEffectPositionType.Percentage;
-                if (this.PixelsPositionGrid.Visibility == Visibility.Visible)
+                OverlayItemEffect effect = new OverlayItemEffect(entrance, visible, exit, duration);
+
+                OverlayItemPosition position = this.ItemPosition.GetPosition();
+
+                OverlayItemBase item = null;
+
+                OverlayActionTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
+                if (overlayType == OverlayActionTypeEnum.Image)
                 {
-                    if (string.IsNullOrEmpty(this.PixelPositionHorizontalTextBox.Text) || !int.TryParse(this.PixelPositionHorizontalTextBox.Text, out horizontal) || horizontal < 0 ||
-                        string.IsNullOrEmpty(this.PixelPositionVerticalTextBox.Text) || !int.TryParse(this.PixelPositionVerticalTextBox.Text, out vertical) || vertical < 0)
-                    {
-                        return null;
-                    }
-                    positionType = OverlayEffectPositionType.Pixel;
-                    horizontal = (int)this.PercentagePositionHorizontalSlider.Value;
-                    vertical = (int)this.PercentagePositionVerticalSlider.Value;
+                    item = this.ImageItem.GetItem();
                 }
-                if (this.PercentagePositionGrid.Visibility == Visibility.Visible)
+                else if (overlayType == OverlayActionTypeEnum.Text)
                 {
-                    horizontal = (int)this.PercentagePositionHorizontalSlider.Value;
-                    vertical = (int)this.PercentagePositionVerticalSlider.Value;
+                    item = this.TextItem.GetItem();
                 }
-                else
+                else if (overlayType == OverlayActionTypeEnum.YouTube)
                 {
-                    if (this.IsSimplePositionButtonSelected(this.TopLeftPositionButton))
-                    {
-                        horizontal = 25;
-                        vertical = 25;
-                    }
-                    else if (this.IsSimplePositionButtonSelected(this.TopPositionButton))
-                    {
-                        horizontal = 50;
-                        vertical = 25;
-                    }
-                    else if (this.IsSimplePositionButtonSelected(this.TopRightPositionButton))
-                    {
-                        horizontal = 75;
-                        vertical = 25;
-                    }
-                    else if (this.IsSimplePositionButtonSelected(this.LeftPositionButton))
-                    {
-                        horizontal = 25;
-                        vertical = 50;
-                    }
-                    else if (this.IsSimplePositionButtonSelected(this.CenterPositionButton))
-                    {
-                        horizontal = 50;
-                        vertical = 50;
-                    }
-                    else if (this.IsSimplePositionButtonSelected(this.RightPositionButton))
-                    {
-                        horizontal = 75;
-                        vertical = 50;
-                    }
-                    else if (this.IsSimplePositionButtonSelected(this.BottomLeftPositionButton))
-                    {
-                        horizontal = 25;
-                        vertical = 75;
-                    }
-                    else if (this.IsSimplePositionButtonSelected(this.BottomPositionButton))
-                    {
-                        horizontal = 50;
-                        vertical = 75;
-                    }
-                    else if (this.IsSimplePositionButtonSelected(this.BottomRightPositionButton))
-                    {
-                        horizontal = 75;
-                        vertical = 75;
-                    }
+                    item = this.YouTubeItem.GetItem();
+                }
+                else if (overlayType == OverlayActionTypeEnum.Video)
+                {
+                    item = this.VideoItem.GetItem();
+                }
+                else if (overlayType == OverlayActionTypeEnum.WebPage)
+                {
+                    item = this.WebPageItem.GetItem();
+                }
+                else if (overlayType == OverlayActionTypeEnum.HTML)
+                {
+                    item = this.HTMLItem.GetItem();
                 }
 
-                OverlayEffectTypeEnum type = EnumHelper.GetEnumValueFromString<OverlayEffectTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                if (type == OverlayEffectTypeEnum.Image)
+                if (item != null)
                 {
-                    if (!string.IsNullOrEmpty(this.ImageFilePathTextBox.Text))
-                    {
-                        int width;
-                        int height;
-                        if (int.TryParse(this.ImageWidthTextBox.Text, out width) && width > 0 &&
-                            int.TryParse(this.ImageHeightTextBox.Text, out height) && height > 0)
-                        {
-                            return new OverlayAction(overlayName, new OverlayImageEffect(this.ImageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
-                        }
-                    }
-                }
-                else if (type == OverlayEffectTypeEnum.Text)
-                {
-                    if (!string.IsNullOrEmpty(this.TextTextBox.Text) && !string.IsNullOrEmpty(this.TextColorComboBox.Text))
-                    {
-                        string color = this.TextColorComboBox.Text;
-                        if (ColorSchemes.ColorSchemeDictionary.ContainsKey(color))
-                        {
-                            color = ColorSchemes.ColorSchemeDictionary[color];
-                        }
-
-                        string font = this.TextFontTextBox.Text;
-                        if (string.IsNullOrEmpty(font))
-                        {
-                            font = null;
-                        }
-
-                        string shadowColor = this.TextShadowColorComboBox.Text;
-                        if (ColorSchemes.ColorSchemeDictionary.ContainsKey(shadowColor))
-                        {
-                            shadowColor = ColorSchemes.ColorSchemeDictionary[shadowColor];
-                        }
-
-                        if (int.TryParse(this.TextSizeComboBox.Text, out int size) && size > 0)
-                        {
-                            return new OverlayAction(overlayName, new OverlayTextEffect(this.TextTextBox.Text, color, size, font, this.TextBoldCheckBox.IsSelected, this.TextItalicCheckBox.IsSelected,
-                                this.TextUnderlineCheckBox.IsSelected, shadowColor, entrance, animation, exit, duration, positionType, horizontal, vertical));
-                        }
-                    }
-                }
-                else if (type == OverlayEffectTypeEnum.YouTube)
-                {
-                    if (!string.IsNullOrEmpty(this.YoutubeVideoIDTextBox.Text))
-                    {
-                        string videoID = this.YoutubeVideoIDTextBox.Text;
-                        videoID = videoID.Replace("https://www.youtube.com/watch?v=", "");
-                        videoID = videoID.Replace("https://youtu.be/", "");
-                        if (videoID.Contains("&"))
-                        {
-                            videoID = videoID.Substring(0, videoID.IndexOf("&"));
-                        }
-
-                        if (int.TryParse(this.YoutubeStartTimeTextBox.Text, out int startTime))
-                        {
-                            int width;
-                            int height;
-                            if (int.TryParse(this.YouTubeWidthTextBox.Text, out width) && width > 0 &&
-                                int.TryParse(this.YouTubeHeightTextBox.Text, out height) && height > 0)
-                            {
-                                return new OverlayAction(overlayName, new OverlayYoutubeEffect(videoID, startTime, width, height, (int)this.YouTubeVolumeSlider.Value, entrance, animation, exit, duration, positionType, horizontal, vertical));
-                            }
-                        }
-                    }
-                }
-                else if (type == OverlayEffectTypeEnum.Video)
-                {
-                    if (!string.IsNullOrEmpty(this.VideoFilePathTextBox.Text))
-                    {
-                        int width;
-                        int height;
-                        if (int.TryParse(this.VideoWidthTextBox.Text, out width) && width > 0 &&
-                            int.TryParse(this.VideoHeightTextBox.Text, out height) && height > 0)
-                        {
-                            return new OverlayAction(overlayName, new OverlayVideoEffect(this.VideoFilePathTextBox.Text, width, height, (int)this.VideoVolumeSlider.Value, entrance, animation, exit, duration, positionType, horizontal, vertical));
-                        }
-                    }
-                }
-                else if (type == OverlayEffectTypeEnum.WebPage)
-                {
-                    if (!string.IsNullOrEmpty(this.WebPageFilePathTextBox.Text))
-                    {
-                        int width;
-                        int height;
-                        if (int.TryParse(this.WebPageWidthTextBox.Text, out width) && width > 0 &&
-                            int.TryParse(this.WebPageHeightTextBox.Text, out height) && height > 0)
-                        {
-                            return new OverlayAction(overlayName, new OverlayWebPageEffect(this.WebPageFilePathTextBox.Text, width, height, entrance, animation, exit, duration, positionType, horizontal, vertical));
-                        }
-                    }
-                }
-                else if (type == OverlayEffectTypeEnum.HTML)
-                {
-                    if (!string.IsNullOrEmpty(this.HTMLTextBox.Text))
-                    {
-                        return new OverlayAction(overlayName, new OverlayHTMLEffect(this.HTMLTextBox.Text, entrance, animation, exit, duration, positionType, horizontal, vertical));
-                    }
+                    return new OverlayAction(overlayName, item, position, effect);
                 }
             }
             return null;
@@ -366,137 +165,42 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void OverlayTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.ImageGrid.Visibility = Visibility.Collapsed;
-            this.TextGrid.Visibility = Visibility.Collapsed;
-            this.YouTubeGrid.Visibility = Visibility.Collapsed;
-            this.VideoGrid.Visibility = Visibility.Collapsed;
-            this.WebPageGrid.Visibility = Visibility.Collapsed;
-            this.HTMLGrid.Visibility = Visibility.Collapsed;
+            this.ImageItem.Visibility = Visibility.Collapsed;
+            this.TextItem.Visibility = Visibility.Collapsed;
+            this.YouTubeItem.Visibility = Visibility.Collapsed;
+            this.VideoItem.Visibility = Visibility.Collapsed;
+            this.WebPageItem.Visibility = Visibility.Collapsed;
+            this.HTMLItem.Visibility = Visibility.Collapsed;
             this.AdditionalOptionsGrid.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
-                OverlayEffectTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayEffectTypeEnum>((string)this.TypeComboBox.SelectedItem);
-                if (overlayType == OverlayEffectTypeEnum.Image)
+                OverlayActionTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayActionTypeEnum>((string)this.TypeComboBox.SelectedItem);
+                if (overlayType == OverlayActionTypeEnum.Image)
                 {
-                    this.ImageGrid.Visibility = Visibility.Visible;
+                    this.ImageItem.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayEffectTypeEnum.Text)
+                else if (overlayType == OverlayActionTypeEnum.Text)
                 {
-                    this.TextGrid.Visibility = Visibility.Visible;
+                    this.TextItem.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayEffectTypeEnum.YouTube)
+                else if (overlayType == OverlayActionTypeEnum.YouTube)
                 {
-                    this.YouTubeGrid.Visibility = Visibility.Visible;
+                    this.YouTubeItem.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayEffectTypeEnum.Video)
+                else if (overlayType == OverlayActionTypeEnum.Video)
                 {
-                    this.VideoGrid.Visibility = Visibility.Visible;
+                    this.VideoItem.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayEffectTypeEnum.WebPage)
+                else if (overlayType == OverlayActionTypeEnum.WebPage)
                 {
-                    this.WebPageGrid.Visibility = Visibility.Visible;
+                    this.WebPageItem.Visibility = Visibility.Visible;
                 }
-                else if (overlayType == OverlayEffectTypeEnum.HTML)
+                else if (overlayType == OverlayActionTypeEnum.HTML)
                 {
-                    this.HTMLGrid.Visibility = Visibility.Visible;
+                    this.HTMLItem.Visibility = Visibility.Visible;
                 }
                 this.AdditionalOptionsGrid.Visibility = Visibility.Visible;
             }
         }
-
-        private void ImageFileBrowseButton_Click(object sender, RoutedEventArgs e)
-        {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.ImageFileFilter());
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                this.ImageFilePathTextBox.Text = filePath;
-            }
-        }
-
-        private void VideoFileBrowseButton_Click(object sender, RoutedEventArgs e)
-        {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.VideoFileFilter());
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                this.VideoFilePathTextBox.Text = filePath;
-            }
-        }
-
-        private void WebPageFileBrowseButton_Click(object sender, RoutedEventArgs e)
-        {
-            string filePath = ChannelSession.Services.FileService.ShowOpenFileDialog(ChannelSession.Services.FileService.HTMLFileFilter());
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                this.WebPageFilePathTextBox.Text = filePath;
-            }
-        }
-
-        private void SimplePositionButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.SimplePositionButton.IsEnabled = false;
-            this.PercentagePositionButton.IsEnabled = true;
-            this.PixelsPositionButton.IsEnabled = true;
-
-            this.SimplePositionGrid.Visibility = Visibility.Visible;
-            this.PercentagePositionGrid.Visibility = Visibility.Collapsed;
-            this.PixelsPositionGrid.Visibility = Visibility.Collapsed;
-        }
-
-        private void PercentagePositionButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.SimplePositionButton.IsEnabled = true;
-            this.PercentagePositionButton.IsEnabled = false;
-            this.PixelsPositionButton.IsEnabled = true;
-
-            this.SimplePositionGrid.Visibility = Visibility.Collapsed;
-            this.PercentagePositionGrid.Visibility = Visibility.Visible;
-            this.PixelsPositionGrid.Visibility = Visibility.Collapsed;
-        }
-
-        private void PixelsPositionButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.SimplePositionButton.IsEnabled = true;
-            this.PercentagePositionButton.IsEnabled = true;
-            this.PixelsPositionButton.IsEnabled = false;
-
-            this.SimplePositionGrid.Visibility = Visibility.Collapsed;
-            this.PercentagePositionGrid.Visibility = Visibility.Collapsed;
-            this.PixelsPositionGrid.Visibility = Visibility.Visible;
-        }
-
-        private void TopLeftPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.TopLeftPositionButton); }
-
-        private void TopPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.TopPositionButton); }
-
-        private void TopRightPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.TopRightPositionButton); }
-
-        private void LeftPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.LeftPositionButton); }
-
-        private void CenterPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.CenterPositionButton); }
-
-        private void RightPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.RightPositionButton); }
-
-        private void BottomLeftPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.BottomLeftPositionButton); }
-
-        private void BottomPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.BottomPositionButton); }
-
-        private void BottomRightPositionButton_Click(object sender, RoutedEventArgs e) { this.HandleSimplePositionChange(this.BottomRightPositionButton); }
-
-        private void HandleSimplePositionChange(Button button)
-        {
-            this.TopLeftPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-            this.TopPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-            this.TopRightPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-            this.LeftPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-            this.CenterPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-            this.RightPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-            this.BottomLeftPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-            this.BottomPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-            this.BottomRightPositionButton.Style = (Style)this.FindResource("MaterialDesignRaisedButton");
-
-            button.Style = (Style)this.FindResource("MaterialDesignRaisedLightButton");
-        }
-
-        private bool IsSimplePositionButtonSelected(Button button) { return button.Style.Equals((Style)this.FindResource("MaterialDesignRaisedLightButton")); }
     }
 }

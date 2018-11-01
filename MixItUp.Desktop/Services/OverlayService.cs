@@ -2,6 +2,7 @@
 using Mixer.Base.Web;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using Newtonsoft.Json.Linq;
@@ -144,29 +145,37 @@ namespace MixItUp.Overlay
 
         public async Task<bool> TestConnection() { return await this.webSocketServer.TestConnection(); }
 
-        public async Task SendImage(OverlayImageEffect effect)
+        public async Task SendImage(OverlayImageItem item, OverlayItemPosition position, OverlayItemEffect effect)
         {
-            this.httpListenerServer.SetLocalFile(effect.ID, effect.FilePath);
-            await this.SendPacket("image", effect);
+            this.httpListenerServer.SetLocalFile(item.ID, item.FilePath);
+            await this.SendEffectPacket("image", item, position, effect);
         }
 
-        public async Task SendText(OverlayTextEffect effect) { await this.SendPacket("text", effect); }
+        public async Task SendText(OverlayTextItem item, OverlayItemPosition position, OverlayItemEffect effect) { await this.SendEffectPacket("text", item, position, effect); }
 
-        public async Task SendYoutubeVideo(OverlayYoutubeEffect effect) { await this.SendPacket("youtube", effect); }
+        public async Task SendYouTubeVideo(OverlayYouTubeItem item, OverlayItemPosition position, OverlayItemEffect effect) { await this.SendEffectPacket("youtube", item, position, effect); }
 
-        public async Task SendLocalVideo(OverlayVideoEffect effect)
+        public async Task SendLocalVideo(OverlayVideoItem item, OverlayItemPosition position, OverlayItemEffect effect)
         {
-            this.httpListenerServer.SetLocalFile(effect.ID, effect.FilePath);
-            await this.SendPacket("video", effect);
+            this.httpListenerServer.SetLocalFile(item.ID, item.FilePath);
+            await this.SendEffectPacket("video", item, position, effect);
         }
 
-        public async Task SendHTML(OverlayHTMLEffect effect) { await this.SendPacket("htmlText", effect); }
+        public async Task SendHTML(OverlayHTMLItem item, OverlayItemPosition position, OverlayItemEffect effect) { await this.SendEffectPacket("htmlText", item, position, effect); }
 
-        public async Task SendWebPage(OverlayWebPageEffect effect) { await this.SendPacket("webPage", effect); }
+        public async Task SendWebPage(OverlayWebPageItem item, OverlayItemPosition position, OverlayItemEffect effect) { await this.SendEffectPacket("webPage", item, position, effect); }
 
         public async Task SendTextToSpeech(OverlayTextToSpeech textToSpeech) { await this.SendPacket("textToSpeech", textToSpeech); }
 
         public async Task SendSongRequest(OverlaySongRequest songRequest) { await this.SendPacket("songRequest", songRequest); }
+
+        private async Task SendEffectPacket(string type, OverlayItemBase item, OverlayItemPosition position, OverlayItemEffect effect)
+        {
+            JObject jobj = JObject.FromObject(item);
+            jobj.Merge(JObject.FromObject(position));
+            jobj.Merge(JObject.FromObject(effect));
+            await this.SendPacket(type, jobj);
+        }
 
         private async Task SendPacket(string type, object contents)
         {

@@ -1,4 +1,4 @@
-﻿using MixItUp.Base.Actions;
+﻿using MixItUp.Base.Model.Overlay;
 using System;
 using System.Net.WebSockets;
 using System.Runtime.Serialization;
@@ -47,17 +47,17 @@ namespace MixItUp.Base.Services
 
         Task EndBatching();
 
-        Task SendImage(OverlayImageEffect effect);
+        Task SendImage(OverlayImageItem item, OverlayItemPosition position, OverlayItemEffect effect);
 
-        Task SendText(OverlayTextEffect effect);
+        Task SendText(OverlayTextItem item, OverlayItemPosition position, OverlayItemEffect effect);
 
-        Task SendYoutubeVideo(OverlayYoutubeEffect effect);
+        Task SendYouTubeVideo(OverlayYouTubeItem item, OverlayItemPosition position, OverlayItemEffect effect);
 
-        Task SendLocalVideo(OverlayVideoEffect effect);
+        Task SendLocalVideo(OverlayVideoItem item, OverlayItemPosition position, OverlayItemEffect effect);
 
-        Task SendHTML(OverlayHTMLEffect effect);
+        Task SendHTML(OverlayHTMLItem item, OverlayItemPosition position, OverlayItemEffect effect);
 
-        Task SendWebPage(OverlayWebPageEffect effect);
+        Task SendWebPage(OverlayWebPageItem item, OverlayItemPosition position, OverlayItemEffect effect);
 
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
 
