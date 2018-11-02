@@ -181,6 +181,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
+        public DateTimeOffset LastUpdated { get; set; }
+
+        [JsonIgnore]
         public UserDataViewModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.ID, new UserDataViewModel(this)); } }
 
         [JsonIgnore]
@@ -271,7 +274,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task RefreshDetails()
         {
-            if (this.ID > 0)
+            if (this.ID > 0 && this.LastUpdated.TotalMinutesFromNow() >= 1)
             {
                 UserWithChannelModel user = await ChannelSession.Connection.GetUser(this.ID);
                 if (user != null)
@@ -288,6 +291,8 @@ namespace MixItUp.Base.ViewModel.User
                 }
 
                 await this.SetCustomRoles();
+
+                this.LastUpdated = DateTimeOffset.Now;
             }
         }
 

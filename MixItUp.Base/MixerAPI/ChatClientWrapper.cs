@@ -258,10 +258,6 @@ namespace MixItUp.Base.MixerAPI
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.ChatUserRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
@@ -526,38 +522,6 @@ namespace MixItUp.Base.MixerAPI
                 tokenSource.Token.ThrowIfCancellationRequested();
 
                 await ChannelSession.SaveSettings();
-            });
-        }
-
-        private async Task ChatUserRefreshBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                Dictionary<uint, ChatUserModel> chatUsers = new Dictionary<uint, ChatUserModel>();
-                foreach (ChatUserModel user in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
-                {
-                    if (user.userId.HasValue)
-                    {
-                        chatUsers[user.userId.GetValueOrDefault()] = user;
-                    }
-                }
-
-                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
-                {
-                    if (chatUsers.ContainsKey(user.ID))
-                    {
-                        user.SetChatDetails(chatUsers[user.ID]);
-                        chatUsers.Remove(user.ID);
-                    }
-                    else
-                    {
-                        await ChannelSession.ActiveUsers.RemoveUser(user.ID);
-                    }
-                }
-
-                await ChannelSession.ActiveUsers.AddOrUpdateUsers(chatUsers.Values);
-
-                await Task.Delay(60000, tokenSource.Token);
             });
         }
 

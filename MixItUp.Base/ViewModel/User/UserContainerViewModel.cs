@@ -81,43 +81,79 @@ namespace MixItUp.Base.ViewModel.User
             return null;
         }
 
-        public async Task AddOrUpdateUsers(IEnumerable<ChatUserModel> chatUsers)
-        {
-            List<UserViewModel> users = new List<UserViewModel>();
-            foreach (ChatUserModel chatUser in chatUsers)
-            {
-                if (chatUser.userId.HasValue)
-                {
-                    UserViewModel user = new UserViewModel(chatUser);
-                    user.SetChatDetails(chatUser);
-                    users.Add(user);
-                }
-            }
-            await this.AddOrUpdateUsers(users);
-        }
-
         public async Task<UserViewModel> AddOrUpdateUser(ChatUserModel chatUser)
         {
             await this.AddOrUpdateUsers(new List<ChatUserModel>() { chatUser });
             return await this.GetUserByID(chatUser.userId.GetValueOrDefault());
         }
 
-        public async Task AddOrUpdateUsers(IEnumerable<InteractiveParticipantModel> interactiveUsers)
+        public async Task AddOrUpdateUsers(IEnumerable<ChatUserModel> chatUsers)
         {
-            List<UserViewModel> users = new List<UserViewModel>();
-            foreach (InteractiveParticipantModel interactiveUser in interactiveUsers)
+            List<UserViewModel> newUsers = new List<UserViewModel>();
+            await this.semaphore.WaitAndRelease(() =>
             {
-                UserViewModel user = new UserViewModel(interactiveUser);
-                user.SetInteractiveDetails(interactiveUser);
-                users.Add(user);
-            }
-            await this.AddOrUpdateUsers(users);
+                foreach (ChatUserModel chatUser in chatUsers)
+                {
+                    if (chatUser.userId.HasValue)
+                    {
+                        UserViewModel user = null;
+                        if (this.users.ContainsKey(chatUser.userId.GetValueOrDefault()))
+                        {
+                            user = this.users[chatUser.userId.GetValueOrDefault()];
+                        }
+                        else
+                        {
+                            user = new UserViewModel(chatUser);
+                            newUsers.Add(user);
+                        }
+
+                        if (user != null)
+                        {
+                            this.users[user.ID] = user;
+                            user.SetChatDetails(chatUser);
+                        }
+                    }
+                }
+
+                return Task.FromResult(0);
+            });
+            await this.RefreshNewUsers(newUsers);
         }
 
         public async Task<UserViewModel> AddOrUpdateUser(InteractiveParticipantModel interactiveUser)
         {
             await this.AddOrUpdateUsers(new List<InteractiveParticipantModel>() { interactiveUser });
             return await this.GetUserByID(interactiveUser.userID);
+        }
+
+        public async Task AddOrUpdateUsers(IEnumerable<InteractiveParticipantModel> interactiveUsers)
+        {
+            List<UserViewModel> newUsers = new List<UserViewModel>();
+            await this.semaphore.WaitAndRelease(() =>
+            {
+                foreach (InteractiveParticipantModel interactiveUser in interactiveUsers)
+                {
+                    UserViewModel user = null;
+                    if (this.users.ContainsKey(interactiveUser.userID))
+                    {
+                        user = this.users[interactiveUser.userID];
+                    }
+                    else
+                    {
+                        user = new UserViewModel(interactiveUser);
+                        newUsers.Add(user);
+                    }
+
+                    if (user != null)
+                    {
+                        this.users[user.ID] = user;
+                        user.SetInteractiveDetails(interactiveUser);
+                    }
+                }
+
+                return Task.FromResult(0);
+            });
+            await this.RefreshNewUsers(newUsers);
         }
 
         public async Task RemoveInteractiveUser(InteractiveParticipantModel interactiveUser)
@@ -185,49 +221,28 @@ namespace MixItUp.Base.ViewModel.User
             return await this.semaphore.WaitAndRelease(() => Task.FromResult(this.users.Count));
         }
 
-        private async Task AddOrUpdateUsers(IEnumerable<UserViewModel> users)
+        private async Task RefreshNewUsers(IEnumerable<UserViewModel> users)
         {
-            List<UserViewModel> firstJoinUsers = new List<UserViewModel>();
-            List<UserViewModel> refreshUsers = new List<UserViewModel>();
-
-            await this.semaphore.WaitAndRelease(() =>
+            Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, users.Select(u => u.GetModel()));
+            foreach (UserViewModel user in users)
             {
-                foreach (UserViewModel user in users)
+                if (follows.ContainsKey(user.ID))
                 {
-                    if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
-                    {
-                        firstJoinUsers.Add(user);
-                    }
-
-                    if (!this.users.ContainsKey(user.ID))
-                    {
-                        this.users[user.ID] = user;
-                        refreshUsers.Add(user);
-                    }
+                    user.FollowDate = follows[user.ID];
                 }
-
-                return Task.FromResult(0);
-            });
-
-            if (refreshUsers.Count() > 0)
-            {
-                Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, refreshUsers.Select(u => u.GetModel()));
-                foreach (UserViewModel user in refreshUsers)
+                if (subscribers.ContainsKey(user.ID))
                 {
-                    if (follows.ContainsKey(user.ID))
-                    {
-                        user.FollowDate = follows[user.ID];
-                    }
-                    if (subscribers.ContainsKey(user.ID))
-                    {
-                        user.SubscribeDate = subscribers[user.ID];
-                    }
+                    user.SubscribeDate = subscribers[user.ID];
                 }
+                user.LastUpdated = DateTimeOffset.Now;
             }
 
-            foreach (UserViewModel user in firstJoinUsers)
+            foreach (UserViewModel user in users)
             {
-                await this.PerformUserFirstJoin(user);
+                if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
+                {
+                    await this.PerformUserFirstJoin(user);
+                }
             }
         }
 
