@@ -25,6 +25,8 @@ namespace MixItUp.WPF.Controls.Overlay
 
         public void SetPosition(OverlayItemPosition position)
         {
+            this.position = position;
+
             if (this.position.PositionType == OverlayEffectPositionType.Percentage)
             {
                 if (this.position.Horizontal == 25 && this.position.Vertical == 25) { this.TopLeftPositionButton_Click(this, new RoutedEventArgs()); }
@@ -38,9 +40,7 @@ namespace MixItUp.WPF.Controls.Overlay
                 else if (this.position.Horizontal == 75 && this.position.Vertical == 75) { this.BottomRightPositionButton_Click(this, new RoutedEventArgs()); }
                 else
                 {
-                    this.SimplePositionButton.IsEnabled = true;
-                    this.PercentagePositionButton.IsEnabled = false;
-                    this.PixelsPositionButton.IsEnabled = true;
+                    this.PercentagePositionButton_Click(this, new RoutedEventArgs());
                 }
 
                 this.PercentagePositionHorizontalSlider.Value = this.position.Horizontal;
@@ -48,9 +48,7 @@ namespace MixItUp.WPF.Controls.Overlay
             }
             else
             {
-                this.SimplePositionButton.IsEnabled = true;
-                this.PercentagePositionButton.IsEnabled = true;
-                this.PixelsPositionButton.IsEnabled = false;
+                this.PixelsPositionButton_Click(this, new RoutedEventArgs());
 
                 this.PixelPositionHorizontalTextBox.Text = this.position.Horizontal.ToString();
                 this.PixelPositionVerticalTextBox.Text = this.position.Vertical.ToString();
@@ -131,6 +129,12 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override Task OnLoaded()
         {
+            this.SimplePositionButton_Click(this, new RoutedEventArgs());
+            this.CenterPositionButton_Click(this, new RoutedEventArgs());
+
+            this.PixelPositionHorizontalTextBox.Text = "0";
+            this.PixelPositionVerticalTextBox.Text = "0";
+
             if (this.position != null)
             {
                 this.SetPosition(position);

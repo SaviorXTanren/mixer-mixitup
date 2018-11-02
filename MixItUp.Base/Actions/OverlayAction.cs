@@ -120,201 +120,6 @@ namespace MixItUp.Base.Actions
     #region Obsolete Overlay Effect System
 
     [Obsolete]
-    public enum OverlayEffectTypeEnum
-    {
-        Text,
-        Image,
-        Video,
-        YouTube,
-        HTML,
-        [Name("Web Page")]
-        WebPage
-    }
-
-    [Obsolete]
-    public enum OverlayEffectEntranceAnimationTypeEnum
-    {
-        None,
-
-        [Name("Bounce In")]
-        BounceIn,
-        [Name("Bounce In Up")]
-        BounceInUp,
-        [Name("Bounce In Down")]
-        BounceInDown,
-        [Name("Bounce In Left")]
-        BounceInLeft,
-        [Name("Bounce In Right")]
-        BounceInRight,
-
-        [Name("Fade In")]
-        FadeIn,
-        [Name("Fade In Up")]
-        FadeInUp,
-        [Name("Fade In Down")]
-        FadeInDown,
-        [Name("Fade In Left")]
-        FadeInLeft,
-        [Name("Fade In Right")]
-        FadeInRight,
-
-        [Name("Flip In X")]
-        FlipInX,
-        [Name("Flip In Y")]
-        FlipInY,
-
-        [Name("Light Speed In")]
-        LightSpeedIn,
-
-        [Name("Rotate In")]
-        RotateIn,
-
-
-        [Name("Rotate In Up")]
-        [Obsolete]
-        RotateInUp,
-        [Name("Rotate In Down")]
-        [Obsolete]
-        RotateInDown,
-        [Name("Rotate In Left")]
-        [Obsolete]
-        RotateInLeft,
-        [Name("Rotate In Right")]
-        [Obsolete]
-        RotateInRight,
-
-
-        [Name("Slide In Up")]
-        SlideInUp,
-        [Name("Slide In Down")]
-        SlideInDown,
-        [Name("Slide In Left")]
-        SlideInLeft,
-        [Name("Slide In Right")]
-        SlideInRight,
-
-        [Name("Zoom In")]
-        ZoomIn,
-        [Name("Zoom In Up")]
-        ZoomInUp,
-        [Name("Zoom In Down")]
-        ZoomInDown,
-        [Name("Zoom In Left")]
-        ZoomInLeft,
-        [Name("Zoom In Right")]
-        ZoomInRight,
-
-        [Name("Jack In The Box")]
-        JackInTheBox,
-
-        [Name("Roll In")]
-        RollIn,
-
-        Random,
-    }
-
-    [Obsolete]
-    public enum OverlayEffectVisibleAnimationTypeEnum
-    {
-        None,
-
-        Bounce,
-        Flash,
-        Pulse,
-        [Name("Rubber Band")]
-        RubberBand,
-        Shake,
-        Swing,
-        Tada,
-        Wobble,
-        Jello,
-        Flip,
-
-        Random,
-    }
-
-    [Obsolete]
-    public enum OverlayEffectExitAnimationTypeEnum
-    {
-        None,
-
-        [Name("Bounce Out")]
-        BounceOut,
-        [Name("Bounce Out Up")]
-        BounceOutUp,
-        [Name("Bounce Out Down")]
-        BounceOutDown,
-        [Name("Bounce Out Left")]
-        BounceOutLeft,
-        [Name("Bounce Out Right")]
-        BounceOutRight,
-
-        [Name("Fade Out")]
-        FadeOut,
-        [Name("Fade Out Up")]
-        FadeOutUp,
-        [Name("Fade Out Down")]
-        FadeOutDown,
-        [Name("Fade Out Left")]
-        FadeOutLeft,
-        [Name("Fade Out Right")]
-        FadeOutRight,
-
-        [Name("Flip Out X")]
-        FlipOutX,
-        [Name("Flip Out Y")]
-        FlipOutY,
-
-        [Name("Light Speed Out")]
-        LightSpeedOut,
-
-        [Name("Rotate Out")]
-        RotateOut,
-
-
-        [Name("Rotate Out Up")]
-        [Obsolete]
-        RotateOutUp,
-        [Name("Rotate Out Down")]
-        [Obsolete]
-        RotateOutDown,
-        [Name("Rotate Out Left")]
-        [Obsolete]
-        RotateOutLeft,
-        [Name("Rotate Out Right")]
-        [Obsolete]
-        RotateOutRight,
-
-
-        [Name("Slide Out Up")]
-        SlideOutUp,
-        [Name("Slide Out Down")]
-        SlideOutDown,
-        [Name("Slide Out Left")]
-        SlideOutLeft,
-        [Name("Slide Out Right")]
-        SlideOutRight,
-
-        [Name("Zoom Out")]
-        ZoomOut,
-        [Name("Zoom Out Up")]
-        ZoomOutUp,
-        [Name("Zoom Out Down")]
-        ZoomOutDown,
-        [Name("Zoom Out Left")]
-        ZoomOutLeft,
-        [Name("Zoom Out Right")]
-        ZoomOutRight,
-
-        Hinge,
-
-        [Name("Roll Out")]
-        RollOut,
-
-        Random,
-    }
-
-    [Obsolete]
     [DataContract]
     public class OverlayTextEffect : OverlayEffectBase
     {
@@ -326,15 +131,6 @@ namespace MixItUp.Base.Actions
         public int Size { get; set; }
 
         public OverlayTextEffect() { }
-
-        public OverlayTextEffect(string text, string color, int size, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.Text, entrance, visible, exit, duration, horizontal, vertical)
-        {
-            this.Text = text;
-            this.Color = color;
-            this.Size = size;
-        }
     }
 
     [Obsolete]
@@ -366,16 +162,6 @@ namespace MixItUp.Base.Actions
         }
 
         public OverlayImageEffect() { }
-
-        public OverlayImageEffect(string filepath, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.Image, entrance, visible, exit, duration, horizontal, vertical)
-        {
-            this.FilePath = filepath;
-            this.Width = width;
-            this.Height = height;
-            this.ID = Guid.NewGuid().ToString().Replace("-", string.Empty);
-        }
     }
 
     [Obsolete]
@@ -410,16 +196,6 @@ namespace MixItUp.Base.Actions
         }
 
         public OverlayVideoEffect() { }
-
-        public OverlayVideoEffect(string filepath, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.Video, entrance, visible, exit, duration, horizontal, vertical)
-        {
-            this.FilePath = filepath;
-            this.Width = width;
-            this.Height = height;
-            this.ID = Guid.NewGuid().ToString().Replace("-", string.Empty);
-        }
     }
 
     [Obsolete]
@@ -436,16 +212,6 @@ namespace MixItUp.Base.Actions
         public int Height { get; set; }
 
         public OverlayYoutubeEffect() { }
-
-        public OverlayYoutubeEffect(string id, int startTime, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.YouTube, entrance, visible, exit, duration, horizontal, vertical)
-        {
-            this.ID = id;
-            this.StartTime = startTime;
-            this.Width = width;
-            this.Height = height;
-        }
     }
 
     [Obsolete]
@@ -456,13 +222,6 @@ namespace MixItUp.Base.Actions
         public string HTMLText { get; set; }
 
         public OverlayHTMLEffect() { }
-
-        public OverlayHTMLEffect(string htmlText, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible, OverlayEffectExitAnimationTypeEnum exit,
-            double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.HTML, entrance, visible, exit, duration, horizontal, vertical)
-        {
-            this.HTMLText = htmlText;
-        }
     }
 
     [Obsolete]
@@ -477,15 +236,6 @@ namespace MixItUp.Base.Actions
         public int Height { get; set; }
 
         public OverlayWebPageEffect() { }
-
-        public OverlayWebPageEffect(string url, int width, int height, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-            : base(OverlayEffectTypeEnum.WebPage, entrance, visible, exit, duration, horizontal, vertical)
-        {
-            this.URL = url;
-            this.Width = width;
-            this.Height = height;
-        }
     }
 
     [Obsolete]
@@ -495,20 +245,11 @@ namespace MixItUp.Base.Actions
         private static readonly Random Random = new Random();
 
         [DataMember]
-        public OverlayEffectTypeEnum EffectType { get; set; }
-
+        public int EntranceAnimation { get; set; }
         [DataMember]
-        public OverlayEffectEntranceAnimationTypeEnum EntranceAnimation { get; set; }
+        public int VisibleAnimation { get; set; }
         [DataMember]
-        public string EntranceAnimationName { get { return this.GetAnimationClassName(this.EntranceAnimation); } set { } }
-        [DataMember]
-        public OverlayEffectVisibleAnimationTypeEnum VisibleAnimation { get; set; }
-        [DataMember]
-        public string VisibleAnimationName { get { return this.GetAnimationClassName(this.VisibleAnimation); } set { } }
-        [DataMember]
-        public OverlayEffectExitAnimationTypeEnum ExitAnimation { get; set; }
-        [DataMember]
-        public string ExitAnimationName { get { return this.GetAnimationClassName(this.ExitAnimation); } set { } }
+        public int ExitAnimation { get; set; }
 
         [DataMember]
         public double Duration;
@@ -518,18 +259,6 @@ namespace MixItUp.Base.Actions
         public int Vertical;
 
         public OverlayEffectBase() { }
-
-        public OverlayEffectBase(OverlayEffectTypeEnum effectType, OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible,
-            OverlayEffectExitAnimationTypeEnum exit, double duration, int horizontal, int vertical)
-        {
-            this.EffectType = effectType;
-            this.EntranceAnimation = entrance;
-            this.VisibleAnimation = visible;
-            this.ExitAnimation = exit;
-            this.Duration = duration;
-            this.Horizontal = horizontal;
-            this.Vertical = vertical;
-        }
 
         public T Copy<T>()
         {

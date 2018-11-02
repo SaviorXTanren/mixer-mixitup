@@ -75,9 +75,9 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="PixelPositionHorizontalTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Pixel Position From Left" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+            <TextBox x:Name="PixelPositionHorizontalTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Left Pixel Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
 
-            <TextBox x:Name="PixelPositionVerticalTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Pixel Position From Top" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+            <TextBox x:Name="PixelPositionVerticalTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Top Pixel Position" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
         </Grid>
     </Grid>
 </Controls:LoadingControlBase>

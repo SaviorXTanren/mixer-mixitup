@@ -24,7 +24,7 @@
 
         <TextBox x:Name="YoutubeVideoIDTextBox" Grid.Row="0" MaterialDesign:HintAssist.Hint="Youtube Video URL/ID" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
-        <TextBox x:Name="YoutubeStartTimeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Start Time (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+        <TextBox x:Name="YoutubeStartTimeTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Start Time (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
         <TextBox Grid.Column="4" x:Name="YouTubeWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="70" />
 

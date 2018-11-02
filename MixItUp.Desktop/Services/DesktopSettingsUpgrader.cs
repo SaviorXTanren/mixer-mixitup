@@ -1,13 +1,8 @@
-﻿using Mixer.Base.Util;
-using MixItUp.Base;
+﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Interactive;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.Desktop.Database;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -57,6 +52,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version21Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version22Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version23Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version24Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -306,6 +302,30 @@ namespace MixItUp.Desktop.Services
                 settings.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
                 settings.ModerationStrike2Command = CustomCommand.BasicChatCommand("Moderation Strike 2", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
                 settings.ModerationStrike3Command = CustomCommand.BasicChatCommand("Moderation Strike 3", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version24Upgrade(int version, string filePath)
+        {
+            if (version < 24)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                List<CommandBase> commands = new List<CommandBase>();
+                commands.AddRange(settings.ChatCommands);
+                commands.AddRange(settings.EventCommands);
+                commands.AddRange(settings.InteractiveCommands);
+                commands.AddRange(settings.TimerCommands);
+                commands.AddRange(settings.ActionGroupCommands);
+                commands.AddRange(settings.GameCommands);
+                commands.AddRange(settings.RemoteCommands);
+                foreach (CommandBase command in commands)
+                {
+                    StoreCommandUpgrader.RestructureNewOverlayActions(command.Actions);
+                }
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
