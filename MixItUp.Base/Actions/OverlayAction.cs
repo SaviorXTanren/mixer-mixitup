@@ -53,65 +53,30 @@ namespace MixItUp.Base.Actions
             IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
             if (overlay != null)
             {
+                OverlayItemBase processedItem = await this.Item.GetProcessedItem(user, arguments, this.extraSpecialIdentifiers);
                 if (this.Item is OverlayImageItem)
                 {
-                    OverlayImageItem imageItem = (OverlayImageItem)this.Item;
-                    string imageFilePath = await this.ReplaceStringWithSpecialModifiers(imageItem.FilePath, user, arguments);
-                    if (!Uri.IsWellFormedUriString(imageFilePath, UriKind.RelativeOrAbsolute))
-                    {
-                        imageFilePath = imageFilePath.ToFilePathString();
-                    }
-
-                    if (!string.IsNullOrEmpty(imageFilePath))
-                    {
-                        OverlayImageItem copy = imageItem.Copy<OverlayImageItem>();
-                        copy.FilePath = imageFilePath;
-                        await overlay.SendImage(copy, this.Position, this.Effects);
-                    }
+                    await overlay.SendImage((OverlayImageItem)processedItem, this.Position, this.Effects);
                 }
                 else if (this.Item is OverlayTextItem)
                 {
-                    OverlayTextItem textEffect = (OverlayTextItem)this.Item;
-                    string text = await this.ReplaceStringWithSpecialModifiers(textEffect.Text, user, arguments);
-                    OverlayTextItem copy = textEffect.Copy<OverlayTextItem>();
-                    copy.Text = text;
-                    await overlay.SendText(copy, this.Position, this.Effects);
+                    await overlay.SendText((OverlayTextItem)processedItem, this.Position, this.Effects);
                 }
                 else if (this.Item is OverlayYouTubeItem)
                 {
-                    await overlay.SendYouTubeVideo((OverlayYouTubeItem)this.Item, this.Position, this.Effects);
+                    await overlay.SendYouTubeVideo((OverlayYouTubeItem)processedItem, this.Position, this.Effects);
                 }
                 else if (this.Item is OverlayVideoItem)
                 {
-                    OverlayVideoItem videoEffect = (OverlayVideoItem)this.Item;
-                    string videoFilePath = await this.ReplaceStringWithSpecialModifiers(videoEffect.FilePath, user, arguments);
-                    if (!Uri.IsWellFormedUriString(videoFilePath, UriKind.RelativeOrAbsolute))
-                    {
-                        videoFilePath = videoFilePath.ToFilePathString();
-                    }
-
-                    if (!string.IsNullOrEmpty(videoFilePath))
-                    {
-                        OverlayVideoItem copy = videoEffect.Copy<OverlayVideoItem>();
-                        copy.FilePath = videoFilePath;
-                        await overlay.SendLocalVideo(copy, this.Position, this.Effects);
-                    }
+                    await overlay.SendLocalVideo((OverlayVideoItem)processedItem, this.Position, this.Effects);
                 }
                 else if (this.Item is OverlayHTMLItem)
                 {
-                    OverlayHTMLItem htmlEffect = (OverlayHTMLItem)this.Item;
-                    string htmlText = await this.ReplaceStringWithSpecialModifiers(htmlEffect.HTMLText, user, arguments);
-                    OverlayHTMLItem copy = htmlEffect.Copy<OverlayHTMLItem>();
-                    copy.HTMLText = htmlText;
-                    await overlay.SendHTML(copy, this.Position, this.Effects);
+                    await overlay.SendHTML((OverlayHTMLItem)processedItem, this.Position, this.Effects);
                 }
                 else if (this.Item is OverlayWebPageItem)
                 {
-                    OverlayWebPageItem webPageEffect = (OverlayWebPageItem)this.Item;
-                    string url = await this.ReplaceStringWithSpecialModifiers(webPageEffect.URL, user, arguments);
-                    OverlayWebPageItem copy = webPageEffect.Copy<OverlayWebPageItem>();
-                    copy.URL = url;
-                    await overlay.SendWebPage(copy, this.Position, this.Effects);
+                    await overlay.SendWebPage((OverlayWebPageItem)processedItem, this.Position, this.Effects);
                 }
             }
         }

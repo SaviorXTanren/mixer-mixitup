@@ -1,5 +1,9 @@
-﻿using System;
+﻿using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -38,6 +42,17 @@ namespace MixItUp.Base.Model.Overlay
             this.Width = width;
             this.Height = height;
             this.ID = Guid.NewGuid().ToString().Replace("-", string.Empty);
+        }
+
+        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            OverlayImageItem item = this.Copy<OverlayImageItem>();
+            item.FilePath = await this.ReplaceStringWithSpecialModifiers(item.FilePath, user, arguments, extraSpecialIdentifiers);
+            if (!Uri.IsWellFormedUriString(item.FilePath, UriKind.RelativeOrAbsolute))
+            {
+                item.FilePath = item.FilePath.ToFilePathString();
+            }
+            return item;
         }
     }
 }

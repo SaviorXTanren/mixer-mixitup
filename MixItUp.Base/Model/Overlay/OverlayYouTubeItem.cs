@@ -1,4 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿using MixItUp.Base.ViewModel.User;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -25,6 +28,13 @@ namespace MixItUp.Base.Model.Overlay
             this.Width = width;
             this.Height = height;
             this.Volume = volume;
+        }
+
+        public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            OverlayYouTubeItem item = this.Copy<OverlayYouTubeItem>();
+            item.ID = await this.ReplaceStringWithSpecialModifiers(item.ID, user, arguments, extraSpecialIdentifiers, encode: true);
+            return item;
         }
     }
 }
