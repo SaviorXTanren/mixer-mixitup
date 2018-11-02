@@ -187,7 +187,7 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayItemEffect
+    public class OverlayItemEffects
     {
         private static readonly Random Random = new Random();
 
@@ -207,7 +207,7 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double Duration;
 
-        public OverlayItemEffect(OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible, OverlayEffectExitAnimationTypeEnum exit, double duration)
+        public OverlayItemEffects(OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible, OverlayEffectExitAnimationTypeEnum exit, double duration)
         {
             this.EntranceAnimation = entrance;
             this.VisibleAnimation = visible;

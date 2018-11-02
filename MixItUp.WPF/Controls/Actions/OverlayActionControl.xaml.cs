@@ -66,10 +66,10 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.action != null)
             {
-                this.DurationTextBox.Text = this.action.Effect.Duration.ToString();
-                this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.EntranceAnimation);
-                this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.VisibleAnimation);
-                this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.ExitAnimation);
+                this.DurationTextBox.Text = this.action.Effects.Duration.ToString();
+                this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.EntranceAnimation);
+                this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.VisibleAnimation);
+                this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.ExitAnimation);
 
                 this.ItemPosition.SetPosition(this.action.Position);
                
@@ -123,7 +123,7 @@ namespace MixItUp.WPF.Controls.Actions
                 OverlayEffectVisibleAnimationTypeEnum visible = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>((string)this.VisibleAnimationComboBox.SelectedItem);
                 OverlayEffectExitAnimationTypeEnum exit = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.ExitAnimationComboBox.SelectedItem);
 
-                OverlayItemEffect effect = new OverlayItemEffect(entrance, visible, exit, duration);
+                OverlayItemEffects effect = new OverlayItemEffects(entrance, visible, exit, duration);
 
                 OverlayItemPosition position = this.ItemPosition.GetPosition();
 

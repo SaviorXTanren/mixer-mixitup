@@ -181,7 +181,7 @@ namespace MixItUp.WPF.Controls.Games
                 CustomCommand overlayCommand = this.CreateBasicChatCommand("@$username opened their capsule and found a dancing Carlton!");
                 overlayCommand.Actions.Add(new OverlayAction(ChannelSession.Services.OverlayServers.DefaultOverlayName,
                     new OverlayImageItem("https://78.media.tumblr.com/1921bcd13e12643771410200a322cb0e/tumblr_ogs5bcHWUc1udh5n8o1_500.gif", 500, 500),
-                    new OverlayItemPosition(OverlayEffectPositionType.Percentage, 50, 50), new OverlayItemEffect(OverlayEffectEntranceAnimationTypeEnum.FadeIn,
+                    new OverlayItemPosition(OverlayEffectPositionType.Percentage, 50, 50), new OverlayItemEffects(OverlayEffectEntranceAnimationTypeEnum.FadeIn,
                     OverlayEffectVisibleAnimationTypeEnum.None, OverlayEffectExitAnimationTypeEnum.FadeOut, 3)));
                 this.outcomes.Add(new VendingMachineOutcome("Dancing Carlton", overlayCommand, 30, 30, 30));
             }

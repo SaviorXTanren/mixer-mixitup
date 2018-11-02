@@ -70,6 +70,46 @@ namespace MixItUp.Base.Commands
             }
         }
 
+        internal static void RestructureNewOverlayActions(List<ActionBase> actions)
+        {
+            for (int i = 0; i < actions.Count; i++)
+            {
+                ActionBase action = actions[i];
+                if (action is OverlayAction)
+                {
+                    OverlayAction oAction = (OverlayAction)action;
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (oAction.Effect is OverlayTextEffect)
+                    {
+                        
+                    }
+                    else if (oAction.Effect is OverlayImageEffect)
+                    {
+
+                    }
+                    else if (oAction.Effect is OverlayVideoEffect)
+                    {
+
+                    }
+                    else if (oAction.Effect is OverlayYoutubeEffect)
+                    {
+
+                    }
+                    else if (oAction.Effect is OverlayWebPageEffect)
+                    {
+
+                    }
+                    else if (oAction.Effect is OverlayHTMLEffect)
+                    {
+
+                    }
+                    //oAction.Position = new Model.Overlay.OverlayItemPosition(oAction.Effect);
+                    oAction.Effect = null;
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+            }
+        }
+
         private static bool IsVersionLessThan(string currentVersion, string checkVersion)
         {
             Version current = Version.Parse(currentVersion.Trim());
