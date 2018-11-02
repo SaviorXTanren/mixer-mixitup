@@ -39,7 +39,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,20,0,0" Width="520" HorizontalAlignment="Center">This will allow you to import your channel's user data from either a plain-text or spreadsheet file. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</TextBlock>
+            <TextBlock Grid.Row="0" TextWrapping="Wrap" Margin="0,20,0,0" Width="520" HorizontalAlignment="Center">This will allow you to import your channel's user data from either a plain-text or spreadsheet file. To import a spreadsheet file, you must have some form of Microsoft Excel installed. Note that this WILL OVERWRITE existing user data in Mix It Up. First, specify the file that you want to import the User data from:</TextBlock>
 
             <Grid Grid.Row="2" Margin="40,0">
                 <Grid.ColumnDefinitions>

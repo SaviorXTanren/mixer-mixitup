@@ -224,7 +224,7 @@
                     <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Import Streamlabs Chat Bot Data</TextBlock>
 
                     <StackPanel Grid.Row="2" Width="675">
-                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">If you previously used Streamlabs Chat Bot, we can import several things from your data to get you ramped up faster in Mix It Up! Currently, the following features can be imported:</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">If you previously used Streamlabs Chat Bot, we can import several things from your data to get you ramped up faster in Mix It Up! To use this feature, you must have some form of Microsoft Excel installed. Currently, the following features can be imported:</TextBlock>
 
                         <TextBlock Margin="20,10,0,0">- Chat Commands</TextBlock>
                         <TextBlock Margin="20,0,0,0">- Timers</TextBlock>

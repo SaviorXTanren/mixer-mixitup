@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoUpdaterDotNET;
 using System;
 using System.Net.Http;
+using MixItUp.Base.Util;
 
 namespace MixItUp.WPF
 {
@@ -27,11 +28,15 @@ namespace MixItUp.WPF
         {
             this.NewVersionTextBlock.Text = updateArgs.CurrentVersion.ToString();
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                string changelogHTML = await client.GetStringAsync(updateArgs.ChangelogURL);
-                this.UpdateChangelogWebBrowser.NavigateToString(changelogHTML);
+                using (HttpClient client = new HttpClient())
+                {
+                    string changelogHTML = await client.GetStringAsync(updateArgs.ChangelogURL);
+                    this.UpdateChangelogWebBrowser.NavigateToString(changelogHTML);
+                }
             }
+            catch (Exception ex) { Logger.Log(ex); }
 
             await base.OnLoaded();
         }

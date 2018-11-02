@@ -16,7 +16,7 @@ namespace MixItUp.Base.Services
     {
         Task<IEnumerable<IChannelSettings>> GetAllSettings();
 
-        IChannelSettings Create(ExpandedChannelModel channel, bool isStreamer);
+        Task<IChannelSettings> Create(ExpandedChannelModel channel, bool isStreamer);
 
         Task Initialize(IChannelSettings settings);
 

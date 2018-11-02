@@ -2,6 +2,7 @@
 using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Users;
 using System;
@@ -115,43 +116,50 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected override async Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command)
         {
-            if (input.input.controlID.Equals("position") && user != null && input.input.meta.ContainsKey("x") && input.input.meta.ContainsKey("y"))
+            try
             {
-                if (this.scene != null && this.positionButton != null && input.input.meta["x"] != null && input.input.meta["y"] != null)
+                if (input.input.controlID.Equals("position") && user != null && input.input.meta.ContainsKey("x") && input.input.meta.ContainsKey("y"))
                 {
-                    Point point = new Point() { X = (double)input.input.meta["x"], Y = (double)input.input.meta["y"] };
-
-                    this.userPoints[user.ID] = point;
-
-                    InteractiveControlModel control = new InteractiveControlModel() { controlID = this.positionButton.controlID };
-                    control.meta["userID"] = user.ID;
-                    control.meta["x"] = point.X;
-                    control.meta["y"] = point.Y;
-                    await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
-
-                    await this.Dispatcher.InvokeAsync(async () =>
+                    if (this.scene != null && this.positionButton != null && input.input.meta["x"] != null && input.input.meta["y"] != null)
                     {
-                        UserProfileAvatarControl avatarControl = null;
+                        Point point = new Point() { X = (double)input.input.meta["x"], Y = (double)input.input.meta["y"] };
 
-                        if (!this.userAvatars.ContainsKey(user.ID))
+                        this.userPoints[user.ID] = point;
+
+                        InteractiveControlModel control = new InteractiveControlModel() { controlID = this.positionButton.controlID };
+                        control.meta["userID"] = user.ID;
+                        control.meta["x"] = point.X;
+                        control.meta["y"] = point.Y;
+                        await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
+
+                        await this.Dispatcher.InvokeAsync(async () =>
                         {
-                            avatarControl = new UserProfileAvatarControl();
-                            await avatarControl.SetImageUrl("https://mixer.com/api/v1/users/" + user.ID + "/avatar");
-                            avatarControl.SetSize(20);
+                            UserProfileAvatarControl avatarControl = null;
 
-                            this.canvas.Children.Add(avatarControl);
-                            this.userAvatars[user.ID] = avatarControl;
-                        }
+                            if (!this.userAvatars.ContainsKey(user.ID))
+                            {
+                                avatarControl = new UserProfileAvatarControl();
+                                await avatarControl.SetImageUrl("https://mixer.com/api/v1/users/" + user.ID + "/avatar");
+                                avatarControl.SetSize(20);
 
-                        avatarControl = this.userAvatars[user.ID];
+                                this.canvas.Children.Add(avatarControl);
+                                this.userAvatars[user.ID] = avatarControl;
+                            }
 
-                        double canvasX = ((point.X / 100.0) * this.canvas.Width);
-                        double canvasY = ((point.Y / 100.0) * this.canvas.Height);
+                            avatarControl = this.userAvatars[user.ID];
 
-                        Canvas.SetLeft(avatarControl, canvasX - 10);
-                        Canvas.SetTop(avatarControl, canvasY - 10);
-                    });
+                            double canvasX = ((point.X / 100.0) * this.canvas.Width);
+                            double canvasY = ((point.Y / 100.0) * this.canvas.Height);
+
+                            Canvas.SetLeft(avatarControl, canvasX - 10);
+                            Canvas.SetTop(avatarControl, canvasY - 10);
+                        });
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
     }

@@ -341,27 +341,30 @@ namespace MixItUp.Base.MixerAPI
 
             DateTimeOffset startTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(10));
             InteractiveParticipantCollectionModel collection = null;
-            do
+            await this.RunAsync(async () =>
             {
-                if (this.Client == null)
+                do
                 {
-                    break;
-                }
-
-                collection = await this.RunAsync(this.Client.GetAllParticipants(startTime));
-                if (collection != null && collection.participants != null)
-                {
-                    foreach (InteractiveParticipantModel participant in collection.participants)
+                    if (this.Client == null)
                     {
-                        participants[participant.userID] = participant;
+                        break;
                     }
 
-                    if (collection.participants.Count() > 0)
+                    collection = await this.Client.GetAllParticipants(startTime);
+                    if (collection != null && collection.participants != null)
                     {
-                        startTime = DateTimeHelper.UnixTimestampToDateTimeOffset(collection.participants.Last().connectedAt);
+                        foreach (InteractiveParticipantModel participant in collection.participants)
+                        {
+                            participants[participant.userID] = participant;
+                        }
+
+                        if (collection.participants.Count() > 0)
+                        {
+                            startTime = DateTimeHelper.UnixTimestampToDateTimeOffset(collection.participants.Last().connectedAt);
+                        }
                     }
-                }
-            } while (collection != null && collection.hasMore);
+                } while (collection != null && collection.participants.Count > 0 && collection.hasMore);
+            });
 
             return participants.Values;
         }

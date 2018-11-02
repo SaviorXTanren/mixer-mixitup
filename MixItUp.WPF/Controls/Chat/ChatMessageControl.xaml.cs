@@ -18,8 +18,6 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatMessageControl : UserControl
     {
-        private static Dictionary<string, BitmapImage> emoticonBitmapImages = new Dictionary<string, BitmapImage>();
-
         public ChatMessageViewModel Message { get; private set; }
 
         private ChatMessageHeaderControl messageHeader;
@@ -44,30 +42,19 @@ namespace MixItUp.WPF.Controls.Chat
                 this.MessageWrapPanel.Children.Add(this.messageHeader);
             }
 
+            if (this.Message.IsWhisper)
+            {
+                this.Background = (Brush)FindResource("PrimaryHueLightBrush");
+                this.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
+            }
+
             foreach (ChatMessageDataModel messageData in this.Message.MessageComponents)
             {
-                if (messageData.type.Equals("emoticon") && ChatMessageViewModel.EmoticonImages.ContainsKey(messageData.text))
+                EmoticonImage emoticon = ChannelSession.GetEmoticonForMessage(messageData);
+                if (emoticon != null)
                 {
-                    try
-                    {
-                        if (!ChatMessageControl.emoticonBitmapImages.ContainsKey(messageData.text))
-                        {
-                            ChatMessageControl.emoticonBitmapImages[messageData.text] = new BitmapImage(new Uri(ChatMessageViewModel.EmoticonImages[messageData.text].FilePath));
-                        }
-
-                        if (ChatMessageControl.emoticonBitmapImages.ContainsKey(messageData.text))
-                        {
-                            CoordinatesModel coords = ChatMessageViewModel.EmoticonImages[messageData.text].Coordinates;
-                            CroppedBitmap bitmap = new CroppedBitmap(ChatMessageControl.emoticonBitmapImages[messageData.text], new Int32Rect((int)coords.x, (int)coords.y, (int)coords.width, (int)coords.height));
-
-                            Image image = new Image();
-                            image.Source = bitmap;
-                            image.ToolTip = messageData.text;
-                            image.VerticalAlignment = VerticalAlignment.Center;
-                            this.MessageWrapPanel.Children.Add(image);
-                        }
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
+                    EmoticonControl image = new EmoticonControl(emoticon);
+                    this.MessageWrapPanel.Children.Add(image);
                 }
                 else
                 {
@@ -87,6 +74,11 @@ namespace MixItUp.WPF.Controls.Chat
                             {
                                 textBlock.Foreground = (App.AppSettings.IsDarkBackground) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
                             }
+                        }
+                        if (messageData.type == "tag" && word.Equals("@" + ChannelSession.User.username, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            this.Background = (Brush)FindResource("PrimaryHueLightBrush");
+                            this.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
                         }
                         this.textBlocks.Add(textBlock);
                         this.MessageWrapPanel.Children.Add(textBlock);
@@ -166,10 +158,10 @@ namespace MixItUp.WPF.Controls.Chat
                     TextBlock textBlock = (TextBlock)item;
                     textBlock.FontSize = ChannelSession.Settings.ChatFontSize;
                 }
-                else if (item is Image)
+                else if (item is EmoticonControl)
                 {
-                    Image image = (Image)item;
-                    image.Height = image.Width = ChannelSession.Settings.ChatFontSize + 2;
+                    EmoticonControl emoticon = (EmoticonControl)item;
+                    emoticon.Height = emoticon.Width = ChannelSession.Settings.ChatFontSize + 2;
                 }
             }
         }

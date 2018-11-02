@@ -25,6 +25,14 @@ namespace MixItUp.WPF.Controls.Settings
             "Note that this does not disable any data included with uploading" + Environment.NewLine +
             "& reviewing Mix It Up store commands.";
 
+        public static readonly string UpdatePreviewProgramTooltip =
+            "The Update Preview Program allows you to get early access" + Environment.NewLine +
+            "to new features & improvements before the general public." + Environment.NewLine +
+            "This is a great way to give early feedback & provide valuable" + Environment.NewLine +
+            "help. Preview Program updates can have bugs & issues associated" + Environment.NewLine +
+            "with them, so users should only sign up for this if they are" + Environment.NewLine +
+            "willing to work around any possible issues that may arise";
+
         public static readonly string AutoLogInTooltip =
             "The Auto Log-In setting allows Mix It Up to automatically" + Environment.NewLine +
             "log in the currently signed-in Mixer user account." + Environment.NewLine + Environment.NewLine +
@@ -38,11 +46,11 @@ namespace MixItUp.WPF.Controls.Settings
         {
             InitializeComponent();
 
-            this.OptOutTrackingTextBlock.ToolTip = OptOutTrackingTooltip;
-            this.OptOutTrackingToggleButton.ToolTip = OptOutTrackingTooltip;
+            this.OptOutTrackingTextBlock.ToolTip = this.OptOutTrackingToggleButton.ToolTip = OptOutTrackingTooltip;
 
-            this.AutoLogInAccountTextBlock.ToolTip = AutoLogInTooltip;
-            this.AutoLogInAccountToggleButton.ToolTip = AutoLogInTooltip;
+            this.UpdatePreviewProgramTextBlock.ToolTip = this.UpdatePreviewProgramToggleButton.ToolTip = UpdatePreviewProgramTooltip;
+
+            this.AutoLogInAccountTextBlock.ToolTip = this.AutoLogInAccountToggleButton.ToolTip = AutoLogInTooltip;
 
             this.DefaultStreamingSoftwareComboBox.ItemsSource = EnumHelper.GetEnumNames<StreamingSoftwareTypeEnum>(
                 new List<StreamingSoftwareTypeEnum>() { StreamingSoftwareTypeEnum.OBSStudio, StreamingSoftwareTypeEnum.XSplit, StreamingSoftwareTypeEnum.StreamlabsOBS });
@@ -59,6 +67,7 @@ namespace MixItUp.WPF.Controls.Settings
 
             this.OptOutTrackingToggleButton.IsChecked = ChannelSession.Settings.OptOutTracking;
             this.FeatureMeToggleButton.IsChecked = ChannelSession.Settings.FeatureMe;
+            this.UpdatePreviewProgramToggleButton.IsChecked = App.AppSettings.PreviewProgram;
             this.AutoLogInAccountToggleButton.IsChecked = (App.AppSettings.AutoLogInAccount == ChannelSession.Channel.user.id);
             this.DefaultStreamingSoftwareComboBox.SelectedItem = EnumHelper.GetEnumName(ChannelSession.Settings.DefaultStreamingSoftware);
             if (!string.IsNullOrEmpty(ChannelSession.Settings.DefaultAudioOutput))
@@ -98,6 +107,11 @@ namespace MixItUp.WPF.Controls.Settings
         private void FeatureMeToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.Settings.FeatureMe = this.FeatureMeToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void UpdatePreviewProgramToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            App.AppSettings.PreviewProgram = this.UpdatePreviewProgramToggleButton.IsChecked.GetValueOrDefault();
         }
 
         private void AutoLogInAccountToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)

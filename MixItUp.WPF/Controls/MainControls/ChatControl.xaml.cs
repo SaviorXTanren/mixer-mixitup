@@ -45,6 +45,7 @@ namespace MixItUp.WPF.Controls.MainControls
         private bool lockChatList = true;
         private List<string> messageHistory = new List<string>();
         private int activeMessageHistory = 0;
+        private int indexOfTag = 0;
 
         public ChatControl(bool isPopOut = false)
         {
@@ -163,34 +164,35 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task AddMessage(ChatMessageViewModel message)
         {
-            await messageUpdateLock.WaitAsync();
-
-            ChatMessageControl messageControl = new ChatMessageControl(message);
-            if (ChannelSession.Settings.LatestChatAtTop)
+            await this.MessageLock(() =>
             {
-                this.MessageControls.Insert(0, messageControl);
-            }
-            else
-            {
-                this.MessageControls.Add(messageControl);
-            }
-            this.totalMessages++;
-
-            while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
-            {
+                ChatMessageControl messageControl = new ChatMessageControl(message);
                 if (ChannelSession.Settings.LatestChatAtTop)
                 {
-                    this.MessageControls.RemoveAt(this.MessageControls.Count - 1);
+                    this.MessageControls.Insert(0, messageControl);
                 }
                 else
                 {
-                    this.MessageControls.RemoveAt(0);
+                    this.MessageControls.Add(messageControl);
                 }
-            }
+                this.totalMessages++;
 
-            Logger.LogChatEvent(message.ToString());
+                while (this.MessageControls.Count > ChannelSession.Settings.MaxMessagesInChat)
+                {
+                    if (ChannelSession.Settings.LatestChatAtTop)
+                    {
+                        this.MessageControls.RemoveAt(this.MessageControls.Count - 1);
+                    }
+                    else
+                    {
+                        this.MessageControls.RemoveAt(0);
+                    }
+                }
 
-            messageUpdateLock.Release();
+                Logger.LogChatEvent(message.ToString());
+
+                return Task.FromResult(0);
+            });
         }
 
         private async Task ShowUserDialog(UserViewModel user)
@@ -314,6 +316,100 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private async void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            HideIntellisense();
+
+            string tag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
+            if (!string.IsNullOrEmpty(tag))
+            {
+                if (tag.StartsWith("@"))
+                {
+                    string filter = tag.Substring(1);
+
+                    List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        users = users.Where(u => u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                    }
+                    users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
+
+                    if (users.Count > 0)
+                    {
+                        this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
+                        UsernameIntellisenseListBox.ItemsSource = users;
+
+                        // Select the bottom user
+                        UsernameIntellisenseListBox.SelectedIndex = users.Count - 1;
+
+                        Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+                        Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+
+                        ShowUserIntellisense(topLeftOffset.X, topLeftOffset.Y, users.Count);
+                    }
+                }
+                else
+                {
+                    List<EmoticonImage> emoticonImages = ShouldSendAsStreamer() ?
+                        ChannelSession.FindMatchingEmoticonsForUser(tag).ToList() :
+                        ChannelSession.FindMatchingEmoticonsForBot(tag).ToList();
+                    if (emoticonImages.Count > 0)
+                    {
+                        emoticonImages = emoticonImages.Take(5).Reverse().ToList();
+                        this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
+                        EmoticonIntellisenseListBox.ItemsSource = emoticonImages;
+
+                        // Select the bottom icon
+                        EmoticonIntellisenseListBox.SelectedIndex = emoticonImages.Count - 1;
+
+                        Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+                        Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+
+                        ShowEmoticonIntellisense(topLeftOffset.X, topLeftOffset.Y, emoticonImages.Count);
+                    }
+                }
+            }
+        }
+
+        private void ShowUserIntellisense(double x, double y, int count)
+        {
+            int itemHeight = count * 40;
+            Canvas.SetLeft(this.UsernameIntellisense, x + 10);
+            Canvas.SetTop(this.UsernameIntellisense, y - itemHeight - 40);
+            this.UsernameIntellisense.UpdateLayout();
+
+            if (!this.UsernameIntellisense.IsPopupOpen)
+            {
+                this.UsernameIntellisense.IsPopupOpen = true;
+            }
+        }
+
+        private void ShowEmoticonIntellisense(double x, double y, int count)
+        {
+            int itemHeight = count * 40;
+            Canvas.SetLeft(this.EmoticonIntellisense, x + 10);
+            Canvas.SetTop(this.EmoticonIntellisense, y - itemHeight - 40);
+            this.EmoticonIntellisense.UpdateLayout();
+
+            if (!this.EmoticonIntellisense.IsPopupOpen)
+            {
+                this.EmoticonIntellisense.IsPopupOpen = true;
+            }
+        }
+
+        private void HideIntellisense()
+        {
+            if (this.UsernameIntellisense.IsPopupOpen)
+            {
+                this.UsernameIntellisense.IsPopupOpen = false;
+            }
+
+            if (this.EmoticonIntellisense.IsPopupOpen)
+            {
+                this.EmoticonIntellisense.IsPopupOpen = false;
+            }
+        }
+
         private void ChatMessageTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -324,33 +420,130 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void ChatMessageTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+            if (this.UsernameIntellisense.IsPopupOpen)
             {
-                case Key.Up:
-                    if (activeMessageHistory > 0)
-                    {
-                        activeMessageHistory--;
-                        this.ChatMessageTextBox.Text = messageHistory[activeMessageHistory];
-                    }
-                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
-                    break;
-
-                case Key.Down:
-                    if (activeMessageHistory < messageHistory.Count)
-                    {
-                        activeMessageHistory++;
-                        if (activeMessageHistory == messageHistory.Count)
+                switch (e.Key)
+                {
+                    case Key.Escape:
+                        HideIntellisense();
+                        e.Handled = true;
+                        break;
+                    case Key.Tab:
+                    case Key.Enter:
+                        SelectIntellisenseUser();
+                        e.Handled = true;
+                        break;
+                    case Key.Up:
+                        UsernameIntellisenseListBox.SelectedIndex = MathHelper.Clamp(UsernameIntellisenseListBox.SelectedIndex - 1, 0, UsernameIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                    case Key.Down:
+                        UsernameIntellisenseListBox.SelectedIndex = MathHelper.Clamp(UsernameIntellisenseListBox.SelectedIndex + 1, 0, UsernameIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                }
+            }
+            else if (this.EmoticonIntellisense.IsPopupOpen)
+            {
+                switch (e.Key)
+                {
+                    case Key.Escape:
+                        HideIntellisense();
+                        e.Handled = true;
+                        break;
+                    case Key.Tab:
+                    case Key.Enter:
+                        SelectIntellisenseEmoticon();
+                        e.Handled = true;
+                        break;
+                    case Key.Up:
+                        EmoticonIntellisenseListBox.SelectedIndex = MathHelper.Clamp(EmoticonIntellisenseListBox.SelectedIndex - 1, 0, EmoticonIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                    case Key.Down:
+                        EmoticonIntellisenseListBox.SelectedIndex = MathHelper.Clamp(EmoticonIntellisenseListBox.SelectedIndex + 1, 0, EmoticonIntellisenseListBox.Items.Count - 1);
+                        e.Handled = true;
+                        break;
+                }
+            }
+            else
+            {
+                switch (e.Key)
+                {
+                    case Key.Up:
+                        if (activeMessageHistory > 0)
                         {
-                            this.ChatMessageTextBox.Text = string.Empty;
-                        }
-                        else
-                        {
+                            activeMessageHistory--;
                             this.ChatMessageTextBox.Text = messageHistory[activeMessageHistory];
                         }
-                    }
-                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
-                    break;
+                        this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                        break;
+
+                    case Key.Down:
+                        if (activeMessageHistory < messageHistory.Count)
+                        {
+                            activeMessageHistory++;
+                            if (activeMessageHistory == messageHistory.Count)
+                            {
+                                this.ChatMessageTextBox.Text = string.Empty;
+                            }
+                            else
+                            {
+                                this.ChatMessageTextBox.Text = messageHistory[activeMessageHistory];
+                            }
+                        }
+                        this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                        break;
+                }
             }
+        }
+
+        private void UsernameIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            SelectIntellisenseUser();
+        }
+
+        private void EmoticonIntellisenseListBox_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            SelectIntellisenseEmoticon();
+        }
+
+        private void SelectIntellisenseUser()
+        {
+            UserViewModel user = UsernameIntellisenseListBox.SelectedItem as UserViewModel;
+            if (user != null)
+            {
+                if (this.indexOfTag == 0)
+                {
+                    this.ChatMessageTextBox.Text = "@" + user.UserName + " ";
+                }
+                else
+                {
+                    this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, this.indexOfTag) + "@" + user.UserName + " ";
+                }
+
+                this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+            }
+            HideIntellisense();
+        }
+
+        private void SelectIntellisenseEmoticon()
+        {
+            EmoticonImage emoticon = EmoticonIntellisenseListBox.SelectedItem as EmoticonImage;
+            if (emoticon != null)
+            {
+                if (this.indexOfTag == 0)
+                {
+                    this.ChatMessageTextBox.Text = emoticon.Name + " ";
+                }
+                else
+                {
+                    this.ChatMessageTextBox.Text = this.ChatMessageTextBox.Text.Substring(0, this.indexOfTag) + emoticon.Name + " ";
+                }
+
+                this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+            }
+            HideIntellisense();
         }
 
         private async void SendChatMessageButton_Click(object sender, RoutedEventArgs e)
@@ -383,7 +576,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.Whisper(username, message, (this.SendChatAsComboBox.SelectedIndex == 0));
+                        await ChannelSession.Chat.Whisper(username, message, ShouldSendAsStreamer());
                     }));
                 }
                 else if (ChatAction.ClearRegex.IsMatch(message))
@@ -394,12 +587,17 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.SendMessage(message, (this.SendChatAsComboBox.SelectedIndex == 0));
+                        await ChannelSession.Chat.SendMessage(message, ShouldSendAsStreamer());
                     }));
                 }
 
                 this.ChatMessageTextBox.Focus();
             }
+        }
+
+        private bool ShouldSendAsStreamer()
+        {
+            return this.SendChatAsComboBox.SelectedIndex == 0;
         }
 
         private async void UserList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -428,7 +626,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
                 if (!control.Message.IsWhisper)
                 {
-                    await ChannelSession.Chat.DeleteMessage(control.Message.ID);
+                    await ChannelSession.Chat.DeleteMessage(control.Message);
                 }
             }
         }
@@ -461,19 +659,19 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.messageUpdateLock.WaitAsync();
-
-                ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
-                if (message != null)
+                await this.MessageLock(() =>
                 {
-                    message.DeleteMessage(deleteEvent.moderator?.user_name);
-                    if (ChannelSession.Settings.HideDeletedMessages)
+                    ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
+                    if (message != null)
                     {
-                        this.MessageControls.Remove(message);
+                        message.DeleteMessage(deleteEvent.moderator?.user_name);
+                        if (ChannelSession.Settings.HideDeletedMessages)
+                        {
+                            this.MessageControls.Remove(message);
+                        }
                     }
-                }
-
-                this.messageUpdateLock.Release();
+                    return Task.FromResult(0);
+                });
             });
         }
 
@@ -481,22 +679,29 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.messageUpdateLock.WaitAsync();
-
-                IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(purgeEvent.Item1.ID));
-                if (userMessages != null)
+                await this.MessageLock(() =>
                 {
-                    foreach (ChatMessageControl message in userMessages)
+                    List<ChatMessageControl> messagesToDelete = new List<ChatMessageControl>();
+
+                    IEnumerable<ChatMessageControl> userMessages = this.MessageControls.Where(msg => msg.Message.User != null && msg.Message.User.ID.Equals(purgeEvent.Item1.ID));
+                    if (userMessages != null)
                     {
-                        message.DeleteMessage(purgeEvent.Item2);
-                        if (ChannelSession.Settings.HideDeletedMessages)
+                        foreach (ChatMessageControl message in userMessages)
                         {
-                            this.MessageControls.Remove(message);
+                            message.DeleteMessage(purgeEvent.Item2);
+                            messagesToDelete.Add(message);
                         }
                     }
-                }
 
-                this.messageUpdateLock.Release();
+                    if (ChannelSession.Settings.HideDeletedMessages)
+                    {
+                        foreach (ChatMessageControl messageToDelete in messagesToDelete)
+                        {
+                            this.MessageControls.Remove(messageToDelete);
+                        }
+                    }
+                    return Task.FromResult(0);
+                });
             });
         }
 
@@ -504,11 +709,11 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.messageUpdateLock.WaitAsync();
-
-                this.MessageControls.Clear();
-
-                this.messageUpdateLock.Release();
+                await this.MessageLock(() =>
+                {
+                    this.MessageControls.Clear();
+                    return Task.FromResult(0);
+                });
             });
         }
 
@@ -608,6 +813,21 @@ namespace MixItUp.WPF.Controls.MainControls
         }
 
         #endregion Chat Event Handlers
+
+        private async Task MessageLock(Func<Task> function)
+        {
+            try
+            {
+                await this.messageUpdateLock.WaitAsync();
+
+                await function();
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+            finally
+            {
+                this.messageUpdateLock.Release();
+            }
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

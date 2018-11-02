@@ -27,6 +27,8 @@ namespace MixItUp.Base.Commands
         GawkBoxDonation = 11,
         [Name("Tiltify Donation")]
         TiltifyDonation = 12,
+        [Name("Extra Life Donation")]
+        ExtraLifeDonation = 13,
 
         [Name("User First Joined")]
         MixerUserFirstJoin = 30,

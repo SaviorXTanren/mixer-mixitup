@@ -139,6 +139,8 @@ namespace MixItUp.Base.Commands
         [JsonIgnore]
         public virtual IEnumerable<string> CommandTriggers { get { return this.Commands; } }
 
+        public override string ToString() { return string.Format("{0} - {1}", this.ID, this.Name); }
+
         public bool MatchesOrContainsCommand(string command) { return this.MatchesCommand(command) || this.ContainsCommand(command); }
 
         public bool MatchesCommand(string command) { return this.CommandTriggers.Count() > 0 && this.CommandTriggers.Any(c => command.Equals(c, StringComparison.InvariantCultureIgnoreCase)); }

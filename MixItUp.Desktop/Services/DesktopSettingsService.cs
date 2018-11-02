@@ -61,9 +61,14 @@ namespace MixItUp.Desktop.Services
 
         public void Initialize() { Directory.CreateDirectory(SettingsDirectoryName); }
 
-        public IChannelSettings Create(ExpandedChannelModel channel, bool isStreamer)
+        public async Task<IChannelSettings> Create(ExpandedChannelModel channel, bool isStreamer)
         {
             IChannelSettings settings = new DesktopChannelSettings(channel, isStreamer);
+            if (File.Exists(this.GetFilePath(settings)))
+            {
+                settings = await this.LoadSettings(this.GetFilePath(settings));
+            }
+
             string databaseFilePath = this.GetDatabaseFilePath(settings);
             if (!File.Exists(databaseFilePath))
             {

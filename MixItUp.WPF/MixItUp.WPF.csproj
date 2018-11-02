@@ -92,8 +92,8 @@
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.6.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.6.6-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.7.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.7.0.1-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
@@ -317,6 +317,9 @@
     </Compile>
     <Compile Include="Controls\Chat\ChatMessageHeaderControl.xaml.cs">
       <DependentUpon>ChatMessageHeaderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\EmoticonControl.xaml.cs">
+      <DependentUpon>EmoticonControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
@@ -584,6 +587,9 @@
     </Compile>
     <Compile Include="Controls\Services\DiscordServiceControl.xaml.cs">
       <DependentUpon>DiscordServiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Services\ExtraLifeServiceControl.xaml.cs">
+      <DependentUpon>ExtraLifeServiceControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Services\GameWispServiceControl.xaml.cs">
       <DependentUpon>GameWispServiceControl.xaml</DependentUpon>
@@ -855,6 +861,10 @@
     <Page Include="Controls\Chat\ChatMessageHeaderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\EmoticonControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Command\ActionGroupCommandDetailsControl.xaml">
       <SubType>Designer</SubType>
@@ -1212,6 +1222,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Services\ExtraLifeServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Services\GameWispServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1393,7 +1407,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
+    <Page Include="Themes\MixItUpTheme.AwkwardTysonAmericana.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.TeamBoom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.TacosAfterDark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\MixItUpTheme.AzhtralsCosmicFire.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\MixItUpTheme.DustysPurplePotion.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1484,6 +1514,10 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="README.md" />
+    <Page Include="Themes\MixItUpTheme.NibblesCarrotPatch.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\MixItUpTheme.1YearAnniversary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

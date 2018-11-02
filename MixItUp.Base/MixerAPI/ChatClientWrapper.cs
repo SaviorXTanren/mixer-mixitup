@@ -29,7 +29,7 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<UserViewModel> OnUserLeaveOccurred = delegate { };
         public event EventHandler<Tuple<UserViewModel, string>> OnUserPurgeOccurred = delegate { };
 
-        public Dictionary<Guid, ChatMessageViewModel> Messages { get; private set; }
+        public LockedDictionary<Guid, ChatMessageViewModel> Messages { get; private set; } = new LockedDictionary<Guid, ChatMessageViewModel>();
 
         public bool DisableChat { get; set; }
 
@@ -38,10 +38,7 @@ namespace MixItUp.Base.MixerAPI
 
         private HashSet<uint> userEntranceCommands = new HashSet<uint>();
 
-        public ChatClientWrapper()
-        {
-            this.Messages = new Dictionary<Guid, ChatMessageViewModel>();
-        }
+        public ChatClientWrapper() { }
 
         public async Task<bool> Connect()
         {
@@ -154,11 +151,13 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        public async Task DeleteMessage(Guid id)
+        public async Task DeleteMessage(ChatMessageViewModel message)
         {
             if (this.Client != null)
             {
-                await this.RunAsync(this.Client.DeleteMessage(id));
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message - {0}", message.Message));
+
+                await this.RunAsync(this.Client.DeleteMessage(message.ID));
             }
         }
 
@@ -330,9 +329,16 @@ namespace MixItUp.Base.MixerAPI
         private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
         {
             UserViewModel user = await this.AddUser(messageEvent);
-            ChatMessageViewModel message = new ChatMessageViewModel(messageEvent, user);
+            if (user == null)
+            {
+                user = new UserViewModel(messageEvent);
+            }
 
-            if (user != null && !message.IsWhisper && !this.userEntranceCommands.Contains(user.ID))
+            ChatMessageViewModel message = await ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
+
+            Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
+
+            if (!message.IsWhisper && !this.userEntranceCommands.Contains(user.ID))
             {
                 this.userEntranceCommands.Add(user.ID);
                 if (user.Data.EntranceCommand != null)
@@ -349,13 +355,16 @@ namespace MixItUp.Base.MixerAPI
 
             if (this.DisableChat && !message.ID.Equals(Guid.Empty))
             {
-                await this.DeleteMessage(message.ID);
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Disabled - {0}", message.Message));
+                await this.DeleteMessage(message);
                 return message;
             }
 
             if (!await ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
             {
-                await this.DeleteMessage(message.ID);
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
+
+                await this.DeleteMessage(message);
 
                 await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isChat: true);
 
@@ -365,6 +374,8 @@ namespace MixItUp.Base.MixerAPI
             string moderationReason = await message.ShouldBeModerated();
             if (!string.IsNullOrEmpty(moderationReason))
             {
+                Util.Logger.LogDiagnostic(string.Format("Message Should Be Moderated - {0}", message.ToString()));
+
                 bool shouldBeModerated = true;
                 PermissionsCommandBase command = this.CheckMessageForCommand(message);
                 if (command != null && string.IsNullOrEmpty(await ModerationHelper.ShouldBeFilteredWordModerated(user, message.Message)))
@@ -374,9 +385,11 @@ namespace MixItUp.Base.MixerAPI
 
                 if (shouldBeModerated)
                 {
+                    Util.Logger.LogDiagnostic(string.Format("Moderation Being Performed - {0}", message.ToString()));
+
                     message.ModerationReason = moderationReason;
 
-                    await this.DeleteMessage(message.ID);
+                    await this.DeleteMessage(message);
 
                     await user.AddModerationStrike(moderationReason);
 
@@ -425,6 +438,8 @@ namespace MixItUp.Base.MixerAPI
             PermissionsCommandBase command = this.CheckMessageForCommand(message);
             if (command != null)
             {
+                Util.Logger.LogDiagnostic(string.Format("Command Found For Message - {0} - {1}", message.ToString(), command.ToString()));
+
                 await this.RunMessageCommand(message, command);
                 return true;
             }
@@ -433,6 +448,8 @@ namespace MixItUp.Base.MixerAPI
 
         private PermissionsCommandBase CheckMessageForCommand(ChatMessageViewModel message)
         {
+            Util.Logger.LogDiagnostic(string.Format("Checking Message For Command - {0}", message.ToString()));
+
             if (!ChannelSession.Settings.AllowCommandWhispering && message.IsWhisper)
             {
                 return null;
@@ -473,7 +490,8 @@ namespace MixItUp.Base.MixerAPI
 
             if (ChannelSession.Settings.DeleteChatCommandsWhenRun)
             {
-                await this.DeleteMessage(message.ID);
+                Util.Logger.LogDiagnostic(string.Format("Deleting Message As Chat Command - {0}", message.Message));
+                await this.DeleteMessage(message);
             }
         }
 
@@ -598,7 +616,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = new ChatMessageViewModel(e);
+            ChatMessageViewModel message = await ChatMessageViewModel.CreateChatMessageViewModel(e);
             if (message.IsWhisper)
             {
                 message = await this.AddMessage(e);

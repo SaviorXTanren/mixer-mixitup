@@ -18,14 +18,18 @@ namespace MixItUp.Base.Util
         AccountDay = 2,
         [Name("Account Is 1 Week Old")]
         AccountWeek = 3,
+        [Name("Account Is 1 Month Old")]
+        AccountMonth = 4,
         [Name("Watched For 10 Minutes")]
         ViewingTenMinutes = 10,
         [Name("Watched For 30 Minutes")]
         ViewingThirtyMinutes = 11,
         [Name("Watched For 1 Hour")]
         ViewingOneHour = 12,
-        [Name("Watched For 2 Hour")]
+        [Name("Watched For 2 Hours")]
         ViewingTwoHours = 13,
+        [Name("Watched For 10 Hours")]
+        ViewingTenHours = 14,
         [Name("Subscriber Only")]
         Subscriber = 20,
         [Name("Moderator Only")]
@@ -47,6 +51,11 @@ namespace MixItUp.Base.Util
 
         public static async Task<string> ShouldBeModerated(UserViewModel user, string text, bool containsLink = false)
         {
+            if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
+            {
+                return null;
+            }
+
             string reason = await ShouldBeFilteredWordModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
@@ -148,7 +157,7 @@ namespace MixItUp.Base.Util
                     count += leftOverText.Count(c => char.IsSymbol(c) || char.IsPunctuation(c));
                     messageSegments.AddRange(leftOverText.ToCharArray().Select(c => c.ToString()));
                     
-                    if (ChannelSession.Settings.ModerationCapsBlockIsPercentage)
+                    if (ChannelSession.Settings.ModerationPunctuationBlockIsPercentage)
                     {
                         count = ConvertCountToPercentage(messageSegments.Count, count);
                     }
@@ -183,6 +192,11 @@ namespace MixItUp.Base.Util
             await user.RefreshDetails();
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
+                if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
+                {
+                    return true;
+                }
+
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.GetsSubscriberBenefits)
                 {
                     return false;
@@ -193,16 +207,27 @@ namespace MixItUp.Base.Util
                     return false;
                 }
 
-                TimeSpan accountLength = user.MixerAccountDate.HasValue ? (DateTimeOffset.Now - user.MixerAccountDate.GetValueOrDefault()) : new TimeSpan();
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour && accountLength.TotalHours < 1)
+                if (user.MixerAccountDate.HasValue)
                 {
-                    return false;
+                    TimeSpan accountLength = DateTimeOffset.Now - user.MixerAccountDate.GetValueOrDefault();
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountHour && accountLength.TotalHours < 1)
+                    {
+                        return false;
+                    }
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountDay && accountLength.TotalDays < 1)
+                    {
+                        return false;
+                    }
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountWeek && accountLength.TotalDays < 7)
+                    {
+                        return false;
+                    }
+                    if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountMonth && accountLength.TotalDays < 30)
+                    {
+                        return false;
+                    }
                 }
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountDay && accountLength.TotalDays < 1)
-                {
-                    return false;
-                }
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.AccountWeek && accountLength.TotalDays < 7)
+                else
                 {
                     return false;
                 }
@@ -221,6 +246,10 @@ namespace MixItUp.Base.Util
                     return false;
                 }
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTwoHours && viewingLength.TotalHours < 2)
+                {
+                    return false;
+                }
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.ViewingTenHours && viewingLength.TotalHours < 10)
                 {
                     return false;
                 }
