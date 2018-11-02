@@ -399,8 +399,6 @@ namespace MixItUp.Base
 
                     ChannelSession.Connection.Initialize();
 
-                    await ChannelSession.ActiveUsers.Initialize();
-
                     if (!await ChannelSession.Chat.Connect() || !await ChannelSession.Constellation.Connect())
                     {
                         return false;

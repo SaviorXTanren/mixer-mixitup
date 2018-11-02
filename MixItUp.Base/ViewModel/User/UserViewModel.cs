@@ -45,15 +45,7 @@ namespace MixItUp.Base.ViewModel.User
     {
         public static DateTimeOffset? GetSubscriberDate(this UserWithGroupsModel userGroups)
         {
-            if (userGroups != null && userGroups.groups != null)
-            {
-                UserGroupModel subscriberGroup = userGroups.groups.FirstOrDefault(g => g.name.Equals("Subscriber") && g.deletedAt == null);
-                if (subscriberGroup != null)
-                {
-                    return subscriberGroup.createdAt;
-                }
-            }
-            return null;
+            return userGroups.GetCreatedDateForGroupIfCurrent(EnumHelper.GetEnumName(MixerRoleEnum.Subscriber));
         }
     }
 

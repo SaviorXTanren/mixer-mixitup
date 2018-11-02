@@ -111,6 +111,8 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task<Dictionary<uint, DateTimeOffset?>> CheckIfFollows(ChannelModel channel, IEnumerable<UserModel> users) { return await this.RunAsync(this.Connection.Channels.CheckIfFollows(channel, users)); }
 
+        public async Task<Dictionary<uint, DateTimeOffset?>> CheckIfUsersHaveRole(ChannelModel channel, IEnumerable<UserModel> users, MixerRoleEnum role) { return await this.RunAsync(this.Connection.Channels.CheckIfUsersHaveRole(channel, users, EnumHelper.GetEnumName(role))); }
+
         public async Task<CostreamModel> GetCurrentCostream() { return await this.RunAsync(this.Connection.Costream.GetCurrentCostream()); }
 
         public async Task<BroadcastModel> GetCurrentBroadcast(ChannelModel channel) { return await this.RunAsync(this.Connection.Channels.GetCurrentBroadcast(channel)); }

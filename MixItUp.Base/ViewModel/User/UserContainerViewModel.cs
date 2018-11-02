@@ -19,17 +19,7 @@ namespace MixItUp.Base.ViewModel.User
 
         private SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
-        private Dictionary<uint, DateTimeOffset?> subscribers = new Dictionary<uint, DateTimeOffset?>();
-
         public UserContainerViewModel() { }
-
-        public async Task Initialize()
-        {
-            foreach (UserWithGroupsModel userGroup in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Subscriber))
-            {
-                subscribers[userGroup.id] = userGroup.GetSubscriberDate();
-            }
-        }
 
         public async Task<bool> HasUser(uint userID)
         {
@@ -223,7 +213,9 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshNewUsers(IEnumerable<UserViewModel> users)
         {
-            Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, users.Select(u => u.GetModel()));
+            IEnumerable<UserModel> userModels = users.Select(u => u.GetModel());
+            Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, userModels);
+            Dictionary<uint, DateTimeOffset?> subscribers = await ChannelSession.Connection.CheckIfUsersHaveRole(ChannelSession.Channel, userModels, MixerRoleEnum.Subscriber);
             foreach (UserViewModel user in users)
             {
                 if (follows.ContainsKey(user.ID))
