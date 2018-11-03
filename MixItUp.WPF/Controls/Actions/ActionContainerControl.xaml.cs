@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Controls.Actions
 
         private void ActionContainerControl_Loaded(object sender, RoutedEventArgs e)
         {
-            this.GroupBoxHeaderTextBlock.Text = this.GroupBoxHeaderTextBox.Text = EnumHelper.GetEnumName(this.type);
+            this.GroupBoxHeaderTextBlock.Text = EnumHelper.GetEnumName(this.type);
 
             if (this.actionControl == null)
             {
@@ -135,7 +135,7 @@ namespace MixItUp.WPF.Controls.Actions
 
                 if (this.action != null && !string.IsNullOrEmpty(this.action.Label))
                 {
-                    this.GroupBoxHeaderTextBlock.Text = this.GroupBoxHeaderTextBox.Text = this.action.Label;
+                    this.GroupBoxHeaderTextBlock.Text = this.action.Label;
                 }
             }
 

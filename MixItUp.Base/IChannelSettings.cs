@@ -4,6 +4,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
@@ -181,6 +182,8 @@ namespace MixItUp.Base
         LockedList<RemoteCommand> RemoteCommands { get; }
 
         LockedList<UserQuoteViewModel> UserQuotes { get; }
+
+        LockedList<OverlayWidget> OverlayWidgets { get; set; }
 
         LockedList<string> FilteredWords { get; }
         LockedList<string> BannedWords { get; }
