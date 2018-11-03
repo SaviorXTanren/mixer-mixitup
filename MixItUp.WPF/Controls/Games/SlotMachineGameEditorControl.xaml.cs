@@ -255,7 +255,7 @@ namespace MixItUp.WPF.Controls.Games
                 currency = ChannelSession.Settings.Currencies.Values.FirstOrDefault();
             }
 
-            this.outcomes.Add(new SlotMachineOutcome(null, null, null, this.CreateBasicChatCommand("Result: $gameslotsoutcome - $@username walks away with $gamepayout " + currency.Name + "!")));
+            this.outcomes.Add(new SlotMachineOutcome(null, null, null, this.CreateBasicChatCommand("Result: $gameslotsoutcome - @$username walks away with $gamepayout " + currency.Name + "!")));
         }
 
         private void AnyOrderToggleButton_Checked(object sender, RoutedEventArgs e)
