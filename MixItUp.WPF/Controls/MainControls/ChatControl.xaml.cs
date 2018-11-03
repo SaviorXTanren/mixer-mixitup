@@ -553,10 +553,13 @@ namespace MixItUp.WPF.Controls.MainControls
                     username = username.Trim();
                     username = username.Replace("@", "");
 
-                    await this.Window.RunAsyncOperation((Func<Task>)(async () =>
+                    if (!string.IsNullOrEmpty(username))
                     {
-                        await ChannelSession.Chat.Whisper(username, message, (this.SendChatAsComboBox.SelectedIndex == 0));
-                    }));
+                        await this.Window.RunAsyncOperation((Func<Task>)(async () =>
+                        {
+                            await ChannelSession.Chat.Whisper(username, message, (this.SendChatAsComboBox.SelectedIndex == 0));
+                        }));
+                    }
                 }
                 else if (ChatAction.ClearRegex.IsMatch(message))
                 {
