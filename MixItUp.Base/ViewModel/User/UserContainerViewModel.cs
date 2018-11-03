@@ -208,31 +208,35 @@ namespace MixItUp.Base.ViewModel.User
 
         private async Task RefreshNewUsers(IEnumerable<UserViewModel> users)
         {
-            if (users.Count() > 0)
+            try
             {
-                IEnumerable<UserModel> userModels = users.Select(u => u.GetModel());
-                Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, userModels);
-                Dictionary<uint, DateTimeOffset?> subscribers = await ChannelSession.Connection.CheckIfUsersHaveRole(ChannelSession.Channel, userModels, MixerRoleEnum.Subscriber);
-                foreach (UserViewModel user in users)
+                if (users.Count() > 0)
                 {
-                    if (follows.ContainsKey(user.ID))
+                    IEnumerable<UserModel> userModels = users.Select(u => u.GetModel());
+                    Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, userModels);
+                    Dictionary<uint, DateTimeOffset?> subscribers = await ChannelSession.Connection.CheckIfUsersHaveRole(ChannelSession.Channel, userModels, MixerRoleEnum.Subscriber);
+                    foreach (UserViewModel user in users)
                     {
-                        user.FollowDate = follows[user.ID];
+                        if (follows.ContainsKey(user.ID))
+                        {
+                            user.FollowDate = follows[user.ID];
+                        }
+                        if (subscribers.ContainsKey(user.ID))
+                        {
+                            user.SubscribeDate = subscribers[user.ID];
+                        }
                     }
-                    if (subscribers.ContainsKey(user.ID))
-                    {
-                        user.SubscribeDate = subscribers[user.ID];
-                    }
-                }
 
-                foreach (UserViewModel user in users)
-                {
-                    if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
+                    foreach (UserViewModel user in users)
                     {
-                        await this.PerformUserFirstJoin(user);
+                        if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
+                        {
+                            await this.PerformUserFirstJoin(user);
+                        }
                     }
                 }
             }
+            catch (Exception ex) { Util.Logger.Log(ex); }
         }
 
         private async Task PerformUserFirstJoin(UserViewModel user)
