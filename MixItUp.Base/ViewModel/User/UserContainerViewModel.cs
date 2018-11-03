@@ -217,11 +217,11 @@ namespace MixItUp.Base.ViewModel.User
                     Dictionary<uint, DateTimeOffset?> subscribers = await ChannelSession.Connection.CheckIfUsersHaveRole(ChannelSession.Channel, userModels, MixerRoleEnum.Subscriber);
                     foreach (UserViewModel user in users)
                     {
-                        if (follows.ContainsKey(user.ID))
+                        if (follows != null && follows.ContainsKey(user.ID))
                         {
                             user.FollowDate = follows[user.ID];
                         }
-                        if (subscribers.ContainsKey(user.ID))
+                        if (subscribers != null && subscribers.ContainsKey(user.ID))
                         {
                             user.SubscribeDate = subscribers[user.ID];
                         }
