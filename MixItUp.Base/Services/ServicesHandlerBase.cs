@@ -35,6 +35,10 @@ namespace MixItUp.Base.Services
 
         public abstract Task Close();
 
+        public abstract Task<bool> InitializeOverlayServer();
+
+        public abstract Task DisconnectOverlayServer();
+
         public abstract Task<bool> InitializeOBSWebsocket();
         public abstract Task DisconnectOBSStudio();
 

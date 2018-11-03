@@ -9,7 +9,7 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayYouTubeItem : OverlayItemBase
     {
         [DataMember]
-        public string ID { get; set; }
+        public string VideoID { get; set; }
         [DataMember]
         public int StartTime { get; set; }
         [DataMember]
@@ -23,7 +23,7 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayYouTubeItem(string id, int startTime, int width, int height, int volume)
         {
-            this.ID = id;
+            this.VideoID = id;
             this.StartTime = startTime;
             this.Width = width;
             this.Height = height;
@@ -33,7 +33,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayYouTubeItem item = this.Copy<OverlayYouTubeItem>();
-            item.ID = await this.ReplaceStringWithSpecialModifiers(item.ID, user, arguments, extraSpecialIdentifiers, encode: true);
+            item.VideoID = await this.ReplaceStringWithSpecialModifiers(item.VideoID, user, arguments, extraSpecialIdentifiers, encode: true);
             return item;
         }
     }

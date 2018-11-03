@@ -11,7 +11,17 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public abstract class OverlayItemBase
     {
+        [DataMember]
+        public Guid ID { get; set; }
+
+        public OverlayItemBase()
+        {
+            this.ID = Guid.NewGuid();
+        }
+
         public abstract Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
+
+        public virtual Task Initialize() { return Task.FromResult(0); }
 
         public T Copy<T>()
         {

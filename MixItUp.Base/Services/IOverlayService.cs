@@ -47,6 +47,8 @@ namespace MixItUp.Base.Services
 
         Task EndBatching();
 
+        Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects);
+
         Task SendImage(OverlayImageItem item, OverlayItemPosition position, OverlayItemEffects effects);
 
         Task SendText(OverlayTextItem item, OverlayItemPosition position, OverlayItemEffects effects);
@@ -62,6 +64,8 @@ namespace MixItUp.Base.Services
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
 
         Task SendSongRequest(OverlaySongRequest songRequest);
+
+        Task RemoveItem(OverlayItemBase item);
 
         Task Disconnect();
     }

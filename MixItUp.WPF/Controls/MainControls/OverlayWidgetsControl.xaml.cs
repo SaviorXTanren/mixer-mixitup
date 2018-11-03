@@ -1,11 +1,13 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
+using MixItUp.Base.Services;
 using MixItUp.WPF.Windows.Overlay;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
@@ -30,6 +32,13 @@ namespace MixItUp.WPF.Controls.MainControls
             return base.InitializeInternal();
         }
 
+        protected override Task OnVisibilityChanged()
+        {
+            this.NoOverlayGrid.Visibility = (ChannelSession.Settings.EnableOverlay) ? Visibility.Collapsed : Visibility.Visible;
+            this.MainGrid.Visibility = (ChannelSession.Settings.EnableOverlay) ? Visibility.Visible : Visibility.Collapsed;
+            return Task.FromResult(0);
+        }
+
         private void RefreshList()
         {
             this.OverlayWidgetsListView.SelectedIndex = -1;
@@ -41,27 +50,21 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async Task RefreshWidgets()
+        private async Task HideWidget(OverlayWidget widget)
         {
-            await Task.Delay(1);
-        }
-
-        private async Task RefreshWidget(OverlayWidget widget)
-        {
-            await Task.Delay(1);
+            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(widget.OverlayName);
+            if (overlay != null)
+            {
+                await overlay.RemoveItem(widget.Item);
+            }
         }
 
         private async void Window_Closed(object sender, System.EventArgs e)
         {
-            await this.Window.RunAsyncOperation(async () =>
+            await this.Window.RunAsyncOperation(() =>
             {
                 this.RefreshList();
-
-                OverlayWidgetEditorWindow window = (OverlayWidgetEditorWindow)sender;
-                if (window != null && window.Widget != null)
-                {
-                    await this.RefreshWidget(window.Widget);
-                }
+                return Task.FromResult(0);
             });
         }
 
@@ -86,9 +89,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (widget != null)
                 {
                     ChannelSession.Settings.OverlayWidgets.Remove(widget);
+                    await this.HideWidget(widget);
+
                     await ChannelSession.SaveSettings();
                     this.RefreshList();
-                    await this.RefreshWidget(widget);
                 }
             });
         }
@@ -97,14 +101,19 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Window.RunAsyncOperation(async () =>
             {
-                Button button = (Button)sender;
+                ToggleButton button = (ToggleButton)sender;
                 OverlayWidget widget = (OverlayWidget)button.DataContext;
                 if (widget != null)
                 {
                     widget.IsEnabled = !widget.IsEnabled;
+
+                    if (!widget.IsEnabled)
+                    {
+                        await this.HideWidget(widget);
+                    }
+
                     await ChannelSession.SaveSettings();
                     this.RefreshList();
-                    await this.RefreshWidget(widget);
                 }
             });
         }

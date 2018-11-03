@@ -23,7 +23,7 @@ namespace MixItUp.Base.Model.Overlay
         public int Volume { get; set; }
 
         [DataMember]
-        public string ID { get; set; }
+        public string FileID { get; set; }
 
         [DataMember]
         public string FullLink
@@ -32,7 +32,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 if (!Uri.IsWellFormedUriString(this.FilePath, UriKind.RelativeOrAbsolute))
                 {
-                    return string.Format("/overlay/files/{0}", this.ID);
+                    return string.Format("/overlay/files/{0}", this.FileID);
                 }
                 return this.FilePath;
             }
@@ -50,7 +50,7 @@ namespace MixItUp.Base.Model.Overlay
             this.Width = width;
             this.Height = height;
             this.Volume = volume;
-            this.ID = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            this.FileID = Guid.NewGuid().ToString().Replace("-", string.Empty);
         }
 
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)

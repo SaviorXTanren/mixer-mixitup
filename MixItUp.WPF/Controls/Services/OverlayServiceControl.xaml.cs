@@ -93,31 +93,19 @@ namespace MixItUp.WPF.Controls.Services
 
         private async Task<bool> ConnectOverlayService()
         {
-            bool overlaysAdded = true;
-            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
+            if (await ChannelSession.Services.InitializeOverlayServer())
             {
-                if (!await ChannelSession.Services.OverlayServers.AddOverlay(kvp.Key, kvp.Value))
-                {
-                    overlaysAdded = false;
-                    break;
-                }
+                ChannelSession.Settings.EnableOverlay = true;
+
+                this.EnableOverlayButton.Visibility = Visibility.Collapsed;
+                this.DisableOverlayButton.Visibility = Visibility.Visible;
+                this.TestOverlayButton.IsEnabled = true;
+
+                this.SetCompletedIcon(visible: true);
+
+                return true;
             }
-
-            if (!overlaysAdded)
-            {
-                await ChannelSession.Services.OverlayServers.RemoveAllOverlays();
-                return false;
-            }
-
-            ChannelSession.Settings.EnableOverlay = true;
-
-            this.EnableOverlayButton.Visibility = Visibility.Collapsed;
-            this.DisableOverlayButton.Visibility = Visibility.Visible;
-            this.TestOverlayButton.IsEnabled = true;
-
-            this.SetCompletedIcon(visible: true);
-
-            return true;
+            return false;
         }
 
         private async Task DisconnectOverlayService()
@@ -126,7 +114,7 @@ namespace MixItUp.WPF.Controls.Services
             this.DisableOverlayButton.Visibility = Visibility.Collapsed;
             this.TestOverlayButton.IsEnabled = false;
 
-            await ChannelSession.Services.OverlayServers.RemoveAllOverlays();
+            await ChannelSession.Services.DisconnectOverlayServer();
 
             ChannelSession.Settings.EnableOverlay = false;
 

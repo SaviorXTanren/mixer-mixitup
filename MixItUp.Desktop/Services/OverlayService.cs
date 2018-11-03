@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Client;
 using Mixer.Base.Web;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
@@ -145,9 +144,37 @@ namespace MixItUp.Overlay
 
         public async Task<bool> TestConnection() { return await this.webSocketServer.TestConnection(); }
 
+        public async Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
+        {
+            if (item is OverlayImageItem)
+            {
+                await this.SendImage((OverlayImageItem)item, position, effects);
+            }
+            else if (item is OverlayTextItem)
+            {
+                await this.SendText((OverlayTextItem)item, position, effects);
+            }
+            else if (item is OverlayYouTubeItem)
+            {
+                await this.SendYouTubeVideo((OverlayYouTubeItem)item, position, effects);
+            }
+            else if (item is OverlayVideoItem)
+            {
+                await this.SendLocalVideo((OverlayVideoItem)item, position, effects);
+            }
+            else if (item is OverlayHTMLItem)
+            {
+                await this.SendHTML((OverlayHTMLItem)item, position, effects);
+            }
+            else if (item is OverlayWebPageItem)
+            {
+                await this.SendWebPage((OverlayWebPageItem)item, position, effects);
+            }
+        }
+
         public async Task SendImage(OverlayImageItem item, OverlayItemPosition position, OverlayItemEffects effects)
         {
-            this.httpListenerServer.SetLocalFile(item.ID, item.FilePath);
+            this.httpListenerServer.SetLocalFile(item.FileID, item.FilePath);
             await this.SendEffectPacket("image", item, position, effects);
         }
 
@@ -157,7 +184,7 @@ namespace MixItUp.Overlay
 
         public async Task SendLocalVideo(OverlayVideoItem item, OverlayItemPosition position, OverlayItemEffects effects)
         {
-            this.httpListenerServer.SetLocalFile(item.ID, item.FilePath);
+            this.httpListenerServer.SetLocalFile(item.FileID, item.FilePath);
             await this.SendEffectPacket("video", item, position, effects);
         }
 
@@ -172,8 +199,8 @@ namespace MixItUp.Overlay
         private async Task SendEffectPacket(string type, OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
         {
             JObject jobj = JObject.FromObject(item);
-            jobj.Merge(JObject.FromObject(position));
-            jobj.Merge(JObject.FromObject(effects));
+            if (position != null) { jobj.Merge(JObject.FromObject(position)); }
+            if (effects != null) { jobj.Merge(JObject.FromObject(effects)); }
             await this.SendPacket(type, jobj);
         }
 
@@ -188,6 +215,11 @@ namespace MixItUp.Overlay
             {
                 await this.webSocketServer.Send(packet);
             }
+        }
+
+        public async Task RemoveItem(OverlayItemBase item)
+        {
+            await this.SendPacket("remove", JObject.FromObject(item));
         }
 
         private void WebSocketServer_OnConnectedOccurred(object sender, EventArgs e)

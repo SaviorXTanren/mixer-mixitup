@@ -207,6 +207,8 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double Duration;
 
+        public OverlayItemEffects() { }
+
         public OverlayItemEffects(OverlayEffectEntranceAnimationTypeEnum entrance, OverlayEffectVisibleAnimationTypeEnum visible, OverlayEffectExitAnimationTypeEnum exit, double duration)
         {
             this.EntranceAnimation = entrance;

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MixItUp.WPF.Windows.Overlay"
         xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
         xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
         xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -36,7 +37,67 @@
         <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
 
         <Grid Grid.Row="0" Margin="10">
-            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="300" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0" x:Name="NameTextBox" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+
+                        <ComboBox x:Name="OverlayNameComboBox" Grid.Column="2" Width="200" MaterialDesign:HintAssist.Hint="Overlay To Use" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                    </Grid>
+
+                    <ComboBox Grid.Row="2" x:Name="TypeComboBox" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" />
+                </Grid>
+
+                <Border Grid.Column="2" Style="{StaticResource DefaultBorder}" HorizontalAlignment="Center">
+                    <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" Margin="10" />
+                </Border>
+            </Grid>
+
+            <OverlayControls:OverlayTextItemControl x:Name="TextItem" Grid.Row="2" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+            <OverlayControls:OverlayImageItemControl x:Name="ImageItem" Grid.Row="2" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+            <OverlayControls:OverlayYouTubeItemControl x:Name="YouTubeItem" Grid.Row="2" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+            <OverlayControls:OverlayVideoItemControl x:Name="VideoItem" Grid.Row="2" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+            <OverlayControls:OverlayWebPageItemControl x:Name="WebPageItem" Grid.Row="2" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+            <OverlayControls:OverlayHTMLItemControl x:Name="HTMLItem" Grid.Row="2" Margin="0,10,0,10" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="SaveButton" Grid.Column="0" Click="SaveButton_Click">Save</Button>
+            </Grid>
         </Grid>
 
         <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />

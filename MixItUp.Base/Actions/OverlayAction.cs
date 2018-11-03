@@ -54,30 +54,7 @@ namespace MixItUp.Base.Actions
             if (overlay != null)
             {
                 OverlayItemBase processedItem = await this.Item.GetProcessedItem(user, arguments, this.extraSpecialIdentifiers);
-                if (this.Item is OverlayImageItem)
-                {
-                    await overlay.SendImage((OverlayImageItem)processedItem, this.Position, this.Effects);
-                }
-                else if (this.Item is OverlayTextItem)
-                {
-                    await overlay.SendText((OverlayTextItem)processedItem, this.Position, this.Effects);
-                }
-                else if (this.Item is OverlayYouTubeItem)
-                {
-                    await overlay.SendYouTubeVideo((OverlayYouTubeItem)processedItem, this.Position, this.Effects);
-                }
-                else if (this.Item is OverlayVideoItem)
-                {
-                    await overlay.SendLocalVideo((OverlayVideoItem)processedItem, this.Position, this.Effects);
-                }
-                else if (this.Item is OverlayHTMLItem)
-                {
-                    await overlay.SendHTML((OverlayHTMLItem)processedItem, this.Position, this.Effects);
-                }
-                else if (this.Item is OverlayWebPageItem)
-                {
-                    await overlay.SendWebPage((OverlayWebPageItem)processedItem, this.Position, this.Effects);
-                }
+                await overlay.SendItem(processedItem, this.Position, this.Effects);
             }
         }
     }

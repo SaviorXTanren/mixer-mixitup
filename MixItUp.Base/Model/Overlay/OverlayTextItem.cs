@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    [DataContract]
     public class OverlayTextItem : OverlayItemBase
     {
         [DataMember]

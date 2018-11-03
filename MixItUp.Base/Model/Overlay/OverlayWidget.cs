@@ -1,12 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using Mixer.Base.Util;
+using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
     public class OverlayWidget
     {
-        public const int MinimumRefreshRate = 5;
-
         [DataMember]
         public string Name { get; set; }
 
@@ -22,22 +21,18 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public OverlayItemPosition Position { get; set; }
 
-        [DataMember]
-        public int RefreshRate { get; set; }
-
         public OverlayWidget()
         {
             this.IsEnabled = true;
         }
 
-        public OverlayWidget(string name, string overlayName, OverlayItemBase item, OverlayItemPosition position, int refreshRate)
+        public OverlayWidget(string name, string overlayName, OverlayItemBase item, OverlayItemPosition position)
             : this()
         {
             this.Name = name;
             this.OverlayName = overlayName;
             this.Item = item;
             this.Position = position;
-            this.RefreshRate = refreshRate;
         }
     }
 }

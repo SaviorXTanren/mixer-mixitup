@@ -13,6 +13,10 @@ namespace MixItUp.Base.Services
         string DefaultOverlayName { get; }
         int DefaultOverlayPort { get; }
 
+        void Initialize();
+
+        void Disable();
+
         Task<bool> AddOverlay(string name, int port);
 
         Task RemoveOverlay(string name);

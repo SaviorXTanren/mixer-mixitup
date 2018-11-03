@@ -61,6 +61,8 @@
                 },
             });
 
+            var itemDictionary = {};
+
             var zIndexCounter = 0;
 
             var mainOverlayDiv = document.getElementById('mainOverlay');
@@ -97,6 +99,9 @@
                     if (packet != null && typeof packet.type !== 'undefined') {
                         if (packet.type === "test") {
                             testPacket();
+                        }
+                        else if (packet.type === "remove") {
+                            removePacket(packet.data);
                         }
                         else if (packet.type === "image") {
                             imagePacket(packet.data);
@@ -138,6 +143,13 @@
                     Horizontal: 50, Vertical: 50, Duration: 3, IsPercentagePosition: true
                 };
                 textPacket(data);
+            }
+
+            function removePacket(data) {
+                if (itemDictionary[data.ID]) {
+                    mainOverlayDiv.removeChild(itemDictionary[data.ID]);
+                    itemDictionary[data.ID] = null;
+                }
             }
 
             function imagePacket(data) {
@@ -319,34 +331,40 @@
                         addedElement.style.cssText += 'position: absolute; left: ' + data.Horizontal.toString() + 'px; top: ' + data.Vertical.toString() + 'px;'
                     }
 
+                    removePacket(data);
+
                     var divContainer = document.createElement('div');
+                    divContainer.id = data.ID;
                     divContainer.style.cssText += 'position: absolute; width: 1920px; height: 1080px; max-width: 1920px; max-height: 1080px; min-width: 1920px; min-height: 1080px;';
                     divContainer.style.zIndex = zIndexCounter++;
                     divContainer.appendChild(addedElement);
 
-                    $(divContainer).animateCss(data.EntranceAnimationName, function () {
+                    itemDictionary[data.ID] = divContainer;
 
-                        setTimeout(function () {
-
-                            $(divContainer).animateCss(data.VisibleAnimationName);
+                    if (data.Duration > 0) {
+                        $(divContainer).animateCss(data.EntranceAnimationName, function () {
 
                             setTimeout(function () {
 
-                                var elementToAnimate = divContainer;
-                                if (data.ExitAnimationName && data.ExitAnimationName == 'hinge') {
-                                    elementToAnimate = addedElement;
-                                }
+                                $(divContainer).animateCss(data.VisibleAnimationName);
 
-                                $(elementToAnimate).animateCss(data.ExitAnimationName, function () {
+                                setTimeout(function () {
 
-                                    mainOverlayDiv.removeChild(divContainer);
-                                });
+                                    var elementToAnimate = divContainer;
+                                    if (data.ExitAnimationName && data.ExitAnimationName == 'hinge') {
+                                        elementToAnimate = addedElement;
+                                    }
 
-                            }, (data.Duration * 1000 * 2) / 3);
+                                    $(elementToAnimate).animateCss(data.ExitAnimationName, function () {
 
-                        }, (data.Duration * 1000) / 3);
+                                        removePacket(data);
+                                    });
 
-                    });
+                                }, (data.Duration * 1000 * 2) / 3);
+
+                            }, (data.Duration * 1000) / 3);
+                        });
+                    }
 
                     mainOverlayDiv.appendChild(divContainer);
                 }

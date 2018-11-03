@@ -34,12 +34,32 @@ namespace MixItUp.Desktop.Services
 
         public override async Task Close()
         {
-            await this.OverlayServers.RemoveAllOverlays();
+            await this.DisconnectOverlayServer();
             await this.DisconnectOBSStudio();
             await this.DisconnectStreamlabsOBSService();
             await this.DisconnectXSplitServer();
             await this.DisconnectDeveloperAPI();
             await this.DisconnectTelemetryService();
+        }
+
+        public override async Task<bool> InitializeOverlayServer()
+        {
+            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
+            {
+                if (!await ChannelSession.Services.OverlayServers.AddOverlay(kvp.Key, kvp.Value))
+                {
+                    await this.DisconnectOverlayServer();
+                    return false;
+                }
+            }
+            this.OverlayServers.Initialize();
+            return true;
+        }
+
+        public override async Task DisconnectOverlayServer()
+        {
+            this.OverlayServers.Disable();
+            await ChannelSession.Services.OverlayServers.RemoveAllOverlays();
         }
 
         public override async Task<bool> InitializeOBSWebsocket()

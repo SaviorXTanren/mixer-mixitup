@@ -538,10 +538,7 @@ namespace MixItUp.Base
 
                     if (ChannelSession.Settings.EnableOverlay)
                     {
-                        foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
-                        {
-                            await ChannelSession.Services.OverlayServers.AddOverlay(kvp.Key, kvp.Value);
-                        }
+                        await ChannelSession.Services.InitializeOverlayServer();
                     }
 
                     if (ChannelSession.Settings.EnableDeveloperAPI)

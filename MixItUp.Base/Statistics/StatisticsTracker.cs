@@ -37,11 +37,11 @@ namespace MixItUp.Base.Statistics
         {
             this.StartTime = DateTimeOffset.Now;
 
-            ChannelSession.Constellation.OnFollowOccurred += Constellation_OnFollowOccurred;
-            ChannelSession.Constellation.OnUnfollowOccurred += Constellation_OnUnfollowOccurred;
-            ChannelSession.Constellation.OnHostedOccurred += Constellation_OnHostedOccurred;
-            ChannelSession.Constellation.OnSubscribedOccurred += Constellation_OnSubscribedOccurred;
-            ChannelSession.Constellation.OnResubscribedOccurred += Constellation_OnResubscribedOccurred;
+            GlobalEvents.OnFollowOccurred += Constellation_OnFollowOccurred;
+            GlobalEvents.OnUnfollowOccurred += Constellation_OnUnfollowOccurred;
+            GlobalEvents.OnHostOccurred += Constellation_OnHostedOccurred;
+            GlobalEvents.OnSubscribeOccurred += Constellation_OnSubscribedOccurred;
+            GlobalEvents.OnResubscribeOccurred += Constellation_OnResubscribedOccurred;
 
             ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 

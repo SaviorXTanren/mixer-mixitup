@@ -108,12 +108,66 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<UserViewModel> OnFollowOccurred;
+        public static void FollowOccurred(UserViewModel user)
+        {
+            if (GlobalEvents.OnFollowOccurred != null)
+            {
+                GlobalEvents.OnFollowOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<UserViewModel> OnUnfollowOccurred;
+        public static void UnfollowOccurred(UserViewModel user)
+        {
+            if (GlobalEvents.OnUnfollowOccurred != null)
+            {
+                GlobalEvents.OnUnfollowOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<UserViewModel> OnSubscribeOccurred;
+        public static void SubscribeOccurred(UserViewModel user)
+        {
+            if (GlobalEvents.OnSubscribeOccurred != null)
+            {
+                GlobalEvents.OnSubscribeOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<Tuple<UserViewModel, int>> OnResubscribeOccurred;
+        public static void ResubscribeOccurred(Tuple<UserViewModel, int> user)
+        {
+            if (GlobalEvents.OnResubscribeOccurred != null)
+            {
+                GlobalEvents.OnResubscribeOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<Tuple<UserViewModel, int>> OnHostOccurred;
+        public static void HostOccurred(Tuple<UserViewModel, int> user)
+        {
+            if (GlobalEvents.OnHostOccurred != null)
+            {
+                GlobalEvents.OnHostOccurred(null, user);
+            }
+        }
+
         public static event EventHandler<UserDonationModel> OnDonationOccurred;
         public static void DonationOccurred(UserDonationModel donation)
         {
             if (GlobalEvents.OnDonationOccurred != null)
             {
                 GlobalEvents.OnDonationOccurred(null, donation);
+            }
+        }
+
+        public static event EventHandler<Tuple<UserViewModel, int>> OnSparksReceived;
+        public static void SparksReceived(Tuple<UserViewModel, int> user)
+        {
+            if (GlobalEvents.OnSparksReceived != null)
+            {
+                GlobalEvents.OnSparksReceived(null, user);
             }
         }
 

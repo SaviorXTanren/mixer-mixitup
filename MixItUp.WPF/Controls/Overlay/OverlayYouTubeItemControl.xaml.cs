@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Overlay
         public override void SetItem(OverlayItemBase item)
         {
             this.item = (OverlayYouTubeItem)item;
-            this.YoutubeVideoIDTextBox.Text = this.item.ID;
+            this.YoutubeVideoIDTextBox.Text = this.item.VideoID;
             this.YoutubeStartTimeTextBox.Text = this.item.StartTime.ToString();
             this.YouTubeWidthTextBox.Text = this.item.Width.ToString();
             this.YouTubeHeightTextBox.Text = this.item.Height.ToString();
