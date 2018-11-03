@@ -385,34 +385,38 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            HideIntellisense();
-
-            string userTag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
-            if (!string.IsNullOrEmpty(userTag) && userTag.StartsWith("@"))
+            try
             {
-                string filter = userTag.Substring(1);
+                HideIntellisense();
 
-                List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
-                if (!string.IsNullOrEmpty(filter))
+                string userTag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
+                if (!string.IsNullOrEmpty(userTag) && userTag.StartsWith("@"))
                 {
-                    users = users.Where(u => u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
-                }
-                users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
+                    string filter = userTag.Substring(1);
 
-                if (users.Count > 0)
-                {
-                    this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(userTag);
-                    UsernameIntellisenseListBox.ItemsSource = users;
+                    List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        users = users.Where(u => !string.IsNullOrEmpty(u.UserName) && u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                    }
+                    users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
 
-                    // Select the bottom user
-                    UsernameIntellisenseListBox.SelectedIndex = users.Count - 1;
+                    if (users.Count > 0)
+                    {
+                        this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(userTag);
+                        UsernameIntellisenseListBox.ItemsSource = users;
 
-                    Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
-                    Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+                        // Select the bottom user
+                        UsernameIntellisenseListBox.SelectedIndex = users.Count - 1;
 
-                    ShowIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                        Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+                        Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+
+                        ShowIntellisense(topLeftOffset.X, topLeftOffset.Y);
+                    }
                 }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private void ShowIntellisense(double x, double y)
