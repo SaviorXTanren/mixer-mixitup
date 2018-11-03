@@ -24,6 +24,63 @@ using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
+    public class SortedUserObservableCollection
+    {
+        public ICollection<ChatUserControl> Collection { get { return collection; } }
+
+        private ObservableCollection<ChatUserControl> collection = new ObservableCollection<ChatUserControl>();
+        private HashSet<uint> existingUsers = new HashSet<uint>();
+
+        public void Add(UserViewModel user)
+        {
+            if (!this.Contains(user))
+            {
+                this.existingUsers.Add(user.ID);
+
+                int insertIndex = 0;
+                for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
+                {
+                    ChatUserControl userControl = this.collection[insertIndex];
+                    if (userControl.User.PrimarySortableRole == user.PrimarySortableRole)
+                    {
+                        if (userControl.User.UserName.CompareTo(user.UserName) > 0)
+                        {
+                            break;
+                        }
+                    }
+                    else if (userControl.User.PrimarySortableRole < user.PrimarySortableRole)
+                    {
+                        break;
+                    }
+                }
+
+                if (insertIndex < this.collection.Count)
+                {
+                    this.collection.Insert(insertIndex, new ChatUserControl(user));
+                }
+                else
+                {
+                    this.collection.Add(new ChatUserControl(user));
+                }
+            }
+        }
+
+        public bool Contains(UserViewModel user)
+        {
+            return this.existingUsers.Contains(user.ID);
+        }
+
+        public void Remove(UserViewModel user)
+        {
+            if (this.Contains(user))
+            {
+                this.existingUsers.Remove(user.ID);
+                ChatUserControl userControl = this.collection.FirstOrDefault(uc => uc.User.ID.Equals(user.ID));
+                this.collection.Remove(userControl);
+            }
+        }
+    }
+
     /// <summary>
     /// Interaction logic for ChatControl.xaml
     /// </summary>
@@ -31,7 +88,7 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         public static BitmapImage SubscriberBadgeBitmap { get; private set; }
 
-        public ObservableCollection<ChatUserControl> UserControls = new ObservableCollection<ChatUserControl>();
+        public SortedUserObservableCollection UserControls = new SortedUserObservableCollection();
         public ObservableCollection<ChatMessageControl> MessageControls = new ObservableCollection<ChatMessageControl>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
@@ -74,7 +131,7 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 
             this.ChatList.ItemsSource = this.MessageControls;
-            this.UserList.ItemsSource = this.UserControls;
+            this.UserList.ItemsSource = this.UserControls.Collection;
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -101,11 +158,11 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await userUpdateLock.WaitAndRelease(async () =>
                 {
-                    foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsersSorted())
+                    foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
                     {
                         if (user.IsInChat)
                         {
-                            this.UserControls.Add(new ChatUserControl(user));
+                            this.UserControls.Add(user);
                         }
                     }
 
@@ -144,18 +201,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     if (user.IsInChat)
                     {
-                        List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsersSorted()).ToList();
-                        ChatUserControl userControl = new ChatUserControl(user);
-
-                        int index = users.IndexOf(user);
-                        if (0 <= index && index < this.UserControls.Count)
-                        {
-                            this.UserControls.Insert(index, userControl);
-                        }
-                        else
-                        {
-                            this.UserControls.Add(userControl);
-                        }
+                        this.UserControls.Remove(user);
+                        this.UserControls.Add(user);
                     }
 
                     await this.RefreshViewerChatterCounts();
@@ -169,11 +216,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await userUpdateLock.WaitAndRelease(async () =>
                 {
-                    ChatUserControl control = this.UserControls.FirstOrDefault(u => u.MatchesUser(user));
-                    if (control != null)
-                    {
-                        this.UserControls.Remove(control);
-                    }
+                    this.UserControls.Remove(user);
 
                     await this.RefreshViewerChatterCounts();
                 });

@@ -178,11 +178,6 @@ namespace MixItUp.Base.ViewModel.User
             return await this.semaphore.WaitAndRelease(() => Task.FromResult(this.users.Values.ToList()));
         }
 
-        public async Task<IEnumerable<UserViewModel>> GetAllUsersSorted()
-        {
-            return (await this.GetAllUsers()).OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName);
-        }
-
         public async Task<IEnumerable<UserViewModel>> GetAllWorkableUsers()
         {
             return await this.semaphore.WaitAndRelease(() =>
