@@ -50,7 +50,7 @@ namespace MixItUp.WPF.Windows.Users
 
         private async Task RefreshData()
         {
-            await this.user.RefreshDetails();
+            await this.user.RefreshDetails(force: true);
 
             this.ranks.Clear();
             this.currencies.Clear();

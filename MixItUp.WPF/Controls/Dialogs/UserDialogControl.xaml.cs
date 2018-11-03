@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            await this.user.RefreshDetails();
+            await this.user.RefreshDetails(force: true);
 
             this.UserAvatar.SetSize(100);
             await this.UserAvatar.SetUserAvatarUrl(this.user);

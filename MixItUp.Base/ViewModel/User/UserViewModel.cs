@@ -264,9 +264,9 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public async Task RefreshDetails()
+        public async Task RefreshDetails(bool force = false)
         {
-            if (this.ID > 0 && this.LastUpdated.TotalMinutesFromNow() >= 1)
+            if (this.ID > 0 && (this.LastUpdated.TotalMinutesFromNow() >= 1 || force))
             {
                 UserWithChannelModel user = await ChannelSession.Connection.GetUser(this.ID);
                 if (user != null)
@@ -278,7 +278,10 @@ namespace MixItUp.Base.ViewModel.User
                     if (this.IsSubscriber)
                     {
                         UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
-                        this.SubscribeDate = userGroups.GetSubscriberDate();
+                        if (userGroups != null)
+                        {
+                            this.SubscribeDate = userGroups.GetSubscriberDate();
+                        }
                     }
                 }
 

@@ -226,7 +226,6 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     user.SubscribeDate = subscribers[user.ID];
                 }
-                user.LastUpdated = DateTimeOffset.Now;
             }
 
             foreach (UserViewModel user in users)
