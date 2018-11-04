@@ -42,12 +42,6 @@ namespace MixItUp.WPF.Controls.Chat
                 this.MessageWrapPanel.Children.Add(this.messageHeader);
             }
 
-            if (this.Message.IsWhisper)
-            {
-                this.Background = (Brush)FindResource("PrimaryHueLightBrush");
-                this.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
-            }
-
             foreach (ChatMessageDataModel messageData in this.Message.MessageComponents)
             {
                 EmoticonImage emoticon = ChannelSession.GetEmoticonForMessage(messageData);
@@ -75,10 +69,10 @@ namespace MixItUp.WPF.Controls.Chat
                                 textBlock.Foreground = (App.AppSettings.IsDarkBackground) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
                             }
                         }
-                        if (messageData.type == "tag" && word.Equals("@" + ChannelSession.User.username, StringComparison.InvariantCultureIgnoreCase))
+                        if (this.Message.IsWhisper || (messageData.type == "tag" && word.Equals("@" + ChannelSession.User.username, StringComparison.InvariantCultureIgnoreCase)))
                         {
-                            this.Background = (Brush)FindResource("PrimaryHueLightBrush");
-                            this.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
+                            textBlock.Background = (Brush)FindResource("PrimaryHueLightBrush");
+                            textBlock.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
                         }
                         this.textBlocks.Add(textBlock);
                         this.MessageWrapPanel.Children.Add(textBlock);
