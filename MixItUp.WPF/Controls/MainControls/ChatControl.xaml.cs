@@ -577,7 +577,10 @@ namespace MixItUp.WPF.Controls.MainControls
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
                         ChatMessageEventModel response = await ChannelSession.Chat.WhisperWithResponse(username, message, ShouldSendAsStreamer());
-                        await this.AddMessage(await ChatMessageViewModel.CreateChatMessageViewModel(response));
+                        if (response != null)
+                        {
+                            await this.AddMessage(await ChatMessageViewModel.CreateChatMessageViewModel(response));
+                        }
                 }));
                 }
                 else if (ChatAction.ClearRegex.IsMatch(message))
