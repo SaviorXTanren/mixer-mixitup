@@ -99,23 +99,19 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void EnableDisableToggleSwitch_Checked(object sender, RoutedEventArgs e)
         {
-            await this.Window.RunAsyncOperation(async () =>
+            ToggleButton button = (ToggleButton)sender;
+            OverlayWidget widget = (OverlayWidget)button.DataContext;
+            if (widget != null)
             {
-                ToggleButton button = (ToggleButton)sender;
-                OverlayWidget widget = (OverlayWidget)button.DataContext;
-                if (widget != null)
+                widget.IsEnabled = button.IsChecked.GetValueOrDefault();
+                if (!widget.IsEnabled)
                 {
-                    widget.IsEnabled = !widget.IsEnabled;
-
-                    if (!widget.IsEnabled)
+                    await this.Window.RunAsyncOperation(async () =>
                     {
                         await this.HideWidget(widget);
-                    }
-
-                    await ChannelSession.SaveSettings();
-                    this.RefreshList();
+                    });
                 }
-            });
+            }
         }
 
         private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
@@ -123,6 +119,16 @@ namespace MixItUp.WPF.Controls.MainControls
             OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow();
             window.Closed += Window_Closed;
             window.Show();
+        }
+
+        private void EnableDisableToggleSwitch_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ToggleButton button = (ToggleButton)sender;
+            OverlayWidget widget = (OverlayWidget)button.DataContext;
+            if (widget != null && widget.IsEnabled)
+            {
+                button.IsChecked = true;
+            }
         }
     }
 }

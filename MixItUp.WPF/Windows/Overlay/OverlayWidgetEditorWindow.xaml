@@ -91,6 +91,8 @@
 
             <OverlayControls:OverlayHTMLItemControl x:Name="HTMLItem" Grid.Row="2" Margin="0,10,0,10" Visibility="Collapsed" HorizontalAlignment="Center" />
 
+            <OverlayControls:OverlayProgressBarItemControl x:Name="ProgressBarItem" Grid.Row="2" Margin="0,10,0,10" Visibility="Collapsed" HorizontalAlignment="Center" />
+
             <Grid Grid.Row="4" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

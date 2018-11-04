@@ -62,41 +62,43 @@ namespace MixItUp.WPF.Windows.Overlay
             {
                 this.NameTextBox.Text = this.Widget.Name;
                 this.OverlayNameComboBox.SelectedItem = this.Widget.OverlayName;
-                
-                if (this.Widget.Item is OverlayTextItem)
-                {
-                    this.ItemPosition.SetPosition(this.Widget.Position);
 
-                    if (this.Widget.Item is OverlayImageItem)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Image);
-                        this.ImageItem.SetItem(this.Widget.Item);
-                    }
-                    else if (this.Widget.Item is OverlayTextItem)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Text);
-                        this.TextItem.SetItem(this.Widget.Item);
-                    }
-                    else if (this.Widget.Item is OverlayYouTubeItem)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.YouTube);
-                        this.YouTubeItem.SetItem(this.Widget.Item);
-                    }
-                    else if (this.Widget.Item is OverlayVideoItem)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Video);
-                        this.VideoItem.SetItem(this.Widget.Item);
-                    }
-                    else if (this.Widget.Item is OverlayWebPageItem)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.WebPage);
-                        this.WebPageItem.SetItem(this.Widget.Item);
-                    }
-                    else if (this.Widget.Item is OverlayHTMLItem)
-                    {
-                        this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.HTML);
-                        this.HTMLItem.SetItem(this.Widget.Item);
-                    }
+                this.ItemPosition.SetPosition(this.Widget.Position);
+
+                if (this.Widget.Item is OverlayImageItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Image);
+                    this.ImageItem.SetItem(this.Widget.Item);
+                }
+                else if (this.Widget.Item is OverlayTextItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Text);
+                    this.TextItem.SetItem(this.Widget.Item);
+                }
+                else if (this.Widget.Item is OverlayYouTubeItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.YouTube);
+                    this.YouTubeItem.SetItem(this.Widget.Item);
+                }
+                else if (this.Widget.Item is OverlayVideoItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Video);
+                    this.VideoItem.SetItem(this.Widget.Item);
+                }
+                else if (this.Widget.Item is OverlayWebPageItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.WebPage);
+                    this.WebPageItem.SetItem(this.Widget.Item);
+                }
+                else if (this.Widget.Item is OverlayHTMLItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.HTML);
+                    this.HTMLItem.SetItem(this.Widget.Item);
+                }
+                else if (this.Widget.Item is OverlayProgressBarItem)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ProgressBar);
+                    this.ProgressBarItem.SetItem(this.Widget.Item);
                 }
             }
 
@@ -111,6 +113,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.VideoItem.Visibility = Visibility.Collapsed;
             this.WebPageItem.Visibility = Visibility.Collapsed;
             this.HTMLItem.Visibility = Visibility.Collapsed;
+            this.ProgressBarItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
@@ -137,6 +140,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.HTML)
                 {
                     this.HTMLItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.ProgressBar)
+                {
+                    this.ProgressBarItem.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -191,6 +198,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.HTML)
                 {
                     item = this.HTMLItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.ProgressBar)
+                {
+                    item = this.ProgressBarItem.GetItem();
                 }
 
                 if (item == null)

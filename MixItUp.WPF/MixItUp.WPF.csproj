@@ -464,6 +464,9 @@
     <Compile Include="Controls\Overlay\OverlayItemPositionControl.xaml.cs">
       <DependentUpon>OverlayItemPositionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
+      <DependentUpon>OverlayProgressBarItemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayTextItemControl.xaml.cs">
       <DependentUpon>OverlayTextItemControl.xaml</DependentUpon>
     </Compile>
@@ -1050,6 +1053,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayItemPositionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayProgressBarItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

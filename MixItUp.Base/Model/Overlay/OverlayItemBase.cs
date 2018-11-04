@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public Guid ID { get; set; }
 
+        [JsonIgnore]
+        public bool IsInitialized { get; private set; }
+
         public OverlayItemBase()
         {
             this.ID = Guid.NewGuid();
@@ -21,7 +25,11 @@ namespace MixItUp.Base.Model.Overlay
 
         public abstract Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);
 
-        public virtual Task Initialize() { return Task.FromResult(0); }
+        public virtual Task Initialize()
+        {
+            this.IsInitialized = true;
+            return Task.FromResult(0);
+        }
 
         public T Copy<T>()
         {
