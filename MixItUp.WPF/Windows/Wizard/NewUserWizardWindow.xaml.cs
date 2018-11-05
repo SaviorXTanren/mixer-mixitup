@@ -517,7 +517,11 @@ namespace MixItUp.WPF.Windows.Wizard
                     JObject profiles = await SerializerHelper.DeserializeFromFile<JObject>(profilesFilePath);
                     JObject sounds = await SerializerHelper.DeserializeFromFile<JObject>(soundsFilePath);
 
-                    this.soundwaveData = new SoundwaveSettings(interactive, profiles, sounds);
+                    this.soundwaveData = new SoundwaveSettings();
+                    if (interactive != null && profiles != null && sounds != null)
+                    {
+                        this.soundwaveData.Initialize(interactive, profiles, sounds);
+                    }
                 }
             }
         }

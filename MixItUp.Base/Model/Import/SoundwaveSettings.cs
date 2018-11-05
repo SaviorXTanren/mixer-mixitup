@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MixItUp.Base.Util;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -23,39 +25,63 @@ namespace MixItUp.Base.Model.Import
             this.Profiles = new Dictionary<string, List<SoundwaveButton>>();
         }
 
-        public SoundwaveSettings(JObject interactive, JObject profiles, JObject sounds)
-            : this()
+        public void Initialize(JObject interactive, JObject profiles, JObject sounds)
         {
-            string cooldownOption = interactive["cooldownOption"].ToString();
-            this.StaticCooldown = cooldownOption.Equals("static");
-            this.StaticCooldownAmount = (int)interactive["staticCooldown"];
-
-            this.DynamicCooldown = cooldownOption.Equals("dynamic");
-
-            Dictionary<string, SoundwaveButton> buttons = new Dictionary<string, SoundwaveButton>();
-
-            int defaultCooldown = (int)sounds["default_cooldown"];
-            int defaultSparks = (int)sounds["default_sparks"];
-            JArray soundArray = (JArray)sounds["sounds"];
-            foreach (JToken sound in soundArray)
+            try
             {
-                SoundwaveButton button = sound.ToObject<SoundwaveButton>();
-                buttons[button.id] = button;
-            }
-
-            JArray profileArray = (JArray)profiles["profiles"];
-            foreach (JToken profile in profileArray)
-            {
-                this.Profiles[profile["name"].ToString()] = new List<SoundwaveButton>();
-                JArray profileSoundArray = (JArray)profile["sounds"];
-                foreach (JToken sound in profileSoundArray)
+                if (interactive["cooldownOption"] != null)
                 {
-                    if (buttons.ContainsKey(sound.ToString()))
+                    string cooldownOption = interactive["cooldownOption"].ToString();
+                    this.StaticCooldown = cooldownOption.Equals("static");
+                    this.DynamicCooldown = cooldownOption.Equals("dynamic");
+                }
+
+                if (interactive["staticCooldown"] != null && int.TryParse(interactive["staticCooldown"].ToString(), out int staticCooldownAmount))
+                {
+                    this.StaticCooldownAmount = staticCooldownAmount;
+                }
+
+                int defaultCooldown = 0;
+                if (interactive["default_cooldown"] != null)
+                {
+                    int.TryParse(interactive["default_cooldown"].ToString(), out defaultCooldown);
+                }
+
+                int defaultSparks = 0;
+                if (interactive["default_sparks"] != null)
+                {
+                    int.TryParse(interactive["default_sparks"].ToString(), out defaultSparks);
+                }
+
+                Dictionary<string, SoundwaveButton> buttons = new Dictionary<string, SoundwaveButton>();
+                if (sounds["sounds"] != null)
+                {
+                    JArray soundArray = (JArray)sounds["sounds"];
+                    foreach (JToken sound in soundArray)
                     {
-                        this.Profiles[profile["name"].ToString()].Add(buttons[sound.ToString()]);
+                        SoundwaveButton button = sound.ToObject<SoundwaveButton>();
+                        buttons[button.id] = button;
+                    }
+                }
+
+                if (profiles["profiles"] != null)
+                {
+                    JArray profileArray = (JArray)profiles["profiles"];
+                    foreach (JToken profile in profileArray)
+                    {
+                        this.Profiles[profile["name"].ToString()] = new List<SoundwaveButton>();
+                        JArray profileSoundArray = (JArray)profile["sounds"];
+                        foreach (JToken sound in profileSoundArray)
+                        {
+                            if (buttons.ContainsKey(sound.ToString()))
+                            {
+                                this.Profiles[profile["name"].ToString()].Add(buttons[sound.ToString()]);
+                            }
+                        }
                     }
                 }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }
