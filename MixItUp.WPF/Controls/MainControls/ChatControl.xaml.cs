@@ -576,8 +576,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.Whisper(username, message, ShouldSendAsStreamer());
-                    }));
+                        ChatMessageEventModel response = await ChannelSession.Chat.WhisperWithResponse(username, message, ShouldSendAsStreamer());
+                        if (response != null)
+                        {
+                            await this.AddMessage(await ChatMessageViewModel.CreateChatMessageViewModel(response));
+                        }
+                }));
                 }
                 else if (ChatAction.ClearRegex.IsMatch(message))
                 {
@@ -627,6 +631,20 @@ namespace MixItUp.WPF.Controls.MainControls
                 if (!control.Message.IsWhisper)
                 {
                     await ChannelSession.Chat.DeleteMessage(control.Message);
+                }
+            }
+        }
+
+        private void MessageWhisperUserMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null)
+            {
+                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
+                if (control.Message.User != null)
+                {
+                    this.ChatMessageTextBox.Text = $"/w @{control.Message.User.UserName} ";
+                    this.ChatMessageTextBox.Focus();
+                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
                 }
             }
         }
