@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             this.SetHeaderText("Mixer Bot Account");
 
-            if (ChannelSession.Settings.BotOAuthToken != null)
+            if (ChannelSession.Settings.BotOAuthToken != null && ChannelSession.BotUser != null)
             {
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
                 this.NewBotLoginGrid.Visibility = Visibility.Collapsed;
