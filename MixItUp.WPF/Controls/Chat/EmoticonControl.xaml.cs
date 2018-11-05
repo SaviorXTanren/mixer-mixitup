@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using MixItUp.Base.Util;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -45,16 +46,20 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void EmoticonControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!EmoticonControl.emoticonBitmapImages.ContainsKey(Emoticon.FilePath))
+            try
             {
-                EmoticonControl.emoticonBitmapImages[Emoticon.FilePath] = new BitmapImage(new Uri(Emoticon.FilePath));
+                if (!EmoticonControl.emoticonBitmapImages.ContainsKey(Emoticon.FilePath))
+                {
+                    EmoticonControl.emoticonBitmapImages[Emoticon.FilePath] = new BitmapImage(new Uri(Emoticon.FilePath));
+                }
+
+                CroppedBitmap bitmap = new CroppedBitmap(
+                    EmoticonControl.emoticonBitmapImages[Emoticon.FilePath],
+                    new Int32Rect((int)Emoticon.X, (int)Emoticon.Y, (int)Emoticon.Width, (int)Emoticon.Height));
+
+                this.EmoticonImage.Source = bitmap;
             }
-
-            CroppedBitmap bitmap = new CroppedBitmap(
-                EmoticonControl.emoticonBitmapImages[Emoticon.FilePath],
-                new Int32Rect((int)Emoticon.X, (int)Emoticon.Y, (int)Emoticon.Width, (int)Emoticon.Height));
-
-            this.EmoticonImage.Source = bitmap;
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }
