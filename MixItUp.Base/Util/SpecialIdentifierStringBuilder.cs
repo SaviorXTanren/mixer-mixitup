@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Game;
+using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
@@ -39,10 +40,10 @@ namespace MixItUp.Base.Util
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
         public const string CostreamUsersSpecialIdentifier = "costreamusers";
 
-        public const string StreamTitleSpecialIdentifier = "streamtitle";
-        public const string StreamFollowCountSpecialIdentifier = "streamfollowcount";
-        public const string StreamSubCountSpecialIdentifier = "streamsubcount";
-        public const string StreamHostCountSpecialIdentifier = "streamhostcount";
+        public const string StreamSpecialIdentifierHeader = "stream";
+        public const string StreamHostCountSpecialIdentifier = StreamSpecialIdentifierHeader + "hostcount";
+
+        public const string MilestoneSpecialIdentifierHeader = "milestone";
 
         public const string CurrentSongIdentifierHeader = "currentsong";
         public const string NextSongIdentifierHeader = "nextsong";
@@ -421,39 +422,49 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(StreamTitleSpecialIdentifier))
-            {
-                if (ChannelSession.Channel?.name != null)
-                {
-                    this.ReplaceSpecialIdentifier(StreamTitleSpecialIdentifier, ChannelSession.Channel.name);
-                }
-            }
-
-            if (this.ContainsSpecialIdentifier(StreamFollowCountSpecialIdentifier) || this.ContainsSpecialIdentifier(StreamSubCountSpecialIdentifier))
+            if (this.ContainsSpecialIdentifier(StreamSpecialIdentifierHeader))
             {
                 ChannelDetailsModel details = await ChannelSession.Connection.GetChannelDetails(ChannelSession.Channel);
                 if (details != null)
                 {
-                    this.ReplaceSpecialIdentifier(StreamFollowCountSpecialIdentifier, details.numFollowers.ToString());
-                    this.ReplaceSpecialIdentifier(StreamSubCountSpecialIdentifier, details.numSubscribers.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", details.name);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followcount", details.numFollowers.ToString());
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subcount", details.numSubscribers.ToString());
                 }
-                else
+
+                if (this.ContainsSpecialIdentifier(StreamHostCountSpecialIdentifier))
                 {
-                    this.ReplaceSpecialIdentifier(StreamFollowCountSpecialIdentifier, "0");
-                    this.ReplaceSpecialIdentifier(StreamSubCountSpecialIdentifier, "0");
+                    IEnumerable<ChannelAdvancedModel> hosters = await ChannelSession.Connection.GetHosters(ChannelSession.Channel);
+                    if (hosters != null)
+                    {
+                        this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, hosters.Count().ToString());
+                    }
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(StreamHostCountSpecialIdentifier))
+            if (this.ContainsSpecialIdentifier(MilestoneSpecialIdentifierHeader))
             {
-                IEnumerable<ChannelAdvancedModel> hosters = await ChannelSession.Connection.GetHosters(ChannelSession.Channel);
-                if (hosters != null)
+                PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+                if (patronageStatus != null)
                 {
-                    this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, hosters.Count().ToString());
-                }
-                else
-                {
-                    this.ReplaceSpecialIdentifier(StreamHostCountSpecialIdentifier, "0");
+                    this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "totalearned", patronageStatus.patronageEarned.ToString());
+
+                    PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
+                    if (patronagePeriod != null)
+                    {
+                        PatronageMilestoneGroupModel patronageMilestoneGroup = patronagePeriod.milestoneGroups[patronageStatus.currentMilestoneGroupId];
+                        PatronageMilestoneModel patronageMilestone = patronageMilestoneGroup.milestones[patronageStatus.currentMilestoneId];
+
+                        double milestoneReward = Math.Round(((double)patronageMilestone.reward) / 100.0, 2);
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward));
+
+                        PatronageMilestoneModel finalPatronageMilestone = patronagePeriod.milestoneGroups.Last().milestones.Last();
+
+                        double finalMilestoneReward = Math.Round(((double)finalPatronageMilestone.reward) / 100.0, 2);
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", finalPatronageMilestone.target.ToString());
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", string.Format("{0:C}", finalMilestoneReward));
+                    }
                 }
             }
 

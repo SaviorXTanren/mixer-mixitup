@@ -6,11 +6,11 @@ using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.TestStreams;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
-using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
@@ -158,6 +158,10 @@ namespace MixItUp.Base.MixerAPI
         public async Task<IEnumerable<ClipModel>> GetChannelClips(ChannelModel channel) { return await this.RunAsync(this.Connection.Clips.GetChannelClips(channel)); }
 
         public async Task<TestStreamSettingsModel> GetTestStreamSettings(ChannelModel channel) { return await this.RunAsync(this.Connection.TestStreams.GetSettings(channel)); }
+
+        public async Task<PatronageStatusModel> GetPatronageStatus(ChannelModel channel) { return await this.RunAsync(this.Connection.Patronage.GetPatronageStatus(channel)); }
+
+        public async Task<PatronagePeriodModel> GetPatronagePeriod(PatronageStatusModel patronageStatus) { return await this.RunAsync(this.Connection.Patronage.GetPatronagePeriod(patronageStatus.patronagePeriodId)); }
 
         private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
         {
