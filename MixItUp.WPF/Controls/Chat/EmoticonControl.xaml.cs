@@ -5,6 +5,9 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using MixItUp.Base.Util;
+using System.Net;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -44,20 +47,32 @@ namespace MixItUp.WPF.Controls.Chat
             this.DataContext = emoticon;
         }
 
-        private void EmoticonControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private async void EmoticonControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             try
             {
-                if (!EmoticonControl.emoticonBitmapImages.ContainsKey(Emoticon.FilePath))
+                string uri = Emoticon.Uri;
+                if (!EmoticonControl.emoticonBitmapImages.ContainsKey(uri))
                 {
-                    EmoticonControl.emoticonBitmapImages[Emoticon.FilePath] = new BitmapImage(new Uri(Emoticon.FilePath));
+                    BitmapImage bitmap = new BitmapImage();
+                    using (WebClient client = new WebClient())
+                    {
+                        
+                        var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(uri); });
+
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = new MemoryStream(bytes);
+                        bitmap.EndInit();
+                    }
+                    EmoticonControl.emoticonBitmapImages[uri] = bitmap;
                 }
 
-                CroppedBitmap bitmap = new CroppedBitmap(
-                    EmoticonControl.emoticonBitmapImages[Emoticon.FilePath],
+                CroppedBitmap croppedBitmap = new CroppedBitmap(
+                    EmoticonControl.emoticonBitmapImages[uri],
                     new Int32Rect((int)Emoticon.X, (int)Emoticon.Y, (int)Emoticon.Width, (int)Emoticon.Height));
 
-                this.EmoticonImage.Source = bitmap;
+                this.EmoticonImage.Source = croppedBitmap;
             }
             catch (Exception ex) { Logger.Log(ex); }
         }

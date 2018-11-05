@@ -50,7 +50,7 @@ namespace MixItUp.Base.ViewModel.Chat
             this.Message = string.Empty;
         }
 
-        public static async Task<ChatMessageViewModel> CreateChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
+        public static ChatMessageViewModel CreateChatMessageViewModel(ChatMessageEventModel chatMessageEvent, UserViewModel user = null)
         {
             ChatMessageViewModel newChatMessageViewModel = new ChatMessageViewModel(chatMessageEvent, user);
             
@@ -61,7 +61,7 @@ namespace MixItUp.Base.ViewModel.Chat
                 {
                     case "emoticon":
                         // Special code here to process emoticons
-                        await ChannelSession.EnsureEmoticonForMessageAsync(message);
+                        ChannelSession.EnsureEmoticonForMessage(message);
                         newChatMessageViewModel.Message += message.text;
                         break;
                     case "link":

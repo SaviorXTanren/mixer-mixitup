@@ -349,7 +349,7 @@ namespace MixItUp.Base.MixerAPI
                 user = new UserViewModel(messageEvent);
             }
 
-            ChatMessageViewModel message = await ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
+            ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
 
             Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
 
@@ -596,7 +596,7 @@ namespace MixItUp.Base.MixerAPI
 
         private async void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = await ChatMessageViewModel.CreateChatMessageViewModel(e);
+            ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(e);
             if (message.IsWhisper)
             {
                 message = await this.AddMessage(e);
