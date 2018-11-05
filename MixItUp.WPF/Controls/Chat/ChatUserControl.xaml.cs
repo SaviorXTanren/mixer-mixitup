@@ -18,12 +18,14 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.DataContext = this.User = user;
 
+            this.Loaded += ChatUserControl_Loaded;
+
             InitializeComponent();
         }
 
         public bool MatchesUser(UserViewModel user) { return this.User.Equals(user); }
 
-        private void ChatUserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void ChatUserControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.UserNameTextBlock.Foreground = Application.Current.FindResource(this.User.PrimaryRoleColorName) as SolidColorBrush;
 
