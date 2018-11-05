@@ -52,6 +52,6 @@
             </TextBlock>
         </Grid>
 
-        <TextBox Grid.Row="2" x:Name="ChatMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Row="2" x:Name="ChatMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextWrapping="Wrap" Width="700" />
     </Grid>
 </local:ActionControlBase>
