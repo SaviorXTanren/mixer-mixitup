@@ -151,6 +151,28 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
+        public async Task<ChatMessageEventModel> WhisperWithResponse(string username, string message, bool sendAsStreamer = false)
+        {
+            if (this.GetBotClient(sendAsStreamer) != null)
+            {
+                message = this.SplitLargeMessage(message, out string subMessage);
+
+                ChatMessageEventModel firstChatMessage = await this.RunAsync(this.GetBotClient(sendAsStreamer).WhisperWithResponse(username, message));
+
+                // Adding delay to prevent messages from arriving in wrong order
+                await Task.Delay(250);
+
+                if (!string.IsNullOrEmpty(subMessage))
+                {
+                    await this.WhisperWithResponse(username, subMessage, sendAsStreamer: sendAsStreamer);
+                }
+
+                return firstChatMessage;
+            }
+
+            return null;
+        }
+
         public async Task DeleteMessage(ChatMessageViewModel message)
         {
             if (this.Client != null)

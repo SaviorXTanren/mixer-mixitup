@@ -10,9 +10,9 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class ChatAction : ActionBase
     {
-        public static readonly Regex UserNameTagRegex = new Regex("@\\w+");
-        public static readonly Regex WhisperRegex = new Regex("^/w @\\w+ ");
-        public static readonly Regex ClearRegex = new Regex("^/clear$");
+        public static readonly Regex UserNameTagRegex = new Regex(@"@\w+");
+        public static readonly Regex WhisperRegex = new Regex(@"^/w(hisper)? @\w+ ", RegexOptions.IgnoreCase);
+        public static readonly Regex ClearRegex = new Regex(@"^/clear$", RegexOptions.IgnoreCase);
 
         private static SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
 
