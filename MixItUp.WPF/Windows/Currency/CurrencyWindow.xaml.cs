@@ -325,7 +325,7 @@ namespace MixItUp.WPF.Windows.Currency
                     Environment.NewLine + Environment.NewLine + "EX: If the Online Rate is \"1 Per Hour\" and a user has 16 viewing hours, then that user's {0} points will be set to 16." +
                     Environment.NewLine + Environment.NewLine + "This process may take some time; are you sure you wish to do this?", this.CurrencyRankIdentifierString)))
                 {
-                    if (this.currency != null)
+                    if (this.currency != null && this.currency.AcquireInterval > 0)
                     {
                         await this.currency.Reset();
 
