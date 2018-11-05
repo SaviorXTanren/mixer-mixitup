@@ -18,19 +18,16 @@ namespace MixItUp.WPF.Controls.Chat
 
         public ChatUserControl()
         {
-            this.DataContextChanged += ChatUserControl_DataContextChanged;
-
             InitializeComponent();
-        }
-
-        public ChatUserControl(UserViewModel user)
-        {
-            this.DataContext = this.User = user;
 
             this.Loaded += ChatUserControl_Loaded;
             this.DataContextChanged += ChatUserControl_DataContextChanged;
+        }
 
-            InitializeComponent();
+        public ChatUserControl(UserViewModel user)
+            : this()
+        {
+            this.DataContext = this.User = user;
         }
 
         public bool MatchesUser(UserViewModel other) { return this.User != null && this.User.Equals(other); }
