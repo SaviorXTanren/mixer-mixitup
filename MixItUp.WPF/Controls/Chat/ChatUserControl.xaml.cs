@@ -4,6 +4,8 @@ using System.Windows;
 using MixItUp.WPF.Controls.MainControls;
 using System.Windows.Media;
 using System.Threading.Tasks;
+using System;
+using MixItUp.Base.Util;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -12,13 +14,21 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatUserControl : UserControl
     {
-        public UserViewModel User { get { return this.DataContext as UserViewModel; } }
+        public UserViewModel User { get; private set; }
+
+        public ChatUserControl()
+        {
+            this.DataContextChanged += ChatUserControl_DataContextChanged;
+
+            InitializeComponent();
+        }
 
         public ChatUserControl(UserViewModel user)
         {
-            this.DataContext = user;
+            this.DataContext = this.User = user;
 
             this.Loaded += ChatUserControl_Loaded;
+            this.DataContextChanged += ChatUserControl_DataContextChanged;
 
             InitializeComponent();
         }
@@ -36,27 +46,31 @@ namespace MixItUp.WPF.Controls.Chat
 
         private void ChatUserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
+            this.User = (UserViewModel)this.DataContext;
             this.InitializeControls();
         }
 
         private void InitializeControls()
         {
-            UserViewModel user = this.User;
-            if (this.IsLoaded && user != null)
+            try
             {
-                this.UserNameTextBlock.Foreground = Application.Current.FindResource(user.PrimaryRoleColorName) as SolidColorBrush;
-
-                if (!string.IsNullOrEmpty(user.AvatarLink))
+                if (this.IsLoaded && this.User != null)
                 {
-                    Task.Run(() => this.Dispatcher.Invoke(() => this.UserAvatar.SetUserAvatarUrl(user)));
-                }
+                    this.UserNameTextBlock.Foreground = Application.Current.FindResource(this.User.PrimaryRoleColorName) as SolidColorBrush;
 
-                if (ChatControl.SubscriberBadgeBitmap != null && user.IsSubscriber)
-                {
-                    this.SubscriberImage.Visibility = Visibility.Visible;
-                    this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;
+                    if (!string.IsNullOrEmpty(this.User.AvatarLink))
+                    {
+                        Task.Run(() => this.Dispatcher.Invoke(() => this.UserAvatar.SetUserAvatarUrl(this.User)));
+                    }
+
+                    if (ChatControl.SubscriberBadgeBitmap != null && this.User.IsSubscriber)
+                    {
+                        this.SubscriberImage.Visibility = Visibility.Visible;
+                        this.SubscriberImage.Source = ChatControl.SubscriberBadgeBitmap;
+                    }
                 }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
     }
 }
