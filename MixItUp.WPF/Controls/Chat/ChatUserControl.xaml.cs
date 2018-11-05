@@ -33,11 +33,7 @@ namespace MixItUp.WPF.Controls.Chat
             InitializeComponent();
         }
 
-        public bool MatchesUser(UserViewModel other)
-        {
-            UserViewModel user = this.User;
-            return user != null && user.Equals(other);
-        }
+        public bool MatchesUser(UserViewModel other) { return this.User != null && this.User.Equals(other); }
 
         private void ChatUserControl_Loaded(object sender, RoutedEventArgs e)
         {
