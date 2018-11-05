@@ -41,16 +41,20 @@ namespace MixItUp.WPF.Controls.MainControls
                 for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
                 {
                     ChatUserControl userControl = this.collection[insertIndex];
-                    if (userControl.User.PrimarySortableRole == user.PrimarySortableRole)
+                    UserViewModel currentUser = userControl.User;
+                    if (currentUser != null)
                     {
-                        if (userControl.User.UserName.CompareTo(user.UserName) > 0)
+                        if (currentUser.PrimarySortableRole == user.PrimarySortableRole)
+                        {
+                            if (currentUser.UserName.CompareTo(user.UserName) > 0)
+                            {
+                                break;
+                            }
+                        }
+                        else if (currentUser.PrimarySortableRole < user.PrimarySortableRole)
                         {
                             break;
                         }
-                    }
-                    else if (userControl.User.PrimarySortableRole < user.PrimarySortableRole)
-                    {
-                        break;
                     }
                 }
 
@@ -75,7 +79,7 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.Contains(user))
             {
                 this.existingUsers.Remove(user.ID);
-                ChatUserControl userControl = this.collection.FirstOrDefault(uc => uc.User.ID.Equals(user.ID));
+                ChatUserControl userControl = this.collection.FirstOrDefault(uc => uc.MatchesUser(user));
                 this.collection.Remove(userControl);
             }
         }
@@ -264,30 +268,33 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task ShowUserDialog(UserViewModel user)
         {
-            UserDialogResult result = await MessageBoxHelper.ShowUserDialog(user);
+            if (user != null)
+            {
+                UserDialogResult result = await MessageBoxHelper.ShowUserDialog(user);
 
-            if (result == UserDialogResult.Purge)
-            {
-                await ChannelSession.Chat.PurgeUser(user.UserName);
-            }
-            else if (result == UserDialogResult.Timeout1)
-            {
-                await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
-            }
-            else if (result == UserDialogResult.Timeout5)
-            {
-                await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
-            }
-            else if (result == UserDialogResult.Ban)
-            {
-                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
+                if (result == UserDialogResult.Purge)
                 {
-                    await ChannelSession.Chat.BanUser(user);
+                    await ChannelSession.Chat.PurgeUser(user.UserName);
                 }
-            }
-            else if (result == UserDialogResult.Unban)
-            {
-                await ChannelSession.Chat.UnBanUser(user);
+                else if (result == UserDialogResult.Timeout1)
+                {
+                    await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
+                }
+                else if (result == UserDialogResult.Timeout5)
+                {
+                    await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
+                }
+                else if (result == UserDialogResult.Ban)
+                {
+                    if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
+                    {
+                        await ChannelSession.Chat.BanUser(user);
+                    }
+                }
+                else if (result == UserDialogResult.Unban)
+                {
+                    await ChannelSession.Chat.UnBanUser(user);
+                }
             }
         }
 
