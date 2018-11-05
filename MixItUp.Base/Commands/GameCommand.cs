@@ -946,20 +946,20 @@ namespace MixItUp.Base.Commands
             bool hasTarget = false;
             bool isTarget = false;
 
-            await this.targetUserSemaphore.WaitAsync();
-
-            hasTarget = (this.currentTargetUser != null);
-            if (hasTarget)
+            await this.targetUserSemaphore.WaitAndRelease(() =>
             {
-                isTarget = (user.Equals(this.currentTargetUser));
-                if (isTarget)
+                hasTarget = (this.currentTargetUser != null);
+                if (hasTarget)
                 {
-                    this.currentTargetUser = null;
-                    this.taskCancellationSource.Cancel();
+                    isTarget = (user.Equals(this.currentTargetUser));
+                    if (isTarget)
+                    {
+                        this.currentTargetUser = null;
+                        this.taskCancellationSource.Cancel();
+                    }
                 }
-            }
-
-            this.targetUserSemaphore.Release();
+                return Task.FromResult(0);
+            });
 
             if (hasTarget)
             {
@@ -1019,16 +1019,20 @@ namespace MixItUp.Base.Commands
 
                                     await Task.Delay(this.TimeLimit * 1000);
 
-                                    await this.targetUserSemaphore.WaitAsync();
-                                    if (!currentCancellationSource.Token.IsCancellationRequested && this.currentTargetUser != null)
+                                    if (!currentCancellationSource.Token.IsCancellationRequested)
                                     {
-                                        await ChannelSession.Chat.SendMessage(string.Format("@{0} did not respond in time...", this.currentTargetUser.UserName));
-                                        this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount);
-                                        this.ResetData(user);
+                                        await this.targetUserSemaphore.WaitAndRelease(async () =>
+                                        {
+                                            if (this.currentTargetUser != null)
+                                            {
+                                                await ChannelSession.Chat.SendMessage(string.Format("@{0} did not respond in time...", this.currentTargetUser.UserName));
+                                                this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount);
+                                                this.ResetData(user);
+                                            }
+                                        });
                                     }
                                 }
                                 catch (Exception) { }
-                                finally { this.targetUserSemaphore.Release(); }
                             }, this.taskCancellationSource.Token);
 
                             await this.PerformCommand(this.StartedCommand, user, new List<string>() { currentTargetUser.UserName }, currentBetAmount, 0);

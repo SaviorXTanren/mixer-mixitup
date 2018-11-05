@@ -45,6 +45,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.WhisperAllAlertsToggleButton.IsChecked = ChannelSession.Settings.WhisperAllAlerts;
             this.LatestChatAtTopToggleButton.IsChecked = ChannelSession.Settings.LatestChatAtTop;
             this.HideViewerAndChatterNumbersToggleButton.IsChecked = ChannelSession.Settings.HideViewerAndChatterNumbers;
+            this.HideChatUserListToggleButton.IsChecked = ChannelSession.Settings.HideChatUserList;
             this.HideDeletedMessagesToggleButton.IsChecked = ChannelSession.Settings.HideDeletedMessages;
             this.TrackWhispererNumberToggleButton.IsChecked = ChannelSession.Settings.TrackWhispererNumber;
             this.AllowCommandWhisperingToggleButton.IsChecked = ChannelSession.Settings.AllowCommandWhispering;
@@ -130,6 +131,16 @@ namespace MixItUp.WPF.Controls.Settings
             ChannelSession.Settings.HideViewerAndChatterNumbers = this.HideViewerAndChatterNumbersToggleButton.IsChecked.GetValueOrDefault();
         }
 
+        private void HideChatUserListToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.HideChatUserList = this.HideChatUserListToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void HideDeletedMessagesToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.HideDeletedMessages = this.HideDeletedMessagesToggleButton.IsChecked.GetValueOrDefault();
+        }
+
         private void TrackWhispererNumberToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.TrackWhispererNumber = this.TrackWhispererNumberToggleButton.IsChecked.GetValueOrDefault();
@@ -153,11 +164,6 @@ namespace MixItUp.WPF.Controls.Settings
         private void DeleteChatCommandsWhenRunToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             ChannelSession.Settings.DeleteChatCommandsWhenRun = this.DeleteChatCommandsWhenRunToggleButton.IsChecked.GetValueOrDefault();
-        }
-
-        private void HideDeletedMessagesToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            ChannelSession.Settings.HideDeletedMessages = this.HideDeletedMessagesToggleButton.IsChecked.GetValueOrDefault();
         }
     }
 }

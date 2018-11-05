@@ -172,29 +172,30 @@ namespace MixItUp.Base.Commands
                         if (!(x > command.DeadZone || x < -command.DeadZone)) { x = 0.0; }
                         if (!(y > command.DeadZone || y < -command.DeadZone)) { y = 0.0; }
 
-                        await this.mouseMovementLock.WaitAsync();
-
-                        this.mouseMovementX = x;
-                        this.mouseMovementY = y;
-
-                        if (this.mouseMovementTask == null || this.mouseMovementTask.IsCompleted)
+                        await this.mouseMovementLock.WaitAndRelease(() =>
                         {
-                            this.mouseMovementTask = Task.Run(async () =>
+                            this.mouseMovementX = x;
+                            this.mouseMovementY = y;
+
+                            if (this.mouseMovementTask == null || this.mouseMovementTask.IsCompleted)
                             {
-                                while (this.mouseMovementX != 0.0 || this.mouseMovementY != 0.0)
+                                this.mouseMovementTask = Task.Run(async () =>
                                 {
-                                    try
+                                    while (this.mouseMovementX != 0.0 || this.mouseMovementY != 0.0)
                                     {
-                                        ChannelSession.Services.InputService.MoveMouse((int)(this.mouseMovementX * command.MouseMovementMultiplier), (int)(this.mouseMovementY * command.MouseMovementMultiplier));
+                                        try
+                                        {
+                                            ChannelSession.Services.InputService.MoveMouse((int)(this.mouseMovementX * command.MouseMovementMultiplier), (int)(this.mouseMovementY * command.MouseMovementMultiplier));
 
-                                        await Task.Delay(50);
+                                            await Task.Delay(50);
+                                        }
+                                        catch (Exception) { }
                                     }
-                                    catch (Exception) { }
-                                }
-                            });
-                        }
+                                });
+                            }
 
-                        this.mouseMovementLock.Release();
+                            return Task.FromResult(0);
+                        });
                     }
                     else
                     {

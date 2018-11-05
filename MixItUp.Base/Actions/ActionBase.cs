@@ -95,18 +95,14 @@ namespace MixItUp.Base.Actions
 
         public async Task Perform(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            await this.AsyncSemaphore.WaitAsync();
-
-            try
+            await this.AsyncSemaphore.WaitAndRelease(async () =>
             {
                 this.extraSpecialIdentifiers = extraSpecialIdentifiers;
 
                 ChannelSession.Services.Telemetry.TrackAction(this.Type);
 
                 await this.PerformInternal(user, arguments);
-            }
-            catch (Exception ex) { Util.Logger.Log(ex); }
-            finally { this.AsyncSemaphore.Release(); }
+            });
         }
 
         public void AssignRandomUserSpecialIdentifierGroup(Guid id) { this.randomUserSpecialIdentifierGroup = id; }

@@ -204,11 +204,13 @@ namespace MixItUp.Base.Commands
                 this.currentCancellationTokenSource = new CancellationTokenSource();
                 this.currentTaskRun = Task.Run(async () =>
                 {
+                    bool waitOccurred = false;
                     try
                     {
                         if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
                         {
                             await this.AsyncSemaphore.WaitAsync();
+                            waitOccurred = true;
                         }
 
                         await SpecialIdentifierStringBuilder.AssignRandomUserSpecialIdentifierGroup(this.ID);
@@ -223,7 +225,7 @@ namespace MixItUp.Base.Commands
                     catch (Exception ex) { Util.Logger.Log(ex); }
                     finally
                     {
-                        if (!this.Unlocked && !ChannelSession.Settings.UnlockAllCommands)
+                        if (waitOccurred)
                         {
                             this.AsyncSemaphore.Release();
                         }

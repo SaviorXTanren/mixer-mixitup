@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows;
 using MixItUp.WPF.Controls.MainControls;
 using System.Windows.Media;
+using System.Threading.Tasks;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -11,19 +12,16 @@ namespace MixItUp.WPF.Controls.Chat
     /// </summary>
     public partial class ChatUserControl : UserControl
     {
-        public UserViewModel User { get { return this.DataContext as UserViewModel; } }
+        public UserViewModel User { get; private set; }
 
-        public ChatUserControl()
+        public ChatUserControl(UserViewModel user)
         {
-            this.DataContextChanged += ChatUserControl_DataContextChanged;
+            this.DataContext = this.User = user;
+
             InitializeComponent();
         }
 
-        public ChatUserControl(UserViewModel user) : this()
-        {
-            InitializeComponent();
-            this.DataContext = user;
-        }
+        public bool MatchesUser(UserViewModel user) { return this.User.Equals(user); }
 
         private void ChatUserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -31,9 +29,7 @@ namespace MixItUp.WPF.Controls.Chat
 
             if (!string.IsNullOrEmpty(this.User.AvatarLink))
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                this.UserAvatar.SetImageUrl(this.User.AvatarLink);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(() => this.Dispatcher.Invoke(() => this.UserAvatar.SetUserAvatarUrl(this.User)));
             }
 
             if (ChatControl.SubscriberBadgeBitmap != null && this.User.IsSubscriber)

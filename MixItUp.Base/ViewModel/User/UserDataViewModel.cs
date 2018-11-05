@@ -287,9 +287,9 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public void UpdateData(UserModel user)
+        public void UpdateData(UserViewModel user)
         {
-            this.UserName = user.username;
+            this.UserName = user.UserName;
         }
 
         public UserCurrencyDataViewModel GetCurrency(Guid currencyID)

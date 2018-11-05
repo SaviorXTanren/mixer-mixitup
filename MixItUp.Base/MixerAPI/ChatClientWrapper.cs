@@ -250,10 +250,7 @@ namespace MixItUp.Base.MixerAPI
                         this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
                     }
 
-                    foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
-                    {
-                        await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-                    }
+                    await ChannelSession.ActiveUsers.AddOrUpdateUsers(await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)));
 
                     if (ChannelSession.IsStreamer)
                     {
@@ -280,10 +277,6 @@ namespace MixItUp.Base.MixerAPI
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.ChatUserRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -382,7 +375,7 @@ namespace MixItUp.Base.MixerAPI
                 return message;
             }
 
-            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
+            if (!await ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
             {
                 Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
 
@@ -438,15 +431,15 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot())
                 {
-                    await this.whisperNumberLock.WaitAsync();
-
-                    if (!whisperMap.ContainsKey(message.User.ID))
+                    await this.whisperNumberLock.WaitAndRelease(() =>
                     {
-                        whisperMap[message.User.ID] = whisperMap.Count + 1;
-                    }
-                    message.User.WhispererNumber = whisperMap[message.User.ID];
-
-                    this.whisperNumberLock.Release();
+                        if (!whisperMap.ContainsKey(message.User.ID))
+                        {
+                            whisperMap[message.User.ID] = whisperMap.Count + 1;
+                        }
+                        message.User.WhispererNumber = whisperMap[message.User.ID];
+                        return Task.FromResult(0);
+                    });
 
                     await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{message.User.WhispererNumber}.", false);
                 }
@@ -552,41 +545,6 @@ namespace MixItUp.Base.MixerAPI
                 tokenSource.Token.ThrowIfCancellationRequested();
 
                 await ChannelSession.SaveSettings();
-            });
-        }
-
-        private async Task ChatUserRefreshBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                Dictionary<uint, ChatUserModel> chatUsers = new Dictionary<uint, ChatUserModel>();
-                foreach (ChatUserModel user in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
-                {
-                    if (user.userId.HasValue)
-                    {
-                        chatUsers[user.userId.GetValueOrDefault()] = user;
-                    }
-                }
-
-                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
-                {
-                    if (chatUsers.ContainsKey(user.ID))
-                    {
-                        user.SetChatDetails(chatUsers[user.ID]);
-                        chatUsers.Remove(user.ID);
-                    }
-                    else
-                    {
-                        await ChannelSession.ActiveUsers.RemoveUser(user.ID);
-                    }
-                }
-
-                foreach (ChatUserModel chatUser in chatUsers.Values)
-                {
-                    await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-                }
-
-                await Task.Delay(30000, tokenSource.Token);
             });
         }
 

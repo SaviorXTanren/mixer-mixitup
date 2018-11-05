@@ -325,14 +325,13 @@ namespace MixItUp.Desktop.Services
 
         private async Task<JObject> SendAndReceive(StreamlabsOBSRequest request)
         {
-            await this.idSempahoreLock.WaitAsync();
-
-            request.ID = this.currentID;
-            this.currentID++;
-
             JObject result = new JObject();
-            try
+
+            await this.idSempahoreLock.WaitAndRelease(async () =>
             {
+                request.ID = this.currentID;
+                this.currentID++;
+
                 JObject requestJObj = JObject.FromObject(request);
                 using (NamedPipeClientStream namedPipeClient = new NamedPipeClientStream(ConnectionString))
                 {
@@ -351,12 +350,7 @@ namespace MixItUp.Desktop.Services
                         result = JObject.Parse(responseString);
                     }), Task.Delay(5000));
                 }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally
-            {
-                this.idSempahoreLock.Release();
-            }
+            });
             return result;
         }
 
