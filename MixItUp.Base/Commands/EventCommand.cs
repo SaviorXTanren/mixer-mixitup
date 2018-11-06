@@ -46,6 +46,9 @@ namespace MixItUp.Base.Commands
         MixerChannelStreamStart = 40,
         [Name("Channel Stream Stop")]
         MixerChannelStreamStop = 41,
+
+        [Name("Channel Milestone Reached")]
+        MixerMilestoneReached = 50,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>

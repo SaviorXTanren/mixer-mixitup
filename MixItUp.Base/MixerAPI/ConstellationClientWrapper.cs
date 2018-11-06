@@ -1,10 +1,11 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
+using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Constellation;
+using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -20,17 +21,18 @@ namespace MixItUp.Base.MixerAPI
     public class ConstellationClientWrapper : MixerWebSocketWrapper
     {
         public static ConstellationEventType ChannelUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__update, ChannelSession.Channel.id); } }
-
         public static ConstellationEventType ChannelFollowEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__followed, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelHostedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__hosted, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelSubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelResubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelResubscribedSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelPatronageUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__patronageUpdate, ChannelSession.Channel.id); } }
 
         private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
             ConstellationEventTypeEnum.channel__id__followed, ConstellationEventTypeEnum.channel__id__hosted, ConstellationEventTypeEnum.channel__id__subscribed,
-            ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared, ConstellationEventTypeEnum.channel__id__update
+            ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared, ConstellationEventTypeEnum.channel__id__update,
+            ConstellationEventTypeEnum.channel__id__patronageUpdate
         };
 
         public event EventHandler<ConstellationLiveEventModel> OnEventOccurred;
@@ -40,15 +42,31 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<Tuple<UserViewModel, int>> OnHostedOccurred;
         public event EventHandler<UserViewModel> OnSubscribedOccurred;
         public event EventHandler<Tuple<UserViewModel, int>> OnResubscribedOccurred;
+        public event EventHandler<PatronageStatusModel> OnPatronageUpdateOccurred;
 
         public ConstellationClient Client { get; private set; }
 
         private Dictionary<string, HashSet<uint>> userEventTracking = new Dictionary<string, HashSet<uint>>();
 
+        private List<PatronageMilestoneModel> allPatronageMilestones = new List<PatronageMilestoneModel>();
+        private List<PatronageMilestoneModel> remainingPatronageMilestones = new List<PatronageMilestoneModel>();
+        private SemaphoreSlim patronageMilestonesSemaphore = new SemaphoreSlim(1);
+
         public ConstellationClientWrapper() { }
 
         public async Task<bool> Connect()
         {
+            PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+            if (patronageStatus != null)
+            {
+                PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
+                if (patronagePeriod != null)
+                {
+                    this.allPatronageMilestones = new List<PatronageMilestoneModel>(patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones));
+                    this.remainingPatronageMilestones = new List<PatronageMilestoneModel>(this.allPatronageMilestones.Where(m => m.target > patronageStatus.patronageEarned));
+                }
+            }
+
             return await this.AttemptConnect();
         }
 
@@ -310,6 +328,37 @@ namespace MixItUp.Base.MixerAPI
 
                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
                     await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user, specialIdentifiers);
+                }
+            }
+            else if (e.channel.Equals(ConstellationClientWrapper.ChannelPatronageUpdateEvent.ToString()))
+            {
+                PatronageStatusModel patronageStatus = e.payload.ToObject<PatronageStatusModel>();
+                if (patronageStatus != null)
+                {
+                    if (this.OnPatronageUpdateOccurred != null)
+                    {
+                        this.OnPatronageUpdateOccurred(this, patronageStatus);
+                    }
+
+                    bool milestoneUpdateOccurred = await this.patronageMilestonesSemaphore.WaitAndRelease(() =>
+                    {
+                        return Task.FromResult(this.remainingPatronageMilestones.RemoveAll(m => m.target <= patronageStatus.patronageEarned) > 0);
+                    });
+
+                    if (milestoneUpdateOccurred)
+                    {
+                        PatronageMilestoneModel milestoneReached = this.allPatronageMilestones.OrderByDescending(m => m.target).FirstOrDefault(m => m.target <= patronageStatus.patronageEarned);
+                        if (milestoneReached != null)
+                        {
+                            double milestoneReward = Math.Round(((double)milestoneReached.reward) / 100.0, 2);
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                            {
+                                { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount", milestoneReached.target.ToString() },
+                                { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward) },
+                            };
+                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached)), await ChannelSession.GetCurrentUser(), specialIdentifiers);
+                        }
+                    }
                 }
             }
 
