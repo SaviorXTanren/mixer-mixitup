@@ -401,7 +401,7 @@ namespace MixItUp.Desktop.Services
         {
             if (item != null)
             {
-                if (item.Type == SongRequestServiceTypeEnum.YouTube)
+                if (item.Type == SongRequestServiceTypeEnum.YouTube && !string.IsNullOrEmpty(item.ID))
                 {
                     this.youTubeStatus = item;
                     this.youTubeStatus.ID = Regex.Replace(this.youTubeStatus.ID, YouTubeFullLinkWithTimePattern, "");
