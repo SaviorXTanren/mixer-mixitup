@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.User;
 using MixItUp.Base.Commands;
@@ -447,36 +446,41 @@ namespace MixItUp.Base.Util
                 PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
                 if (patronageStatus != null)
                 {
-                    this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "totalearned", patronageStatus.patronageEarned.ToString());
-
                     PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
                     if (patronagePeriod != null)
                     {
                         PatronageMilestoneGroupModel patronageMilestoneGroup = patronagePeriod.milestoneGroups[patronageStatus.currentMilestoneGroupId];
-                        PatronageMilestoneModel patronageMilestone = patronageMilestoneGroup.milestones.First(x => x.id == patronageStatus.currentMilestoneId);
+                        PatronageMilestoneModel patronageMilestone = patronageMilestoneGroup.milestones.FirstOrDefault(m => m.id == patronageStatus.currentMilestoneId);
+                        if (patronageMilestone != null)
+                        {
+                            double milestoneReward = Math.Round(((double)patronageMilestone.reward) / 100.0, 2);
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward));
+                        }
 
-                        double milestoneReward = Math.Round(((double)patronageMilestone.reward) / 100.0, 2);
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward));
+                        PatronageMilestoneModel patronageNextMilestone = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones).FirstOrDefault(m => m.id == (patronageStatus.currentMilestoneId + 1));
+                        if (patronageNextMilestone != null)
+                        {
+                            double milestoneNextReward = Math.Round(((double)patronageNextMilestone.reward) / 100.0, 2);
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamount", patronageNextMilestone.target.ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", string.Format("{0:C}", milestoneNextReward));
+                        }
 
-                        double earnedReward = patronagePeriod.milestoneGroups.SelectMany(y => y.milestones).Where(x => x.id < patronageStatus.currentMilestoneId).Sum(x => x.reward);
-                        earnedReward = earnedReward > 0 ? Math.Round(((double)earnedReward) / 100.0, 2) : 0;
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", string.Format("{0:C}", earnedReward));
+                        PatronageMilestoneModel patronageFinalMilestone = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones).OrderByDescending(m => m.id).FirstOrDefault();
+                        if (patronageNextMilestone != null)
+                        {
+                            double milestoneFinalReward = Math.Round(((double)patronageFinalMilestone.reward) / 100.0, 2);
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", patronageFinalMilestone.target.ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", string.Format("{0:C}", milestoneFinalReward));
+                        }
 
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
+                        IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones).Where(m => m.target <= patronageStatus.patronageEarned);
+                        long patronageEarnedReward = patronageMilestonesEarned.Sum(m => m.reward);
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", string.Format("{0:C}", patronageEarnedReward));
 
-                        double nextEarnedReward = patronagePeriod.milestoneGroups.SelectMany(y => y.milestones).Where(x => x.id <= patronageStatus.currentMilestoneId).Sum(x => x.reward);
-                        nextEarnedReward = nextEarnedReward > 0 ? Math.Round(((double)nextEarnedReward) / 100.0, 2) : 0;
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextearnedreward", string.Format("{0:C}", nextEarnedReward));
-
-                        PatronageMilestoneModel finalPatronageMilestone = patronagePeriod.milestoneGroups.Last().milestones.Last();
-
-                        double finalMilestoneReward = Math.Round(((double)finalPatronageMilestone.reward) / 100.0, 2);
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", finalPatronageMilestone.target.ToString());
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", string.Format("{0:C}", finalMilestoneReward));
-
-                        double patronageTotal = patronagePeriod.milestoneGroups.SelectMany(y => y.milestones).Sum(x => x.reward);
-                        patronageTotal = patronageTotal > 0 ? Math.Round(((double)patronageTotal) / 100.0, 2) : 0;
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "patronagetotal", string.Format("{0:C}", patronageTotal));
+                        long patronagePotentialReward = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones).Sum(m => m.reward);
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "potentialreward", string.Format("{0:C}", patronagePotentialReward));
                     }
                 }
             }
