@@ -173,6 +173,12 @@ namespace MixItUp.WPF.Controls.MainControls
                     await this.RefreshViewerChatterCounts();
                 });
             }
+
+            IEnumerable<ChatMessageEventModel> oldMessages = await ChannelSession.Chat.GetChatHistory(50);
+            foreach (ChatMessageEventModel message in oldMessages)
+            {
+                await AddMessage(ChatMessageViewModel.CreateChatMessageViewModel(message));
+            }
         }
 
         protected override Task OnVisibilityChanged()

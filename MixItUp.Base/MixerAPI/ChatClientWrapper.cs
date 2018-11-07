@@ -224,6 +224,16 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
+        public async Task<IEnumerable<ChatMessageEventModel>> GetChatHistory(uint maxMessages)
+        {
+            if (this.Client != null)
+            {
+                return await this.Client.GetChatHistory(50);
+            }
+
+            return new List<ChatMessageEventModel>();
+        }
+
         protected override async Task<bool> ConnectInternal()
         {
             if (ChannelSession.Connection != null)
