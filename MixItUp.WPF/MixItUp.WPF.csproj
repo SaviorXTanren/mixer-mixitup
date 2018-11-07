@@ -321,6 +321,9 @@
     <Compile Include="Controls\Chat\EmoticonControl.xaml.cs">
       <DependentUpon>EmoticonControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Chat\StickerControl.xaml.cs">
+      <DependentUpon>StickerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -837,6 +840,10 @@
     <Page Include="Controls\Chat\EmoticonControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Chat\StickerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\ActionGroupCommandDetailsControl.xaml">
       <SubType>Designer</SubType>

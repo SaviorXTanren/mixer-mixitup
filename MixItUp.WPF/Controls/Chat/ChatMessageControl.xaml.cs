@@ -1,15 +1,12 @@
 ﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Themes;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -47,12 +44,13 @@ namespace MixItUp.WPF.Controls.Chat
                 EmoticonImage emoticon = ChannelSession.GetEmoticonForMessage(messageData);
                 if (emoticon != null)
                 {
-                    EmoticonControl image = new EmoticonControl(emoticon);
-                    this.MessageWrapPanel.Children.Add(image);
+                    EmoticonControl emoticonControl = new EmoticonControl(emoticon);
+                    this.MessageWrapPanel.Children.Add(emoticonControl);
                 }
                 else if (messageData.type.Equals("image"))
                 {
-                    // Show image...
+                    StickerControl stickerControl = new StickerControl(this.Message.Skill);
+                    this.MessageWrapPanel.Children.Add(stickerControl);
                 }
                 else
                 {
@@ -164,6 +162,11 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     EmoticonControl emoticon = (EmoticonControl)item;
                     emoticon.Height = emoticon.Width = ChannelSession.Settings.ChatFontSize + 2;
+                }
+                else if (item is StickerControl)
+                {
+                    StickerControl sticker = (StickerControl)item;
+                    sticker.UpdateSizing();
                 }
             }
         }
