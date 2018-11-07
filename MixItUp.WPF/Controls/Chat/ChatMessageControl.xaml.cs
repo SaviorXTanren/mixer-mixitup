@@ -50,6 +50,10 @@ namespace MixItUp.WPF.Controls.Chat
                     EmoticonControl image = new EmoticonControl(emoticon);
                     this.MessageWrapPanel.Children.Add(image);
                 }
+                else if (messageData.type.Equals("image"))
+                {
+                    // Show image...
+                }
                 else
                 {
                     foreach (string word in messageData.text.Split(new string[] { " " }, StringSplitOptions.None))

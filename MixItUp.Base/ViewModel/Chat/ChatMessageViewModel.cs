@@ -4,9 +4,6 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.ViewModel.Chat
@@ -26,6 +23,10 @@ namespace MixItUp.Base.ViewModel.Chat
         public bool ContainsLink { get; private set; }
 
         public bool IsInUsersChannel { get; private set; }
+
+        public Dictionary<string, string> Images { get; set; } = new Dictionary<string, string>();
+
+        public ChatSkillModel Skill { get; private set; }
 
         public bool IsDeleted { get; set; }
 
@@ -68,12 +69,21 @@ namespace MixItUp.Base.ViewModel.Chat
                         newChatMessageViewModel.ContainsLink = true;
                         newChatMessageViewModel.Message += message.text;
                         break;
+                    case "image":
+                        newChatMessageViewModel.Images[message.text] = message.url;
+                        newChatMessageViewModel.Message += string.Format(" *{0}* ", message.text);
+                        break;
                     case "text":
                     case "tag":
                     default:
                         newChatMessageViewModel.Message += message.text;
                         break;
                 }
+            }
+
+            if (newChatMessageViewModel.ChatMessageEvent.message.ContainsSkill)
+            {
+                newChatMessageViewModel.Skill = newChatMessageViewModel.ChatMessageEvent.message.Skill;
             }
 
             return newChatMessageViewModel;
@@ -96,6 +106,10 @@ namespace MixItUp.Base.ViewModel.Chat
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
         public bool IsUserTagged { get { return this.Message.Contains("@" + ChannelSession.User.username); } }
+
+        public bool ContainsImage { get { return this.Images.Count > 0; } }
+
+        public bool IsSkill { get { return this.Skill != null; } }
 
         public async Task<string> ShouldBeModerated()
         {

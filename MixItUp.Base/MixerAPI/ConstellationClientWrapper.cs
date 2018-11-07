@@ -26,13 +26,14 @@ namespace MixItUp.Base.MixerAPI
         public static ConstellationEventType ChannelSubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__subscribed, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelResubscribedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubscribed, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelResubscribedSharedEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__resubShared, ChannelSession.Channel.id); } }
+        public static ConstellationEventType ChannelSkillEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__skill, ChannelSession.Channel.id); } }
         public static ConstellationEventType ChannelPatronageUpdateEvent { get { return new ConstellationEventType(ConstellationEventTypeEnum.channel__id__patronageUpdate, ChannelSession.Channel.id); } }
 
         private static readonly List<ConstellationEventTypeEnum> subscribedEvents = new List<ConstellationEventTypeEnum>()
         {
             ConstellationEventTypeEnum.channel__id__followed, ConstellationEventTypeEnum.channel__id__hosted, ConstellationEventTypeEnum.channel__id__subscribed,
             ConstellationEventTypeEnum.channel__id__resubscribed, ConstellationEventTypeEnum.channel__id__resubShared, ConstellationEventTypeEnum.channel__id__update,
-            ConstellationEventTypeEnum.channel__id__patronageUpdate
+            ConstellationEventTypeEnum.channel__id__skill, ConstellationEventTypeEnum.channel__id__patronageUpdate
         };
 
         public event EventHandler<ConstellationLiveEventModel> OnEventOccurred;
@@ -42,6 +43,7 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<Tuple<UserViewModel, int>> OnHostedOccurred;
         public event EventHandler<UserViewModel> OnSubscribedOccurred;
         public event EventHandler<Tuple<UserViewModel, int>> OnResubscribedOccurred;
+        public event EventHandler<Tuple<UserViewModel, ChatSkillModel>> OnSkillOccurred;
         public event EventHandler<PatronageStatusModel> OnPatronageUpdateOccurred;
 
         public ConstellationClient Client { get; private set; }
@@ -169,203 +171,226 @@ namespace MixItUp.Base.MixerAPI
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
         {
-            UserViewModel user = null;
-            bool? followed = null;
-            ChannelModel channel = null;
-
-            JToken payloadToken;
-            if (e.payload.TryGetValue("user", out payloadToken))
+            try
             {
-                user = new UserViewModel(payloadToken.ToObject<UserModel>());
+                UserViewModel user = null;
+                bool? followed = null;
+                ChannelModel channel = null;
 
-                JToken subscribeStartToken;
-                if (e.payload.TryGetValue("since", out subscribeStartToken))
+                JToken payloadToken;
+                if (e.payload.TryGetValue("user", out payloadToken))
                 {
-                    user.SubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
-                }
+                    user = new UserViewModel(payloadToken.ToObject<UserModel>());
 
-                if (e.payload.TryGetValue("following", out JToken followedToken))
-                {
-                    followed = (bool)followedToken;
-                }
-            }
-            else if (e.payload.TryGetValue("hoster", out payloadToken))
-            {
-                channel = payloadToken.ToObject<ChannelModel>();
-                user = new UserViewModel(channel.userId, channel.token);
-            }
-
-            if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
-            {
-                if (e.payload["online"] != null)
-                {
-                    bool online = e.payload["online"].ToObject<bool>();
-                    user = await ChannelSession.GetCurrentUser();
-                    if (online)
+                    JToken subscribeStartToken;
+                    if (e.payload.TryGetValue("since", out subscribeStartToken))
                     {
-                        if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)))
+                        user.SubscribeDate = subscribeStartToken.ToObject<DateTimeOffset>();
+                    }
+
+                    if (e.payload.TryGetValue("following", out JToken followedToken))
+                    {
+                        followed = (bool)followedToken;
+                    }
+                }
+                else if (e.payload.TryGetValue("hoster", out payloadToken))
+                {
+                    channel = payloadToken.ToObject<ChannelModel>();
+                    user = new UserViewModel(channel.userId, channel.token);
+                }
+
+                if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
+                {
+                    if (e.payload["online"] != null)
+                    {
+                        bool online = e.payload["online"].ToObject<bool>();
+                        user = await ChannelSession.GetCurrentUser();
+                        if (online)
                         {
-                            this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart));
-                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)), user);
+                            if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)))
+                            {
+                                this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart));
+                                await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStart)), user);
+                            }
+                        }
+                        else
+                        {
+                            if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)))
+                            {
+                                this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop));
+                                await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)), user);
+                            }
+                        }
+                    }
+                }
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()))
+                {
+                    if (followed.GetValueOrDefault())
+                    {
+                        if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString()))
+                        {
+                            this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString());
+
+                            foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                            {
+                                user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
+                            }
+
+                            if (this.OnFollowOccurred != null)
+                            {
+                                this.OnFollowOccurred(this, user);
+                            }
+
+                            await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
                         }
                     }
                     else
                     {
-                        if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)))
+                        if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
                         {
-                            this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop));
-                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerChannelStreamStop)), user);
+                            this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow));
+                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)), user);
+                        }
+
+                        if (this.OnUnfollowOccurred != null)
+                        {
+                            this.OnUnfollowOccurred(this, user);
                         }
                     }
                 }
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelFollowEvent.ToString()))
-            {
-                if (followed.GetValueOrDefault())
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()))
                 {
-                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString()))
+                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString()))
                     {
-                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelFollowEvent.ToString());
+                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString());
+
+                        int viewerCount = 0;
+                        if (channel != null)
+                        {
+                            viewerCount = (int)channel.viewersCurrent;
+                        }
 
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
-                            user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
+                            user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
                         }
 
-                        if (this.OnFollowOccurred != null)
+                        if (this.OnHostedOccurred != null)
                         {
-                            this.OnFollowOccurred(this, user);
+                            this.OnHostedOccurred(this, new Tuple<UserViewModel, int>(user, viewerCount));
+                        }
+
+                        EventCommand command = this.FindMatchingEventCommand(e.channel);
+                        if (command != null)
+                        {
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
+                            await this.RunEventCommand(command, user, specialIdentifiers);
+                        }
+                    }
+                }
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
+                {
+                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
+                    {
+                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString());
+
+                        user.SubscribeDate = DateTimeOffset.Now;
+                        foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                        {
+                            user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
+                        }
+
+                        if (this.OnSubscribedOccurred != null)
+                        {
+                            this.OnSubscribedOccurred(this, user);
                         }
 
                         await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
                     }
                 }
-                else
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
                 {
-                    if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
+                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString()))
                     {
-                        this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow));
-                        await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)), user);
-                    }
+                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString());
 
-                    if (this.OnUnfollowOccurred != null)
-                    {
-                        this.OnUnfollowOccurred(this, user);
-                    }
-                }
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()))
-            {
-                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString()))
-                {
-                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString());
-
-                    int viewerCount = 0;
-                    if (channel != null)
-                    {
-                        viewerCount = (int)channel.viewersCurrent;
-                    }
-
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                    {
-                        user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
-                    }
-
-                    if (this.OnHostedOccurred != null)
-                    {
-                        this.OnHostedOccurred(this, new Tuple<UserViewModel, int>(user, viewerCount));
-                    }
-
-                    EventCommand command = this.FindMatchingEventCommand(e.channel);
-                    if (command != null)
-                    {
-                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
-                        await this.RunEventCommand(command, user, specialIdentifiers);
-                    }
-                }
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
-            {
-                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
-                {
-                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString());
-
-                    user.SubscribeDate = DateTimeOffset.Now;
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                    {
-                        user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
-                    }
-
-                    if (this.OnSubscribedOccurred != null)
-                    {
-                        this.OnSubscribedOccurred(this, user);
-                    }
-
-                    await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
-                }
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
-            {
-                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString()))
-                {
-                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString());
-
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
-                    {
-                        user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
-                    }
-
-                    int resubMonths = 0;
-                    if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
-                    {
-                        resubMonths = (int)resubMonthsToken;
-                    }
-
-                    if (this.OnResubscribedOccurred != null)
-                    {
-                        this.OnResubscribedOccurred(this, new Tuple<UserViewModel, int>(user, resubMonths));
-                    }
-
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
-                    await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user, specialIdentifiers);
-                }
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelPatronageUpdateEvent.ToString()))
-            {
-                PatronageStatusModel patronageStatus = e.payload.ToObject<PatronageStatusModel>();
-                if (patronageStatus != null)
-                {
-                    if (this.OnPatronageUpdateOccurred != null)
-                    {
-                        this.OnPatronageUpdateOccurred(this, patronageStatus);
-                    }
-
-                    bool milestoneUpdateOccurred = await this.patronageMilestonesSemaphore.WaitAndRelease(() =>
-                    {
-                        return Task.FromResult(this.remainingPatronageMilestones.RemoveAll(m => m.target <= patronageStatus.patronageEarned) > 0);
-                    });
-
-                    if (milestoneUpdateOccurred)
-                    {
-                        PatronageMilestoneModel milestoneReached = this.allPatronageMilestones.OrderByDescending(m => m.target).FirstOrDefault(m => m.target <= patronageStatus.patronageEarned);
-                        if (milestoneReached != null)
+                        foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
-                            double milestoneReward = Math.Round(((double)milestoneReached.reward) / 100.0, 2);
-                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                            user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
+                        }
+
+                        int resubMonths = 0;
+                        if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
+                        {
+                            resubMonths = (int)resubMonthsToken;
+                        }
+
+                        if (this.OnResubscribedOccurred != null)
+                        {
+                            this.OnResubscribedOccurred(this, new Tuple<UserViewModel, int>(user, resubMonths));
+                        }
+
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
+                        await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user, specialIdentifiers);
+                    }
+                }
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelSkillEvent.ToString()))
+                {
+                    if (e.payload["skillId"] != null && e.payload["triggeringUserId"] != null)
+                    {
+                        Guid skillID = e.payload["skillId"].ToObject<Guid>();
+                        uint userID = e.payload["triggeringUserId"].ToObject<uint>();
+
+                        user = await ChannelSession.ActiveUsers.GetUserByID(userID);
+                        if (user != null)
+                        {
+                            user = new UserViewModel(await ChannelSession.Connection.GetUser(userID));
+                        }
+
+                        if (this.OnSkillOccurred != null)
+                        {
+                            this.OnSkillOccurred(this, new Tuple<UserViewModel, ChatSkillModel>(user, null));
+                        }
+                    }
+                }
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelPatronageUpdateEvent.ToString()))
+                {
+                    PatronageStatusModel patronageStatus = e.payload.ToObject<PatronageStatusModel>();
+                    if (patronageStatus != null)
+                    {
+                        if (this.OnPatronageUpdateOccurred != null)
+                        {
+                            this.OnPatronageUpdateOccurred(this, patronageStatus);
+                        }
+
+                        bool milestoneUpdateOccurred = await this.patronageMilestonesSemaphore.WaitAndRelease(() =>
+                        {
+                            return Task.FromResult(this.remainingPatronageMilestones.RemoveAll(m => m.target <= patronageStatus.patronageEarned) > 0);
+                        });
+
+                        if (milestoneUpdateOccurred)
+                        {
+                            PatronageMilestoneModel milestoneReached = this.allPatronageMilestones.OrderByDescending(m => m.target).FirstOrDefault(m => m.target <= patronageStatus.patronageEarned);
+                            if (milestoneReached != null)
+                            {
+                                double milestoneReward = Math.Round(((double)milestoneReached.reward) / 100.0, 2);
+                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                             {
                                 { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount", milestoneReached.target.ToString() },
                                 { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward) },
                             };
-                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached)), await ChannelSession.GetCurrentUser(), specialIdentifiers);
+                                await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached)), await ChannelSession.GetCurrentUser(), specialIdentifiers);
+                            }
                         }
                     }
                 }
-            }
 
-            if (this.OnEventOccurred != null)
-            {
-                this.OnEventOccurred(this, e);
+                if (this.OnEventOccurred != null)
+                {
+                    this.OnEventOccurred(this, e);
+                }
             }
+            catch (Exception ex) { Util.Logger.Log(ex); }
         }
 
         private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)
