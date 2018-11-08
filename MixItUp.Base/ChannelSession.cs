@@ -387,7 +387,7 @@ namespace MixItUp.Base
             {
                 if (!externalEmoticons.ContainsKey(message.pack))
                 {
-                    externalEmoticons.Add(message.pack, new Dictionary<string, EmoticonImage>());
+                    externalEmoticons[message.pack] = new Dictionary<string, EmoticonImage>();
                 }
 
                 externalEmoticons[message.pack][message.text] = new EmoticonImage
