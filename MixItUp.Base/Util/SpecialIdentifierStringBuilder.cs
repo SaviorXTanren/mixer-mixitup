@@ -476,12 +476,11 @@ namespace MixItUp.Base.Util
                         }
 
                         IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
-                        long patronageEarnedReward = patronageMilestonesEarned.Sum(m => m.reward);
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", string.Format("{0:C}", patronageEarnedReward));
+                        long patronageEarnedReward = patronageMilestonesEarned.Max(m => m.reward);
+                        double patronageEarnedRewardDollars = Math.Round(((double)patronageEarnedReward) / 100.0, 2);
 
-                        long patronagePotentialReward = patronageMilestones.Sum(m => m.reward);
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "potentialreward", string.Format("{0:C}", patronagePotentialReward));
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
+                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", string.Format("{0:C}", patronageEarnedRewardDollars));
                     }
                 }
             }
