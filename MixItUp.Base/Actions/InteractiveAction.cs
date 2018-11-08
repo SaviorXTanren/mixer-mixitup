@@ -336,21 +336,22 @@ namespace MixItUp.Base.Actions
                                 control.meta["userID"] = user.ID;
                                 foreach (var kvp in this.CustomMetadata)
                                 {
-                                    if (bool.TryParse(kvp.Value, out bool boolValue))
+                                    string value = await this.ReplaceStringWithSpecialModifiers(kvp.Value, user, arguments);
+                                    if (bool.TryParse(value, out bool boolValue))
                                     {
                                         control.meta[kvp.Key] = boolValue;
                                     }
-                                    else if (int.TryParse(kvp.Value, out int intValue))
+                                    else if (int.TryParse(value, out int intValue))
                                     {
                                         control.meta[kvp.Key] = intValue;
                                     }
-                                    else if (double.TryParse(kvp.Value, out double doubleValue))
+                                    else if (double.TryParse(value, out double doubleValue))
                                     {
                                         control.meta[kvp.Key] = doubleValue;
                                     }
                                     else
                                     {
-                                        control.meta[kvp.Key] = kvp.Value;
+                                        control.meta[kvp.Key] = value;
                                     }
                                 }
                             }
