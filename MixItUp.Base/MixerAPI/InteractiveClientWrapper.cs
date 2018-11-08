@@ -773,6 +773,11 @@ namespace MixItUp.Base.MixerAPI
                         if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
                         {
                             await this.CaptureSparkTransaction(e.transactionID);
+
+                            if (connectedControl.SparkCost > 0)
+                            {
+                                GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, connectedControl.SparkCost));
+                            }
                         }
 
                         List<string> arguments = new List<string>();

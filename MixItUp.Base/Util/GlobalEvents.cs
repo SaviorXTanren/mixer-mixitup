@@ -128,6 +128,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<Tuple<UserViewModel, int>> OnSparkUseOccurred;
+        public static void SparkUseOccurred(Tuple<UserViewModel, int> spark)
+        {
+            if (GlobalEvents.OnSparkUseOccurred != null)
+            {
+                GlobalEvents.OnSparkUseOccurred(null, spark);
+            }
+        }
+
         public static event EventHandler<Tuple<UserViewModel, ChatSkillModel>> OnChatSkillOccurred;
         public static void ChatSkillOccurred(Tuple<UserViewModel, ChatSkillModel> skill)
         {

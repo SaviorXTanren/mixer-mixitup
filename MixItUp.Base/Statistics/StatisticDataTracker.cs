@@ -117,6 +117,40 @@ namespace MixItUp.Base.Statistics
         }
     }
 
+    public class StaticTextStatisticDataTracker : StatisticDataTrackerBase
+    {
+        public StaticTextStatisticDataTracker(string name, string iconName, Func<StatisticDataTrackerBase, Task> updateFunction)
+            : base(name, iconName, updateFunction)
+        { }
+
+        public void AddValue(string identifier, string value) { this.DataPoints.Add(new StatisticDataPoint(identifier, value)); }
+
+        public void ClearValues() { this.DataPoints.Clear(); }
+
+        public override IEnumerable<string> GetExportHeaders() { return this.DataPoints.Select(dp => dp.Identifier); }
+
+        public override IEnumerable<List<string>> GetExportData()
+        {
+            List<List<string>> results = new List<List<string>>();
+            results.Add(new List<string>());
+            foreach (StatisticDataPoint dataPoint in this.DataPoints)
+            {
+                results[0].Add(dataPoint.ValueString);
+            }
+            return results;
+        }
+
+        public override string ToString()
+        {
+            List<string> values = new List<string>();
+            foreach (StatisticDataPoint dataPoint in this.DataPoints)
+            {
+                values.Add(string.Format("{0}: {1}", dataPoint.Identifier, dataPoint.ValueString));
+            }
+            return string.Join(",    ", values);
+        }
+    }
+
     public class TrackedNumberStatisticDataTracker : StatisticDataTrackerBase
     {
         public TrackedNumberStatisticDataTracker(string name, string iconName, Func<StatisticDataTrackerBase, Task> updateFunction)
