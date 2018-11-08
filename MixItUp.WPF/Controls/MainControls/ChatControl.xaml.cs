@@ -30,59 +30,75 @@ namespace MixItUp.WPF.Controls.MainControls
         public ICollection<ChatUserControl> Collection { get { return collection; } }
 
         private ObservableCollection<ChatUserControl> collection = new ObservableCollection<ChatUserControl>();
-        private HashSet<uint> existingUsers = new HashSet<uint>();
+        private Dictionary<uint, ChatUserControl> existingUsers = new Dictionary<uint, ChatUserControl>();
 
-        public void Add(UserViewModel user)
+        private SemaphoreSlim collectionChangeSemaphore = new SemaphoreSlim(1);
+
+        public async Task Add(UserViewModel user)
         {
-            if (!this.Contains(user))
+            await this.collectionChangeSemaphore.WaitAndRelease(() =>
             {
-                this.existingUsers.Add(user.ID);
-
-                int insertIndex = 0;
-                for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
+                if (!this.existingUsers.ContainsKey(user.ID))
                 {
-                    ChatUserControl userControl = this.collection[insertIndex];
-                    UserViewModel currentUser = userControl.User;
-                    if (currentUser != null)
+                    int insertIndex = 0;
+                    for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
                     {
-                        if (currentUser.PrimarySortableRole == user.PrimarySortableRole)
+                        ChatUserControl userControl = this.collection[insertIndex];
+                        if (userControl != null)
                         {
-                            if (currentUser.UserName.CompareTo(user.UserName) > 0)
+                            UserViewModel currentUser = userControl.User;
+                            if (currentUser != null)
                             {
-                                break;
+                                if (currentUser.PrimarySortableRole == user.PrimarySortableRole)
+                                {
+                                    if (currentUser.UserName.CompareTo(user.UserName) > 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                                else if (currentUser.PrimarySortableRole < user.PrimarySortableRole)
+                                {
+                                    break;
+                                }
                             }
                         }
-                        else if (currentUser.PrimarySortableRole < user.PrimarySortableRole)
-                        {
-                            break;
-                        }
+                    }
+
+                    ChatUserControl control = new ChatUserControl(user);
+                    this.existingUsers[user.ID] = control;
+
+                    if (insertIndex < this.collection.Count)
+                    {
+                        this.collection.Insert(insertIndex, control);
+                    }
+                    else
+                    {
+                        this.collection.Add(control);
                     }
                 }
-
-                if (insertIndex < this.collection.Count)
-                {
-                    this.collection.Insert(insertIndex, new ChatUserControl(user));
-                }
-                else
-                {
-                    this.collection.Add(new ChatUserControl(user));
-                }
-            }
+                return Task.FromResult(0);
+            });
         }
 
-        public bool Contains(UserViewModel user)
+        public async Task<bool> Contains(UserViewModel user)
         {
-            return this.existingUsers.Contains(user.ID);
-        }
-
-        public void Remove(UserViewModel user)
-        {
-            if (this.Contains(user))
+            return await this.collectionChangeSemaphore.WaitAndRelease(() =>
             {
-                this.existingUsers.Remove(user.ID);
-                ChatUserControl userControl = this.collection.FirstOrDefault(uc => uc.MatchesUser(user));
-                this.collection.Remove(userControl);
-            }
+                return Task.FromResult(this.existingUsers.ContainsKey(user.ID));
+            });
+        }
+
+        public async Task Remove(UserViewModel user)
+        {
+            await this.collectionChangeSemaphore.WaitAndRelease(() =>
+            {
+                if (this.existingUsers.ContainsKey(user.ID))
+                {
+                    this.collection.Remove(this.existingUsers[user.ID]);
+                    this.existingUsers.Remove(user.ID);
+                }
+                return Task.FromResult(0);
+            });
         }
     }
 
@@ -169,7 +185,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         if (user.IsInChat)
                         {
-                            this.UserControls.Add(user);
+                            await this.UserControls.Add(user);
                         }
                     }
 
@@ -214,8 +230,8 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     if (user.IsInChat)
                     {
-                        this.UserControls.Remove(user);
-                        this.UserControls.Add(user);
+                        await this.UserControls.Remove(user);
+                        await this.UserControls.Add(user);
                     }
 
                     await this.RefreshViewerChatterCounts();
@@ -229,7 +245,7 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await userUpdateLock.WaitAndRelease(async () =>
                 {
-                    this.UserControls.Remove(user);
+                    await this.UserControls.Remove(user);
 
                     await this.RefreshViewerChatterCounts();
                 });
