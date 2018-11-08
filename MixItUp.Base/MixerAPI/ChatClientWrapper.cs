@@ -136,7 +136,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task Whisper(string username, string message, bool sendAsStreamer = false)
         {
-            if (this.GetBotClient(sendAsStreamer) != null)
+            if (!string.IsNullOrEmpty(username) && this.GetBotClient(sendAsStreamer) != null)
             {
                 message = this.SplitLargeMessage(message, out string subMessage);
 
