@@ -7,6 +7,7 @@ using Mixer.Base.Model.Costream;
 using Mixer.Base.Model.Game;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.Patronage;
+using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.Teams;
 using Mixer.Base.Model.TestStreams;
 using Mixer.Base.Model.User;
@@ -162,6 +163,8 @@ namespace MixItUp.Base.MixerAPI
         public async Task<PatronageStatusModel> GetPatronageStatus(ChannelModel channel) { return await this.RunAsync(this.Connection.Patronage.GetPatronageStatus(channel)); }
 
         public async Task<PatronagePeriodModel> GetPatronagePeriod(PatronageStatusModel patronageStatus) { return await this.RunAsync(this.Connection.Patronage.GetPatronagePeriod(patronageStatus.patronagePeriodId)); }
+
+        public async Task<SkillCatalogModel> GetSkillCatalog(ChannelModel channel) { return await this.RunAsync(this.Connection.Skills.GetSkillCatalog(channel)); }
 
         private void RestAPIService_OnRequestSent(object sender, Tuple<string, HttpContent> e)
         {

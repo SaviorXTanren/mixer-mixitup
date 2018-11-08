@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
@@ -21,7 +22,6 @@ namespace MixItUp.Base.MixerAPI
         private Dictionary<uint, int> whisperMap = new Dictionary<uint, int>();
 
         public event EventHandler<ChatMessageViewModel> OnMessageOccurred = delegate { };
-        public event EventHandler<ChatSkillModel> OnSkillOccurred = delegate { };
         public event EventHandler<ChatDeleteMessageEventModel> OnDeleteMessageOccurred = delegate { };
         public event EventHandler OnClearMessagesOccurred = delegate { };
 
@@ -602,9 +602,9 @@ namespace MixItUp.Base.MixerAPI
             if (message != null)
             {
                 this.OnMessageOccurred(sender, message);
-                if (message.IsSkill)
+                if (message.IsChatSkill)
                 {
-                    this.OnSkillOccurred(sender, message.Skill);
+                    GlobalEvents.ChatSkillOccurred(new Tuple<UserViewModel, ChatSkillModel>(message.User, message.ChatSkill));
                 }
             }
         }

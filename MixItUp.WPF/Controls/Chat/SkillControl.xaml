@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Chat.SkillControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Chat"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="SkillImage" Grid.Column="0" ToolTip="{Binding skill_name}" />
+        <TextBlock x:Name="SkillNameTextBlock" VerticalAlignment="Center" Grid.Column="2" Text="{Binding name}" />
+
+        <MaterialDesign:PackIcon x:Name="SparkIcon" Kind="WeatherLightning" Grid.Column="4" VerticalAlignment="Center" Style="{StaticResource DefaultPackIcon}" Height="18" Width="18" Margin="0,1,0,0" ToolTip="Sparks" />
+        <TextBlock x:Name="SkillCostTextBlock" VerticalAlignment="Center" Grid.Column="6" Text="{Binding price}" />
+    </Grid>
+</UserControl>

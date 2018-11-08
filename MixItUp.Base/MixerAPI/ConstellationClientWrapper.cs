@@ -3,6 +3,7 @@ using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.Patronage;
+using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
@@ -43,7 +44,7 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<Tuple<UserViewModel, int>> OnHostedOccurred;
         public event EventHandler<UserViewModel> OnSubscribedOccurred;
         public event EventHandler<Tuple<UserViewModel, int>> OnResubscribedOccurred;
-        public event EventHandler<Tuple<UserViewModel, ChatSkillModel>> OnSkillOccurred;
+        public event EventHandler<Tuple<UserViewModel, SkillModel>> OnSkillOccurred;
         public event EventHandler<PatronageStatusModel> OnPatronageUpdateOccurred;
 
         public ConstellationClient Client { get; private set; }
@@ -53,6 +54,9 @@ namespace MixItUp.Base.MixerAPI
         private List<PatronageMilestoneModel> allPatronageMilestones = new List<PatronageMilestoneModel>();
         private List<PatronageMilestoneModel> remainingPatronageMilestones = new List<PatronageMilestoneModel>();
         private SemaphoreSlim patronageMilestonesSemaphore = new SemaphoreSlim(1);
+
+        private SkillCatalogModel skillCatalog;
+        private Dictionary<Guid, SkillModel> availableSkills = new Dictionary<Guid, SkillModel>();
 
         public ConstellationClientWrapper() { }
 
@@ -67,6 +71,12 @@ namespace MixItUp.Base.MixerAPI
                     this.allPatronageMilestones = new List<PatronageMilestoneModel>(patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones));
                     this.remainingPatronageMilestones = new List<PatronageMilestoneModel>(this.allPatronageMilestones.Where(m => m.target > patronageStatus.patronageEarned));
                 }
+            }
+
+            this.skillCatalog = await ChannelSession.Connection.GetSkillCatalog(ChannelSession.Channel);
+            if (this.skillCatalog != null)
+            {
+                this.availableSkills = new Dictionary<Guid, SkillModel>(this.skillCatalog.skills.ToDictionary(s => s.id, s => s));
             }
 
             return await this.AttemptConnect();
@@ -336,20 +346,30 @@ namespace MixItUp.Base.MixerAPI
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSkillEvent.ToString()))
                 {
-                    if (e.payload["skillId"] != null && e.payload["triggeringUserId"] != null)
+                    if (e.payload["triggeringUserId"] != null && e.payload["skillId"] != null)
                     {
-                        Guid skillID = e.payload["skillId"].ToObject<Guid>();
                         uint userID = e.payload["triggeringUserId"].ToObject<uint>();
-
                         user = await ChannelSession.ActiveUsers.GetUserByID(userID);
                         if (user != null)
                         {
                             user = new UserViewModel(await ChannelSession.Connection.GetUser(userID));
                         }
 
-                        if (this.OnSkillOccurred != null)
+                        Guid skillID = e.payload["skillId"].ToObject<Guid>();
+                        SkillModel skill = null;
+                        if (this.availableSkills.ContainsKey(skillID))
                         {
-                            this.OnSkillOccurred(this, new Tuple<UserViewModel, ChatSkillModel>(user, null));
+                            skill = this.availableSkills[skillID];
+                        }
+
+                        if (user != null && skill != null)
+                        {
+                            if (this.OnSkillOccurred != null)
+                            {
+                                this.OnSkillOccurred(this, new Tuple<UserViewModel, SkillModel>(user, skill));
+                            }
+
+                            GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillModel>(user, skill));
                         }
                     }
                 }

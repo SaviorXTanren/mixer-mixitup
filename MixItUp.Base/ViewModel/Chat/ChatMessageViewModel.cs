@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Skills;
 using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -18,15 +19,19 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public string TargetUsername { get; private set; }
 
-        public DateTimeOffset Timestamp { get; private set; }
+        public DateTimeOffset Timestamp { get; private set; } = DateTimeOffset.Now;
 
         public bool ContainsLink { get; private set; }
 
         public bool IsInUsersChannel { get; private set; }
 
+        public bool IsAlert { get; private set; }
+
         public Dictionary<string, string> Images { get; set; } = new Dictionary<string, string>();
 
-        public ChatSkillModel Skill { get; private set; }
+        public ChatSkillModel ChatSkill { get; private set; }
+
+        public SkillModel Skill { get; private set; }
 
         public bool IsDeleted { get; set; }
 
@@ -47,7 +52,6 @@ namespace MixItUp.Base.ViewModel.Chat
             this.IsInUsersChannel = ChannelSession.Channel.id.Equals(this.ChatMessageEvent.channel);
 
             this.TargetUsername = this.ChatMessageEvent.target;
-            this.Timestamp = DateTimeOffset.Now;
             this.Message = string.Empty;
         }
 
@@ -83,7 +87,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
             if (newChatMessageViewModel.ChatMessageEvent.message.ContainsSkill)
             {
-                newChatMessageViewModel.Skill = newChatMessageViewModel.ChatMessageEvent.message.Skill;
+                newChatMessageViewModel.ChatSkill = newChatMessageViewModel.ChatMessageEvent.message.Skill;
             }
 
             return newChatMessageViewModel;
@@ -91,15 +95,21 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public ChatMessageViewModel(string alertText, UserViewModel user = null, string foregroundBrush = null)
         {
-            this.ID = Guid.Empty;
             this.User = user;
-            this.Timestamp = DateTimeOffset.Now;
+            this.IsInUsersChannel = true;
+            this.IsAlert = true;
             this.Message = "---  " + alertText + "  ---";
             this.AlertMessageBrush = ColorSchemes.GetColorCode(foregroundBrush);
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
         }
 
-        public bool IsAlertMessage { get { return this.ID == Guid.Empty; } }
+        public ChatMessageViewModel(SkillModel skill, UserViewModel user)
+        {
+            this.User = user;
+            this.IsInUsersChannel = true;
+            this.Message = "---  \"" + skill.name + "\" Skill Used  ---";
+            this.Skill = skill;
+        }
 
         public string AlertMessageBrush { get; private set; }
 
@@ -108,6 +118,8 @@ namespace MixItUp.Base.ViewModel.Chat
         public bool IsUserTagged { get { return this.Message.Contains("@" + ChannelSession.User.username); } }
 
         public bool ContainsImage { get { return this.Images.Count > 0; } }
+
+        public bool IsChatSkill { get { return this.ChatSkill != null; } }
 
         public bool IsSkill { get { return this.Skill != null; } }
 
@@ -146,7 +158,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public override string ToString()
         {
-            if (this.IsAlertMessage)
+            if (this.IsAlert)
             {
                 return this.Message;
             }
