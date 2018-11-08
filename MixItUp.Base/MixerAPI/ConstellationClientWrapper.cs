@@ -395,10 +395,10 @@ namespace MixItUp.Base.MixerAPI
                             {
                                 double milestoneReward = Math.Round(((double)milestoneReached.reward) / 100.0, 2);
                                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                            {
-                                { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount", milestoneReached.target.ToString() },
-                                { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward) },
-                            };
+                                {
+                                    { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount", milestoneReached.target.ToString() },
+                                    { SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward) },
+                                };
                                 await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached)), await ChannelSession.GetCurrentUser(), specialIdentifiers);
                             }
                         }
