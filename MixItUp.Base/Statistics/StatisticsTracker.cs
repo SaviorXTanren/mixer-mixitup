@@ -1,4 +1,6 @@
-﻿using Mixer.Base.Model.Patronage;
+﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Patronage;
+using Mixer.Base.Model.Skills;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
@@ -53,7 +55,10 @@ namespace MixItUp.Base.Statistics
             ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+
             GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnChatSkillOccurred += GlobalEvents_OnChatSkillOccurred;
+            GlobalEvents.OnSkillOccurred += GlobalEvents_OnSkillOccurred;
 
             this.Statistics = new List<StatisticDataTrackerBase>();
 
@@ -160,6 +165,16 @@ namespace MixItUp.Base.Statistics
         private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> e)
         {
             this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
+        }
+
+        private void GlobalEvents_OnChatSkillOccurred(object sender, Tuple<UserViewModel, ChatSkillModel> e)
+        {
+            this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2.cost);
+        }
+
+        private void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillModel> e)
+        {
+            this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2.price);
         }
     }
 }
