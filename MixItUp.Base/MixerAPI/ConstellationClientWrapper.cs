@@ -74,6 +74,10 @@ namespace MixItUp.Base.MixerAPI
             }
 
             this.skillCatalog = await ChannelSession.Connection.GetSkillCatalog(ChannelSession.Channel);
+
+            // Hacky workaround until auth issue is fixed for Skill Catalog
+            this.skillCatalog = await SerializerHelper.DeserializeFromFile<SkillCatalogModel>("SkillsCatalogData.txt");
+
             if (this.skillCatalog != null)
             {
                 this.availableSkills = new Dictionary<Guid, SkillModel>(this.skillCatalog.skills.ToDictionary(s => s.id, s => s));
