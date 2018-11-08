@@ -155,10 +155,6 @@ namespace MixItUp.WPF.Controls.Command
 
                     switch (eventCommand.OtherEventType)
                     {
-                        case OtherEventTypeEnum.MixerMilestoneReached:
-                            extraSpecialIdentifiers[SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "amount"] = "1000000";
-                            extraSpecialIdentifiers[SpecialIdentifierStringBuilder.MilestoneSpecialIdentifierHeader + "reward"] = "$100.00";
-                            break;
                         case OtherEventTypeEnum.GameWispSubscribed:
                         case OtherEventTypeEnum.GameWispResubscribed:
                             extraSpecialIdentifiers["subscribemonths"] = "999";
