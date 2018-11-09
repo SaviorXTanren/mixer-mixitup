@@ -60,9 +60,7 @@ namespace MixItUp.Base.Util
         {
             if (this.Count > 0)
             {
-                Random random = new Random();
-                int index = random.Next(this.Count);
-                return this[index];
+                return this[RandomHelper.GenerateRandomNumber(this.Count)];
             }
             return default(T);
         }

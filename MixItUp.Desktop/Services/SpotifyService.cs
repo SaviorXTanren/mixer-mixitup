@@ -313,8 +313,7 @@ namespace MixItUp.Desktop.Services
                     IEnumerable<SpotifySong> playlistSongs = await this.GetPlaylistSongs(playlist);
                     if (playlistSongs != null && playlistSongs.Count() > 0)
                     {
-                        Random rand = new Random();
-                        position["position"] = rand.Next(playlistSongs.Count());
+                        position["position"] = RandomHelper.GenerateRandomNumber(playlistSongs.Count());
                     }
                 }
 

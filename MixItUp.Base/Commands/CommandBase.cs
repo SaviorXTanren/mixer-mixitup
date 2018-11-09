@@ -89,8 +89,6 @@ namespace MixItUp.Base.Commands
         public bool IsRandomized { get; set; }
 
         [JsonIgnore]
-        private Random random = new Random();
-        [JsonIgnore]
         private Task currentTaskRun;
         [JsonIgnore]
         private CancellationTokenSource currentCancellationTokenSource;
@@ -265,7 +263,7 @@ namespace MixItUp.Base.Commands
             List<ActionBase> actionsToRun = new List<ActionBase>();
             if (this.IsRandomized)
             {
-                actionsToRun.Add(this.Actions[this.random.Next(this.Actions.Count)]);
+                actionsToRun.Add(this.Actions[RandomHelper.GenerateRandomNumber(this.Actions.Count)]);
             }
             else
             {
