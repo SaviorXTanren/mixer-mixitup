@@ -178,21 +178,20 @@ namespace MixItUp.Base.Util
 
         public static async Task AssignRandomUserSpecialIdentifierGroup(Guid id)
         {
-            Random random = new Random();
             SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id] = new RandomUserSpecialIdentiferGroup();
             IEnumerable<UserViewModel> users = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
             users = users.Where(u => !u.ID.Equals(ChannelSession.User.id));
             if (users.Count() > 0)
             {
-                SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomUser = users.ElementAt(random.Next(users.Count()));
+                SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomUser = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
                 users = users.Where(u => u.IsFollower);
                 if (users.Count() > 0)
                 {
-                    SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomFollower = users.ElementAt(random.Next(users.Count()));
+                    SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomFollower = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
                     users = users.Where(u => u.GetsSubscriberBenefits);
                     if (users.Count() > 0)
                     {
-                        SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomSubscriber = users.ElementAt(random.Next(users.Count()));
+                        SpecialIdentifierStringBuilder.RandomUserSpecialIdentifierGroups[id].RandomSubscriber = users.ElementAt(RandomHelper.GenerateRandomNumber(users.Count()));
                     }
                 }
             }
@@ -555,8 +554,7 @@ namespace MixItUp.Base.Util
                 {
                     this.ReplaceNumberBasedSpecialIdentifier(RandomNumberSpecialIdentifier, (maxNumber) =>
                     {
-                        Random random = new Random();
-                        int number = (random.Next() % maxNumber) + 1;
+                        int number = RandomHelper.GenerateRandomNumber(maxNumber) + 1;
                         return number.ToString();
                     });
                 }

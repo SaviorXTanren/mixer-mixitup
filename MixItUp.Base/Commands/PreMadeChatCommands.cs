@@ -474,8 +474,7 @@ namespace MixItUp.Base.Commands
                             }
                             else
                             {
-                                Random random = new Random();
-                                quoteIndex = random.Next(ChannelSession.Settings.UserQuotes.Count);
+                                quoteIndex = RandomHelper.GenerateRandomNumber(ChannelSession.Settings.UserQuotes.Count);
                             }
 
                             UserQuoteViewModel quote = ChannelSession.Settings.UserQuotes[quoteIndex];
@@ -578,8 +577,7 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    Random random = new Random();
-                    int index = random.Next(0, this.responses.Count);
+                    int index = RandomHelper.GenerateRandomNumber(this.responses.Count);
                     await ChannelSession.Chat.SendMessage(string.Format("The Magic 8-Ball says: \"{0}\"", this.responses[index]));
                 }
             }));

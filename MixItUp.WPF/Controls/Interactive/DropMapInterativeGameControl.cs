@@ -83,8 +83,7 @@ namespace MixItUp.WPF.Controls.Interactive
                     if (this.userPoints.Count > 0)
                     {
                         var users = this.userPoints.Keys.ToList();
-                        Random random = new Random();
-                        int index = random.Next(users.Count);
+                        int index = RandomHelper.GenerateRandomNumber(users.Count);
                         uint winner = users[index];
                         Point point = this.userPoints[winner];
                         UserProfileAvatarControl avatar = this.userAvatars[winner];
