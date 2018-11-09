@@ -170,9 +170,9 @@ namespace MixItUp.Overlay
             {
                 await this.SendWebPage((OverlayWebPageItem)item, position, effects);
             }
-            else if (item is OverlayProgressBarItem)
+            else
             {
-                await this.SendEffectPacket("progressBar", item, position, effects);
+                await this.SendEffectPacket("custom", item, position, effects);
             }
         }
 

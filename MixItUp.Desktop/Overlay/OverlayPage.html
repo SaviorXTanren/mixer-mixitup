@@ -121,14 +121,14 @@
                         else if (packet.type === "webPage") {
                             webPagePacket(packet.data);
                         }
-                        else if (packet.type === "progressBar") {
-                            progressBarPacket(packet.data);
-                        }
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
                         else if (packet.type === "songRequest") {
                             songRequestPacket(packet.data);
+                        }
+                        else if (packet.type === "custom") {
+                            customPacket(packet.data);
                         }
                         else if (packet.type == "batch") {
                             for (var i = 0; i < packet.array.length; i++) {
@@ -248,27 +248,6 @@
                 addWaitRemoveElement(data, addedElement);
             }
 
-            function progressBarPacket(data) {
-                var addedElement = document.createElement('div');
-                addedElement.width = data.Width;
-                addedElement.height = data.Height;
-
-                var backgroundDiv = document.createElement('div');
-                backgroundDiv.style.cssText += 'position: absolute; background-color: ' + data.BackgroundColor + '; width: ' + data.Width + 'px; height: ' + data.Height + 'px; transform: translate(-50%, -50%);';
-                addedElement.appendChild(backgroundDiv);
-
-                var progressDiv = document.createElement('div');
-                progressDiv.style.cssText += 'position: absolute; background-color: ' + data.ProgressColor + '; width: ' + data.ProgressWidth + 'px; height: ' + data.Height + 'px;';
-                backgroundDiv.appendChild(progressDiv);
-
-                var textElement = document.createElement('p');
-                textElement.innerHTML = data.CurrentAmount;
-                textElement.style.cssText += 'position: absolute; font-size: ' + ((3 * data.Height) / 4) + 'px; color: ' + data.TextColor + '; ' + ' white-space: nowrap; font-weight: bold; margin: auto; transform: translate(-50%, -50%);';
-                addedElement.appendChild(textElement);
-
-                addWaitRemoveElement(data, addedElement);
-            }
-
             function textToSpeechPacket(data) {
                 if (responsiveVoice.voiceSupport()) {
                     responsiveVoice.speak(data.Text, data.Voice, { pitch: data.Pitch, rate: data.Rate, volume: data.Volume });
@@ -277,10 +256,6 @@
                     var data = { Horizontal: 50, Vertical: 50, Duration: 3 };
                     addWaitRemoveElement(data, noTextToSpeechDiv);
                 }
-            }
-
-            function getRandom(min, max) {
-                return Math.floor(Math.random() * (max - min + 1)) + min;
             }
 
             function songRequestPacket(data) {
@@ -342,6 +317,13 @@
                         youtubeSongRequestPlayer.setVolume(data.Volume);
                     }
                 }
+            }
+
+            function customPacket(data) {
+                var addedElement = document.createElement('div');
+                addedElement.innerHTML = data.HTMLText;
+
+                addWaitRemoveElement(data, addedElement);
             }
 
             function addWaitRemoveElement(data, addedElement, addToDiv = true) {

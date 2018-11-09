@@ -19,8 +19,14 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayProgressBarItem : OverlayItemBase
+    public class OverlayProgressBarItem : OverlayCustomHTMLItem
     {
+        public const string HTMLTemplate =
+            @"<div style=""position: absolute; background-color: {BACKGROUND_COLOR}; width: {BAR_WIDTH}px; height: {BAR_HEIGHT}px; transform: translate(-50%, -50%);"">
+    <div style=""position: absolute; background-color: {PROGRESS_COLOR}; width: {PROGRESS_WIDTH}px; height: {BAR_HEIGHT}px;""></div>
+</div>
+<p style=""position: absolute; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(-50%, -50%);"">{AMOUNT}</p>";
+
         [DataMember]
         public ProgressBarTypeEnum ProgressBarType { get; set; }
 
@@ -73,6 +79,7 @@ namespace MixItUp.Base.Model.Overlay
         }
 
         private OverlayProgressBarItem(ProgressBarTypeEnum progressBarType, int resetAfterDays, string progressColor, string backgroundColor, string textColor, int width, int height)
+            : base(OverlayProgressBarItem.HTMLTemplate)
         {
             this.ProgressBarType = progressBarType;
             this.ResetAfterDays = resetAfterDays;
@@ -83,39 +90,6 @@ namespace MixItUp.Base.Model.Overlay
             this.Height = height;
             this.LastReset = DateTimeOffset.Now;
         }
-
-        [DataMember]
-        public double CurrentAmount
-        {
-            get
-            {
-                double amount = this.CurrentAmountNumber;
-                if (!string.IsNullOrEmpty(this.CurrentAmountCustom))
-                {
-                    double.TryParse(this.CurrentAmountCustom, out amount);
-                }
-                return amount;
-            }
-            set { }
-        }
-
-        [DataMember]
-        public double GoalAmount
-        {
-            get
-            {
-                double amount = this.GoalAmountNumber;
-                if (!string.IsNullOrEmpty(this.GoalAmountCustom))
-                {
-                    double.TryParse(this.GoalAmountCustom, out amount);
-                }
-                return amount;
-            }
-            set { }
-        }
-
-        [DataMember]
-        public int ProgressWidth { get { return (int)(((double)this.Width) * (this.CurrentAmount / this.GoalAmount)); } set { } }
 
         public override async Task Initialize()
         {
@@ -157,28 +131,50 @@ namespace MixItUp.Base.Model.Overlay
                 this.CurrentAmountNumber = 0;
                 this.LastReset = DateTimeOffset.Now;
             }
+            return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+        }
 
-            OverlayProgressBarItem item = this.Copy<OverlayProgressBarItem>();
+        protected override async Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            Dictionary<string, string> replacementSets = new Dictionary<string, string>();
+
+            replacementSets["BACKGROUND_COLOR"] = this.BackgroundColor;
+            replacementSets["PROGRESS_COLOR"] = this.ProgressColor;
+            replacementSets["TEXT_COLOR"] = this.TextColor;
+            replacementSets["BAR_WIDTH"] = this.Width.ToString();
+            replacementSets["BAR_HEIGHT"] = this.Height.ToString();
+            replacementSets["TEXT_SIZE"] = ((3 * this.Height) / 4).ToString();
+
+            double amount = this.CurrentAmountNumber;
+            double goal = this.GoalAmountNumber;
+
             if (this.ProgressBarType == ProgressBarTypeEnum.Followers)
             {
-                item.CurrentAmountNumber = this.totalFollowers;
+                amount = this.totalFollowers;
                 if (this.CurrentAmountNumber >= 0)
                 {
-                    item.CurrentAmountNumber = this.totalFollowers - this.CurrentAmountNumber;
+                    amount = this.totalFollowers - this.CurrentAmountNumber;
                 }
             }
             else if (this.ProgressBarType == ProgressBarTypeEnum.Custom)
             {
-                if (!string.IsNullOrEmpty(item.CurrentAmountCustom))
+                if (!string.IsNullOrEmpty(this.CurrentAmountCustom))
                 {
-                    item.CurrentAmountCustom = await this.ReplaceStringWithSpecialModifiers(item.CurrentAmountCustom, user, arguments, extraSpecialIdentifiers);
+                    string customAmount = await this.ReplaceStringWithSpecialModifiers(this.CurrentAmountCustom, user, arguments, extraSpecialIdentifiers);
+                    double.TryParse(customAmount, out amount);
                 }
-                if (!string.IsNullOrEmpty(item.GoalAmountCustom))
+                if (!string.IsNullOrEmpty(this.GoalAmountCustom))
                 {
-                    item.GoalAmountCustom = await this.ReplaceStringWithSpecialModifiers(item.GoalAmountCustom, user, arguments, extraSpecialIdentifiers);
+                    string customGoal = await this.ReplaceStringWithSpecialModifiers(this.GoalAmountCustom, user, arguments, extraSpecialIdentifiers);
+                    double.TryParse(customGoal, out goal);
                 }
             }
-            return item;
+
+            replacementSets["AMOUNT"] = amount.ToString();
+            replacementSets["GOAL"] = goal.ToString();
+            replacementSets["PROGRESS_WIDTH"] = ((int)(((double)this.Width) * (amount / goal))).ToString();
+
+            return replacementSets;
         }
 
         private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user) { this.totalFollowers++; }
