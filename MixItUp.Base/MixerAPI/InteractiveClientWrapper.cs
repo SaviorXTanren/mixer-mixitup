@@ -732,7 +732,7 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
-                    if (user == null)
+                    if (user == null || !user.IsInChat)
                     {
                         if (ChannelSession.Settings.PreventUnknownInteractiveUsers)
                         {
