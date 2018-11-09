@@ -39,12 +39,6 @@ namespace MixItUp.Base.MixerAPI
 
         public event EventHandler<ConstellationLiveEventModel> OnEventOccurred;
 
-        public event EventHandler<UserViewModel> OnFollowOccurred;
-        public event EventHandler<UserViewModel> OnUnfollowOccurred;
-        public event EventHandler<Tuple<UserViewModel, int>> OnHostedOccurred;
-        public event EventHandler<UserViewModel> OnSubscribedOccurred;
-        public event EventHandler<Tuple<UserViewModel, int>> OnResubscribedOccurred;
-
         public ConstellationClient Client { get; private set; }
 
         private Dictionary<string, HashSet<uint>> userEventTracking = new Dictionary<string, HashSet<uint>>();
@@ -248,54 +242,54 @@ namespace MixItUp.Base.MixerAPI
                                 user.Data.AddCurrencyAmount(currency, currency.OnFollowBonus);
                             }
 
-                        await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
-                    }
+                            await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                        }
 
-                    GlobalEvents.FollowOccurred(user);
-                }
-                else
-                {
-                    if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
+                        GlobalEvents.FollowOccurred(user);
+                    }
+                    else
                     {
-                        this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow));
-                        await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)), user);
+                        if (this.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)))
+                        {
+                            this.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow));
+                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserUnfollow)), user);
+                        }
+
+                        GlobalEvents.UnfollowOccurred(user);
                     }
-
-                    GlobalEvents.UnfollowOccurred(user);
                 }
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()))
-            {
-                int viewerCount = 0;
-                if (channel != null)
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelHostedEvent.ToString()))
                 {
-                    viewerCount = (int)channel.viewersCurrent;
-                }
-
-                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString()))
-                {
-                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString());
-
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    int viewerCount = 0;
+                    if (channel != null)
                     {
-                        user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
+                        viewerCount = (int)channel.viewersCurrent;
                     }
 
-                    EventCommand command = this.FindMatchingEventCommand(e.channel);
-                    if (command != null)
+                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString()))
                     {
-                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
-                        await this.RunEventCommand(command, user, specialIdentifiers);
-                    }
+                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelHostedEvent.ToString());
 
-                    GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
+                        foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                        {
+                            user.Data.AddCurrencyAmount(currency, currency.OnHostBonus);
+                        }
+
+                        EventCommand command = this.FindMatchingEventCommand(e.channel);
+                        if (command != null)
+                        {
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "hostviewercount", viewerCount.ToString() } };
+                            await this.RunEventCommand(command, user, specialIdentifiers);
+                        }
+
+                        GlobalEvents.HostOccurred(new Tuple<UserViewModel, int>(user, viewerCount));
+                    }
                 }
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
-            {
-                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
                 {
-                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString());
+                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString()))
+                    {
+                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelSubscribedEvent.ToString());
 
                         user.SubscribeDate = DateTimeOffset.Now;
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
@@ -303,34 +297,27 @@ namespace MixItUp.Base.MixerAPI
                             user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                         }
 
-                    await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
-                }
+                        await this.RunEventCommand(this.FindMatchingEventCommand(e.channel), user);
+                    }
 
-                GlobalEvents.SubscribeOccurred(user);
-            }
-            else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
-            {
-                int resubMonths = 0;
-                if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
-                {
-                    resubMonths = (int)resubMonthsToken;
+                    GlobalEvents.SubscribeOccurred(user);
                 }
-
-                if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString()))
+                else if (e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()) || e.channel.Equals(ConstellationClientWrapper.ChannelResubscribedSharedEvent.ToString()))
                 {
-                    this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString());
+                    int resubMonths = 0;
+                    if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
+                    {
+                        resubMonths = (int)resubMonthsToken;
+                    }
+
+                    if (this.CanUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString()))
+                    {
+                        this.LogUserRunEvent(user, ConstellationClientWrapper.ChannelResubscribedEvent.ToString());
 
                         foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                         {
                             user.Data.AddCurrencyAmount(currency, currency.OnSubscribeBonus);
                         }
-
-                        int resubMonths = 0;
-                        if (e.payload.TryGetValue("totalMonths", out JToken resubMonthsToken))
-                        {
-                            resubMonths = (int)resubMonthsToken;
-                        }
-
 
                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "usersubmonths", resubMonths.ToString() } };
                         await this.RunEventCommand(this.FindMatchingEventCommand(ConstellationClientWrapper.ChannelResubscribedEvent.ToString()), user, specialIdentifiers);
@@ -358,11 +345,6 @@ namespace MixItUp.Base.MixerAPI
 
                         if (user != null && skill != null)
                         {
-                            if (this.OnSkillOccurred != null)
-                            {
-                                this.OnSkillOccurred(this, new Tuple<UserViewModel, SkillModel>(user, skill));
-                            }
-
                             GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillModel>(user, skill));
                         }
                     }
@@ -372,11 +354,6 @@ namespace MixItUp.Base.MixerAPI
                     PatronageStatusModel patronageStatus = e.payload.ToObject<PatronageStatusModel>();
                     if (patronageStatus != null)
                     {
-                        if (this.OnPatronageUpdateOccurred != null)
-                        {
-                            this.OnPatronageUpdateOccurred(this, patronageStatus);
-                        }
-
                         bool milestoneUpdateOccurred = await this.patronageMilestonesSemaphore.WaitAndRelease(() =>
                         {
                             return Task.FromResult(this.remainingPatronageMilestones.RemoveAll(m => m.target <= patronageStatus.patronageEarned) > 0);
@@ -396,6 +373,8 @@ namespace MixItUp.Base.MixerAPI
                                 await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached)), await ChannelSession.GetCurrentUser(), specialIdentifiers);
                             }
                         }
+
+                        GlobalEvents.PatronageUpdateOccurred(patronageStatus);
                     }
                 }
 

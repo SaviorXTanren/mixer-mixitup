@@ -775,7 +775,7 @@ namespace MixItUp.Base.MixerAPI
                             await this.CaptureSparkTransaction(e.transactionID);
                             if (connectedControl.SparkCost > 0)
                             {
-                                GlobalEvents.SparksReceived(new Tuple<UserViewModel, int>(user, connectedControl.SparkCost));
+                                GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, connectedControl.SparkCost));
                             }
                         }
 

@@ -100,7 +100,7 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnSubscribeOccurred -= GlobalEvents_OnSubscribeOccurred;
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
-            GlobalEvents.OnSparksReceived -= GlobalEvents_OnSparksReceived;
+            GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
 
             if (this.ProgressBarType == ProgressBarTypeEnum.Followers)
             {
@@ -118,7 +118,7 @@ namespace MixItUp.Base.Model.Overlay
             }
             else if (this.ProgressBarType == ProgressBarTypeEnum.Sparks)
             {
-                GlobalEvents.OnSparksReceived += GlobalEvents_OnSparksReceived;
+                GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
             }
 
             await base.Initialize();
@@ -187,6 +187,6 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.CurrentAmountNumber += donation.Amount; }
 
-        private void GlobalEvents_OnSparksReceived(object sender, Tuple<UserViewModel, int> user) { this.CurrentAmountNumber += user.Item2; }
+        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> user) { this.CurrentAmountNumber += user.Item2; }
     }
 }

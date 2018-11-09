@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.User;
@@ -164,15 +165,6 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, int>> OnSparksReceived;
-        public static void SparksReceived(Tuple<UserViewModel, int> user)
-        {
-            if (GlobalEvents.OnSparksReceived != null)
-            {
-                GlobalEvents.OnSparksReceived(null, user);
-            }
-        }
-
         public static event EventHandler OnSongRequestsChangedOccurred;
         public static void SongRequestsChangedOccurred()
         {
@@ -206,6 +198,15 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnSkillOccurred != null)
             {
                 GlobalEvents.OnSkillOccurred(null, skill);
+            }
+        }
+
+        public static event EventHandler<PatronageStatusModel> OnPatronageUpdateOccurred;
+        public static void PatronageUpdateOccurred(PatronageStatusModel patronageStatus)
+        {
+            if (GlobalEvents.OnPatronageUpdateOccurred != null)
+            {
+                GlobalEvents.OnPatronageUpdateOccurred(null, patronageStatus);
             }
         }
     }
