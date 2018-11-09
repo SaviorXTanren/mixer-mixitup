@@ -23,12 +23,10 @@ namespace MixItUp.WPF.Controls.Dialogs
 
         private async void UserDialogControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            await this.user.RefreshDetails();
+            await this.user.RefreshDetails(force: true);
 
             this.UserAvatar.SetSize(100);
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            this.UserAvatar.SetImageUrl(this.user.AvatarLink);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            await this.UserAvatar.SetUserAvatarUrl(this.user);
 
             if (this.user.MixerRoles.Contains(MixerRoleEnum.Banned))
             {

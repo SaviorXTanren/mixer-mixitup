@@ -158,8 +158,7 @@ namespace MixItUp.Base.Actions
                             }
                             else if (this.GameQueueType == GameQueueActionType.RemoveRandom)
                             {
-                                Random random = new Random();
-                                int index = random.Next(0, ChannelSession.GameQueue.Count());
+                                int index = RandomHelper.GenerateRandomNumber(ChannelSession.GameQueue.Count());
                                 queueUser = ChannelSession.GameQueue.ElementAt(index);
                             }
                             else if (this.GameQueueType == GameQueueActionType.RemoveFirstType)

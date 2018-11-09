@@ -26,6 +26,7 @@
             <ContextMenu x:Key="ChatListContextMenu">
                 <MenuItem x:Name="MessageCopyMenuItem" Header="Copy Message" Click="MessageCopyMenuItem_Click" />
                 <MenuItem x:Name="MessageDeleteMenuItem" Header="Delete Message" Click="MessageDeleteMenuItem_Click" />
+                <MenuItem x:Name="MessageWhisperUserMenuItem" Header="Whisper User" Click="MessageWhisperUserMenuItem_Click" />
                 <MenuItem x:Name="MessageUserInformationMenuItem" Header="User Info" Click="MessageUserInformationMenuItem_Click" />
             </ContextMenu>
 
@@ -95,9 +96,9 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
@@ -141,9 +142,9 @@
                     </Grid>
                 </Grid>
 
-                <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
+                <GridSplitter x:Name="ChatSplitter" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
 
-                <ListView x:Name="UserList" Grid.Column="2" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" />
+                <ListView x:Name="UserList" Grid.Column="2" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" Width="200" />
             </Grid>
 
         </GroupBox>

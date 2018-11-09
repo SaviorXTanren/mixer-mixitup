@@ -20,7 +20,7 @@ namespace MixItUp.WPF.Controls.Services
         {
             this.SetHeaderText("Mixer Bot Account");
 
-            if (ChannelSession.Settings.BotOAuthToken != null)
+            if (ChannelSession.Settings.BotOAuthToken != null && ChannelSession.BotUser != null)
             {
                 this.ExistingBotGrid.Visibility = Visibility.Visible;
                 this.NewBotLoginGrid.Visibility = Visibility.Collapsed;
@@ -29,7 +29,7 @@ namespace MixItUp.WPF.Controls.Services
                 if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.BotUser.id);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 
@@ -72,7 +72,7 @@ namespace MixItUp.WPF.Controls.Services
                 if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.BotUser.id);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 

@@ -391,39 +391,24 @@ namespace MixItUp.Base
             GlobalEvents.ServiceReconnect(serviceName);
         }
 
-        public static async Task EnsureEmoticonForMessageAsync(ChatMessageDataModel message)
+        public static void EnsureEmoticonForMessage(ChatMessageDataModel message)
         {
             if (message.source.Equals("external") && Uri.IsWellFormedUriString(message.pack, UriKind.Absolute))
             {
-                string imageFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(message.pack));
-
                 if (!externalEmoticons.ContainsKey(message.pack))
                 {
-                    externalEmoticons.Add(message.pack, new Dictionary<string, EmoticonImage>());
-                    if (!File.Exists(imageFilePath))
-                    {
-                        using (WebClient client = new WebClient())
-                        {
-                            await Task.Run(() =>
-                            {
-                                client.DownloadFile(new Uri(message.pack), imageFilePath);
-                            });
-                        }
-                    }
+                    externalEmoticons[message.pack] = new Dictionary<string, EmoticonImage>();
                 }
 
-                if (!externalEmoticons[message.pack].ContainsKey(message.text))
+                externalEmoticons[message.pack][message.text] = new EmoticonImage
                 {
-                    externalEmoticons[message.pack][message.text] = new EmoticonImage
-                    {
-                        Name = message.text,
-                        FilePath = imageFilePath,
-                        X = message.coords.x,
-                        Y = message.coords.y,
-                        Width = message.coords.width,
-                        Height = message.coords.height,
-                    };
-                }
+                    Name = message.text,
+                    Uri = message.pack,
+                    X = message.coords.x,
+                    Y = message.coords.y,
+                    Width = message.coords.width,
+                    Height = message.coords.height,
+                };
             }
         }
 
@@ -689,30 +674,19 @@ namespace MixItUp.Base
 
                         foreach (KeyValuePair<string, BuiltinEmoticonPack> pack in manifest)
                         {
-                            string imageLink = string.Format(ChannelSession.DefaultEmoticonsLinkFormat, pack.Key);
-                            string imageFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(imageLink));
-
                             if (!builtinEmoticons.ContainsKey(pack.Key))
                             {
                                 builtinEmoticons.Add(pack.Key, new Dictionary<string, EmoticonImage>());
-                                if (!File.Exists(imageFilePath))
-                                {
-                                    using (WebClient client = new WebClient())
-                                    {
-                                        await Task.Run(() =>
-                                        {
-                                            client.DownloadFile(new Uri(imageLink), imageFilePath);
-                                        });
-                                    }
-                                }
                             }
 
+                            string imageLink = string.Format(ChannelSession.DefaultEmoticonsLinkFormat, pack.Key);
                             foreach (KeyValuePair<string, EmoticonGroupModel> emoticon in pack.Value.emoticons)
                             {
+
                                 builtinEmoticons[pack.Key][emoticon.Key] = new EmoticonImage
                                 {
                                     Name = emoticon.Key,
-                                    FilePath = imageFilePath,
+                                    Uri = imageLink,
                                     X = emoticon.Value.x,
                                     Y = emoticon.Value.y,
                                     Width = emoticon.Value.width,
@@ -745,29 +719,18 @@ namespace MixItUp.Base
             List<EmoticonPackModel> userPacks = (await ChannelSession.Connection.GetEmoticons(ChannelSession.Channel, user)).ToList();
             foreach (EmoticonPackModel userPack in userPacks)
             {
-                string imageFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(userPack.url));
-
                 if (!storage.ContainsKey(userPack.channelId.ToString()))
                 {
                     storage.Add(userPack.channelId.ToString(), new Dictionary<string, EmoticonImage>());
-                    if (!File.Exists(imageFilePath))
-                    {
-                        using (WebClient client = new WebClient())
-                        {
-                            await Task.Run(() =>
-                            {
-                                client.DownloadFile(new Uri(userPack.url), imageFilePath);
-                            });
-                        }
-                    }
                 }
 
                 foreach (KeyValuePair<string, EmoticonGroupModel> emoticon in userPack.emoticons)
                 {
+
                     storage[userPack.channelId.ToString()][emoticon.Key] = new EmoticonImage
                     {
                         Name = emoticon.Key,
-                        FilePath = imageFilePath,
+                        Uri = userPack.url,
                         X = emoticon.Value.x,
                         Y = emoticon.Value.y,
                         Width = emoticon.Value.width,

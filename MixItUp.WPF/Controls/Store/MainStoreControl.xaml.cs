@@ -46,7 +46,7 @@ namespace MixItUp.WPF.Controls.Store
                 this.BackButton.Visibility = Visibility.Visible;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                this.DetailsUserAvatar.SetImageUrl(storeListing.UserAvatar);
+                this.DetailsUserAvatar.SetUserAvatarUrl(storeListing.UserID);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                 this.RateReviewButton.Visibility = (storeListing.IsCommandOwnedByUser) ? Visibility.Collapsed : Visibility.Visible;

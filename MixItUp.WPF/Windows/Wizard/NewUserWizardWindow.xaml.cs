@@ -215,7 +215,7 @@ namespace MixItUp.WPF.Windows.Wizard
                 if (!string.IsNullOrEmpty(ChannelSession.BotUser.avatarUrl))
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    this.BotProfileAvatar.SetImageUrl(ChannelSession.BotUser.avatarUrl);
+                    this.BotProfileAvatar.SetUserAvatarUrl(ChannelSession.BotUser.id);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
 
@@ -517,7 +517,11 @@ namespace MixItUp.WPF.Windows.Wizard
                     JObject profiles = await SerializerHelper.DeserializeFromFile<JObject>(profilesFilePath);
                     JObject sounds = await SerializerHelper.DeserializeFromFile<JObject>(soundsFilePath);
 
-                    this.soundwaveData = new SoundwaveSettings(interactive, profiles, sounds);
+                    this.soundwaveData = new SoundwaveSettings();
+                    if (interactive != null && profiles != null && sounds != null)
+                    {
+                        this.soundwaveData.Initialize(interactive, profiles, sounds);
+                    }
                 }
             }
         }

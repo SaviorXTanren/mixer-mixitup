@@ -102,7 +102,7 @@ namespace MixItUp.WPF.Controls.Games
                 this.StatusArgumentTextBox.Text = this.existingCommand.StatusArgument;
                 this.statusCommand = this.existingCommand.StatusCommand;
 
-                this.InspectionArgumentTextBox.Text = this.existingCommand.StatusArgument;
+                this.InspectionArgumentTextBox.Text = this.existingCommand.InspectionArgument;
                 this.InspectionCostTextBox.Text = this.existingCommand.InspectionCost.ToString();
                 this.inspectionCommand = this.existingCommand.InspectionCommand;
             }

@@ -108,8 +108,7 @@ namespace MixItUp.Base.Actions
                             }
                             else
                             {
-                                Random random = new Random();
-                                int lineIndex = random.Next(lines.Count);
+                                int lineIndex = RandomHelper.GenerateRandomNumber(lines.Count);
                                 data = lines[lineIndex];
                             }
                         }

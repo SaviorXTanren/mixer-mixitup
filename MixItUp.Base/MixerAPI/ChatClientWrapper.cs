@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
@@ -135,7 +136,7 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task Whisper(string username, string message, bool sendAsStreamer = false)
         {
-            if (this.GetBotClient(sendAsStreamer) != null)
+            if (!string.IsNullOrEmpty(username) && this.GetBotClient(sendAsStreamer) != null)
             {
                 message = this.SplitLargeMessage(message, out string subMessage);
 
@@ -149,6 +150,28 @@ namespace MixItUp.Base.MixerAPI
                     await this.Whisper(username, subMessage, sendAsStreamer: sendAsStreamer);
                 }
             }
+        }
+
+        public async Task<ChatMessageEventModel> WhisperWithResponse(string username, string message, bool sendAsStreamer = false)
+        {
+            if (this.GetBotClient(sendAsStreamer) != null)
+            {
+                message = this.SplitLargeMessage(message, out string subMessage);
+
+                ChatMessageEventModel firstChatMessage = await this.RunAsync(this.GetBotClient(sendAsStreamer).WhisperWithResponse(username, message));
+
+                // Adding delay to prevent messages from arriving in wrong order
+                await Task.Delay(250);
+
+                if (!string.IsNullOrEmpty(subMessage))
+                {
+                    await this.WhisperWithResponse(username, subMessage, sendAsStreamer: sendAsStreamer);
+                }
+
+                return firstChatMessage;
+            }
+
+            return null;
         }
 
         public async Task DeleteMessage(ChatMessageViewModel message)
@@ -201,6 +224,16 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
+        public async Task<IEnumerable<ChatMessageEventModel>> GetChatHistory(uint maxMessages)
+        {
+            if (this.Client != null)
+            {
+                return await this.Client.GetChatHistory(50);
+            }
+
+            return new List<ChatMessageEventModel>();
+        }
+
         protected override async Task<bool> ConnectInternal()
         {
             if (ChannelSession.Connection != null)
@@ -228,10 +261,7 @@ namespace MixItUp.Base.MixerAPI
                         this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
                     }
 
-                    foreach (ChatUserModel chatUser in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
-                    {
-                        await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-                    }
+                    await ChannelSession.ActiveUsers.AddOrUpdateUsers(await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)));
 
                     if (ChannelSession.IsStreamer)
                     {
@@ -258,10 +288,6 @@ namespace MixItUp.Base.MixerAPI
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.ChatUserRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -334,7 +360,7 @@ namespace MixItUp.Base.MixerAPI
                 user = new UserViewModel(messageEvent);
             }
 
-            ChatMessageViewModel message = await ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
+            ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
 
             Util.Logger.LogDiagnostic(string.Format("Message Received - {0}", message.ToString()));
 
@@ -416,15 +442,15 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot())
                 {
-                    await this.whisperNumberLock.WaitAsync();
-
-                    if (!whisperMap.ContainsKey(message.User.ID))
+                    await this.whisperNumberLock.WaitAndRelease(() =>
                     {
-                        whisperMap[message.User.ID] = whisperMap.Count + 1;
-                    }
-                    message.User.WhispererNumber = whisperMap[message.User.ID];
-
-                    this.whisperNumberLock.Release();
+                        if (!whisperMap.ContainsKey(message.User.ID))
+                        {
+                            whisperMap[message.User.ID] = whisperMap.Count + 1;
+                        }
+                        message.User.WhispererNumber = whisperMap[message.User.ID];
+                        return Task.FromResult(0);
+                    });
 
                     await ChannelSession.Chat.Whisper(message.User.UserName, $"You are whisperer #{message.User.WhispererNumber}.", false);
                 }
@@ -533,41 +559,6 @@ namespace MixItUp.Base.MixerAPI
             });
         }
 
-        private async Task ChatUserRefreshBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                Dictionary<uint, ChatUserModel> chatUsers = new Dictionary<uint, ChatUserModel>();
-                foreach (ChatUserModel user in await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)))
-                {
-                    if (user.userId.HasValue)
-                    {
-                        chatUsers[user.userId.GetValueOrDefault()] = user;
-                    }
-                }
-
-                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
-                {
-                    if (chatUsers.ContainsKey(user.ID))
-                    {
-                        user.SetChatDetails(chatUsers[user.ID]);
-                        chatUsers.Remove(user.ID);
-                    }
-                    else
-                    {
-                        await ChannelSession.ActiveUsers.RemoveUser(user.ID);
-                    }
-                }
-
-                foreach (ChatUserModel chatUser in chatUsers.Values)
-                {
-                    await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-                }
-
-                await Task.Delay(30000, tokenSource.Token);
-            });
-        }
-
         private async Task TimerCommandsBackground()
         {
             int timerCommandIndex = 0;
@@ -611,12 +602,16 @@ namespace MixItUp.Base.MixerAPI
             if (message != null)
             {
                 this.OnMessageOccurred(sender, message);
+                if (message.IsChatSkill)
+                {
+                    GlobalEvents.ChatSkillOccurred(new Tuple<UserViewModel, ChatSkillModel>(message.User, message.ChatSkill));
+                }
             }
         }
 
         private async void BotChatClient_OnMessageOccurred(object sender, ChatMessageEventModel e)
         {
-            ChatMessageViewModel message = await ChatMessageViewModel.CreateChatMessageViewModel(e);
+            ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(e);
             if (message.IsWhisper)
             {
                 message = await this.AddMessage(e);

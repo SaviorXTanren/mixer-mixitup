@@ -168,49 +168,48 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task RefreshRequestsList()
         {
-            await SongRequestControl.songListLock.WaitAsync();
-
-            this.EnableSongRequestsToggleButton.IsChecked = ChannelSession.Services.SongRequestService.IsEnabled;
-            this.SongRequestServicesGrid.IsEnabled = !ChannelSession.Services.SongRequestService.IsEnabled;
-            this.DefaultPlaylistURL.IsEnabled = !ChannelSession.Services.SongRequestService.IsEnabled;
-            this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
-            this.ClearQueueButton.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
-
-            SongRequestItem currentSong = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
-            if (currentSong != null)
+            await SongRequestControl.songListLock.WaitAndRelease(async () =>
             {
-                CurrentSongName.Text = currentSong.Name;
-            }
-            else
-            {
-                CurrentSongName.Text = "None";
-            }
+                this.EnableSongRequestsToggleButton.IsChecked = ChannelSession.Services.SongRequestService.IsEnabled;
+                this.SongRequestServicesGrid.IsEnabled = !ChannelSession.Services.SongRequestService.IsEnabled;
+                this.DefaultPlaylistURL.IsEnabled = !ChannelSession.Services.SongRequestService.IsEnabled;
+                this.CurrentlyPlayingAndSongQueueGrid.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
+                this.ClearQueueButton.IsEnabled = ChannelSession.Services.SongRequestService.IsEnabled;
 
-            this.requestPlaylist.Clear();
-            IEnumerable<SongRequestItem> requests = await ChannelSession.Services.SongRequestService.GetAllRequests();
-            if (requests.Count() > 0)
-            {
-                if (!requests.First().Equals(currentSong))
+                SongRequestItem currentSong = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                if (currentSong != null)
                 {
-                    this.requestPlaylist.Add(requests.First());
+                    CurrentSongName.Text = currentSong.Name;
+                }
+                else
+                {
+                    CurrentSongName.Text = "None";
                 }
 
-                foreach (SongRequestItem item in requests.Skip(1))
+                this.requestPlaylist.Clear();
+                IEnumerable<SongRequestItem> requests = await ChannelSession.Services.SongRequestService.GetAllRequests();
+                if (requests.Count() > 0)
                 {
-                    this.requestPlaylist.Add(item);
+                    if (!requests.First().Equals(currentSong))
+                    {
+                        this.requestPlaylist.Add(requests.First());
+                    }
+
+                    foreach (SongRequestItem item in requests.Skip(1))
+                    {
+                        this.requestPlaylist.Add(item);
+                    }
                 }
-            }
 
-            if (currentSong != null && (requests.Count() == 0 || !requests.First().Equals(currentSong)))
-            {
-                this.SongTypeIdentifierTextBlock.Text = "Playlist Song:";
-            }
-            else
-            {
-                this.SongTypeIdentifierTextBlock.Text = "Current Song:";
-            }
-
-            SongRequestControl.songListLock.Release();
+                if (currentSong != null && (requests.Count() == 0 || !requests.First().Equals(currentSong)))
+                {
+                    this.SongTypeIdentifierTextBlock.Text = "Playlist Song:";
+                }
+                else
+                {
+                    this.SongTypeIdentifierTextBlock.Text = "Current Song:";
+                }
+            });
         }
 
         private void DefaultPlaylistURL_TextChanged(object sender, TextChangedEventArgs e)

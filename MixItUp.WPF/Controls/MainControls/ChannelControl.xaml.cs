@@ -298,8 +298,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 this.ChannelRaidNameTextBox.Clear();
                 if (channels != null && channels.Count() > 0)
                 {
-                    Random random = new Random();
-                    this.channelToRaid = channels.ElementAt(random.Next(0, channels.Count()));
+                    this.channelToRaid = channels.ElementAt(RandomHelper.GenerateRandomNumber(channels.Count()));
 
                     UserModel user = await ChannelSession.Connection.GetUser(this.channelToRaid.userId);
                     GameTypeModel game = await ChannelSession.Connection.GetGameType(this.channelToRaid.typeId.GetValueOrDefault());

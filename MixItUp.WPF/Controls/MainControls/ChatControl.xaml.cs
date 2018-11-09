@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Skills;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
@@ -11,7 +12,6 @@ using MixItUp.WPF.Windows.PopOut;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -25,6 +25,83 @@ using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.MainControls
 {
+    public class SortedUserObservableCollection
+    {
+        public ICollection<ChatUserControl> Collection { get { return collection; } }
+
+        private ObservableCollection<ChatUserControl> collection = new ObservableCollection<ChatUserControl>();
+        private Dictionary<uint, ChatUserControl> existingUsers = new Dictionary<uint, ChatUserControl>();
+
+        private SemaphoreSlim collectionChangeSemaphore = new SemaphoreSlim(1);
+
+        public async Task Add(UserViewModel user)
+        {
+            await this.collectionChangeSemaphore.WaitAndRelease(() =>
+            {
+                if (!this.existingUsers.ContainsKey(user.ID))
+                {
+                    int insertIndex = 0;
+                    for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
+                    {
+                        ChatUserControl userControl = this.collection[insertIndex];
+                        if (userControl != null)
+                        {
+                            UserViewModel currentUser = userControl.User;
+                            if (currentUser != null)
+                            {
+                                if (currentUser.PrimarySortableRole == user.PrimarySortableRole)
+                                {
+                                    if (currentUser.UserName.CompareTo(user.UserName) > 0)
+                                    {
+                                        break;
+                                    }
+                                }
+                                else if (currentUser.PrimarySortableRole < user.PrimarySortableRole)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    ChatUserControl control = new ChatUserControl(user);
+                    this.existingUsers[user.ID] = control;
+
+                    if (insertIndex < this.collection.Count)
+                    {
+                        this.collection.Insert(insertIndex, control);
+                    }
+                    else
+                    {
+                        this.collection.Add(control);
+                    }
+                }
+                return Task.FromResult(0);
+            });
+        }
+
+        public async Task<bool> Contains(UserViewModel user)
+        {
+            return await this.collectionChangeSemaphore.WaitAndRelease(() =>
+            {
+                return Task.FromResult(this.existingUsers.ContainsKey(user.ID));
+            });
+        }
+
+        public async Task Remove(UserViewModel user)
+        {
+            await this.collectionChangeSemaphore.WaitAndRelease(() =>
+            {
+                if (this.existingUsers.ContainsKey(user.ID))
+                {
+                    this.collection.Remove(this.existingUsers[user.ID]);
+                    this.existingUsers.Remove(user.ID);
+                }
+                return Task.FromResult(0);
+            });
+        }
+    }
+
     /// <summary>
     /// Interaction logic for ChatControl.xaml
     /// </summary>
@@ -32,7 +109,7 @@ namespace MixItUp.WPF.Controls.MainControls
     {
         public static BitmapImage SubscriberBadgeBitmap { get; private set; }
 
-        public ObservableCollection<ChatUserControl> UserControls = new ObservableCollection<ChatUserControl>();
+        public SortedUserObservableCollection UserControls = new SortedUserObservableCollection();
         public ObservableCollection<ChatMessageControl> MessageControls = new ObservableCollection<ChatMessageControl>();
 
         private CancellationTokenSource backgroundThreadCancellationTokenSource = new CancellationTokenSource();
@@ -60,6 +137,8 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.DisableChatButton.Visibility = Visibility.Collapsed;
             }
+
+            GlobalEvents.OnSkillOccurred += GlobalEvents_OnSkillOccurred;
         }
 
         protected override async Task InitializeInternal()
@@ -75,7 +154,7 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 
             this.ChatList.ItemsSource = this.MessageControls;
-            this.UserList.ItemsSource = this.UserControls;
+            this.UserList.ItemsSource = this.UserControls.Collection;
 
             ChannelSession.Chat.OnMessageOccurred += ChatClient_OnMessageOccurred;
             ChannelSession.Chat.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
@@ -98,9 +177,27 @@ namespace MixItUp.WPF.Controls.MainControls
                 }
             }
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.ChatRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            if (!ChannelSession.Settings.HideChatUserList)
+            {
+                await userUpdateLock.WaitAndRelease(async () =>
+                {
+                    foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
+                    {
+                        if (user.IsInChat)
+                        {
+                            await this.UserControls.Add(user);
+                        }
+                    }
+
+                    await this.RefreshViewerChatterCounts();
+                });
+            }
+
+            IEnumerable<ChatMessageEventModel> oldMessages = await ChannelSession.Chat.GetChatHistory(50);
+            foreach (ChatMessageEventModel message in oldMessages)
+            {
+                await AddMessage(ChatMessageViewModel.CreateChatMessageViewModel(message));
+            }
         }
 
         protected override Task OnVisibilityChanged()
@@ -118,53 +215,52 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.ViewerChatterNumbersGrid.Visibility = (ChannelSession.Settings.HideViewerAndChatterNumbers) ? Visibility.Collapsed : Visibility.Visible;
 
+            this.ChatSplitter.Visibility = this.UserList.Visibility = (ChannelSession.Settings.HideChatUserList) ? Visibility.Collapsed : Visibility.Visible;
+
             return Task.FromResult(0);
-        }
-
-        private async Task ChatRefreshBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await this.Dispatcher.InvokeAsync<Task>(async () =>
-                {
-                    await this.RefreshUserList();
-                });
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await Task.Delay(1000 * 30);
-            });
         }
 
         #region Chat Update Methods
 
-        private async Task RefreshUserList()
+        private async Task RefreshSpecificUserInList(UserViewModel user)
         {
-            await userUpdateLock.WaitAsync();
-
-            this.UserControls.Clear();
-
-            List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
-            users = users.OrderByDescending(u => u.PrimarySortableRole).ThenBy(u => u.UserName).ToList();
-            foreach (UserViewModel user in users)
+            if (!ChannelSession.Settings.HideChatUserList)
             {
-                if (user.IsInChat)
+                await userUpdateLock.WaitAndRelease(async () =>
                 {
-                    this.UserControls.Add(new ChatUserControl(user));
-                }
-            }
+                    if (user.IsInChat)
+                    {
+                        await this.UserControls.Remove(user);
+                        await this.UserControls.Add(user);
+                    }
 
+                    await this.RefreshViewerChatterCounts();
+                });
+            }
+        }
+
+        private async Task RemoveSpecificUserInList(UserViewModel user)
+        {
+            if (!ChannelSession.Settings.HideChatUserList)
+            {
+                await userUpdateLock.WaitAndRelease(async () =>
+                {
+                    await this.UserControls.Remove(user);
+
+                    await this.RefreshViewerChatterCounts();
+                });
+            }
+        }
+
+        private async Task RefreshViewerChatterCounts()
+        {
             this.ViewersCountTextBlock.Text = ChannelSession.Channel.viewersCurrent.ToString();
             this.ChatCountTextBlock.Text = (await ChannelSession.ActiveUsers.Count()).ToString();
-
-            userUpdateLock.Release();
         }
 
         private async Task AddMessage(ChatMessageViewModel message)
         {
-            await this.MessageLock(() =>
+            await this.messageUpdateLock.WaitAndRelease(() =>
             {
                 ChatMessageControl messageControl = new ChatMessageControl(message);
                 if (ChannelSession.Settings.LatestChatAtTop)
@@ -197,30 +293,33 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task ShowUserDialog(UserViewModel user)
         {
-            UserDialogResult result = await MessageBoxHelper.ShowUserDialog(user);
+            if (user != null)
+            {
+                UserDialogResult result = await MessageBoxHelper.ShowUserDialog(user);
 
-            if (result == UserDialogResult.Purge)
-            {
-                await ChannelSession.Chat.PurgeUser(user.UserName);
-            }
-            else if (result == UserDialogResult.Timeout1)
-            {
-                await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
-            }
-            else if (result == UserDialogResult.Timeout5)
-            {
-                await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
-            }
-            else if (result == UserDialogResult.Ban)
-            {
-                if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
+                if (result == UserDialogResult.Purge)
                 {
-                    await ChannelSession.Chat.BanUser(user);
+                    await ChannelSession.Chat.PurgeUser(user.UserName);
                 }
-            }
-            else if (result == UserDialogResult.Unban)
-            {
-                await ChannelSession.Chat.UnBanUser(user);
+                else if (result == UserDialogResult.Timeout1)
+                {
+                    await ChannelSession.Chat.TimeoutUser(user.UserName, 60);
+                }
+                else if (result == UserDialogResult.Timeout5)
+                {
+                    await ChannelSession.Chat.TimeoutUser(user.UserName, 300);
+                }
+                else if (result == UserDialogResult.Ban)
+                {
+                    if (await MessageBoxHelper.ShowConfirmationDialog(string.Format("This will ban the user {0} from this channel. Are you sure?", user.UserName)))
+                    {
+                        await ChannelSession.Chat.BanUser(user);
+                    }
+                }
+                else if (result == UserDialogResult.Unban)
+                {
+                    await ChannelSession.Chat.UnBanUser(user);
+                }
             }
         }
 
@@ -318,57 +417,61 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async void ChatMessageTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            HideIntellisense();
-
-            string tag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
-            if (!string.IsNullOrEmpty(tag))
+            try
             {
-                if (tag.StartsWith("@"))
+                HideIntellisense();
+
+                string tag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
+                if (!string.IsNullOrEmpty(tag))
                 {
-                    string filter = tag.Substring(1);
-
-                    List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
-                    if (!string.IsNullOrEmpty(filter))
+                    if (tag.StartsWith("@"))
                     {
-                        users = users.Where(u => u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                        string filter = tag.Substring(1);
+
+                        List<UserViewModel> users = (await ChannelSession.ActiveUsers.GetAllUsers()).ToList();
+                        if (!string.IsNullOrEmpty(filter))
+                        {
+                            users = users.Where(u => !string.IsNullOrEmpty(u.UserName) && u.UserName.StartsWith(filter, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                        }
+                        users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
+
+                        if (users.Count > 0)
+                        {
+                            this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
+                            UsernameIntellisenseListBox.ItemsSource = users;
+
+                            // Select the bottom user
+                            UsernameIntellisenseListBox.SelectedIndex = users.Count - 1;
+
+                            Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+                            Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+
+                            ShowUserIntellisense(topLeftOffset.X, topLeftOffset.Y, users.Count);
+                        }
                     }
-                    users = users.OrderBy(u => u.UserName).Take(5).Reverse().ToList();
-
-                    if (users.Count > 0)
+                    else
                     {
-                        this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
-                        UsernameIntellisenseListBox.ItemsSource = users;
+                        List<EmoticonImage> emoticonImages = ShouldSendAsStreamer() ?
+                            ChannelSession.FindMatchingEmoticonsForUser(tag).ToList() :
+                            ChannelSession.FindMatchingEmoticonsForBot(tag).ToList();
+                        if (emoticonImages.Count > 0)
+                        {
+                            emoticonImages = emoticonImages.Take(5).Reverse().ToList();
+                            this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
+                            EmoticonIntellisenseListBox.ItemsSource = emoticonImages;
 
-                        // Select the bottom user
-                        UsernameIntellisenseListBox.SelectedIndex = users.Count - 1;
+                            // Select the bottom icon
+                            EmoticonIntellisenseListBox.SelectedIndex = emoticonImages.Count - 1;
 
-                        Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
-                        Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
+                            Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
+                            Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
 
-                        ShowUserIntellisense(topLeftOffset.X, topLeftOffset.Y, users.Count);
-                    }
-                }
-                else
-                {
-                    List<EmoticonImage> emoticonImages = ShouldSendAsStreamer() ?
-                        ChannelSession.FindMatchingEmoticonsForUser(tag).ToList() :
-                        ChannelSession.FindMatchingEmoticonsForBot(tag).ToList();
-                    if (emoticonImages.Count > 0)
-                    {
-                        emoticonImages = emoticonImages.Take(5).Reverse().ToList();
-                        this.indexOfTag = this.ChatMessageTextBox.Text.LastIndexOf(tag);
-                        EmoticonIntellisenseListBox.ItemsSource = emoticonImages;
-
-                        // Select the bottom icon
-                        EmoticonIntellisenseListBox.SelectedIndex = emoticonImages.Count - 1;
-
-                        Rect positionOfCarat = this.ChatMessageTextBox.GetRectFromCharacterIndex(this.ChatMessageTextBox.CaretIndex, true);
-                        Point topLeftOffset = this.ChatMessageTextBox.TransformToAncestor(this).Transform(new Point(positionOfCarat.Left, positionOfCarat.Top));
-
-                        ShowEmoticonIntellisense(topLeftOffset.X, topLeftOffset.Y, emoticonImages.Count);
+                            ShowEmoticonIntellisense(topLeftOffset.X, topLeftOffset.Y, emoticonImages.Count);
+                        }
                     }
                 }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private void ShowUserIntellisense(double x, double y, int count)
@@ -576,8 +679,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     await this.Window.RunAsyncOperation((Func<Task>)(async () =>
                     {
-                        await ChannelSession.Chat.Whisper(username, message, ShouldSendAsStreamer());
-                    }));
+                        ChatMessageEventModel response = await ChannelSession.Chat.WhisperWithResponse(username, message, ShouldSendAsStreamer());
+                        if (response != null)
+                        {
+                            await this.AddMessage(ChatMessageViewModel.CreateChatMessageViewModel(response));
+                        }
+                }));
                 }
                 else if (ChatAction.ClearRegex.IsMatch(message))
                 {
@@ -631,6 +738,20 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
+        private void MessageWhisperUserMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.ChatList.SelectedItem != null)
+            {
+                ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
+                if (control.Message.User != null)
+                {
+                    this.ChatMessageTextBox.Text = $"/w @{control.Message.User.UserName} ";
+                    this.ChatMessageTextBox.Focus();
+                    this.ChatMessageTextBox.CaretIndex = this.ChatMessageTextBox.Text.Length;
+                }
+            }
+        }
+
         private async void MessageUserInformationMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (this.ChatList.SelectedItem != null)
@@ -659,7 +780,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.MessageLock(() =>
+                await this.messageUpdateLock.WaitAndRelease(() =>
                 {
                     ChatMessageControl message = this.MessageControls.FirstOrDefault(msg => msg.Message.ID.Equals(deleteEvent.id));
                     if (message != null)
@@ -679,7 +800,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.MessageLock(() =>
+                await this.messageUpdateLock.WaitAndRelease(() =>
                 {
                     List<ChatMessageControl> messagesToDelete = new List<ChatMessageControl>();
 
@@ -709,7 +830,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.MessageLock(() =>
+                await this.messageUpdateLock.WaitAndRelease(() =>
                 {
                     this.MessageControls.Clear();
                     return Task.FromResult(0);
@@ -721,7 +842,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RefreshUserList();
+                await this.RefreshSpecificUserInList(user);
             });
 
             if (ChannelSession.Settings.ChatShowUserJoinLeave)
@@ -734,7 +855,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RefreshUserList();
+                await this.RefreshSpecificUserInList(user);
             });
         }
 
@@ -742,7 +863,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.RefreshUserList();
+                await this.RemoveSpecificUserInList(user);
             });
 
             if (ChannelSession.Settings.ChatShowUserJoinLeave)
@@ -812,22 +933,15 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        #endregion Chat Event Handlers
-
-        private async Task MessageLock(Func<Task> function)
+        private async void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillModel> skill)
         {
-            try
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
             {
-                await this.messageUpdateLock.WaitAsync();
-
-                await function();
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally
-            {
-                this.messageUpdateLock.Release();
-            }
+                await this.AddMessage(new ChatMessageViewModel(skill.Item2, skill.Item1));
+            });
         }
+
+        #endregion Chat Event Handlers
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

@@ -184,8 +184,6 @@ namespace MixItUp.Base.Actions
     [DataContract]
     public class OverlayEffectBase
     {
-        private static readonly Random Random = new Random();
-
         [DataMember]
         public int EntranceAnimation { get; set; }
         [DataMember]
@@ -221,7 +219,7 @@ namespace MixItUp.Base.Actions
             {
                 List<T> values = EnumHelper.GetEnumList<T>().ToList();
                 values.RemoveAll(v => v.ToString().Equals("None") || v.ToString().Equals("Random"));
-                name = values[Random.Next(values.Count)].ToString();
+                name = values[RandomHelper.GenerateRandomNumber(values.Count)].ToString();
             }
 
             if (!string.IsNullOrEmpty(name) && !name.Equals("None"))

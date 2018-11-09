@@ -41,10 +41,19 @@ namespace MixItUp.Base.ViewModel.User
         Custom = 99,
     }
 
+    public static class UserWithGroupsModelExtensions
+    {
+        public static DateTimeOffset? GetSubscriberDate(this UserWithGroupsModel userGroups)
+        {
+            return userGroups.GetCreatedDateForGroupIfCurrent(EnumHelper.GetEnumName(MixerRoleEnum.Subscriber));
+        }
+    }
+
     [DataContract]
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
         public const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
+        public const string UserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=64&h=64";
 
         public static IEnumerable<MixerRoleEnum> SelectableBasicUserRoles()
         {
@@ -76,12 +85,6 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public string UserName { get; set; }
-
-        [DataMember]
-        public string AvatarLink { get; set; }
-
-        [DataMember]
-        public uint GameTypeID { get; set; }
 
         [DataMember]
         public DateTimeOffset? MixerAccountDate { get; set; }
@@ -120,12 +123,10 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.CustomRoles = new HashSet<string>();
             this.InteractiveIDs = new HashSet<string>();
-            this.AvatarLink = UserViewModel.DefaultAvatarLink;
         }
 
         public UserViewModel(UserModel user) : this(user.id, user.username)
         {
-            this.AvatarLink = (!string.IsNullOrEmpty(user.avatarUrl)) ? user.avatarUrl : UserViewModel.DefaultAvatarLink;
             this.MixerAccountDate = user.createdAt;
         }
 
@@ -147,8 +148,12 @@ namespace MixItUp.Base.ViewModel.User
             this.ID = id;
             this.UserName = username;
 
+            this.Data.UpdateData(this);
+
             this.SetMixerRoles(userRoles);
         }
+
+        public string AvatarLink { get { return string.Format(UserAvatarLinkFormat, this.ID); } }
 
         private readonly HashSet<MixerRoleEnum> mixerRoles = new HashSet<MixerRoleEnum>();
         public HashSet<MixerRoleEnum> MixerRoles
@@ -166,6 +171,9 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
         }
+
+        [JsonIgnore]
+        public DateTimeOffset LastUpdated { get; set; }
 
         [JsonIgnore]
         public UserDataViewModel Data { get { return ChannelSession.Settings.UserData.GetValueIfExists(this.ID, new UserDataViewModel(this)); } }
@@ -256,50 +264,39 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public async Task RefreshDetails(bool getChatDetails = true)
+        public async Task RefreshDetails(bool force = false)
         {
-            if (this.ID > 0)
+            if (this.ID > 0 && (this.LastUpdated.TotalMinutesFromNow() >= 1 || force))
             {
                 UserWithChannelModel user = await ChannelSession.Connection.GetUser(this.ID);
                 if (user != null)
                 {
-                    if (!string.IsNullOrEmpty(user.avatarUrl))
-                    {
-                        this.AvatarLink = user.avatarUrl;
-                    }
                     this.MixerAccountDate = user.createdAt;
                     this.Sparks = (int)user.sparks;
 
-                    this.GameTypeID = user.channel.typeId.GetValueOrDefault();
-
-                    this.Data.UpdateData(user);
-                }
-
-                if (getChatDetails)
-                {
-                    ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, this.ID);
-                    if (chatUser != null)
+                    this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
+                    if (this.IsSubscriber)
                     {
-                        this.SetChatDetails(chatUser);
-                    }
-                }
-
-                this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
-
-                if (this.IsSubscriber)
-                {
-                    UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
-                    if (userGroups != null && userGroups.groups != null)
-                    {
-                        UserGroupModel subscriberGroup = userGroups.groups.FirstOrDefault(g => g.name.Equals("Subscriber") && g.deletedAt == null);
-                        if (subscriberGroup != null)
+                        UserWithGroupsModel userGroups = await ChannelSession.Connection.GetUserInChannel(ChannelSession.Channel, this.ID);
+                        if (userGroups != null)
                         {
-                            this.SubscribeDate = subscriberGroup.createdAt;
+                            this.SubscribeDate = userGroups.GetSubscriberDate();
                         }
                     }
                 }
 
                 await this.SetCustomRoles();
+
+                this.LastUpdated = DateTimeOffset.Now;
+            }
+        }
+
+        public async Task RefreshChatDetails()
+        {
+            ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, this.ID);
+            if (chatUser != null)
+            {
+                this.SetChatDetails(chatUser);
             }
         }
 

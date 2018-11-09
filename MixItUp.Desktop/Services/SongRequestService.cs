@@ -282,7 +282,7 @@ namespace MixItUp.Desktop.Services
             {
                 if (requestSearch.FoundSingleResult)
                 {
-                    await this.LockWrapper(() =>
+                    await SongRequestService.songRequestLock.WaitAndRelease(() =>
                     {
                         this.allRequests.Add(requestSearch.SongRequest);
                         return Task.FromResult(0);
@@ -311,7 +311,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task<IEnumerable<SongRequestItem>> GetAllRequests()
         {
-            return await this.LockWrapper(() =>
+            return await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
                 return Task.FromResult(this.allRequests.ToList());
             });
@@ -319,7 +319,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task RemoveSongRequest(SongRequestItem song)
         {
-            await this.LockWrapper(() =>
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
                 this.allRequests.Remove(song);
                 return Task.FromResult(0);
@@ -331,7 +331,7 @@ namespace MixItUp.Desktop.Services
         public async Task RemoveLastSongRequestedByUser(UserViewModel user)
         {
             SongRequestItem song = null;
-            await this.LockWrapper(() =>
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
                 song = this.allRequests.LastOrDefault(s => s.User.ID == user.ID);
                 if (song != null)
@@ -354,7 +354,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task ClearAllRequests()
         {
-            await this.LockWrapper(() =>
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
                 this.allRequests.Clear();
                 return Task.FromResult(0);
@@ -369,7 +369,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task PlayPauseCurrentSong()
         {
-            await this.LockWrapper(async () =>
+            await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
                 await this.PlayPauseCurrentSongInternal();
             });
@@ -378,7 +378,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task SkipToNextSong()
         {
-            await this.LockWrapper(async () =>
+            await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
                 await this.SkipToNextSongInternal();
             });
@@ -387,7 +387,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task RefreshVolume()
         {
-            await this.LockWrapper(async () =>
+            await SongRequestService.songRequestLock.WaitAndRelease(async () =>
             {
                 await this.RefreshVolumeInternal();
             });
@@ -398,7 +398,7 @@ namespace MixItUp.Desktop.Services
         {
             if (item != null)
             {
-                if (item.Type == SongRequestServiceTypeEnum.YouTube)
+                if (item.Type == SongRequestServiceTypeEnum.YouTube && !string.IsNullOrEmpty(item.ID))
                 {
                     this.youTubeStatus = item;
                     this.youTubeStatus.ID = Regex.Replace(this.youTubeStatus.ID, YouTubeFullLinkWithTimePattern, "");
@@ -414,7 +414,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task<SongRequestItem> GetCurrentlyPlaying()
         {
-            return await this.LockWrapper(() =>
+            return await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
                 return Task.FromResult(this.currentSong);
             });
@@ -422,7 +422,7 @@ namespace MixItUp.Desktop.Services
 
         public async Task<SongRequestItem> GetNextTrack()
         {
-            return await this.LockWrapper(() =>
+            return await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
                 if (this.allRequests.Count == 1 && this.playlistItems.Count > 0)
                 {
@@ -457,7 +457,7 @@ namespace MixItUp.Desktop.Services
 
                 bool changeOccurred = false;
 
-                await this.LockWrapper(async () =>
+                await SongRequestService.songRequestLock.WaitAndRelease(async () =>
                 {
                     Logger.LogDiagnostic("Current Song: " + this.currentSong);
                     Logger.LogDiagnostic("Spotify Status: " + this.spotifyStatus);
@@ -915,37 +915,5 @@ namespace MixItUp.Desktop.Services
         }
 
         #endregion Interaction Internal Methods
-
-        private async Task LockWrapper(Func<Task> function)
-        {
-            await SongRequestService.songRequestLock.WaitAsync();
-
-            try
-            {
-                await function();
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally
-            {
-                SongRequestService.songRequestLock.Release();
-            }
-        }
-
-        private async Task<T> LockWrapper<T>(Func<Task<T>> function)
-        {
-            await SongRequestService.songRequestLock.WaitAsync();
-
-            try
-            {
-                return await function();
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            finally
-            {
-                SongRequestService.songRequestLock.Release();
-            }
-
-            return default(T);
-        }
     }
 }

@@ -1,9 +1,13 @@
-﻿using MixItUp.Base.MixerAPI;
+﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Patronage;
+using Mixer.Base.Model.Skills;
+using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Statistics
@@ -33,6 +37,11 @@ namespace MixItUp.Base.Statistics
             return string.Format("Donaters: {0},    Total: {1:C},    Average: {2:C}", dataTracker.UniqueIdentifiers, dataTracker.TotalValueDecimal, dataTracker.AverageValueString);
         });
 
+        private EventStatisticDataTracker sparksTracker = new EventStatisticDataTracker("Sparks", "WeatherLightning", new List<string>() { "Username", "Amount" }, (EventStatisticDataTracker dataTracker) =>
+        {
+            return string.Format("Users: {0},    Total: {1},    Average: {2}", dataTracker.UniqueIdentifiers, dataTracker.TotalValue, dataTracker.AverageValueString);
+        });
+
         public StatisticsTracker()
         {
             this.StartTime = DateTimeOffset.Now;
@@ -46,6 +55,10 @@ namespace MixItUp.Base.Statistics
             ChannelSession.Interactive.OnInteractiveControlUsed += Interactive_OnInteractiveControlUsed;
 
             GlobalEvents.OnDonationOccurred += GlobalEvents_OnDonationOccurred;
+
+            GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnChatSkillOccurred += GlobalEvents_OnChatSkillOccurred;
+            GlobalEvents.OnSkillOccurred += GlobalEvents_OnSkillOccurred;
 
             this.Statistics = new List<StatisticDataTrackerBase>();
 
@@ -76,6 +89,40 @@ namespace MixItUp.Base.Statistics
             this.Statistics.Add(this.resubscriberTracker);
 
             this.Statistics.Add(this.interactiveTracker);
+            this.Statistics.Add(this.sparksTracker);
+            this.Statistics.Add(new StaticTextStatisticDataTracker("Milestones", "Diamond", async (StatisticDataTrackerBase stats) =>
+            {
+                StaticTextStatisticDataTracker staticStats = (StaticTextStatisticDataTracker)stats;
+                staticStats.ClearValues();
+
+                if (ChannelSession.Connection != null && ChannelSession.Channel != null)
+                {
+                    PatronageStatusModel patronageStatus = await ChannelSession.Connection.GetPatronageStatus(ChannelSession.Channel);
+                    if (patronageStatus != null)
+                    {
+                        PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
+                        if (patronagePeriod != null)
+                        {
+                            IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);
+                            IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
+                            if (patronageMilestonesEarned.Count() > 0)
+                            {
+                                long patronageEarnedReward = patronageMilestonesEarned.Max(m => m.reward);
+                                double patronageEarnedRewardDollars = Math.Round(((double)patronageEarnedReward) / 100.0, 2);
+
+                                staticStats.AddValue("Milestone #", patronageStatus.currentMilestoneId.ToString());
+                                staticStats.AddValue("Total Sparks", patronageStatus.patronageEarned.ToString());
+                                staticStats.AddValue("Total Payout", string.Format("{0:C}", patronageEarnedRewardDollars));
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                staticStats.AddValue("Milestone #", "0");
+                staticStats.AddValue("Total Sparks", "0");
+                staticStats.AddValue("Total Payout", "$0.00");
+            }));
 
             this.Statistics.Add(this.donationsTracker);
         }
@@ -116,6 +163,21 @@ namespace MixItUp.Base.Statistics
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel e)
         {
             this.donationsTracker.OnStatisticEventOccurred(e.ID, e.Amount);
+        }
+
+        private void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> e)
+        {
+            this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2);
+        }
+
+        private void GlobalEvents_OnChatSkillOccurred(object sender, Tuple<UserViewModel, ChatSkillModel> e)
+        {
+            this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2.cost);
+        }
+
+        private void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillModel> e)
+        {
+            this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2.price);
         }
     }
 }

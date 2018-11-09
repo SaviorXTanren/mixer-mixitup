@@ -1,15 +1,12 @@
 ﻿using Mixer.Base.Model.Chat;
-using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Themes;
 using MixItUp.Base.ViewModel.Chat;
-using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace MixItUp.WPF.Controls.Chat
 {
@@ -37,15 +34,15 @@ namespace MixItUp.WPF.Controls.Chat
         {
             this.MessageWrapPanel.Children.Clear();
 
-            if (!this.Message.IsAlertMessage)
+            if (!this.Message.IsAlert)
             {
                 this.MessageWrapPanel.Children.Add(this.messageHeader);
             }
 
-            if (this.Message.IsWhisper)
+            if (this.Message.IsSkill)
             {
-                this.Background = (Brush)FindResource("PrimaryHueLightBrush");
-                this.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
+                SkillControl skillControl = new SkillControl(this.Message.Skill);
+                this.MessageWrapPanel.Children.Add(skillControl);
             }
 
             foreach (ChatMessageDataModel messageData in this.Message.MessageComponents)
@@ -53,8 +50,13 @@ namespace MixItUp.WPF.Controls.Chat
                 EmoticonImage emoticon = ChannelSession.GetEmoticonForMessage(messageData);
                 if (emoticon != null)
                 {
-                    EmoticonControl image = new EmoticonControl(emoticon);
-                    this.MessageWrapPanel.Children.Add(image);
+                    EmoticonControl emoticonControl = new EmoticonControl(emoticon);
+                    this.MessageWrapPanel.Children.Add(emoticonControl);
+                }
+                else if (messageData.type.Equals("image"))
+                {
+                    StickerControl stickerControl = new StickerControl(this.Message.ChatSkill);
+                    this.MessageWrapPanel.Children.Add(stickerControl);
                 }
                 else
                 {
@@ -63,7 +65,7 @@ namespace MixItUp.WPF.Controls.Chat
                         TextBlock textBlock = new TextBlock();
                         textBlock.Text = word + " ";
                         textBlock.VerticalAlignment = VerticalAlignment.Center;
-                        if (this.Message.IsAlertMessage)
+                        if (this.Message.IsAlert)
                         {
                             textBlock.FontWeight = FontWeights.Bold;
                             if (!string.IsNullOrEmpty(this.Message.AlertMessageBrush) && !this.Message.AlertMessageBrush.Equals(ColorSchemes.DefaultColorScheme))
@@ -75,11 +77,15 @@ namespace MixItUp.WPF.Controls.Chat
                                 textBlock.Foreground = (App.AppSettings.IsDarkBackground) ? new SolidColorBrush(Colors.White) : new SolidColorBrush(Colors.Black);
                             }
                         }
-                        if (messageData.type == "tag" && word.Equals("@" + ChannelSession.User.username, StringComparison.InvariantCultureIgnoreCase))
+
+                        bool isWhisperToStreamer = this.Message.IsWhisper && ChannelSession.User.username.Equals(this.Message.TargetUsername, StringComparison.InvariantCultureIgnoreCase);
+                        bool isStreamerTagged = messageData.type == "tag" && word.Equals("@" + ChannelSession.User.username, StringComparison.InvariantCultureIgnoreCase);
+                        if (isWhisperToStreamer || isStreamerTagged)
                         {
-                            this.Background = (Brush)FindResource("PrimaryHueLightBrush");
-                            this.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
+                            textBlock.Background = (Brush)FindResource("PrimaryHueLightBrush");
+                            textBlock.Foreground = (Brush)FindResource("PrimaryHueLightForegroundBrush");
                         }
+
                         this.textBlocks.Add(textBlock);
                         this.MessageWrapPanel.Children.Add(textBlock);
                     }
@@ -111,7 +117,7 @@ namespace MixItUp.WPF.Controls.Chat
                     this.Message.DeletedBy = deletedBy;
                 }
 
-                if (this.Message.IsAlertMessage)
+                if (this.Message.IsAlert)
                 {
                     textBlock.FontWeight = FontWeights.Bold;
                     if (!string.IsNullOrEmpty(this.Message.AlertMessageBrush) && !this.Message.AlertMessageBrush.Equals(ColorSchemes.DefaultColorScheme))
@@ -162,6 +168,16 @@ namespace MixItUp.WPF.Controls.Chat
                 {
                     EmoticonControl emoticon = (EmoticonControl)item;
                     emoticon.Height = emoticon.Width = ChannelSession.Settings.ChatFontSize + 2;
+                }
+                else if (item is StickerControl)
+                {
+                    StickerControl sticker = (StickerControl)item;
+                    sticker.UpdateSizing();
+                }
+                else if (item is SkillControl)
+                {
+                    SkillControl skill = (SkillControl)item;
+                    skill.UpdateSizing();
                 }
             }
         }

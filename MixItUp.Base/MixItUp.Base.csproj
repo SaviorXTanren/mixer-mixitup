@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mixer-client-csharp" Version="0.7.0.1-beta" />
+    <PackageReference Include="mixer-client-csharp" Version="0.8.1.1-beta" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
@@ -39,6 +39,9 @@
 
   <ItemGroup>
     <None Update="LoginRedirectPage.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="SkillsCatalogData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

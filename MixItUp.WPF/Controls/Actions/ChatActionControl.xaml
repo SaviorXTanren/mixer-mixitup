@@ -51,7 +51,8 @@
                 <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
             </TextBlock>
         </Grid>
-
-        <TextBox Grid.Row="2" x:Name="ChatMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        
+        <Border x:Name="b" Grid.Row="2" Margin="5"/>
+        <TextBox Grid.Row="2" x:Name="ChatMessageTextBox" MaterialDesign:HintAssist.Hint="Chat Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextWrapping="Wrap" Width="{Binding ActualWidth, ElementName=b}"/>
     </Grid>
 </local:ActionControlBase>

@@ -197,6 +197,8 @@ namespace MixItUp.Base.Util
                     return true;
                 }
 
+                await user.RefreshDetails();
+
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.GetsSubscriberBenefits)
                 {
                     return false;
