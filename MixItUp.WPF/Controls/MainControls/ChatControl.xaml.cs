@@ -3,12 +3,14 @@ using Mixer.Base.Model.Skills;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.PopOut;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -933,7 +935,7 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private async void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillModel> skill)
+        private async void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillInstanceModel> skill)
         {
             await this.Dispatcher.InvokeAsync<Task>(async () =>
             {

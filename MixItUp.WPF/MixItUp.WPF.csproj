@@ -216,9 +216,8 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsInput, Version=1.0.4.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL">
-      <HintPath>..\packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="WpfAnimatedGif, Version=1.4.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.1.4.17\lib\net\WpfAnimatedGif.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +319,9 @@
     </Compile>
     <Compile Include="Controls\Chat\EmoticonControl.xaml.cs">
       <DependentUpon>EmoticonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\GifSkillControl.xaml.cs">
+      <DependentUpon>GifSkillControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat\SkillControl.xaml.cs">
       <DependentUpon>SkillControl.xaml</DependentUpon>
@@ -877,6 +879,10 @@
     <Page Include="Controls\Chat\EmoticonControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Chat\GifSkillControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat\SkillControl.xaml">
       <SubType>Designer</SubType>

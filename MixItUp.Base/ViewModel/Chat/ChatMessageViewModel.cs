@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Skills;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -31,7 +32,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public ChatSkillModel ChatSkill { get; private set; }
 
-        public SkillModel Skill { get; private set; }
+        public SkillInstanceModel Skill { get; private set; }
 
         public bool IsDeleted { get; set; }
 
@@ -103,11 +104,11 @@ namespace MixItUp.Base.ViewModel.Chat
             this.MessageComponents.Add(new ChatMessageDataModel() { type = "text", text = this.Message });
         }
 
-        public ChatMessageViewModel(SkillModel skill, UserViewModel user)
+        public ChatMessageViewModel(SkillInstanceModel skill, UserViewModel user)
         {
             this.User = user;
             this.IsInUsersChannel = true;
-            this.Message = "---  \"" + skill.name + "\" Skill Used  ---";
+            this.Message = "---  \"" + skill.Skill.name + "\" Skill Used  ---";
             this.Skill = skill;
         }
 

@@ -7,6 +7,7 @@ using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -345,7 +346,12 @@ namespace MixItUp.Base.MixerAPI
 
                         if (user != null && skill != null)
                         {
-                            GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillModel>(user, skill));
+                            JObject manifest = (JObject)e.payload["manifest"];
+                            JObject parameters = (JObject)e.payload["parameters"];
+
+                            SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
+
+                            GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
                         }
                     }
                 }

@@ -1,5 +1,5 @@
-﻿using Mixer.Base.Model.Skills;
-using MixItUp.Base;
+﻿using MixItUp.Base;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace MixItUp.WPF.Controls.Chat
     {
         private static Dictionary<string, BitmapImage> skillBitmapImages = new Dictionary<string, BitmapImage>();
 
-        public SkillModel Skill { get { return this.DataContext as SkillModel; } }
+        public SkillInstanceModel Skill { get { return this.DataContext as SkillInstanceModel; } }
 
         public SkillControl()
         {
@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Chat
             InitializeComponent();
         }
 
-        public SkillControl(SkillModel skill) : this()
+        public SkillControl(SkillInstanceModel skill) : this()
         {
             InitializeComponent();
             this.DataContext = skill;
@@ -36,6 +36,7 @@ namespace MixItUp.WPF.Controls.Chat
         public void UpdateSizing()
         {
             this.SkillImage.Height = this.SkillImage.Width = ChannelSession.Settings.ChatFontSize * 2;
+            this.GifSkillIcon.Height = this.GifSkillIcon.Width = ChannelSession.Settings.ChatFontSize * 2;
             this.SkillNameTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
             this.SparkIcon.Height = this.SparkIcon.Width = ChannelSession.Settings.ChatFontSize + 2;
             this.SkillCostTextBlock.FontSize = ChannelSession.Settings.ChatFontSize;
@@ -47,23 +48,31 @@ namespace MixItUp.WPF.Controls.Chat
             {
                 if (this.Skill != null)
                 {
-                    string uri = Skill.attributionIconUrl;
-                    if (!SkillControl.skillBitmapImages.ContainsKey(uri))
+                    if (this.Skill.IsGif)
                     {
-                        BitmapImage bitmap = new BitmapImage();
-                        using (WebClient client = new WebClient())
-                        {
-                            var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(uri); });
-
-                            bitmap.BeginInit();
-                            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmap.StreamSource = new MemoryStream(bytes);
-                            bitmap.EndInit();
-                        }
-                        SkillControl.skillBitmapImages[uri] = bitmap;
+                        this.GifSkillPopup.Visibility = Visibility.Visible;
                     }
+                    else
+                    {
+                        this.SkillImage.Visibility = Visibility.Visible;
+                        if (!SkillControl.skillBitmapImages.ContainsKey(this.Skill.Skill.attributionIconUrl))
+                        {
+                            BitmapImage bitmap = new BitmapImage();
+                            using (WebClient client = new WebClient())
+                            {
+                                string url = this.Skill.Skill.attributionIconUrl;
+                                var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(url); });
 
-                    this.SkillImage.Source = SkillControl.skillBitmapImages[uri];
+                                bitmap.BeginInit();
+                                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                                bitmap.StreamSource = new MemoryStream(bytes);
+                                bitmap.EndInit();
+                            }
+                            SkillControl.skillBitmapImages[this.Skill.Skill.attributionIconUrl] = bitmap;
+                        }
+
+                        this.SkillImage.Source = SkillControl.skillBitmapImages[this.Skill.Skill.attributionIconUrl];
+                    }
 
                     this.UpdateSizing();
                 }
