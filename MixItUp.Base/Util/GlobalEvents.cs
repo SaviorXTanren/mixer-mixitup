@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.Skills;
 using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -146,8 +147,8 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public static event EventHandler<Tuple<UserViewModel, SkillModel>> OnSkillOccurred;
-        public static void SkillOccurred(Tuple<UserViewModel, SkillModel> skill)
+        public static event EventHandler<Tuple<UserViewModel, SkillInstanceModel>> OnSkillOccurred;
+        public static void SkillOccurred(Tuple<UserViewModel, SkillInstanceModel> skill)
         {
             if (GlobalEvents.OnSkillOccurred != null)
             {

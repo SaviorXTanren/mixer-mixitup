@@ -2,6 +2,7 @@
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
@@ -175,9 +176,9 @@ namespace MixItUp.Base.Statistics
             this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2.cost);
         }
 
-        private void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillModel> e)
+        private void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillInstanceModel> e)
         {
-            this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2.price);
+            this.sparksTracker.OnStatisticEventOccurred(e.Item1.UserName, e.Item2.Skill.price);
         }
     }
 }

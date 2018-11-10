@@ -7,6 +7,7 @@ using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
@@ -44,7 +45,7 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<Tuple<UserViewModel, int>> OnHostedOccurred;
         public event EventHandler<UserViewModel> OnSubscribedOccurred;
         public event EventHandler<Tuple<UserViewModel, int>> OnResubscribedOccurred;
-        public event EventHandler<Tuple<UserViewModel, SkillModel>> OnSkillOccurred;
+        public event EventHandler<Tuple<UserViewModel, SkillInstanceModel>> OnSkillOccurred;
         public event EventHandler<PatronageStatusModel> OnPatronageUpdateOccurred;
 
         public ConstellationClient Client { get; private set; }
@@ -368,12 +369,17 @@ namespace MixItUp.Base.MixerAPI
 
                         if (user != null && skill != null)
                         {
+                            JObject manifest = (JObject)e.payload["manifest"];
+                            JObject parameters = (JObject)e.payload["parameters"];
+
+                            SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
+
                             if (this.OnSkillOccurred != null)
                             {
-                                this.OnSkillOccurred(this, new Tuple<UserViewModel, SkillModel>(user, skill));
+                                this.OnSkillOccurred(this, new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
                             }
 
-                            GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillModel>(user, skill));
+                            GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
                         }
                     }
                 }
