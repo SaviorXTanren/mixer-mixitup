@@ -210,5 +210,14 @@ namespace MixItUp.Base.Util
                 GlobalEvents.OnPatronageUpdateOccurred(null, patronageStatus);
             }
         }
+
+        public static event EventHandler<PatronageMilestoneModel> OnPatronageMilestoneReachedOccurred;
+        public static void PatronageMilestoneReachedOccurred(PatronageMilestoneModel patronageMilestone)
+        {
+            if (GlobalEvents.OnPatronageMilestoneReachedOccurred != null)
+            {
+                GlobalEvents.OnPatronageMilestoneReachedOccurred(null, patronageMilestone);
+            }
+        }
     }
 }

@@ -360,6 +360,8 @@ namespace MixItUp.Base.MixerAPI
                     PatronageStatusModel patronageStatus = e.payload.ToObject<PatronageStatusModel>();
                     if (patronageStatus != null)
                     {
+                        GlobalEvents.PatronageUpdateOccurred(patronageStatus);
+
                         bool milestoneUpdateOccurred = await this.patronageMilestonesSemaphore.WaitAndRelease(() =>
                         {
                             return Task.FromResult(this.remainingPatronageMilestones.RemoveAll(m => m.target <= patronageStatus.patronageEarned) > 0);
@@ -370,6 +372,8 @@ namespace MixItUp.Base.MixerAPI
                             PatronageMilestoneModel milestoneReached = this.allPatronageMilestones.OrderByDescending(m => m.target).FirstOrDefault(m => m.target <= patronageStatus.patronageEarned);
                             if (milestoneReached != null)
                             {
+                                GlobalEvents.PatronageMilestoneReachedOccurred(milestoneReached);
+
                                 double milestoneReward = Math.Round(((double)milestoneReached.reward) / 100.0, 2);
                                 Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                                 {
@@ -379,8 +383,6 @@ namespace MixItUp.Base.MixerAPI
                                 await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerMilestoneReached)), await ChannelSession.GetCurrentUser(), specialIdentifiers);
                             }
                         }
-
-                        GlobalEvents.PatronageUpdateOccurred(patronageStatus);
                     }
                 }
 

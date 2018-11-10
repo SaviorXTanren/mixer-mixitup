@@ -30,33 +30,49 @@ namespace MixItUp.WPF.Controls.Overlay
             this.item = (OverlayProgressBarItem)item;
             this.GoalTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.ProgressBarType);
 
-            if (this.item.ProgressBarType == ProgressBarTypeEnum.Followers && this.item.CurrentAmountNumber < 0)
+            this.StartingAmountTextBox.IsEnabled = true;
+            this.GoalAmountTextBox.IsEnabled = true;
+            this.ResetAfterDaysTextBox.IsEnabled = true;
+
+            if (this.item.ProgressBarType == ProgressBarTypeEnum.Milestones)
             {
-                this.TotalFollowsCheckBox.IsChecked = true;
-                this.StartingAmountTextBox.Text = "0";
+                this.StartingAmountTextBox.Text = string.Empty;
+                this.StartingAmountTextBox.IsEnabled = false;
+                this.GoalAmountTextBox.Text = string.Empty;
+                this.GoalAmountTextBox.IsEnabled = false;
+                this.ResetAfterDaysTextBox.Text = string.Empty;
+                this.ResetAfterDaysTextBox.IsEnabled = false;
             }
             else
             {
-                if (!string.IsNullOrEmpty(this.item.CurrentAmountCustom))
+                if (this.item.ProgressBarType == ProgressBarTypeEnum.Followers && this.item.CurrentAmountNumber < 0)
                 {
-                    this.StartingAmountTextBox.Text = this.item.CurrentAmountCustom.ToString();
+                    this.TotalFollowsCheckBox.IsChecked = true;
+                    this.StartingAmountTextBox.Text = "0";
                 }
                 else
                 {
-                    this.StartingAmountTextBox.Text = this.item.CurrentAmountNumber.ToString();
+                    if (!string.IsNullOrEmpty(this.item.CurrentAmountCustom))
+                    {
+                        this.StartingAmountTextBox.Text = this.item.CurrentAmountCustom.ToString();
+                    }
+                    else
+                    {
+                        this.StartingAmountTextBox.Text = this.item.CurrentAmountNumber.ToString();
+                    }
                 }
-            }
 
-            if (!string.IsNullOrEmpty(this.item.GoalAmountCustom))
-            {
-                this.GoalAmountTextBox.Text = this.item.GoalAmountCustom.ToString();
-            }
-            else
-            {
-                this.GoalAmountTextBox.Text = this.item.GoalAmountNumber.ToString();
-            }
+                if (!string.IsNullOrEmpty(this.item.GoalAmountCustom))
+                {
+                    this.GoalAmountTextBox.Text = this.item.GoalAmountCustom.ToString();
+                }
+                else
+                {
+                    this.GoalAmountTextBox.Text = this.item.GoalAmountNumber.ToString();
+                }
 
-            this.ResetAfterDaysTextBox.Text = this.item.ResetAfterDays.ToString();
+                this.ResetAfterDaysTextBox.Text = this.item.ResetAfterDays.ToString();
+            }
 
             this.ProgressColorComboBox.Text = this.item.ProgressColor;
             if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.ProgressColor))
@@ -88,20 +104,24 @@ namespace MixItUp.WPF.Controls.Overlay
             {
                 ProgressBarTypeEnum type = EnumHelper.GetEnumValueFromString<ProgressBarTypeEnum>((string)this.GoalTypeComboBox.SelectedItem);
 
-                string startingAmount = this.StartingAmountTextBox.Text;
-                if (type == ProgressBarTypeEnum.Followers && this.TotalFollowsCheckBox.IsChecked.GetValueOrDefault())
-                {
-                    startingAmount = "-1";
-                }
-
-                string goalAmount = this.GoalAmountTextBox.Text;
-
+                string startingAmount = "0";
+                string goalAmount = "0";
                 int resetAfterDays = 0;
-                if (!string.IsNullOrEmpty(this.ResetAfterDaysTextBox.Text))
+                if (type != ProgressBarTypeEnum.Milestones)
                 {
-                    if (!int.TryParse(this.ResetAfterDaysTextBox.Text, out resetAfterDays))
+                    if (!(type == ProgressBarTypeEnum.Followers && this.TotalFollowsCheckBox.IsChecked.GetValueOrDefault()))
                     {
-                        return null;
+                        startingAmount = this.StartingAmountTextBox.Text;
+                    }
+
+                    goalAmount = this.GoalAmountTextBox.Text;
+
+                    if (!string.IsNullOrEmpty(this.ResetAfterDaysTextBox.Text))
+                    {
+                        if (!int.TryParse(this.ResetAfterDaysTextBox.Text, out resetAfterDays))
+                        {
+                            return null;
+                        }
                     }
                 }
 
@@ -151,6 +171,8 @@ namespace MixItUp.WPF.Controls.Overlay
             this.GoalTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ProgressBarTypeEnum>();
             this.ProgressColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
 
+            this.StartingAmountTextBox.Text = "0";
+            this.GoalAmountTextBox.Text = "0";
             this.ResetAfterDaysTextBox.Text = "0";
             this.HTMLText.Text = OverlayProgressBarItem.HTMLTemplate;
 
