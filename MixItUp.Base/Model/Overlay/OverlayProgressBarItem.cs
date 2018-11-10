@@ -1,7 +1,6 @@
 ﻿using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -62,24 +61,24 @@ namespace MixItUp.Base.Model.Overlay
 
         public OverlayProgressBarItem() { }
 
-        public OverlayProgressBarItem(ProgressBarTypeEnum progressBarType, double currentAmount, double goalAmount, int resetAfterDays, string progressColor,
+        public OverlayProgressBarItem(string htmlText, ProgressBarTypeEnum progressBarType, double currentAmount, double goalAmount, int resetAfterDays, string progressColor,
             string backgroundColor, string textColor, int width, int height)
-            : this(progressBarType, resetAfterDays, progressColor, backgroundColor, textColor, width, height)
+            : this(htmlText, progressBarType, resetAfterDays, progressColor, backgroundColor, textColor, width, height)
         {
             this.CurrentAmountNumber = currentAmount;
             this.GoalAmountNumber = goalAmount;
         }
 
-        public OverlayProgressBarItem(ProgressBarTypeEnum progressBarType, string currentAmount, string goalAmount, int resetAfterDays, string progressColor,
+        public OverlayProgressBarItem(string htmlText, ProgressBarTypeEnum progressBarType, string currentAmount, string goalAmount, int resetAfterDays, string progressColor,
             string backgroundColor, string textColor, int width, int height)
-            : this(progressBarType, resetAfterDays, progressColor, backgroundColor, textColor, width, height)
+            : this(htmlText, progressBarType, resetAfterDays, progressColor, backgroundColor, textColor, width, height)
         {
             this.CurrentAmountCustom = currentAmount;
             this.GoalAmountCustom = goalAmount;
         }
 
-        private OverlayProgressBarItem(ProgressBarTypeEnum progressBarType, int resetAfterDays, string progressColor, string backgroundColor, string textColor, int width, int height)
-            : base(OverlayProgressBarItem.HTMLTemplate)
+        private OverlayProgressBarItem(string htmlText, ProgressBarTypeEnum progressBarType, int resetAfterDays, string progressColor, string backgroundColor, string textColor, int width, int height)
+            : base(htmlText)
         {
             this.ProgressBarType = progressBarType;
             this.ResetAfterDays = resetAfterDays;

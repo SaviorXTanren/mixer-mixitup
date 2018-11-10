@@ -78,6 +78,8 @@ namespace MixItUp.WPF.Controls.Overlay
 
             this.WidthTextBox.Text = this.item.Width.ToString();
             this.HeightTextBox.Text = this.item.Height.ToString();
+
+            this.HTMLText.Text = this.item.HTMLText;
         }
 
         public override OverlayItemBase GetItem()
@@ -127,13 +129,18 @@ namespace MixItUp.WPF.Controls.Overlay
                     return null;
                 }
 
+                if (string.IsNullOrEmpty(this.HTMLText.Text))
+                {
+                    return null;
+                }
+
                 if (double.TryParse(startingAmount, out double startingAmountNumber) && double.TryParse(goalAmount, out double goalAmountNumber))
                 {
-                    return new OverlayProgressBarItem(type, startingAmountNumber, goalAmountNumber, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
+                    return new OverlayProgressBarItem(this.HTMLText.Text, type, startingAmountNumber, goalAmountNumber, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
                 }
                 else
                 {
-                    return new OverlayProgressBarItem(type, startingAmount, goalAmount, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
+                    return new OverlayProgressBarItem(this.HTMLText.Text, type, startingAmount, goalAmount, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
                 }
             }
             return null;
@@ -143,6 +150,9 @@ namespace MixItUp.WPF.Controls.Overlay
         {
             this.GoalTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ProgressBarTypeEnum>();
             this.ProgressColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
+
+            this.ResetAfterDaysTextBox.Text = "0";
+            this.HTMLText.Text = OverlayProgressBarItem.HTMLTemplate;
 
             if (this.item != null)
             {
