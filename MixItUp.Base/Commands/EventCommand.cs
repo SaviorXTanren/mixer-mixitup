@@ -49,6 +49,8 @@ namespace MixItUp.Base.Commands
 
         [Name("Channel Milestone Reached")]
         MixerMilestoneReached = 50,
+        [Name("Channel Skill Used")]
+        MixerSkillUsed = 51,
     }
 
     public class EventCommand : CommandBase, IEquatable<EventCommand>

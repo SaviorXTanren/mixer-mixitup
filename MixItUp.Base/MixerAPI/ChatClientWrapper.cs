@@ -619,6 +619,9 @@ namespace MixItUp.Base.MixerAPI
                 if (message.IsChatSkill)
                 {
                     GlobalEvents.ChatSkillOccurred(new Tuple<UserViewModel, ChatSkillModel>(message.User, message.ChatSkill));
+
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "skillname", message.ChatSkill.skill_name }, { "skillcost", message.ChatSkill.cost.ToString() } };
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
                 }
             }
         }

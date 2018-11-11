@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
@@ -386,6 +385,9 @@ namespace MixItUp.Base.MixerAPI
                             }
 
                             GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
+
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "skillname", skillInstance.Skill.name }, { "skillcost", skillInstance.Skill.price.ToString() } };
+                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
                         }
                     }
                 }
