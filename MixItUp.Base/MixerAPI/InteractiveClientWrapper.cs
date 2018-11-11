@@ -260,43 +260,50 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task Disconnect()
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
-                this.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
+                if (this.Client != null)
                 {
-                    this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
-                    this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                    this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                    this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                    this.Client.OnDisconnectOccurred -= InteractiveClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
+                        this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                        this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                        this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                    }
+
+                    this.Client.OnGiveInput -= Client_OnGiveInput;
+                    this.Client.OnControlDelete -= Client_OnControlDelete;
+                    this.Client.OnControlCreate -= Client_OnControlCreate;
+                    this.Client.OnControlUpdate -= Client_OnControlUpdate;
+                    this.Client.OnSceneUpdate -= Client_OnSceneUpdate;
+                    this.Client.OnSceneDelete -= Client_OnSceneDelete;
+                    this.Client.OnSceneCreate -= Client_OnSceneCreate;
+                    this.Client.OnGroupUpdate -= Client_OnGroupUpdate;
+                    this.Client.OnGroupDelete -= Client_OnGroupDelete;
+                    this.Client.OnGroupCreate -= Client_OnGroupCreate;
+                    this.Client.OnParticipantUpdate -= Client_OnParticipantUpdate;
+                    this.Client.OnParticipantJoin -= Client_OnParticipantJoin;
+                    this.Client.OnParticipantLeave -= Client_OnParticipantLeave;
+                    this.Client.OnIssueMemoryWarning -= Client_OnIssueMemoryWarning;
+
+                    await this.RunAsync(this.Client.Disconnect());
+
+                    this.backgroundThreadCancellationTokenSource.Cancel();
                 }
+                this.Client = null;
 
-                this.Client.OnGiveInput -= Client_OnGiveInput;
-                this.Client.OnControlDelete -= Client_OnControlDelete;
-                this.Client.OnControlCreate -= Client_OnControlCreate;
-                this.Client.OnControlUpdate -= Client_OnControlUpdate;
-                this.Client.OnSceneUpdate -= Client_OnSceneUpdate;
-                this.Client.OnSceneDelete -= Client_OnSceneDelete;
-                this.Client.OnSceneCreate -= Client_OnSceneCreate;
-                this.Client.OnGroupUpdate -= Client_OnGroupUpdate;
-                this.Client.OnGroupDelete -= Client_OnGroupDelete;
-                this.Client.OnGroupCreate -= Client_OnGroupCreate;
-                this.Client.OnParticipantUpdate -= Client_OnParticipantUpdate;
-                this.Client.OnParticipantJoin -= Client_OnParticipantJoin;
-                this.Client.OnParticipantLeave -= Client_OnParticipantLeave;
-                this.Client.OnIssueMemoryWarning -= Client_OnIssueMemoryWarning;
-
-                await this.RunAsync(this.Client.Disconnect());
-
-                this.backgroundThreadCancellationTokenSource.Cancel();
-            }
-            this.Client = null;
-
-            this.Scenes.Clear();
-            this.Controls.Clear();
+                this.Scenes.Clear();
+                this.Controls.Clear();
+            });
         }
 
-        public bool IsConnected() { return this.Client != null && this.Client.Authenticated; }
+        public bool IsConnected()
+        {
+            InteractiveClient client = this.Client;
+            return client != null && client.Authenticated;
+        }
 
         public async Task<InteractiveConnectedSceneGroupCollectionModel> GetScenes() { return await this.RunAsync(this.Client.GetScenes()); }
 
@@ -449,46 +456,49 @@ namespace MixItUp.Base.MixerAPI
             {
                 this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version));
             }
-            
-            if (this.Client != null)
+
+            return await this.RunAsync(async () =>
             {
-                this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
-
-                if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
+                if (this.Client != null)
                 {
-                    this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
+
+                    if (await this.RunAsync(this.Client.Connect()) && await this.RunAsync(this.Client.Ready()))
                     {
-                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        this.Client.OnDisconnectOccurred += InteractiveClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
+                        {
+                            this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        }
+
+                        this.Client.OnGiveInput += Client_OnGiveInput;
+                        this.Client.OnControlDelete += Client_OnControlDelete;
+                        this.Client.OnControlCreate += Client_OnControlCreate;
+                        this.Client.OnControlUpdate += Client_OnControlUpdate;
+                        this.Client.OnSceneUpdate += Client_OnSceneUpdate;
+                        this.Client.OnSceneDelete += Client_OnSceneDelete;
+                        this.Client.OnSceneCreate += Client_OnSceneCreate;
+                        this.Client.OnGroupUpdate += Client_OnGroupUpdate;
+                        this.Client.OnGroupDelete += Client_OnGroupDelete;
+                        this.Client.OnGroupCreate += Client_OnGroupCreate;
+                        this.Client.OnParticipantUpdate += Client_OnParticipantUpdate;
+                        this.Client.OnParticipantJoin += Client_OnParticipantJoin;
+                        this.Client.OnParticipantLeave += Client_OnParticipantLeave;
+                        this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
+
+                        if (sharedProject != null && InteractiveSharedProjectModel.AllMixPlayProjects.Contains(sharedProject))
+                        {
+                            ChannelSession.Services.Telemetry.TrackInteractiveGame(this.Game);
+                        }
+
+                        return await this.Initialize();
                     }
-
-                    this.Client.OnGiveInput += Client_OnGiveInput;
-                    this.Client.OnControlDelete += Client_OnControlDelete;
-                    this.Client.OnControlCreate += Client_OnControlCreate;
-                    this.Client.OnControlUpdate += Client_OnControlUpdate;
-                    this.Client.OnSceneUpdate += Client_OnSceneUpdate;
-                    this.Client.OnSceneDelete += Client_OnSceneDelete;
-                    this.Client.OnSceneCreate += Client_OnSceneCreate;
-                    this.Client.OnGroupUpdate += Client_OnGroupUpdate;
-                    this.Client.OnGroupDelete += Client_OnGroupDelete;
-                    this.Client.OnGroupCreate += Client_OnGroupCreate;
-                    this.Client.OnParticipantUpdate += Client_OnParticipantUpdate;
-                    this.Client.OnParticipantJoin += Client_OnParticipantJoin;
-                    this.Client.OnParticipantLeave += Client_OnParticipantLeave;
-                    this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
-
-                    if (sharedProject != null && InteractiveSharedProjectModel.AllMixPlayProjects.Contains(sharedProject))
-                    {
-                        ChannelSession.Services.Telemetry.TrackInteractiveGame(this.Game);
-                    }
-
-                    return await this.Initialize();
                 }
-            }
-            return false;
+                return false;
+            });
         }
 
         #region Interactive Update Methods
