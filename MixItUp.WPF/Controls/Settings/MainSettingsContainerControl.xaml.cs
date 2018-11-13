@@ -34,7 +34,7 @@ namespace MixItUp.WPF.Controls.Settings
             this.settingsGroups.Add(new SettingsOption("Themes & Colors", new ThemeSettingsControl()));
             this.settingsGroups.Add(new SettingsOption("Notifications", new NotificationsSettingsControl()));
             this.settingsGroups.Add(new SettingsOption("Chat", new ChatSettingsControl()));
-            this.settingsGroups.Add(new SettingsOption("Interactive", new InteractiveSettingsControl()));
+            this.settingsGroups.Add(new SettingsOption("MixPlay", new InteractiveSettingsControl()));
             this.settingsGroups.Add(new SettingsOption("Serial Devices", new SerialDevicesSettingsControl()));
             this.settingsGroups.Add(new SettingsOption("Advanced", new AdvancedSettingsControl()));
         }

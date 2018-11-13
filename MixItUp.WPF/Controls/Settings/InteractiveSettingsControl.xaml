@@ -23,10 +23,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Default Interactive Game To Connect:</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Default MixPlay Game To Connect:</TextBlock>
         <ComboBox x:Name="DefaultInteractiveGameComboBox" Grid.Row="0" Grid.Column="2" SelectionChanged="DefaultInteractiveGameComboBox_SelectionChanged" DisplayMemberPath="name" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Prevent Unknown Interactive Users:</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Style="{StaticResource HeaderTextBlock}">Prevent Unknown MixPlay Users:</TextBlock>
         <ToggleButton Grid.Row="2" Grid.Column="2" x:Name="PreventUnknownInteractiveUsersToggleButton" HorizontalAlignment="Left" Checked="PreventUnknownInteractiveUsersToggleButton_Checked" Unchecked="PreventUnknownInteractiveUsersToggleButton_Checked" />
 
         <Separator Grid.Row="4" Grid.ColumnSpan="2" Margin="10" />
@@ -40,7 +40,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Custom Interactive Projects:</TextBlock>
+            <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Custom MixPlay Projects:</TextBlock>
 
             <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="2" BorderThickness="1" Width="390">
                 <ListView x:Name="CustomInteractiveProjectsListView" HorizontalAlignment="Center">
