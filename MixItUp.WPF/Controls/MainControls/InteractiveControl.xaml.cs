@@ -476,7 +476,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 Logger.Log(ex);
             }
 
-            await MessageBoxHelper.ShowMessageDialog("Failed to connect to interactive with selected game. Please try again.");
+            await MessageBoxHelper.ShowMessageDialog("Failed to connect to MixPlay with selected game. Please try again.");
         }
 
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
