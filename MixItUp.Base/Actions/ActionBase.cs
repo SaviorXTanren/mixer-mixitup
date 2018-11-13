@@ -30,6 +30,7 @@ namespace MixItUp.Base.Actions
         Counter,
         [Name("Game Queue")]
         GameQueue,
+        [Name("MixPlay")]
         Interactive,
         [Name("Text To Speech")]
         TextToSpeech,
