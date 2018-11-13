@@ -31,7 +31,7 @@ namespace MixItUp.WPF.Controls.Chat
         private void ChatMessageHeaderControl_Loaded(object sender, RoutedEventArgs e)
         {
             WhispererNumber.Visibility = ChannelSession.Settings.TrackWhispererNumber ? Visibility.Visible : Visibility.Collapsed;
-            if (!this.Message.IsAlertMessage)
+            if (!this.Message.IsAlert)
             {
                 this.UserTextBlock.Foreground = Application.Current.FindResource(this.Message.User.PrimaryRoleColorName) as SolidColorBrush;
 

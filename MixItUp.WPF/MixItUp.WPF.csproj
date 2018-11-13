@@ -92,8 +92,8 @@
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
-    <Reference Include="Mixer.Base, Version=0.8.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\mixer-client-csharp.0.8.0.1-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
+    <Reference Include="Mixer.Base, Version=0.8.1.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\mixer-client-csharp.0.8.1.1-beta\lib\netstandard2.0\Mixer.Base.dll</HintPath>
     </Reference>
     <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
@@ -216,9 +216,8 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsInput, Version=1.0.4.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL">
-      <HintPath>..\packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="WpfAnimatedGif, Version=1.4.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WpfAnimatedGif.1.4.17\lib\net\WpfAnimatedGif.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +319,15 @@
     </Compile>
     <Compile Include="Controls\Chat\EmoticonControl.xaml.cs">
       <DependentUpon>EmoticonControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\GifSkillControl.xaml.cs">
+      <DependentUpon>GifSkillControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\SkillControl.xaml.cs">
+      <DependentUpon>SkillControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Chat\StickerControl.xaml.cs">
+      <DependentUpon>StickerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Command\ActionGroupCommandDetailsControl.xaml.cs">
       <DependentUpon>ActionGroupCommandDetailsControl.xaml</DependentUpon>
@@ -837,6 +845,18 @@
     <Page Include="Controls\Chat\EmoticonControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Chat\GifSkillControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\SkillControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Chat\StickerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\ActionGroupCommandDetailsControl.xaml">
       <SubType>Designer</SubType>

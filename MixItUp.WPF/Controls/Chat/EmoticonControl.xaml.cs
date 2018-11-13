@@ -51,28 +51,30 @@ namespace MixItUp.WPF.Controls.Chat
         {
             try
             {
-                string uri = Emoticon.Uri;
-                if (!EmoticonControl.emoticonBitmapImages.ContainsKey(uri))
+                if (this.Emoticon != null)
                 {
-                    BitmapImage bitmap = new BitmapImage();
-                    using (WebClient client = new WebClient())
+                    string uri = Emoticon.Uri;
+                    if (!EmoticonControl.emoticonBitmapImages.ContainsKey(uri))
                     {
-                        
-                        var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(uri); });
+                        BitmapImage bitmap = new BitmapImage();
+                        using (WebClient client = new WebClient())
+                        {
+                            var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(uri); });
 
-                        bitmap.BeginInit();
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmap.StreamSource = new MemoryStream(bytes);
-                        bitmap.EndInit();
+                            bitmap.BeginInit();
+                            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmap.StreamSource = new MemoryStream(bytes);
+                            bitmap.EndInit();
+                        }
+                        EmoticonControl.emoticonBitmapImages[uri] = bitmap;
                     }
-                    EmoticonControl.emoticonBitmapImages[uri] = bitmap;
+
+                    CroppedBitmap croppedBitmap = new CroppedBitmap(
+                        EmoticonControl.emoticonBitmapImages[uri],
+                        new Int32Rect((int)Emoticon.X, (int)Emoticon.Y, (int)Emoticon.Width, (int)Emoticon.Height));
+
+                    this.EmoticonImage.Source = croppedBitmap;
                 }
-
-                CroppedBitmap croppedBitmap = new CroppedBitmap(
-                    EmoticonControl.emoticonBitmapImages[uri],
-                    new Int32Rect((int)Emoticon.X, (int)Emoticon.Y, (int)Emoticon.Width, (int)Emoticon.Height));
-
-                this.EmoticonImage.Source = croppedBitmap;
             }
             catch (Exception ex) { Logger.Log(ex); }
         }

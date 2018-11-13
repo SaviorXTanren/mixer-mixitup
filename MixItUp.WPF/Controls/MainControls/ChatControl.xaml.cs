@@ -1,13 +1,16 @@
 ﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Skills;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.MixerAPI;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Chat;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.PopOut;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -136,6 +139,8 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 this.DisableChatButton.Visibility = Visibility.Collapsed;
             }
+
+            GlobalEvents.OnSkillOccurred += GlobalEvents_OnSkillOccurred;
         }
 
         protected override async Task InitializeInternal()
@@ -188,6 +193,12 @@ namespace MixItUp.WPF.Controls.MainControls
 
                     await this.RefreshViewerChatterCounts();
                 });
+            }
+
+            IEnumerable<ChatMessageEventModel> oldMessages = await ChannelSession.Chat.GetChatHistory(50);
+            foreach (ChatMessageEventModel message in oldMessages)
+            {
+                await AddMessage(ChatMessageViewModel.CreateChatMessageViewModel(message));
             }
         }
 
@@ -922,6 +933,14 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 await ChannelSession.Chat.Whisper(ChannelSession.User.username, message);
             }
+        }
+
+        private async void GlobalEvents_OnSkillOccurred(object sender, Tuple<UserViewModel, SkillInstanceModel> skill)
+        {
+            await this.Dispatcher.InvokeAsync<Task>(async () =>
+            {
+                await this.AddMessage(new ChatMessageViewModel(skill.Item2, skill.Item1));
+            });
         }
 
         #endregion Chat Event Handlers

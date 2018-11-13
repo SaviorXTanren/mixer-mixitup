@@ -183,6 +183,9 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public MixerRoleEnum PrimaryRole { get { return this.MixerRoles.Max(); } }
+        
+        [JsonIgnore]
+        public string PrimaryRoleString { get { return EnumHelper.GetEnumName(this.PrimaryRole); } }
 
         [JsonIgnore]
         public MixerRoleEnum PrimarySortableRole { get { return this.MixerRoles.Where(r => r != MixerRoleEnum.Follower).Max(); } }

@@ -173,6 +173,30 @@ namespace MixItUp.Base.ViewModel.User
             });
         }
 
+        public async Task FullRefresh(IEnumerable<ChatUserModel> chatUsers)
+        {
+            HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
+
+            List<UserViewModel> usersToRemove = new List<UserViewModel>();
+            await this.semaphore.WaitAndRelease(() =>
+            {
+                foreach (UserViewModel user in this.users.Values)
+                {
+                    if (!chatUserIDs.Contains(user.ID))
+                    {
+                        usersToRemove.Add(user);
+                    }
+                }
+                return Task.FromResult(0);
+            });
+
+            await this.AddOrUpdateUsers(chatUsers);
+            foreach (UserViewModel user in usersToRemove)
+            {
+                await this.RemoveUser(user.ID);
+            }
+        }
+
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
             return await this.semaphore.WaitAndRelease(() => Task.FromResult(this.users.Values.ToList()));

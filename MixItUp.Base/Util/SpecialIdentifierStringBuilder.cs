@@ -448,8 +448,9 @@ namespace MixItUp.Base.Util
                     PatronagePeriodModel patronagePeriod = await ChannelSession.Connection.GetPatronagePeriod(patronageStatus);
                     if (patronagePeriod != null)
                     {
-                        PatronageMilestoneGroupModel patronageMilestoneGroup = patronagePeriod.milestoneGroups[patronageStatus.currentMilestoneGroupId];
-                        PatronageMilestoneModel patronageMilestone = patronageMilestoneGroup.milestones.FirstOrDefault(m => m.id == patronageStatus.currentMilestoneId);
+                        IEnumerable<PatronageMilestoneModel> patronageMilestones = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones);
+
+                        PatronageMilestoneModel patronageMilestone = patronageMilestones.FirstOrDefault(m => m.id == patronageStatus.currentMilestoneId);
                         if (patronageMilestone != null)
                         {
                             double milestoneReward = Math.Round(((double)patronageMilestone.reward) / 100.0, 2);
@@ -457,7 +458,7 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward));
                         }
 
-                        PatronageMilestoneModel patronageNextMilestone = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones).FirstOrDefault(m => m.id == (patronageStatus.currentMilestoneId + 1));
+                        PatronageMilestoneModel patronageNextMilestone = patronageMilestones.FirstOrDefault(m => m.id == (patronageStatus.currentMilestoneId + 1));
                         if (patronageNextMilestone != null)
                         {
                             double milestoneNextReward = Math.Round(((double)patronageNextMilestone.reward) / 100.0, 2);
@@ -465,7 +466,7 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", string.Format("{0:C}", milestoneNextReward));
                         }
 
-                        PatronageMilestoneModel patronageFinalMilestone = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones).OrderByDescending(m => m.id).FirstOrDefault();
+                        PatronageMilestoneModel patronageFinalMilestone = patronageMilestones.OrderByDescending(m => m.id).FirstOrDefault();
                         if (patronageNextMilestone != null)
                         {
                             double milestoneFinalReward = Math.Round(((double)patronageFinalMilestone.reward) / 100.0, 2);
@@ -473,13 +474,15 @@ namespace MixItUp.Base.Util
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", string.Format("{0:C}", milestoneFinalReward));
                         }
 
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
-                        IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones).Where(m => m.target <= patronageStatus.patronageEarned);
-                        long patronageEarnedReward = patronageMilestonesEarned.Sum(m => m.reward);
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", string.Format("{0:C}", patronageEarnedReward));
+                        IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
+                        if (patronageMilestonesEarned.Count() > 0)
+                        {
+                            long patronageEarnedReward = patronageMilestonesEarned.Max(m => m.reward);
+                            double patronageEarnedRewardDollars = Math.Round(((double)patronageEarnedReward) / 100.0, 2);
 
-                        long patronagePotentialReward = patronagePeriod.milestoneGroups.SelectMany(mg => mg.milestones).Sum(m => m.reward);
-                        this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "potentialreward", string.Format("{0:C}", patronagePotentialReward));
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", string.Format("{0:C}", patronageEarnedRewardDollars));
+                        }
                     }
                 }
             }
@@ -617,6 +620,7 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "moderationstrikes", userData.ModerationStrikes.ToString());
                 }
 
+                this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "primaryrole", user.PrimaryRoleString);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "avatar", user.AvatarLink);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "url", "https://www.mixer.com/" + user.UserName);
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "name", user.UserName);
