@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Group Name:" />
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Name:" />
 
             <TextBox Grid.Column="2" x:Name="ActionGroupNameFilterTextBox" Width="150" TextChanged="ActionGroupNameFilterTextBox_TextChanged" />
         </Grid>
