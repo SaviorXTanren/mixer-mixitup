@@ -59,7 +59,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task<UserViewModel> AddOrUpdateUser(UserViewModel user)
         {
-            if (user.ID > 0)
+            if (!user.IsAnonymous)
             {
                 await this.semaphore.WaitAndRelease(() =>
                 {

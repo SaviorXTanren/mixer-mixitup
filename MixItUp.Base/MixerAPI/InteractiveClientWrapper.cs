@@ -754,7 +754,7 @@ namespace MixItUp.Base.MixerAPI
                         user.InteractiveIDs.Add(e.participantID);
                     }
 
-                    if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.ID == 0)
+                    if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.IsAnonymous)
                     {
                         return;
                     }
