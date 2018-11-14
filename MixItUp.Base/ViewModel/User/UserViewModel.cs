@@ -181,7 +181,7 @@ namespace MixItUp.Base.ViewModel.User
         [JsonIgnore]
         public string RolesDisplayString { get; private set; }
 
-        [JsonProperty]
+        [JsonIgnore]
         public bool IsAnonymous { get { return this.ID == 0; } }
 
         [JsonIgnore]
