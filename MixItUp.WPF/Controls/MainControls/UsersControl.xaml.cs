@@ -45,7 +45,13 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void RefreshList(DataGridColumn sortColumn = null)
         {
-            string filter = this.UsernameFilterTextBox.Text;
+            string filter = null;
+
+            if (this.UsernameFilterTextBox != null)
+            {
+                filter = this.UsernameFilterTextBox.Text;
+            }
+
             if (!string.IsNullOrEmpty(filter))
             {
                 filter = filter.ToLower();
