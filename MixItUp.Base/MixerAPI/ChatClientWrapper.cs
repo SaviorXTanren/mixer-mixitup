@@ -50,70 +50,80 @@ namespace MixItUp.Base.MixerAPI
         {
             if (ChannelSession.BotConnection != null)
             {
-                this.BotClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.BotConnection);
-                if (this.BotClient != null)
+                return await this.RunAsync(async () =>
                 {
-                    this.BotClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
-                    this.BotClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    this.BotClient = await this.ConnectAndAuthenticateChatClient(ChannelSession.BotConnection);
+                    if (this.BotClient != null)
                     {
-                        this.BotClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                        this.BotClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.BotClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.BotClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        this.BotClient.OnMessageOccurred += BotChatClient_OnMessageOccurred;
+                        this.BotClient.OnDisconnectOccurred += BotClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
+                        {
+                            this.BotClient.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.BotClient.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.BotClient.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.BotClient.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        }
+                        return true;
                     }
-                    return true;
-                }
+                    return false;
+                });
             }
             return false;
         }
 
         public async Task Disconnect()
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
-                this.Client.OnClearMessagesOccurred -= ChatClient_OnClearMessagesOccurred;
-                this.Client.OnDeleteMessageOccurred -= ChatClient_OnDeleteMessageOccurred;
-                this.Client.OnMessageOccurred -= ChatClient_OnMessageOccurred;
-                this.Client.OnPollEndOccurred -= ChatClient_OnPollEndOccurred;
-                this.Client.OnPollStartOccurred -= ChatClient_OnPollStartOccurred;
-                this.Client.OnPurgeMessageOccurred -= ChatClient_OnPurgeMessageOccurred;
-                this.Client.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
-                this.Client.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
-                this.Client.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
-                this.Client.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
+                if (this.Client != null)
                 {
-                    this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
-                    this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                    this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                    this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                    this.Client.OnClearMessagesOccurred -= ChatClient_OnClearMessagesOccurred;
+                    this.Client.OnDeleteMessageOccurred -= ChatClient_OnDeleteMessageOccurred;
+                    this.Client.OnMessageOccurred -= ChatClient_OnMessageOccurred;
+                    this.Client.OnPollEndOccurred -= ChatClient_OnPollEndOccurred;
+                    this.Client.OnPollStartOccurred -= ChatClient_OnPollStartOccurred;
+                    this.Client.OnPurgeMessageOccurred -= ChatClient_OnPurgeMessageOccurred;
+                    this.Client.OnUserJoinOccurred -= ChatClient_OnUserJoinOccurred;
+                    this.Client.OnUserLeaveOccurred -= ChatClient_OnUserLeaveOccurred;
+                    this.Client.OnUserUpdateOccurred -= ChatClient_OnUserUpdateOccurred;
+                    this.Client.OnDisconnectOccurred -= StreamerClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
+                        this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                        this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                        this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                    }
+
+                    await this.RunAsync(this.Client.Disconnect());
+
+                    this.backgroundThreadCancellationTokenSource.Cancel();
                 }
-
-                await this.RunAsync(this.Client.Disconnect());
-
-                this.backgroundThreadCancellationTokenSource.Cancel();
-            }
-            this.Client = null;
+                this.Client = null;
+            });
         }
 
         public async Task DisconnectBot()
         {
-            if (this.BotClient != null)
+            await this.RunAsync(async () =>
             {
-                this.BotClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
-                this.BotClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
+                if (this.BotClient != null)
                 {
-                    this.BotClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
-                    this.BotClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                    this.BotClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                    this.BotClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
-                }
+                    this.BotClient.OnMessageOccurred -= BotChatClient_OnMessageOccurred;
+                    this.BotClient.OnDisconnectOccurred -= BotClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.BotClient.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
+                        this.BotClient.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                        this.BotClient.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                        this.BotClient.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                    }
 
-                await this.RunAsync(this.BotClient.Disconnect());
-            }
-            this.BotClient = null;
+                    await this.RunAsync(this.BotClient.Disconnect());
+                }
+                this.BotClient = null;
+            });
         }
 
         public async Task SendMessage(string message, bool sendAsStreamer = false)
@@ -241,61 +251,69 @@ namespace MixItUp.Base.MixerAPI
                 this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 
                 this.Client = await this.ConnectAndAuthenticateChatClient(ChannelSession.Connection);
-                if (this.Client != null)
+                return await this.RunAsync(async () =>
                 {
-                    this.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
-                    this.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
-                    this.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
-                    this.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
-                    this.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
-                    this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
-                    this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
-                    this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
-                    this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
-                    this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    if (this.Client != null)
                     {
-                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
-                    }
-
-                    await ChannelSession.ActiveUsers.AddOrUpdateUsers(await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)));
-
-                    if (ChannelSession.IsStreamer)
-                    {
-                        ChannelSession.PreMadeChatCommands.Clear();
-                        foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
+                        this.Client.OnClearMessagesOccurred += ChatClient_OnClearMessagesOccurred;
+                        this.Client.OnDeleteMessageOccurred += ChatClient_OnDeleteMessageOccurred;
+                        this.Client.OnMessageOccurred += ChatClient_OnMessageOccurred;
+                        this.Client.OnPollEndOccurred += ChatClient_OnPollEndOccurred;
+                        this.Client.OnPollStartOccurred += ChatClient_OnPollStartOccurred;
+                        this.Client.OnPurgeMessageOccurred += ChatClient_OnPurgeMessageOccurred;
+                        this.Client.OnUserJoinOccurred += ChatClient_OnUserJoinOccurred;
+                        this.Client.OnUserLeaveOccurred += ChatClient_OnUserLeaveOccurred;
+                        this.Client.OnUserUpdateOccurred += ChatClient_OnUserUpdateOccurred;
+                        this.Client.OnDisconnectOccurred += StreamerClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
                         {
+                            this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        }
+
+                        await ChannelSession.ActiveUsers.AddOrUpdateUsers(await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, Math.Max(ChannelSession.Channel.viewersCurrent, 1)));
+
+                        if (ChannelSession.IsStreamer)
+                        {
+                            ChannelSession.PreMadeChatCommands.Clear();
+                            foreach (PreMadeChatCommand command in ReflectionHelper.CreateInstancesOfImplementingType<PreMadeChatCommand>())
+                            {
 #pragma warning disable CS0612 // Type or member is obsolete
-                            if (!(command is ObsoletePreMadeCommand))
-                            {
-                                ChannelSession.PreMadeChatCommands.Add(command);
-                            }
+                                if (!(command is ObsoletePreMadeCommand))
+                                {
+                                    ChannelSession.PreMadeChatCommands.Add(command);
+                                }
 #pragma warning restore CS0612 // Type or member is obsolete
-                        }
+                            }
 
-                        foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
-                        {
-                            PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
-                            if (command != null)
+                            foreach (PreMadeChatCommandSettings commandSetting in ChannelSession.Settings.PreMadeChatCommandSettings)
                             {
-                                command.UpdateFromSettings(commandSetting);
+                                PreMadeChatCommand command = ChannelSession.PreMadeChatCommands.FirstOrDefault(c => c.Name.Equals(commandSetting.Name));
+                                if (command != null)
+                                {
+                                    command.UpdateFromSettings(commandSetting);
+                                }
                             }
                         }
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                        return true;
                     }
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.ChannelRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(async () => { await this.TimerCommandsBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-                    return true;
-                }
+                    return false;
+                });
             }
             return false;
         }
@@ -592,6 +610,22 @@ namespace MixItUp.Base.MixerAPI
             });
         }
 
+        private async Task ChatterRefreshBackground()
+        {
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            {
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                await ChannelSession.RefreshChannel();
+                await Task.Delay(180000, tokenSource.Token);
+
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                IEnumerable<ChatUserModel> chatters = await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, int.MaxValue);
+                await ChannelSession.ActiveUsers.AddOrUpdateUsers(chatters);
+            });
+        }
+
         #endregion Refresh Methods
 
         #region Chat Event Handlers
@@ -605,6 +639,9 @@ namespace MixItUp.Base.MixerAPI
                 if (message.IsChatSkill)
                 {
                     GlobalEvents.ChatSkillOccurred(new Tuple<UserViewModel, ChatSkillModel>(message.User, message.ChatSkill));
+
+                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "skillname", message.ChatSkill.skill_name }, { "skillcost", message.ChatSkill.cost.ToString() } };
+                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
                 }
             }
         }

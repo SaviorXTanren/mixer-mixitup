@@ -590,8 +590,6 @@ namespace MixItUp.Desktop
 
             if (this.IsStreamer)
             {
-                await this.RemoveDuplicateUsers();
-
                 IEnumerable<uint> removedUsers = this.UserData.GetRemovedValues();
                 await this.DatabaseWrapper.RunBulkWriteCommand("DELETE FROM Users WHERE ID = @ID", removedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@ID", value: (int)u) }));
 
@@ -613,54 +611,5 @@ namespace MixItUp.Desktop
         }
 
         public Version GetLatestVersion() { return Assembly.GetEntryAssembly().GetName().Version; }
-
-        public async Task RemoveDuplicateUsers()
-        {
-            if (ChannelSession.Connection != null)
-            {
-                var duplicateGroups = this.UserData.Values.GroupBy(u => u.UserName).Where(g => g.Count() > 1);
-                foreach (var duplicateGroup in duplicateGroups)
-                {
-                    UserModel onlineUser = null;
-                    if (!string.IsNullOrEmpty(duplicateGroup.Key))
-                    {
-                        onlineUser = await ChannelSession.Connection.GetUser(duplicateGroup.Key);
-                    }
-
-                    if (onlineUser != null)
-                    {
-                        List<UserDataViewModel> dupeUsers = new List<UserDataViewModel>(duplicateGroup);
-                        if (dupeUsers.Count > 0)
-                        {
-                            UserDataViewModel solidUser = dupeUsers.FirstOrDefault(u => u.ID == onlineUser.id);
-                            if (solidUser != null)
-                            {
-                                dupeUsers.Remove(solidUser);
-                                foreach (UserDataViewModel dupeUser in dupeUsers)
-                                {
-                                    solidUser.ViewingMinutes += dupeUser.ViewingMinutes;
-                                    foreach (var kvp in dupeUser.CurrencyAmounts)
-                                    {
-                                        solidUser.AddCurrencyAmount(kvp.Key, kvp.Value.Amount);
-                                    }
-                                }
-
-                                foreach (UserDataViewModel dupeUser in dupeUsers)
-                                {
-                                    this.UserData.Remove(dupeUser.ID);
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var dupeUser in duplicateGroup)
-                        {
-                            this.UserData.Remove(dupeUser.ID);
-                        }
-                    }
-                }
-            }
-        }
     }
 }

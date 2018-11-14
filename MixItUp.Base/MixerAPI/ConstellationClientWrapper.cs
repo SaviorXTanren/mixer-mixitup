@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Channel;
-using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Constellation;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
@@ -85,23 +84,26 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task Disconnect()
         {
-            if (this.Client != null)
+            await this.RunAsync(async () =>
             {
-                this.Client.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
-                if (ChannelSession.Settings.DiagnosticLogging)
+                if (this.Client != null)
                 {
-                    this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
-                    this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
-                    this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
-                    this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                    this.Client.OnDisconnectOccurred -= ConstellationClient_OnDisconnectOccurred;
+                    if (ChannelSession.Settings.DiagnosticLogging)
+                    {
+                        this.Client.OnPacketSentOccurred -= WebSocketClient_OnPacketSentOccurred;
+                        this.Client.OnMethodOccurred -= WebSocketClient_OnMethodOccurred;
+                        this.Client.OnReplyOccurred -= WebSocketClient_OnReplyOccurred;
+                        this.Client.OnEventOccurred -= WebSocketClient_OnEventOccurred;
+                    }
+                    this.Client.OnSubscribedEventOccurred -= ConstellationClient_OnSubscribedEventOccurred;
+
+                    await this.RunAsync(this.Client.Disconnect());
+
+                    this.backgroundThreadCancellationTokenSource.Cancel();
                 }
-                this.Client.OnSubscribedEventOccurred -= ConstellationClient_OnSubscribedEventOccurred;
-
-                await this.RunAsync(this.Client.Disconnect());
-
-                this.backgroundThreadCancellationTokenSource.Cancel();
-            }
-            this.Client = null;
+                this.Client = null;
+            });
         }
 
         public bool CanUserRunEvent(UserViewModel user, string eventName)
@@ -152,28 +154,31 @@ namespace MixItUp.Base.MixerAPI
         protected override async Task<bool> ConnectInternal()
         {
             this.Client = await this.RunAsync(ConstellationClient.Create(ChannelSession.Connection.Connection));
-            if (this.Client != null)
+            return await this.RunAsync(async () =>
             {
-                this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
-
-                if (await this.RunAsync(this.Client.Connect()))
+                if (this.Client != null)
                 {
-                    this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
-                    if (ChannelSession.Settings.DiagnosticLogging)
+                    this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
+
+                    if (await this.RunAsync(this.Client.Connect()))
                     {
-                        this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
-                        this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
-                        this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
-                        this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        this.Client.OnDisconnectOccurred += ConstellationClient_OnDisconnectOccurred;
+                        if (ChannelSession.Settings.DiagnosticLogging)
+                        {
+                            this.Client.OnPacketSentOccurred += WebSocketClient_OnPacketSentOccurred;
+                            this.Client.OnMethodOccurred += WebSocketClient_OnMethodOccurred;
+                            this.Client.OnReplyOccurred += WebSocketClient_OnReplyOccurred;
+                            this.Client.OnEventOccurred += WebSocketClient_OnEventOccurred;
+                        }
+                        this.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
+
+                        await this.SubscribeToEvents(ConstellationClientWrapper.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.Channel.id)));
+
+                        return true;
                     }
-                    this.Client.OnSubscribedEventOccurred += ConstellationClient_OnSubscribedEventOccurred;
-
-                    await this.SubscribeToEvents(ConstellationClientWrapper.subscribedEvents.Select(e => new ConstellationEventType(e, ChannelSession.Channel.id)));
-
-                    return true;
                 }
-            }
-            return false;
+                return false;
+            });
         }
 
         private async void ConstellationClient_OnSubscribedEventOccurred(object sender, ConstellationLiveEventModel e)
@@ -352,6 +357,9 @@ namespace MixItUp.Base.MixerAPI
                             SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
 
                             GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
+
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "skillname", skillInstance.Skill.name }, { "skillcost", skillInstance.Skill.price.ToString() } };
+                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
                         }
                     }
                 }
