@@ -182,6 +182,9 @@ namespace MixItUp.Base.ViewModel.User
         public string RolesDisplayString { get; private set; }
 
         [JsonIgnore]
+        public bool IsAnonymous { get { return this.ID == 0; } }
+
+        [JsonIgnore]
         public MixerRoleEnum PrimaryRole { get { return this.MixerRoles.Max(); } }
         
         [JsonIgnore]
@@ -269,7 +272,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task RefreshDetails(bool force = false)
         {
-            if (this.ID > 0 && (this.LastUpdated.TotalMinutesFromNow() >= 1 || force))
+            if (!this.IsAnonymous && (this.LastUpdated.TotalMinutesFromNow() >= 1 || force))
             {
                 UserWithChannelModel user = await ChannelSession.Connection.GetUser(this.ID);
                 if (user != null)
@@ -305,7 +308,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task SetCustomRoles()
         {
-            if (this.ID > 0)
+            if (!this.IsAnonymous)
             {
                 this.CustomRoles.Clear();
                 if (ChannelSession.Services.GameWisp != null)
@@ -325,7 +328,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SetChatDetails(ChatUserModel chatUser)
         {
-            if (this.ID > 0 && chatUser != null)
+            if (!this.IsAnonymous && chatUser != null)
             {
                 this.SetMixerRoles(chatUser.userRoles);
                 this.IsInChat = true;
