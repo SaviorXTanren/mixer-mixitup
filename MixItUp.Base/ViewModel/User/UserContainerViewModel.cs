@@ -123,21 +123,24 @@ namespace MixItUp.Base.ViewModel.User
             {
                 foreach (InteractiveParticipantModel interactiveUser in interactiveUsers)
                 {
-                    UserViewModel user = null;
-                    if (this.users.ContainsKey(interactiveUser.userID))
+                    if (interactiveUser.userID > 0)
                     {
-                        user = this.users[interactiveUser.userID];
-                    }
-                    else
-                    {
-                        user = new UserViewModel(interactiveUser);
-                        newUsers.Add(user);
-                    }
+                        UserViewModel user = null;
+                        if (this.users.ContainsKey(interactiveUser.userID))
+                        {
+                            user = this.users[interactiveUser.userID];
+                        }
+                        else
+                        {
+                            user = new UserViewModel(interactiveUser);
+                            newUsers.Add(user);
+                        }
 
-                    if (user != null)
-                    {
-                        this.users[user.ID] = user;
-                        user.SetInteractiveDetails(interactiveUser);
+                        if (user != null)
+                        {
+                            this.users[user.ID] = user;
+                            user.SetInteractiveDetails(interactiveUser);
+                        }
                     }
                 }
 
