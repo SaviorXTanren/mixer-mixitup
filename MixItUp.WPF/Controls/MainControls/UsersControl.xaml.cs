@@ -1,8 +1,10 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Currency;
 using MixItUp.WPF.Windows.Users;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -45,44 +47,54 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void RefreshList(DataGridColumn sortColumn = null)
         {
-            string filter = this.UsernameFilterTextBox.Text;
-            if (!string.IsNullOrEmpty(filter))
+            try
             {
-                filter = filter.ToLower();
-            }
+                string filter = null;
 
-            this.LimitingResultsMessage.Visibility = Visibility.Collapsed;
-            this.userData.Clear();
-
-            IEnumerable<UserDataViewModel> data = ChannelSession.Settings.UserData.Values.ToList();
-            if (sortColumn != null)
-            {
-                int columnIndex = this.UserDataGridView.Columns.IndexOf(sortColumn);
-                if (columnIndex == 0) { data = data.OrderBy(u => u.UserName); }
-                if (columnIndex == 1) { data = data.OrderBy(u => u.ViewingMinutes); }
-                if (columnIndex == 2) { data = data.OrderBy(u => u.PrimaryCurrency); }
-                if (columnIndex == 3) { data = data.OrderBy(u => u.PrimaryRankPoints); }
-
-                if (sortColumn.SortDirection.GetValueOrDefault() == ListSortDirection.Descending)
+                if (this.UsernameFilterTextBox != null)
                 {
-                    data = data.Reverse();
-                }
-                lastSortedColumn = sortColumn;
-            }
-
-            foreach (var userData in data)
-            {
-                if (string.IsNullOrEmpty(filter) || userData.UserName.ToLower().Contains(filter))
-                {
-                    this.userData.Add(userData);
+                    filter = this.UsernameFilterTextBox.Text;
                 }
 
-                if (this.userData.Count >= 200)
+                if (!string.IsNullOrEmpty(filter))
                 {
-                    this.LimitingResultsMessage.Visibility = Visibility.Visible;
-                    break;
+                    filter = filter.ToLower();
+                }
+
+                this.LimitingResultsMessage.Visibility = Visibility.Collapsed;
+                this.userData.Clear();
+
+                IEnumerable<UserDataViewModel> data = ChannelSession.Settings.UserData.Values.ToList();
+                if (sortColumn != null)
+                {
+                    int columnIndex = this.UserDataGridView.Columns.IndexOf(sortColumn);
+                    if (columnIndex == 0) { data = data.OrderBy(u => u.UserName); }
+                    if (columnIndex == 1) { data = data.OrderBy(u => u.ViewingMinutes); }
+                    if (columnIndex == 2) { data = data.OrderBy(u => u.PrimaryCurrency); }
+                    if (columnIndex == 3) { data = data.OrderBy(u => u.PrimaryRankPoints); }
+
+                    if (sortColumn.SortDirection.GetValueOrDefault() == ListSortDirection.Descending)
+                    {
+                        data = data.Reverse();
+                    }
+                    lastSortedColumn = sortColumn;
+                }
+
+                foreach (var userData in data)
+                {
+                    if (string.IsNullOrEmpty(filter) || userData.UserName.ToLower().Contains(filter))
+                    {
+                        this.userData.Add(userData);
+                    }
+
+                    if (this.userData.Count >= 200)
+                    {
+                        this.LimitingResultsMessage.Visibility = Visibility.Visible;
+                        break;
+                    }
                 }
             }
+            catch (Exception ex) { Logger.Log(ex); }
         }
 
         private void UsernameFilterTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)

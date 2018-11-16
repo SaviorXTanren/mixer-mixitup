@@ -40,7 +40,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Command Name:" />
+                <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Filter By Name:" />
 
                 <TextBox Grid.Column="2" x:Name="CommandNameFilterTextBox" Width="150" TextChanged="CommandNameFilterTextBox_TextChanged" />
             </Grid>
