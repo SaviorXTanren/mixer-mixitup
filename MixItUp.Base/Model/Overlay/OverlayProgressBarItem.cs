@@ -102,6 +102,8 @@ namespace MixItUp.Base.Model.Overlay
             GlobalEvents.OnResubscribeOccurred -= GlobalEvents_OnResubscribeOccurred;
             GlobalEvents.OnDonationOccurred -= GlobalEvents_OnDonationOccurred;
             GlobalEvents.OnSparkUseOccurred -= GlobalEvents_OnSparkUseOccurred;
+            GlobalEvents.OnPatronageUpdateOccurred -= GlobalEvents_OnPatronageUpdateOccurred;
+            GlobalEvents.OnPatronageMilestoneReachedOccurred -= GlobalEvents_OnPatronageMilestoneReachedOccurred;
 
             if (this.ProgressBarType == ProgressBarTypeEnum.Followers)
             {
