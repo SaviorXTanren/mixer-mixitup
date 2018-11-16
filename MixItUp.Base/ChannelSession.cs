@@ -599,6 +599,8 @@ namespace MixItUp.Base
 
                     await ChannelSession.SaveSettings();
 
+                    await ChannelSession.Services.Settings.SaveBackup(ChannelSession.Settings);
+
                     await ChannelSession.Services.Settings.PerformBackupIfApplicable(ChannelSession.Settings);
 
                     ChannelSession.Services.Telemetry.TrackLogin();
