@@ -56,32 +56,37 @@ namespace MixItUp.Base.Services
                 catch (Exception ex) { Logger.Log(ex); }
             }
 
-            PinAuthorizer pinAuth = new PinAuthorizer()
+            try
             {
-                CredentialStore = new InMemoryCredentialStore
+                PinAuthorizer pinAuth = new PinAuthorizer()
                 {
-                    ConsumerKey = TwitterService.ClientID,
-                    ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
-                },
-                GoToTwitterAuthorization = pageLink => Process.Start(pageLink),
-                GetPin = () =>
-                {
-                    while (string.IsNullOrEmpty(this.authPin))
+                    CredentialStore = new InMemoryCredentialStore
                     {
-                        Task.Delay(1000).Wait();
+                        ConsumerKey = TwitterService.ClientID,
+                        ConsumerSecret = ChannelSession.SecretManager.GetSecret("TwitterSecret"),
+                    },
+                    GoToTwitterAuthorization = pageLink => Process.Start(pageLink),
+                    GetPin = () =>
+                    {
+                        while (string.IsNullOrEmpty(this.authPin))
+                        {
+                            Task.Delay(1000).Wait();
+                        }
+                        return this.authPin;
                     }
-                    return this.authPin;
+                };
+
+                await pinAuth.AuthorizeAsync();
+                this.authPin = null;
+
+                if (!string.IsNullOrEmpty(pinAuth.CredentialStore.OAuthToken))
+                {
+                    await this.InitializeInternal(pinAuth);
+                    return true;
                 }
-            };
-
-            await pinAuth.AuthorizeAsync();
-            this.authPin = null;
-
-            if (!string.IsNullOrEmpty(pinAuth.CredentialStore.OAuthToken))
-            {
-                await this.InitializeInternal(pinAuth);
-                return true;
             }
+            catch (Exception ex) { Logger.Log(ex); }
+
             return false;
         }
 
