@@ -169,7 +169,7 @@ namespace MixItUp.WPF.Windows.Wizard
                         this.streamlabsChatBotData = await this.GatherStreamlabsChatBotSettings(this.StreamlabsChatBotDataFilePathTextBox.Text);
                         if (this.streamlabsChatBotData == null)
                         {
-                            await MessageBoxHelper.ShowMessageDialog("Failed to import Streamlabs Chat Bot data, please ensure that you have selected the data file. If this continues to fail, please contact Mix it Up support for assitance.");
+                            await MessageBoxHelper.ShowMessageDialog("Failed to import Streamlabs Chat Bot data, please ensure that you have selected the correct data file & have Microsoft Excel installed. If this continues to fail, please contact Mix it Up support for assitance.");
                             return;
                         }
                     }
