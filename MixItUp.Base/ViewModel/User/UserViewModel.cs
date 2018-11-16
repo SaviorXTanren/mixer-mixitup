@@ -108,7 +108,7 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsInChat { get; set; }
 
         [DataMember]
-        public HashSet<string> InteractiveIDs { get; set; }
+        public LockedDictionary<string, InteractiveParticipantModel> InteractiveIDs { get; set; }
 
         [DataMember]
         public string InteractiveGroupID { get; set; }
@@ -122,7 +122,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserViewModel()
         {
             this.CustomRoles = new HashSet<string>();
-            this.InteractiveIDs = new HashSet<string>();
+            this.InteractiveIDs = new LockedDictionary<string, InteractiveParticipantModel>();
         }
 
         public UserViewModel(UserModel user) : this(user.id, user.username)
@@ -182,7 +182,7 @@ namespace MixItUp.Base.ViewModel.User
         public string RolesDisplayString { get; private set; }
 
         [JsonIgnore]
-        public bool IsAnonymous { get { return this.ID == 0; } }
+        public bool IsAnonymous { get { return this.ID == 0 || this.InteractiveIDs.Values.Any(i => i.anonymous.GetValueOrDefault()); } }
 
         [JsonIgnore]
         public MixerRoleEnum PrimaryRole { get { return this.MixerRoles.Max(); } }
@@ -342,7 +342,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public void SetInteractiveDetails(InteractiveParticipantModel participant)
         {
-            this.InteractiveIDs.Add(participant.sessionID);
+            this.InteractiveIDs[participant.sessionID] = participant;
             this.InteractiveGroupID = participant.groupID;
         }
 
@@ -451,7 +451,7 @@ namespace MixItUp.Base.ViewModel.User
         public IEnumerable<InteractiveParticipantModel> GetParticipantModels()
         {
             List<InteractiveParticipantModel> participants = new List<InteractiveParticipantModel>();
-            foreach (string interactiveID in this.InteractiveIDs)
+            foreach (string interactiveID in this.InteractiveIDs.Keys)
             {
                 participants.Add(new InteractiveParticipantModel()
                 {

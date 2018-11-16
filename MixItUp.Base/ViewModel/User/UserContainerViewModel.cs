@@ -53,7 +53,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             return await this.semaphore.WaitAndRelease(() =>
             {
-                return Task.FromResult(this.users.Values.FirstOrDefault(u => u.InteractiveIDs.Contains(interactiveParticipantID)));
+                return Task.FromResult(this.users.Values.FirstOrDefault(u => u.InteractiveIDs.ContainsKey(interactiveParticipantID)));
             });
         }
 
