@@ -109,7 +109,16 @@ namespace MixItUp.Desktop.Services
 
         public async Task Save(IChannelSettings settings, string fileName) { await this.SaveSettings(settings, fileName); }
 
-        public async Task SaveBackup(IChannelSettings settings, string filePath)
+        public async Task SaveBackup(IChannelSettings settings)
+        {
+            string filePath = this.GetFilePath(settings);
+            await this.SaveSettings(settings, filePath + DesktopSettingsService.BackupFileExtension);
+
+            DesktopChannelSettings desktopSettings = (DesktopChannelSettings)settings;
+            File.Copy(desktopSettings.DatabasePath, desktopSettings.DatabasePath + DesktopSettingsService.BackupFileExtension, overwrite: true);
+        }
+
+        public async Task SaveAutomaticBackup(IChannelSettings settings, string filePath)
         {
             await this.Save(ChannelSession.Settings);
 
@@ -145,7 +154,7 @@ namespace MixItUp.Desktop.Services
                 {
                     string filePath = Path.Combine(settings.SettingsBackupLocation, settings.Channel.id + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + ".mixitup");
 
-                    await this.SaveBackup(settings, filePath);
+                    await this.SaveAutomaticBackup(settings, filePath);
 
                     settings.SettingsLastBackup = DateTimeOffset.Now;
                 }
