@@ -118,7 +118,7 @@ namespace MixItUp.Desktop.Services
             File.Copy(desktopSettings.DatabasePath, desktopSettings.DatabasePath + DesktopSettingsService.BackupFileExtension, overwrite: true);
         }
 
-        public async Task SaveAutomaticBackup(IChannelSettings settings, string filePath)
+        public async Task SavePackagedBackup(IChannelSettings settings, string filePath)
         {
             await this.Save(ChannelSession.Settings);
 
@@ -154,7 +154,7 @@ namespace MixItUp.Desktop.Services
                 {
                     string filePath = Path.Combine(settings.SettingsBackupLocation, settings.Channel.id + "-Backup-" + DateTimeOffset.Now.ToString("MM-dd-yyyy") + ".mixitup");
 
-                    await this.SaveAutomaticBackup(settings, filePath);
+                    await this.SavePackagedBackup(settings, filePath);
 
                     settings.SettingsLastBackup = DateTimeOffset.Now;
                 }
