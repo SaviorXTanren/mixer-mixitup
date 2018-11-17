@@ -124,7 +124,12 @@ namespace MixItUp.Desktop.Services
                                     {
                                         await widget.Item.Initialize();
                                     }
-                                    await overlay.SendItem(await widget.Item.GetProcessedItem(user, new List<string>(), new Dictionary<string, string>()), widget.Position, new OverlayItemEffects());
+
+                                    OverlayItemBase item = await widget.Item.GetProcessedItem(user, new List<string>(), new Dictionary<string, string>());
+                                    if (item != null)
+                                    {
+                                        await overlay.SendItem(item, widget.Position, new OverlayItemEffects());
+                                    }
                                 }
                             }
                             catch (Exception ex) { Logger.Log(ex); }

@@ -9,6 +9,9 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayHTMLItem : OverlayItemBase
     {
         [DataMember]
+        public override string ItemType { get { return "html"; } }
+
+        [DataMember]
         public string HTMLText { get; set; }
 
         public OverlayHTMLItem() { }

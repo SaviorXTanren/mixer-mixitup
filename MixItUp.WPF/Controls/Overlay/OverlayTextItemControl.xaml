@@ -43,7 +43,7 @@
 
             <ComboBox Grid.Column="0" x:Name="TextColorComboBox" MaterialDesign:HintAssist.Hint="Font Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 
-            <TextBox x:Name="TextFontTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Font Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <ComboBox x:Name="TextFontComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Font Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
 
             <ComboBox Grid.Column="4" x:Name="TextShadowColorComboBox" MaterialDesign:HintAssist.Hint="Shadow (Optional)" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
 

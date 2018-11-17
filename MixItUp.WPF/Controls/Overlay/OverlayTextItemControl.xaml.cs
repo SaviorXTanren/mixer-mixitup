@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Themes;
+using MixItUp.Base.Util;
+using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace MixItUp.WPF.Controls.Overlay
             {
                 color = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(color)).Key;
             }
-            this.TextFontTextBox.Text = this.item.Font;
+            this.TextFontComboBox.Text = this.item.Font;
             this.TextBoldCheckBox.IsSelected = this.item.Bold;
             this.TextItalicCheckBox.IsSelected = this.item.Italic;
             this.TextUnderlineCheckBox.IsSelected = this.item.Underline;
@@ -59,7 +60,7 @@ namespace MixItUp.WPF.Controls.Overlay
                     color = ColorSchemes.ColorSchemeDictionary[color];
                 }
 
-                string font = this.TextFontTextBox.Text;
+                string font = this.TextFontComboBox.Text;
                 if (string.IsNullOrEmpty(font))
                 {
                     font = null;
@@ -82,6 +83,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override Task OnLoaded()
         {
+            this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
             this.TextSizeComboBox.ItemsSource = OverlayTextItemControl.sampleFontSize.Select(f => f.ToString());
             this.TextShadowColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
 

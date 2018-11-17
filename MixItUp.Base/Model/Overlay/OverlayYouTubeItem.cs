@@ -9,6 +9,9 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayYouTubeItem : OverlayItemBase
     {
         [DataMember]
+        public override string ItemType { get { return "youtube"; } }
+
+        [DataMember]
         public string VideoID { get; set; }
         [DataMember]
         public int StartTime { get; set; }

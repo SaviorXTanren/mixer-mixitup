@@ -108,13 +108,14 @@ namespace MixItUp.Base.Statistics
                             IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
                             if (patronageMilestonesEarned.Count() > 0)
                             {
-                                long patronageEarnedReward = patronageMilestonesEarned.Max(m => m.reward);
-                                double patronageEarnedRewardDollars = Math.Round(((double)patronageEarnedReward) / 100.0, 2);
-
-                                staticStats.AddValue("Milestone #", patronageStatus.currentMilestoneId.ToString());
-                                staticStats.AddValue("Total Sparks", patronageStatus.patronageEarned.ToString());
-                                staticStats.AddValue("Total Payout", string.Format("{0:C}", patronageEarnedRewardDollars));
-                                return;
+                                PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
+                                if (patronageMilestoneHighestEarned != null)
+                                {
+                                    staticStats.AddValue("Milestone #", patronageStatus.currentMilestoneId.ToString());
+                                    staticStats.AddValue("Total Sparks", patronageStatus.patronageEarned.ToString());
+                                    staticStats.AddValue("Total Payout", patronageMilestoneHighestEarned.DollarAmountText());
+                                    return;
+                                }
                             }
                         }
                     }

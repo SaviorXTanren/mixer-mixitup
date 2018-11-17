@@ -15,6 +15,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public Guid ID { get; set; }
 
+        [DataMember]
+        public virtual string ItemType { get { return string.Empty; } }
+
         [JsonIgnore]
         public bool IsInitialized { get; private set; }
 

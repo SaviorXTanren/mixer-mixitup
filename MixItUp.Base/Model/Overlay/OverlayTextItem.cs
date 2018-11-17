@@ -9,6 +9,9 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayTextItem : OverlayItemBase
     {
         [DataMember]
+        public override string ItemType { get { return "text"; } }
+
+        [DataMember]
         public string Text { get; set; }
         [DataMember]
         public string Color { get; set; }

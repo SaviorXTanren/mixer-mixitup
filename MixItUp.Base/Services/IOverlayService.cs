@@ -49,18 +49,6 @@ namespace MixItUp.Base.Services
 
         Task SendItem(OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects);
 
-        Task SendImage(OverlayImageItem item, OverlayItemPosition position, OverlayItemEffects effects);
-
-        Task SendText(OverlayTextItem item, OverlayItemPosition position, OverlayItemEffects effects);
-
-        Task SendYouTubeVideo(OverlayYouTubeItem item, OverlayItemPosition position, OverlayItemEffects effects);
-
-        Task SendLocalVideo(OverlayVideoItem item, OverlayItemPosition position, OverlayItemEffects effects);
-
-        Task SendHTML(OverlayHTMLItem item, OverlayItemPosition position, OverlayItemEffects effects);
-
-        Task SendWebPage(OverlayWebPageItem item, OverlayItemPosition position, OverlayItemEffects effects);
-
         Task SendTextToSpeech(OverlayTextToSpeech textToSpeech);
 
         Task SendSongRequest(OverlaySongRequest songRequest);

@@ -9,6 +9,9 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayWebPageItem : OverlayItemBase
     {
         [DataMember]
+        public override string ItemType { get { return "webpage"; } }
+
+        [DataMember]
         public string URL { get; set; }
         [DataMember]
         public int Width { get; set; }

@@ -1,6 +1,6 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Model.Overlay;
-using MixItUp.Base.Themes;
+using MixItUp.Base.Util;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;

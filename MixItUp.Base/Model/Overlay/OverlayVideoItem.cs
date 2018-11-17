@@ -14,6 +14,9 @@ namespace MixItUp.Base.Model.Overlay
         public const int DefaultWidth = 560;
 
         [DataMember]
+        public override string ItemType { get { return "video"; } }
+
+        [DataMember]
         public string FilePath { get; set; }
         [DataMember]
         public int Width { get; set; }

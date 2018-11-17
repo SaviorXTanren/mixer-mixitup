@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Model.Channel;
 using Mixer.Base.Model.OAuth;
-using Mixer.Base.Model.User;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
@@ -10,7 +9,6 @@ using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
-using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;

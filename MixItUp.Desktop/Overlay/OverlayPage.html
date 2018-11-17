@@ -115,11 +115,14 @@
                         else if (packet.type === "video") {
                             videoPacket(packet.data);
                         }
-                        else if (packet.type === "htmlText") {
+                        else if (packet.type === "html") {
                             htmlTextPacket(packet.data);
                         }
-                        else if (packet.type === "webPage") {
+                        else if (packet.type === "webpage") {
                             webPagePacket(packet.data);
+                        }
+                        else if (packet.type === "eventlist") {
+                            eventListPacket(packet.data);
                         }
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
@@ -127,13 +130,13 @@
                         else if (packet.type === "songRequest") {
                             songRequestPacket(packet.data);
                         }
-                        else if (packet.type === "custom") {
-                            customPacket(packet.data);
-                        }
-                        else if (packet.type == "batch") {
+                        else if (packet.type === "batch") {
                             for (var i = 0; i < packet.array.length; i++) {
                                 packetReceived(packet.array[i]);
                             }
+                        }
+                        else {
+                            customPacket(packet.data);
                         }
                     }
                 }
@@ -246,6 +249,11 @@
                 addedElement.frameBorder = 0;
 
                 addWaitRemoveElement(data, addedElement);
+            }
+
+            function eventListPacket(data) {
+
+
             }
 
             function textToSpeechPacket(data) {

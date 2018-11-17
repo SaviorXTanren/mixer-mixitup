@@ -11,6 +11,9 @@ namespace MixItUp.Base.Model.Overlay
     public class OverlayImageItem : OverlayItemBase
     {
         [DataMember]
+        public override string ItemType { get { return "image"; } }
+
+        [DataMember]
         public string FilePath { get; set; }
         [DataMember]
         public int Width { get; set; }

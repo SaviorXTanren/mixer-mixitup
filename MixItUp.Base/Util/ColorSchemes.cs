@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MixItUp.Base.Themes
+namespace MixItUp.Base.Util
 {
     public static class ColorSchemes
     {
