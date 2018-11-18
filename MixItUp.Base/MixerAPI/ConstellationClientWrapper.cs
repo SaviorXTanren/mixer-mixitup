@@ -41,7 +41,7 @@ namespace MixItUp.Base.MixerAPI
 
         public ConstellationClient Client { get; private set; }
 
-        private Dictionary<string, HashSet<uint>> userEventTracking = new Dictionary<string, HashSet<uint>>();
+        private LockedDictionary<string, LockedHashSet<uint>> userEventTracking = new LockedDictionary<string, LockedHashSet<uint>>();
 
         private List<PatronageMilestoneModel> allPatronageMilestones = new List<PatronageMilestoneModel>();
         private List<PatronageMilestoneModel> remainingPatronageMilestones = new List<PatronageMilestoneModel>();
