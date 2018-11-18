@@ -31,6 +31,20 @@ namespace MixItUp.WPF
             InitializeComponent();
             this.Closing += MainWindow_Closing;
             this.Initialize(this.StatusBar);
+
+            if (App.AppSettings.Width > 0)
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                this.Height = App.AppSettings.Height;
+                this.Width = App.AppSettings.Width;
+                this.Top = App.AppSettings.Top;
+                this.Left = App.AppSettings.Left;
+
+                if (App.AppSettings.IsMaximized)
+                {
+                    WindowState = WindowState.Maximized;
+                }
+            }
         }
 
         public void Restart()
@@ -94,6 +108,26 @@ namespace MixItUp.WPF
 
         private async Task StartShutdownProcess()
         {
+            if (WindowState == WindowState.Maximized)
+            {
+                // Use the RestoreBounds as the current values will be 0, 0 and the size of the screen
+                App.AppSettings.Top = RestoreBounds.Top;
+                App.AppSettings.Left = RestoreBounds.Left;
+                App.AppSettings.Height = RestoreBounds.Height;
+                App.AppSettings.Width = RestoreBounds.Width;
+                App.AppSettings.IsMaximized = true;
+            }
+            else
+            {
+                App.AppSettings.Top = this.Top;
+                App.AppSettings.Left = this.Left;
+                App.AppSettings.Height = this.Height;
+                App.AppSettings.Width = this.Width;
+                App.AppSettings.IsMaximized = false;
+            }
+
+            Properties.Settings.Default.Save();
+
             this.ShuttingDownGrid.Visibility = Visibility.Visible;
             this.MainMenu.Visibility = Visibility.Collapsed;
 
