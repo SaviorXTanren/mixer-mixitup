@@ -123,7 +123,7 @@ namespace MixItUp.Base.MixerAPI
         {
             if (!this.userEventTracking.ContainsKey(eventName))
             {
-                this.userEventTracking[eventName] = new HashSet<uint>();
+                this.userEventTracking[eventName] = new LockedHashSet<uint>();
             }
 
             if (user != null)
