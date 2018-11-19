@@ -455,6 +455,7 @@ namespace MixItUp.Base.Util
                         {
                             double milestoneReward = Math.Round(((double)patronageMilestone.reward) / 100.0, 2);
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amountdifference", (patronageMilestone.target - patronageStatus.patronageEarned).ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward));
                         }
 
@@ -463,6 +464,7 @@ namespace MixItUp.Base.Util
                         {
                             double milestoneNextReward = Math.Round(((double)patronageNextMilestone.reward) / 100.0, 2);
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamount", patronageNextMilestone.target.ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamountdifference", (patronageNextMilestone.target - patronageStatus.patronageEarned).ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", string.Format("{0:C}", milestoneNextReward));
                         }
 
@@ -471,6 +473,7 @@ namespace MixItUp.Base.Util
                         {
                             double milestoneFinalReward = Math.Round(((double)patronageFinalMilestone.reward) / 100.0, 2);
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", patronageFinalMilestone.target.ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamountdifference", (patronageFinalMilestone.target - patronageStatus.patronageEarned).ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", string.Format("{0:C}", milestoneFinalReward));
                         }
 
