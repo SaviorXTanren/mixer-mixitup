@@ -72,25 +72,36 @@ namespace MixItUp.Base.Model.Overlay
         public int Height { get; set; }
 
         [DataMember]
+        public OverlayEffectEntranceAnimationTypeEnum AddEventAnimation { get; set; }
+        [DataMember]
+        public string AddEventAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.AddEventAnimation); } set { } }
+        [DataMember]
+        public OverlayEffectExitAnimationTypeEnum RemoveEventAnimation { get; set; }
+        [DataMember]
+        public string RemoveEventAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.RemoveEventAnimation); } set { } }
+
+        [DataMember]
         private List<OverlayEventListItem> events = new List<OverlayEventListItem>();
 
         private List<OverlayEventListItem> eventsToAdd = new List<OverlayEventListItem>();
 
         public OverlayEventList() { }
 
-        public OverlayEventList(string htmlText, IEnumerable<EventListItemTypeEnum> itemTypes, int totalToShow, bool resetOnLoad, string borderColor, string backgroundColor, string textColor,
-            string textFont, int width, int height)
+        public OverlayEventList(string htmlText, IEnumerable<EventListItemTypeEnum> itemTypes, int totalToShow, bool resetOnLoad, string textFont, int width, int height,
+            string borderColor, string backgroundColor, string textColor, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
             : base(htmlText)
         {
             this.ItemTypes = new List<EventListItemTypeEnum>(itemTypes);
             this.TotalToShow = totalToShow;
             this.ResetOnLoad = resetOnLoad;
-            this.BorderColor = borderColor;
-            this.BackgroundColor = backgroundColor;
-            this.TextColor = textColor;
             this.TextFont = textFont;
             this.Width = width;
             this.Height = height;
+            this.BorderColor = borderColor;
+            this.BackgroundColor = backgroundColor;
+            this.TextColor = textColor;
+            this.AddEventAnimation = addEventAnimation;
+            this.RemoveEventAnimation = removeEventAnimation;
         }
 
         public override async Task Initialize()

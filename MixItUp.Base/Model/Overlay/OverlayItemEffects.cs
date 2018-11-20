@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Util;
+using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -189,20 +190,18 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayItemEffects
     {
-        private static readonly Random Random = new Random();
-
         [DataMember]
         public OverlayEffectEntranceAnimationTypeEnum EntranceAnimation { get; set; }
         [DataMember]
-        public string EntranceAnimationName { get { return this.GetAnimationClassName(this.EntranceAnimation); } set { } }
+        public string EntranceAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.EntranceAnimation); } set { } }
         [DataMember]
         public OverlayEffectVisibleAnimationTypeEnum VisibleAnimation { get; set; }
         [DataMember]
-        public string VisibleAnimationName { get { return this.GetAnimationClassName(this.VisibleAnimation); } set { } }
+        public string VisibleAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.VisibleAnimation); } set { } }
         [DataMember]
         public OverlayEffectExitAnimationTypeEnum ExitAnimation { get; set; }
         [DataMember]
-        public string ExitAnimationName { get { return this.GetAnimationClassName(this.ExitAnimation); } set { } }
+        public string ExitAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.ExitAnimation); } set { } }
 
         [DataMember]
         public double Duration;
@@ -217,7 +216,7 @@ namespace MixItUp.Base.Model.Overlay
             this.Duration = duration;
         }
 
-        private string GetAnimationClassName<T>(T animationType)
+        public static string GetAnimationClassName<T>(T animationType)
         {
             string name = animationType.ToString();
 
@@ -230,7 +229,7 @@ namespace MixItUp.Base.Model.Overlay
             {
                 List<T> values = EnumHelper.GetEnumList<T>().ToList();
                 values.RemoveAll(v => v.ToString().Equals("None") || v.ToString().Equals("Random"));
-                name = values[Random.Next(values.Count)].ToString();
+                name = values[RandomHelper.GenerateRandomNumber(values.Count)].ToString();
             }
 
             if (!string.IsNullOrEmpty(name) && !name.Equals("None"))

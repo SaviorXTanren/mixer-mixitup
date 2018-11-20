@@ -20,6 +20,8 @@ namespace MixItUp.WPF.Windows.Overlay
         WebPage,
         [Name("Goal/Progress Bar")]
         ProgressBar,
+        [Name("Event List")]
+        EventList,
     }
 
     /// <summary>
@@ -100,6 +102,11 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ProgressBar);
                     this.ProgressBarItem.SetItem(this.Widget.Item);
                 }
+                else if (this.Widget.Item is OverlayEventList)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ProgressBar);
+                    this.ProgressBarItem.SetItem(this.Widget.Item);
+                }
             }
 
             await base.OnLoaded();
@@ -114,6 +121,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.WebPageItem.Visibility = Visibility.Collapsed;
             this.HTMLItem.Visibility = Visibility.Collapsed;
             this.ProgressBarItem.Visibility = Visibility.Collapsed;
+            this.EventListItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
@@ -144,6 +152,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.ProgressBar)
                 {
                     this.ProgressBarItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.EventList)
+                {
+                    this.EventListItem.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -202,6 +214,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.ProgressBar)
                 {
                     item = this.ProgressBarItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.EventList)
+                {
+                    item = this.EventListItem.GetItem();
                 }
 
                 if (item == null)

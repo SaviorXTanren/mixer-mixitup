@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.Overlay;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System.Collections.Generic;
@@ -41,6 +42,8 @@ namespace MixItUp.WPF.Controls.Overlay
             this.WidthTextBox.Text = this.item.Width.ToString();
             this.HeightTextBox.Text = this.item.Height.ToString();
 
+            this.TextFontComboBox.Text = this.item.TextFont;
+
             this.BorderColorComboBox.Text = this.item.BorderColor;
             if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.BorderColor))
             {
@@ -59,7 +62,8 @@ namespace MixItUp.WPF.Controls.Overlay
                 this.TextColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.TextColor)).Key;
             }
 
-            this.TextFontComboBox.Text = this.item.TextFont;
+            this.AddEventAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.AddEventAnimation);
+            this.RemoveEventAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.RemoveEventAnimation);
 
             this.HTMLText.Text = this.item.HTMLText;
         }
@@ -114,15 +118,29 @@ namespace MixItUp.WPF.Controls.Overlay
                 return null;
             }
 
-            return new OverlayEventList(this.HTMLText.Text, eventTypes, totalToShow, this.ResetOnLoadCheckBox.IsChecked.GetValueOrDefault(), borderColor, backgroundColor,
-                textColor, textFont, width, height);
+            OverlayEffectEntranceAnimationTypeEnum addEventAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.AddEventAnimationComboBox.SelectedItem);
+            OverlayEffectExitAnimationTypeEnum removeEventAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.RemoveEventAnimationComboBox.SelectedItem);
+
+            return new OverlayEventList(this.HTMLText.Text, eventTypes, totalToShow, this.ResetOnLoadCheckBox.IsChecked.GetValueOrDefault(), textFont, width, height,
+                borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation);
         }
 
         protected override Task OnLoaded()
         {
+            this.TotalToShowTextBox.Text = "5";
+
+            this.WidthTextBox.Text = "0";
+            this.HeightTextBox.Text = "0";
+
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
-            this.TotalToShowTextBox.Text = "5";
+            this.BorderColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
+
+            this.AddEventAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
+            this.AddEventAnimationComboBox.SelectedIndex = 0;
+            this.RemoveEventAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectExitAnimationTypeEnum>();
+            this.RemoveEventAnimationComboBox.SelectedIndex = 0;
+
             this.HTMLText.Text = OverlayEventList.HTMLTemplate;
 
             if (this.item != null)
