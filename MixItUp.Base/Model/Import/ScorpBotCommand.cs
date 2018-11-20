@@ -139,16 +139,23 @@ namespace MixItUp.Base.Model.Import
             this.Text = this.GetRegexEntries(this.Text, WriteFileRegexHeaderPattern, (string entry) =>
             {
                 string[] splits = entry.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                FileAction action = new FileAction(FileActionTypeEnum.AppendToFile, splits[1], splits[0]);
-                action.LineIndexToRead = splits[1];
-                if (splits.Length > 2)
+                if (splits.Length == 1)
                 {
+                    this.Actions.Add(new FileAction(FileActionTypeEnum.AppendToFile, string.Empty, splits[0]));
+                }
+                else if (splits.Length == 2)
+                {
+                    this.Actions.Add(new FileAction(FileActionTypeEnum.AppendToFile, splits[1], splits[0]));
+                }
+                else if (splits.Length > 2)
+                {
+                    FileAction action = new FileAction(FileActionTypeEnum.AppendToFile, splits[1], splits[0]);
                     if (bool.TryParse(splits[2], out bool overwrite) && overwrite)
                     {
                         action.FileActionType = FileActionTypeEnum.SaveToFile;
                     }
+                    this.Actions.Add(action);
                 }
-                this.Actions.Add(action);
                 return string.Empty;
             });
 
