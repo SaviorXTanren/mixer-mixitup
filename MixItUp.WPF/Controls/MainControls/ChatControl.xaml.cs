@@ -204,14 +204,16 @@ namespace MixItUp.WPF.Controls.MainControls
 
         protected override Task OnVisibilityChanged()
         {
+            List<string> chatVoices = new List<string>() { "Streamer" };
             if (ChannelSession.Chat.BotClient != null)
             {
-                this.SendChatAsComboBox.ItemsSource = new List<string>() { "Streamer", "Bot" };
-                this.SendChatAsComboBox.SelectedIndex = 1;
+                chatVoices.Add("Bot");
             }
-            else
+
+            List<string> chatterList = this.SendChatAsComboBox.ItemsSource as List<string>;
+            if (chatterList == null || chatterList.Count != chatVoices.Count)
             {
-                this.SendChatAsComboBox.ItemsSource = new List<string>() { "Streamer" };
+                this.SendChatAsComboBox.ItemsSource = chatVoices;
                 this.SendChatAsComboBox.SelectedIndex = 0;
             }
 

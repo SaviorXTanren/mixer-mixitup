@@ -63,6 +63,21 @@ namespace MixItUp.WPF
         [DataMember]
         public string Language { get; set; }
 
+        [DataMember]
+        public double Top { get; set; }
+
+        [DataMember]
+        public double Left { get; set; }
+
+        [DataMember]
+        public double Width { get; set; }
+
+        [DataMember]
+        public double Height { get; set; }
+
+        [DataMember]
+        public bool IsMaximized { get; set; }
+
         [JsonIgnore]
         public bool IsDarkBackground { get { return App.AppSettings.BackgroundColor.Equals("Dark"); } }
 

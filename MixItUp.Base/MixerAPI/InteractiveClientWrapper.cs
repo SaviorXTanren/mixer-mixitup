@@ -190,13 +190,13 @@ namespace MixItUp.Base.MixerAPI
 
         public List<InteractiveConnectedSceneModel> Scenes { get; private set; }
         public Dictionary<string, InteractiveConnectedControlCommand> Controls { get; private set; }
-
-        private SemaphoreSlim interactiveUserLock = new SemaphoreSlim(1);
+        public LockedDictionary<string, InteractiveParticipantModel> Participants { get; private set; }
 
         public InteractiveClientWrapper()
         {
             this.Scenes = new List<InteractiveConnectedSceneModel>();
             this.Controls = new Dictionary<string, InteractiveConnectedControlCommand>();
+            this.Participants = new LockedDictionary<string, InteractiveParticipantModel>();
         }
 
         public async Task<IEnumerable<InteractiveGameModel>> GetAllConnectableGames()
@@ -585,21 +585,7 @@ namespace MixItUp.Base.MixerAPI
             // Initialize Participants
             await this.AddParticipants(await this.GetRecentParticipants());
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(async () => { await this.RefreshInteractiveUsers(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
             return true;
-        }
-
-        private async Task RefreshInteractiveUsers()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                await ChannelSession.ActiveUsers.AddOrUpdateUsers(await this.GetRecentParticipants());
-
-                await Task.Delay(30000);
-            });
         }
 
         private void AddConnectedControl(InteractiveConnectedSceneModel scene, InteractiveControlModel control)
@@ -633,8 +619,10 @@ namespace MixItUp.Base.MixerAPI
 
                 foreach (InteractiveParticipantModel participant in participants)
                 {
-                    if (participant != null)
+                    if (participant != null && !string.IsNullOrEmpty(participant.sessionID))
                     {
+                        this.Participants[participant.sessionID] = participant;
+
                         UserViewModel user = await ChannelSession.ActiveUsers.GetUserByID(participant.userID);
                         if (user != null)
                         {
@@ -697,7 +685,11 @@ namespace MixItUp.Base.MixerAPI
             {
                 foreach (InteractiveParticipantModel participant in e.participants)
                 {
-                    await ChannelSession.ActiveUsers.RemoveInteractiveUser(participant);
+                    if (!string.IsNullOrEmpty(participant.sessionID))
+                    {
+                        await ChannelSession.ActiveUsers.RemoveInteractiveUser(participant);
+                        this.Participants.Remove(participant.sessionID);
+                    }
                 }
             }
             this.OnParticipantLeave(this, e);
@@ -716,7 +708,13 @@ namespace MixItUp.Base.MixerAPI
         {
             if (e.participants != null)
             {
-                //await this.AddParticipants(e.participants);
+                foreach (InteractiveParticipantModel participant in e.participants)
+                {
+                    if (!string.IsNullOrEmpty(participant.sessionID))
+                    {
+                        this.Participants[participant.sessionID] = participant;
+                    }
+                }
             }
             this.OnParticipantUpdate(this, e);
         }
@@ -733,24 +731,32 @@ namespace MixItUp.Base.MixerAPI
                         user = await ChannelSession.ActiveUsers.GetUserByID(e.participantID);
                         if (user == null)
                         {
-                            IEnumerable<InteractiveParticipantModel> recentParticipants = await this.GetRecentParticipants();
-                            InteractiveParticipantModel participant = recentParticipants.FirstOrDefault(p => p.sessionID.Equals(e.participantID));
-                            if (participant != null)
+                            InteractiveParticipantModel participant = null;
+                            if (this.Participants.TryGetValue(e.participantID, out participant))
                             {
-                                user = await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
+                                user = new UserViewModel(participant);
+                            }
+                            else
+                            {
+                                IEnumerable<InteractiveParticipantModel> recentParticipants = await this.GetRecentParticipants();
+                                participant = recentParticipants.FirstOrDefault(p => p.sessionID.Equals(e.participantID));
+                                if (participant != null)
+                                {
+                                    user = await ChannelSession.ActiveUsers.AddOrUpdateUser(participant);
+                                }
                             }
                         }
                     }
 
                     if (user == null || !user.IsInChat)
                     {
-                        if (ChannelSession.Settings.PreventUnknownInteractiveUsers)
-                        {
-                            return;
-                        }
-
                         user = new UserViewModel(0, "Unknown User");
-                        user.InteractiveIDs.Add(e.participantID);
+                        user.InteractiveIDs[e.participantID] = new InteractiveParticipantModel() { sessionID = e.participantID, anonymous = true };
+                    }
+
+                    if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.IsAnonymous)
+                    {
+                        return;
                     }
 
                     if (user.IsInInteractiveTimeout)

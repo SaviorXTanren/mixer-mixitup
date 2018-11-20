@@ -68,6 +68,23 @@
 		"skillAssetsUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/ac3aae5f-e917-4134-8371-32ea1b42975f/0010_pizza_512.png"
 	},
 	{
+		"id": "25a3c44e-234f-47b1-a7dd-c12304de2afe",
+		"name": "Thumbs Up",
+		"description": "Thumbs Up",
+		"locked": false,
+		"lockReason": 0,
+		"category": "Stickers",
+		"iconUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/82f7cd76-1ca1-4e1e-bbc6-9ce0ee8e7d7d/0001_fallout76_thumbs-up.png",
+		"previewUrl": null,
+		"globalLevelUnlock": 1,
+		"price": 50,
+		"currency": 1,
+		"skillSetupUrl": null,
+		"skillExecutionUrl": null,
+		"attributionIconUrl": null,
+		"skillAssetsUrl": null
+	},
+	{
 		"id": "6e7a6334-4a02-4d33-9fb2-2e2b10a52791",
 		"name": "Sunglasses",
 		"description": "Sunglasses",
@@ -136,6 +153,23 @@
 		"skillAssetsUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/86d71808-adae-4b02-8647-3eed9652d6fc/0028_mecha-dolce_512.png"
 	},
 	{
+		"id": "e31316d5-eff4-49a6-b5b4-469b262673f9",
+		"name": "Charisma",
+		"description": "Charisma",
+		"locked": false,
+		"lockReason": 0,
+		"category": "Stickers",
+		"iconUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/0fc1e367-7b57-429f-a664-ff572a0726da/0002_fallout76_charisma.png",
+		"previewUrl": null,
+		"globalLevelUnlock": 10,
+		"price": 125,
+		"currency": 1,
+		"skillSetupUrl": null,
+		"skillExecutionUrl": null,
+		"attributionIconUrl": null,
+		"skillAssetsUrl": null
+	},
+	{
 		"id": "d5995f81-1334-4be6-a953-840393609079",
 		"name": "Taco",
 		"description": "Taco",
@@ -170,6 +204,23 @@
 		"skillAssetsUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/4e9af4d0-ceee-4fce-a5bb-db3663b04bc7/0014_paper_512.png"
 	},
 	{
+		"id": "0dd4b747-0d28-4cc6-9249-b7ca4804dc47",
+		"name": "Strength",
+		"description": "Strength",
+		"locked": false,
+		"lockReason": 0,
+		"category": "Stickers",
+		"iconUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/11e6a797-9221-4590-b4ab-c788d7c6c78a/0003_fallout76_strength.png",
+		"previewUrl": null,
+		"globalLevelUnlock": 20,
+		"price": 125,
+		"currency": 1,
+		"skillSetupUrl": null,
+		"skillExecutionUrl": null,
+		"attributionIconUrl": null,
+		"skillAssetsUrl": null
+	},
+	{
 		"id": "c7440a9b-f7d9-4441-b9b9-fb3b16a7ed38",
 		"name": "Hug Bot",
 		"description": "Hug Bot",
@@ -187,23 +238,6 @@
 		"skillAssetsUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/de706a86-9994-42c8-9597-9b74b96c5fa6/0004_hug-bot_512.png"
 	},
 	{
-		"id": "28ffde53-8bf7-4050-bd3b-9895d5142a36",
-		"name": "Robo Triceratops",
-		"description": "Robo Triceratops",
-		"locked": false,
-		"lockReason": 0,
-		"category": "Stickers",
-		"iconUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/e231e5bf-2bc1-4488-84ef-dff7ae130184/0002_triceratops_256.png",
-		"previewUrl": null,
-		"globalLevelUnlock": 25,
-		"price": 125,
-		"currency": 1,
-		"skillSetupUrl": null,
-		"skillExecutionUrl": null,
-		"attributionIconUrl": null,
-		"skillAssetsUrl": null
-	},
-	{
 		"id": "f3598535-7fcd-4287-9ad4-b915f418af0a",
 		"name": "Space Whale",
 		"description": "How is it flying? Some things were meant to remain a mystery. ",
@@ -219,6 +253,40 @@
 		"skillExecutionUrl": "https://static.mixerusercontent.com/skills/animatedimage/execute.js?v=0",
 		"attributionIconUrl": "https://static.mixer.com/img/design/ui/skills-chat-attribution/space-whale_chat_24.png",
 		"skillAssetsUrl": "https://static.mixerusercontent.com/skills/animatedimage/manifest.json?v=0"
+	},
+	{
+		"id": "13aeb4db-7603-4d98-8695-6fbd5c376723",
+		"name": "Atomic Wrangler",
+		"description": "Drop a bomb and watch him go for a ride.",
+		"locked": false,
+		"lockReason": 0,
+		"category": "Effects",
+		"iconUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/a9c1b709-4fd1-45d9-bc57-9d5334c802d0/atomic-wrangler_preview.gif",
+		"previewUrl": "https://static.mixer.com/img/design/ui/skills-tray-mobile/fallout-wrangler_mobile-preview.png",
+		"globalLevelUnlock": 25,
+		"price": 2000,
+		"currency": 1,
+		"skillSetupUrl": null,
+		"skillExecutionUrl": "https://this_field_is_not_used",
+		"attributionIconUrl": "https://static.mixerusercontent.com/skills/fallout_nuketown/fallout-wrangler_chat_24.png",
+		"skillAssetsUrl": "https://static.mixerusercontent.com/skills/fallout_nuketown/manifest.json"
+	},
+	{
+		"id": "e0f44ec1-73a7-4c7e-a798-a3d3211aea91",
+		"name": "Agility",
+		"description": "Agility",
+		"locked": false,
+		"lockReason": 0,
+		"category": "Stickers",
+		"iconUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/73d53c80-fc66-4d01-908a-646b8f699d25/0004_fallout76_agility.png",
+		"previewUrl": null,
+		"globalLevelUnlock": 30,
+		"price": 250,
+		"currency": 1,
+		"skillSetupUrl": null,
+		"skillExecutionUrl": null,
+		"attributionIconUrl": null,
+		"skillAssetsUrl": null
 	},
 	{
 		"id": "4c11d37f-41f9-400f-a7ea-a3c3aba39564",
@@ -272,6 +340,23 @@
 		"skillAssetsUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/fa955aa5-33ae-4ee4-a033-ca45ee530e06/0017_scissors_512.png"
 	},
 	{
+		"id": "bf3bbe7d-884c-4370-85c4-78876c5db5b8",
+		"name": "Squad",
+		"description": "Squad",
+		"locked": false,
+		"lockReason": 0,
+		"category": "Stickers",
+		"iconUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/a2c03d80-95e1-4a8b-9684-1840893bbbc1/0005_fallout76_squad.png",
+		"previewUrl": null,
+		"globalLevelUnlock": 40,
+		"price": 250,
+		"currency": 1,
+		"skillSetupUrl": null,
+		"skillExecutionUrl": null,
+		"attributionIconUrl": null,
+		"skillAssetsUrl": null
+	},
+	{
 		"id": "258370d9-6c62-4ac6-ac46-7706ba488cba",
 		"name": "Panda",
 		"description": "Panda",
@@ -306,13 +391,13 @@
 		"skillAssetsUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/b41da798-4061-4528-a26b-944fe9fe5940/0024_dev-bot_512.png"
 	},
 	{
-		"id": "bee3f999-ec42-4116-9f33-1747d5d121d0",
-		"name": "Robo Pterodactyl",
-		"description": "Robo Pterodactyl",
+		"id": "a696dbce-dc65-4cfa-898c-2dfbf876df96",
+		"name": "Nuka Cola",
+		"description": "Nuka Cola",
 		"locked": false,
 		"lockReason": 0,
 		"category": "Stickers",
-		"iconUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/76fd9fc7-b86c-4d2e-95d3-495e712f9696/0001_pterodactyl_256.png",
+		"iconUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/d33e9114-d635-4cc8-ab3f-351de59c2ac3/0006_fallout76_nuka-cola.png",
 		"previewUrl": null,
 		"globalLevelUnlock": 50,
 		"price": 250,
@@ -442,23 +527,6 @@
 		"skillAssetsUrl": "https://xforgeassets001.xboxlive.com/xuid-2535473787585366-public/73134fb8-763f-48c3-bb6a-35819aa0ba51/0009_pineapple_512.png"
 	},
 	{
-		"id": "3e7fa8d5-01e3-4582-aaaa-83df6fc08bda",
-		"name": "Robo T-Rex",
-		"description": "Robo T-Rex",
-		"locked": false,
-		"lockReason": 0,
-		"category": "Stickers",
-		"iconUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/17405615-b6eb-4467-8266-4418bbbdb75f/0003_t-rex_256.png",
-		"previewUrl": null,
-		"globalLevelUnlock": 75,
-		"price": 500,
-		"currency": 1,
-		"skillSetupUrl": null,
-		"skillExecutionUrl": null,
-		"attributionIconUrl": null,
-		"skillAssetsUrl": null
-	},
-	{
 		"id": "b085ff23-b010-401c-9eac-0dbe24fbc2db",
 		"name": "Firework show",
 		"description": "Enjoy the excitement of a fireworks show without the fire hazard.",
@@ -474,6 +542,23 @@
 		"skillExecutionUrl": "https://static.mixerusercontent.com/skills/fireworks/execute.js",
 		"attributionIconUrl": "https://static.mixer.com/img/design/ui/skills-chat-attribution/fireworks_chat_24.png",
 		"skillAssetsUrl": "https://static.mixerusercontent.com/skills/fireworks/manifest.json"
+	},
+	{
+		"id": "b4dac16e-54b8-4f12-8f5b-8f8854717311",
+		"name": "Reclamation Celebration",
+		"description": "It's time to leave the vault and celebrate reclamation day!",
+		"locked": false,
+		"lockReason": 0,
+		"category": "Effects",
+		"iconUrl": "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/9db4b404-2266-4287-a1f5-38da208f5b98/reclamation-celebration_preview.gif",
+		"previewUrl": "https://static.mixer.com/img/design/ui/skills-tray-mobile/fallout-celeb_mobile-preview.png",
+		"globalLevelUnlock": 76,
+		"price": 10000,
+		"currency": 1,
+		"skillSetupUrl": null,
+		"skillExecutionUrl": "https://this_field_is_not_used",
+		"attributionIconUrl": "https://static.mixer.com/img/design/ui/skills-chat-attribution/fallout-celeb_chat_24.png",
+		"skillAssetsUrl": "https://static.mixerusercontent.com/skills/fallout_celebration/manifest.json"
 	},
 	{
 		"id": "b0e66855-1249-4634-b764-06ede58580d0",
@@ -667,7 +752,15 @@
 	"Effects",
 	"Rallies",
 	"Test"],
-	"promotedSkills": ["28ffde53-8bf7-4050-bd3b-9895d5142a36",
+	"promotedSkills": ["3e7fa8d5-01e3-4582-aaaa-83df6fc08bda",
 	"bee3f999-ec42-4116-9f33-1747d5d121d0",
-	"3e7fa8d5-01e3-4582-aaaa-83df6fc08bda"]
+	"28ffde53-8bf7-4050-bd3b-9895d5142a36",
+	"25a3c44e-234f-47b1-a7dd-c12304de2afe",
+	"e31316d5-eff4-49a6-b5b4-469b262673f9",
+	"0dd4b747-0d28-4cc6-9249-b7ca4804dc47",
+	"e0f44ec1-73a7-4c7e-a798-a3d3211aea91",
+	"bf3bbe7d-884c-4370-85c4-78876c5db5b8",
+	"a696dbce-dc65-4cfa-898c-2dfbf876df96",
+	"13aeb4db-7603-4d98-8695-6fbd5c376723",
+	"b4dac16e-54b8-4f12-8f5b-8f8854717311"]
 }
