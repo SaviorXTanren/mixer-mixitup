@@ -198,10 +198,13 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                         case OtherEventTypeEnum.MixerMilestoneReached:
                             extraSpecialIdentifiers["milestoneamount"] = "100";
+                            extraSpecialIdentifiers["milestoneremainingamount"] = "100";
                             extraSpecialIdentifiers["milestonereward"] = "$10.00";
                             extraSpecialIdentifiers["milestonenextamount"] = "100";
+                            extraSpecialIdentifiers["milestonenextremainingamount"] = "100";
                             extraSpecialIdentifiers["milestonenextreward"] = "$10.00";
                             extraSpecialIdentifiers["milestonefinalamount"] = "100";
+                            extraSpecialIdentifiers["milestonefinalremainingamount"] = "100";
                             extraSpecialIdentifiers["milestonefinalreward"] = "$10.00";
                             extraSpecialIdentifiers["milestoneearnedamount"] = "100";
                             extraSpecialIdentifiers["milestoneearnedreward"] = "$10.00";
