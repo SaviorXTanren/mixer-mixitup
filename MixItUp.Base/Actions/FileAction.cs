@@ -58,9 +58,11 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            string filePath = (await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, arguments)).ToFilePathString();
+            string filePath = (await this.ReplaceStringWithSpecialModifiers(this.FilePath, user, arguments));
             if (this.FileActionType == FileActionTypeEnum.SaveToFile || this.FileActionType == FileActionTypeEnum.AppendToFile)
             {
+                filePath = filePath.ToFilePathString();
+
                 string textToWrite = (!string.IsNullOrEmpty(this.TransferText)) ? this.TransferText : string.Empty;
                 textToWrite = await this.ReplaceStringWithSpecialModifiers(textToWrite, user, arguments);
                 if (this.FileActionType == FileActionTypeEnum.SaveToFile)

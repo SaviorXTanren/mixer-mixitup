@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +15,8 @@ namespace MixItUp.Desktop.Files
 {
     public class WindowsFileService : IFileService
     {
+        private static readonly List<string> webPathPrefixes = new List<string>() { "http://", "https://", "www." };
+
         private static SemaphoreSlim fileLock = new SemaphoreSlim(1);
 
         public string ImageFileFilter() { return "All Picture Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;|All files (*.*)|*.*"; }
@@ -69,9 +73,19 @@ namespace MixItUp.Desktop.Files
         {
             try
             {
-                using (StreamReader reader = new StreamReader(File.OpenRead(filePath)))
+                if (File.Exists(filePath))
                 {
-                    return await reader.ReadToEndAsync();
+                    using (StreamReader reader = new StreamReader(File.OpenRead(filePath)))
+                    {
+                        return await reader.ReadToEndAsync();
+                    }
+                }
+                else if (webPathPrefixes.Any(p => filePath.StartsWith(p, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        return await Task.Run(async () => { return await client.DownloadStringTaskAsync(filePath); });
+                    }
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
