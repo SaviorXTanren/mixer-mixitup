@@ -1,11 +1,16 @@
-﻿using MixItUp.Base;
+﻿using Mixer.Base.Model.Skills;
+using Mixer.Base.Util;
+using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.MainControls;
 using MixItUp.WPF.Util;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace MixItUp.WPF.Controls.Command
@@ -185,6 +190,23 @@ namespace MixItUp.WPF.Controls.Command
                                 extraSpecialIdentifiers[kvp.Key] = kvp.Value;
                             }
                             break;
+                        case OtherEventTypeEnum.MixerSkillUsed:
+                            extraSpecialIdentifiers["skillname"] = "Lots of stars";
+                            extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(SkillTypeEnum.Sticker);
+                            extraSpecialIdentifiers["skillcost"] = "50";
+                            extraSpecialIdentifiers["skillimage"] = "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/b7a1d715-3a9e-4bdd-a030-32f9e2e0f51e/0013_lots-o-stars_256.png";
+                            break;
+                        case OtherEventTypeEnum.MixerMilestoneReached:
+                            extraSpecialIdentifiers["milestoneamount"] = "100";
+                            extraSpecialIdentifiers["milestonereward"] = "$10.00";
+                            extraSpecialIdentifiers["milestonenextamount"] = "100";
+                            extraSpecialIdentifiers["milestonenextreward"] = "$10.00";
+                            extraSpecialIdentifiers["milestonefinalamount"] = "100";
+                            extraSpecialIdentifiers["milestonefinalreward"] = "$10.00";
+                            extraSpecialIdentifiers["milestoneearnedamount"] = "100";
+                            extraSpecialIdentifiers["milestoneearnedreward"] = "$10.00";
+                            break;
+
                     }
                 }
 
