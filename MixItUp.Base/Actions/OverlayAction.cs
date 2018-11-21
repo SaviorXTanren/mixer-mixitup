@@ -36,6 +36,11 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public OverlayItemEffects Effects { get; set; }
 
+        [DataMember]
+        public Guid WidgetID { get; set; }
+        [DataMember]
+        public bool ShowWidget { get; set; }
+
         public OverlayAction() : base(ActionTypeEnum.Overlay) { }
 
         public OverlayAction(string overlayName, OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
@@ -47,14 +52,40 @@ namespace MixItUp.Base.Actions
             this.Effects = effects;
         }
 
+        public OverlayAction(Guid widgetID, bool showWidget)
+            : this()
+        {
+            this.WidgetID = widgetID;
+            this.ShowWidget = showWidget;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.OverlayServers.DefaultOverlayName : this.OverlayName;
-            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
-            if (overlay != null)
+            if (this.WidgetID != Guid.Empty)
             {
-                OverlayItemBase processedItem = await this.Item.GetProcessedItem(user, arguments, this.extraSpecialIdentifiers);
-                await overlay.SendItem(processedItem, this.Position, this.Effects);
+                OverlayWidget widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
+                if (widget != null)
+                {
+                    widget.IsEnabled = this.ShowWidget;
+                    if (!widget.IsEnabled)
+                    {
+                        IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(widget.OverlayName);
+                        if (overlay != null)
+                        {
+                            await overlay.RemoveItem(widget.Item);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.OverlayServers.DefaultOverlayName : this.OverlayName;
+                IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
+                if (overlay != null)
+                {
+                    OverlayItemBase processedItem = await this.Item.GetProcessedItem(user, arguments, this.extraSpecialIdentifiers);
+                    await overlay.SendItem(processedItem, this.Position, this.Effects);
+                }
             }
         }
     }
