@@ -1,9 +1,9 @@
 ﻿using Mixer.Base.Clients;
 using Mixer.Base.Model.Chat;
-using Mixer.Base.Model.Skills;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Skill;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
@@ -643,9 +643,9 @@ namespace MixItUp.Base.MixerAPI
                     Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                     {
                         { "skillname", message.ChatSkill.skill_name },
-                        { "skilltype", EnumHelper.GetEnumName(message.Skill.Type) },
+                        { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
                         { "skillcost", message.ChatSkill.cost.ToString() },
-                        { "skillimage", message.Skill.ImageUrl },
+                        { "skillimage", message.ChatSkill.icon_url },
                     };
                     await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
                 }
