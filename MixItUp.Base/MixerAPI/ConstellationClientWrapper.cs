@@ -41,6 +41,8 @@ namespace MixItUp.Base.MixerAPI
 
         public ConstellationClient Client { get; private set; }
 
+        public IEnumerable<SkillModel> AvailableSkills { get { return this.availableSkills.Values; } }
+
         private LockedDictionary<string, LockedHashSet<uint>> userEventTracking = new LockedDictionary<string, LockedHashSet<uint>>();
 
         private List<PatronageMilestoneModel> allPatronageMilestones = new List<PatronageMilestoneModel>();
@@ -358,7 +360,13 @@ namespace MixItUp.Base.MixerAPI
 
                             GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
 
-                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>() { { "skillname", skillInstance.Skill.name }, { "skillcost", skillInstance.Skill.price.ToString() } };
+                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                            {
+                                { "skillname", skillInstance.Skill.name },
+                                { "skilltype", EnumHelper.GetEnumName(skillInstance.Type) },
+                                { "skillcost", skillInstance.Skill.price.ToString() },
+                                { "skillimage", skillInstance.ImageUrl }
+                            };
                             await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
                         }
                     }

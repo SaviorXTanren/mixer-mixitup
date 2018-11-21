@@ -454,7 +454,7 @@ namespace MixItUp.Base.Util
                         if (patronageMilestone != null)
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amountdifference", (patronageMilestone.target - patronageStatus.patronageEarned).ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingamount", (patronageMilestone.target - patronageStatus.patronageEarned).ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", patronageMilestone.DollarAmountText());
                         }
 
@@ -462,7 +462,7 @@ namespace MixItUp.Base.Util
                         if (patronageNextMilestone != null)
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamount", patronageNextMilestone.target.ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamountdifference", (patronageNextMilestone.target - patronageStatus.patronageEarned).ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingnextamount", (patronageNextMilestone.target - patronageStatus.patronageEarned).ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", patronageNextMilestone.DollarAmountText());
                         }
 
@@ -470,7 +470,7 @@ namespace MixItUp.Base.Util
                         if (patronageNextMilestone != null)
                         {
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", patronageFinalMilestone.target.ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamountdifference", (patronageFinalMilestone.target - patronageStatus.patronageEarned).ToString());
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingfinalamount", (patronageFinalMilestone.target - patronageStatus.patronageEarned).ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", patronageFinalMilestone.DollarAmountText());
                         }
 
