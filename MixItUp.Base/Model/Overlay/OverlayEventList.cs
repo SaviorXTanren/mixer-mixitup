@@ -37,12 +37,12 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayEventList : OverlayCustomHTMLItemBase
+    public class OverlayEventList : OverlayCustomHTMLItem
     {
         public const string HTMLTemplate =
     @"<div style=""position: relative; border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px"">
-  <p style=""position: absolute; top: 35%; left: 5%; width: 50%; float: left; text-align: left; font-size: {TOP_TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">{NAME}</p>
-  <p style=""position: absolute; top: 80%; right: 5%; width: 50%; text-align: right; font-size: {BOTTOM_TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">{DETAILS}</p>
+  <p style=""position: absolute; top: 35%; left: 5%; width: 50%; float: left; text-align: left; font-family: '{TEXT_FONT}'; font-size: {TOP_TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">{NAME}</p>
+  <p style=""position: absolute; top: 80%; right: 5%; width: 50%; text-align: right; font-family: '{TEXT_FONT}'; font-size: {BOTTOM_TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">{DETAILS}</p>
 </div>";
 
         [DataMember]
@@ -152,10 +152,12 @@ namespace MixItUp.Base.Model.Overlay
             return null;
         }
 
+        public override OverlayCustomHTMLItem GetCopy() { return this.Copy<OverlayEventList>(); }
+
         protected override Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayEventListItem eventToAdd = this.eventsToAdd.First();
-            this.eventsToAdd.RemoveAt(0);
+            //this.eventsToAdd.RemoveAt(0);
 
             if (this.events.Count >= this.TotalToShow)
             {
@@ -168,10 +170,11 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["BACKGROUND_COLOR"] = this.BackgroundColor;
             replacementSets["BORDER_COLOR"] = this.BorderColor;
             replacementSets["TEXT_COLOR"] = this.TextColor;
+            replacementSets["TEXT_FONT"] = this.TextFont;
             replacementSets["WIDTH"] = this.Width.ToString();
             replacementSets["HEIGHT"] = this.Height.ToString();
-            replacementSets["TOP_TEXT_SIZE"] = ((int)(0.4 * ((double)this.Height))).ToString();
-            replacementSets["BOTTOM_TEXT_SIZE"] = ((int)(0.2 * ((double)this.Height))).ToString();
+            replacementSets["TOP_TEXT_HEIGHT"] = ((int)(0.4 * ((double)this.Height))).ToString();
+            replacementSets["BOTTOM_TEXT_HEIGHT"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
             replacementSets["NAME"] = eventToAdd.Name;
             replacementSets["DETAILS"] = eventToAdd.Details;

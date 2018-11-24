@@ -6,21 +6,26 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Model.Overlay
 {
     [DataContract]
-    public abstract class OverlayCustomHTMLItemBase : OverlayItemBase
+    public class OverlayCustomHTMLItem : OverlayItemBase
     {
         [DataMember]
         public string HTMLText { get; set; }
 
-        public OverlayCustomHTMLItemBase() { }
+        [DataMember]
+        public override string ItemType { get { return "custom"; } }
 
-        public OverlayCustomHTMLItemBase(string htmlTemplate)
+        public OverlayCustomHTMLItem() { }
+
+        public OverlayCustomHTMLItem(string htmlTemplate)
         {
             this.HTMLText = htmlTemplate;
         }
 
+        public virtual OverlayCustomHTMLItem GetCopy() { return this.Copy<OverlayCustomHTMLItem>(); }
+
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            OverlayCustomHTMLItemBase item = this.Copy<OverlayCustomHTMLItemBase>();
+            OverlayCustomHTMLItem item = this.GetCopy();
             foreach (var kvp in await this.GetReplacementSets(user, arguments, extraSpecialIdentifiers))
             {
                 item.HTMLText = item.HTMLText.Replace($"{{{kvp.Key}}}", kvp.Value);

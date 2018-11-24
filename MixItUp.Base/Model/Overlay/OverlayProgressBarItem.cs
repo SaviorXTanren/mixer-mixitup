@@ -20,7 +20,7 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
-    public class OverlayProgressBarItem : OverlayCustomHTMLItemBase
+    public class OverlayProgressBarItem : OverlayCustomHTMLItem
     {
         public const string HTMLTemplate =
             @"<div style=""position: absolute; background-color: {BACKGROUND_COLOR}; width: {BAR_WIDTH}px; height: {BAR_HEIGHT}px; transform: translate(-50%, -50%);"">

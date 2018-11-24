@@ -104,8 +104,8 @@ namespace MixItUp.WPF.Windows.Overlay
                 }
                 else if (this.Widget.Item is OverlayEventList)
                 {
-                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ProgressBar);
-                    this.ProgressBarItem.SetItem(this.Widget.Item);
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.EventList);
+                    this.EventListItem.SetItem(this.Widget.Item);
                 }
             }
 

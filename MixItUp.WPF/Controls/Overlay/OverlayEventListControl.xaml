@@ -118,7 +118,7 @@
             <TextBox Grid.Column="4" x:Name="WidthTextBox" MaterialDesign:HintAssist.Hint="Item Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
             <TextBox Grid.Column="6" x:Name="HeightTextBox" MaterialDesign:HintAssist.Hint="Item Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
 
-            <ComboBox Grid.Column="8" x:Name="TextFontComboBox" MaterialDesign:HintAssist.Hint="Font Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
+            <ComboBox Grid.Column="8" x:Name="TextFontComboBox" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
         </Grid>
 

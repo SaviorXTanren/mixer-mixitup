@@ -105,7 +105,10 @@ namespace MixItUp.WPF.Controls.Overlay
                 textColor = ColorSchemes.ColorSchemeDictionary[textColor];
             }
 
-            string textFont = this.TextFontComboBox.Text;
+            if (string.IsNullOrEmpty(this.TextFontComboBox.Text))
+            {
+                return null;
+            }
 
             if (string.IsNullOrEmpty(this.WidthTextBox.Text) || !int.TryParse(this.WidthTextBox.Text, out int width) ||
                 string.IsNullOrEmpty(this.HeightTextBox.Text) || !int.TryParse(this.HeightTextBox.Text, out int height))
@@ -121,7 +124,7 @@ namespace MixItUp.WPF.Controls.Overlay
             OverlayEffectEntranceAnimationTypeEnum addEventAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.AddEventAnimationComboBox.SelectedItem);
             OverlayEffectExitAnimationTypeEnum removeEventAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.RemoveEventAnimationComboBox.SelectedItem);
 
-            return new OverlayEventList(this.HTMLText.Text, eventTypes, totalToShow, this.ResetOnLoadCheckBox.IsChecked.GetValueOrDefault(), textFont, width, height,
+            return new OverlayEventList(this.HTMLText.Text, eventTypes, totalToShow, this.ResetOnLoadCheckBox.IsChecked.GetValueOrDefault(), this.TextFontComboBox.Text, width, height,
                 borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation);
         }
 
@@ -141,6 +144,9 @@ namespace MixItUp.WPF.Controls.Overlay
             this.RemoveEventAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectExitAnimationTypeEnum>();
             this.RemoveEventAnimationComboBox.SelectedIndex = 0;
 
+            this.WidthTextBox.Text = "400";
+            this.HeightTextBox.Text = "100";
+            this.TextFontComboBox.Text = "Arial";
             this.HTMLText.Text = OverlayEventList.HTMLTemplate;
 
             if (this.item != null)
