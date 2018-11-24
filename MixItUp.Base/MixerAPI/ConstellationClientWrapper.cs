@@ -52,7 +52,10 @@ namespace MixItUp.Base.MixerAPI
         private SkillCatalogModel skillCatalog;
         private Dictionary<Guid, SkillModel> availableSkills = new Dictionary<Guid, SkillModel>();
 
-        public ConstellationClientWrapper() { }
+        public ConstellationClientWrapper()
+        {
+            GlobalEvents.OnSparkUseOccurred += GlobalEvents_OnSparkUseOccurred;
+        }
 
         public async Task<bool> Connect()
         {
@@ -360,6 +363,8 @@ namespace MixItUp.Base.MixerAPI
 
                             GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
 
+                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)skillInstance.Skill.price));
+
                             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
                             {
                                 { "skillname", skillInstance.Skill.name },
@@ -407,6 +412,16 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
             catch (Exception ex) { Util.Logger.Log(ex); }
+        }
+
+        private async void GlobalEvents_OnSparkUseOccurred(object sender, Tuple<UserViewModel, int> sparkUsage)
+        {
+            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+            {
+                { "sparkamount", sparkUsage.Item2.ToString() },
+            };
+
+            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSparksUsed)), sparkUsage.Item1, specialIdentifiers);
         }
 
         private async void ConstellationClient_OnDisconnectOccurred(object sender, WebSocketCloseStatus e)

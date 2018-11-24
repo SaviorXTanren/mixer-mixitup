@@ -209,7 +209,9 @@ namespace MixItUp.WPF.Controls.Command
                             extraSpecialIdentifiers["milestoneearnedamount"] = "100";
                             extraSpecialIdentifiers["milestoneearnedreward"] = "$10.00";
                             break;
-
+                        case OtherEventTypeEnum.MixerSparksUsed:
+                            extraSpecialIdentifiers["sparkamount"] = "10";
+                            break;
                     }
                 }
 
