@@ -726,7 +726,11 @@ namespace MixItUp.WPF.Controls.MainControls
             if (this.ChatList.SelectedItem != null)
             {
                 ChatMessageControl control = (ChatMessageControl)this.ChatList.SelectedItem;
-                Clipboard.SetText(control.Message.Message);
+                try
+                {
+                    Clipboard.SetText(control.Message.Message);
+                }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
 
