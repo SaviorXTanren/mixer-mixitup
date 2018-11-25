@@ -730,7 +730,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     Clipboard.SetText(control.Message.Message);
                 }
-                catch (Exception ex) { Logger.Log(ex): }
+                catch (Exception ex) { Logger.Log(ex); }
             }
         }
 
