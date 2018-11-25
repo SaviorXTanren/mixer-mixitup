@@ -200,12 +200,20 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public async Task<IEnumerable<UserViewModel>> GetAllUsers()
+        public async Task<IEnumerable<UserViewModel>> GetAllUsers(bool mustBeInChat = true)
         {
-            return await this.semaphore.WaitAndRelease(() => Task.FromResult(this.users.Values.ToList()));
+            return await this.semaphore.WaitAndRelease(() =>
+            {
+                IEnumerable<UserViewModel> users = this.users.Values.ToList();
+                if (mustBeInChat)
+                {
+                    users = users.Where(u => u.IsInChat);
+                }
+                return Task.FromResult(users);
+            });
         }
 
-        public async Task<IEnumerable<UserViewModel>> GetAllWorkableUsers()
+        public async Task<IEnumerable<UserViewModel>> GetAllWorkableUsers(bool mustBeInChat = true)
         {
             return await this.semaphore.WaitAndRelease(() =>
             {
@@ -214,6 +222,11 @@ namespace MixItUp.Base.ViewModel.User
                 if (ChannelSession.BotUser != null)
                 {
                     users.RemoveAll(u => ChannelSession.BotUser.username.Equals(u.UserName));
+                }
+
+                if (mustBeInChat)
+                {
+                    users = users.Where(u => u.IsInChat).ToList();
                 }
                 return Task.FromResult(users);
             });
