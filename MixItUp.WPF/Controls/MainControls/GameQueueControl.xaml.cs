@@ -2,7 +2,6 @@
 using MixItUp.Base;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Util;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -83,13 +82,15 @@ namespace MixItUp.WPF.Controls.MainControls
             ChannelSession.Settings.GameQueueRequirements = this.Requirement.GetRequirements();
 
             ChannelSession.GameQueueEnabled = true;
-            this.ClearQueueButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.Requirement.IsEnabled = false;
+            this.SubPriorityToggleButton.IsEnabled = this.Requirement.IsEnabled = false;
+            this.ClearQueueButton.IsEnabled = true;
         }
 
         private void EnableGameQueueToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
         {
             ChannelSession.GameQueueEnabled = false;
             this.ClearQueueButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.Requirement.IsEnabled = true;
+            this.ClearQueueButton.IsEnabled = false;
         }
 
         private void ClearQueueButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -140,7 +141,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 this.EnableGameQueueToggleButton.IsChecked = ChannelSession.GameQueueEnabled;
-                this.ClearQueueButton.IsEnabled = this.SubPriorityToggleButton.IsEnabled = this.Requirement.IsEnabled = (!ChannelSession.GameQueueEnabled);
+                this.SubPriorityToggleButton.IsEnabled = this.Requirement.IsEnabled = (!ChannelSession.GameQueueEnabled);
+                this.ClearQueueButton.IsEnabled = ChannelSession.GameQueueEnabled;
                 this.RefreshQueueList();
             }));
         }
