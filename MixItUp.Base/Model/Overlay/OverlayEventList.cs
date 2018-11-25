@@ -157,7 +157,7 @@ namespace MixItUp.Base.Model.Overlay
         protected override Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
             OverlayEventListItem eventToAdd = this.eventsToAdd.First();
-            //this.eventsToAdd.RemoveAt(0);
+            this.eventsToAdd.RemoveAt(0);
 
             if (this.events.Count >= this.TotalToShow)
             {
