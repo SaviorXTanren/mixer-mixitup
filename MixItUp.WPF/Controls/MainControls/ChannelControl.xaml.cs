@@ -292,7 +292,7 @@ namespace MixItUp.WPF.Controls.MainControls
                     {
                         query += "?where=partnered:eq:true";
                     }
-                    channels = await ChannelSession.Connection.Connection.Channels.GetPagedAsync<ChannelModel>(query, 50, linkPagesAvailable: false);
+                    channels = await ChannelSession.Connection.Connection.Channels.GetPagedNumberAsync<ChannelModel>(query, 50, linkPagesAvailable: false);
                 }
 
                 this.ChannelRaidNameTextBox.Clear();
