@@ -242,6 +242,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(kvp.Key, kvp.Value);
             }
 
+            this.ReplaceSpecialIdentifier("timedigits", DateTimeOffset.Now.ToString("HHmm"));
             this.ReplaceSpecialIdentifier("datetime", DateTimeOffset.Now.ToString("g"));
             this.ReplaceSpecialIdentifier("date", DateTimeOffset.Now.ToString("d"));
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
