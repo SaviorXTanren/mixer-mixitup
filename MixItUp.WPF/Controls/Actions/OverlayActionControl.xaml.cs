@@ -48,8 +48,8 @@ namespace MixItUp.WPF.Controls.Actions
                 {
                     this.OverlayNameComboBox.IsEnabled = false;
                     this.OverlayNameComboBox.ItemsSource = new List<string>() { ChannelSession.Services.OverlayServers.DefaultOverlayName };
-                    this.OverlayNameComboBox.SelectedIndex = 0;
                 }
+                this.OverlayNameComboBox.SelectedItem = ChannelSession.Services.OverlayServers.DefaultOverlayName;
             }
             else
             {
@@ -73,6 +73,11 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.action != null)
             {
+                if (!string.IsNullOrEmpty(this.action.OverlayName))
+                {
+                    this.OverlayNameComboBox.SelectedItem = this.action.OverlayName;
+                }
+
                 if (this.action.WidgetID != Guid.Empty)
                 {
                     this.TypeComboBox.SelectedItem = ShowHideWidgetOption;

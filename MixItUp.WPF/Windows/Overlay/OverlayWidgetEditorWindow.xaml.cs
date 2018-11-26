@@ -60,8 +60,8 @@ namespace MixItUp.WPF.Windows.Overlay
             {
                 this.OverlayNameComboBox.IsEnabled = false;
                 this.OverlayNameComboBox.ItemsSource = new List<string>() { ChannelSession.Services.OverlayServers.DefaultOverlayName };
-                this.OverlayNameComboBox.SelectedIndex = 0;
             }
+            this.OverlayNameComboBox.SelectedItem = ChannelSession.Services.OverlayServers.DefaultOverlayName;
 
             if (this.Widget != null)
             {
