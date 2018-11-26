@@ -1,6 +1,7 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Util;
+using MixItUp.WPF.Util;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -92,6 +93,8 @@ namespace MixItUp.WPF.Controls.Overlay
                 this.TextColorComboBox.Text = ColorSchemes.ColorSchemeDictionary.FirstOrDefault(c => c.Value.Equals(this.item.TextColor)).Key;
             }
 
+            this.TextFontComboBox.Text = this.item.TextFont;
+
             this.WidthTextBox.Text = this.item.Width.ToString();
             this.HeightTextBox.Text = this.item.Height.ToString();
 
@@ -143,6 +146,11 @@ namespace MixItUp.WPF.Controls.Overlay
                     textColor = ColorSchemes.ColorSchemeDictionary[textColor];
                 }
 
+                if (string.IsNullOrEmpty(this.TextFontComboBox.Text))
+                {
+                    return null;
+                }
+
                 if (string.IsNullOrEmpty(this.WidthTextBox.Text) || !int.TryParse(this.WidthTextBox.Text, out int width) ||
                     string.IsNullOrEmpty(this.HeightTextBox.Text) || !int.TryParse(this.HeightTextBox.Text, out int height))
                 {
@@ -156,11 +164,11 @@ namespace MixItUp.WPF.Controls.Overlay
 
                 if (double.TryParse(startingAmount, out double startingAmountNumber) && double.TryParse(goalAmount, out double goalAmountNumber))
                 {
-                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmountNumber, goalAmountNumber, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
+                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmountNumber, goalAmountNumber, resetAfterDays, progressColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height);
                 }
                 else
                 {
-                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmount, goalAmount, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
+                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmount, goalAmount, resetAfterDays, progressColor, backgroundColor, textColor, this.TextFontComboBox.Text, width, height);
                 }
             }
             return null;
@@ -171,9 +179,12 @@ namespace MixItUp.WPF.Controls.Overlay
             this.GoalTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<ProgressBarTypeEnum>();
             this.ProgressColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
 
+            this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
+
             this.StartingAmountTextBox.Text = "0";
             this.GoalAmountTextBox.Text = "0";
             this.ResetAfterDaysTextBox.Text = "0";
+            this.TextFontComboBox.Text = "Arial";
             this.HTMLText.Text = OverlayProgressBar.HTMLTemplate;
 
             if (this.item != null)
