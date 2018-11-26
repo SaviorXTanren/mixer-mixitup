@@ -49,7 +49,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="350" />
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -74,8 +74,8 @@
                     <ComboBox Grid.Row="2" x:Name="TypeComboBox" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="300" />
                 </Grid>
 
-                <Border Grid.Column="2" Style="{StaticResource DefaultBorder}" HorizontalAlignment="Center">
-                    <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" Margin="10" />
+                <Border Grid.Column="2" Style="{StaticResource DefaultBorder}" HorizontalAlignment="Center" Width="350" Height="190">
+                    <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" Margin="10" VerticalAlignment="Top" />
                 </Border>
             </Grid>
 
