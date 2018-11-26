@@ -26,7 +26,7 @@ namespace MixItUp.Base.Model.Overlay
             @"<div style=""position: absolute; background-color: {BACKGROUND_COLOR}; width: {BAR_WIDTH}px; height: {BAR_HEIGHT}px; transform: translate(-50%, -50%);"">
     <div style=""position: absolute; background-color: {PROGRESS_COLOR}; width: {PROGRESS_WIDTH}px; height: {BAR_HEIGHT}px;""></div>
 </div>
-<p style=""position: absolute; font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(-50%, -50%);"">{AMOUNT}</p>";
+<p style=""position: absolute; font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(-50%, -50%);"">{AMOUNT} ({PERCENTAGE}%)</p>";
 
         [DataMember]
         public ProgressBarTypeEnum ProgressBarType { get; set; }
@@ -210,11 +210,14 @@ namespace MixItUp.Base.Model.Overlay
                 }
             }
 
+            double percentage = (amount / goal);
+
             replacementSets["AMOUNT"] = amount.ToString();
             replacementSets["GOAL"] = goal.ToString();
+            replacementSets["PERCENTAGE"] = ((int)(percentage * 100)).ToString();
             if (goal > 0)
             {
-                replacementSets["PROGRESS_WIDTH"] = ((int)(((double)this.Width) * (amount / goal))).ToString();
+                replacementSets["PROGRESS_WIDTH"] = ((int)(((double)this.Width) * percentage)).ToString();
             }
 
             return replacementSets;

@@ -20,12 +20,14 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -42,10 +44,12 @@
                 <CheckBox x:Name="TotalFollowsCheckBox" Grid.Column="2" VerticalAlignment="Center" Checked="TotalFollowsCheckBox_Checked" Unchecked="TotalFollowsCheckBox_Checked" />
             </Grid>
             
-            <TextBox x:Name="StartingAmountTextBox" Grid.Column="3" MaterialDesign:HintAssist.Hint="Starting Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
-            <TextBox x:Name="GoalAmountTextBox" Grid.Column="5" MaterialDesign:HintAssist.Hint="Goal Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox x:Name="StartingAmountTextBox" Grid.Column="3" MaterialDesign:HintAssist.Hint="Starting Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+            <TextBox x:Name="GoalAmountTextBox" Grid.Column="5" MaterialDesign:HintAssist.Hint="Goal Amount" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
 
-            <TextBox x:Name="ResetAfterDaysTextBox" Grid.Column="7" MaterialDesign:HintAssist.Hint="Reset After Days" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
+            <TextBox x:Name="ResetAfterDaysTextBox" Grid.Column="7" MaterialDesign:HintAssist.Hint="Reset After Days" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+
+            <ComboBox Grid.Column="9" x:Name="TextFontComboBox" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
 
         </Grid>
 
@@ -55,8 +59,6 @@
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
@@ -70,10 +72,8 @@
 
             <ComboBox Grid.Column="4" x:Name="TextColorComboBox" MaterialDesign:HintAssist.Hint="Text Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="130" />
 
-            <ComboBox Grid.Column="6" x:Name="TextFontComboBox" MaterialDesign:HintAssist.Hint="Text Font" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Width="150" />
-
-            <TextBox Grid.Column="8" x:Name="WidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
-            <TextBox Grid.Column="10" x:Name="HeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+            <TextBox Grid.Column="6" x:Name="WidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
+            <TextBox Grid.Column="8" x:Name="HeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
         </Grid>
 
         <TextBox Grid.Row="4" x:Name="HTMLText" MaterialDesign:HintAssist.Hint="HTML Style" Style="{StaticResource MaterialDesignFloatingHintTextBox}" AcceptsReturn="True" Width="700" Height="150" VerticalAlignment="Top" />
