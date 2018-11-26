@@ -93,9 +93,11 @@
 
                     <OverlayControls:OverlayHTMLItemControl x:Name="HTMLItem" Visibility="Collapsed" HorizontalAlignment="Center" />
 
-                    <OverlayControls:OverlayProgressBarItemControl x:Name="ProgressBarItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+                    <OverlayControls:OverlayProgressBarControl x:Name="ProgressBarItem" Visibility="Collapsed" HorizontalAlignment="Center" />
 
                     <OverlayControls:OverlayEventListControl x:Name="EventListItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayGameQueueControl x:Name="GameQueueItem" Visibility="Collapsed" HorizontalAlignment="Center" />
                 </Grid>
             </ScrollViewer>
 

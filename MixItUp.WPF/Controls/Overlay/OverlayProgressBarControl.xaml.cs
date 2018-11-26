@@ -8,18 +8,18 @@ using System.Windows;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayProgressBarItemControl.xaml
+    /// Interaction logic for OverlayProgressBarControl.xaml
     /// </summary>
-    public partial class OverlayProgressBarItemControl : OverlayItemControl
+    public partial class OverlayProgressBarControl : OverlayItemControl
     {
-        private OverlayProgressBarItem item;
+        private OverlayProgressBar item;
 
-        public OverlayProgressBarItemControl()
+        public OverlayProgressBarControl()
         {
             InitializeComponent();
         }
 
-        public OverlayProgressBarItemControl(OverlayProgressBarItem item)
+        public OverlayProgressBarControl(OverlayProgressBar item)
             : this()
         {
             this.item = item;
@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         public override void SetItem(OverlayItemBase item)
         {
-            this.item = (OverlayProgressBarItem)item;
+            this.item = (OverlayProgressBar)item;
             this.GoalTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.ProgressBarType);
 
             this.StartingAmountTextBox.IsEnabled = true;
@@ -156,11 +156,11 @@ namespace MixItUp.WPF.Controls.Overlay
 
                 if (double.TryParse(startingAmount, out double startingAmountNumber) && double.TryParse(goalAmount, out double goalAmountNumber))
                 {
-                    return new OverlayProgressBarItem(this.HTMLText.Text, type, startingAmountNumber, goalAmountNumber, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
+                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmountNumber, goalAmountNumber, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
                 }
                 else
                 {
-                    return new OverlayProgressBarItem(this.HTMLText.Text, type, startingAmount, goalAmount, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
+                    return new OverlayProgressBar(this.HTMLText.Text, type, startingAmount, goalAmount, resetAfterDays, progressColor, backgroundColor, textColor, width, height);
                 }
             }
             return null;
@@ -174,7 +174,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.StartingAmountTextBox.Text = "0";
             this.GoalAmountTextBox.Text = "0";
             this.ResetAfterDaysTextBox.Text = "0";
-            this.HTMLText.Text = OverlayProgressBarItem.HTMLTemplate;
+            this.HTMLText.Text = OverlayProgressBar.HTMLTemplate;
 
             if (this.item != null)
             {

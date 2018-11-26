@@ -463,6 +463,9 @@
     <Compile Include="Controls\MixerStatusAlertControl.xaml.cs">
       <DependentUpon>MixerStatusAlertControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayGameQueueControl.xaml.cs">
+      <DependentUpon>OverlayGameQueueControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayHTMLItemControl.xaml.cs">
       <DependentUpon>OverlayHTMLItemControl.xaml</DependentUpon>
     </Compile>
@@ -476,8 +479,8 @@
     <Compile Include="Controls\Overlay\OverlayEventListControl.xaml.cs">
       <DependentUpon>OverlayEventListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Overlay\OverlayProgressBarItemControl.xaml.cs">
-      <DependentUpon>OverlayProgressBarItemControl.xaml</DependentUpon>
+    <Compile Include="Controls\Overlay\OverlayProgressBarControl.xaml.cs">
+      <DependentUpon>OverlayProgressBarControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Overlay\OverlayTextItemControl.xaml.cs">
       <DependentUpon>OverlayTextItemControl.xaml</DependentUpon>
@@ -1069,6 +1072,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Overlay\OverlayGameQueueControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Overlay\OverlayHTMLItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1085,7 +1092,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Overlay\OverlayProgressBarItemControl.xaml">
+    <Page Include="Controls\Overlay\OverlayProgressBarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

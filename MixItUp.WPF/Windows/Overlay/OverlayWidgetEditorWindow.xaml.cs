@@ -22,6 +22,8 @@ namespace MixItUp.WPF.Windows.Overlay
         ProgressBar,
         [Name("Event List")]
         EventList,
+        [Name("Game Queue")]
+        GameQueue,
     }
 
     /// <summary>
@@ -97,7 +99,7 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.HTML);
                     this.HTMLItem.SetItem(this.Widget.Item);
                 }
-                else if (this.Widget.Item is OverlayProgressBarItem)
+                else if (this.Widget.Item is OverlayProgressBar)
                 {
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ProgressBar);
                     this.ProgressBarItem.SetItem(this.Widget.Item);
@@ -106,6 +108,11 @@ namespace MixItUp.WPF.Windows.Overlay
                 {
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.EventList);
                     this.EventListItem.SetItem(this.Widget.Item);
+                }
+                else if (this.Widget.Item is OverlayGameQueue)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.GameQueue);
+                    this.GameQueueItem.SetItem(this.Widget.Item);
                 }
             }
 
@@ -122,6 +129,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.HTMLItem.Visibility = Visibility.Collapsed;
             this.ProgressBarItem.Visibility = Visibility.Collapsed;
             this.EventListItem.Visibility = Visibility.Collapsed;
+            this.GameQueueItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
@@ -156,6 +164,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.EventList)
                 {
                     this.EventListItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.GameQueue)
+                {
+                    this.GameQueueItem.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -218,6 +230,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.EventList)
                 {
                     item = this.EventListItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.GameQueue)
+                {
+                    item = this.GameQueueItem.GetItem();
                 }
 
                 if (item == null)
