@@ -8,8 +8,7 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayWebPageItem : OverlayItemBase
     {
-        [DataMember]
-        public override string ItemType { get { return "webpage"; } }
+        public const string WebPageItemType = "webpage";
 
         [DataMember]
         public string URL { get; set; }
@@ -18,9 +17,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Height { get; set; }
 
-        public OverlayWebPageItem() { }
+        public OverlayWebPageItem() : base(OverlayWebPageItem.WebPageItemType) { }
 
         public OverlayWebPageItem(string url, int width, int height)
+            : base(OverlayWebPageItem.WebPageItemType)
         {
             this.URL = url;
             this.Width = width;

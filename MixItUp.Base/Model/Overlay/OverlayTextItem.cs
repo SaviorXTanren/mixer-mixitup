@@ -8,8 +8,7 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayTextItem : OverlayItemBase
     {
-        [DataMember]
-        public override string ItemType { get { return "text"; } }
+        public const string TextItemType = "text";
 
         [DataMember]
         public string Text { get; set; }
@@ -28,9 +27,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string ShadowColor { get; set; }
 
-        public OverlayTextItem() { }
+        public OverlayTextItem() : base(OverlayTextItem.TextItemType) { }
 
         public OverlayTextItem(string text, string color, int size, string font, bool bold, bool italic, bool underline, string shadowColor)
+            : base(OverlayTextItem.TextItemType)
         {
             this.Text = text;
             this.Color = color;

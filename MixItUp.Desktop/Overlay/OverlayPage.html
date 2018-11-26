@@ -211,6 +211,9 @@
                         else if (packet.type === "gamequeue") {
                             gameQueuePacket(packet.data);
                         }
+                        else if (packet.type === "timer") {
+                            timerPacket(packet.data);
+                        }
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
@@ -471,6 +474,42 @@
                             mainDiv.appendChild(itemDiv);
                         }
                     }
+                }
+            }
+
+            // Timer Functions
+
+            function timerPacket(data) {
+                if (!itemDictionary[data.ID]) {
+                    var addedElement = document.createElement('div');
+
+                    timerUpdate(data, addedElement);
+
+                    addWaitRemoveElement(data, addedElement);
+                }
+            }
+
+            function timerUpdate(data, mainDiv) {
+
+                var hours = Math.floor(data.TotalLength / 3600);
+                var minutes = Math.floor((data.TotalLength - (hours * 3600)) / 60);
+                var seconds = data.TotalLength - (hours * 3600) - (minutes * 60);
+
+                if (hours < 10) { hours = "0" + hours; }
+                if (minutes < 10) { minutes = "0" + minutes; }
+                if (seconds < 10) { seconds = "0" + seconds; }
+                var timeText =  hours + ':' + minutes + ':' + seconds;
+
+                mainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
+
+                if (data.TotalLength > 0) {
+                    setTimeout(function () {
+                        data.TotalLength--;
+                        timerUpdate(data, mainDiv);
+                    }, 1000);
+                }
+                else {
+                    mainDiv.innerHTML = "";
                 }
             }
 

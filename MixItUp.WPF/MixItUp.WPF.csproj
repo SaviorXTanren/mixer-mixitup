@@ -485,6 +485,9 @@
     <Compile Include="Controls\Overlay\OverlayTextItemControl.xaml.cs">
       <DependentUpon>OverlayTextItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayTimerControl.xaml.cs">
+      <DependentUpon>OverlayTimerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayVideoItemControl.xaml.cs">
       <DependentUpon>OverlayVideoItemControl.xaml</DependentUpon>
     </Compile>
@@ -1097,6 +1100,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayTextItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayTimerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

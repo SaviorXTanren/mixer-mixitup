@@ -98,6 +98,8 @@
                     <OverlayControls:OverlayEventListControl x:Name="EventListItem" Visibility="Collapsed" HorizontalAlignment="Center" />
 
                     <OverlayControls:OverlayGameQueueControl x:Name="GameQueueItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayTimerControl x:Name="TimerItem" Visibility="Collapsed" HorizontalAlignment="Center" />
                 </Grid>
             </ScrollViewer>
 

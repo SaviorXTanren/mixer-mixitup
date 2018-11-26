@@ -24,8 +24,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private const string GameQueueUserPositionSpecialIdentifier = "gamequeueuserposition";
 
-        [DataMember]
-        public override string ItemType { get { return "gamequeue"; } }
+        public const string GameQueueItemType = "gamequeue";
 
         [DataMember]
         public int TotalToShow { get; set; }
@@ -60,11 +59,11 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private bool gameQueueUpdated = true;
 
-        public OverlayGameQueue() { }
+        public OverlayGameQueue() : base(OverlayGameQueue.GameQueueItemType, OverlayGameQueue.HTMLTemplate) { }
 
         public OverlayGameQueue(string htmlText, int totalToShow, string textFont, int width, int height, string borderColor, string backgroundColor, string textColor,
             OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
-            : base(htmlText)
+            : base(OverlayGameQueue.GameQueueItemType, htmlText)
         {
             this.TotalToShow = totalToShow;
             this.TextFont = textFont;

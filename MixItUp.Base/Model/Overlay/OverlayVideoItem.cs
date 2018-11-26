@@ -13,8 +13,7 @@ namespace MixItUp.Base.Model.Overlay
         public const int DefaultHeight = 315;
         public const int DefaultWidth = 560;
 
-        [DataMember]
-        public override string ItemType { get { return "video"; } }
+        public const string VideoItemType = "video";
 
         [DataMember]
         public string FilePath { get; set; }
@@ -45,9 +44,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double VolumeDecimal { get { return ((double)this.Volume / 100.0); } }
 
-        public OverlayVideoItem() { this.Volume = 100; }
+        public OverlayVideoItem() : base(OverlayVideoItem.VideoItemType) { this.Volume = 100; }
 
         public OverlayVideoItem(string filepath, int width, int height, int volume)
+            : base(OverlayVideoItem.VideoItemType)
         {
             this.FilePath = filepath;
             this.Width = width;

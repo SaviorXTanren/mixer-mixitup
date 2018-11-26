@@ -8,8 +8,7 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayYouTubeItem : OverlayItemBase
     {
-        [DataMember]
-        public override string ItemType { get { return "youtube"; } }
+        private const string YouTubeItemType = "youtube";
 
         [DataMember]
         public string VideoID { get; set; }
@@ -22,9 +21,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Volume { get; set; }
 
-        public OverlayYouTubeItem() { this.Volume = 100; }
+        public OverlayYouTubeItem() : base(OverlayYouTubeItem.YouTubeItemType) { this.Volume = 100; }
 
         public OverlayYouTubeItem(string id, int startTime, int width, int height, int volume)
+            : base(OverlayYouTubeItem.YouTubeItemType)
         {
             this.VideoID = id;
             this.StartTime = startTime;

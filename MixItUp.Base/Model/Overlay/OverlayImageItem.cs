@@ -10,8 +10,7 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayImageItem : OverlayItemBase
     {
-        [DataMember]
-        public override string ItemType { get { return "image"; } }
+        public const string ImageItemType = "image";
 
         [DataMember]
         public string FilePath { get; set; }
@@ -37,9 +36,10 @@ namespace MixItUp.Base.Model.Overlay
             set { }
         }
 
-        public OverlayImageItem() { }
+        public OverlayImageItem() : base(OverlayImageItem.ImageItemType) { }
 
         public OverlayImageItem(string filepath, int width, int height)
+            : base(OverlayImageItem.ImageItemType)
         {
             this.FilePath = filepath;
             this.Width = width;

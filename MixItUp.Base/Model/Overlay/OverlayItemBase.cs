@@ -16,7 +16,7 @@ namespace MixItUp.Base.Model.Overlay
         public Guid ID { get; set; }
 
         [DataMember]
-        public abstract string ItemType { get; }
+        public string ItemType { get; set; }
 
         [JsonIgnore]
         public bool IsInitialized { get; private set; }
@@ -24,6 +24,12 @@ namespace MixItUp.Base.Model.Overlay
         public OverlayItemBase()
         {
             this.ID = Guid.NewGuid();
+        }
+
+        public OverlayItemBase(string itemType)
+            : this()
+        {
+            this.ItemType = itemType;
         }
 
         public abstract Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers);

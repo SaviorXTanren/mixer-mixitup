@@ -8,15 +8,15 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayHTMLItem : OverlayItemBase
     {
-        [DataMember]
-        public override string ItemType { get { return "html"; } }
+        public const string HTMLItemType = "html";
 
         [DataMember]
         public string HTMLText { get; set; }
 
-        public OverlayHTMLItem() { }
+        public OverlayHTMLItem() : base(OverlayHTMLItem.HTMLItemType) { }
 
         public OverlayHTMLItem(string htmlText)
+            : base(OverlayHTMLItem.HTMLItemType)
         {
             this.HTMLText = htmlText;
         }

@@ -45,8 +45,7 @@ namespace MixItUp.Base.Model.Overlay
   <p style=""position: absolute; top: 80%; right: 5%; width: 50%; text-align: right; font-family: '{TEXT_FONT}'; font-size: {BOTTOM_TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">{DETAILS}</p>
 </div>";
 
-        [DataMember]
-        public override string ItemType { get { return "eventlist"; } }
+        public const string EventListItemType = "eventlist";
 
         [DataMember]
         public List<EventListItemTypeEnum> ItemTypes { get; set; }
@@ -85,11 +84,11 @@ namespace MixItUp.Base.Model.Overlay
 
         private List<OverlayEventListItem> eventsToAdd = new List<OverlayEventListItem>();
 
-        public OverlayEventList() { }
+        public OverlayEventList() : base(OverlayEventList.EventListItemType, OverlayEventList.HTMLTemplate) { }
 
         public OverlayEventList(string htmlText, IEnumerable<EventListItemTypeEnum> itemTypes, int totalToShow, bool resetOnLoad, string textFont, int width, int height,
             string borderColor, string backgroundColor, string textColor, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
-            : base(htmlText)
+            : base(OverlayEventList.EventListItemType, htmlText)
         {
             this.ItemTypes = new List<EventListItemTypeEnum>(itemTypes);
             this.TotalToShow = totalToShow;
