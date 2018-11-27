@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace MixItUp.Base.Model.DeveloperAPIs
+namespace MixItUp.CSharp.API.Models
 {
     [DataContract]
     public class UserCurrencyGiveDeveloperAPIModel

@@ -260,6 +260,14 @@ paths:
           description: Success
         '400':
           description: Bad request was sent in
+    delete:
+      tags:
+        - Chat
+      summary: Clears the chat history
+      operationId: clearChat
+      responses:
+        '200':
+          description: Success
 
   '/commands':
     get:
