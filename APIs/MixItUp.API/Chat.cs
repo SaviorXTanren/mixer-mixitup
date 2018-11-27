@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace MixItUp.API
 {
+    //  GET:    http://localhost:8911/api/chat/users        Chat.GetAllUsersAsync
+    //  DELETE: http://localhost:8911/api/chat/message      Chat.ClearChatAsync
+    //  POST:   http://localhost:8911/api/chat/message      Chat.SendMessageAsync
     public static class Chat
     {
         public static async Task<User[]> GetAllUsersAsync()
@@ -15,7 +18,7 @@ namespace MixItUp.API
             await RestClient.DeleteAsync("chat/message");
         }
 
-        public static async Task SendMessage(string message, bool sendAsStreamer)
+        public static async Task SendMessageAsync(string message, bool sendAsStreamer)
         {
             var model = new SendChatMessage
             {

@@ -102,7 +102,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 user.ViewingMinutes = updatedUserData.ViewingMinutes.Value;
             }
 
-            foreach (Currency currencyData in updatedUserData.CurrencyAmounts)
+            foreach (CurrencyAmount currencyData in updatedUserData.CurrencyAmounts)
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
                 {
@@ -115,7 +115,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("{userID:int:min(0)}/currency/{currencyID:guid}/adjust")]
         [HttpPut, HttpPatch]
-        public User AdjustCurrency(uint userID, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        public User AdjustUserCurrency(uint userID, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
             UserDataViewModel user = ChannelSession.Settings.UserData[userID];
             if (user == null)
@@ -128,7 +128,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("{username}/currency/{currencyID:guid}/adjust")]
         [HttpPut, HttpPatch]
-        public User AdjustCurrency(string username, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        public User AdjustUserCurrency(string username, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
             UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
@@ -141,7 +141,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("top")]
         [HttpGet]
-        public IEnumerable<User> Get(Guid currencyID, int count = 10)
+        public IEnumerable<User> Get(int count = 10)
         {
             if (count < 1)
             {
@@ -175,13 +175,13 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
             foreach (UserCurrencyViewModel currencyData in ChannelSession.Settings.Currencies.Values)
             {
-                user.CurrencyAmounts.Add(CurrencyController.CurrencyFromUserCurrencyViewModel(currencyData, userData.GetCurrencyAmount(currencyData)));
+                user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currencyData, userData.GetCurrencyAmount(currencyData)));
             }
 
             return user;
         }
 
-        private User AdjustCurrency(UserDataViewModel user, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        private User AdjustCurrency(UserDataViewModel user, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {

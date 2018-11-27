@@ -3,7 +3,7 @@
 namespace MixItUp.API.Models
 {
     [DataContract]
-    public class UserCurrencyGiveDeveloperAPIModel
+    public class GiveUserCurrency
     {
         [DataMember]
         public int Amount { get; set; }

@@ -14,21 +14,27 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
     {
         [Route]
         [HttpGet]
-        public IEnumerable<UserCurrencyViewModel> Get()
+        public IEnumerable<Currency> Get()
         {
-            return ChannelSession.Settings.Currencies.Values;
+            List<Currency> list = new List<Currency>();
+            foreach (var currency in ChannelSession.Settings.Currencies.Values)
+            {
+                list.Add(CurrencyFromUserCurrencyViewModel(currency));
+            }
+
+            return list;
         }
 
         [Route("{currencyID:guid}")]
         [HttpGet]
-        public UserCurrencyViewModel Get(Guid currencyID)
+        public Currency Get(Guid currencyID)
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return ChannelSession.Settings.Currencies[currencyID];
+            return CurrencyFromUserCurrencyViewModel(ChannelSession.Settings.Currencies[currencyID]);
         }
 
         [Route("{currencyID:guid}/top")]
@@ -64,7 +70,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("{currencyID:guid}/give")]
         [HttpPost]
-        public IEnumerable<User> BulkGive(Guid currencyID, [FromBody] IEnumerable<UserCurrencyGiveDeveloperAPIModel> giveDatas)
+        public IEnumerable<User> BulkGive(Guid currencyID, [FromBody] IEnumerable<GiveUserCurrency> giveDatas)
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {
@@ -102,13 +108,22 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return users;
         }
 
-        public static Currency CurrencyFromUserCurrencyViewModel(UserCurrencyViewModel currency, int amount)
+        public static CurrencyAmount CurrencyAmountFromUserCurrencyViewModel(UserCurrencyViewModel currency, int amount)
         {
-            return new Currency
+            return new CurrencyAmount
             {
                 ID = currency.ID,
                 Name = currency.Name,
                 Amount = amount
+            };
+        }
+
+        public static Currency CurrencyFromUserCurrencyViewModel(UserCurrencyViewModel currency)
+        {
+            return new Currency
+            {
+                ID = currency.ID,
+                Name = currency.Name
             };
         }
     }

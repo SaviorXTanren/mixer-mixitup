@@ -1,8 +1,8 @@
-import { ICurrency } from "./currency";
+import { ICurrencyAmount } from "./currencyamount";
 
 export interface IUser {
     ID: number;
     UserName: string;
     ViewingMinutes?: number;
-    CurrencyAmmounts: ICurrency[];
+    CurrencyAmounts: ICurrencyAmount[];
 }

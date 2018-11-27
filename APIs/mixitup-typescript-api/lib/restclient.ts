@@ -20,6 +20,15 @@ export class RestClient {
         return await WebRequest.json<T>(RestClient.BaseUri + path, options);
     }
 
+    public static async PutAsync<T>(path: string, model: any): Promise<T> {
+        const options: WebRequest.RequestOptions = {
+            method: "PUT",
+            body: model
+        };
+
+        return await WebRequest.json<T>(RestClient.BaseUri + path, options);
+    }
+
     public static async DeleteAsync(path: string): Promise<{}> {
         return await WebRequest.delete(RestClient.BaseUri + path);
     }

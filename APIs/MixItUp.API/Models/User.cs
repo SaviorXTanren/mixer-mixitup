@@ -16,6 +16,6 @@ namespace MixItUp.API.Models
         public int? ViewingMinutes { get; set; }
 
         [DataMember]
-        public List<Currency> CurrencyAmounts { get; set; } = new List<Currency>();
+        public List<CurrencyAmount> CurrencyAmounts { get; set; } = new List<CurrencyAmount>();
     }
 }

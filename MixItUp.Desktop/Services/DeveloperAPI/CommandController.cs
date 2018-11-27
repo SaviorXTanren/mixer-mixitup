@@ -59,7 +59,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("{commandID:guid}")]
         [HttpPut, HttpPatch]
-        public Command Update(Guid commandID, [FromBody] CommandBase commandData)
+        public Command Update(Guid commandID, [FromBody] Command commandData)
         {
             CommandBase selectedCommand = GetAllCommands().SingleOrDefault(c => c.ID == commandID);
             if (selectedCommand == null)
