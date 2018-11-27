@@ -1,5 +1,6 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace MixItUp.WPF.Controls.Interactive
     /// </summary>
     public partial class PUBGDropMapInteractiveControl : DropMapInterativeGameControl
     {
+        private const string MapSelectionSettingProperty = "MapSelection";
+
         private const string ErangelMapName = "Erangel";
         private const string MiramarMapName = "Miramar";
         private const string SanhokMapName = "Sanhok";
@@ -29,6 +32,11 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             InitializeComponent();
 
+            this.Initialize(this.LocationPointsCanvas);
+
+            this.MaxTimeTextBox.Text = this.maxTime.ToString();
+            this.SparkCostTextBox.Text = this.sparkCost.ToString();
+
             this.MapComboBox.ItemsSource = this.maps;
 
             this.maps.Add(new PUBGMap() { Name = ErangelMapName, Map = "map1.png" });
@@ -37,9 +45,11 @@ namespace MixItUp.WPF.Controls.Interactive
 
             this.MapComboBox.SelectedIndex = 0;
 
-            this.MaxTimeTextBox.Text = "30";
-
-            this.Initialize(this.LocationPointsCanvas);
+            JObject settings = this.GetCustomSettings();
+            if (settings.ContainsKey(MapSelectionSettingProperty))
+            {
+                this.MapComboBox.SelectedIndex = settings[MapSelectionSettingProperty].ToObject<int>();
+            }
         }
 
         protected override void UpdateTimerUI(int timeLeft)
@@ -72,6 +82,7 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 this.MapComboBox.IsEnabled = false;
                 this.MaxTimeTextBox.IsEnabled = false;
+                this.SparkCostTextBox.IsEnabled = false;
 
                 this.TimerStackPanel.Visibility = Visibility.Collapsed;
                 this.DropLocationStackPanel.Visibility = Visibility.Collapsed;
@@ -82,6 +93,10 @@ namespace MixItUp.WPF.Controls.Interactive
                 this.WinnerAvatar.SetSize(80);
                 this.WinnerTextBlock.Text = string.Empty;
             });
+
+            JObject settings = this.GetCustomSettings();
+            settings[MapSelectionSettingProperty] = this.MapComboBox.SelectedIndex;
+            this.SaveCustomSettings(settings);
 
             await base.GameConnectedInternal();
 
@@ -96,6 +111,7 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             this.MapComboBox.IsEnabled = true;
             this.MaxTimeTextBox.IsEnabled = true;
+            this.SparkCostTextBox.IsEnabled = true;
 
             return Task.FromResult(0);
         }
@@ -121,6 +137,10 @@ namespace MixItUp.WPF.Controls.Interactive
                 {
                     this.SanhokMap.Visibility = Visibility.Visible;
                 }
+
+                JObject settings = this.GetCustomSettings();
+                settings[MapSelectionSettingProperty] = this.MapComboBox.SelectedIndex;
+                this.SaveCustomSettings(settings);
             }
         }
 
@@ -129,10 +149,24 @@ namespace MixItUp.WPF.Controls.Interactive
             if (!string.IsNullOrEmpty(this.MaxTimeTextBox.Text) && int.TryParse(this.MaxTimeTextBox.Text, out int time) && time > 0)
             {
                 this.maxTime = time;
+                this.SaveDropMapSettings();
             }
             else
             {
                 this.MaxTimeTextBox.Text = "0";
+            }
+        }
+
+        private void SparkCostTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.SparkCostTextBox.Text) && int.TryParse(this.SparkCostTextBox.Text, out int cost) && cost >= 0)
+            {
+                this.sparkCost = cost;
+                this.SaveDropMapSettings();
+            }
+            else
+            {
+                this.SparkCostTextBox.Text = "0";
             }
         }
     }
