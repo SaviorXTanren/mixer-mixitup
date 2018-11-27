@@ -178,7 +178,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Branding", "Branding", "{0B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIs", "APIs", "{51CC9FC3-AA4D-4CA5-86AC-BDEBC49B7AC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MixItUp.CSharp.API", "APIs\MixItUp.CSharp.API\MixItUp.CSharp.API.csproj", "{6EAD4AD5-3606-42B0-A2DA-13848A0D4076}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MixItUp.API", "APIs\MixItUp.API\MixItUp.API.csproj", "{6EAD4AD5-3606-42B0-A2DA-13848A0D4076}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,11 +1,7 @@
-﻿using MixItUp.CSharp.API.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using MixItUp.API.Models;
 using System.Threading.Tasks;
 
-namespace MixItUp.CSharp.API
+namespace MixItUp.API
 {
     public static class Chat
     {

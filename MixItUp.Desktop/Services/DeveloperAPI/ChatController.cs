@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.CSharp.API.Models;
+using MixItUp.API.Models;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;

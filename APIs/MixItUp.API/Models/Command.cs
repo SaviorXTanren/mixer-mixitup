@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
-namespace MixItUp.CSharp.API.Models
+namespace MixItUp.API.Models
 {
     [DataContract]
     public class Command
