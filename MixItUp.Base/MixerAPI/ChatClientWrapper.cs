@@ -323,11 +323,7 @@ namespace MixItUp.Base.MixerAPI
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChatterJoinLeaveBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+                        Task.Run(async () => { await this.ChatterJoinBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         return true;
@@ -577,8 +573,6 @@ namespace MixItUp.Base.MixerAPI
                 await ChannelSession.SaveSettings();
 
                 tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.SaveSettings();
             });
         }
 
@@ -615,23 +609,7 @@ namespace MixItUp.Base.MixerAPI
             });
         }
 
-        private async Task ChatterRefreshBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.RefreshChannel();
-                await Task.Delay(180000, tokenSource.Token);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                IEnumerable<ChatUserModel> chatters = await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, int.MaxValue);
-                await ChannelSession.ActiveUsers.AddOrUpdateUsers(chatters);
-            });
-        }
-
-        private async Task ChatterJoinLeaveBackground()
+        private async Task ChatterJoinBackground()
         {
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
@@ -671,16 +649,19 @@ namespace MixItUp.Base.MixerAPI
                 {
                     GlobalEvents.ChatSkillOccurred(new Tuple<UserViewModel, ChatSkillModel>(message.User, message.ChatSkill));
 
-                    GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
-
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                    if (message.IsInUsersChannel)
                     {
-                        { "skillname", message.ChatSkill.skill_name },
-                        { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
-                        { "skillcost", message.ChatSkill.cost.ToString() },
-                        { "skillimage", message.ChatSkill.icon_url },
-                    };
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
+                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
+
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                        {
+                            { "skillname", message.ChatSkill.skill_name },
+                            { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
+                            { "skillcost", message.ChatSkill.cost.ToString() },
+                            { "skillimage", message.ChatSkill.icon_url },
+                        };
+                        await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
+                    }
                 }
             }
         }
