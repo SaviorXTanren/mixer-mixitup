@@ -16,6 +16,19 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
+    public static class ChatEventModelExtensions
+    {
+        public static ChatUserModel GetUser(this ChatUserEventModel chatUserEvent)
+        {
+            return new ChatUserModel() { userId = chatUserEvent.id, userName = chatUserEvent.username, userRoles = chatUserEvent.roles };
+        }
+
+        public static ChatUserModel GetUser(this ChatMessageEventModel chatMessageEvent)
+        {
+            return new ChatUserModel() { userId = chatMessageEvent.user_id, userName = chatMessageEvent.user_name, userRoles = chatMessageEvent.user_roles };
+        }
+    }
+
     public class ChatClientWrapper : MixerWebSocketWrapper
     {
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
@@ -38,6 +51,9 @@ namespace MixItUp.Base.MixerAPI
         public ChatClient BotClient { get; private set; }
 
         private HashSet<uint> userEntranceCommands = new HashSet<uint>();
+
+        private SemaphoreSlim userJoinEventsSemaphore = new SemaphoreSlim(1);
+        private Dictionary<uint, ChatUserEventModel> userJoinEvents = new Dictionary<uint, ChatUserEventModel>();
 
         public ChatClientWrapper() { }
 
@@ -310,6 +326,10 @@ namespace MixItUp.Base.MixerAPI
                         Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await this.ChatterJoinLeaveBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
                         return true;
                     }
                     return false;
@@ -355,24 +375,9 @@ namespace MixItUp.Base.MixerAPI
 
         #region Chat Update Methods
 
-        private async Task<UserViewModel> AddUser(ChatUserEventModel chatUserEvent)
-        {
-            return await this.AddUser(new ChatUserModel() { userId = chatUserEvent.id, userName = chatUserEvent.username, userRoles = chatUserEvent.roles });
-        }
-
-        public async Task<UserViewModel> AddUser(ChatMessageEventModel chatMessageEvent)
-        {
-            return await this.AddUser(new ChatUserModel() { userId = chatMessageEvent.user_id, userName = chatMessageEvent.user_name, userRoles = chatMessageEvent.user_roles });
-        }
-
-        private async Task<UserViewModel> AddUser(ChatUserModel chatUser)
-        {
-            return await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-        }
-
         private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
         {
-            UserViewModel user = await this.AddUser(messageEvent);
+            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(messageEvent.GetUser());
             if (user == null)
             {
                 user = new UserViewModel(messageEvent);
@@ -626,6 +631,32 @@ namespace MixItUp.Base.MixerAPI
             });
         }
 
+        private async Task ChatterJoinLeaveBackground()
+        {
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            {
+                List<ChatUserEventModel> usersToProcess = new List<ChatUserEventModel>();
+
+                await this.userJoinEventsSemaphore.WaitAndRelease(() =>
+                {
+                    usersToProcess = new List<ChatUserEventModel>(this.userJoinEvents.Values);
+                    this.userJoinEvents.Clear();
+                    return Task.FromResult(0);
+                });
+
+                if (usersToProcess.Count > 0)
+                {
+                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(usersToProcess.Select(u => u.GetUser()));
+                    foreach (UserViewModel user in processedUsers)
+                    {
+                        this.OnUserJoinOccurred(this, user);
+                    }
+                }
+
+                await Task.Delay(5000, tokenSource.Token);
+            });
+        }
+
         #endregion Refresh Methods
 
         #region Chat Event Handlers
@@ -696,32 +727,32 @@ namespace MixItUp.Base.MixerAPI
 
         private void ChatClient_OnPollEndOccurred(object sender, ChatPollEventModel e) { }
 
-        private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await this.AddUser(e);
-            if (user != null)
+            await this.userJoinEventsSemaphore.WaitAndRelease(() =>
             {
-                this.OnUserJoinOccurred(sender, user);
-            }
+                this.userJoinEvents[chatUser.id] = chatUser;
+                return Task.FromResult(0);
+            });
         }
 
-        private async void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.RemoveUser(e.id);
+            UserViewModel user = await ChannelSession.ActiveUsers.RemoveUser(chatUser.id);
             if (user != null)
             {
                 this.OnUserLeaveOccurred(sender, user);
             }
         }
 
-        private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await this.AddUser(e);
+            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser.GetUser());
             if (user != null)
             {
                 this.OnUserUpdateOccurred(sender, user);
 
-                if (e.roles != null && e.roles.Count() > 0 && e.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
+                if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
                 {
                     if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
                     {
