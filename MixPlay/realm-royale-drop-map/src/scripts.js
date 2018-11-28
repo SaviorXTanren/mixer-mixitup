@@ -20,6 +20,9 @@ var selectorDiv;
 var timerDiv;
 var timerText;
 
+var sparkCostDiv;
+var sparkCostText;
+
 var locationDiv;
 var locationText;
 
@@ -55,7 +58,7 @@ function pointPlaced(x, y) {
 
         mixer.socket.call('giveInput', {
             controlID: 'position',
-            event: 'click',
+            event: 'mousedown',
             meta: {
                 x: xPos,
                 y: yPos,
@@ -69,6 +72,14 @@ function handleControlUpdate(update) {
         var control = update.controls[0];
 
         if (control.controlID === 'position') {
+			if (control.cost > 0) {
+				sparkCostDiv.style.visibility = 'visible';
+				sparkCostText.innerHTML = control.cost;
+			}
+			else {
+				sparkCostDiv.style.visibility = 'hidden';
+			}
+			
             if (control.meta.x >= 0 && control.meta.y >= 0 && control.meta.userID != null) {
                 var xPos = ((control.meta.x / 100) * mapImage.width) + mapImage.offsetLeft;
                 var yPos = ((control.meta.y / 100) * mapImage.height) + mapImage.offsetTop;
@@ -110,6 +121,7 @@ function handleControlUpdate(update) {
                 pcExplanationDiv.style.visibility = 'hidden';
                 xboxExplanationDiv.style.visibility = 'hidden';
                 timerDiv.style.visibility = 'hidden';
+				sparkCostDiv.style.visibility = 'hidden';
 
                 while (mapPointsDiv.firstChild) {
                     mapPointsDiv.removeChild(mapPointsDiv.firstChild);
@@ -262,6 +274,9 @@ window.addEventListener('load', function initMixer() {
 
     timerDiv = document.getElementById('timerDiv');
     timerText = document.getElementById('timerText');
+	
+	sparkCostDiv = document.getElementById('sparkCostDiv');
+	sparkCostText = document.getElementById('sparkCostText');
 
     $(mapImage).mousemove(function (event) {
         xMouseCoordinate = event.pageX;

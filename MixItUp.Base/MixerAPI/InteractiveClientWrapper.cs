@@ -84,7 +84,7 @@ namespace MixItUp.Base.MixerAPI
 
                 if (!string.IsNullOrEmpty(this.ButtonCommand.CooldownGroupName))
                 {
-                    var otherButtons = ChannelSession.Interactive.Controls.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
+                    var otherButtons = ChannelSession.Interactive.ControlCommands.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
                     otherButtons = otherButtons.Where(c => this.ButtonCommand.CooldownGroupName.Equals(c.ButtonCommand.CooldownGroupName));
                     foreach (var otherItem in otherButtons)
                     {
@@ -184,18 +184,21 @@ namespace MixItUp.Base.MixerAPI
 
         public event EventHandler<InteractiveInputEvent> OnInteractiveControlUsed = delegate { };
 
+        public InteractiveSharedProjectModel SharedProject { get; private set; }
         public InteractiveGameModel Game { get; private set; }
         public InteractiveGameVersionModel Version { get; private set; }
         public InteractiveClient Client { get; private set; }
 
         public List<InteractiveConnectedSceneModel> Scenes { get; private set; }
-        public Dictionary<string, InteractiveConnectedControlCommand> Controls { get; private set; }
+        public Dictionary<string, InteractiveControlModel> Controls { get; private set; }
+        public Dictionary<string, InteractiveConnectedControlCommand> ControlCommands { get; private set; }
         public LockedDictionary<string, InteractiveParticipantModel> Participants { get; private set; }
 
         public InteractiveClientWrapper()
         {
             this.Scenes = new List<InteractiveConnectedSceneModel>();
-            this.Controls = new Dictionary<string, InteractiveConnectedControlCommand>();
+            this.Controls = new Dictionary<string, InteractiveControlModel>();
+            this.ControlCommands = new Dictionary<string, InteractiveConnectedControlCommand>();
             this.Participants = new LockedDictionary<string, InteractiveParticipantModel>();
         }
 
@@ -254,6 +257,8 @@ namespace MixItUp.Base.MixerAPI
 
             this.Scenes.Clear();
             this.Controls.Clear();
+            this.ControlCommands.Clear();
+            this.Participants.Clear();
 
             return await this.AttemptConnect();
         }
@@ -296,6 +301,8 @@ namespace MixItUp.Base.MixerAPI
 
                 this.Scenes.Clear();
                 this.Controls.Clear();
+                this.ControlCommands.Clear();
+                this.Participants.Clear();
             });
         }
 
@@ -440,17 +447,77 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
+        public async Task RefreshCachedControls()
+        {
+            this.Scenes.Clear();
+            this.Controls.Clear();
+            this.ControlCommands.Clear();
+
+            // Initialize Scenes
+            InteractiveConnectedSceneGroupCollectionModel scenes = await this.GetScenes();
+            if (scenes != null)
+            {
+                foreach (InteractiveConnectedSceneModel scene in scenes.scenes)
+                {
+                    this.Scenes.Add(scene);
+
+                    InteractiveSceneModel dataScene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(scene.sceneID));
+
+                    foreach (InteractiveConnectedButtonControlModel button in scene.buttons)
+                    {
+                        if (dataScene != null)
+                        {
+                            InteractiveButtonControlModel dataButton = dataScene.buttons.FirstOrDefault(b => b.controlID.Equals(button.controlID));
+                            if (dataButton != null)
+                            {
+                                button.text = dataButton.text;
+                                button.tooltip = dataButton.tooltip;
+                            }
+                        }
+
+                        this.Controls[button.controlID] = button;
+
+                        this.AddConnectedControl(scene, button);
+                    }
+
+                    foreach (InteractiveConnectedJoystickControlModel joystick in scene.joysticks)
+                    {
+                        this.Controls[joystick.controlID] = joystick;
+
+                        this.AddConnectedControl(scene, joystick);
+                    }
+
+                    foreach (InteractiveConnectedTextBoxControlModel textBox in scene.textBoxes)
+                    {
+                        if (dataScene != null)
+                        {
+                            InteractiveTextBoxControlModel dataTextBox = dataScene.textBoxes.FirstOrDefault(b => b.controlID.Equals(textBox.controlID));
+                            if (dataTextBox != null)
+                            {
+                                textBox.placeholder = dataTextBox.placeholder;
+                                textBox.submitText = dataTextBox.submitText;
+                            }
+                        }
+
+                        this.Controls[textBox.controlID] = textBox;
+
+                        this.AddConnectedControl(scene, textBox);
+                    }
+                }
+            }
+        }
+
         protected override async Task<bool> ConnectInternal()
         {
-            InteractiveSharedProjectModel sharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
-            if (sharedProject == null)
+            this.SharedProject = ChannelSession.Settings.CustomInteractiveProjectIDs.FirstOrDefault(p => p.VersionID == this.Version.id);
+            if (this.SharedProject == null)
             {
-                sharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id && p.VersionID == this.Version.id);
+                this.SharedProject = InteractiveSharedProjectModel.AllMixPlayProjects.FirstOrDefault(p => p.GameID == this.Game.id && p.VersionID == this.Version.id);
             }
 
-            if (sharedProject != null)
+            if (this.SharedProject != null)
             {
-                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version, sharedProject.ShareCode));
+                this.Client = await this.RunAsync(InteractiveClient.CreateFromChannel(ChannelSession.Connection.Connection, ChannelSession.Channel, this.Game, this.Version, this.SharedProject.ShareCode));
             }
             else
             {
@@ -489,7 +556,7 @@ namespace MixItUp.Base.MixerAPI
                         this.Client.OnParticipantLeave += Client_OnParticipantLeave;
                         this.Client.OnIssueMemoryWarning += Client_OnIssueMemoryWarning;
 
-                        if (sharedProject != null && InteractiveSharedProjectModel.AllMixPlayProjects.Contains(sharedProject))
+                        if (this.SharedProject != null && InteractiveSharedProjectModel.AllMixPlayProjects.Contains(this.SharedProject))
                         {
                             ChannelSession.Services.Telemetry.TrackInteractiveGame(this.Game);
                         }
@@ -506,7 +573,7 @@ namespace MixItUp.Base.MixerAPI
         private async Task<bool> Initialize()
         {
             this.Scenes.Clear();
-            this.Controls.Clear();
+            this.ControlCommands.Clear();
 
             this.Version = await ChannelSession.Connection.GetInteractiveGameVersion(this.Version);
             foreach (InteractiveSceneModel scene in this.Version.controls.scenes)
@@ -517,53 +584,10 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
 
-            // Initialize Scenes
-            InteractiveConnectedSceneGroupCollectionModel scenes = await ChannelSession.Interactive.GetScenes();
-            if (scenes == null)
+            await this.RefreshCachedControls();           
+            if (this.Scenes.Count == 0)
             {
                 return false;
-            }
-
-            foreach (InteractiveConnectedSceneModel scene in scenes.scenes)
-            {
-                this.Scenes.Add(scene);
-
-                InteractiveSceneModel dataScene = this.Version.controls.scenes.FirstOrDefault(s => s.sceneID.Equals(scene.sceneID));
-
-                foreach (InteractiveConnectedButtonControlModel button in scene.buttons)
-                {
-                    if (dataScene != null)
-                    {
-                        InteractiveButtonControlModel dataButton = dataScene.buttons.FirstOrDefault(b => b.controlID.Equals(button.controlID));
-                        if (dataButton != null)
-                        {
-                            button.text = dataButton.text;
-                            button.tooltip = dataButton.tooltip;
-                        }
-                    }
-
-                    this.AddConnectedControl(scene, button);
-                }
-
-                foreach (InteractiveConnectedJoystickControlModel joystick in scene.joysticks)
-                {
-                    this.AddConnectedControl(scene, joystick);
-                }
-
-                foreach (InteractiveConnectedTextBoxControlModel textBox in scene.textBoxes)
-                {
-                    if (dataScene != null)
-                    {
-                        InteractiveTextBoxControlModel dataTextBox = dataScene.textBoxes.FirstOrDefault(b => b.controlID.Equals(textBox.controlID));
-                        if (dataTextBox != null)
-                        {
-                            textBox.placeholder = dataTextBox.placeholder;
-                            textBox.submitText = dataTextBox.submitText;
-                        }
-                    }
-
-                    this.AddConnectedControl(scene, textBox);
-                }
             }
 
             // Initialize Groups
@@ -594,17 +618,17 @@ namespace MixItUp.Base.MixerAPI
             if (command != null)
             {
                 command.UpdateWithLatestControl(control);
-                if (command is InteractiveButtonCommand)
+                if (control is InteractiveConnectedButtonControlModel)
                 {
-                    this.Controls[control.controlID] = new InteractiveConnectedButtonCommand(scene, (InteractiveConnectedButtonControlModel)control, command);
+                    this.ControlCommands[control.controlID] = new InteractiveConnectedButtonCommand(scene, (InteractiveConnectedButtonControlModel)control, command);
                 }
-                else if (command is InteractiveJoystickCommand)
+                else if (control is InteractiveConnectedJoystickControlModel)
                 {
-                    this.Controls[control.controlID] = new InteractiveConnectedJoystickCommand(scene, (InteractiveConnectedJoystickControlModel)control, command);
+                    this.ControlCommands[control.controlID] = new InteractiveConnectedJoystickCommand(scene, (InteractiveConnectedJoystickControlModel)control, command);
                 }
-                else if (command is InteractiveTextBoxCommand)
+                else if (control is InteractiveConnectedTextBoxControlModel)
                 {
-                    this.Controls[control.controlID] = new InteractiveConnectedTextBoxCommand(scene, (InteractiveConnectedTextBoxControlModel)control, command);
+                    this.ControlCommands[control.controlID] = new InteractiveConnectedTextBoxCommand(scene, (InteractiveConnectedTextBoxControlModel)control, command);
                 }
             }
         }
@@ -770,32 +794,50 @@ namespace MixItUp.Base.MixerAPI
                         return;
                     }
 
-                    InteractiveConnectedControlCommand connectedControl = null;
-
-                    if (this.Controls.ContainsKey(e.input.controlID))
+                    if (!this.Controls.ContainsKey(e.input.controlID))
                     {
-                        connectedControl = this.Controls[e.input.controlID];
+                        return;
+                    }
+                    InteractiveControlModel control = this.Controls[e.input.controlID];
 
-                        if (!connectedControl.Command.IsEnabled)
-                        {
-                            return;
-                        }
+                    InteractiveConnectedControlCommand connectedControl = null;
+                    if (this.ControlCommands.ContainsKey(e.input.controlID))
+                    {
+                        connectedControl = this.ControlCommands[e.input.controlID];
 
                         if (!connectedControl.DoesInputMatchCommand(e))
                         {
                             return;
                         }
 
-                        if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
+                        if (!connectedControl.Command.IsEnabled)
                         {
-                            await this.CaptureSparkTransaction(e.transactionID);
+                            return;
+                        }
+                    }
 
-                            if (connectedControl.SparkCost > 0)
-                            {
-                                GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, connectedControl.SparkCost));
-                            }
+                    if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
+                    {
+                        await this.CaptureSparkTransaction(e.transactionID);
+
+                        int sparkCost = 0;
+                        if (control is InteractiveButtonControlModel)
+                        {
+                            sparkCost = ((InteractiveButtonControlModel)control).cost.GetValueOrDefault();
+                        }
+                        else if (control is InteractiveTextBoxControlModel)
+                        {
+                            sparkCost = ((InteractiveTextBoxControlModel)control).cost.GetValueOrDefault();
                         }
 
+                        if (sparkCost > 0)
+                        {
+                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, sparkCost));
+                        }
+                    }
+
+                    if (connectedControl != null)
+                    {
                         List<string> arguments = new List<string>();
 
                         if (connectedControl is InteractiveConnectedJoystickCommand)

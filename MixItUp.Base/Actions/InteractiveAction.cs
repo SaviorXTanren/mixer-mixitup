@@ -231,9 +231,9 @@ namespace MixItUp.Base.Actions
                         List<InteractiveConnectedButtonControlModel> buttons = new List<InteractiveConnectedButtonControlModel>();
                         if (this.InteractiveType == InteractiveActionTypeEnum.CooldownButton)
                         {
-                            if (ChannelSession.Interactive.Controls.ContainsKey(this.CooldownID) && ChannelSession.Interactive.Controls[this.CooldownID] is InteractiveConnectedButtonCommand)
+                            if (ChannelSession.Interactive.ControlCommands.ContainsKey(this.CooldownID) && ChannelSession.Interactive.ControlCommands[this.CooldownID] is InteractiveConnectedButtonCommand)
                             {
-                                InteractiveConnectedButtonCommand command = (InteractiveConnectedButtonCommand)ChannelSession.Interactive.Controls[this.CooldownID];
+                                InteractiveConnectedButtonCommand command = (InteractiveConnectedButtonCommand)ChannelSession.Interactive.ControlCommands[this.CooldownID];
                                 scene = command.Scene;
                                 buttons.Add(command.Button);
                             }
@@ -241,7 +241,7 @@ namespace MixItUp.Base.Actions
 
                         if (this.InteractiveType == InteractiveActionTypeEnum.CooldownGroup)
                         {
-                            var allButtons = ChannelSession.Interactive.Controls.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
+                            var allButtons = ChannelSession.Interactive.ControlCommands.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
                             allButtons = allButtons.Where(c => this.CooldownID.Equals(c.ButtonCommand.CooldownGroupName));
                             if (allButtons.Count() > 0)
                             {
@@ -252,7 +252,7 @@ namespace MixItUp.Base.Actions
 
                         if (this.InteractiveType == InteractiveActionTypeEnum.CooldownScene)
                         {
-                            var allButtons = ChannelSession.Interactive.Controls.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
+                            var allButtons = ChannelSession.Interactive.ControlCommands.Values.Where(c => c is InteractiveConnectedButtonCommand).Select(c => (InteractiveConnectedButtonCommand)c);
                             allButtons = allButtons.Where(c => this.CooldownID.Equals(c.ButtonCommand.SceneID));
                             if (allButtons.Count() > 0)
                             {
