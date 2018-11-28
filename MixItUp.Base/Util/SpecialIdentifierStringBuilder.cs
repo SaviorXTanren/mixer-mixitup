@@ -610,7 +610,7 @@ namespace MixItUp.Base.Util
                 {
                     UserDataViewModel userData = ChannelSession.Settings.UserData[user.ID];
 
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.Name))
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                     {
                         UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
                         UserRankViewModel rank = currencyData.GetRank();
