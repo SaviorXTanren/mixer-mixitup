@@ -55,7 +55,7 @@ function pointPlaced(x, y) {
 
         mixer.socket.call('giveInput', {
             controlID: 'position',
-            event: 'click',
+            event: 'mousedown',
             meta: {
                 x: xPos,
                 y: yPos,

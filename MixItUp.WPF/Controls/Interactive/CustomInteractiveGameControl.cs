@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.MixerAPI;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -39,6 +40,20 @@ namespace MixItUp.WPF.Controls.Interactive
         protected virtual Task GameDisconnectedInternal() { return Task.FromResult(0); }
 
         protected virtual Task OnInteractiveControlUsed(UserViewModel user, InteractiveGiveInputModel input, InteractiveConnectedControlCommand command) { return Task.FromResult(0); }
+
+        protected JObject GetCustomSettings()
+        {
+            if (ChannelSession.Settings.CustomInteractiveSettings.ContainsKey(this.Game.id))
+            {
+                return ChannelSession.Settings.CustomInteractiveSettings[this.Game.id];
+            }
+            return new JObject();
+        }
+
+        protected void SaveCustomSettings(JObject settings)
+        {
+            ChannelSession.Settings.CustomInteractiveSettings[this.Game.id] = settings;
+        }
 
         private async void CustomInteractiveGameControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
