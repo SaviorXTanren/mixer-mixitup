@@ -217,7 +217,9 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["PERCENTAGE"] = ((int)(percentage * 100)).ToString();
             if (goal > 0)
             {
-                replacementSets["PROGRESS_WIDTH"] = ((int)(((double)this.Width) * percentage)).ToString();
+                int progressWidth = (int)(((double)this.Width) * percentage);
+                progressWidth = MathHelper.Clamp(progressWidth, 0, this.Width);
+                replacementSets["PROGRESS_WIDTH"] = progressWidth.ToString();
             }
 
             return replacementSets;
