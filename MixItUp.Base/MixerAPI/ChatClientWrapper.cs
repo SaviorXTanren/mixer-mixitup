@@ -323,11 +323,7 @@ namespace MixItUp.Base.MixerAPI
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChatterJoinLeaveBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+                        Task.Run(async () => { await this.ChatterJoinBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         return true;
@@ -577,8 +573,6 @@ namespace MixItUp.Base.MixerAPI
                 await ChannelSession.SaveSettings();
 
                 tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.SaveSettings();
             });
         }
 
@@ -615,23 +609,7 @@ namespace MixItUp.Base.MixerAPI
             });
         }
 
-        private async Task ChatterRefreshBackground()
-        {
-            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
-            {
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.RefreshChannel();
-                await Task.Delay(180000, tokenSource.Token);
-
-                tokenSource.Token.ThrowIfCancellationRequested();
-
-                IEnumerable<ChatUserModel> chatters = await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, int.MaxValue);
-                await ChannelSession.ActiveUsers.AddOrUpdateUsers(chatters);
-            });
-        }
-
-        private async Task ChatterJoinLeaveBackground()
+        private async Task ChatterJoinBackground()
         {
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
