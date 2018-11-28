@@ -832,7 +832,7 @@ namespace MixItUp.Base.MixerAPI
 
                         if (sparkCost > 0)
                         {
-                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, connectedControl.SparkCost));
+                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, sparkCost));
                         }
                     }
 
