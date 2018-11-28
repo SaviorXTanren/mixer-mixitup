@@ -33,6 +33,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private ObservableCollection<ChatUserControl> collection = new ObservableCollection<ChatUserControl>();
         private Dictionary<uint, ChatUserControl> existingUsers = new Dictionary<uint, ChatUserControl>();
+        private Dictionary<uint, MixerRoleEnum> cachedUserRoles = new Dictionary<uint, MixerRoleEnum>();
 
         private SemaphoreSlim collectionChangeSemaphore = new SemaphoreSlim(1);
 
@@ -42,6 +43,8 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 if (!this.existingUsers.ContainsKey(user.ID))
                 {
+                    this.cachedUserRoles[user.ID] = user.PrimarySortableRole;
+
                     int insertIndex = 0;
                     for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
                     {
@@ -51,14 +54,14 @@ namespace MixItUp.WPF.Controls.MainControls
                             UserViewModel currentUser = userControl.User;
                             if (currentUser != null)
                             {
-                                if (currentUser.PrimarySortableRole == user.PrimarySortableRole)
+                                if (this.cachedUserRoles[currentUser.ID] == this.cachedUserRoles[user.ID])
                                 {
                                     if (currentUser.UserName.CompareTo(user.UserName) > 0)
                                     {
                                         break;
                                     }
                                 }
-                                else if (currentUser.PrimarySortableRole < user.PrimarySortableRole)
+                                else if (this.cachedUserRoles[currentUser.ID] < this.cachedUserRoles[user.ID])
                                 {
                                     break;
                                 }

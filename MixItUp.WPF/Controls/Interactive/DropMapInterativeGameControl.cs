@@ -5,6 +5,7 @@ using MixItUp.Base.MixerAPI;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Users;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,11 @@ namespace MixItUp.WPF.Controls.Interactive
 {
     public abstract class DropMapInterativeGameControl : CustomInteractiveGameControl
     {
-        protected int maxTime;
+        private const string MaxTimeSettingProperty = "MaxTime";
+        private const string SparkCostSettingProperty = "SparkCost";
+
+        protected int maxTime = 30;
+        protected int sparkCost = 0;
 
         protected InteractiveConnectedSceneModel scene;
         protected InteractiveConnectedButtonControlModel positionButton;
@@ -32,6 +37,16 @@ namespace MixItUp.WPF.Controls.Interactive
         public void Initialize(Canvas canvas)
         {
             this.canvas = canvas;
+
+            JObject settings = this.GetCustomSettings();
+            if (settings.ContainsKey(MaxTimeSettingProperty))
+            {
+                this.maxTime = settings[MaxTimeSettingProperty].ToObject<int>();
+            }
+            if (settings.ContainsKey(SparkCostSettingProperty))
+            {
+                this.sparkCost = settings[SparkCostSettingProperty].ToObject<int>();
+            }
         }
 
         protected abstract void UpdateTimerUI(int timeLeft);
@@ -40,8 +55,18 @@ namespace MixItUp.WPF.Controls.Interactive
 
         protected abstract Task UpdateWinnerUI(uint winner, string username, string location);
 
+        protected void SaveDropMapSettings()
+        {
+            JObject settings = this.GetCustomSettings();
+            settings[MaxTimeSettingProperty] = this.maxTime;
+            settings[SparkCostSettingProperty] = this.sparkCost;
+            this.SaveCustomSettings(settings);
+        }
+
         protected override async Task GameConnectedInternal()
         {
+            this.SaveDropMapSettings();
+
             InteractiveConnectedSceneGroupCollectionModel sceneGroups = await ChannelSession.Interactive.GetScenes();
             if (sceneGroups != null)
             {
@@ -51,6 +76,14 @@ namespace MixItUp.WPF.Controls.Interactive
                     this.positionButton = this.scene.buttons.FirstOrDefault(c => c.controlID.Equals("position"));
                     this.winnerButton = this.scene.buttons.FirstOrDefault(c => c.controlID.Equals("winner"));
                 }
+            }
+
+            if (this.sparkCost > 0)
+            {
+                this.positionButton.cost = this.sparkCost;
+                await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { this.positionButton });
+
+                await ChannelSession.Interactive.RefreshCachedControls();
             }
 
             this.userAvatars.Clear();

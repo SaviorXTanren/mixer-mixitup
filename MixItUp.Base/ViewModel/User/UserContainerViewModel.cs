@@ -77,8 +77,9 @@ namespace MixItUp.Base.ViewModel.User
             return await this.GetUserByID(chatUser.userId.GetValueOrDefault());
         }
 
-        public async Task AddOrUpdateUsers(IEnumerable<ChatUserModel> chatUsers)
+        public async Task<IEnumerable<UserViewModel>> AddOrUpdateUsers(IEnumerable<ChatUserModel> chatUsers)
         {
+            Dictionary<uint, UserViewModel> allProcessedUsers = new Dictionary<uint, UserViewModel>();
             List<UserViewModel> newUsers = new List<UserViewModel>();
             await this.semaphore.WaitAndRelease(() =>
             {
@@ -99,6 +100,7 @@ namespace MixItUp.Base.ViewModel.User
 
                         if (user != null)
                         {
+                            allProcessedUsers[user.ID] = user;
                             this.users[user.ID] = user;
                             user.SetChatDetails(chatUser);
                         }
@@ -108,6 +110,7 @@ namespace MixItUp.Base.ViewModel.User
                 return Task.FromResult(0);
             });
             await this.RefreshNewUsers(newUsers);
+            return allProcessedUsers.Values;
         }
 
         public async Task<UserViewModel> AddOrUpdateUser(InteractiveParticipantModel interactiveUser)
@@ -116,8 +119,9 @@ namespace MixItUp.Base.ViewModel.User
             return await this.GetUserByID(interactiveUser.userID);
         }
 
-        public async Task AddOrUpdateUsers(IEnumerable<InteractiveParticipantModel> interactiveUsers)
+        public async Task<IEnumerable<UserViewModel>> AddOrUpdateUsers(IEnumerable<InteractiveParticipantModel> interactiveUsers)
         {
+            Dictionary<uint, UserViewModel> allProcessedUsers = new Dictionary<uint, UserViewModel>();
             List<UserViewModel> newUsers = new List<UserViewModel>();
             await this.semaphore.WaitAndRelease(() =>
             {
@@ -138,6 +142,7 @@ namespace MixItUp.Base.ViewModel.User
 
                         if (user != null)
                         {
+                            allProcessedUsers[user.ID] = user;
                             this.users[user.ID] = user;
                             user.SetInteractiveDetails(interactiveUser);
                         }
@@ -147,6 +152,7 @@ namespace MixItUp.Base.ViewModel.User
                 return Task.FromResult(0);
             });
             await this.RefreshNewUsers(newUsers);
+            return allProcessedUsers.Values;
         }
 
         public async Task RemoveInteractiveUser(InteractiveParticipantModel interactiveUser)

@@ -16,6 +16,19 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.MixerAPI
 {
+    public static class ChatEventModelExtensions
+    {
+        public static ChatUserModel GetUser(this ChatUserEventModel chatUserEvent)
+        {
+            return new ChatUserModel() { userId = chatUserEvent.id, userName = chatUserEvent.username, userRoles = chatUserEvent.roles };
+        }
+
+        public static ChatUserModel GetUser(this ChatMessageEventModel chatMessageEvent)
+        {
+            return new ChatUserModel() { userId = chatMessageEvent.user_id, userName = chatMessageEvent.user_name, userRoles = chatMessageEvent.user_roles };
+        }
+    }
+
     public class ChatClientWrapper : MixerWebSocketWrapper
     {
         private SemaphoreSlim whisperNumberLock = new SemaphoreSlim(1);
@@ -38,6 +51,9 @@ namespace MixItUp.Base.MixerAPI
         public ChatClient BotClient { get; private set; }
 
         private HashSet<uint> userEntranceCommands = new HashSet<uint>();
+
+        private SemaphoreSlim userJoinEventsSemaphore = new SemaphoreSlim(1);
+        private Dictionary<uint, ChatUserEventModel> userJoinEvents = new Dictionary<uint, ChatUserEventModel>();
 
         public ChatClientWrapper() { }
 
@@ -307,7 +323,7 @@ namespace MixItUp.Base.MixerAPI
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+                        Task.Run(async () => { await this.ChatterJoinBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
                         return true;
@@ -355,24 +371,9 @@ namespace MixItUp.Base.MixerAPI
 
         #region Chat Update Methods
 
-        private async Task<UserViewModel> AddUser(ChatUserEventModel chatUserEvent)
-        {
-            return await this.AddUser(new ChatUserModel() { userId = chatUserEvent.id, userName = chatUserEvent.username, userRoles = chatUserEvent.roles });
-        }
-
-        public async Task<UserViewModel> AddUser(ChatMessageEventModel chatMessageEvent)
-        {
-            return await this.AddUser(new ChatUserModel() { userId = chatMessageEvent.user_id, userName = chatMessageEvent.user_name, userRoles = chatMessageEvent.user_roles });
-        }
-
-        private async Task<UserViewModel> AddUser(ChatUserModel chatUser)
-        {
-            return await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser);
-        }
-
         private async Task<ChatMessageViewModel> AddMessage(ChatMessageEventModel messageEvent)
         {
-            UserViewModel user = await this.AddUser(messageEvent);
+            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(messageEvent.GetUser());
             if (user == null)
             {
                 user = new UserViewModel(messageEvent);
@@ -572,8 +573,6 @@ namespace MixItUp.Base.MixerAPI
                 await ChannelSession.SaveSettings();
 
                 tokenSource.Token.ThrowIfCancellationRequested();
-
-                await ChannelSession.SaveSettings();
             });
         }
 
@@ -610,19 +609,29 @@ namespace MixItUp.Base.MixerAPI
             });
         }
 
-        private async Task ChatterRefreshBackground()
+        private async Task ChatterJoinBackground()
         {
             await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
             {
-                tokenSource.Token.ThrowIfCancellationRequested();
+                List<ChatUserEventModel> usersToProcess = new List<ChatUserEventModel>();
 
-                await ChannelSession.RefreshChannel();
-                await Task.Delay(180000, tokenSource.Token);
+                await this.userJoinEventsSemaphore.WaitAndRelease(() =>
+                {
+                    usersToProcess = new List<ChatUserEventModel>(this.userJoinEvents.Values);
+                    this.userJoinEvents.Clear();
+                    return Task.FromResult(0);
+                });
 
-                tokenSource.Token.ThrowIfCancellationRequested();
+                if (usersToProcess.Count > 0)
+                {
+                    IEnumerable<UserViewModel> processedUsers = await ChannelSession.ActiveUsers.AddOrUpdateUsers(usersToProcess.Select(u => u.GetUser()));
+                    foreach (UserViewModel user in processedUsers)
+                    {
+                        this.OnUserJoinOccurred(this, user);
+                    }
+                }
 
-                IEnumerable<ChatUserModel> chatters = await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, int.MaxValue);
-                await ChannelSession.ActiveUsers.AddOrUpdateUsers(chatters);
+                await Task.Delay(5000, tokenSource.Token);
             });
         }
 
@@ -640,16 +649,19 @@ namespace MixItUp.Base.MixerAPI
                 {
                     GlobalEvents.ChatSkillOccurred(new Tuple<UserViewModel, ChatSkillModel>(message.User, message.ChatSkill));
 
-                    GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
-
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                    if (message.IsInUsersChannel)
                     {
-                        { "skillname", message.ChatSkill.skill_name },
-                        { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
-                        { "skillcost", message.ChatSkill.cost.ToString() },
-                        { "skillimage", message.ChatSkill.icon_url },
-                    };
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
+                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
+
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                        {
+                            { "skillname", message.ChatSkill.skill_name },
+                            { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
+                            { "skillcost", message.ChatSkill.cost.ToString() },
+                            { "skillimage", message.ChatSkill.icon_url },
+                        };
+                        await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
+                    }
                 }
             }
         }
@@ -696,32 +708,32 @@ namespace MixItUp.Base.MixerAPI
 
         private void ChatClient_OnPollEndOccurred(object sender, ChatPollEventModel e) { }
 
-        private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserJoinOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await this.AddUser(e);
-            if (user != null)
+            await this.userJoinEventsSemaphore.WaitAndRelease(() =>
             {
-                this.OnUserJoinOccurred(sender, user);
-            }
+                this.userJoinEvents[chatUser.id] = chatUser;
+                return Task.FromResult(0);
+            });
         }
 
-        private async void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserLeaveOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await ChannelSession.ActiveUsers.RemoveUser(e.id);
+            UserViewModel user = await ChannelSession.ActiveUsers.RemoveUser(chatUser.id);
             if (user != null)
             {
                 this.OnUserLeaveOccurred(sender, user);
             }
         }
 
-        private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel e)
+        private async void ChatClient_OnUserUpdateOccurred(object sender, ChatUserEventModel chatUser)
         {
-            UserViewModel user = await this.AddUser(e);
+            UserViewModel user = await ChannelSession.ActiveUsers.AddOrUpdateUser(chatUser.GetUser());
             if (user != null)
             {
                 this.OnUserUpdateOccurred(sender, user);
 
-                if (e.roles != null && e.roles.Count() > 0 && e.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
+                if (chatUser.roles != null && chatUser.roles.Count() > 0 && chatUser.roles.Where(r => !string.IsNullOrEmpty(r)).Contains(EnumHelper.GetEnumName(MixerRoleEnum.Banned)))
                 {
                     if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserBan)))
                     {
