@@ -671,16 +671,19 @@ namespace MixItUp.Base.MixerAPI
                 {
                     GlobalEvents.ChatSkillOccurred(new Tuple<UserViewModel, ChatSkillModel>(message.User, message.ChatSkill));
 
-                    GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
-
-                    Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                    if (message.IsInUsersChannel)
                     {
-                        { "skillname", message.ChatSkill.skill_name },
-                        { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
-                        { "skillcost", message.ChatSkill.cost.ToString() },
-                        { "skillimage", message.ChatSkill.icon_url },
-                    };
-                    await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
+                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(message.User, (int)message.ChatSkill.cost));
+
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                        {
+                            { "skillname", message.ChatSkill.skill_name },
+                            { "skilltype", EnumHelper.GetEnumName(SkillTypeEnum.Sticker) },
+                            { "skillcost", message.ChatSkill.cost.ToString() },
+                            { "skillimage", message.ChatSkill.icon_url },
+                        };
+                        await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), message.User, specialIdentifiers);
+                    }
                 }
             }
         }
