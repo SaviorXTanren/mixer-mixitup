@@ -816,6 +816,9 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
+                    Util.Logger.LogDiagnostic("Transaction ID is not null - " + !string.IsNullOrEmpty(e.transactionID));
+                    Util.Logger.LogDiagnostic("User is not spark exempt - " + !user.Data.IsSparkExempt);
+
                     if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
                     {
                         Util.Logger.LogDiagnostic("Sending Spark Transaction Capture - " + e.transactionID);
