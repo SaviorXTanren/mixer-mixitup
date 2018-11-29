@@ -427,6 +427,7 @@ namespace MixItUp.Base.Util
                 if (details != null)
                 {
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "title", details.name);
+                    this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "agerating", details.audience);
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "followcount", details.numFollowers.ToString());
                     this.ReplaceSpecialIdentifier(StreamSpecialIdentifierHeader + "subcount", details.numSubscribers.ToString());
                 }
@@ -609,7 +610,7 @@ namespace MixItUp.Base.Util
                 {
                     UserDataViewModel userData = ChannelSession.Settings.UserData[user.ID];
 
-                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
+                    foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.OrderByDescending(c => c.UserAmountSpecialIdentifier))
                     {
                         UserCurrencyDataViewModel currencyData = userData.GetCurrency(currency);
                         UserRankViewModel rank = currencyData.GetRank();
