@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
-namespace MixItUp.Base.Model.DeveloperAPIs
+namespace MixItUp.API.Models
 {
     [DataContract]
-    public class ChatMessageDeveloperAPIModel
+    public class SendChatMessage
     {
         [Required]
         [DataMember]
