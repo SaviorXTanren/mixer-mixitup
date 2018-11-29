@@ -30,7 +30,7 @@ namespace MixItUp.Desktop.Files
             {
                 string destinationDirectory = Path.GetDirectoryName(destinationPath);
                 await this.CreateDirectory(destinationDirectory);
-                File.Copy(sourcePath, destinationPath);
+                File.Copy(sourcePath, destinationPath, overwrite: true);
             }
         }
 
