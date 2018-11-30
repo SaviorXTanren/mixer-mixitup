@@ -323,6 +323,10 @@ namespace MixItUp.Base.MixerAPI
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        Task.Run(async () => { await this.ChatterRefreshBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         Task.Run(async () => { await this.ChatterJoinBackground(); }, this.backgroundThreadCancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
@@ -606,6 +610,21 @@ namespace MixItUp.Base.MixerAPI
 
                     timerCommandIndex++;
                 }
+            });
+        }
+
+        private async Task ChatterRefreshBackground()
+        {
+            await BackgroundTaskWrapper.RunBackgroundTask(this.backgroundThreadCancellationTokenSource, async (tokenSource) =>
+            {
+                await Task.Delay(300000, tokenSource.Token);
+
+                tokenSource.Token.ThrowIfCancellationRequested();
+
+                IEnumerable<ChatUserModel> chatters = await ChannelSession.Connection.GetChatUsers(ChannelSession.Channel, int.MaxValue);
+                await ChannelSession.ActiveUsers.FullRefresh(chatters);
+
+                tokenSource.Token.ThrowIfCancellationRequested();
             });
         }
 

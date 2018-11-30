@@ -195,6 +195,41 @@ namespace MixItUp.Base.ViewModel.User
             });
         }
 
+        public async Task FullRefresh(IEnumerable<ChatUserModel> chatUsers)
+        {
+            HashSet<uint> refreshChatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
+            HashSet<uint> existingChatUserIDs = new HashSet<uint>();
+
+            List<ChatUserModel> usersToAdd = new List<ChatUserModel>();
+            List<UserViewModel> usersToRemove = new List<UserViewModel>();
+            await this.semaphore.WaitAndRelease(() =>
+            {
+                existingChatUserIDs = new HashSet<uint>(this.users.Keys);
+                foreach (ChatUserModel user in chatUsers)
+                {
+                    if (!existingChatUserIDs.Contains(user.userId.GetValueOrDefault()))
+                    {
+                        usersToAdd.Add(user);
+                    }
+                }
+
+                foreach (UserViewModel user in this.users.Values)
+                {
+                    if (!refreshChatUserIDs.Contains(user.ID))
+                    {
+                        usersToRemove.Add(user);
+                    }
+                }
+                return Task.FromResult(0);
+            });
+
+            await this.AddOrUpdateUsers(usersToAdd);
+            foreach (UserViewModel user in usersToRemove)
+            {
+                await this.RemoveUser(user.ID);
+            }
+        }
+
         public async Task<IEnumerable<UserViewModel>> GetAllWorkableUsers(bool mustBeInChat = true)
         {
             return await this.semaphore.WaitAndRelease(() =>
