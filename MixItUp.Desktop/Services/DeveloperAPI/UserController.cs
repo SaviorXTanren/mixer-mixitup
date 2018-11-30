@@ -1,6 +1,6 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Model.DeveloperAPIs;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +14,9 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
     {
         [Route]
         [HttpPost]
-        public IEnumerable<UserDeveloperAPIModel> BulkGet([FromBody] IEnumerable<string> usernamesOrIDs)
+        public IEnumerable<User> BulkGet([FromBody] IEnumerable<string> usernamesOrIDs)
         {
-            List<UserDeveloperAPIModel> users = new List<UserDeveloperAPIModel>();
+            List<User> users = new List<User>();
             foreach (var usernameOrID in usernamesOrIDs)
             {
                 UserDataViewModel user = null;
@@ -32,7 +32,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
                 if (user != null)
                 {
-                    users.Add(new UserDeveloperAPIModel(user));
+                    users.Add(UserFromUserDataViewModel(user));
                 }
             }
 
@@ -40,7 +40,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         }
 
         [Route("{userID:int:min(0)}")]
-        public UserDeveloperAPIModel Get(uint userID)
+        public User Get(uint userID)
         {
             UserDataViewModel user = ChannelSession.Settings.UserData[userID];
             if (user == null)
@@ -48,12 +48,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return new UserDeveloperAPIModel(user);
+            return UserFromUserDataViewModel(user);
         }
 
         [Route("{username}")]
         [HttpGet]
-        public UserDeveloperAPIModel Get(string username)
+        public User Get(string username)
         {
             UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
@@ -61,12 +61,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return new UserDeveloperAPIModel(user);
+            return UserFromUserDataViewModel(user);
         }
 
         [Route("{userID:int:min(0)}")]
         [HttpPut, HttpPatch]
-        public UserDeveloperAPIModel Update(uint userID, [FromBody] UserDeveloperAPIModel updatedUserData)
+        public User Update(uint userID, [FromBody] User updatedUserData)
         {
             UserDataViewModel user = ChannelSession.Settings.UserData[userID];
             if (user == null)
@@ -79,7 +79,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("{username}")]
         [HttpPut, HttpPatch]
-        public UserDeveloperAPIModel Update(string username, [FromBody] UserDeveloperAPIModel updatedUserData)
+        public User Update(string username, [FromBody] User updatedUserData)
         {
             UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
@@ -90,7 +90,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             return UpdateUser(user, updatedUserData);
         }
 
-        private UserDeveloperAPIModel UpdateUser(UserDataViewModel user, UserDeveloperAPIModel updatedUserData)
+        private User UpdateUser(UserDataViewModel user, User updatedUserData)
         {
             if (updatedUserData == null || !updatedUserData.ID.Equals(user.ID))
             {
@@ -102,7 +102,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 user.ViewingMinutes = updatedUserData.ViewingMinutes.Value;
             }
 
-            foreach (UserCurrencyDeveloperAPIModel currencyData in updatedUserData.CurrencyAmounts)
+            foreach (CurrencyAmount currencyData in updatedUserData.CurrencyAmounts)
             {
                 if (ChannelSession.Settings.Currencies.ContainsKey(currencyData.ID))
                 {
@@ -110,12 +110,12 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 }
             }
 
-            return new UserDeveloperAPIModel(user);
+            return UserFromUserDataViewModel(user);
         }
 
         [Route("{userID:int:min(0)}/currency/{currencyID:guid}/adjust")]
         [HttpPut, HttpPatch]
-        public UserDeveloperAPIModel AdjustCurrency(uint userID, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        public User AdjustUserCurrency(uint userID, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
             UserDataViewModel user = ChannelSession.Settings.UserData[userID];
             if (user == null)
@@ -128,7 +128,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("{username}/currency/{currencyID:guid}/adjust")]
         [HttpPut, HttpPatch]
-        public UserDeveloperAPIModel AdjustCurrency(string username, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        public User AdjustUserCurrency(string username, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
             UserDataViewModel user = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase));
             if (user == null)
@@ -141,7 +141,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
 
         [Route("top")]
         [HttpGet]
-        public IEnumerable<UserDeveloperAPIModel> Get(Guid currencyID, int count = 10)
+        public IEnumerable<User> Get(int count = 10)
         {
             if (count < 1)
             {
@@ -155,15 +155,33 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
             IEnumerable<UserDataViewModel> allUsers = allUsersDictionary.Select(kvp => kvp.Value);
             allUsers = allUsers.Where(u => !u.IsCurrencyRankExempt);
 
-            List<UserDeveloperAPIModel> userList = new List<UserDeveloperAPIModel>();
+            List<User> userList = new List<User>();
             foreach (UserDataViewModel user in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(count))
             {
-                userList.Add(new UserDeveloperAPIModel(user));
+                userList.Add(UserFromUserDataViewModel(user));
             }
             return userList;
         }
 
-        private UserDeveloperAPIModel AdjustCurrency(UserDataViewModel user, Guid currencyID, [FromBody] UserCurrencyUpdateDeveloperAPIModel currencyUpdate)
+        public static User UserFromUserDataViewModel(UserDataViewModel userData)
+        {
+
+            User user = new User
+            {
+                ID = userData.ID,
+                UserName = userData.UserName,
+                ViewingMinutes = userData.ViewingMinutes
+            };
+
+            foreach (UserCurrencyViewModel currencyData in ChannelSession.Settings.Currencies.Values)
+            {
+                user.CurrencyAmounts.Add(CurrencyController.CurrencyAmountFromUserCurrencyViewModel(currencyData, userData.GetCurrencyAmount(currencyData)));
+            }
+
+            return user;
+        }
+
+        private User AdjustCurrency(UserDataViewModel user, Guid currencyID, [FromBody] AdjustCurrency currencyUpdate)
         {
             if (!ChannelSession.Settings.Currencies.ContainsKey(currencyID))
             {
@@ -193,7 +211,7 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
                 user.AddCurrencyAmount(currency, currencyUpdate.Amount);
             }
 
-            return new UserDeveloperAPIModel(user);
+            return UserFromUserDataViewModel(user);
         }
     }
 }

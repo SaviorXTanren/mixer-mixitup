@@ -1,10 +1,7 @@
 ﻿using MixItUp.Base;
-using MixItUp.Base.Commands;
-using MixItUp.Base.Model.DeveloperAPIs;
 using MixItUp.Base.ViewModel.User;
-using System;
+using MixItUp.API.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -16,16 +13,16 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
     {
         [Route("users")]
         [HttpGet]
-        public async Task<IEnumerable<UserDeveloperAPIModel>> GetChatUsers()
+        public async Task<IEnumerable<User>> GetChatUsers()
         {
-            List<UserDeveloperAPIModel> users = new List<UserDeveloperAPIModel>();
+            List<User> users = new List<User>();
 
             var chatUsers = await ChannelSession.ActiveUsers.GetAllWorkableUsers();
-            foreach(var chatUser in chatUsers)
+            foreach (var chatUser in chatUsers)
             {
                 if (ChannelSession.Settings.UserData.ContainsKey(chatUser.ID))
                 {
-                    users.Add(new UserDeveloperAPIModel(ChannelSession.Settings.UserData[chatUser.ID]));
+                    users.Add(UserController.UserFromUserDataViewModel(ChannelSession.Settings.UserData[chatUser.ID]));
                 }
             }
 
@@ -33,8 +30,15 @@ namespace MixItUp.Desktop.Services.DeveloperAPI
         }
 
         [Route("message")]
+        [HttpDelete]
+        public async Task ClearChat()
+        {
+            await ChannelSession.Chat.ClearMessages();
+        }
+
+        [Route("message")]
         [HttpPost]
-        public async Task SendChatMessage([FromBody] ChatMessageDeveloperAPIModel chatMessage)
+        public async Task SendChatMessage([FromBody] SendChatMessage chatMessage)
         {
             if (chatMessage == null)
             {

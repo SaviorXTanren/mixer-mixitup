@@ -818,6 +818,8 @@ namespace MixItUp.Base.MixerAPI
 
                     if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)
                     {
+                        Util.Logger.LogDiagnostic("Sending Spark Transaction Capture - " + e.transactionID);
+
                         await this.CaptureSparkTransaction(e.transactionID);
 
                         int sparkCost = 0;

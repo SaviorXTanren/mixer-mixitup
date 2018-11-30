@@ -44,7 +44,6 @@ namespace MixItUp.Base.MixerAPI
         public event EventHandler<Tuple<UserViewModel, int>> OnHostedOccurred;
         public event EventHandler<UserViewModel> OnSubscribedOccurred;
         public event EventHandler<Tuple<UserViewModel, int>> OnResubscribedOccurred;
-        public event EventHandler<Tuple<UserViewModel, SkillInstanceModel>> OnSkillOccurred;
         public event EventHandler<PatronageStatusModel> OnPatronageUpdateOccurred;
 
         public ConstellationClient Client { get; private set; }
@@ -400,22 +399,17 @@ namespace MixItUp.Base.MixerAPI
 
                         SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
 
-                        if (this.OnSkillOccurred != null)
-                        {
-                            this.OnSkillOccurred(this, new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
-                        }
-
                         GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
 
                         GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)skillInstance.Skill.price));
 
                         Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-                            {
-                                { "skillname", skillInstance.Skill.name },
-                                { "skilltype", EnumHelper.GetEnumName(skillInstance.Type) },
-                                { "skillcost", skillInstance.Skill.price.ToString() },
-                                { "skillimage", skillInstance.ImageUrl }
-                            };
+                        {
+                            { "skillname", skillInstance.Skill.name },
+                            { "skilltype", EnumHelper.GetEnumName(skillInstance.Type) },
+                            { "skillcost", skillInstance.Skill.price.ToString() },
+                            { "skillimage", skillInstance.ImageUrl }
+                        };
                         await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
                     }
                 }

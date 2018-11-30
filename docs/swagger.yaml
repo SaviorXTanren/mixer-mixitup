@@ -201,10 +201,10 @@ paths:
         required: true
         type: string
         format: uuid
-    put:
+    post:
       tags:
         - Currency
-      summary: Gets a list users ordered by currency quantity descending
+      summary: Gives a list of users various amounts of currency
       operationId: bulkGiveUsersCurrency
       parameters:
         - name: listOfUsersWithAmounts
@@ -260,6 +260,14 @@ paths:
           description: Success
         '400':
           description: Bad request was sent in
+    delete:
+      tags:
+        - Chat
+      summary: Clears the chat history
+      operationId: clearChat
+      responses:
+        '200':
+          description: Success
 
   '/commands':
     get:
@@ -377,7 +385,7 @@ definitions:
       CurrrencyAmounts:
         type: array
         items:
-          $ref: '#/definitions/MixItUpCurrency'
+          $ref: '#/definitions/MixItUpCurrencyAmount'
 
   UpdateMixItUpUser:
     type: object
@@ -394,7 +402,7 @@ definitions:
       CurrrencyAmounts:
         type: array
         items:
-          $ref: '#/definitions/UpdateMixItUpCurrency'
+          $ref: '#/definitions/UpdateMixItUpCurrencyAmount'
           
   ListOfMixItUpUsernamesOrIDs:
     type: array
@@ -414,7 +422,7 @@ definitions:
         description: The amount to adjust the user's currency.  This amount may be positive or negative.
         type: integer
 
-  MixItUpCurrency:
+  MixItUpCurrencyAmount:
     type: object
     required: [ ID, Name, Amount ]
     properties:
@@ -431,6 +439,20 @@ definitions:
         description: The amount of currency the user has.
         type: integer
         example: 2751
+
+  MixItUpCurrency:
+    type: object
+    required: [ ID, Name ]
+    properties:
+      ID:
+        description: The Mix It Up currency ID.
+        type: string
+        format: uuid
+        example: 1783e5d9-c2ab-423a-ae64-7dc9a086b194
+      Name:
+        description: The Mix It Up currency name.
+        type: string
+        example: Influence
 
   ListOfMixItUpCurrency:
     type: array

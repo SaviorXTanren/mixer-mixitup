@@ -1,6 +1,8 @@
 ﻿using Mixer.Base.Model.Skills;
+using MixItUp.Base.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.Skill
@@ -16,7 +18,12 @@ namespace MixItUp.Base.Model.Skill
     [DataContract]
     public class SkillInstanceModel
     {
-        private const string GifUrlKey = "gifUrl";
+        private const string ManifestNameKey = "name";
+
+        private const string GiphyManifestName = "giphy";
+        private const string GiphyParametersHost = "giphyHost";
+        private const string GiphyParametersID = "giphyId";
+        private const string GiphyFileFormat = "https://{0}/media/{1}/200w.gif";
 
         [DataMember]
         public SkillModel Skill { get; set; }
@@ -66,28 +73,28 @@ namespace MixItUp.Base.Model.Skill
             {
                 if (this.IsGif)
                 {
-                    return this.GifUrl;
+                    try
+                    {
+                        string host = this.Parameters[SkillInstanceModel.GiphyParametersHost].ToString();
+                        string id = this.Parameters[SkillInstanceModel.GiphyParametersID].ToString();
+                        return string.Format(SkillInstanceModel.GiphyFileFormat, host, id);
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
                 }
-                else
-                {
-                    return this.Skill.iconUrl;
-                }
+                return this.Skill.iconUrl;
             }
         }
 
         [JsonIgnore]
-        public bool IsGif { get { return this.Parameters.ContainsKey(SkillInstanceModel.GifUrlKey); } }
-
-        [JsonIgnore]
-        public string GifUrl
+        public bool IsGif
         {
             get
             {
-                if (this.IsGif)
+                if (this.Manifest.ContainsKey(SkillInstanceModel.ManifestNameKey) && !string.IsNullOrEmpty(this.Manifest[SkillInstanceModel.ManifestNameKey].ToString()))
                 {
-                    return this.Parameters[SkillInstanceModel.GifUrlKey].ToString();
+                    return this.Manifest[SkillInstanceModel.ManifestNameKey].ToString().Equals(SkillInstanceModel.GiphyManifestName);
                 }
-                return null;
+                return false;
             }
         }
     }
