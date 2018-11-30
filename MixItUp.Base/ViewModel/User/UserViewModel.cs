@@ -299,10 +299,13 @@ namespace MixItUp.Base.ViewModel.User
 
         public async Task RefreshChatDetails()
         {
-            ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, this.ID);
-            if (chatUser != null)
+            if (!this.IsAnonymous && this.LastUpdated.TotalMinutesFromNow() >= 1)
             {
-                this.SetChatDetails(chatUser);
+                ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, this.ID);
+                if (chatUser != null)
+                {
+                    this.SetChatDetails(chatUser);
+                }
             }
         }
 
