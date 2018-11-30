@@ -14,9 +14,10 @@ namespace MixItUp.WPF.Controls.Interactive
         {
             InitializeComponent();
 
-            this.MaxTimeTextBox.Text = "30";
-
             this.Initialize(this.LocationPointsCanvas);
+
+            this.MaxTimeTextBox.Text = this.maxTime.ToString();
+            this.SparkCostTextBox.Text = this.sparkCost.ToString();
         }
 
         protected override void UpdateTimerUI(int timeLeft)
@@ -48,6 +49,7 @@ namespace MixItUp.WPF.Controls.Interactive
             this.Dispatcher.Invoke(() =>
             {
                 this.MaxTimeTextBox.IsEnabled = false;
+                this.SparkCostTextBox.IsEnabled = false;
 
                 this.TimerStackPanel.Visibility = Visibility.Collapsed;
                 this.DropLocationStackPanel.Visibility = Visibility.Collapsed;
@@ -65,6 +67,7 @@ namespace MixItUp.WPF.Controls.Interactive
         protected override Task GameDisconnectedInternal()
         {
             this.MaxTimeTextBox.IsEnabled = true;
+            this.SparkCostTextBox.IsEnabled = true;
 
             return Task.FromResult(0);
         }
@@ -74,10 +77,24 @@ namespace MixItUp.WPF.Controls.Interactive
             if (!string.IsNullOrEmpty(this.MaxTimeTextBox.Text) && int.TryParse(this.MaxTimeTextBox.Text, out int time) && time > 0)
             {
                 this.maxTime = time;
+                this.SaveDropMapSettings();
             }
             else
             {
                 this.MaxTimeTextBox.Text = "0";
+            }
+        }
+
+        private void SparkCostTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.SparkCostTextBox.Text) && int.TryParse(this.SparkCostTextBox.Text, out int cost) && cost >= 0)
+            {
+                this.sparkCost = cost;
+                this.SaveDropMapSettings();
+            }
+            else
+            {
+                this.SparkCostTextBox.Text = "0";
             }
         }
     }

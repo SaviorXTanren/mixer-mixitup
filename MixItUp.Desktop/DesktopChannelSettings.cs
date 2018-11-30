@@ -15,6 +15,7 @@ using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.Desktop.Database;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -281,6 +282,9 @@ namespace MixItUp.Desktop
         public int SongRequestVolume { get; set; } = 100;
 
         [JsonProperty]
+        public Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
+
+        [JsonProperty]
         public string TelemetryUserId { get; set; }
 
         [JsonProperty]
@@ -339,6 +343,7 @@ namespace MixItUp.Desktop
             this.RemoteSavedDevices = new List<RemoteDeviceModel>();
             this.FavoriteGroups = new List<FavoriteGroupModel>();
             this.SongRequestServiceTypes = new HashSet<SongRequestServiceTypeEnum>();
+            this.CustomInteractiveSettings = new Dictionary<uint, JObject>();
 
             this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();

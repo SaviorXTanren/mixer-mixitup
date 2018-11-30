@@ -77,8 +77,9 @@ namespace MixItUp.Base.ViewModel.User
             return await this.GetUserByID(chatUser.userId.GetValueOrDefault());
         }
 
-        public async Task AddOrUpdateUsers(IEnumerable<ChatUserModel> chatUsers)
+        public async Task<IEnumerable<UserViewModel>> AddOrUpdateUsers(IEnumerable<ChatUserModel> chatUsers)
         {
+            Dictionary<uint, UserViewModel> allProcessedUsers = new Dictionary<uint, UserViewModel>();
             List<UserViewModel> newUsers = new List<UserViewModel>();
             await this.semaphore.WaitAndRelease(() =>
             {
@@ -99,6 +100,7 @@ namespace MixItUp.Base.ViewModel.User
 
                         if (user != null)
                         {
+                            allProcessedUsers[user.ID] = user;
                             this.users[user.ID] = user;
                             user.SetChatDetails(chatUser);
                         }
@@ -107,7 +109,8 @@ namespace MixItUp.Base.ViewModel.User
 
                 return Task.FromResult(0);
             });
-            await this.RefreshNewUsers(newUsers);
+            await this.PerformUserFirstJoins(newUsers);
+            return allProcessedUsers.Values;
         }
 
         public async Task<UserViewModel> AddOrUpdateUser(InteractiveParticipantModel interactiveUser)
@@ -116,8 +119,9 @@ namespace MixItUp.Base.ViewModel.User
             return await this.GetUserByID(interactiveUser.userID);
         }
 
-        public async Task AddOrUpdateUsers(IEnumerable<InteractiveParticipantModel> interactiveUsers)
+        public async Task<IEnumerable<UserViewModel>> AddOrUpdateUsers(IEnumerable<InteractiveParticipantModel> interactiveUsers)
         {
+            Dictionary<uint, UserViewModel> allProcessedUsers = new Dictionary<uint, UserViewModel>();
             List<UserViewModel> newUsers = new List<UserViewModel>();
             await this.semaphore.WaitAndRelease(() =>
             {
@@ -138,6 +142,7 @@ namespace MixItUp.Base.ViewModel.User
 
                         if (user != null)
                         {
+                            allProcessedUsers[user.ID] = user;
                             this.users[user.ID] = user;
                             user.SetInteractiveDetails(interactiveUser);
                         }
@@ -146,7 +151,8 @@ namespace MixItUp.Base.ViewModel.User
 
                 return Task.FromResult(0);
             });
-            await this.RefreshNewUsers(newUsers);
+            await this.PerformUserFirstJoins(newUsers);
+            return allProcessedUsers.Values;
         }
 
         public async Task RemoveInteractiveUser(InteractiveParticipantModel interactiveUser)
@@ -174,30 +180,6 @@ namespace MixItUp.Base.ViewModel.User
                 }
                 return Task.FromResult(user);
             });
-        }
-
-        public async Task FullRefresh(IEnumerable<ChatUserModel> chatUsers)
-        {
-            HashSet<uint> chatUserIDs = new HashSet<uint>(chatUsers.Select(u => u.userId.GetValueOrDefault()));
-
-            List<UserViewModel> usersToRemove = new List<UserViewModel>();
-            await this.semaphore.WaitAndRelease(() =>
-            {
-                foreach (UserViewModel user in this.users.Values)
-                {
-                    if (!chatUserIDs.Contains(user.ID))
-                    {
-                        usersToRemove.Add(user);
-                    }
-                }
-                return Task.FromResult(0);
-            });
-
-            await this.AddOrUpdateUsers(chatUsers);
-            foreach (UserViewModel user in usersToRemove)
-            {
-                await this.RemoveUser(user.ID);
-            }
         }
 
         public async Task<IEnumerable<UserViewModel>> GetAllUsers(bool mustBeInChat = true)
@@ -246,46 +228,23 @@ namespace MixItUp.Base.ViewModel.User
             return await this.semaphore.WaitAndRelease(() => Task.FromResult(this.users.Count));
         }
 
-        private async Task RefreshNewUsers(IEnumerable<UserViewModel> users)
+        private async Task PerformUserFirstJoins(IEnumerable<UserViewModel> users)
         {
             try
             {
-                if (users.Count() > 0)
+                foreach (UserViewModel user in users)
                 {
-                    IEnumerable<UserModel> userModels = users.Select(u => u.GetModel());
-                    Dictionary<uint, DateTimeOffset?> follows = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, userModels);
-                    Dictionary<uint, DateTimeOffset?> subscribers = await ChannelSession.Connection.CheckIfUsersHaveRole(ChannelSession.Channel, userModels, MixerRoleEnum.Subscriber);
-                    foreach (UserViewModel user in users)
+                    if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
                     {
-                        if (follows != null && follows.ContainsKey(user.ID))
+                        if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
                         {
-                            user.FollowDate = follows[user.ID];
-                        }
-                        if (subscribers != null && subscribers.ContainsKey(user.ID))
-                        {
-                            user.SubscribeDate = subscribers[user.ID];
-                        }
-                    }
-
-                    foreach (UserViewModel user in users)
-                    {
-                        if (!ChannelSession.Settings.UserData.ContainsKey(user.ID))
-                        {
-                            await this.PerformUserFirstJoin(user);
+                            ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
+                            await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)), user);
                         }
                     }
                 }
             }
             catch (Exception ex) { Util.Logger.Log(ex); }
-        }
-
-        private async Task PerformUserFirstJoin(UserViewModel user)
-        {
-            if (ChannelSession.Constellation.CanUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)))
-            {
-                ChannelSession.Constellation.LogUserRunEvent(user, EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin));
-                await ChannelSession.Constellation.RunEventCommand(ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerUserFirstJoin)), user);
-            }
         }
     }
 }

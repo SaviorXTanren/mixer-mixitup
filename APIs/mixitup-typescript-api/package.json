@@ -1,0 +1,42 @@
+{
+  "name": "mixitup-typescript-api",
+  "version": "0.0.1",
+  "description": "A typescript interface to communicate to a locally running Mix It Up bot.",
+  "private": true,
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaviorXTanren/mixer-mixitup.git"
+  },
+  "keywords": [
+    "mixer",
+    "mixitup",
+    "bot"
+  ],
+  "author": "SaviorXTanren",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SaviorXTanren/mixer-mixitup/issues"
+  },
+  "homepage": "https://github.com/SaviorXTanren/mixer-mixitup#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.10",
+    "@types/es6-promise": "^3.3.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-loader": "^5.3.1",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.6",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2"
+  },
+  "dependencies": {
+    "web-request": "^1.0.7"
+  }
+}

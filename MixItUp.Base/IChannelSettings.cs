@@ -12,6 +12,7 @@ using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -157,6 +158,8 @@ namespace MixItUp.Base
         bool SpotifyAllowExplicit { get; set; }
         string DefaultPlaylist { get; set; }
         int SongRequestVolume { get; set; }
+
+        Dictionary<uint, JObject> CustomInteractiveSettings { get; set; }
 
         string TelemetryUserId { get; set; }
 

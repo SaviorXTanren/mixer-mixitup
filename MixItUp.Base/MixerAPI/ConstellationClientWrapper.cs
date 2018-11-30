@@ -338,7 +338,7 @@ namespace MixItUp.Base.MixerAPI
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelSkillEvent.ToString()))
                 {
-                    if (e.payload["triggeringUserId"] != null && e.payload["skillId"] != null)
+                    if (e.payload["triggeringUserId"] != null)
                     {
                         uint userID = e.payload["triggeringUserId"].ToObject<uint>();
                         user = await ChannelSession.ActiveUsers.GetUserByID(userID);
@@ -346,34 +346,49 @@ namespace MixItUp.Base.MixerAPI
                         {
                             user = new UserViewModel(await ChannelSession.Connection.GetUser(userID));
                         }
+                    }
 
+                    SkillModel skill = null;
+                    if (e.payload["skillId"] != null)
+                    {
                         Guid skillID = e.payload["skillId"].ToObject<Guid>();
-                        SkillModel skill = null;
                         if (this.availableSkills.ContainsKey(skillID))
                         {
                             skill = this.availableSkills[skillID];
                         }
-
-                        if (user != null && skill != null)
+                    }
+                    
+                    if (skill == null)
+                    {
+                        if (e.payload["manifest"] != null && e.payload["manifest"]["name"] != null)
                         {
-                            JObject manifest = (JObject)e.payload["manifest"];
-                            JObject parameters = (JObject)e.payload["parameters"];
-
-                            SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
-
-                            GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
-
-                            GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)skillInstance.Skill.price));
-
-                            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                            string skillName = e.payload["manifest"]["name"].ToString();
+                            if (skillName.Equals("beachball"))
                             {
-                                { "skillname", skillInstance.Skill.name },
-                                { "skilltype", EnumHelper.GetEnumName(skillInstance.Type) },
-                                { "skillcost", skillInstance.Skill.price.ToString() },
-                                { "skillimage", skillInstance.ImageUrl }
-                            };
-                            await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
+                                skill = this.availableSkills.Values.FirstOrDefault(s => s.name.Equals("Beach Ball"));
+                            }
                         }
+                    }
+
+                    if (user != null && skill != null)
+                    {
+                        JObject manifest = (JObject)e.payload["manifest"];
+                        JObject parameters = (JObject)e.payload["parameters"];
+
+                        SkillInstanceModel skillInstance = new SkillInstanceModel(skill, manifest, parameters);
+
+                        GlobalEvents.SkillOccurred(new Tuple<UserViewModel, SkillInstanceModel>(user, skillInstance));
+
+                        GlobalEvents.SparkUseOccurred(new Tuple<UserViewModel, int>(user, (int)skillInstance.Skill.price));
+
+                        Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
+                        {
+                            { "skillname", skillInstance.Skill.name },
+                            { "skilltype", EnumHelper.GetEnumName(skillInstance.Type) },
+                            { "skillcost", skillInstance.Skill.price.ToString() },
+                            { "skillimage", skillInstance.ImageUrl }
+                        };
+                        await this.RunEventCommand(this.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.MixerSkillUsed)), user, specialIdentifiers);
                     }
                 }
                 else if (e.channel.Equals(ConstellationClientWrapper.ChannelPatronageUpdateEvent.ToString()))
