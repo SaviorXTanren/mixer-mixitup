@@ -54,6 +54,11 @@ namespace MixItUp.WPF.Controls.MainControls
                             UserViewModel currentUser = userControl.User;
                             if (currentUser != null)
                             {
+                                if (!this.cachedUserRoles.ContainsKey(currentUser.ID))
+                                {
+                                    this.cachedUserRoles[currentUser.ID] = currentUser.PrimarySortableRole;
+                                }
+
                                 if (this.cachedUserRoles[currentUser.ID] == this.cachedUserRoles[user.ID])
                                 {
                                     if (currentUser.UserName.CompareTo(user.UserName) > 0)
