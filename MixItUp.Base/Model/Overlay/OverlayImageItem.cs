@@ -36,10 +36,10 @@ namespace MixItUp.Base.Model.Overlay
             set { }
         }
 
-        public OverlayImageItem() : base(OverlayImageItem.ImageItemType) { }
+        public OverlayImageItem() : base(ImageItemType) { }
 
         public OverlayImageItem(string filepath, int width, int height)
-            : base(OverlayImageItem.ImageItemType)
+            : base(ImageItemType)
         {
             this.FilePath = filepath;
             this.Width = width;

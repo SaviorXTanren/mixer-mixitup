@@ -27,10 +27,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string ShadowColor { get; set; }
 
-        public OverlayTextItem() : base(OverlayTextItem.TextItemType) { }
+        public OverlayTextItem() : base(TextItemType) { }
 
         public OverlayTextItem(string text, string color, int size, string font, bool bold, bool italic, bool underline, string shadowColor)
-            : base(OverlayTextItem.TextItemType)
+            : base(TextItemType)
         {
             this.Text = text;
             this.Color = color;

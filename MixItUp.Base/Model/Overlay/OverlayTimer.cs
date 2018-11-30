@@ -1,5 +1,4 @@
 ﻿using MixItUp.Base.ViewModel.User;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -24,10 +23,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int TextSize { get; set; }
 
-        public OverlayTimer() : base(OverlayTimer.TimerItemType, OverlayTimer.HTMLTemplate) { }
+        public OverlayTimer() : base(TimerItemType, HTMLTemplate) { }
 
         public OverlayTimer(string htmlText, int totalLength, string textColor, string textFont, int textSize)
-            : base(OverlayTimer.TimerItemType, htmlText)
+            : base(TimerItemType, htmlText)
         {
             this.TotalLength = totalLength;
             this.TextColor = textColor;

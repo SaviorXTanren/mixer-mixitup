@@ -66,7 +66,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private bool refreshMilestone;
 
-        public OverlayProgressBar() : base(OverlayProgressBar.CustomItemType, OverlayProgressBar.HTMLTemplate) { }
+        public OverlayProgressBar() : base(CustomItemType, HTMLTemplate) { }
 
         public OverlayProgressBar(string htmlText, ProgressBarTypeEnum progressBarType, double currentAmount, double goalAmount, int resetAfterDays, string progressColor,
             string backgroundColor, string textColor, string textFont, int width, int height)
@@ -86,7 +86,7 @@ namespace MixItUp.Base.Model.Overlay
 
         private OverlayProgressBar(string htmlText, ProgressBarTypeEnum progressBarType, int resetAfterDays, string progressColor, string backgroundColor, string textColor,
             string textFont, int width, int height)
-            : base(OverlayProgressBar.CustomItemType, htmlText)
+            : base(CustomItemType, htmlText)
         {
             this.ProgressBarType = progressBarType;
             this.ResetAfterDays = resetAfterDays;

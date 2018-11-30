@@ -44,10 +44,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double VolumeDecimal { get { return ((double)this.Volume / 100.0); } }
 
-        public OverlayVideoItem() : base(OverlayVideoItem.VideoItemType) { this.Volume = 100; }
+        public OverlayVideoItem() : base(VideoItemType) { this.Volume = 100; }
 
         public OverlayVideoItem(string filepath, int width, int height, int volume)
-            : base(OverlayVideoItem.VideoItemType)
+            : base(VideoItemType)
         {
             this.FilePath = filepath;
             this.Width = width;

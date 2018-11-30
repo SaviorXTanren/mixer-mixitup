@@ -59,11 +59,11 @@ namespace MixItUp.Base.Model.Overlay
         [JsonIgnore]
         private bool gameQueueUpdated = true;
 
-        public OverlayGameQueue() : base(OverlayGameQueue.GameQueueItemType, OverlayGameQueue.HTMLTemplate) { }
+        public OverlayGameQueue() : base(GameQueueItemType, HTMLTemplate) { }
 
         public OverlayGameQueue(string htmlText, int totalToShow, string textFont, int width, int height, string borderColor, string backgroundColor, string textColor,
             OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
-            : base(OverlayGameQueue.GameQueueItemType, htmlText)
+            : base(GameQueueItemType, htmlText)
         {
             this.TotalToShow = totalToShow;
             this.TextFont = textFont;

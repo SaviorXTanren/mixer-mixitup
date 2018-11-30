@@ -23,7 +23,7 @@ namespace MixItUp.Base.Model.Overlay
           </p>
         </div>";
 
-        public const string EventListItemType = "chatmessages";
+        public const string ChatMessagesItemType = "chatmessages";
 
         private const string TextMessageHTMLTemplate = @"<span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; word-wrap: break-word; color: {TEXT_COLOR}; vertical-align: middle; margin-left: 10px;"">{TEXT}</span>";
         private const string EmoticonMessageHTMLTemplate = @"<span role=""img"" style=""height: {EMOTICON_SIZE}px; width: {EMOTICON_SIZE}px; background-repeat: no-repeat; display: inline-block; background-image: url({EMOTICON}); background-position: {EMOTICON_X}px {EMOTICON_Y}px;""></span>";
@@ -67,11 +67,11 @@ namespace MixItUp.Base.Model.Overlay
         private LockedList<ChatMessageViewModel> allMessages = new LockedList<ChatMessageViewModel>();
         private List<ChatMessageViewModel> messagesToProcess = new List<ChatMessageViewModel>();
 
-        public OverlayChatMessages() : base(OverlayChatMessages.EventListItemType, OverlayEventList.HTMLTemplate) { }
+        public OverlayChatMessages() : base(ChatMessagesItemType, HTMLTemplate) { }
 
         public OverlayChatMessages(string htmlText, int totalToShow, int width, string borderColor, string backgroundColor, string textColor,
             string textFont, int textSize, OverlayEffectEntranceAnimationTypeEnum addEventAnimation)
-            : base(OverlayChatMessages.EventListItemType, htmlText)
+            : base(ChatMessagesItemType, htmlText)
         {
             this.TotalToShow = totalToShow;
             this.Width = width;

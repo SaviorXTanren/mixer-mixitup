@@ -84,11 +84,11 @@ namespace MixItUp.Base.Model.Overlay
 
         private List<OverlayEventListItem> eventsToAdd = new List<OverlayEventListItem>();
 
-        public OverlayEventList() : base(OverlayEventList.EventListItemType, OverlayEventList.HTMLTemplate) { }
+        public OverlayEventList() : base(EventListItemType, HTMLTemplate) { }
 
         public OverlayEventList(string htmlText, IEnumerable<EventListItemTypeEnum> itemTypes, int totalToShow, bool resetOnLoad, string textFont, int width, int height,
             string borderColor, string backgroundColor, string textColor, OverlayEffectEntranceAnimationTypeEnum addEventAnimation, OverlayEffectExitAnimationTypeEnum removeEventAnimation)
-            : base(OverlayEventList.EventListItemType, htmlText)
+            : base(EventListItemType, htmlText)
         {
             this.ItemTypes = new List<EventListItemTypeEnum>(itemTypes);
             this.TotalToShow = totalToShow;

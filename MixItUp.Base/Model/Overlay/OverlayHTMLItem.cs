@@ -13,10 +13,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public string HTMLText { get; set; }
 
-        public OverlayHTMLItem() : base(OverlayHTMLItem.HTMLItemType) { }
+        public OverlayHTMLItem() : base(HTMLItemType) { }
 
         public OverlayHTMLItem(string htmlText)
-            : base(OverlayHTMLItem.HTMLItemType)
+            : base(HTMLItemType)
         {
             this.HTMLText = htmlText;
         }

@@ -21,10 +21,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Volume { get; set; }
 
-        public OverlayYouTubeItem() : base(OverlayYouTubeItem.YouTubeItemType) { this.Volume = 100; }
+        public OverlayYouTubeItem() : base(YouTubeItemType) { this.Volume = 100; }
 
         public OverlayYouTubeItem(string id, int startTime, int width, int height, int volume)
-            : base(OverlayYouTubeItem.YouTubeItemType)
+            : base(YouTubeItemType)
         {
             this.VideoID = id;
             this.StartTime = startTime;

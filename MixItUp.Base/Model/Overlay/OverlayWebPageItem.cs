@@ -17,10 +17,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public int Height { get; set; }
 
-        public OverlayWebPageItem() : base(OverlayWebPageItem.WebPageItemType) { }
+        public OverlayWebPageItem() : base(WebPageItemType) { }
 
         public OverlayWebPageItem(string url, int width, int height)
-            : base(OverlayWebPageItem.WebPageItemType)
+            : base(WebPageItemType)
         {
             this.URL = url;
             this.Width = width;
