@@ -463,6 +463,9 @@
     <Compile Include="Controls\MixerStatusAlertControl.xaml.cs">
       <DependentUpon>MixerStatusAlertControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayChatMessagesControl.xaml.cs">
+      <DependentUpon>OverlayChatMessagesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayGameQueueControl.xaml.cs">
       <DependentUpon>OverlayGameQueueControl.xaml</DependentUpon>
     </Compile>
@@ -1072,6 +1075,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MixerStatusAlertControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayChatMessagesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

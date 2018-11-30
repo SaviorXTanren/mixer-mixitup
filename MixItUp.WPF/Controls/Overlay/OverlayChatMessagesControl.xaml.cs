@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayGameQueueControl.xaml
+    /// Interaction logic for OverlayChatMessagesControl.xaml
     /// </summary>
-    public partial class OverlayGameQueueControl : OverlayItemControl
+    public partial class OverlayChatMessagesControl : OverlayItemControl
     {
-        private OverlayGameQueue item;
+        private OverlayChatMessages item;
 
-        public OverlayGameQueueControl()
+        public OverlayChatMessagesControl()
         {
             InitializeComponent();
         }
 
-        public OverlayGameQueueControl(OverlayGameQueue item)
+        public OverlayChatMessagesControl(OverlayChatMessages item)
             : this()
         {
             this.item = item;
@@ -27,14 +27,14 @@ namespace MixItUp.WPF.Controls.Overlay
 
         public override void SetItem(OverlayItemBase item)
         {
-            this.item = (OverlayGameQueue)item;
+            this.item = (OverlayChatMessages)item;
 
             this.TotalToShowTextBox.Text = this.item.TotalToShow.ToString();
 
             this.WidthTextBox.Text = this.item.Width.ToString();
-            this.HeightTextBox.Text = this.item.Height.ToString();
 
             this.TextFontComboBox.Text = this.item.TextFont;
+            this.TextSizeTextBox.Text = this.item.TextSize.ToString();
 
             this.BorderColorComboBox.Text = this.item.BorderColor;
             if (ColorSchemes.ColorSchemeDictionary.ContainsValue(this.item.BorderColor))
@@ -55,14 +55,12 @@ namespace MixItUp.WPF.Controls.Overlay
             }
 
             this.AddEventAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.AddEventAnimation);
-            this.RemoveEventAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.RemoveEventAnimation);
 
             this.HTMLText.Text = this.item.HTMLText;
         }
 
         public override OverlayItemBase GetItem()
         {
-
             if (string.IsNullOrEmpty(this.TotalToShowTextBox.Text) || !int.TryParse(this.TotalToShowTextBox.Text, out int totalToShow) || totalToShow <= 0)
             {
                 return null;
@@ -91,8 +89,12 @@ namespace MixItUp.WPF.Controls.Overlay
                 return null;
             }
 
-            if (string.IsNullOrEmpty(this.WidthTextBox.Text) || !int.TryParse(this.WidthTextBox.Text, out int width) ||
-                string.IsNullOrEmpty(this.HeightTextBox.Text) || !int.TryParse(this.HeightTextBox.Text, out int height))
+            if (string.IsNullOrEmpty(this.TextSizeTextBox.Text) || !int.TryParse(this.TextSizeTextBox.Text, out int textSize))
+            {
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(this.WidthTextBox.Text) || !int.TryParse(this.WidthTextBox.Text, out int width))
             {
                 return null;
             }
@@ -103,9 +105,9 @@ namespace MixItUp.WPF.Controls.Overlay
             }
 
             OverlayEffectEntranceAnimationTypeEnum addEventAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.AddEventAnimationComboBox.SelectedItem);
-            OverlayEffectExitAnimationTypeEnum removeEventAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.RemoveEventAnimationComboBox.SelectedItem);
 
-            return new OverlayGameQueue(this.HTMLText.Text,totalToShow, this.TextFontComboBox.Text, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation);
+            return new OverlayChatMessages(this.HTMLText.Text, totalToShow, width, borderColor, backgroundColor, textColor, this.TextFontComboBox.Text,
+                textSize, addEventAnimation);
         }
 
         protected override Task OnLoaded()
@@ -118,13 +120,11 @@ namespace MixItUp.WPF.Controls.Overlay
 
             this.AddEventAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
             this.AddEventAnimationComboBox.SelectedIndex = 0;
-            this.RemoveEventAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectExitAnimationTypeEnum>();
-            this.RemoveEventAnimationComboBox.SelectedIndex = 0;
 
             this.WidthTextBox.Text = "400";
-            this.HeightTextBox.Text = "100";
             this.TextFontComboBox.Text = "Arial";
-            this.HTMLText.Text = OverlayGameQueue.HTMLTemplate;
+            this.TextSizeTextBox.Text = "16";
+            this.HTMLText.Text = OverlayChatMessages.HTMLTemplate;
 
             if (this.item != null)
             {

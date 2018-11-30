@@ -24,6 +24,8 @@ namespace MixItUp.WPF.Windows.Overlay
         EventList,
         [Name("Game Queue")]
         GameQueue,
+        [Name("Chat Messages")]
+        ChatMessages,
         Timer,
     }
 
@@ -115,6 +117,11 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.GameQueue);
                     this.GameQueueItem.SetItem(this.Widget.Item);
                 }
+                else if (this.Widget.Item is OverlayChatMessages)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ChatMessages);
+                    this.ChatMessagesItem.SetItem(this.Widget.Item);
+                }
                 else if (this.Widget.Item is OverlayTimer)
                 {
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Timer);
@@ -136,6 +143,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.ProgressBarItem.Visibility = Visibility.Collapsed;
             this.EventListItem.Visibility = Visibility.Collapsed;
             this.GameQueueItem.Visibility = Visibility.Collapsed;
+            this.ChatMessagesItem.Visibility = Visibility.Collapsed;
             this.TimerItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
@@ -175,6 +183,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.GameQueue)
                 {
                     this.GameQueueItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.ChatMessages)
+                {
+                    this.ChatMessagesItem.Visibility = Visibility.Visible;
                 }
                 else if (overlayType == OverlayWidgetTypeEnum.Timer)
                 {
@@ -245,6 +257,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.GameQueue)
                 {
                     item = this.GameQueueItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.ChatMessages)
+                {
+                    item = this.ChatMessagesItem.GetItem();
                 }
                 else if (overlayType == OverlayWidgetTypeEnum.Timer)
                 {

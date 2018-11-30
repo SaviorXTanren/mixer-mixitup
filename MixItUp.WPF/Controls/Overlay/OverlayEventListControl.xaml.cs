@@ -132,9 +132,6 @@ namespace MixItUp.WPF.Controls.Overlay
         {
             this.TotalToShowTextBox.Text = "5";
 
-            this.WidthTextBox.Text = "0";
-            this.HeightTextBox.Text = "0";
-
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
 
             this.BorderColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;

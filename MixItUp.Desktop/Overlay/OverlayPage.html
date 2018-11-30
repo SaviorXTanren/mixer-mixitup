@@ -214,6 +214,9 @@
                         else if (packet.type === "timer") {
                             timerPacket(packet.data);
                         }
+                        else if (packet.type === "chatmessages") {
+                            chatMessagesPacket(packet.data);
+                        }
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
@@ -510,6 +513,48 @@
                 }
                 else {
                     mainDiv.innerHTML = "";
+                }
+            }
+
+            // Event List Functions
+
+            function chatMessagesPacket(data) {
+
+                if (!listWidgets.has(data.ID)) {
+                    var list = {};
+
+                    listWidgets.set(data.ID, list);
+
+                    list.MainDiv = document.createElement('div');
+                    list.Items = [];
+
+                    addWaitRemoveElement(data, list.MainDiv);
+                }
+
+                var list = listWidgets.get(data.ID);
+                var mainDiv = list.MainDiv;
+                var items = list.Items;
+
+                var i = 0;
+
+                if (items.length >= data.TotalToShow) {
+                    for (i = 0; i < data.NewMessages.length && mainDiv.hasChildNodes(); i++) {
+                        items.pop();
+                        mainDiv.removeChild(mainDiv.firstChild);
+                    }
+                }
+
+                for (i = 0; i < data.NewMessages.length; i++) {
+                    var newMessage = data.NewMessages[i];
+
+                    var newItemDiv = document.createElement('div');
+                    var newItemInnerDiv = document.createElement('div');
+                    newItemInnerDiv.innerHTML = newMessage;
+                    newItemDiv.appendChild(newItemInnerDiv);
+                    $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
+
+                    mainDiv.appendChild(newItemDiv);
+                    items.unshift(data.NewMessages[i]);
                 }
             }
 
