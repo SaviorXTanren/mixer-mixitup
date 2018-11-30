@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-namespace MixItUp.Base.Model.DeveloperAPIs
+namespace MixItUp.API.Models
 {
     [DataContract]
-    public class UserCurrencyGiveDeveloperAPIModel
+    public class GiveUserCurrency
     {
         [DataMember]
         public int Amount { get; set; }
