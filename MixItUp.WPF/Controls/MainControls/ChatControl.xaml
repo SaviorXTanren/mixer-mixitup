@@ -144,7 +144,7 @@
 
                 <GridSplitter x:Name="ChatSplitter" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="5" />
 
-                <ListView x:Name="UserList" Grid.Column="2" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" Width="200" />
+                <ListView x:Name="UserList" Grid.Column="2" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Visible" HorizontalContentAlignment="Stretch" SelectionChanged="UserList_SelectionChanged" Width="200" />
             </Grid>
 
         </GroupBox>

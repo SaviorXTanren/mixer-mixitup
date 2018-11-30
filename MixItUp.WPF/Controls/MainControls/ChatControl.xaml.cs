@@ -54,6 +54,11 @@ namespace MixItUp.WPF.Controls.MainControls
                             UserViewModel currentUser = userControl.User;
                             if (currentUser != null)
                             {
+                                if (!this.cachedUserRoles.ContainsKey(currentUser.ID))
+                                {
+                                    this.cachedUserRoles[currentUser.ID] = currentUser.PrimarySortableRole;
+                                }
+
                                 if (this.cachedUserRoles[currentUser.ID] == this.cachedUserRoles[user.ID])
                                 {
                                     if (currentUser.UserName.CompareTo(user.UserName) > 0)
@@ -188,10 +193,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
                     {
-                        if (user.IsInChat)
-                        {
-                            await this.UserControls.Add(user);
-                        }
+                        await this.UserControls.Add(user);
                     }
 
                     await this.RefreshViewerChatterCounts();
@@ -426,7 +428,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             try
             {
-                HideIntellisense();
+                this.HideIntellisense();
 
                 string tag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
                 if (!string.IsNullOrEmpty(tag))

@@ -77,21 +77,6 @@ namespace MixItUp.Base.Commands
             this.Requirements.Role.MixerRole = settings.Permissions;
             this.Requirements.Cooldown.Amount = settings.Cooldown;
         }
-
-        public string GetMixerAge(UserModel user)
-        {
-            return user.username + "'s Mixer Age: " + user.createdAt.GetValueOrDefault().GetAge();
-        }
-
-        public string GetFollowAge(UserModel user, DateTimeOffset followDate)
-        {
-            return user.username + "'s Follow Age: " + followDate.GetAge();
-        }
-
-        public string GetSubscribeAge(UserModel user, DateTimeOffset subscribeDate)
-        {
-            return user.username + "'s Subscribe Age: " + subscribeDate.GetAge();
-        }
     }
 
     public class MixItUpChatCommand : PreMadeChatCommand
@@ -339,8 +324,8 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    UserModel userModel = await ChannelSession.Connection.GetUser(user.GetModel());
-                    await ChannelSession.Chat.SendMessage(this.GetMixerAge(userModel));
+                    await user.RefreshDetails();
+                    await ChannelSession.Chat.SendMessage(user.UserName + "'s Mixer Age: " + user.MixerAgeString);
                 }
             }));
         }
@@ -355,14 +340,8 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    if (user.FollowDate != null)
-                    {
-                        await ChannelSession.Chat.SendMessage(this.GetFollowAge(user.GetModel(), user.FollowDate.GetValueOrDefault()));
-                    }
-                    else
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "You are not currently following this channel");
-                    }
+                    await user.RefreshDetails();
+                    await ChannelSession.Chat.SendMessage(user.UserName + "'s Follow Age: " + user.FollowAgeString);
                 }
             }));
         }
@@ -377,14 +356,8 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    if (user.SubscribeDate != null)
-                    {
-                        await ChannelSession.Chat.SendMessage(this.GetSubscribeAge(user.GetModel(), user.SubscribeDate.GetValueOrDefault()));
-                    }
-                    else
-                    {
-                        await ChannelSession.Chat.Whisper(user.UserName, "You are not currently subscribed to this channel");
-                    }
+                    await user.RefreshDetails();
+                    await ChannelSession.Chat.SendMessage(user.UserName + "'s Subscribe Age: " + user.SubscribeAgeString);
                 }
             }));
         }
@@ -399,7 +372,8 @@ namespace MixItUp.Base.Commands
             {
                 if (ChannelSession.Chat != null)
                 {
-                    await ChannelSession.Chat.SendMessage(this.GetMixerAge(ChannelSession.Channel.user));
+                    await user.RefreshDetails();
+                    await ChannelSession.Chat.SendMessage(user.UserName + "'s Streamer Age: " + user.MixerAgeString);
                 }
             }));
         }
