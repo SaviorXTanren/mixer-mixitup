@@ -68,9 +68,10 @@ namespace MixItUp.WPF.Controls.MainControls
                     return;
                 }
 
-                if (this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && ChannelSession.Services.Spotify == null)
+                if (this.SpotifyToggleButton.IsChecked.GetValueOrDefault() && (ChannelSession.Services.Spotify == null || (await ChannelSession.Services.Spotify.GetCurrentlyPlaying()) == null))
                 {
-                    await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area");
+                    await MessageBoxHelper.ShowMessageDialog("You must connect to your Spotify account in the Services area. You must also have Spotify running on your computer and you have played at least one song in the Spotify app."
+                        + Environment.NewLine + Environment.NewLine + "This is required to be done everytime to let Spotify know that where to send our song requests to.");
                     this.EnableSongRequestsToggleButton.IsChecked = false;
                     return;
                 }
@@ -97,6 +98,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 else
                 {
                     await MessageBoxHelper.ShowMessageDialog("We were unable to initialize the Song Request service, please try again.");
+                    this.EnableSongRequestsToggleButton.IsChecked = false;
                 }
             });
         }

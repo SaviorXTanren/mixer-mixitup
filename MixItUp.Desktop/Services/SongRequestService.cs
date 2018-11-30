@@ -83,7 +83,7 @@ namespace MixItUp.Desktop.Services
                 return false;
             }
 
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify) && ChannelSession.Services.Spotify == null)
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.Spotify) && (ChannelSession.Services.Spotify == null || (await ChannelSession.Services.Spotify.GetCurrentlyPlaying()) == null))
             {
                 return false;
             }
