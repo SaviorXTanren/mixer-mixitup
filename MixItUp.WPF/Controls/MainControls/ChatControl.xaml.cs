@@ -193,10 +193,7 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllUsers())
                     {
-                        if (user.IsInChat)
-                        {
-                            await this.UserControls.Add(user);
-                        }
+                        await this.UserControls.Add(user);
                     }
 
                     await this.RefreshViewerChatterCounts();
@@ -431,7 +428,7 @@ namespace MixItUp.WPF.Controls.MainControls
         {
             try
             {
-                HideIntellisense();
+                this.HideIntellisense();
 
                 string tag = this.ChatMessageTextBox.Text.Split(' ').LastOrDefault();
                 if (!string.IsNullOrEmpty(tag))
