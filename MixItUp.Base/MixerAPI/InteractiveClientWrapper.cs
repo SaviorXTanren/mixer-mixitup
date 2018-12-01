@@ -777,6 +777,10 @@ namespace MixItUp.Base.MixerAPI
                         user = new UserViewModel(0, "Unknown User");
                         user.InteractiveIDs[e.participantID] = new InteractiveParticipantModel() { sessionID = e.participantID, anonymous = true };
                     }
+                    else
+                    {
+                        await user.RefreshDetails();
+                    }
 
                     if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.IsAnonymous)
                     {
@@ -788,7 +792,7 @@ namespace MixItUp.Base.MixerAPI
                         return;
                     }
 
-                    if (!await ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
+                    if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
                     {
                         await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isInteractive: true);
                         return;

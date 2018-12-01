@@ -378,6 +378,10 @@ namespace MixItUp.Base.MixerAPI
             {
                 user = new UserViewModel(messageEvent);
             }
+            else
+            {
+                await user.RefreshDetails();
+            }
 
             ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
 
@@ -405,7 +409,7 @@ namespace MixItUp.Base.MixerAPI
                 return message;
             }
 
-            if (!await ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
+            if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
             {
                 Util.Logger.LogDiagnostic(string.Format("Deleting Message As User does not meet requirement - {0} - {1}", ChannelSession.Settings.ModerationChatInteractiveParticipation, message.Message));
 
