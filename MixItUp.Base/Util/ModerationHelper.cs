@@ -187,17 +187,14 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        public static async Task<bool> MeetsChatInteractiveParticipationRequirement(UserViewModel user)
+        public static bool MeetsChatInteractiveParticipationRequirement(UserViewModel user)
         {
-            await user.RefreshDetails();
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
                 if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
                 {
                     return true;
                 }
-
-                await user.RefreshDetails();
 
                 if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.GetsSubscriberBenefits)
                 {
