@@ -26,6 +26,8 @@ namespace MixItUp.WPF.Windows.Overlay
         GameQueue,
         [Name("Chat Messages")]
         ChatMessages,
+        [Name("Mixer Clip Playback")]
+        MixerClip,
         Timer,
     }
 
@@ -122,6 +124,11 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.ChatMessages);
                     this.ChatMessagesItem.SetItem(this.Widget.Item);
                 }
+                else if (this.Widget.Item is OverlayMixerClip)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.MixerClip);
+                    this.MixerClipItem.SetItem(this.Widget.Item);
+                }
                 else if (this.Widget.Item is OverlayTimer)
                 {
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Timer);
@@ -144,6 +151,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.EventListItem.Visibility = Visibility.Collapsed;
             this.GameQueueItem.Visibility = Visibility.Collapsed;
             this.ChatMessagesItem.Visibility = Visibility.Collapsed;
+            this.MixerClipItem.Visibility = Visibility.Collapsed;
             this.TimerItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
@@ -187,6 +195,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.ChatMessages)
                 {
                     this.ChatMessagesItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.MixerClip)
+                {
+                    this.MixerClipItem.Visibility = Visibility.Visible;
                 }
                 else if (overlayType == OverlayWidgetTypeEnum.Timer)
                 {
@@ -261,6 +273,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.ChatMessages)
                 {
                     item = this.ChatMessagesItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.MixerClip)
+                {
+                    item = this.MixerClipItem.GetItem();
                 }
                 else if (overlayType == OverlayWidgetTypeEnum.Timer)
                 {

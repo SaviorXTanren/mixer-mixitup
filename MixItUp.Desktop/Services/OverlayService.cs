@@ -168,9 +168,10 @@ namespace MixItUp.Overlay
 
         private async Task SendEffectPacket(string type, OverlayItemBase item, OverlayItemPosition position, OverlayItemEffects effects)
         {
-            JObject jobj = JObject.FromObject(item);
-            if (position != null) { jobj.Merge(JObject.FromObject(position)); }
+            JObject jobj = new JObject();
             if (effects != null) { jobj.Merge(JObject.FromObject(effects)); }
+            if (position != null) { jobj.Merge(JObject.FromObject(position)); }
+            jobj.Merge(JObject.FromObject(item));
             await this.SendPacket(type, jobj);
         }
 

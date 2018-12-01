@@ -1,4 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
@@ -226,6 +227,15 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnPatronageMilestoneReachedOccurred != null)
             {
                 GlobalEvents.OnPatronageMilestoneReachedOccurred(null, patronageMilestone);
+            }
+        }
+
+        public static event EventHandler<ClipModel> OnMixerClipCreated;
+        public static void MixerClipCreated(ClipModel clip)
+        {
+            if (GlobalEvents.OnMixerClipCreated != null)
+            {
+                GlobalEvents.OnMixerClipCreated(null, clip);
             }
         }
     }

@@ -100,7 +100,9 @@
                     <OverlayControls:OverlayGameQueueControl x:Name="GameQueueItem" Visibility="Collapsed" HorizontalAlignment="Center" />
 
                     <OverlayControls:OverlayChatMessagesControl x:Name="ChatMessagesItem" Visibility="Collapsed" HorizontalAlignment="Center" />
-                    
+
+                    <OverlayControls:OverlayMixerClipControl x:Name="MixerClipItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
                     <OverlayControls:OverlayTimerControl x:Name="TimerItem" Visibility="Collapsed" HorizontalAlignment="Center" />
                 </Grid>
             </ScrollViewer>

@@ -482,6 +482,9 @@
     <Compile Include="Controls\Overlay\OverlayEventListControl.xaml.cs">
       <DependentUpon>OverlayEventListControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlayMixerClipControl.xaml.cs">
+      <DependentUpon>OverlayMixerClipControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayProgressBarControl.xaml.cs">
       <DependentUpon>OverlayProgressBarControl.xaml</DependentUpon>
     </Compile>
@@ -1099,6 +1102,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayEventListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlayMixerClipControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

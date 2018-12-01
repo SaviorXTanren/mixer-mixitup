@@ -5,12 +5,15 @@
         <title>Mix It Up - Overlay</title>
         <link rel="shortcut icon" type="image/x-icon" href="https://github.com/SaviorXTanren/mixer-mixitup/raw/master/Wiki/Images/LogoSmall.png" />
         <link rel="stylesheet" type="text/css" href="animate.min.css">
+        <link href="https://unpkg.com/video.js/dist/video-js.min.css" rel="stylesheet">
 
         <script src="jquery.min.js"></script>
 
         <script src="webSocketWrapper.js"></script>
 
         <script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+
+        <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
 
         <style>
             .slidedown-animation {
@@ -216,6 +219,9 @@
                         }
                         else if (packet.type === "chatmessages") {
                             chatMessagesPacket(packet.data);
+                        }
+                        else if (packet.type === "mixerclip") {
+                            mixerClipPacket(packet.data);
                         }
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
@@ -501,7 +507,7 @@
                 if (hours < 10) { hours = "0" + hours; }
                 if (minutes < 10) { minutes = "0" + minutes; }
                 if (seconds < 10) { seconds = "0" + seconds; }
-                var timeText =  hours + ':' + minutes + ':' + seconds;
+                var timeText = hours + ':' + minutes + ':' + seconds;
 
                 mainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
 
@@ -515,8 +521,6 @@
                     mainDiv.innerHTML = "";
                 }
             }
-
-            // Event List Functions
 
             function chatMessagesPacket(data) {
 
@@ -556,6 +560,34 @@
                     mainDiv.appendChild(newItemDiv);
                     items.unshift(data.NewMessages[i]);
                 }
+            }
+
+            function mixerClipPacket(data) {
+
+                var addedElement = document.createElement('video');
+                addedElement.id = data.ID;
+                addedElement.frameBorder = 0;
+                addedElement.allow = "autoplay; encrypted-media";
+                addedElement.setAttribute('autoplay', '');
+                addedElement.volume = data.VolumeDecimal;
+
+                var sourceElement = document.createElement('source');
+                sourceElement.src = data.URL;
+                addedElement.appendChild(sourceElement);
+
+                addWaitRemoveElement(data, addedElement);
+
+                var options = {
+                    autoplay: 'play',
+                    controls: false,
+                    preload: 'auto',
+                };
+
+                videojs(addedElement, options, function onPlayerReady() {
+                    var player = document.getElementById(data.ID).getElementsByTagName('video')[0];
+                    player.width = data.Width;
+                    player.height = data.Height;
+                });
             }
 
             function customPacket(data) {
