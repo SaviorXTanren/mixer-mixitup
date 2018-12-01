@@ -103,6 +103,8 @@
 
                     <OverlayControls:OverlayMixerClipControl x:Name="MixerClipItem" Visibility="Collapsed" HorizontalAlignment="Center" />
 
+                    <OverlayControls:OverlayLeaderboardControl x:Name="LeaderboardItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
                     <OverlayControls:OverlayTimerControl x:Name="TimerItem" Visibility="Collapsed" HorizontalAlignment="Center" />
                 </Grid>
             </ScrollViewer>

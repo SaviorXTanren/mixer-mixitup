@@ -28,6 +28,7 @@ namespace MixItUp.WPF.Windows.Overlay
         ChatMessages,
         [Name("Mixer Clip Playback")]
         MixerClip,
+        Leaderboard,
         Timer,
     }
 
@@ -129,6 +130,11 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.MixerClip);
                     this.MixerClipItem.SetItem(this.Widget.Item);
                 }
+                else if (this.Widget.Item is OverlayLeaderboard)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Leaderboard);
+                    this.LeaderboardItem.SetItem(this.Widget.Item);
+                }
                 else if (this.Widget.Item is OverlayTimer)
                 {
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.Timer);
@@ -152,6 +158,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.GameQueueItem.Visibility = Visibility.Collapsed;
             this.ChatMessagesItem.Visibility = Visibility.Collapsed;
             this.MixerClipItem.Visibility = Visibility.Collapsed;
+            this.LeaderboardItem.Visibility = Visibility.Collapsed;
             this.TimerItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
@@ -199,6 +206,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.MixerClip)
                 {
                     this.MixerClipItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.Leaderboard)
+                {
+                    this.LeaderboardItem.Visibility = Visibility.Visible;
                 }
                 else if (overlayType == OverlayWidgetTypeEnum.Timer)
                 {
@@ -277,6 +288,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.MixerClip)
                 {
                     item = this.MixerClipItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.Leaderboard)
+                {
+                    item = this.LeaderboardItem.GetItem();
                 }
                 else if (overlayType == OverlayWidgetTypeEnum.Timer)
                 {

@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="TotalToShowTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Items To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+            <TextBox x:Name="TotalToShowTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Total To Show" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
             <TextBox Grid.Column="2" x:Name="WidthTextBox" MaterialDesign:HintAssist.Hint="Item Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
             <TextBox Grid.Column="4" x:Name="HeightTextBox" MaterialDesign:HintAssist.Hint="Item Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="110" />
