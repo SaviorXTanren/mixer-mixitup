@@ -152,9 +152,7 @@
             var noConnectionDiv = document.getElementById('noConnectionDiv');
             var noTextToSpeechDiv = document.getElementById('noTextToSpeechDiv');
 
-            // List widgets
-
-            var listWidgets = new Map();
+            var widgetData = new Map();
 
             // YouTube player
 
@@ -214,9 +212,6 @@
                         else if (packet.type === "gamequeue") {
                             gameQueuePacket(packet.data);
                         }
-                        else if (packet.type === "timer") {
-                            timerPacket(packet.data);
-                        }
                         else if (packet.type === "chatmessages") {
                             chatMessagesPacket(packet.data);
                         }
@@ -225,6 +220,12 @@
                         }
                         else if (packet.type === "leaderboard") {
                             leaderboardPacket(packet.data);
+                        }
+                        else if (packet.type === "timer") {
+                            timerPacket(packet.data);
+                        }
+                        else if (packet.type === "timertrain") {
+                            timerTrainPacket(packet.data);
                         }
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
@@ -257,6 +258,7 @@
                 if (itemDictionary[data.ID]) {
                     mainOverlayDiv.removeChild(itemDictionary[data.ID]);
                     itemDictionary[data.ID] = null;
+                    widgetData.delete(data.ID);
                 }
             }
 
@@ -357,10 +359,10 @@
 
             function eventListPacket(data) {
 
-                if (!listWidgets.has(data.ID)) {
+                if (!widgetData.has(data.ID)) {
                     var list = {};
 
-                    listWidgets.set(data.ID, list);
+                    widgetData.set(data.ID, list);
 
                     list.MainDiv = document.createElement('div');
                     list.Items = [];
@@ -368,7 +370,7 @@
                     addWaitRemoveElement(data, list.MainDiv);
                 }
 
-                var list = listWidgets.get(data.ID);
+                var list = widgetData.get(data.ID);
                 var mainDiv = list.MainDiv;
                 var items = list.Items;
 
@@ -433,10 +435,10 @@
 
             function gameQueuePacket(data) {
 
-                if (!listWidgets.has(data.ID)) {
+                if (!widgetData.has(data.ID)) {
                     var list = {};
 
-                    listWidgets.set(data.ID, list);
+                    widgetData.set(data.ID, list);
 
                     list.MainDiv = document.createElement('div');
                     list.Items = [];
@@ -444,7 +446,7 @@
                     addWaitRemoveElement(data, list.MainDiv);
                 }
 
-                var list = listWidgets.get(data.ID);
+                var list = widgetData.get(data.ID);
                 var mainDiv = list.MainDiv;
 
                 data.TotalLeftToRemove = mainDiv.children.length;
@@ -489,48 +491,12 @@
                 }
             }
 
-            // Timer Functions
-
-            function timerPacket(data) {
-                if (!itemDictionary[data.ID]) {
-                    var addedElement = document.createElement('div');
-
-                    timerUpdate(data, addedElement);
-
-                    addWaitRemoveElement(data, addedElement);
-                }
-            }
-
-            function timerUpdate(data, mainDiv) {
-
-                var hours = Math.floor(data.TotalLength / 3600);
-                var minutes = Math.floor((data.TotalLength - (hours * 3600)) / 60);
-                var seconds = data.TotalLength - (hours * 3600) - (minutes * 60);
-
-                if (hours < 10) { hours = "0" + hours; }
-                if (minutes < 10) { minutes = "0" + minutes; }
-                if (seconds < 10) { seconds = "0" + seconds; }
-                var timeText = hours + ':' + minutes + ':' + seconds;
-
-                mainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
-
-                if (data.TotalLength > 0) {
-                    setTimeout(function () {
-                        data.TotalLength--;
-                        timerUpdate(data, mainDiv);
-                    }, 1000);
-                }
-                else {
-                    mainDiv.innerHTML = "";
-                }
-            }
-
             function chatMessagesPacket(data) {
 
-                if (!listWidgets.has(data.ID)) {
+                if (!widgetData.has(data.ID)) {
                     var list = {};
 
-                    listWidgets.set(data.ID, list);
+                    widgetData.set(data.ID, list);
 
                     list.MainDiv = document.createElement('div');
                     list.Items = [];
@@ -538,7 +504,7 @@
                     addWaitRemoveElement(data, list.MainDiv);
                 }
 
-                var list = listWidgets.get(data.ID);
+                var list = widgetData.get(data.ID);
                 var mainDiv = list.MainDiv;
                 var items = list.Items;
 
@@ -595,10 +561,10 @@
 
             function leaderboardPacket(data) {
 
-                if (!listWidgets.has(data.ID)) {
+                if (!widgetData.has(data.ID)) {
                     var list = {};
 
-                    listWidgets.set(data.ID, list);
+                    widgetData.set(data.ID, list);
 
                     list.MainDiv = document.createElement('div');
                     list.Items = [];
@@ -606,7 +572,7 @@
                     addWaitRemoveElement(data, list.MainDiv);
                 }
 
-                var list = listWidgets.get(data.ID);
+                var list = widgetData.get(data.ID);
                 var mainDiv = list.MainDiv;
 
                 data.TotalLeftToRemove = mainDiv.children.length;
@@ -648,6 +614,88 @@
                             mainDiv.appendChild(itemDiv);
                         }
                     }
+                }
+            }
+
+            // Timer Functions
+
+            function timerPacket(data) {
+                if (!itemDictionary[data.ID]) {
+                    var addedElement = document.createElement('div');
+
+                    timerUpdate(data, addedElement);
+
+                    addWaitRemoveElement(data, addedElement);
+                }
+            }
+
+            function timerUpdate(data, mainDiv) {
+
+                var hours = Math.floor(data.TotalLength / 3600);
+                var minutes = Math.floor((data.TotalLength - (hours * 3600)) / 60);
+                var seconds = data.TotalLength - (hours * 3600) - (minutes * 60);
+
+                if (hours < 10) { hours = "0" + hours; }
+                if (minutes < 10) { minutes = "0" + minutes; }
+                if (seconds < 10) { seconds = "0" + seconds; }
+                var timeText = hours + ':' + minutes + ':' + seconds;
+
+                mainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
+
+                if (data.TotalLength > 0) {
+                    setTimeout(function () {
+                        data.TotalLength--;
+                        timerUpdate(data, mainDiv);
+                    }, 1000);
+                }
+                else {
+                    mainDiv.innerHTML = "";
+                }
+            }
+
+            // Timer Train Functions
+
+            function timerTrainPacket(data) {
+                if (!widgetData.has(data.ID)) {
+                    var newTimer = {};
+
+                    widgetData.set(data.ID, newTimer);
+
+                    newTimer.MainDiv = document.createElement('div');
+                    newTimer.TotalSeconds = data.SecondsToAdd;
+
+                    timerTrainUpdate(data, newTimer);
+
+                    addWaitRemoveElement(data, newTimer.MainDiv);
+                }
+                else {
+                    var timer = widgetData.get(data.ID);
+                    timer.TotalSeconds += data.SecondsToAdd;
+                }
+            }
+
+            function timerTrainUpdate(data, timer) {
+
+                var hours = Math.floor(timer.TotalSeconds / 3600);
+                var minutes = Math.floor((timer.TotalSeconds - (hours * 3600)) / 60);
+                var seconds = timer.TotalSeconds - (hours * 3600) - (minutes * 60);
+
+                if (hours < 10) { hours = "0" + hours; }
+                if (minutes < 10) { minutes = "0" + minutes; }
+                if (seconds < 10) { seconds = "0" + seconds; }
+                var timeText = hours + ':' + minutes + ':' + seconds;
+
+                timer.MainDiv.innerHTML = data.HTMLText.replace("{TIME}", timeText);
+
+                if (timer.TotalSeconds > 0) {
+                    setTimeout(function () {
+                        timer.TotalSeconds--;
+                        timerTrainUpdate(data, timer);
+                    }, 1000);
+                }
+                else {
+                    timer.MainDiv.innerHTML = "";
+                    removePacket(data);
                 }
             }
 
