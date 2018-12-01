@@ -57,8 +57,6 @@ namespace MixItUp.Base.Model.Overlay
         {
             GlobalEvents.OnMixerClipCreated += GlobalEvents_OnMixerClipCreated;
 
-            this.lastClip = await SerializerHelper.DeserializeFromFile<ClipModel>("C:\\clip.txt");
-
             await base.Initialize();
         }
 
