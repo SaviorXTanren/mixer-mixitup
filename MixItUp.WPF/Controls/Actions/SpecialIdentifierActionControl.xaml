@@ -12,6 +12,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Margin="0,0,0,-10" HorizontalAlignment="Right">
@@ -28,6 +30,18 @@
             <TextBox Grid.Column="0" x:Name="SpecialIdentifierNameTextBox" MaterialDesign:HintAssist.Hint="Special Identifier Name (Letters &amp; Numbers Only, no $)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Grid.Column="2" x:Name="SpecialIdentifierReplacementTextBox" MaterialDesign:HintAssist.Hint="Replacement Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="1" VerticalAlignment="Center">Is Math Expression:</TextBlock>
+            <ToggleButton Grid.Column="3" x:Name="SpecialIdentifierShouldProcessMathCheckBox"/>
         </Grid>
     </Grid>
 </local:ActionControlBase>
