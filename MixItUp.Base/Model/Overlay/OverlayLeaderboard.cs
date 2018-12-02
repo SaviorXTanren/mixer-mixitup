@@ -23,19 +23,6 @@ namespace MixItUp.Base.Model.Overlay
     [DataContract]
     public class OverlayLeaderboard : OverlayCustomHTMLItem
     {
-        private class DonationLeaderboardUser
-        {
-            public string Username { get; set; }
-            public UserViewModel User { get; set; }
-            public double Amount { get; set; }
-            public string AmountText { get { return string.Format("{0:C}", Math.Round(this.Amount, 2)); } }
-
-            public DonationLeaderboardUser(string username)
-            {
-                this.Username = username;
-            }
-        }
-
         public const string HTMLTemplate =
         @"<div style=""position: relative; border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR}; width: {WIDTH}px; height: {HEIGHT}px"">
           <p style=""position: absolute; top: 35%; left: 5%; width: 50%; float: left; text-align: left; font-family: '{TEXT_FONT}'; font-size: {TOP_TEXT_HEIGHT}px; color: {TEXT_COLOR}; white-space: nowrap; font-weight: bold; margin: auto; transform: translate(0, -50%);"">{USERNAME}</p>
@@ -82,7 +69,7 @@ namespace MixItUp.Base.Model.Overlay
         private Dictionary<UserViewModel, DateTimeOffset> userSubDates = new Dictionary<UserViewModel, DateTimeOffset>();
         private bool refreshSubscribers = true;
 
-        private Dictionary<string, DonationLeaderboardUser> userDonations = new Dictionary<string, DonationLeaderboardUser>();
+        private Dictionary<string, UserDonationModel> userDonations = new Dictionary<string, UserDonationModel>();
         private bool refreshDonations = true;
 
         private DateTimeOffset lastCurrencyRefresh = DateTimeOffset.MinValue;
@@ -140,7 +127,8 @@ namespace MixItUp.Base.Model.Overlay
                     {
                         if (!this.userDonations.ContainsKey(donation.UserName))
                         {
-                            this.userDonations[donation.UserName] = new DonationLeaderboardUser(donation.UserName);
+                            this.userDonations[donation.UserName] = donation.ToGenericDonation();
+                            this.userDonations[donation.UserName].Amount = 0.0;
                         }
                         this.userDonations[donation.UserName].Amount += donation.Amount;
                     }
@@ -181,28 +169,18 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.refreshDonations = false;
 
-                List<DonationLeaderboardUser> usersToShow = new List<DonationLeaderboardUser>();
+                List<UserDonationModel> topDonators = new List<UserDonationModel>();
 
                 var orderedUsers = this.userDonations.OrderByDescending(kvp => kvp.Value.Amount);
                 for (int i = 0; i < this.TotalToShow && i < orderedUsers.Count(); i++)
                 {
-                    usersToShow.Add(orderedUsers.ElementAt(i).Value);
+                    topDonators.Add(orderedUsers.ElementAt(i).Value);
                 }
 
-                foreach (DonationLeaderboardUser userToShow in usersToShow)
+                foreach (UserDonationModel topDonator in topDonators)
                 {
-                    UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(userToShow.Username, StringComparison.InvariantCultureIgnoreCase));
-                    if (userData != null)
-                    {
-                        userToShow.User = new UserViewModel(userData);
-                    }
-                    else
-                    {
-                        userToShow.User = new UserViewModel(0, userToShow.Username);
-                    }
-
-                    extraSpecialIdentifiers["DETAILS"] = userToShow.AmountText;
-                    OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(userToShow.User, arguments, extraSpecialIdentifiers);
+                    extraSpecialIdentifiers["DETAILS"] = topDonator.AmountText;
+                    OverlayCustomHTMLItem htmlItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(topDonator.User, arguments, extraSpecialIdentifiers);
                     copy.LeaderboardEntries.Add(htmlItem.HTMLText);
                 }
                 return copy;
@@ -285,7 +263,8 @@ namespace MixItUp.Base.Model.Overlay
         {
             if (!this.userDonations.ContainsKey(donation.UserName))
             {
-                this.userDonations[donation.UserName] = new DonationLeaderboardUser(donation.UserName);
+                this.userDonations[donation.UserName] = donation.Copy();
+                this.userDonations[donation.UserName].Amount = 0.0;
             }
             this.userDonations[donation.UserName].Amount += donation.Amount;
             this.refreshDonations = true;

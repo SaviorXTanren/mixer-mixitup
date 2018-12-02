@@ -1,8 +1,10 @@
 ﻿using Mixer.Base.Util;
 using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace MixItUp.Base.Model.User
@@ -17,7 +19,7 @@ namespace MixItUp.Base.Model.User
     }
 
     [DataContract]
-    public class UserDonationModel
+    public class UserDonationModel : JSONObjectBase<UserDonationModel>
     {
         [DataMember]
         public UserDonationSourceEnum Source { get; set; }
@@ -39,6 +41,23 @@ namespace MixItUp.Base.Model.User
 
         [JsonIgnore]
         public string AmountText { get { return string.Format("{0:C}", Math.Round(this.Amount, 2)); } }
+
+        [JsonIgnore]
+        public UserViewModel User
+        {
+            get
+            {
+                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(this.UserName, StringComparison.InvariantCultureIgnoreCase));
+                if (userData != null)
+                {
+                    return new UserViewModel(userData);
+                }
+                else
+                {
+                    return new UserViewModel(0, this.UserName);
+                }
+            }
+        }
 
         public Dictionary<string, string> GetSpecialIdentifiers()
         {
