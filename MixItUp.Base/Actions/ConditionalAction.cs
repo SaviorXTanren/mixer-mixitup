@@ -107,7 +107,7 @@ namespace MixItUp.Base.Actions
                     result = true;
                 }
                 else if (compareResult > 0 && (this.ComparisionType == ConditionalComparisionTypeEnum.NotEquals || this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThan ||
-                    this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThan))
+                    this.ComparisionType == ConditionalComparisionTypeEnum.GreaterThanOrEqual))
                 {
                     result = true;
                 }

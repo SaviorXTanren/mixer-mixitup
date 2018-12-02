@@ -24,7 +24,7 @@
                 <MaterialDesign:PackIcon x:Name="GifSkillIcon" Kind="Image" Style="{StaticResource DefaultPackIcon}" />
             </MaterialDesign:PopupBox.ToggleContent>
             <Grid Margin="5">
-                <local:GifSkillControl DataContext="{Binding GifUrl}" />
+                <local:GifSkillControl DataContext="{Binding ImageUrl}" />
             </Grid>
         </MaterialDesign:PopupBox>
 
