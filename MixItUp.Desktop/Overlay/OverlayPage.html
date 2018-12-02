@@ -227,6 +227,9 @@
                         else if (packet.type === "timertrain") {
                             timerTrainPacket(packet.data);
                         }
+                        else if (packet.type === "streamboss") {
+                            streamBossPacket(packet.data);
+                        }
                         else if (packet.type === "textToSpeech") {
                             textToSpeechPacket(packet.data);
                         }
@@ -697,6 +700,29 @@
                     timer.MainDiv.innerHTML = "";
                     removePacket(data);
                 }
+            }
+
+            function streamBossPacket(data) {
+                if (!widgetData.has(data.ID)) {
+                    var addedElement = document.createElement('div');
+
+                    widgetData.set(data.ID, addedElement);
+
+                    addWaitRemoveElement(data, addedElement);
+                }
+
+                var div = widgetData.get(data.ID);
+                div.innerHTML = data.HTMLText;
+
+                var divContainer = itemDictionary[data.ID];
+                if (divContainer != null) {
+                    if (data.NewBoss) {
+                        $(divContainer).animateCss(data.NewBossAnimationName, function () { });
+                    }
+                    else {
+                        $(divContainer).animateCss(data.DamageAnimationName, function () { });
+                    }
+                }  
             }
 
             function customPacket(data) {

@@ -31,7 +31,9 @@ namespace MixItUp.WPF.Windows.Overlay
         Leaderboard,
         Timer,
         [Name("Timer Train")]
-        TimerTrain
+        TimerTrain,
+        [Name("Stream Boss")]
+        StreamBoss
     }
 
     /// <summary>
@@ -147,6 +149,11 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.TimerTrain);
                     this.TimerItem.SetItem(this.Widget.Item);
                 }
+                else if (this.Widget.Item is OverlayStreamBoss)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.StreamBoss);
+                    this.StreamBossItem.SetItem(this.Widget.Item);
+                }
             }
 
             await base.OnLoaded();
@@ -168,6 +175,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.LeaderboardItem.Visibility = Visibility.Collapsed;
             this.TimerItem.Visibility = Visibility.Collapsed;
             this.TimerTrainItem.Visibility = Visibility.Collapsed;
+            this.StreamBossItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
@@ -226,6 +234,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.TimerTrain)
                 {
                     this.TimerTrainItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.StreamBoss)
+                {
+                    this.StreamBossItem.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -312,6 +324,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.TimerTrain)
                 {
                     item = this.TimerTrainItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.StreamBoss)
+                {
+                    item = this.StreamBossItem.GetItem();
                 }
 
                 if (item == null)

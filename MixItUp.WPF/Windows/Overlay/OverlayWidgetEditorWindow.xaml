@@ -108,6 +108,8 @@
                     <OverlayControls:OverlayTimerControl x:Name="TimerItem" Visibility="Collapsed" HorizontalAlignment="Center" />
 
                     <OverlayControls:OverlayTimerTrainControl x:Name="TimerTrainItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayStreamBossControl x:Name="StreamBossItem" Visibility="Collapsed" HorizontalAlignment="Center" />
                 </Grid>
             </ScrollViewer>
 
