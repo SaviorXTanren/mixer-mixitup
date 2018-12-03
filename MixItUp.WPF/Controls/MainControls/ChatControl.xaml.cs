@@ -201,9 +201,12 @@ namespace MixItUp.WPF.Controls.MainControls
             }
 
             IEnumerable<ChatMessageEventModel> oldMessages = await ChannelSession.Chat.GetChatHistory(50);
-            foreach (ChatMessageEventModel message in oldMessages)
+            if (oldMessages != null)
             {
-                await AddMessage(ChatMessageViewModel.CreateChatMessageViewModel(message));
+                foreach (ChatMessageEventModel message in oldMessages)
+                {
+                    await AddMessage(ChatMessageViewModel.CreateChatMessageViewModel(message));
+                }
             }
         }
 
