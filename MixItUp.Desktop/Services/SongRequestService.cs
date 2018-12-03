@@ -124,7 +124,8 @@ namespace MixItUp.Desktop.Services
                                     Type = SongRequestServiceTypeEnum.Spotify,
                                     ID = song.ID,
                                     Name = song.ToString(),
-                                    Length = song.Duration
+                                    Length = song.Duration,
+                                    AlbumImage = song.Album?.ImageLink
                                 });
                             }
                         }
@@ -173,7 +174,13 @@ namespace MixItUp.Desktop.Services
                                                     {
                                                         if (item["kind"] != null && item["kind"].ToString().Equals("youtube#playlistItem"))
                                                         {
-                                                            this.playlistItems.Add(new SongRequestItem() { ID = item["contentDetails"]["videoId"].ToString(), Name = item["snippet"]["title"].ToString(), Type = SongRequestServiceTypeEnum.YouTube });
+                                                            this.playlistItems.Add(new SongRequestItem()
+                                                            {
+                                                                ID = item["contentDetails"]["videoId"].ToString(),
+                                                                Name = item["snippet"]["title"].ToString(),
+                                                                Type = SongRequestServiceTypeEnum.YouTube,
+                                                                AlbumImage = item["snippet"]["thumbnails"]["maxres"]["url"].ToString()
+                                                            });
                                                         }
                                                     }
                                                 }
@@ -570,7 +577,13 @@ namespace MixItUp.Desktop.Services
                                 {
                                     if (item["id"] != null && item["id"]["kind"] != null && item["id"]["kind"].ToString().Equals("youtube#video"))
                                     {
-                                        searchItems.Add(new SongRequestItemSearch(new SongRequestItem() { ID = item["id"]["videoId"].ToString(), Name = item["snippet"]["title"].ToString(), User = user, Type = SongRequestServiceTypeEnum.YouTube }));
+                                        searchItems.Add(new SongRequestItemSearch(new SongRequestItem()
+                                        {
+                                            ID = item["id"]["videoId"].ToString(),
+                                            Name = item["snippet"]["title"].ToString(),
+                                            User = user, Type = SongRequestServiceTypeEnum.YouTube,
+                                            AlbumImage = item["snippet"]["thumbnails"]["maxres"]["url"].ToString()
+                                        }));
                                     }
                                 }
                             }
@@ -624,8 +637,14 @@ namespace MixItUp.Desktop.Services
                                     string length = item["contentDetails"]["duration"].ToString();
                                     TimeSpan timespan = XmlConvert.ToTimeSpan(length);
 
-                                    return new SongRequestItemSearch(new SongRequestItem() { ID = item["id"].ToString(), Name = item["snippet"]["title"].ToString(),
-                                        Length = (int)timespan.TotalSeconds, User = user, Type = SongRequestServiceTypeEnum.YouTube });
+                                    return new SongRequestItemSearch(new SongRequestItem()
+                                    {
+                                        ID = item["id"].ToString(),
+                                        Name = item["snippet"]["title"].ToString(),
+                                        Length = (int)timespan.TotalSeconds, User = user,
+                                        Type = SongRequestServiceTypeEnum.YouTube,
+                                        AlbumImage = item["snippet"]["thumbnails"]["maxres"]["url"].ToString()
+                                    });
                                 }
                             }
                         }
@@ -718,7 +737,14 @@ namespace MixItUp.Desktop.Services
                         }
                         else
                         {
-                            return new SongRequestItemSearch(new SongRequestItem() { ID = song.ID, Name = song.ToString(), Length = song.Duration, User = user, Type = SongRequestServiceTypeEnum.Spotify });
+                            return new SongRequestItemSearch(new SongRequestItem()
+                            {
+                                ID = song.ID,
+                                Name = song.ToString(),
+                                Length = song.Duration,
+                                User = user, Type = SongRequestServiceTypeEnum.Spotify,
+                                AlbumImage = song.Album?.ImageLink
+                            });
                         }
                     }
                     else
@@ -873,7 +899,8 @@ namespace MixItUp.Desktop.Services
                         Type = SongRequestServiceTypeEnum.Spotify,
                         ID = currentlyPlaying.ID,
                         Progress = currentlyPlaying.CurrentProgress,
-                        Length = currentlyPlaying.Duration
+                        Length = currentlyPlaying.Duration,
+                        AlbumImage = currentlyPlaying.Album?.ImageLink
                     };
 
                     if (currentlyPlaying.IsPlaying)

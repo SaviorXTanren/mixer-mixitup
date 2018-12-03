@@ -313,11 +313,13 @@ namespace MixItUp.Base.Util
                 {
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", song.Name);
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", song.User.UserName);
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "albumimage", song.AlbumImage);
                 }
                 else
                 {
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", "No Song");
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", "Nobody");
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "albumimage", string.Empty);
                 }
             }
 
@@ -334,11 +336,13 @@ namespace MixItUp.Base.Util
                 {
                     this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "title", song.Name);
                     this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "username", song.User.UserName);
+                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "albumimage", song.AlbumImage);
                 }
                 else
                 {
                     this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "title", "No Song");
                     this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "username", "Nobody");
+                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "albumimage", string.Empty);
                 }
             }
 
