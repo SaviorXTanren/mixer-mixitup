@@ -27,6 +27,7 @@ namespace MixItUp.Base.Services
     {
         public string ID { get; set; }
         public string Name { get; set; }
+        public string AlbumImage { get; set; }
 
         public SongRequestServiceTypeEnum Type { get; set; }
         public UserViewModel User { get; set; }
