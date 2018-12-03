@@ -179,7 +179,7 @@ namespace MixItUp.Desktop.Services
                                                                 ID = item["contentDetails"]["videoId"].ToString(),
                                                                 Name = item["snippet"]["title"].ToString(),
                                                                 Type = SongRequestServiceTypeEnum.YouTube,
-                                                                AlbumImage = item["snippet"]["thumbnails"]["maxres"]["url"].ToString()
+                                                                AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
                                                             });
                                                         }
                                                     }
@@ -581,8 +581,9 @@ namespace MixItUp.Desktop.Services
                                         {
                                             ID = item["id"]["videoId"].ToString(),
                                             Name = item["snippet"]["title"].ToString(),
-                                            User = user, Type = SongRequestServiceTypeEnum.YouTube,
-                                            AlbumImage = item["snippet"]["thumbnails"]["maxres"]["url"].ToString()
+                                            User = user,
+                                            Type = SongRequestServiceTypeEnum.YouTube,
+                                            AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
                                         }));
                                     }
                                 }
@@ -643,7 +644,7 @@ namespace MixItUp.Desktop.Services
                                         Name = item["snippet"]["title"].ToString(),
                                         Length = (int)timespan.TotalSeconds, User = user,
                                         Type = SongRequestServiceTypeEnum.YouTube,
-                                        AlbumImage = item["snippet"]["thumbnails"]["maxres"]["url"].ToString()
+                                        AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
                                     });
                                 }
                             }
