@@ -76,6 +76,9 @@
       <HintPath>..\packages\NetOffice.Excel.1.7.4.4\lib\net45\ExcelApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Jace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jace.0.9.0\lib\netstandard1.6\Jace.dll</HintPath>
+    </Reference>
     <Reference Include="LinqToTwitter.AspNet, Version=5.0.0.35873, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\linqtotwitter.5.0.0-beta2\lib\net461\LinqToTwitter.AspNet.dll</HintPath>
     </Reference>
