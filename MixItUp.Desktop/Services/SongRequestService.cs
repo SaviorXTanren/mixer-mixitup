@@ -165,33 +165,32 @@ namespace MixItUp.Desktop.Services
                                                 pageToken = null;
                                             }
 
-                                                if (jobj["items"] != null && jobj["items"] is JArray)
+                                            if (jobj["items"] != null && jobj["items"] is JArray)
+                                            {
+                                                JArray items = (JArray)jobj["items"];
+                                                foreach (JToken item in items)
                                                 {
-                                                    JArray items = (JArray)jobj["items"];
-                                                    foreach (JToken item in items)
+                                                    if (item["kind"] != null && item["kind"].ToString().Equals("youtube#playlistItem"))
                                                     {
-                                                        if (item["kind"] != null && item["kind"].ToString().Equals("youtube#playlistItem"))
+                                                        this.playlistItems.Add(new SongRequestItem()
                                                         {
-                                                            this.playlistItems.Add(new SongRequestItem()
-                                                            {
-                                                                ID = item["contentDetails"]["videoId"].ToString(),
-                                                                Name = item["snippet"]["title"].ToString(),
-                                                                Type = SongRequestServiceTypeEnum.YouTube,
-                                                                AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
-                                                            });
-                                                        }
+                                                            ID = item["contentDetails"]["videoId"].ToString(),
+                                                            Name = item["snippet"]["title"].ToString(),
+                                                            Type = SongRequestServiceTypeEnum.YouTube,
+                                                            AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
+                                                        });
                                                     }
                                                 }
                                             }
-                                        } while (!string.IsNullOrEmpty(pageToken));
-                                    }
+                                        }
+                                    } while (!string.IsNullOrEmpty(pageToken));
                                 }
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
                     }
                 }
 
