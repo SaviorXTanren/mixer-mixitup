@@ -180,6 +180,16 @@ namespace MixItUp.Base
             }
         }
 
+        public static IDictionary<string, int> AllOverlayNameAndPorts
+        {
+            get
+            {
+                Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
+                results.Add(ChannelSession.Services.OverlayServers.DefaultOverlayName, ChannelSession.Services.OverlayServers.DefaultOverlayPort);
+                return results;
+            }
+        }
+
         public static bool IsStreamer
         {
             get

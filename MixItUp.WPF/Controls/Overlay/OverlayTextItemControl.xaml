@@ -1,0 +1,63 @@
+﻿<local:OverlayItemControl x:Class="MixItUp.WPF.Controls.Overlay.OverlayTextItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MixItUp.WPF.Controls.Overlay"
+             xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="550" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0,-5,0,20">
+                    <Hyperlink NavigateUri="https://github.com/SaviorXTanren/mixer-mixitup/wiki/Special-Identifiers" RequestNavigate="Hyperlink_RequestNavigate">Special Identifiers Reference</Hyperlink>
+            </TextBlock>
+            <TextBox x:Name="TextTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Text" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <ComboBox Grid.Column="2" x:Name="TextSizeComboBox" MaterialDesign:HintAssist.Hint="Size (Pixels)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="135" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ComboBox Grid.Column="0" x:Name="TextColorComboBox" MaterialDesign:HintAssist.Hint="Font Color" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <ComboBox x:Name="TextFontComboBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Font Name (Optional)" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" />
+
+            <ComboBox Grid.Column="4" x:Name="TextShadowColorComboBox" MaterialDesign:HintAssist.Hint="Shadow (Optional)" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+
+            <ListBox Grid.Column="6" SelectionMode="Extended" Style="{StaticResource MaterialDesignToolToggleFlatListBox}">
+                <ListBoxItem x:Name="TextBoldCheckBox">
+                    <MaterialDesign:PackIcon Kind="FormatBold"/>
+                </ListBoxItem>
+                <ListBoxItem x:Name="TextItalicCheckBox">
+                    <MaterialDesign:PackIcon Kind="FormatItalic"/>
+                </ListBoxItem>
+                <ListBoxItem x:Name="TextUnderlineCheckBox">
+                    <MaterialDesign:PackIcon Kind="FormatUnderline"/>
+                </ListBoxItem>
+            </ListBox>
+        </Grid>
+    </Grid>
+</local:OverlayItemControl>

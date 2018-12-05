@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Model.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -63,6 +64,8 @@ namespace MixItUp.Base.Services
         Task Disconnect();
 
         OAuthTokenModel GetOAuthTokenCopy();
+
+        Task<IEnumerable<StreamlabsDonation>> GetDonations(int maxAmount = 1);
 
         Task SpinWheel();
         

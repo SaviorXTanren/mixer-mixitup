@@ -1,6 +1,5 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base.Model.Skill;
-using MixItUp.Base.Themes;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;

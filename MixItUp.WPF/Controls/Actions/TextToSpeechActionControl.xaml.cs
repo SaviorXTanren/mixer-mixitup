@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.TextToSpeechVoiceComboBox.ItemsSource = this.voices;
 
-            this.OverlayNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.OverlayServer == null) ? Visibility.Visible : Visibility.Collapsed;
+            this.OverlayNotEnabledWarningTextBlock.Visibility = (ChannelSession.Services.OverlayServers == null) ? Visibility.Visible : Visibility.Collapsed;
 
             foreach (string voice in TextToSpeechAction.AvailableVoices)
             {

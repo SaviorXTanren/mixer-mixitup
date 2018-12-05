@@ -1,6 +1,6 @@
 ﻿using Mixer.Base.Model.Chat;
 using MixItUp.Base;
-using MixItUp.Base.Themes;
+using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using System;
 using System.Collections.Generic;

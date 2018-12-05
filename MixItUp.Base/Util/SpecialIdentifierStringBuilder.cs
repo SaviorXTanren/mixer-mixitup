@@ -313,11 +313,13 @@ namespace MixItUp.Base.Util
                 {
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", song.Name);
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", song.User.UserName);
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "albumimage", song.AlbumImage ?? string.Empty);
                 }
                 else
                 {
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "title", "No Song");
                     this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "username", "Nobody");
+                    this.ReplaceSpecialIdentifier(CurrentSongIdentifierHeader + "albumimage", string.Empty);
                 }
             }
 
@@ -334,11 +336,13 @@ namespace MixItUp.Base.Util
                 {
                     this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "title", song.Name);
                     this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "username", song.User.UserName);
+                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "albumimage", song.AlbumImage ?? string.Empty);
                 }
                 else
                 {
                     this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "title", "No Song");
                     this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "username", "Nobody");
+                    this.ReplaceSpecialIdentifier(NextSongIdentifierHeader + "albumimage", string.Empty);
                 }
             }
 
@@ -455,38 +459,36 @@ namespace MixItUp.Base.Util
                         PatronageMilestoneModel patronageMilestone = patronageMilestones.FirstOrDefault(m => m.id == patronageStatus.currentMilestoneId);
                         if (patronageMilestone != null)
                         {
-                            double milestoneReward = Math.Round(((double)patronageMilestone.reward) / 100.0, 2);
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "amount", patronageMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingamount", (patronageMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", string.Format("{0:C}", milestoneReward));
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "reward", patronageMilestone.DollarAmountText());
                         }
 
                         PatronageMilestoneModel patronageNextMilestone = patronageMilestones.FirstOrDefault(m => m.id == (patronageStatus.currentMilestoneId + 1));
                         if (patronageNextMilestone != null)
                         {
-                            double milestoneNextReward = Math.Round(((double)patronageNextMilestone.reward) / 100.0, 2);
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextamount", patronageNextMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingnextamount", (patronageNextMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", string.Format("{0:C}", milestoneNextReward));
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "nextreward", patronageNextMilestone.DollarAmountText());
                         }
 
                         PatronageMilestoneModel patronageFinalMilestone = patronageMilestones.OrderByDescending(m => m.id).FirstOrDefault();
                         if (patronageNextMilestone != null)
                         {
-                            double milestoneFinalReward = Math.Round(((double)patronageFinalMilestone.reward) / 100.0, 2);
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalamount", patronageFinalMilestone.target.ToString());
                             this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "remainingfinalamount", (patronageFinalMilestone.target - patronageStatus.patronageEarned).ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", string.Format("{0:C}", milestoneFinalReward));
+                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "finalreward", patronageFinalMilestone.DollarAmountText());
                         }
 
                         IEnumerable<PatronageMilestoneModel> patronageMilestonesEarned = patronageMilestones.Where(m => m.target <= patronageStatus.patronageEarned);
                         if (patronageMilestonesEarned.Count() > 0)
                         {
-                            long patronageEarnedReward = patronageMilestonesEarned.Max(m => m.reward);
-                            double patronageEarnedRewardDollars = Math.Round(((double)patronageEarnedReward) / 100.0, 2);
-
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
-                            this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", string.Format("{0:C}", patronageEarnedRewardDollars));
+                            PatronageMilestoneModel patronageMilestoneHighestEarned = patronageMilestonesEarned.OrderByDescending(m => m.reward).FirstOrDefault();
+                            if (patronageMilestoneHighestEarned != null)
+                            {
+                                this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedamount", patronageStatus.patronageEarned.ToString());
+                                this.ReplaceSpecialIdentifier(MilestoneSpecialIdentifierHeader + "earnedreward", patronageMilestoneHighestEarned.DollarAmountText());
+                            }
                         }
                     }
                 }

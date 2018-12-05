@@ -29,15 +29,19 @@ namespace MixItUp.WPF.Controls.Statistics
 
             Task.Run(async () =>
             {
-                while (true)
+                try
                 {
-                    await this.Dispatcher.BeginInvoke(new Action(() =>
+                    while (true)
                     {
-                        this.RefreshOverview();
-                    }));
+                        await this.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            this.RefreshOverview();
+                        }));
 
-                    await Task.Delay(60000);
+                        await Task.Delay(60000);
+                    }
                 }
+                catch (Exception ex) { Logger.Log(ex); }
             });
 
             return Task.FromResult(0);

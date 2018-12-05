@@ -274,18 +274,18 @@ namespace MixItUp.Base.Commands
             {
                 token.ThrowIfCancellationRequested();
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServers != null)
                 {
-                    ChannelSession.Services.OverlayServer.StartBatching();
+                    ChannelSession.Services.OverlayServers.StartBatching();
                 }
 
                 await actionsToRun[i].Perform(user, arguments, extraSpecialIdentifiers);
 
-                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServer != null)
+                if (actionsToRun[i] is OverlayAction && ChannelSession.Services.OverlayServers != null)
                 {
                     if (i == (actionsToRun.Count - 1) || !(actionsToRun[i + 1] is OverlayAction))
                     {
-                        await ChannelSession.Services.OverlayServer.EndBatching();
+                        await ChannelSession.Services.OverlayServers.EndBatching();
                     }
                 }
             }

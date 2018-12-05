@@ -196,9 +196,10 @@
     <Compile Include="Services\DiscordService.cs" />
     <Compile Include="Services\GameWispService.cs" />
     <Compile Include="Services\GawkBoxService.cs" />
+    <Compile Include="Services\OverlayServiceManager.cs" />
     <Compile Include="Services\RemoteService.cs" />
     <Compile Include="Services\OBSService.cs" />
-    <Compile Include="Services\OverlayWebServer.cs" />
+    <Compile Include="Services\OverlayService.cs" />
     <Compile Include="Services\SerialService.cs" />
     <Compile Include="Services\SongRequestService.cs" />
     <Compile Include="Services\SpotifyService.cs" />
@@ -214,7 +215,7 @@
     <Compile Include="Services\WindowsInputService.cs" />
     <Compile Include="Services\DesktopSettingsService.cs" />
     <Compile Include="Services\WindowsTextToSpeechService.cs" />
-    <Compile Include="Services\XSplitWebServer.cs" />
+    <Compile Include="Services\XSplitWebSocketServer.cs" />
     <Compile Include="Util\SocketIOService.cs" />
   </ItemGroup>
   <ItemGroup>

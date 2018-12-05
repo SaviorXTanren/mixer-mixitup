@@ -214,7 +214,7 @@ namespace MixItUp.WPF.Controls.Games
 
                 this.startedCommand = this.CreateBasic2ChatCommand("@$username has started a game of roulette! Type !roulette <BET TYPE> <AMOUNT> in chat to play!", "Valid Bet Types: $gamevalidbettypes");
 
-                this.userJoinCommand = this.CreateBasicChatCommand("You slap you chips on the number $gamebettype as the ball starts to spin around the roulette wheel!", whisper: true);
+                this.userJoinCommand = this.CreateBasicChatCommand("You slap your chips on the number $gamebettype as the ball starts to spin around the roulette wheel!", whisper: true);
 
                 this.userSuccessCommand = this.CreateBasicChatCommand("Congrats, you made out with $gamepayout " + currency.Name + "!", whisper: true);
                 this.userFailCommand = this.CreateBasicChatCommand("Lady luck wasn't with you today, better luck next time...", whisper: true);

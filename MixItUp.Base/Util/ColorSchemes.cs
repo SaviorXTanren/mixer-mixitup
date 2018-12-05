@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MixItUp.Base.Themes
+namespace MixItUp.Base.Util
 {
     public static class ColorSchemes
     {
@@ -9,6 +9,7 @@ namespace MixItUp.Base.Themes
         public static readonly Dictionary<string, string> ColorSchemeDictionary = new Dictionary<string, string>()
         {
             { "Amber", "#ffb300" },
+            { "Black", "#000000" },
             { "Blue", "#2196f3" },
             { "Blue Grey", "#607d8b" },
             { "Brown", "#795548" },
@@ -26,6 +27,7 @@ namespace MixItUp.Base.Themes
             { "Purple", "#9c27b0" },
             { "Red", "#f44336" },
             { "Teal", "#009688" },
+            { "White", "#ffffff" },
             { "Yellow", "#ffeb3b" },
         };
 
