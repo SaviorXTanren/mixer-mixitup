@@ -214,6 +214,10 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                     }
                 }
+                else if (command is InteractiveButtonCommand)
+                {
+                    extraSpecialIdentifiers["buttoncontrolid"] = "FakeTestButtonId";
+                }
 
                 await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.UserName }, extraSpecialIdentifiers);
                 if (command is PermissionsCommandBase)
