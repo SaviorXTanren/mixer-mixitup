@@ -43,8 +43,13 @@ namespace MixItUp.Base.MixerAPI
             return this.EventTypeString.Equals(input.input.eventType);
         }
 
-        public virtual async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public virtual async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
+            Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>()
+            {
+                { "mixplaycontrolid", this.Control.controlID },
+            };
+
             await this.Command.Perform(user, arguments, extraSpecialIdentifiers);
         }
     }
@@ -66,13 +71,9 @@ namespace MixItUp.Base.MixerAPI
         public override bool HasCooldown { get { return this.ButtonCommand.HasCooldown; } }
         public override long CooldownTimestamp { get { return this.ButtonCommand.GetCooldownTimestamp(); } }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>()
-            {
-                { "buttoncontrolid", Button.controlID },
-            };
-            await base.Perform(user, arguments, specialIdentifiers);
+            await base.Perform(user, arguments);
         }
 
         private async void ButtonCommand_OnCommandStart(object sender, EventArgs e)
@@ -125,9 +126,9 @@ namespace MixItUp.Base.MixerAPI
         public override bool HasCooldown { get { return false; } }
         public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            await base.Perform(user, arguments, extraSpecialIdentifiers);
+            await base.Perform(user, arguments);
         }
     }
 
@@ -144,9 +145,9 @@ namespace MixItUp.Base.MixerAPI
         public override bool HasCooldown { get { return false; } }
         public override long CooldownTimestamp { get { return DateTimeHelper.DateTimeOffsetToUnixTimestamp(DateTimeOffset.Now); } }
 
-        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null, Dictionary<string, string> extraSpecialIdentifiers = null)
+        public override async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            await base.Perform(user, arguments, extraSpecialIdentifiers);
+            await base.Perform(user, arguments);
         }
     }
 

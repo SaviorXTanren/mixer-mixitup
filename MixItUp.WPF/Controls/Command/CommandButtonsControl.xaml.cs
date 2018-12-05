@@ -214,9 +214,9 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                     }
                 }
-                else if (command is InteractiveButtonCommand)
+                else if (command is InteractiveCommand)
                 {
-                    extraSpecialIdentifiers["buttoncontrolid"] = "FakeTestButtonId";
+                    extraSpecialIdentifiers["mixplaycontrolid"] = "Fake Test Mix Play Control Id";
                 }
 
                 await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.UserName }, extraSpecialIdentifiers);
