@@ -23,6 +23,7 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.SpecialIdentifierNameTextBox.Text = this.action.SpecialIdentifierName;
                 this.SpecialIdentifierReplacementTextBox.Text = this.action.SpecialIdentifierReplacement;
+                this.SpecialIdentifierShouldProcessMathCheckBox.IsChecked = this.action.SpecialIdentifierShouldProcessMath;
             }
             return Task.FromResult(0);
         }
@@ -31,7 +32,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (SpecialIdentifierStringBuilder.IsValidSpecialIdentifier(this.SpecialIdentifierNameTextBox.Text) && !string.IsNullOrEmpty(this.SpecialIdentifierReplacementTextBox.Text))
             {
-                return new SpecialIdentifierAction(this.SpecialIdentifierNameTextBox.Text, this.SpecialIdentifierReplacementTextBox.Text);
+                return new SpecialIdentifierAction(this.SpecialIdentifierNameTextBox.Text, this.SpecialIdentifierReplacementTextBox.Text, this.SpecialIdentifierShouldProcessMathCheckBox.IsChecked ?? false);
             }
             return null;
         }
