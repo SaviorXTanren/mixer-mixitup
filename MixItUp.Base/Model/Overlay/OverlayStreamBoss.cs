@@ -36,7 +36,7 @@ namespace MixItUp.Base.Model.Overlay
           </tbody>
         </table>";
 
-        public const string TimerTrainItemType = "streamboss";
+        public const string StreamBossItemType = "streamboss";
 
         [DataMember]
         public int StartingHealth { get; set; }
@@ -88,12 +88,12 @@ namespace MixItUp.Base.Model.Overlay
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
 
-        public OverlayStreamBoss() : base(TimerTrainItemType, HTMLTemplate) { }
+        public OverlayStreamBoss() : base(StreamBossItemType, HTMLTemplate) { }
 
         public OverlayStreamBoss(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
             string progressColor, double followBonus, double hostBonus, double subscriberBonus, double donationBonus, double sparkBonus,
             OverlayEffectVisibleAnimationTypeEnum damageAnimation, OverlayEffectVisibleAnimationTypeEnum newBossAnimation)
-            : base(TimerTrainItemType, htmlText)
+            : base(StreamBossItemType, htmlText)
         {
             this.StartingHealth = startingHealth;
             this.Width = width;

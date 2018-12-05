@@ -33,7 +33,9 @@ namespace MixItUp.WPF.Windows.Overlay
         [Name("Timer Train")]
         TimerTrain,
         [Name("Stream Boss")]
-        StreamBoss
+        StreamBoss,
+        [Name("Game Stats")]
+        GameStats
     }
 
     /// <summary>
@@ -154,6 +156,11 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.StreamBoss);
                     this.StreamBossItem.SetItem(this.Widget.Item);
                 }
+                else if (this.Widget.Item is OverlayGameStats)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.GameStats);
+                    this.GameStatsItem.SetItem(this.Widget.Item);
+                }
             }
 
             await base.OnLoaded();
@@ -176,6 +183,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.TimerItem.Visibility = Visibility.Collapsed;
             this.TimerTrainItem.Visibility = Visibility.Collapsed;
             this.StreamBossItem.Visibility = Visibility.Collapsed;
+            this.GameStatsItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
@@ -238,6 +246,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.StreamBoss)
                 {
                     this.StreamBossItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.GameStats)
+                {
+                    this.GameStatsItem.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -328,6 +340,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.StreamBoss)
                 {
                     item = this.StreamBossItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.GameStats)
+                {
+                    item = this.GameStatsItem.GetItem();
                 }
 
                 if (item == null)
