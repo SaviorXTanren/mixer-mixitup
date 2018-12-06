@@ -9,7 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="375" />
+            <ColumnDefinition Width="350" />
             <ColumnDefinition Width="20" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="20" />
@@ -18,11 +18,11 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" x:Name="ImageFilePathTextBox" MaterialDesign:HintAssist.Hint="Image File Path / URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        <TextBox Grid.Column="0" x:Name="ImageFilePathTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Image File Path / URL" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         <Button Grid.Column="2" x:Name="ImageFileBrowseButton" Click="ImageFileBrowseButton_Click">Browse</Button>
 
-        <TextBox Grid.Column="4" x:Name="ImageWidthTextBox" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+        <TextBox Grid.Column="4" x:Name="ImageWidthTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Width (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
 
-        <TextBox Grid.Column="6" x:Name="ImageHeightTextBox" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+        <TextBox Grid.Column="6" x:Name="ImageHeightTextBox" VerticalAlignment="Center" MaterialDesign:HintAssist.Hint="Height (Pixels)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" />
     </Grid>
 </local:OverlayItemControl>
