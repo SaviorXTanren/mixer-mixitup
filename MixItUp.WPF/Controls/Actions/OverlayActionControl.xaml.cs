@@ -63,7 +63,6 @@ namespace MixItUp.WPF.Controls.Actions
 
             this.WidgetNameComboBox.ItemsSource = ChannelSession.Settings.OverlayWidgets.ToList();
 
-            this.DurationTextBox.Text = "0";
             this.EntranceAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
             this.EntranceAnimationComboBox.SelectedIndex = 0;
             this.VisibleAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
