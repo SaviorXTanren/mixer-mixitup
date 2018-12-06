@@ -216,7 +216,10 @@ namespace MixItUp.WPF.Controls.Command
                 }
                 else if (command is InteractiveCommand)
                 {
-                    extraSpecialIdentifiers["mixplaycontrolid"] = "Fake Test Mix Play Control Id";
+                    InteractiveCommand iCommand = (InteractiveCommand)command;
+
+                    extraSpecialIdentifiers["mixplaycontrolid"] = iCommand.Name;
+                    extraSpecialIdentifiers["mixplaycontrolcost"] = "123";
                 }
 
                 await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.UserName }, extraSpecialIdentifiers);

@@ -47,7 +47,8 @@ namespace MixItUp.Base.MixerAPI
         {
             Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>()
             {
-                { "mixplaycontrolid", this.Control.controlID },
+                { "mixplaycontrolid", this.Name },
+                { "mixplaycontrolcost", this.SparkCost.ToString() },
             };
 
             await this.Command.Perform(user, arguments, extraSpecialIdentifiers);
