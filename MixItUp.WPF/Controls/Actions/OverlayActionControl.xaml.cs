@@ -102,6 +102,13 @@ namespace MixItUp.WPF.Controls.Actions
 #pragma warning restore CS0612 // Type or member is obsolete
                     }
 
+                    if (this.action.Position == null)
+                    {
+#pragma warning disable CS0612 // Type or member is obsolete
+                        this.action.Position = new OverlayItemPosition(OverlayEffectPositionType.Percentage, this.action.Effect.Horizontal, this.action.Effect.Vertical);
+#pragma warning restore CS0612 // Type or member is obsolete
+                    }
+
                     this.ItemPosition.SetPosition(this.action.Position);
 
                     if (this.action.Item is OverlayImageItem)

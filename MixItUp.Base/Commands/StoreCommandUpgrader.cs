@@ -28,7 +28,7 @@ namespace MixItUp.Base.Commands
                 StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(actions);
             }
 
-            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.4.18.0"))
+            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.4.19.0"))
             {
                 StoreCommandUpgrader.RestructureNewOverlayActions(actions);
             }
