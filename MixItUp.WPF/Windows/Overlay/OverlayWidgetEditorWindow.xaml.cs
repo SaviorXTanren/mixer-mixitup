@@ -78,6 +78,7 @@ namespace MixItUp.WPF.Windows.Overlay
             {
                 this.NameTextBox.Text = this.Widget.Name;
                 this.OverlayNameComboBox.SelectedItem = this.Widget.OverlayName;
+                this.DontRefreshToggleButton.IsChecked = this.Widget.DontRefresh;
 
                 this.ItemPosition.SetPosition(this.Widget.Position);
 
@@ -354,7 +355,7 @@ namespace MixItUp.WPF.Windows.Overlay
 
                 if (this.Widget == null)
                 {
-                    this.Widget = new OverlayWidget(this.NameTextBox.Text, overlayName, item, position);
+                    this.Widget = new OverlayWidget(this.NameTextBox.Text, overlayName, item, position, this.DontRefreshToggleButton.IsChecked.GetValueOrDefault());
                     ChannelSession.Settings.OverlayWidgets.Add(this.Widget);
                 }
                 else
@@ -365,6 +366,7 @@ namespace MixItUp.WPF.Windows.Overlay
                     this.Widget.OverlayName = overlayName;
                     this.Widget.Item = item;
                     this.Widget.Position = position;
+                    this.Widget.DontRefresh = this.DontRefreshToggleButton.IsChecked.GetValueOrDefault();
                 }
 
                 this.Close();

@@ -20,18 +20,22 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public OverlayItemPosition Position { get; set; }
 
+        [DataMember]
+        public bool DontRefresh { get; set; }
+
         public OverlayWidget()
         {
             this.IsEnabled = true;
         }
 
-        public OverlayWidget(string name, string overlayName, OverlayItemBase item, OverlayItemPosition position)
+        public OverlayWidget(string name, string overlayName, OverlayItemBase item, OverlayItemPosition position, bool dontRefresh)
             : this()
         {
             this.Name = name;
             this.OverlayName = overlayName;
             this.Item = item;
             this.Position = position;
+            this.DontRefresh = dontRefresh;
         }
     }
 }

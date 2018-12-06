@@ -120,15 +120,20 @@ namespace MixItUp.Desktop.Services
                             {
                                 if (widget.IsEnabled)
                                 {
-                                    if (!widget.Item.IsInitialized)
+                                    bool isInitialized = widget.Item.IsInitialized;
+
+                                    if (!isInitialized)
                                     {
                                         await widget.Item.Initialize();
                                     }
 
-                                    OverlayItemBase item = await widget.Item.GetProcessedItem(user, new List<string>(), new Dictionary<string, string>());
-                                    if (item != null)
+                                    if (!isInitialized || !widget.DontRefresh)
                                     {
-                                        await overlay.SendItem(item, widget.Position, new OverlayItemEffects());
+                                        OverlayItemBase item = await widget.Item.GetProcessedItem(user, new List<string>(), new Dictionary<string, string>());
+                                        if (item != null)
+                                        {
+                                            await overlay.SendItem(item, widget.Position, new OverlayItemEffects());
+                                        }
                                     }
                                 }
                             }

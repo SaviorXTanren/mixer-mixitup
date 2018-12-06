@@ -61,6 +61,14 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
+            if (this.Effects == null)
+            {
+#pragma warning disable CS0612 // Type or member is obsolete
+                this.Effects = new OverlayItemEffects((OverlayEffectEntranceAnimationTypeEnum)this.Effect.EntranceAnimation,
+                    (OverlayEffectVisibleAnimationTypeEnum)this.Effect.VisibleAnimation, (OverlayEffectExitAnimationTypeEnum)this.Effect.ExitAnimation, this.Effect.Duration);
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
+
             if (this.WidgetID != Guid.Empty)
             {
                 OverlayWidget widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));

@@ -68,10 +68,8 @@ namespace MixItUp.WPF.Controls.Overlay
                     return null;
                 }
                 positionType = OverlayEffectPositionType.Pixel;
-                horizontal = (int)this.PercentagePositionHorizontalSlider.Value;
-                vertical = (int)this.PercentagePositionVerticalSlider.Value;
             }
-            if (this.PercentagePositionGrid.Visibility == Visibility.Visible)
+            else if (this.PercentagePositionGrid.Visibility == Visibility.Visible)
             {
                 horizontal = (int)this.PercentagePositionHorizontalSlider.Value;
                 vertical = (int)this.PercentagePositionVerticalSlider.Value;

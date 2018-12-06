@@ -63,7 +63,6 @@ namespace MixItUp.WPF.Controls.Actions
 
             this.WidgetNameComboBox.ItemsSource = ChannelSession.Settings.OverlayWidgets.ToList();
 
-            this.DurationTextBox.Text = "0";
             this.EntranceAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectEntranceAnimationTypeEnum>();
             this.EntranceAnimationComboBox.SelectedIndex = 0;
             this.VisibleAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
@@ -86,10 +85,22 @@ namespace MixItUp.WPF.Controls.Actions
                 }
                 else
                 {
-                    this.DurationTextBox.Text = this.action.Effects.Duration.ToString();
-                    this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.EntranceAnimation);
-                    this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.VisibleAnimation);
-                    this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.ExitAnimation);
+                    if (this.action.Effects != null)
+                    {
+                        this.DurationTextBox.Text = this.action.Effects.Duration.ToString();
+                        this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.EntranceAnimation);
+                        this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.VisibleAnimation);
+                        this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effects.ExitAnimation);
+                    }
+                    else
+                    {
+#pragma warning disable CS0612 // Type or member is obsolete
+                        this.DurationTextBox.Text = this.action.Effect.Duration.ToString();
+                        this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName((OverlayEffectEntranceAnimationTypeEnum)this.action.Effect.EntranceAnimation);
+                        this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName((OverlayEffectVisibleAnimationTypeEnum)this.action.Effect.VisibleAnimation);
+                        this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName((OverlayEffectExitAnimationTypeEnum)this.action.Effect.ExitAnimation);
+#pragma warning restore CS0612 // Type or member is obsolete
+                    }
 
                     this.ItemPosition.SetPosition(this.action.Position);
 
