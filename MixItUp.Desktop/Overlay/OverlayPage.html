@@ -719,7 +719,7 @@
                     if (data.NewBoss) {
                         $(divContainer).animateCss(data.NewBossAnimationName, function () { });
                     }
-                    else {
+                    else if (data.DamageTaken) {
                         $(divContainer).animateCss(data.DamageAnimationName, function () { });
                     }
                 }  

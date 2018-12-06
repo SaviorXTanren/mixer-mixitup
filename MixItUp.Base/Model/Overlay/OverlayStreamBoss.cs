@@ -83,8 +83,8 @@ namespace MixItUp.Base.Model.Overlay
         public int CurrentHealth { get; set; }
         [DataMember]
         public bool NewBoss { get; set; }
-
-        private bool damageTaken = true;
+        [DataMember]
+        public bool DamageTaken { get; set; }
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
 
@@ -153,14 +153,14 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            if (this.damageTaken)
+            if (this.DamageTaken)
             {
-                this.damageTaken = false;
                 OverlayItemBase copy = await base.GetProcessedItem(this.CurrentBoss, arguments, extraSpecialIdentifiers);
+                this.DamageTaken = false;
                 this.NewBoss = false;
                 return copy;
             }
-            return null;
+            return await base.GetProcessedItem(this.CurrentBoss, arguments, extraSpecialIdentifiers);
         }
 
         protected override async Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
@@ -202,7 +202,7 @@ namespace MixItUp.Base.Model.Overlay
         {
             await this.HealthSemaphore.WaitAndRelease(() =>
             {
-                this.damageTaken = true;
+                this.DamageTaken = true;
                 this.CurrentHealth -= (int)amount;
                 if (this.CurrentHealth <= 0)
                 {
