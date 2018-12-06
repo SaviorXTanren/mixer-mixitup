@@ -61,6 +61,13 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
+            if (this.Position == null)
+            {
+#pragma warning disable CS0612 // Type or member is obsolete
+                this.Position = new OverlayItemPosition(OverlayEffectPositionType.Percentage, this.Effect.Horizontal, this.Effect.Vertical);
+#pragma warning restore CS0612 // Type or member is obsolete
+            }
+
             if (this.Effects == null)
             {
 #pragma warning disable CS0612 // Type or member is obsolete
