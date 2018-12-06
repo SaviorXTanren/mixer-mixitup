@@ -305,7 +305,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private async Task ShowUserDialog(UserViewModel user)
         {
-            if (user != null)
+            if (user != null && !user.IsAnonymous)
             {
                 UserDialogResult result = await MessageBoxHelper.ShowUserDialog(user);
 
