@@ -214,6 +214,13 @@ namespace MixItUp.WPF.Controls.Command
                             break;
                     }
                 }
+                else if (command is InteractiveCommand)
+                {
+                    InteractiveCommand iCommand = (InteractiveCommand)command;
+
+                    extraSpecialIdentifiers["mixplaycontrolid"] = iCommand.Name;
+                    extraSpecialIdentifiers["mixplaycontrolcost"] = "123";
+                }
 
                 await command.PerformAndWait(currentUser, new List<string>() { "@" + currentUser.UserName }, extraSpecialIdentifiers);
                 if (command is PermissionsCommandBase)
