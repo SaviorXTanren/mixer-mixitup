@@ -97,9 +97,9 @@ namespace MixItUp.WPF.Controls.Actions
                     {
 #pragma warning disable CS0612 // Type or member is obsolete
                         this.DurationTextBox.Text = this.action.Effect.Duration.ToString();
-                        this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.EntranceAnimation);
-                        this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.VisibleAnimation);
-                        this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.Effect.ExitAnimation);
+                        this.EntranceAnimationComboBox.SelectedItem = EnumHelper.GetEnumName((OverlayEffectEntranceAnimationTypeEnum)this.action.Effect.EntranceAnimation);
+                        this.VisibleAnimationComboBox.SelectedItem = EnumHelper.GetEnumName((OverlayEffectVisibleAnimationTypeEnum)this.action.Effect.VisibleAnimation);
+                        this.ExitAnimationComboBox.SelectedItem = EnumHelper.GetEnumName((OverlayEffectExitAnimationTypeEnum)this.action.Effect.ExitAnimation);
 #pragma warning restore CS0612 // Type or member is obsolete
                     }
 
