@@ -171,6 +171,7 @@ namespace MixItUp.WPF
 
         private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            this.Activate();
             if (!this.shutdownStarted)
             {
                 e.Cancel = true;

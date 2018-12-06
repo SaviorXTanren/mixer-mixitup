@@ -45,7 +45,12 @@ namespace MixItUp.Base.MixerAPI
 
         public virtual async Task Perform(UserViewModel user, IEnumerable<string> arguments = null)
         {
-            await this.Command.Perform(user, arguments);
+            Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>()
+            {
+                { "mixplaycontrolid", this.Control.controlID },
+            };
+
+            await this.Command.Perform(user, arguments, extraSpecialIdentifiers);
         }
     }
 
