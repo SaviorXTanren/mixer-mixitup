@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,12 +74,22 @@ namespace MixItUp.Base.MixerAPI
             this.skillCatalog = await ChannelSession.Connection.GetSkillCatalog(ChannelSession.Channel);
 
             // Hacky workaround until auth issue is fixed for Skill Catalog
-            this.skillCatalog = await SerializerHelper.DeserializeFromFile<SkillCatalogModel>("SkillsCatalogData.txt");
-
-            if (this.skillCatalog != null)
+            try
             {
-                this.availableSkills = new Dictionary<Guid, SkillModel>(this.skillCatalog.skills.ToDictionary(s => s.id, s => s));
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    string data = await httpClient.GetStringAsync("https://raw.githubusercontent.com/SaviorXTanren/mixer-mixitup/master/MixItUp.Base/SkillsCatalogData.txt");
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        this.skillCatalog = SerializerHelper.DeserializeFromString<SkillCatalogModel>(data);
+                        if (this.skillCatalog != null)
+                        {
+                            this.availableSkills = new Dictionary<Guid, SkillModel>(this.skillCatalog.skills.ToDictionary(s => s.id, s => s));
+                        }
+                    }
+                }
             }
+            catch (Exception ex) { Util.Logger.Log(ex); }
 
             return await this.AttemptConnect();
         }
