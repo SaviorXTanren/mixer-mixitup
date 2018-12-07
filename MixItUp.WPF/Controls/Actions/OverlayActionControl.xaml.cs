@@ -149,66 +149,69 @@ namespace MixItUp.WPF.Controls.Actions
         public override ActionBase GetAction()
         {
             string type = (string)this.TypeComboBox.SelectedItem;
-            if (type.Equals(ShowHideWidgetOption))
+            if (!string.IsNullOrEmpty(type))
             {
-                if (this.WidgetNameComboBox.SelectedIndex >= 0)
+                if (type.Equals(ShowHideWidgetOption))
                 {
-                    OverlayWidget widget = (OverlayWidget)this.WidgetNameComboBox.SelectedItem;
-                    return new OverlayAction(widget.Item.ID, this.ShowHideWidgetCheckBox.IsChecked.GetValueOrDefault());
+                    if (this.WidgetNameComboBox.SelectedIndex >= 0)
+                    {
+                        OverlayWidget widget = (OverlayWidget)this.WidgetNameComboBox.SelectedItem;
+                        return new OverlayAction(widget.Item.ID, this.ShowHideWidgetCheckBox.IsChecked.GetValueOrDefault());
+                    }
                 }
-            }
-            else
-            {
-                OverlayActionTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayActionTypeEnum>(type);
-
-                if (this.OverlayNameComboBox.SelectedIndex < 0)
+                else
                 {
-                    return null;
-                }
-                string overlayName = (string)this.OverlayNameComboBox.SelectedItem;
+                    OverlayActionTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayActionTypeEnum>(type);
 
-                double duration;
-                if (double.TryParse(this.DurationTextBox.Text, out duration) && duration > 0 && this.EntranceAnimationComboBox.SelectedIndex >= 0 &&
-                    this.VisibleAnimationComboBox.SelectedIndex >= 0 && this.ExitAnimationComboBox.SelectedIndex >= 0)
-                {
-                    OverlayEffectEntranceAnimationTypeEnum entrance = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.EntranceAnimationComboBox.SelectedItem);
-                    OverlayEffectVisibleAnimationTypeEnum visible = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>((string)this.VisibleAnimationComboBox.SelectedItem);
-                    OverlayEffectExitAnimationTypeEnum exit = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.ExitAnimationComboBox.SelectedItem);
+                    if (this.OverlayNameComboBox.SelectedIndex < 0)
+                    {
+                        return null;
+                    }
+                    string overlayName = (string)this.OverlayNameComboBox.SelectedItem;
 
-                    OverlayItemEffects effect = new OverlayItemEffects(entrance, visible, exit, duration);
+                    double duration;
+                    if (double.TryParse(this.DurationTextBox.Text, out duration) && duration > 0 && this.EntranceAnimationComboBox.SelectedIndex >= 0 &&
+                        this.VisibleAnimationComboBox.SelectedIndex >= 0 && this.ExitAnimationComboBox.SelectedIndex >= 0)
+                    {
+                        OverlayEffectEntranceAnimationTypeEnum entrance = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.EntranceAnimationComboBox.SelectedItem);
+                        OverlayEffectVisibleAnimationTypeEnum visible = EnumHelper.GetEnumValueFromString<OverlayEffectVisibleAnimationTypeEnum>((string)this.VisibleAnimationComboBox.SelectedItem);
+                        OverlayEffectExitAnimationTypeEnum exit = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.ExitAnimationComboBox.SelectedItem);
 
-                    OverlayItemPosition position = this.ItemPosition.GetPosition();
+                        OverlayItemEffects effect = new OverlayItemEffects(entrance, visible, exit, duration);
 
-                    OverlayItemBase item = null;
+                        OverlayItemPosition position = this.ItemPosition.GetPosition();
 
-                    if (overlayType == OverlayActionTypeEnum.Image)
-                    {
-                        item = this.ImageItem.GetItem();
-                    }
-                    else if (overlayType == OverlayActionTypeEnum.Text)
-                    {
-                        item = this.TextItem.GetItem();
-                    }
-                    else if (overlayType == OverlayActionTypeEnum.YouTube)
-                    {
-                        item = this.YouTubeItem.GetItem();
-                    }
-                    else if (overlayType == OverlayActionTypeEnum.Video)
-                    {
-                        item = this.VideoItem.GetItem();
-                    }
-                    else if (overlayType == OverlayActionTypeEnum.WebPage)
-                    {
-                        item = this.WebPageItem.GetItem();
-                    }
-                    else if (overlayType == OverlayActionTypeEnum.HTML)
-                    {
-                        item = this.HTMLItem.GetItem();
-                    }
+                        OverlayItemBase item = null;
 
-                    if (item != null)
-                    {
-                        return new OverlayAction(overlayName, item, position, effect);
+                        if (overlayType == OverlayActionTypeEnum.Image)
+                        {
+                            item = this.ImageItem.GetItem();
+                        }
+                        else if (overlayType == OverlayActionTypeEnum.Text)
+                        {
+                            item = this.TextItem.GetItem();
+                        }
+                        else if (overlayType == OverlayActionTypeEnum.YouTube)
+                        {
+                            item = this.YouTubeItem.GetItem();
+                        }
+                        else if (overlayType == OverlayActionTypeEnum.Video)
+                        {
+                            item = this.VideoItem.GetItem();
+                        }
+                        else if (overlayType == OverlayActionTypeEnum.WebPage)
+                        {
+                            item = this.WebPageItem.GetItem();
+                        }
+                        else if (overlayType == OverlayActionTypeEnum.HTML)
+                        {
+                            item = this.HTMLItem.GetItem();
+                        }
+
+                        if (item != null)
+                        {
+                            return new OverlayAction(overlayName, item, position, effect);
+                        }
                     }
                 }
             }
