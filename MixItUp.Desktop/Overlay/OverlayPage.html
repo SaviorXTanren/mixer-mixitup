@@ -111,8 +111,6 @@
 
         <div id="youtubeSongRequestPlayerDiv" style="position: relative; left: -2000px"></div>
 
-        <div id="youtubeVideoPlayerDiv" style="position: relative; left: -2000px"></div>
-
         <script>
             $.fn.extend({
                 animateCss: function (animationName, callback) {
@@ -306,13 +304,14 @@
                     var youtubeVideoPlayer = new YT.Player(addedElement.id, {
                         height: data.Height,
                         width: data.Width,
-                        videoId: data.ID,
-                        playerVars: { 'autoplay': 1, 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
+                        videoId: data.VideoID,
+                        playerVars: { 'controls': 0, 'modestbranding': 1, 'start': data.StartTime },
                         events: {
                             'onReady': function () {
                                 youtubeVideoPlayer.setVolume(data.Volume);
                                 youtubeVideoPlayer.setLoop(false);
                                 youtubeVideoPlayer.frameBorder = 0;
+                                youtubeVideoPlayer.playVideo();
                             }
                         }
                     });
