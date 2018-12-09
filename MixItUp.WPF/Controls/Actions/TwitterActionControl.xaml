@@ -22,6 +22,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" HorizontalAlignment="Right" Margin="0,0,0,-10">
@@ -29,5 +31,7 @@
         </TextBlock>
 
         <TextBox Grid.Row="2" x:Name="TweetMessageTextBox" MaterialDesign:HintAssist.Hint="Tweet Message" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+        
+        <TextBox Grid.Row="4" x:Name="TweetImagePathTextBox" MaterialDesign:HintAssist.Hint="Tweet Image (Optinal)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
     </Grid>
 </local:ActionControlBase>
