@@ -44,7 +44,7 @@
 
                     <TextBlock Grid.Row="0" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center">Welcome to Mix It Up!</TextBlock>
 
-                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">This wizard that will walk you through getting start with Mix It Up and getting some initial settings in place. If you wish to, you can skip this wizard by simply closing this window.</TextBlock>
+                    <TextBlock Grid.Row="2" TextWrapping="Wrap" Width="390">This wizard will walk you through getting started with Mix It Up and getting some initial settings in place. If you wish to, you can skip this wizard by simply closing this window.</TextBlock>
                 </Grid>
 
                 <Grid x:Name="BotLoginPageGrid" Visibility="Collapsed" Margin="20,0">
