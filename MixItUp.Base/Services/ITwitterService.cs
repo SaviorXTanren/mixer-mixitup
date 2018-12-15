@@ -44,7 +44,7 @@ namespace MixItUp.Base.Services
 
         Task<IEnumerable<Tweet>> GetLatestTweets();
 
-        Task SendTweet(string tweet);
+        Task SendTweet(string tweet, string imagePath = null);
 
         OAuthTokenModel GetOAuthTokenCopy();
     }
