@@ -4,7 +4,10 @@ using MixItUp.Base.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -134,13 +137,36 @@ namespace MixItUp.Base.Services
             return results;
         }
 
-        public async Task SendTweet(string tweet)
+        public async Task SendTweet(string tweet, string imagePath = null)
         {
             try
             {
                 using (var twitterCtx = new TwitterContext(this.auth))
                 {
-                    await twitterCtx.TweetAsync(tweet);
+                    List<ulong> mediaIds = new List<ulong>();
+
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(imagePath))
+                        {
+                            // Download the image and upload to Twitter
+                            using (WebClient client = new WebClient())
+                            {
+                                var bytes = await Task.Run<byte[]>(async () => { return await client.DownloadDataTaskAsync(imagePath); });
+
+                                using (Image img = ByteArrayToImage(bytes))
+                                {
+                                    string mediaType = $"image/{new ImageFormatConverter().ConvertToString(img.RawFormat).ToLower()}";
+
+                                    Media media = await twitterCtx.UploadMediaAsync(bytes, mediaType, "tweet_image");
+                                    mediaIds.Add(media.MediaID);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex) { Logger.Log(ex); }
+
+                    await twitterCtx.TweetAsync(tweet, mediaIds);
                 }
             }
             catch (Exception ex) { Logger.Log(ex); }
@@ -160,6 +186,17 @@ namespace MixItUp.Base.Services
                 };
             }
             return null;
+        }
+
+        private static Image ByteArrayToImage(byte[] bmpBytes)
+        {
+            Image image = null;
+            using (MemoryStream stream = new MemoryStream(bmpBytes))
+            {
+                image = Image.FromStream(stream);
+            }
+
+            return image;
         }
 
         private Task InitializeInternal(IAuthorizer auth)
