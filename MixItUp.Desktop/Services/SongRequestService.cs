@@ -88,7 +88,7 @@ namespace MixItUp.Desktop.Services
                 return false;
             }
 
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube) && ChannelSession.Settings.EnableOverlay)
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube) && !ChannelSession.Settings.EnableOverlay)
             {
                 return false;
             }
