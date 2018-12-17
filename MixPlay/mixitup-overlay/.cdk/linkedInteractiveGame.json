@@ -1,0 +1,26 @@
+{
+  "coverUrl": null,
+  "createdAt": "2018-12-16T21:47:58.000Z",
+  "deletedAt": null,
+  "description": null,
+  "hasPublishedVersions": false,
+  "id": 303018,
+  "installation": null,
+  "isShared": false,
+  "name": "Mix It Up Overlay",
+  "ownerId": 7207866,
+  "typeId": 130909,
+  "updatedAt": "2018-12-16T21:47:58.000Z",
+  "versions": [
+    {
+      "changelog": "Initial release",
+      "createdAt": "2018-12-16T21:47:58.000Z",
+      "id": 308928,
+      "installation": null,
+      "state": "draft",
+      "updatedAt": "2018-12-16T21:49:27.000Z",
+      "version": "0.1.0",
+      "versionOrder": 256
+    }
+  ]
+}
