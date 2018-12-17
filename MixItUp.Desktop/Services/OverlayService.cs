@@ -204,10 +204,15 @@ namespace MixItUp.Overlay
         private const string OverlayFolderPath = "Overlay\\";
         private const string OverlayWebpageFilePath = OverlayFolderPath + "OverlayPage.html";
 
+        private const string CSSIncludeReplacementStringFormat = "<link rel=\"stylesheet\" type=\"text/css\" href=\".*\">";
+
+        private const string JQueryScriptReplacementString = "<script src=\"jquery.min.js\"></script>";
+        private const string JQueryFilePath = OverlayFolderPath + "jquery.min.js";
+
         private const string WebSocketWrapperScriptReplacementString = "<script src=\"webSocketWrapper.js\"></script>";
         private const string WebSocketWrapperFilePath = OverlayFolderPath + "WebSocketWrapper.js";
 
-        private const string OverlayConnectionPortReplacementString = "openWebsocketConnection(\"\");";
+        private const string OverlayConnectionPortReplacementString = "openWebsocketConnection(\"0000\");";
         private const string OverlayConnectionPortFormat = "openWebsocketConnection(\"{0}\");";
 
         private const string OverlayFilesWebPath = "overlay/files/";
@@ -222,6 +227,21 @@ namespace MixItUp.Overlay
         {
             this.port = port;
             this.webPageInstance = File.ReadAllText(OverlayWebpageFilePath);
+
+            string[] splits = CSSIncludeReplacementStringFormat.Split(new string[] { ".*" }, StringSplitOptions.RemoveEmptyEntries);
+            Regex cssRegex = new Regex(CSSIncludeReplacementStringFormat);
+            foreach (Match match in cssRegex.Matches(this.webPageInstance))
+            {
+                string cssFileName = match.Value;
+                cssFileName = cssFileName.Replace(splits[0], "");
+                cssFileName = cssFileName.Replace(splits[1], "");
+                string cssFileContents = File.ReadAllText(OverlayFolderPath + cssFileName);
+
+                this.webPageInstance = this.webPageInstance.Replace(match.Value, string.Format("<style>{0}</style>", cssFileContents));
+            }
+
+            string jqueryText = File.ReadAllText(JQueryFilePath);
+            this.webPageInstance = this.webPageInstance.Replace(JQueryScriptReplacementString, string.Format("<script>{0}</script>", jqueryText));
 
             string webSocketWrapperText = File.ReadAllText(WebSocketWrapperFilePath);
             this.webPageInstance = this.webPageInstance.Replace(WebSocketWrapperScriptReplacementString, string.Format("<script>{0}</script>", webSocketWrapperText));
