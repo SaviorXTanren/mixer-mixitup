@@ -32,6 +32,7 @@ namespace MixItUp.Base.Services
         public IExtraLifeService ExtraLife { get; protected set; }
         public ITelemetryService Telemetry { get; protected set; }
         public IStreamDeckService StreamDeck { get; protected set; }
+        public IScoutService Scout { get; protected set; }
 
         public abstract Task Close();
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MixItUp.Base.Util;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
+using MixItUp.Base.Services;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -31,6 +32,8 @@ namespace MixItUp.Base.Model.Overlay
             this.Username = username;
             this.Platform = platform;
         }
+
+        public virtual Task Initialize() { return Task.FromResult(0); }
 
         public virtual Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
@@ -59,56 +62,56 @@ namespace MixItUp.Base.Model.Overlay
         @"<table cellpadding=""10"" style=""border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR};"">
             <tbody>
             <tr>
-                <td colspan=""3"" style=""padding: 5px;"">
+                <td colspan=""3"" style=""padding: 10px;"">
                     <div style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; text-align: center;"">TOTAL</div>
                 </td>
             </tr>
             <tr>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR};"">Kills:</span>
                 </td>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{TOTAL_KILLS}</span>
                 </td>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 510px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{TOTAL_KD}</span>
                 </td>
             </tr>
             <tr>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR};"">Wins:</span>
                 </td>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{TOTAL_WINS}</span>
                 </td>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{TOTAL_WL}</span>
                 </td>
             </tr>
             <tr>
-                <td colspan=""3"" style=""padding: 5px;"">
+                <td colspan=""3"" style=""padding: 10px;"">
                     <div style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; text-align: center;"">SESSION</div>
                 </td>
             </tr>
             <tr>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR};"">Kills:</span>
                 </td>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{SESSION_KILLS}</span>
                 </td>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{SESSION_KD}</span>
                 </td>
             </tr>
             <tr>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR};"">Wins:</span>
                 </td>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{SESSION_WINS}</span>
                 </td>
-                <td style=""padding: 5px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{SESSION_WL}</span>
                 </td>
             </tr>
@@ -116,6 +119,8 @@ namespace MixItUp.Base.Model.Overlay
         </table>";
 
         private const string PlayerSearchAPIFormat = "https://r6stats.com/api/player-search/{0}/{1}";
+
+        private ScoutUser user;
 
         private int initialKills = 0;
         private int initialDeaths = 0;
@@ -126,66 +131,63 @@ namespace MixItUp.Base.Model.Overlay
 
         public RainboxSixSiegeGameStatsSetup(string username, GameStatsPlatformTypeEnum platform) : base(username, platform) { }
 
-        public override async Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        public override async Task Initialize()
         {
-            Dictionary<string, string> replacementSets = new Dictionary<string, string>();
-
             string platformString = "";
             switch (this.Platform)
             {
                 case GameStatsPlatformTypeEnum.PC: platformString = "uplay"; break;
-                case GameStatsPlatformTypeEnum.Xbox: platformString = "xbox"; break;
-                case GameStatsPlatformTypeEnum.Playstation: platformString = "ps4"; break;
+                case GameStatsPlatformTypeEnum.Xbox: platformString = "xbl"; break;
+                case GameStatsPlatformTypeEnum.Playstation: platformString = "psn"; break;
             }
 
-            string playerData = await this.GetAsync(string.Format(PlayerSearchAPIFormat, this.Username, platformString));
-            if (playerData != null)
+            this.user = await ChannelSession.Services.Scout.GetUser("r6siege", this.Username, new Dictionary<string, string>()
             {
-                JArray array = JArray.Parse(playerData);
-                foreach (JToken token in array)
+                { "platform", platformString },
+            });
+        }
+
+        public override async Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            Dictionary<string, string> replacementSets = new Dictionary<string, string>();
+
+            if (this.user != null)
+            {
+                Dictionary<string, ScoutStat> stats = await ChannelSession.Services.Scout.GetStats("r6siege", this.user);
+
+                int kills = stats["kills"].ValueInt;
+                int deaths = stats["deaths"].ValueInt;
+                double kd = (deaths > 0) ? (((double)kills) / ((double)deaths)) : 1.0;
+                int wins = stats["matchesWon"].ValueInt;
+                int loses = stats["matchesLost"].ValueInt;
+                int matches = wins + loses;
+                double wl = (matches > 0) ? (((double)wins) / ((double)matches)) : 1.0;
+
+                replacementSets["TOTAL_KILLS"] = kills.ToString();
+                replacementSets["TOTAL_KD"] = Math.Round(kd, 2).ToString("F2");
+                replacementSets["TOTAL_WINS"] = wins.ToString();
+                replacementSets["TOTAL_WL"] = Math.Round(wl, 2).ToString("P1");
+
+                if (this.initialWins == 0 && this.initialLoses == 0)
                 {
-                    JObject jobj = (JObject)token;
-                    if (jobj.ContainsKey("username") && jobj["username"].ToString().Equals(this.Username, StringComparison.InvariantCultureIgnoreCase) && jobj.ContainsKey("genericStats"))
-                    {
-                        JObject statsJObj = (JObject)jobj["genericStats"];
-
-                        int kills = statsJObj["kills"].ToObject<int>();
-                        int deaths = statsJObj["deaths"].ToObject<int>();
-                        double kd = (deaths > 0) ? (((double)kills) / ((double)deaths)) : 1.0;
-                        int wins = statsJObj["wins"].ToObject<int>();
-                        int loses = statsJObj["losses"].ToObject<int>();
-                        int matches = wins + loses;
-                        double wl = (matches > 0) ? (((double)wins) / ((double)matches)) : 1.0;
-
-                        replacementSets["TOTAL_KILLS"] = kills.ToString();
-                        replacementSets["TOTAL_KD"] = Math.Round(kd, 2).ToString("F2");
-                        replacementSets["TOTAL_WINS"] = wins.ToString();
-                        replacementSets["TOTAL_WL"] = Math.Round(wl, 2).ToString("P1");
-
-                        if (this.initialWins == 0 && this.initialLoses == 0)
-                        {
-                            this.initialKills = kills;
-                            this.initialDeaths = deaths;
-                            this.initialWins = wins;
-                            this.initialLoses = loses;
-                        }
-
-                        int sessionKills = kills - this.initialKills;
-                        int sessionDeaths = deaths - this.initialDeaths;
-                        double sessionkd = (sessionDeaths > 0) ? (((double)sessionKills) / ((double)sessionDeaths)) : 1.0;
-                        int sessionWins = wins - this.initialWins;
-                        int sessionLoses = loses - this.initialLoses;
-                        int sessionmatches = sessionWins + sessionLoses;
-                        double sessionwl = (sessionmatches > 0) ? (((double)sessionWins) / ((double)sessionmatches)) : 1.0;
-
-                        replacementSets["SESSION_KILLS"] = sessionKills.ToString();
-                        replacementSets["SESSION_KD"] = Math.Round(sessionkd, 2).ToString("F2");
-                        replacementSets["SESSION_WINS"] = sessionWins.ToString();
-                        replacementSets["SESSION_WL"] = Math.Round(sessionwl, 2).ToString("P1");
-
-                        break;
-                    }
+                    this.initialKills = kills;
+                    this.initialDeaths = deaths;
+                    this.initialWins = wins;
+                    this.initialLoses = loses;
                 }
+
+                int sessionKills = kills - this.initialKills;
+                int sessionDeaths = deaths - this.initialDeaths;
+                double sessionkd = (sessionDeaths > 0) ? (((double)sessionKills) / ((double)sessionDeaths)) : 1.0;
+                int sessionWins = wins - this.initialWins;
+                int sessionLoses = loses - this.initialLoses;
+                int sessionmatches = sessionWins + sessionLoses;
+                double sessionwl = (sessionmatches > 0) ? (((double)sessionWins) / ((double)sessionmatches)) : 1.0;
+
+                replacementSets["SESSION_KILLS"] = sessionKills.ToString();
+                replacementSets["SESSION_KD"] = Math.Round(sessionkd, 2).ToString("F2");
+                replacementSets["SESSION_WINS"] = sessionWins.ToString();
+                replacementSets["SESSION_WL"] = Math.Round(sessionwl, 2).ToString("P1");
             }
 
             return replacementSets;
@@ -229,6 +231,7 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task Initialize()
         {
             await base.Initialize();
+            await this.Setup.Initialize();
         }
 
         public override OverlayCustomHTMLItem GetCopy() { return this.Copy<OverlayGameStats>(); }
