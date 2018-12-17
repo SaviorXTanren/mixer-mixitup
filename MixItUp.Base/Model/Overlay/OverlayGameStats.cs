@@ -89,11 +89,15 @@ namespace MixItUp.Base.Model.Overlay
 
         public string Category { get; set; }
 
-        public GameStatsSetupBase(string username, GameStatsPlatformTypeEnum platform)
+        public GameStatsSetupBase() { }
+
+        protected GameStatsSetupBase(string username, GameStatsPlatformTypeEnum platform)
         {
             this.Username = username;
             this.Platform = platform;
         }
+
+        protected GameStatsSetupBase(string username, GameStatsPlatformTypeEnum platform, string category) : this(username, platform) { this.Category = category; }
 
         public virtual Task Initialize() { return Task.FromResult(0); }
 
@@ -129,6 +133,8 @@ namespace MixItUp.Base.Model.Overlay
         private int initialLoses = 0;
 
         public override string Name { get { return GameName; } }
+
+        public RainboxSixSiegeGameStatsSetup() { }
 
         public RainboxSixSiegeGameStatsSetup(string username, GameStatsPlatformTypeEnum platform) : base(username, platform) { }
 
@@ -222,11 +228,14 @@ namespace MixItUp.Base.Model.Overlay
         private ScoutUser user;
 
         private FortniteGameStatsCategoryTypeEnum categoryEnum;
+
         private int initialKills = 0;
         private int initialWins = 0;
         private int initialMatches = 0;
 
         public override string Name { get { return GameName; } }
+
+        public FortniteGameStatsSetup() { }
 
         public FortniteGameStatsSetup(string username, GameStatsPlatformTypeEnum platform, string category) : base(username, platform)
         {
