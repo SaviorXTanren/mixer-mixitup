@@ -1,12 +1,13 @@
-﻿using MixItUp.Base.ViewModel.User;
+﻿using Mixer.Base.Util;
+using MixItUp.Base.Services;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using MixItUp.Base.Util;
-using System.Net.Http;
-using Newtonsoft.Json.Linq;
-using MixItUp.Base.Services;
 
 namespace MixItUp.Base.Model.Overlay
 {
@@ -14,50 +15,12 @@ namespace MixItUp.Base.Model.Overlay
     {
         PC,
         Xbox,
-        Playstation,
-        Switch
+        Playstation
     }
 
     [DataContract]
     public class GameStatsSetupBase
     {
-        public virtual string Name { get { return string.Empty; } }
-
-        public string Username { get; set; }
-
-        public GameStatsPlatformTypeEnum Platform { get; set; }
-
-        public GameStatsSetupBase(string username, GameStatsPlatformTypeEnum platform)
-        {
-            this.Username = username;
-            this.Platform = platform;
-        }
-
-        public virtual Task Initialize() { return Task.FromResult(0); }
-
-        public virtual Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
-        {
-            return Task.FromResult(new Dictionary<string, string>());
-        }
-
-        protected async Task<string> GetAsync(string url)
-        {
-            try
-            {
-                using (HttpClient client = new HttpClient())
-                {
-                    return await client.GetStringAsync(url);
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            return null;
-        }
-    }
-
-    public class RainboxSixSiegeGameStatsSetup : GameStatsSetupBase
-    {
-        public const string GameName = "Rainbox Six Siege";
-
         public const string DefaultHTMLTemplate =
         @"<table cellpadding=""10"" style=""border-style: solid; border-width: 5px; border-color: {BORDER_COLOR}; background-color: {BACKGROUND_COLOR};"">
             <tbody>
@@ -73,7 +36,7 @@ namespace MixItUp.Base.Model.Overlay
                 <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{TOTAL_KILLS}</span>
                 </td>
-                <td style=""padding: 510px;"">
+                <td style=""padding: 10px;"">
                     <span style=""font-family: '{TEXT_FONT}'; font-size: {TEXT_SIZE}px; font-weight: bold; color: {TEXT_COLOR}; float: right"">{TOTAL_KD}</span>
                 </td>
             </tr>
@@ -118,7 +81,45 @@ namespace MixItUp.Base.Model.Overlay
             </tbody>
         </table>";
 
-        private const string PlayerSearchAPIFormat = "https://r6stats.com/api/player-search/{0}/{1}";
+        public virtual string Name { get { return string.Empty; } }
+
+        public string Username { get; set; }
+
+        public GameStatsPlatformTypeEnum Platform { get; set; }
+
+        public string Category { get; set; }
+
+        public GameStatsSetupBase(string username, GameStatsPlatformTypeEnum platform)
+        {
+            this.Username = username;
+            this.Platform = platform;
+        }
+
+        public virtual Task Initialize() { return Task.FromResult(0); }
+
+        public virtual Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            return Task.FromResult(new Dictionary<string, string>());
+        }
+
+        protected async Task<string> GetAsync(string url)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    return await client.GetStringAsync(url);
+                }
+            }
+            catch (Exception ex) { Util.Logger.Log(ex); }
+            return null;
+        }
+    }
+
+    [DataContract]
+    public class RainboxSixSiegeGameStatsSetup : GameStatsSetupBase
+    {
+        public const string GameName = "Rainbox Six Siege";
 
         private ScoutUser user;
 
@@ -161,12 +162,12 @@ namespace MixItUp.Base.Model.Overlay
                 int wins = stats["matchesWon"].ValueInt;
                 int loses = stats["matchesLost"].ValueInt;
                 int matches = wins + loses;
-                double wl = (matches > 0) ? (((double)wins) / ((double)matches)) : 1.0;
+                double wl = (matches > 0) ? ((((double)wins) / ((double)matches)) * 100.0) : 1.0;
 
                 replacementSets["TOTAL_KILLS"] = kills.ToString();
                 replacementSets["TOTAL_KD"] = Math.Round(kd, 2).ToString("F2");
                 replacementSets["TOTAL_WINS"] = wins.ToString();
-                replacementSets["TOTAL_WL"] = Math.Round(wl, 2).ToString("P1");
+                replacementSets["TOTAL_WL"] = Math.Round(wl, 2).ToString("F1") + "%";
 
                 if (this.initialWins == 0 && this.initialLoses == 0)
                 {
@@ -182,12 +183,126 @@ namespace MixItUp.Base.Model.Overlay
                 int sessionWins = wins - this.initialWins;
                 int sessionLoses = loses - this.initialLoses;
                 int sessionmatches = sessionWins + sessionLoses;
-                double sessionwl = (sessionmatches > 0) ? (((double)sessionWins) / ((double)sessionmatches)) : 1.0;
+                double sessionwl = (sessionmatches > 0) ? ((((double)sessionWins) / ((double)sessionmatches)) * 100.0) : 1.0;
 
                 replacementSets["SESSION_KILLS"] = sessionKills.ToString();
                 replacementSets["SESSION_KD"] = Math.Round(sessionkd, 2).ToString("F2");
                 replacementSets["SESSION_WINS"] = sessionWins.ToString();
-                replacementSets["SESSION_WL"] = Math.Round(sessionwl, 2).ToString("P1");
+                replacementSets["SESSION_WL"] = Math.Round(sessionwl, 2).ToString("F1") + "%";
+            }
+
+            return replacementSets;
+        }
+    }
+
+    [DataContract]
+    public class FortniteGameStatsSetup : GameStatsSetupBase
+    {
+        private enum FortniteGameStatsCategoryTypeEnum
+        {
+            Lifetime,
+            [Name("Solo Lifetime")]
+            SoloLifetime,
+            [Name("Duo Lifetime")]
+            DuoLifetime,
+            [Name("Squad Lifetime")]
+            SquadLifetime,
+            [Name("Solo Season")]
+            SoloSeason,
+            [Name("Duo Season")]
+            DuoSeason,
+            [Name("Squad Season")]
+            SquadSeason,
+        }
+
+        public const string GameName = "Fortnite";
+
+        public static readonly List<string> Categories = EnumHelper.GetEnumNames<FortniteGameStatsCategoryTypeEnum>().ToList();
+
+        private ScoutUser user;
+
+        private FortniteGameStatsCategoryTypeEnum categoryEnum;
+        private int initialKills = 0;
+        private int initialWins = 0;
+        private int initialMatches = 0;
+
+        public override string Name { get { return GameName; } }
+
+        public FortniteGameStatsSetup(string username, GameStatsPlatformTypeEnum platform, string category) : base(username, platform)
+        {
+            this.Category = category;
+        }
+
+        public override async Task Initialize()
+        {
+            this.categoryEnum = EnumHelper.GetEnumValueFromString<FortniteGameStatsCategoryTypeEnum>(this.Category);
+
+            string platformString = "";
+            string consoleString = null;
+            switch (this.Platform)
+            {
+                case GameStatsPlatformTypeEnum.PC: platformString = "epic"; break;
+                case GameStatsPlatformTypeEnum.Xbox: platformString = "xbl"; consoleString = "xb1"; break;
+                case GameStatsPlatformTypeEnum.Playstation: platformString = "psn"; consoleString = "ps4"; break;
+            }
+
+            this.user = await ChannelSession.Services.Scout.GetUser("fortnite", this.Username, new Dictionary<string, string>()
+            {
+                { "platform", platformString },
+                { "console", consoleString },
+            });
+        }
+
+        public override async Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            Dictionary<string, string> replacementSets = new Dictionary<string, string>();
+
+            if (this.user != null)
+            {
+                string segment = null;
+                switch (this.categoryEnum)
+                {
+                    case FortniteGameStatsCategoryTypeEnum.SoloLifetime: segment = "p2.br.m0.alltime"; break;
+                    case FortniteGameStatsCategoryTypeEnum.DuoLifetime: segment = "p10.br.m0.alltime"; break;
+                    case FortniteGameStatsCategoryTypeEnum.SquadLifetime: segment = "p9.br.m0.alltime"; break;
+                    case FortniteGameStatsCategoryTypeEnum.SoloSeason: segment = "p2.br.m0.weekly"; break;
+                    case FortniteGameStatsCategoryTypeEnum.DuoSeason: segment = "p10.br.m0.weekly"; break;
+                    case FortniteGameStatsCategoryTypeEnum.SquadSeason: segment = "p9.br.m0.weekly"; break;
+                }
+
+                Dictionary<string, ScoutStat> stats = await ChannelSession.Services.Scout.GetStats("fortnite", this.user, segment);
+
+                int wins = stats["placeTop1"].ValueInt;
+                int matches = stats["matchesPlayed"].ValueInt;
+                int kills = stats["kills"].ValueInt;
+                int deaths = matches - wins;
+                double kd = (deaths > 0) ? (((double)kills) / ((double)deaths)) : 1.0;
+                double wl = (matches > 0) ? ((((double)wins) / ((double)matches)) * 100.0) : 1.0;
+
+                replacementSets["TOTAL_KILLS"] = kills.ToString();
+                replacementSets["TOTAL_KD"] = Math.Round(kd, 2).ToString("F2");
+                replacementSets["TOTAL_WINS"] = wins.ToString();
+                replacementSets["TOTAL_WL"] = Math.Round(wl, 2).ToString("F1") + "%";
+
+                if (this.initialWins == 0 && this.initialMatches == 0)
+                {
+                    this.initialKills = kills;
+                    this.initialWins = wins;
+                    this.initialMatches = matches;
+                }
+
+                int sessionKills = kills - this.initialKills;
+                int sessionDeaths = deaths - (this.initialMatches - this.initialWins);
+                double sessionkd = (sessionDeaths > 0) ? (((double)sessionKills) / ((double)sessionDeaths)) : 1.0;
+                int sessionWins = wins - this.initialWins;
+                int sessionLoses = deaths - (this.initialMatches - this.initialWins);
+                int sessionmatches = sessionWins + sessionLoses;
+                double sessionwl = (sessionmatches > 0) ? ((((double)sessionWins) / ((double)sessionmatches)) * 100.0) : 1.0;
+
+                replacementSets["SESSION_KILLS"] = sessionKills.ToString();
+                replacementSets["SESSION_KD"] = Math.Round(sessionkd, 2).ToString("F2");
+                replacementSets["SESSION_WINS"] = sessionWins.ToString();
+                replacementSets["SESSION_WL"] = Math.Round(sessionwl, 2).ToString("F1") + "%";
             }
 
             return replacementSets;

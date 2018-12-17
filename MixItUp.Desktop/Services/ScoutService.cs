@@ -74,7 +74,7 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
-        public async Task<Dictionary<string, ScoutStat>> GetStats(string title, ScoutUser user, Dictionary<string, string> parameters = null)
+        public async Task<Dictionary<string, ScoutStat>> GetStats(string title, ScoutUser user, string segment, Dictionary<string, string> parameters = null)
         {
             try
             {
@@ -85,6 +85,10 @@ namespace MixItUp.Desktop.Services
 
                 parameters["title"] = title;
                 parameters["id"] = user.PlayerID;
+                if (!string.IsNullOrEmpty(segment))
+                {
+                    parameters["segment"] = segment;
+                }
 
                 List<string> parameterSets = new List<string>();
                 foreach (var parameter in parameters)
@@ -92,7 +96,16 @@ namespace MixItUp.Desktop.Services
                     parameterSets.Add(string.Format("{0}: \"{1}\"", parameter.Key, parameter.Value));
                 }
 
-                string query = "{ player(" + string.Join(", ", parameterSets) + ") { id metadata { key value } stats { metadata { key } value } } }";
+                string query = "{ player(" + string.Join(", ", parameterSets) + ") { id metadata { key value } ";
+                if (!string.IsNullOrEmpty(segment))
+                {
+                    query += "segments { metadata { key value } stats { metadata { key } value } }";
+                }
+                else
+                {
+                    query += "stats { metadata { key } value }";
+                }
+                query += " } }";
 
                 JObject content = new JObject();
                 content["query"] = query;
@@ -127,6 +140,22 @@ namespace MixItUp.Desktop.Services
                                     foreach (JObject stat in stats)
                                     {
                                         results.Add(new ScoutStat(stat));
+                                    }
+                                }
+
+                                if (player.ContainsKey("segments"))
+                                {
+                                    JArray segments = (JArray)player["segments"];
+                                    foreach (JObject seg in segments)
+                                    {
+                                        if (seg.ContainsKey("stats"))
+                                        {
+                                            JArray stats = (JArray)seg["stats"];
+                                            foreach (JObject stat in stats)
+                                            {
+                                                results.Add(new ScoutStat(stat));
+                                            }
+                                        }
                                     }
                                 }
 

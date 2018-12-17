@@ -108,6 +108,6 @@ namespace MixItUp.Base.Services
     {
         Task<ScoutUser> GetUser(string title, string identifier, Dictionary<string, string> parameters = null);
 
-        Task<Dictionary<string, ScoutStat>> GetStats(string title, ScoutUser user, Dictionary<string, string> parameters = null);
+        Task<Dictionary<string, ScoutStat>> GetStats(string title, ScoutUser user, string segment = null, Dictionary<string, string> parameters = null);
     }
 }
