@@ -44,7 +44,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.OverlayWidgetsListView.SelectedIndex = -1;
 
             this.widgets.Clear();
-            foreach (OverlayWidget widget in ChannelSession.Settings.OverlayWidgets.OrderBy(c => c.OverlayName))
+            foreach (OverlayWidget widget in ChannelSession.Settings.OverlayWidgets.OrderBy(c => c.OverlayName).ThenBy(c => c.Name))
             {
                 this.widgets.Add(widget);
             }
