@@ -3,7 +3,9 @@ var isDebug = false;
 
 function openWebsocketConnection(port)
 {
-    openWebsocketConnectionWithAddress(window.location.hostname, port);
+    if (port != "") {
+        openWebsocketConnectionWithAddress(window.location.hostname, port);
+    }
 }
 
 function openWebsocketConnectionWithAddress(address, port)
