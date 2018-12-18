@@ -129,6 +129,9 @@ namespace MixItUp.WPF.Controls.Overlay
                     case FortniteGameStatsSetup.GameName:
                         setup = new FortniteGameStatsSetup(this.UsernameTextBox.Text, platform, (string)this.CategoryComboBox.SelectedItem);
                         break;
+                    case CallOfDutyBlackOps4GameStatsSetup.GameName:
+                        setup = new CallOfDutyBlackOps4GameStatsSetup(this.UsernameTextBox.Text, platform, (string)this.CategoryComboBox.SelectedItem);
+                        break;
                 }
             }
 
@@ -142,7 +145,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override Task OnLoaded()
         {
-            List<string> games = new List<string>() { RainboxSixSiegeGameStatsSetup.GameName, FortniteGameStatsSetup.GameName };
+            List<string> games = new List<string>() { CallOfDutyBlackOps4GameStatsSetup.GameName, FortniteGameStatsSetup.GameName, RainboxSixSiegeGameStatsSetup.GameName };
             this.GameComboBox.ItemsSource = games.OrderBy(g => g);
             this.PlatformComboBox.ItemsSource = EnumHelper.GetEnumNames<GameStatsPlatformTypeEnum>();
 
@@ -173,6 +176,11 @@ namespace MixItUp.WPF.Controls.Overlay
                 {
                     this.CategoryComboBox.Visibility = Visibility.Visible;
                     this.CategoryComboBox.ItemsSource = FortniteGameStatsSetup.Categories;
+                }
+                else if (gameName.Equals(CallOfDutyBlackOps4GameStatsSetup.GameName))
+                {
+                    this.CategoryComboBox.Visibility = Visibility.Visible;
+                    this.CategoryComboBox.ItemsSource = CallOfDutyBlackOps4GameStatsSetup.Categories;
                 }
             }
         }

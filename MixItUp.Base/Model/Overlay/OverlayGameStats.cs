@@ -319,6 +319,118 @@ namespace MixItUp.Base.Model.Overlay
     }
 
     [DataContract]
+    public class CallOfDutyBlackOps4GameStatsSetup : GameStatsSetupBase
+    {
+        private enum CallOfDutyBlackOps4GameStatsCategoryTypeEnum
+        {
+            [Name("All Modes Lifetime")]
+            AllModesLifetime,
+            [Name("Blackout Lifetime")]
+            BlackoutLifetime,
+            [Name("Blackout Solo Lifetime")]
+            BlackoutSoloLifetime,
+            [Name("Blackout Duo Lifetime")]
+            BlackoutDuoLifetime,
+            [Name("Blackout Squad Lifetime")]
+            BlackoutSquadLifetime,
+        }
+
+        public const string GameName = "Call of Duty: Black Ops 4";
+
+        public static readonly List<string> Categories = EnumHelper.GetEnumNames<CallOfDutyBlackOps4GameStatsCategoryTypeEnum>().ToList();
+
+        private ScoutUser user;
+
+        private CallOfDutyBlackOps4GameStatsCategoryTypeEnum categoryEnum;
+
+        private int initialKills = 0;
+        private int initialDeaths = 0;
+        private int initialWins = 0;
+        private int initialMatches = 0;
+
+        public override string Name { get { return GameName; } }
+
+        public CallOfDutyBlackOps4GameStatsSetup() { }
+
+        public CallOfDutyBlackOps4GameStatsSetup(string username, GameStatsPlatformTypeEnum platform, string category) : base(username, platform)
+        {
+            this.Category = category;
+        }
+
+        public override async Task Initialize()
+        {
+            this.categoryEnum = EnumHelper.GetEnumValueFromString<CallOfDutyBlackOps4GameStatsCategoryTypeEnum>(this.Category);
+
+            string platformString = "";
+            switch (this.Platform)
+            {
+                case GameStatsPlatformTypeEnum.PC: platformString = "battlenet"; break;
+                case GameStatsPlatformTypeEnum.Xbox: platformString = "xbl"; break;
+                case GameStatsPlatformTypeEnum.Playstation: platformString = "psn"; break;
+            }
+
+            this.user = await ChannelSession.Services.Scout.GetUser("codbo4", this.Username, new Dictionary<string, string>()
+            {
+                { "platform", platformString },
+            });
+        }
+
+        public override async Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
+        {
+            Dictionary<string, string> replacementSets = new Dictionary<string, string>();
+
+            if (this.user != null)
+            {
+                string segment = null;
+                switch (this.categoryEnum)
+                {
+                    case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutLifetime: segment = "blackout.lifetime.all"; break;
+                    case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutSoloLifetime: segment = "blackout.lifetime.solo"; break;
+                    case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutDuoLifetime: segment = "blackout.lifetime.duo"; break;
+                    case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutSquadLifetime: segment = "lackout.lifetime.quad"; break;
+                }
+
+                Dictionary<string, ScoutStat> stats = await ChannelSession.Services.Scout.GetStats("codbo4", this.user, segment);
+
+                int wins = stats["wins"].ValueInt;
+                int matches = stats["totalGamesPlayed"].ValueInt;
+                int kills = stats["kills"].ValueInt;
+                int deaths = stats["deaths"].ValueInt;
+                double kd = (deaths > 0) ? (((double)kills) / ((double)deaths)) : 1.0;
+                double wl = (matches > 0) ? ((((double)wins) / ((double)matches)) * 100.0) : 1.0;
+
+                replacementSets["TOTAL_KILLS"] = kills.ToString();
+                replacementSets["TOTAL_KD"] = Math.Round(kd, 2).ToString("F2");
+                replacementSets["TOTAL_WINS"] = wins.ToString();
+                replacementSets["TOTAL_WL"] = Math.Round(wl, 2).ToString("F1") + "%";
+
+                if (this.initialWins == 0 && this.initialMatches == 0)
+                {
+                    this.initialKills = kills;
+                    this.initialDeaths = deaths;
+                    this.initialWins = wins;
+                    this.initialMatches = matches;
+                }
+
+                int sessionKills = kills - this.initialKills;
+                int sessionDeaths = deaths - this.initialDeaths;
+                double sessionkd = (sessionDeaths > 0) ? (((double)sessionKills) / ((double)sessionDeaths)) : 1.0;
+                int sessionWins = wins - this.initialWins;
+                int sessionLoses = deaths - (this.initialMatches - this.initialWins);
+                int sessionmatches = sessionWins + sessionLoses;
+                double sessionwl = (sessionmatches > 0) ? ((((double)sessionWins) / ((double)sessionmatches)) * 100.0) : 1.0;
+
+                replacementSets["SESSION_KILLS"] = sessionKills.ToString();
+                replacementSets["SESSION_KD"] = Math.Round(sessionkd, 2).ToString("F2");
+                replacementSets["SESSION_WINS"] = sessionWins.ToString();
+                replacementSets["SESSION_WL"] = Math.Round(sessionwl, 2).ToString("F1") + "%";
+            }
+
+            return replacementSets;
+        }
+    }
+
+    [DataContract]
     public class OverlayGameStats : OverlayCustomHTMLItem
     {
         public const string GameStatsItemType = "gamestats";
