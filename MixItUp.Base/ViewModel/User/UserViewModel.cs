@@ -255,7 +255,7 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
-        public bool IsInteractiveParticipant { get { return this.InteractiveIDs.Count > 0 && !string.IsNullOrEmpty(this.InteractiveGroupID); } }
+        public bool IsInteractiveParticipant { get { return this.InteractiveIDs.Count > 0; } }
 
         [JsonIgnore]
         public GameWispTier GameWispTier
