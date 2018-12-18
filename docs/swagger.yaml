@@ -402,7 +402,7 @@ definitions:
       CurrrencyAmounts:
         type: array
         items:
-          $ref: '#/definitions/UpdateMixItUpCurrencyAmount'
+          $ref: '#/definitions/MixItUpCurrencyAmount'
           
   ListOfMixItUpUsernamesOrIDs:
     type: array

@@ -755,6 +755,23 @@ namespace MixItUp.Base.MixerAPI
             {
                 if (e != null && e.input != null)
                 {
+                    InteractiveControlModel control = this.Controls[e.input.controlID];
+                    InteractiveConnectedControlCommand connectedControl = null;
+                    if (this.ControlCommands.ContainsKey(e.input.controlID))
+                    {
+                        connectedControl = this.ControlCommands[e.input.controlID];
+
+                        if (!connectedControl.DoesInputMatchCommand(e))
+                        {
+                            return;
+                        }
+
+                        if (!connectedControl.Command.IsEnabled)
+                        {
+                            return;
+                        }
+                    }
+
                     UserViewModel user = null;
                     if (!string.IsNullOrEmpty(e.participantID))
                     {
@@ -778,6 +795,14 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
+                    UserViewModel lurkingUser = null;
+                    if (user != null && !user.IsInChat)
+                    {
+                        // The user is in lurk mode and not in chat, we can't let them be discovered by using MixPlay
+                        lurkingUser = user;
+                        user = null;
+                    }
+
                     if (user == null || !user.IsInChat)
                     {
                         user = new UserViewModel(0, "Unknown User");
@@ -790,6 +815,10 @@ namespace MixItUp.Base.MixerAPI
 
                     if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.IsAnonymous)
                     {
+                        if (lurkingUser != null)
+                        {
+                            await ChannelSession.Chat.Whisper(lurkingUser.UserName, "You are in lurk mode and cannot use MixPlay until you send a chat message.");
+                        }
                         return;
                     }
 
@@ -800,30 +829,20 @@ namespace MixItUp.Base.MixerAPI
 
                     if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
                     {
-                        await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isInteractive: true);
+                        if (lurkingUser != null)
+                        {
+                            await ChannelSession.Chat.Whisper(lurkingUser.UserName, "You are in lurk mode and cannot use MixPlay until you send a chat message.");
+                        }
+                        else
+                        {
+                            await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isInteractive: true);
+                        }
                         return;
                     }
 
                     if (!this.Controls.ContainsKey(e.input.controlID))
                     {
                         return;
-                    }
-                    InteractiveControlModel control = this.Controls[e.input.controlID];
-
-                    InteractiveConnectedControlCommand connectedControl = null;
-                    if (this.ControlCommands.ContainsKey(e.input.controlID))
-                    {
-                        connectedControl = this.ControlCommands[e.input.controlID];
-
-                        if (!connectedControl.DoesInputMatchCommand(e))
-                        {
-                            return;
-                        }
-
-                        if (!connectedControl.Command.IsEnabled)
-                        {
-                            return;
-                        }
                     }
 
                     if (!string.IsNullOrEmpty(e.transactionID) && !user.Data.IsSparkExempt)

@@ -19,6 +19,7 @@ namespace MixItUp.WPF.Controls.Actions
             if (this.action != null)
             {
                 this.TweetMessageTextBox.Text = this.action.TweetText;
+                this.TweetImagePathTextBox.Text = this.action.ImagePath;
             }
             return Task.FromResult(0);
         }
@@ -27,7 +28,7 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (!string.IsNullOrEmpty(this.TweetMessageTextBox.Text))
             {
-                return new TwitterAction(this.TweetMessageTextBox.Text);
+                return new TwitterAction(this.TweetMessageTextBox.Text, this.TweetImagePathTextBox.Text);
             }
             return null;
         }
