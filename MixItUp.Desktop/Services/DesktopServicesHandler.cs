@@ -27,6 +27,7 @@ namespace MixItUp.Desktop.Services
             this.SongRequestService = new SongRequestService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
+            this.Scout = new ScoutService();
 
             this.ExtraLife = new ExtraLifeService();
             this.OverlayServers = new OverlayServiceManager();

@@ -5,6 +5,7 @@ using MixItUp.WPF.Util;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MixItUp.WPF.Controls.Overlay
 {
@@ -31,6 +32,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.item = (OverlayGameStats)item;
 
             this.GameComboBox.SelectedItem = this.item.Setup.Name;
+            this.CategoryComboBox.SelectedItem = this.item.Setup.Category;
 
             this.UsernameTextBox.Text = this.item.Setup.Username;
             this.PlatformComboBox.SelectedItem = EnumHelper.GetEnumName(this.item.Setup.Platform);
@@ -62,6 +64,11 @@ namespace MixItUp.WPF.Controls.Overlay
         public override OverlayItemBase GetItem()
         {
             if (this.GameComboBox.SelectedIndex < 0)
+            {
+                return null;
+            }
+
+            if (this.CategoryComboBox.Visibility == Visibility.Visible && this.CategoryComboBox.SelectedIndex < 0)
             {
                 return null;
             }
@@ -119,6 +126,12 @@ namespace MixItUp.WPF.Controls.Overlay
                     case RainboxSixSiegeGameStatsSetup.GameName:
                         setup = new RainboxSixSiegeGameStatsSetup(this.UsernameTextBox.Text, platform);
                         break;
+                    case FortniteGameStatsSetup.GameName:
+                        setup = new FortniteGameStatsSetup(this.UsernameTextBox.Text, platform, (string)this.CategoryComboBox.SelectedItem);
+                        break;
+                    case CallOfDutyBlackOps4GameStatsSetup.GameName:
+                        setup = new CallOfDutyBlackOps4GameStatsSetup(this.UsernameTextBox.Text, platform, (string)this.CategoryComboBox.SelectedItem);
+                        break;
                 }
             }
 
@@ -132,7 +145,8 @@ namespace MixItUp.WPF.Controls.Overlay
 
         protected override Task OnLoaded()
         {
-            this.GameComboBox.ItemsSource = new List<string>() { "Rainbox Six Siege" };
+            List<string> games = new List<string>() { CallOfDutyBlackOps4GameStatsSetup.GameName, FortniteGameStatsSetup.GameName, RainboxSixSiegeGameStatsSetup.GameName };
+            this.GameComboBox.ItemsSource = games.OrderBy(g => g);
             this.PlatformComboBox.ItemsSource = EnumHelper.GetEnumNames<GameStatsPlatformTypeEnum>();
 
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
@@ -140,6 +154,8 @@ namespace MixItUp.WPF.Controls.Overlay
             this.BorderColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
 
             this.TextFontComboBox.Text = "Arial";
+
+            this.HTMLText.Text = GameStatsSetupBase.DefaultHTMLTemplate;
 
             if (this.item != null)
             {
@@ -151,14 +167,20 @@ namespace MixItUp.WPF.Controls.Overlay
 
         private void GameComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            this.CategoryComboBox.Visibility = Visibility.Collapsed;
+            this.CategoryComboBox.ItemsSource = null;
             if (this.GameComboBox.SelectedIndex >= 0)
             {
                 string gameName = (string)this.GameComboBox.SelectedItem;
-                switch (gameName)
+                if (gameName.Equals(FortniteGameStatsSetup.GameName))
                 {
-                    case RainboxSixSiegeGameStatsSetup.GameName:
-                        this.HTMLText.Text = RainboxSixSiegeGameStatsSetup.DefaultHTMLTemplate;
-                        break;
+                    this.CategoryComboBox.Visibility = Visibility.Visible;
+                    this.CategoryComboBox.ItemsSource = FortniteGameStatsSetup.Categories;
+                }
+                else if (gameName.Equals(CallOfDutyBlackOps4GameStatsSetup.GameName))
+                {
+                    this.CategoryComboBox.Visibility = Visibility.Visible;
+                    this.CategoryComboBox.ItemsSource = CallOfDutyBlackOps4GameStatsSetup.Categories;
                 }
             }
         }

@@ -9,7 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Border Style="{StaticResource DefaultBorder}">
-            <TextBox x:Name="HTMLTextBox" MaterialDesign:HintAssist.Hint="HTML Text" Style="{StaticResource MultiLineTextBox}" Height="100" />
+            <TextBox x:Name="HTMLTextBox" MaterialDesign:HintAssist.Hint="HTML Text" Style="{StaticResource MultiLineTextBox}" Height="100" Width="700" />
         </Border>
     </Grid>
 </local:OverlayItemControl>

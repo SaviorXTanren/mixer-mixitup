@@ -47,7 +47,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
             this.actionGroupCommands.Clear();
 
-            IEnumerable<ActionGroupCommand> data = ChannelSession.Settings.ActionGroupCommands.ToList();
+            IEnumerable<ActionGroupCommand> data = ChannelSession.Settings.ActionGroupCommands.ToList().OrderBy(u => u.Name);
             if (sortColumn != null)
             {
                 int columnIndex = this.ActionGroupCommandsListView.Columns.IndexOf(sortColumn);

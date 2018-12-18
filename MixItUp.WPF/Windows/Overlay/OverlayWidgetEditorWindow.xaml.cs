@@ -60,7 +60,7 @@ namespace MixItUp.WPF.Windows.Overlay
 
         protected override async Task OnLoaded()
         {
-            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayWidgetTypeEnum>();
+            this.TypeComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayWidgetTypeEnum>().OrderBy(t => t);
 
             if (ChannelSession.Services.OverlayServers.GetOverlayNames().Count() > 1)
             {

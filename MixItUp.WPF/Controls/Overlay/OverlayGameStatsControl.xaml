@@ -20,6 +20,7 @@
         <Grid Grid.Row="0" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="15" />
@@ -28,9 +29,11 @@
 
             <ComboBox Grid.Column="0" x:Name="GameComboBox" MaterialDesign:HintAssist.Hint="Game" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" SelectionChanged="GameComboBox_SelectionChanged" />
 
-            <TextBox Grid.Column="2" x:Name="UsernameTextBox" MaterialDesign:HintAssist.Hint="Username" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+            <ComboBox Grid.Column="1" x:Name="CategoryComboBox" Visibility="Collapsed" Margin="15,0,0,0" MaterialDesign:HintAssist.Hint="Category" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="150" />
 
-            <ComboBox Grid.Column="4" x:Name="PlatformComboBox" MaterialDesign:HintAssist.Hint="Platform" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
+            <TextBox Grid.Column="3" x:Name="UsernameTextBox" MaterialDesign:HintAssist.Hint="Username" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+
+            <ComboBox Grid.Column="5" x:Name="PlatformComboBox" MaterialDesign:HintAssist.Hint="Platform" IsEditable="True" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="120" />
 
         </Grid>
 
