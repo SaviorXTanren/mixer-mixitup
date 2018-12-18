@@ -642,7 +642,7 @@ namespace MixItUp.Base.Util
                 this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "submonths", user.SubscribeMonths.ToString());
 
                 if (this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "followers") || this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "game") ||
-                    this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid"))
+                    this.ContainsSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channel"))
                 {
                     ExpandedChannelModel channel = await ChannelSession.Connection.GetChannel(user.UserName);
 
@@ -658,6 +658,7 @@ namespace MixItUp.Base.Util
                     }
 
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channelid", channel.id.ToString());
+                    this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "channellive", channel.online.ToString());
                 }
             }
         }
