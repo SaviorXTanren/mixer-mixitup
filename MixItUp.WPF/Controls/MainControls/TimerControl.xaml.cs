@@ -86,15 +86,17 @@ namespace MixItUp.WPF.Controls.MainControls
         private async void TimerMinimumMessagesTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             int value;
-            if (int.TryParse(this.TimerMinimumMessagesTextBox.Text, out value) && value > 0)
+            if (int.TryParse(this.TimerMinimumMessagesTextBox.Text, out value) && value >= 0)
             {
                 ChannelSession.Settings.TimerCommandsMinimumMessages = value;
             }
             else
             {
-                await MessageBoxHelper.ShowMessageDialog("Minimum Messages must be greater than 0");
+                await MessageBoxHelper.ShowMessageDialog("Minimum Messages must be 0 or greater");
                 this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
             }
+
+            await this.CheckIfMinMessagesAndIntervalAreBothZero();
         }
 
         private async void TimerIntervalTextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -107,6 +109,18 @@ namespace MixItUp.WPF.Controls.MainControls
             else
             {
                 await MessageBoxHelper.ShowMessageDialog("Interval must be 0 or greater");
+                this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
+            }
+
+            await this.CheckIfMinMessagesAndIntervalAreBothZero();
+        }
+
+        private async Task CheckIfMinMessagesAndIntervalAreBothZero()
+        {
+            if (ChannelSession.Settings.TimerCommandsMinimumMessages <= 0 && ChannelSession.Settings.TimerCommandsInterval <= 0)
+            {
+                await MessageBoxHelper.ShowMessageDialog("Minimum Messages & Interval can not both be 0");
+                ChannelSession.Settings.TimerCommandsInterval = 1;
                 this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             }
         }
