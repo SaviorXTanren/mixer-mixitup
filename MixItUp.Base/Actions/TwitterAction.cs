@@ -16,12 +16,16 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string TweetText { get; set; }
 
+        [DataMember]
+        public string ImagePath { get; set; }
+
         public TwitterAction() : base(ActionTypeEnum.Twitter) { }
 
-        public TwitterAction(string tweetText)
+        public TwitterAction(string tweetText, string imagePath)
             : this()
         {
             this.TweetText = tweetText;
+            this.ImagePath = imagePath;
         }
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
@@ -29,7 +33,8 @@ namespace MixItUp.Base.Actions
             if (ChannelSession.Services.Twitter != null)
             {
                 string tweet = await this.ReplaceStringWithSpecialModifiers(this.TweetText, user, arguments);
-                await ChannelSession.Services.Twitter.SendTweet(tweet);
+                string imagePath = await this.ReplaceStringWithSpecialModifiers(this.ImagePath, user, arguments);
+                await ChannelSession.Services.Twitter.SendTweet(tweet, imagePath);
             }
         }
     }
