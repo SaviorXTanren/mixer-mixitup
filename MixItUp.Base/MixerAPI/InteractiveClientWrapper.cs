@@ -796,12 +796,14 @@ namespace MixItUp.Base.MixerAPI
                     }
 
                     UserViewModel lurkingUser = null;
-                    if (user != null && !user.IsInChat)
-                    {
-                        // The user is in lurk mode and not in chat, we can't let them be discovered by using MixPlay
-                        lurkingUser = user;
-                        user = null;
-                    }
+                    // Disabling the "lurk mode" for now.  If a user is lurking, and they use MixPlay, then they can be discovered.
+                    // NOTE: They won't show up in the chat list however.
+                    //if (user != null && !user.IsInChat)
+                    //{
+                    //    // The user is in lurk mode and not in chat, we can't let them be discovered by using MixPlay
+                    //    lurkingUser = user;
+                    //    user = null;
+                    //}
 
                     if (user == null)
                     {
