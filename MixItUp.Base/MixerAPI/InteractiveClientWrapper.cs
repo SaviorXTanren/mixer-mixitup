@@ -404,7 +404,20 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveControlModel> controls) { await this.RunAsync(this.Client.UpdateControls(scene, controls)); }
+        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveControlModel> controls)
+        {
+            // We don't want to update all fields of the controls, so let's just clone and remove the fields we don't want to change
+            List<InteractiveControlModel> updatedControls = new List<InteractiveControlModel>();
+            
+            foreach (InteractiveControlModel control in controls)
+            {
+                InteractiveControlModel updatedControl = SerializerHelper.Clone(control);
+                updatedControl.position = null;
+                updatedControls.Add(updatedControl);
+            }
+
+            await this.RunAsync(this.Client.UpdateControls(scene, updatedControls));
+        }
 
         public async Task CaptureSparkTransaction(string transactionID) { await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
 
@@ -590,7 +603,7 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
 
-            await this.RefreshCachedControls();           
+            await this.RefreshCachedControls();
             if (this.Scenes.Count == 0)
             {
                 return false;
