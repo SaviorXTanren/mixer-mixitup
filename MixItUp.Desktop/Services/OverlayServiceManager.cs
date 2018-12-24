@@ -143,7 +143,7 @@ namespace MixItUp.Desktop.Services
                     }
                 }
 
-                await Task.Delay(5000);
+                await Task.Delay(ChannelSession.Settings.OverlayWidgetRefreshTime * 1000);
             });
         }
 

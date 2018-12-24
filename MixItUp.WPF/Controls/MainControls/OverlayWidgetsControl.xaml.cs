@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Services;
+using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Overlay;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace MixItUp.WPF.Controls.MainControls
         protected override Task InitializeInternal()
         {
             this.OverlayWidgetsListView.ItemsSource = this.widgets;
+
+            this.RefreshTimeTextBox.Text = ChannelSession.Settings.OverlayWidgetRefreshTime.ToString();
 
             this.RefreshList();
 
@@ -114,13 +117,6 @@ namespace MixItUp.WPF.Controls.MainControls
             }
         }
 
-        private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
-        {
-            OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow();
-            window.Closed += Window_Closed;
-            window.Show();
-        }
-
         private void EnableDisableToggleSwitch_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             ToggleButton button = (ToggleButton)sender;
@@ -129,6 +125,27 @@ namespace MixItUp.WPF.Controls.MainControls
             {
                 button.IsChecked = true;
             }
+        }
+
+        private async void RefreshTimeTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            int value;
+            if (int.TryParse(this.RefreshTimeTextBox.Text, out value) && value > 0)
+            {
+                ChannelSession.Settings.OverlayWidgetRefreshTime = value;
+            }
+            else
+            {
+                await MessageBoxHelper.ShowMessageDialog("Refresh Interval must be greater than 0");
+                this.RefreshTimeTextBox.Text = ChannelSession.Settings.OverlayWidgetRefreshTime.ToString();
+            }
+        }
+
+        private void AddOverlayWidgetButton_Click(object sender, RoutedEventArgs e)
+        {
+            OverlayWidgetEditorWindow window = new OverlayWidgetEditorWindow();
+            window.Closed += Window_Closed;
+            window.Show();
         }
     }
 }

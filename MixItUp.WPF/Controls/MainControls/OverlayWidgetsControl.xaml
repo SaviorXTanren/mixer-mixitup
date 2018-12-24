@@ -60,7 +60,17 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Button x:Name="AddOverlayWidgetButton" Grid.Row="2" Width="180" Click="AddOverlayWidgetButton_Click">Add Overlay Widget</Button>
+            <Grid Grid.Row="2" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="RefreshTimeTextBox" Grid.Column="0" Width="120" LostFocus="RefreshTimeTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Refresh Interval (Secs)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Button x:Name="AddOverlayWidgetButton" Grid.Column="2" Width="180" Click="AddOverlayWidgetButton_Click">Add Overlay Widget</Button>
+            </Grid>
 
         </Grid>
     </Grid>

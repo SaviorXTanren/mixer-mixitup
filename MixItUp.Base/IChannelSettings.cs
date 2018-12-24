@@ -109,6 +109,7 @@ namespace MixItUp.Base
         bool EnableOverlay { get; set; }
         Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
         string OverlaySourceName { get; set; }
+        int OverlayWidgetRefreshTime { get; set; }
 
         string OBSStudioServerIP { get; set; }
         string OBSStudioServerPassword { get; set; }

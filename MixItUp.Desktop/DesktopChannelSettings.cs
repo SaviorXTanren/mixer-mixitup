@@ -196,6 +196,8 @@ namespace MixItUp.Desktop
         public Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
         [JsonProperty]
         public string OverlaySourceName { get; set; }
+        [JsonProperty]
+        public int OverlayWidgetRefreshTime { get; set; }
 
         [JsonProperty]
         public string OBSStudioServerIP { get; set; }
@@ -449,6 +451,8 @@ namespace MixItUp.Desktop
             this.MaxMessagesInChat = 100;
             this.ChatFontSize = 13;
             this.ChatUserJoinLeaveColorScheme = this.ChatEventAlertsColorScheme = this.ChatInteractiveAlertsColorScheme = ColorSchemes.DefaultColorScheme;
+
+            this.OverlayWidgetRefreshTime = 5;
 
             this.ModerationFilteredWordsExcempt = MixerRoleEnum.Mod;
             this.ModerationChatTextExcempt = MixerRoleEnum.Mod;
