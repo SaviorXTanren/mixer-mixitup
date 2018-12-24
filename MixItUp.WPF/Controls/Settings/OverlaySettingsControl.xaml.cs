@@ -14,7 +14,7 @@ namespace MixItUp.WPF.Controls.Settings
 
         public string Address { get { return string.Format(OverlayService.RegularOverlayHttpListenerServerAddressFormat, this.Port); } }
 
-        public bool CanDelete { get { return ChannelSession.Services.OverlayServers.DefaultOverlayName.Equals(this.Name); } }
+        public bool CanDelete { get { return !ChannelSession.Services.OverlayServers.DefaultOverlayName.Equals(this.Name); } }
 
         public OverlayEndpointListing(string name, int port)
         {
@@ -39,7 +39,7 @@ namespace MixItUp.WPF.Controls.Settings
         {
             this.OverlayEndpointsListView.ItemsSource = this.overlays;
             this.overlays.Clear();
-            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
+            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts.OrderBy(kvp => kvp.Value))
             {
                 this.overlays.Add(new OverlayEndpointListing(kvp.Key, kvp.Value));
             }

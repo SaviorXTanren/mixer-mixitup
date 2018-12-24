@@ -45,7 +45,7 @@
 
                                 <TextBlock Grid.Column="2" Text="{Binding Address}" />
 
-                                <Button Grid.Column="4" x:Name="DeleteOverlayButton" Margin="-10" Visibility="{Binding CanDelete}" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteOverlayButton_Click" ToolTip="Delete" />
+                                <Button Grid.Column="4" x:Name="DeleteOverlayButton" Margin="-10" IsEnabled="{Binding CanDelete}" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteOverlayButton_Click" ToolTip="Delete" />
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

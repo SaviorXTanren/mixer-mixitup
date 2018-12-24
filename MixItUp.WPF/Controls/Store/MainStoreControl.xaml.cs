@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -96,6 +97,15 @@ namespace MixItUp.WPF.Controls.Store
                 if (listingDetails == null)
                 {
                     await MessageBoxHelper.ShowMessageDialog("Failed to download command, please try again");
+                    return;
+                }
+
+                Version assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
+                Version commandVersion = new Version(listingDetails.AppVersion);
+                if (assemblyVersion < commandVersion)
+                {
+                    await MessageBoxHelper.ShowMessageDialog(string.Format("You can not download this command as it was created on version ({0}) of Mix It Up ", commandVersion));
                     return;
                 }
 

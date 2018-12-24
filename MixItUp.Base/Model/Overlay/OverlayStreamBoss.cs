@@ -1,4 +1,5 @@
-﻿using MixItUp.Base.Model.User;
+﻿using Mixer.Base.Model.User;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
@@ -78,13 +79,16 @@ namespace MixItUp.Base.Model.Overlay
         public string NewBossAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.NewBossAnimation); } set { } }
 
         [DataMember]
-        public UserViewModel CurrentBoss { get; set; }
+        public uint CurrentBossUserID { get; set; }
         [DataMember]
         public int CurrentHealth { get; set; }
         [DataMember]
         public bool NewBoss { get; set; }
         [DataMember]
         public bool DamageTaken { get; set; }
+
+        [DataMember]
+        public UserViewModel CurrentBoss { get; set; }
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
 
@@ -114,8 +118,24 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task Initialize()
         {
-            this.CurrentBoss = await ChannelSession.GetCurrentUser();
-            this.CurrentHealth = this.StartingHealth;
+            if (this.CurrentBossUserID > 0)
+            {
+                UserModel user = await ChannelSession.Connection.GetUser(this.CurrentBossUserID);
+                if (user != null)
+                {
+                    this.CurrentBoss = new UserViewModel(user);
+                }
+                else
+                {
+                    this.CurrentBossUserID = 0;
+                }
+            }
+
+            if (this.CurrentBossUserID == 0)
+            {
+                this.CurrentBoss = await ChannelSession.GetCurrentUser();
+                this.CurrentHealth = this.StartingHealth;
+            }
 
             GlobalEvents.OnFollowOccurred -= GlobalEvents_OnFollowOccurred;
             GlobalEvents.OnHostOccurred -= GlobalEvents_OnHostOccurred;
@@ -207,6 +227,7 @@ namespace MixItUp.Base.Model.Overlay
                 if (this.CurrentHealth <= 0)
                 {
                     this.CurrentBoss = user;
+                    this.CurrentBossUserID = user.ID;
                     this.CurrentHealth = this.StartingHealth;
                     this.NewBoss = true;
                 }
