@@ -404,7 +404,20 @@ namespace MixItUp.Base.MixerAPI
             }
         }
 
-        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveControlModel> controls) { await this.RunAsync(this.Client.UpdateControls(scene, controls)); }
+        public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveControlModel> controls)
+        {
+            // We don't want to update all fields of the controls, so let's just clone and remove the fields we don't want to change
+            List<InteractiveControlModel> updatedControls = new List<InteractiveControlModel>();
+            
+            foreach (InteractiveControlModel control in controls)
+            {
+                InteractiveControlModel updatedControl = SerializerHelper.Clone(control);
+                updatedControl.position = null;
+                updatedControls.Add(updatedControl);
+            }
+
+            await this.RunAsync(this.Client.UpdateControls(scene, updatedControls));
+        }
 
         public async Task CaptureSparkTransaction(string transactionID) { await this.RunAsync(this.Client.CaptureSparkTransaction(transactionID)); }
 
@@ -590,7 +603,7 @@ namespace MixItUp.Base.MixerAPI
                 }
             }
 
-            await this.RefreshCachedControls();           
+            await this.RefreshCachedControls();
             if (this.Scenes.Count == 0)
             {
                 return false;
@@ -795,14 +808,6 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
-                    UserViewModel lurkingUser = null;
-                    if (user != null && !user.IsInChat)
-                    {
-                        // The user is in lurk mode and not in chat, we can't let them be discovered by using MixPlay
-                        lurkingUser = user;
-                        user = null;
-                    }
-
                     if (user == null || !user.IsInChat)
                     {
                         user = new UserViewModel(0, "Unknown User");
@@ -815,10 +820,6 @@ namespace MixItUp.Base.MixerAPI
 
                     if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.IsAnonymous)
                     {
-                        if (lurkingUser != null)
-                        {
-                            await ChannelSession.Chat.Whisper(lurkingUser.UserName, "You are in lurk mode and cannot use MixPlay until you send a chat message.");
-                        }
                         return;
                     }
 
@@ -829,14 +830,7 @@ namespace MixItUp.Base.MixerAPI
 
                     if (!ModerationHelper.MeetsChatInteractiveParticipationRequirement(user))
                     {
-                        if (lurkingUser != null)
-                        {
-                            await ChannelSession.Chat.Whisper(lurkingUser.UserName, "You are in lurk mode and cannot use MixPlay until you send a chat message.");
-                        }
-                        else
-                        {
-                            await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isInteractive: true);
-                        }
+                        await ModerationHelper.SendChatInteractiveParticipationWhisper(user, isInteractive: true);
                         return;
                     }
 
