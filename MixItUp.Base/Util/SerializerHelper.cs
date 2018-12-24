@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -43,10 +44,9 @@ namespace MixItUp.Base.Util
             return (T)JsonConvert.DeserializeObject(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
         }
 
-        public static T Clone<T>(T obj)
+        public static T Clone<T>(object data)
         {
-            var serialized = JsonConvert.SerializeObject(obj);
-            return JsonConvert.DeserializeObject<T>(serialized);
+            return SerializerHelper.DeserializeFromString<T>(SerializerHelper.SerializeToString(data));
         }
     }
 }

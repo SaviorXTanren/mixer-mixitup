@@ -406,14 +406,19 @@ namespace MixItUp.Base.MixerAPI
 
         public async Task UpdateControls(InteractiveConnectedSceneModel scene, IEnumerable<InteractiveControlModel> controls)
         {
-            // We don't want to update all fields of the controls, so let's just clone and remove the fields we don't want to change
             List<InteractiveControlModel> updatedControls = new List<InteractiveControlModel>();
-            
+
             foreach (InteractiveControlModel control in controls)
             {
-                InteractiveControlModel updatedControl = SerializerHelper.Clone(control);
-                updatedControl.position = null;
-                updatedControls.Add(updatedControl);
+                if (control is InteractiveConnectedButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedButtonControlModel>(control)); }
+                else if (control is InteractiveConnectedJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedJoystickControlModel>(control)); }
+                else if (control is InteractiveConnectedTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedTextBoxControlModel>(control)); }
+                else if (control is InteractiveConnectedLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedLabelControlModel>(control)); }
+            }
+
+            foreach (InteractiveControlModel control in updatedControls)
+            {
+                control.position = null;
             }
 
             await this.RunAsync(this.Client.UpdateControls(scene, updatedControls));
