@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
@@ -77,7 +78,9 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public List<Guid> DeletedMessages = new List<Guid>();
 
-        private LockedList<ChatMessageViewModel> allMessages = new LockedList<ChatMessageViewModel>();
+        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
+
+        private List<ChatMessageViewModel> allMessages = new List<ChatMessageViewModel>();
         private List<ChatMessageViewModel> messagesToProcess = new List<ChatMessageViewModel>();
 
         public OverlayChatMessages() : base(ChatMessagesItemType, HTMLTemplate) { }
@@ -106,41 +109,45 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            if (this.allMessages.Count > 0 || this.DeletedMessages.Count > 0)
+            return await this.semaphore.WaitAndRelease(async () =>
             {
-                OverlayChatMessages copy = this.Copy<OverlayChatMessages>();
-                this.DeletedMessages.Clear();
-
-                if (this.allMessages.Count > 0)
+                if (this.allMessages.Count > 0 || this.DeletedMessages.Count > 0)
                 {
-                    int skip = this.allMessages.Count;
-                    if (skip > this.TotalToShow)
-                    {
-                        skip = skip - this.TotalToShow;
-                    }
-                    else
-                    {
-                        skip = 0;
-                    }
+                    OverlayChatMessages copy = this.Copy<OverlayChatMessages>();
 
-                    this.messagesToProcess = new List<ChatMessageViewModel>(this.allMessages.Skip(skip));
-                    this.allMessages.Clear();
+                    this.DeletedMessages.Clear();
 
-                    for (int i = 0; i < this.messagesToProcess.Count; i++)
+                    if (this.allMessages.Count > 0)
                     {
-                        OverlayCustomHTMLItem overlayItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-                        copy.Messages.Add(new OverlayChatMessage()
+                        int skip = this.allMessages.Count;
+                        if (skip > this.TotalToShow)
                         {
-                            ID = this.messagesToProcess.ElementAt(0).ID,
-                            Message = overlayItem.HTMLText,
-                        });
-                        this.messagesToProcess.RemoveAt(0);
-                    }
-                }
+                            skip = skip - this.TotalToShow;
+                        }
+                        else
+                        {
+                            skip = 0;
+                        }
 
-                return copy;
-            }
-            return null;
+                        this.messagesToProcess = new List<ChatMessageViewModel>(this.allMessages.Skip(skip));
+                        this.allMessages.Clear();
+
+                        while (this.messagesToProcess.Count > 0)
+                        {
+                            OverlayCustomHTMLItem overlayItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+                            copy.Messages.Add(new OverlayChatMessage()
+                            {
+                                ID = this.messagesToProcess.ElementAt(0).ID,
+                                Message = overlayItem.HTMLText,
+                            });
+                            this.messagesToProcess.RemoveAt(0);
+                        }
+                    }
+
+                    return copy;
+                }
+                return null;
+            });
         }
 
         public override OverlayCustomHTMLItem GetCopy() { return this.Copy<OverlayChatMessages>(); }
@@ -223,17 +230,25 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(replacementSets);
         }
 
-        private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
+        private async void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
             if (!message.IsAlert && !message.IsWhisper)
             {
-                this.allMessages.Add(message);
+                await this.semaphore.WaitAndRelease(() =>
+                {
+                    this.allMessages.Add(message);
+                    return Task.FromResult(0);
+                });
             }
         }
 
-        private void GlobalEvents_OnChatMessageDeleted(object sender, Guid id)
+        private async void GlobalEvents_OnChatMessageDeleted(object sender, Guid id)
         {
-            this.DeletedMessages.Add(id);
+            await this.semaphore.WaitAndRelease(() =>
+            {
+                this.DeletedMessages.Add(id);
+                return Task.FromResult(0);
+            });
         }
     }
 }
