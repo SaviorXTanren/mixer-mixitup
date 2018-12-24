@@ -37,12 +37,16 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Button x:Name="EnableOverlayButton" Grid.Row="0" Click="EnableOverlayButton_Click" Width="140">Enable Overlay</Button>
             <Button x:Name="DisableOverlayButton" Grid.Row="0" Click="DisableOverlayButton_Click" Width="140" Visibility="Collapsed">Disable Overlay</Button>
 
             <Button x:Name="TestOverlayButton" Grid.Row="2" Click="TestOverlayButton_Click" Width="140" IsEnabled="False">Test Connection</Button>
+
+            <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="130">Multi-overlay support can be found in Settings</TextBlock>
         </Grid>
 
         <Grid Grid.Column="4" VerticalAlignment="Center" Width="200">
