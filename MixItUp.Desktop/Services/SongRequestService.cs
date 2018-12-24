@@ -105,28 +105,33 @@ namespace MixItUp.Desktop.Services
                         if (Regex.IsMatch(ChannelSession.Settings.DefaultPlaylist, SpotifyPlaylistLinkRegex, RegexOptions.IgnoreCase))
                         {
                             string playlistID = ChannelSession.Settings.DefaultPlaylist.Split(new char[] { '/' }).Last();
-                            if (playlistID.Contains("?"))
+                            if (!string.IsNullOrEmpty(playlistID))
                             {
-                                playlistID = playlistID.Substring(0, playlistID.IndexOf("?"));
+                                if (playlistID.Contains("?"))
+                                {
+                                    playlistID = playlistID.Substring(0, playlistID.IndexOf("?"));
+                                }
+                                uri = string.Format(SpotifyPlaylistUriFormat, ChannelSession.Services.Spotify.Profile.ID, playlistID);
                             }
-                            uri = string.Format(SpotifyPlaylistUriFormat, ChannelSession.Services.Spotify.Profile.ID, playlistID);
                         }
 
                         string id = uri.Split(new string[] { ":playlist:" }, StringSplitOptions.RemoveEmptyEntries).Last();
-
-                        IEnumerable<SpotifySong> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(new SpotifyPlaylist { ID = id });
-                        if (songs != null)
+                        if (!string.IsNullOrEmpty(id))
                         {
-                            foreach (SpotifySong song in songs)
+                            IEnumerable<SpotifySong> songs = await ChannelSession.Services.Spotify.GetPlaylistSongs(new SpotifyPlaylist { ID = id });
+                            if (songs != null)
                             {
-                                this.playlistItems.Add(new SongRequestItem()
+                                foreach (SpotifySong song in songs)
                                 {
-                                    Type = SongRequestServiceTypeEnum.Spotify,
-                                    ID = song.ID,
-                                    Name = song.ToString(),
-                                    Length = song.Duration,
-                                    AlbumImage = song.Album?.ImageLink
-                                });
+                                    this.playlistItems.Add(new SongRequestItem()
+                                    {
+                                        Type = SongRequestServiceTypeEnum.Spotify,
+                                        ID = song.ID,
+                                        Name = song.ToString(),
+                                        Length = song.Duration,
+                                        AlbumImage = song.Album?.ImageLink
+                                    });
+                                }
                             }
                         }
                     }

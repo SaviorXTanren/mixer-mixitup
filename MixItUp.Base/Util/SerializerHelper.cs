@@ -42,5 +42,11 @@ namespace MixItUp.Base.Util
         {
             return (T)JsonConvert.DeserializeObject(data, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
         }
+
+        public static T Clone<T>(T obj)
+        {
+            var serialized = JsonConvert.SerializeObject(obj);
+            return JsonConvert.DeserializeObject<T>(serialized);
+        }
     }
 }

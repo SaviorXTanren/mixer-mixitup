@@ -191,6 +191,11 @@ namespace MixItUp.Base.Util
         {
             if (ChannelSession.Settings.ModerationChatInteractiveParticipation != ModerationChatInteractiveParticipationEnum.None)
             {
+                if (user == null)
+                {
+                    return false;
+                }
+
                 if (UserContainerViewModel.SpecialUserAccounts.Contains(user.UserName))
                 {
                     return true;
