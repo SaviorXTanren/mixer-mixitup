@@ -59,6 +59,15 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<Guid> OnChatMessageDeleted;
+        public static void ChatMessageDeleted(Guid messageID)
+        {
+            if (GlobalEvents.OnChatMessageDeleted != null)
+            {
+                GlobalEvents.OnChatMessageDeleted(null, messageID);
+            }
+        }
+
         public static event EventHandler<ChatMessageViewModel> OnChatCommandMessageReceived;
         public static void ChatCommandMessageReceived(ChatMessageViewModel chatMessage)
         {

@@ -513,23 +513,33 @@
                 var i = 0;
 
                 if (items.length >= data.TotalToShow) {
-                    for (i = 0; i < data.NewMessages.length && mainDiv.hasChildNodes(); i++) {
+                    for (i = 0; i < data.Messages.length && mainDiv.hasChildNodes(); i++) {
                         items.pop();
                         mainDiv.removeChild(mainDiv.firstChild);
                     }
                 }
 
-                for (i = 0; i < data.NewMessages.length; i++) {
-                    var newMessage = data.NewMessages[i];
+                for (i = 0; i < data.Messages.length; i++) {
+                    var newMessage = data.Messages[i];
 
                     var newItemDiv = document.createElement('div');
                     var newItemInnerDiv = document.createElement('div');
-                    newItemInnerDiv.innerHTML = newMessage;
+                    newItemInnerDiv.innerHTML = newMessage.Message;
                     newItemDiv.appendChild(newItemInnerDiv);
                     $(newItemDiv).animateCss(data.AddEventAnimationName, function () { });
 
                     mainDiv.appendChild(newItemDiv);
-                    items.unshift(data.NewMessages[i]);
+                    items.unshift({ id: data.Messages[i].ID, div: newItemDiv });
+                }
+
+                for (i = 0; i < data.DeletedMessages.length; i++) {
+                    for (j = 0; j < items.length; j++) {
+                        if (data.DeletedMessages[i] == items[j].id) {
+                            mainDiv.removeChild(items[j].div);
+                            items.splice(j, 1);
+                            break;
+                        }
+                    }
                 }
             }
 

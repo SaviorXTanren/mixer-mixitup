@@ -2,6 +2,7 @@
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Chat;
 using MixItUp.Base.ViewModel.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,6 +11,15 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Model.Overlay
 {
+    [DataContract]
+    public class OverlayChatMessage
+    {
+        [DataMember]
+        public Guid ID { get; set; }
+        [DataMember]
+        public string Message { get; set; }
+    }
+
     [DataContract]
     public class OverlayChatMessages : OverlayCustomHTMLItem
     {
@@ -62,7 +72,10 @@ namespace MixItUp.Base.Model.Overlay
         public string AddEventAnimationName { get { return OverlayItemEffects.GetAnimationClassName(this.AddEventAnimation); } set { } }
 
         [DataMember]
-        public List<string> NewMessages = new List<string>();
+        public List<OverlayChatMessage> Messages = new List<OverlayChatMessage>();
+
+        [DataMember]
+        public List<Guid> DeletedMessages = new List<Guid>();
 
         private LockedList<ChatMessageViewModel> allMessages = new LockedList<ChatMessageViewModel>();
         private List<ChatMessageViewModel> messagesToProcess = new List<ChatMessageViewModel>();
@@ -86,35 +99,45 @@ namespace MixItUp.Base.Model.Overlay
         public override async Task Initialize()
         {
             GlobalEvents.OnChatMessageReceived += GlobalEvents_OnChatMessageReceived;
+            GlobalEvents.OnChatMessageDeleted += GlobalEvents_OnChatMessageDeleted;
 
             await base.Initialize();
         }
 
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            if (this.allMessages.Count > 0)
+            if (this.allMessages.Count > 0 || this.DeletedMessages.Count > 0)
             {
                 OverlayChatMessages copy = this.Copy<OverlayChatMessages>();
+                this.DeletedMessages.Clear();
 
-                int skip = this.allMessages.Count;
-                if (skip > this.TotalToShow)
+                if (this.allMessages.Count > 0)
                 {
-                    skip = skip - this.TotalToShow;
-                }
-                else
-                {
-                    skip = 0;
+                    int skip = this.allMessages.Count;
+                    if (skip > this.TotalToShow)
+                    {
+                        skip = skip - this.TotalToShow;
+                    }
+                    else
+                    {
+                        skip = 0;
+                    }
+
+                    this.messagesToProcess = new List<ChatMessageViewModel>(this.allMessages.Skip(skip));
+                    this.allMessages.Clear();
+
+                    for (int i = 0; i < this.messagesToProcess.Count; i++)
+                    {
+                        OverlayCustomHTMLItem overlayItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
+                        copy.Messages.Add(new OverlayChatMessage()
+                        {
+                            ID = this.messagesToProcess.ElementAt(0).ID,
+                            Message = overlayItem.HTMLText,
+                        });
+                        this.messagesToProcess.RemoveAt(0);
+                    }
                 }
 
-                this.messagesToProcess = new List<ChatMessageViewModel>(this.allMessages.Skip(skip));
-                this.allMessages.Clear();
-
-                for (int i = 0; i < this.messagesToProcess.Count; i++)
-                {
-                    OverlayCustomHTMLItem overlayItem = (OverlayCustomHTMLItem)await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-                    copy.NewMessages.Add(overlayItem.HTMLText);
-                    this.messagesToProcess.RemoveAt(0);
-                }
                 return copy;
             }
             return null;
@@ -202,10 +225,15 @@ namespace MixItUp.Base.Model.Overlay
 
         private void GlobalEvents_OnChatMessageReceived(object sender, ChatMessageViewModel message)
         {
-            if (!message.IsAlert)
+            if (!message.IsAlert && !message.IsWhisper)
             {
                 this.allMessages.Add(message);
             }
+        }
+
+        private void GlobalEvents_OnChatMessageDeleted(object sender, Guid id)
+        {
+            this.DeletedMessages.Add(id);
         }
     }
 }

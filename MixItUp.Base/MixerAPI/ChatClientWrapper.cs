@@ -742,6 +742,7 @@ namespace MixItUp.Base.MixerAPI
         private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
             this.OnDeleteMessageOccurred(sender, e);
+            GlobalEvents.ChatMessageDeleted(e.id);
         }
 
         private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)
