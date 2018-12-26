@@ -27,6 +27,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.TimerCommandsListView.ItemsSource = this.timerCommands;
             this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             this.TimerMinimumMessagesTextBox.Text = ChannelSession.Settings.TimerCommandsMinimumMessages.ToString();
+            this.DisableAllTimers.IsChecked = ChannelSession.Settings.DisableAllTimers;
 
             this.RefreshList();
 
@@ -123,6 +124,11 @@ namespace MixItUp.WPF.Controls.MainControls
                 ChannelSession.Settings.TimerCommandsInterval = 1;
                 this.TimerIntervalTextBox.Text = ChannelSession.Settings.TimerCommandsInterval.ToString();
             }
+        }
+
+        private void DisableAllTimers_Click(object sender, RoutedEventArgs e)
+        {
+            ChannelSession.Settings.DisableAllTimers = this.DisableAllTimers.IsChecked.GetValueOrDefault();
         }
     }
 }
