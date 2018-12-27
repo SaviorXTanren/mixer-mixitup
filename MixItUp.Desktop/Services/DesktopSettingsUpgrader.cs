@@ -53,6 +53,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version22Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version23Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version24Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version25Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -326,6 +327,19 @@ namespace MixItUp.Desktop.Services
                 {
                     StoreCommandUpgrader.RestructureNewOverlayActions(command.Actions);
                 }
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version25Upgrade(int version, string filePath)
+        {
+            if (version < 25)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                settings.OverlayWidgetRefreshTime = 5;
 
                 await ChannelSession.Services.Settings.Save(settings);
             }
