@@ -475,10 +475,6 @@ namespace MixItUp.Desktop.Services
                     Logger.LogDiagnostic("Spotify Status: " + this.spotifyStatus);
                     Logger.LogDiagnostic("YouTube Status: " + this.youTubeStatus);
 
-                    Logger.LogDiagnostic("Current Song: " + this.currentSong);
-                    Logger.LogDiagnostic("Spotify Status: " + this.spotifyStatus);
-                    Logger.LogDiagnostic("YouTube Status: " + this.youTubeStatus);
-
                     if (this.currentSong == null)
                     {
                         await this.SkipToNextSongInternal();

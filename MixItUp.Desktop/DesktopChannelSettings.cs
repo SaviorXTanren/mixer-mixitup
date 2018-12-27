@@ -122,6 +122,8 @@ namespace MixItUp.Desktop
         public int TimerCommandsInterval { get; set; }
         [JsonProperty]
         public int TimerCommandsMinimumMessages { get; set; }
+        [JsonProperty]
+        public bool DisableAllTimers { get; set; }
 
         [JsonProperty]
         public string GiveawayCommand { get; set; }

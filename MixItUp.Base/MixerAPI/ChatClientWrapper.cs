@@ -600,21 +600,24 @@ namespace MixItUp.Base.MixerAPI
 
                 tokenSource.Token.ThrowIfCancellationRequested();
 
-                IEnumerable<TimerCommand> timers = ChannelSession.Settings.TimerCommands.Where(c => c.IsEnabled);
-                if (timers.Count() > 0)
+                if (!ChannelSession.Settings.DisableAllTimers)
                 {
-                    timerCommandIndex = timerCommandIndex % timers.Count();
-                    TimerCommand command = timers.ElementAt(timerCommandIndex);
-
-                    while ((this.Messages.Count - startMessageCount) < ChannelSession.Settings.TimerCommandsMinimumMessages)
+                    IEnumerable<TimerCommand> timers = ChannelSession.Settings.TimerCommands.Where(c => c.IsEnabled);
+                    if (timers.Count() > 0)
                     {
-                        tokenSource.Token.ThrowIfCancellationRequested();
-                        await Task.Delay(1000 * 10, tokenSource.Token);
+                        timerCommandIndex = timerCommandIndex % timers.Count();
+                        TimerCommand command = timers.ElementAt(timerCommandIndex);
+
+                        while ((this.Messages.Count - startMessageCount) < ChannelSession.Settings.TimerCommandsMinimumMessages)
+                        {
+                            tokenSource.Token.ThrowIfCancellationRequested();
+                            await Task.Delay(1000 * 10, tokenSource.Token);
+                        }
+
+                        await command.Perform();
+
+                        timerCommandIndex++;
                     }
-
-                    await command.Perform();
-
-                    timerCommandIndex++;
                 }
             });
         }
