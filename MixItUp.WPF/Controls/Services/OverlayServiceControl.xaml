@@ -37,7 +37,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="30" />
+                <RowDefinition Height="20" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
@@ -46,7 +46,7 @@
 
             <Button x:Name="TestOverlayButton" Grid.Row="2" Click="TestOverlayButton_Click" Width="140" IsEnabled="False">Test Connection</Button>
 
-            <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="130">Multi-overlay support can be found in Settings</TextBlock>
+            <TextBlock Grid.Row="4" TextWrapping="Wrap" Width="150">Multi-overlay support can be found in Settings</TextBlock>
         </Grid>
 
         <Grid Grid.Column="4" VerticalAlignment="Center" Width="200">
