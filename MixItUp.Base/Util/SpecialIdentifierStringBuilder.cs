@@ -374,20 +374,24 @@ namespace MixItUp.Base.Util
                 IEnumerable<Tweet> tweets = await ChannelSession.Services.Twitter.GetLatestTweets();
                 if (tweets.Count() > 0)
                 {
-                    this.ReplaceSpecialIdentifier("tweetlatesturl", tweets.FirstOrDefault().TweetLink);
-                    this.ReplaceSpecialIdentifier("tweetlatesttext", tweets.FirstOrDefault().Text);
-                    this.ReplaceSpecialIdentifier("tweetlatestdatetime", tweets.FirstOrDefault().DateTime.ToString("g"));
-                    this.ReplaceSpecialIdentifier("tweetlatestdate", tweets.FirstOrDefault().DateTime.ToString("d"));
-                    this.ReplaceSpecialIdentifier("tweetlatesttime", tweets.FirstOrDefault().DateTime.ToString("t"));
+                    Tweet latestTweet = tweets.FirstOrDefault();
+                    DateTimeOffset latestTweetLocalTime = latestTweet.DateTime.ToLocalTime();
+
+                    this.ReplaceSpecialIdentifier("tweetlatesturl", latestTweet.TweetLink);
+                    this.ReplaceSpecialIdentifier("tweetlatesttext", latestTweet.Text);
+                    this.ReplaceSpecialIdentifier("tweetlatestdatetime", latestTweetLocalTime.ToString("g"));
+                    this.ReplaceSpecialIdentifier("tweetlatestdate", latestTweetLocalTime.ToString("d"));
+                    this.ReplaceSpecialIdentifier("tweetlatesttime", latestTweetLocalTime.ToString("t"));
 
                     Tweet streamTweet = tweets.FirstOrDefault(t => t.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.User.username.ToLower()))));
                     if (streamTweet != null)
                     {
+                        DateTimeOffset streamTweetLocalTime = streamTweet.DateTime.ToLocalTime();
                         this.ReplaceSpecialIdentifier("tweetstreamurl", streamTweet.TweetLink);
                         this.ReplaceSpecialIdentifier("tweetstreamtext", streamTweet.Text);
-                        this.ReplaceSpecialIdentifier("tweetstreamdatetime", streamTweet.DateTime.ToString("g"));
-                        this.ReplaceSpecialIdentifier("tweetstreamdate", streamTweet.DateTime.ToString("d"));
-                        this.ReplaceSpecialIdentifier("tweetstreamtime", streamTweet.DateTime.ToString("t"));
+                        this.ReplaceSpecialIdentifier("tweetstreamdatetime", streamTweetLocalTime.ToString("g"));
+                        this.ReplaceSpecialIdentifier("tweetstreamdate", streamTweetLocalTime.ToString("d"));
+                        this.ReplaceSpecialIdentifier("tweetstreamtime", streamTweetLocalTime.ToString("t"));
                     }
                 }
             }

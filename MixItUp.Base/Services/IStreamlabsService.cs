@@ -30,7 +30,12 @@ namespace MixItUp.Base.Services
             get
             {
                 double amount = 0;
-                double.TryParse(this.AmountString, out amount);
+                string amountString = this.AmountString;
+                if (!double.TryParse(amountString, out amount))
+                {
+                    amountString = amountString.Replace(".", ",");
+                    double.TryParse(amountString, out amount);
+                }
                 return amount;
             }
         }

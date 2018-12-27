@@ -61,7 +61,7 @@ namespace MixItUp.WPF.Controls.MainControls
 
                                 if (this.cachedUserRoles[currentUser.ID] == this.cachedUserRoles[user.ID])
                                 {
-                                    if (currentUser.UserName.CompareTo(user.UserName) > 0)
+                                    if (!string.IsNullOrEmpty(user.UserName) && currentUser.UserName.CompareTo(user.UserName) > 0)
                                     {
                                         break;
                                     }
