@@ -71,6 +71,7 @@ namespace MixItUp.Base
         
         int TimerCommandsInterval { get; set; }
         int TimerCommandsMinimumMessages { get; set; }
+        bool DisableAllTimers { get; set; }
 
         string GiveawayCommand { get; set; }
         bool GiveawayGawkBoxTrigger { get; set; }
