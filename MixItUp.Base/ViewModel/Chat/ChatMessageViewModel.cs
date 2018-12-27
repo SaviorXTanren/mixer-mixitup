@@ -115,7 +115,7 @@ namespace MixItUp.Base.ViewModel.Chat
 
         public bool IsWhisper { get { return !string.IsNullOrEmpty(this.TargetUsername); } }
 
-        public bool IsUserTagged { get { return this.Message.Contains("@" + ChannelSession.User.username); } }
+        public bool IsUserTagged { get { return this.Message.Contains("@" + ChannelSession.User.username + " "); } }
 
         public bool ContainsImage { get { return this.Images.Count > 0; } }
 

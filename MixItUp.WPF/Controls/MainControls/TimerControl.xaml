@@ -43,6 +43,10 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Button x:Name="AddCommandButton" Grid.Column="0" Click="AddCommandButton_Click">New Command</Button>
@@ -50,6 +54,9 @@
             <TextBox Grid.Column="2" x:Name="TimerIntervalTextBox" LostFocus="TimerIntervalTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Interval (Minutes)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
 
             <TextBox Grid.Column="4" x:Name="TimerMinimumMessagesTextBox" LostFocus="TimerMinimumMessagesTextBox_LostFocus" MaterialDesign:HintAssist.Hint="Min Messages" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+            <TextBlock Grid.Column="6" Text="Disable All Timers:" VerticalAlignment="Center"/>
+            <ToggleButton Grid.Column="8" x:Name="DisableAllTimers" Click="DisableAllTimers_Click"/>
 
         </Grid>
 

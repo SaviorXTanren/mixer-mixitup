@@ -170,6 +170,23 @@
 		"skillAssetsUrl": "not_used"
 	},
 	{
+		"id": "a1655403-774c-4a83-85cc-55f49a6b9547",
+		"name": "Snow Bot",
+		"description": "Snow Bot",
+		"locked": false,
+		"lockReason": 0,
+		"category": "Stickers",
+		"iconUrl": "https://xforgeassets001.xboxlive.com/serviceid-562a2165-bb5d-46f6-828c-2acdc8b22eb9-public/03f9c5b1-ad34-42a2-a41b-3cb2c024e207/0003_snowbot.png",
+		"previewUrl": null,
+		"globalLevelUnlock": 1,
+		"price": 1000,
+		"currency": 1,
+		"skillSetupUrl": null,
+		"skillExecutionUrl": null,
+		"attributionIconUrl": null,
+		"skillAssetsUrl": "not_used"
+	},
+	{
 		"id": "e9cb0411-f037-4080-bc7a-66e26c62baa4",
 		"name": "Polar Bear",
 		"description": "Polar Bear",
