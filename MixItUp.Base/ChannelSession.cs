@@ -16,9 +16,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -177,6 +175,16 @@ namespace MixItUp.Base
                 commands.AddRange(ChannelSession.Settings.ActionGroupCommands);
                 commands.AddRange(ChannelSession.Settings.RemoteCommands);
                 return commands;
+            }
+        }
+
+        public static IDictionary<string, int> AllOverlayNameAndPorts
+        {
+            get
+            {
+                Dictionary<string, int> results = new Dictionary<string, int>(ChannelSession.Settings.OverlayCustomNameAndPorts);
+                results.Add(ChannelSession.Services.OverlayServers.DefaultOverlayName, ChannelSession.Services.OverlayServers.DefaultOverlayPort);
+                return results;
             }
         }
 

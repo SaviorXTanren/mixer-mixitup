@@ -21,7 +21,7 @@ namespace MixItUp.Base.Actions
         public const int MinimumLength = 15;
         public const int MaximumLength = 300;
 
-        private const string VideoFileContentLocatorType = "HlsStreaming";
+        public const string VideoFileContentLocatorType = "HlsStreaming";
 
         private const string FFMPEGExecutablePath = "ffmpeg-4.0-win32-static\\bin\\ffmpeg.exe";
 
@@ -116,6 +116,8 @@ namespace MixItUp.Base.Actions
 
         private async Task ProcessClip(ClipModel clip, string clipName)
         {
+            GlobalEvents.MixerClipCreated(clip);
+
             string clipUrl = string.Format("https://mixer.com/{0}?clip={1}", ChannelSession.User.username, clip.shareableId);
 
             if (this.ShowClipInfoInChat)

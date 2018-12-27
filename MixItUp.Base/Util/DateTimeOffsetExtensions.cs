@@ -56,6 +56,11 @@ namespace MixItUp.Base.Util
             return subMonths;
         }
 
+        public static int TotalDaysFromNow(this DateTimeOffset dt)
+        {
+            return (int)(DateTimeOffset.Now.Date - dt.Date).TotalDays;
+        }
+
         public static int TotalMinutesFromNow(this DateTimeOffset dt)
         {
             return (int)(DateTimeOffset.Now - dt).TotalMinutes;

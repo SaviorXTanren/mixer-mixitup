@@ -78,16 +78,35 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(0);
         }
 
-        public async Task<IEnumerable<StreamlabsDonation>> GetDonations()
+        public async Task<IEnumerable<StreamlabsDonation>> GetDonations(int maxAmount = 1)
         {
             List<StreamlabsDonation> results = new List<StreamlabsDonation>();
             try
             {
-                HttpResponseMessage response = await this.GetAsync("donations");
-                JObject jobj = await this.ProcessJObjectResponse(response);
-                foreach (var donation in (JArray)jobj["data"])
+                int lastID = 0;
+                while (results.Count < maxAmount)
                 {
-                    results.Add(donation.ToObject<StreamlabsDonation>());
+                    string beforeFilter = string.Empty;
+                    if (lastID > 0)
+                    {
+                        beforeFilter = "?before=" + lastID;
+                    }
+
+                    HttpResponseMessage response = await this.GetAsync("donations" + beforeFilter);
+                    JObject jobj = await this.ProcessJObjectResponse(response);
+                    JArray data = (JArray)jobj["data"];
+
+                    if (data.Count == 0)
+                    {
+                        break;
+                    }
+
+                    foreach (var d in data)
+                    {
+                        StreamlabsDonation donation = d.ToObject<StreamlabsDonation>();
+                        lastID = donation.ID;
+                        results.Add(donation);
+                    }
                 }
             }
             catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }

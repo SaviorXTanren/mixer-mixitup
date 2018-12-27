@@ -414,6 +414,11 @@ namespace MixItUp.Base.MixerAPI
                 else if (control is InteractiveConnectedJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedJoystickControlModel>(control)); }
                 else if (control is InteractiveConnectedTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedTextBoxControlModel>(control)); }
                 else if (control is InteractiveConnectedLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveConnectedLabelControlModel>(control)); }
+                else if (control is InteractiveButtonControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveButtonControlModel>(control)); }
+                else if (control is InteractiveJoystickControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveJoystickControlModel>(control)); }
+                else if (control is InteractiveTextBoxControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveTextBoxControlModel>(control)); }
+                else if (control is InteractiveLabelControlModel) { updatedControls.Add(SerializerHelper.Clone<InteractiveLabelControlModel>(control)); }
+                else { updatedControls.Add(SerializerHelper.Clone<InteractiveControlModel>(control)); }
             }
 
             foreach (InteractiveControlModel control in updatedControls)
@@ -813,7 +818,7 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
-                    if (user == null)
+                    if (user == null || !user.IsInChat)
                     {
                         user = new UserViewModel(0, "Unknown User");
                         user.InteractiveIDs[e.participantID] = new InteractiveParticipantModel() { sessionID = e.participantID, anonymous = true };

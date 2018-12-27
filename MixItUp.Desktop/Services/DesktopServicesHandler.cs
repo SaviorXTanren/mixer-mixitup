@@ -5,7 +5,6 @@ using MixItUp.Desktop.Files;
 using MixItUp.Desktop.Services.DeveloperAPI;
 using MixItUp.Input;
 using MixItUp.OBS;
-using MixItUp.Overlay;
 using MixItUp.XSplit;
 using System;
 using System.Net.WebSockets;
@@ -28,8 +27,10 @@ namespace MixItUp.Desktop.Services
             this.SongRequestService = new SongRequestService();
             this.TranslationService = new TranslationService();
             this.SerialService = new SerialService();
+            this.Scout = new ScoutService();
 
             this.ExtraLife = new ExtraLifeService();
+            this.OverlayServers = new OverlayServiceManager();
         }
 
         public override async Task Close()
@@ -44,30 +45,22 @@ namespace MixItUp.Desktop.Services
 
         public override async Task<bool> InitializeOverlayServer()
         {
-            if (this.OverlayServer == null)
+            foreach (var kvp in ChannelSession.AllOverlayNameAndPorts)
             {
-                this.OverlayServer = new OverlayWebServer();
-                if (await this.OverlayServer.Initialize())
+                if (!await ChannelSession.Services.OverlayServers.AddOverlay(kvp.Key, kvp.Value))
                 {
-                    this.OverlayServer.OnWebSocketConnectedOccurred += OverlayServer_OnWebSocketConnectedOccurred;
-                    this.OverlayServer.OnWebSocketDisconnectedOccurred += OverlayServer_OnWebSocketDisconnectedOccurred;
-                    return true;
+                    await this.DisconnectOverlayServer();
+                    return false;
                 }
             }
-            await this.DisconnectOverlayServer();
-            return false;
+            this.OverlayServers.Initialize();
+            return true;
         }
 
         public override async Task DisconnectOverlayServer()
         {
-            if (this.OverlayServer != null)
-            {
-                this.OverlayServer.OnWebSocketConnectedOccurred -= OverlayServer_OnWebSocketConnectedOccurred;
-                this.OverlayServer.OnWebSocketDisconnectedOccurred -= OverlayServer_OnWebSocketDisconnectedOccurred;
-
-                await this.OverlayServer.Disconnect();
-                this.OverlayServer = null;
-            }
+            this.OverlayServers.Disable();
+            await ChannelSession.Services.OverlayServers.RemoveAllOverlays();
         }
 
         public override async Task<bool> InitializeOBSWebsocket()
@@ -128,7 +121,7 @@ namespace MixItUp.Desktop.Services
         {
             if (this.XSplitServer == null)
             {
-                this.XSplitServer = new XSplitWebServer("http://localhost:8211/");
+                this.XSplitServer = new XSplitWebSocketHttpListenerServer("http://localhost:8211/");
                 if (await this.XSplitServer.Connect())
                 {
                     this.XSplitServer.Connected += XSplitServer_Connected;

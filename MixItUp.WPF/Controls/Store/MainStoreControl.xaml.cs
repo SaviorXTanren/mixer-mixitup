@@ -2,6 +2,7 @@
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using MixItUp.WPF.Windows.Command;
@@ -131,12 +132,12 @@ namespace MixItUp.WPF.Controls.Store
                                 if (action.Type == ActionTypeEnum.Overlay)
                                 {
                                     OverlayAction oAction = (OverlayAction)action;
-                                    if (oAction.Effect is OverlayImageEffect)
+                                    if (oAction.Item is OverlayImageItem)
                                     {
-                                        OverlayImageEffect iEffect = (OverlayImageEffect)oAction.Effect;
-                                        if (assetFileNames.Contains(Path.GetFileName(iEffect.FilePath)))
+                                        OverlayImageItem overlayItem = (OverlayImageItem)oAction.Item;
+                                        if (assetFileNames.Contains(Path.GetFileName(overlayItem.FilePath)))
                                         {
-                                            iEffect.FilePath = Path.Combine(folderLocation, Path.GetFileName(iEffect.FilePath));
+                                            overlayItem.FilePath = Path.Combine(folderLocation, Path.GetFileName(overlayItem.FilePath));
                                         }
                                     }
                                 }

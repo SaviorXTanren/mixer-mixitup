@@ -465,6 +465,8 @@ namespace MixItUp.Base.MixerAPI
                 await ChannelSession.Services.AudioService.Play(ChannelSession.Settings.NotificationChatWhisperSoundFilePath, 100);
             }
 
+            GlobalEvents.ChatMessageReceived(message);
+
             if (!await this.CheckMessageForCommandAndRun(message))
             {
                 if (message.IsWhisper && ChannelSession.Settings.TrackWhispererNumber && !message.IsStreamerOrBot())
@@ -743,6 +745,7 @@ namespace MixItUp.Base.MixerAPI
         private void ChatClient_OnDeleteMessageOccurred(object sender, ChatDeleteMessageEventModel e)
         {
             this.OnDeleteMessageOccurred(sender, e);
+            GlobalEvents.ChatMessageDeleted(e.id);
         }
 
         private async void ChatClient_OnPurgeMessageOccurred(object sender, ChatPurgeMessageEventModel e)

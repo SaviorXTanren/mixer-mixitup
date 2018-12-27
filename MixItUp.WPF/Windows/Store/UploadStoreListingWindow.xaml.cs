@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Util;
 using Newtonsoft.Json.Linq;
@@ -170,12 +171,12 @@ namespace MixItUp.WPF.Windows.Store
                         if (action.Type == ActionTypeEnum.Overlay)
                         {
                             OverlayAction oAction = (OverlayAction)action;
-                            if (oAction.Effect is OverlayImageEffect)
+                            if (oAction.Item is OverlayImageItem)
                             {
-                                OverlayImageEffect iEffect = (OverlayImageEffect)oAction.Effect;
-                                if (File.Exists(iEffect.FilePath))
+                                OverlayImageItem overlayItem = (OverlayImageItem)oAction.Item;
+                                if (File.Exists(overlayItem.FilePath))
                                 {
-                                    assetFiles.Add(iEffect.FilePath);
+                                    assetFiles.Add(overlayItem.FilePath);
                                 }
                             }
                         }

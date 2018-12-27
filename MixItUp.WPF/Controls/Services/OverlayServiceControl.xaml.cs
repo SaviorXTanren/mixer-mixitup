@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.WPF.Util;
 using System;
@@ -70,11 +71,12 @@ namespace MixItUp.WPF.Controls.Services
 
         private async void TestOverlayButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ChannelSession.Services.OverlayServer != null)
+            if (ChannelSession.Services.OverlayServers != null)
             {
                 await this.groupBoxControl.window.RunAsyncOperation(async () =>
                 {
-                    if (await ChannelSession.Services.OverlayServer.TestConnection())
+                    IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
+                    if (overlay != null && await overlay.TestConnection())
                     {
                         await MessageBoxHelper.ShowMessageDialog("Overlay connection test successful!");
                     }
@@ -91,20 +93,19 @@ namespace MixItUp.WPF.Controls.Services
 
         private async Task<bool> ConnectOverlayService()
         {
-            if (!await ChannelSession.Services.InitializeOverlayServer())
+            if (await ChannelSession.Services.InitializeOverlayServer())
             {
-                return false;
+                ChannelSession.Settings.EnableOverlay = true;
+
+                this.EnableOverlayButton.Visibility = Visibility.Collapsed;
+                this.DisableOverlayButton.Visibility = Visibility.Visible;
+                this.TestOverlayButton.IsEnabled = true;
+
+                this.SetCompletedIcon(visible: true);
+
+                return true;
             }
-
-            ChannelSession.Settings.EnableOverlay = true;
-
-            this.EnableOverlayButton.Visibility = Visibility.Collapsed;
-            this.DisableOverlayButton.Visibility = Visibility.Visible;
-            this.TestOverlayButton.IsEnabled = true;
-
-            this.SetCompletedIcon(visible: true);
-
-            return true;
+            return false;
         }
 
         private async Task DisconnectOverlayService()

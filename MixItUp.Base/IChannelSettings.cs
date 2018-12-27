@@ -4,6 +4,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Model.Favorites;
 using MixItUp.Base.Model.Interactive;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Model.Serial;
 using MixItUp.Base.Services;
@@ -107,7 +108,9 @@ namespace MixItUp.Base
         CustomCommand ModerationStrike3Command { get; set; }
 
         bool EnableOverlay { get; set; }
+        Dictionary<string, int> OverlayCustomNameAndPorts { get; set; }
         string OverlaySourceName { get; set; }
+        int OverlayWidgetRefreshTime { get; set; }
 
         string OBSStudioServerIP { get; set; }
         string OBSStudioServerPassword { get; set; }
@@ -185,6 +188,8 @@ namespace MixItUp.Base
         LockedList<RemoteCommand> RemoteCommands { get; }
 
         LockedList<UserQuoteViewModel> UserQuotes { get; }
+
+        LockedList<OverlayWidget> OverlayWidgets { get; set; }
 
         LockedList<string> FilteredWords { get; }
         LockedList<string> BannedWords { get; }

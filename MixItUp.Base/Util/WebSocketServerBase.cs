@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Net.WebSockets;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,55 +12,34 @@ namespace MixItUp.Base.Util
 {
     public abstract class WebSocketServerBase : WebSocketBase
     {
-        public event EventHandler OnConnectedOccurred;
+        public event EventHandler OnConnectedOccurred = delegate { };
 
-        private SemaphoreSlim asyncSemaphore = new SemaphoreSlim(1);
-
-        private string address;
-
-        private HttpListener httpListener;
+        private HttpListenerContext context;
 
         private bool connectionTestSuccessful;
 
-        public WebSocketServerBase(string address) { this.address = address; }
+        public WebSocketServerBase(HttpListenerContext context) { this.context = context; }
 
         public async Task<bool> Initialize()
         {
             try
             {
-                this.httpListener = new HttpListener();
-                this.httpListener.Prefixes.Add(this.address);
-                this.httpListener.Start();
+                HttpListenerWebSocketContext wsc = await this.context.AcceptWebSocketAsync(null);
+                this.SetWebSocket(wsc.WebSocket);
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                this.WaitForWebSocketConnection();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                if (ChannelSession.Settings.DiagnosticLogging)
+                {
+                    await this.Send(new WebSocketPacket() { type = "debug" });
+                }
+
+                this.OnConnectedOccurred(this, new EventArgs());
+
+                await this.Receive();
 
                 return true;
             }
             catch (Exception ex) { Logger.Log(ex); }
-
-            await this.DisconnectServer();
-
             return false;
-        }
-
-        public async Task DisconnectServer(WebSocketCloseStatus closeStatus = WebSocketCloseStatus.NormalClosure)
-        {
-            await this.Disconnect(closeStatus);
-
-            try
-            {
-                if (this.httpListener != null)
-                {
-                    using (this.httpListener)
-                    {
-                        this.httpListener.GetType().InvokeMember("RemoveAll", BindingFlags.NonPublic | BindingFlags.InvokeMethod | BindingFlags.Instance, null, this.httpListener, new object[] { false });
-                    }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
-            this.httpListener = null;
         }
 
         public async Task Send(WebSocketPacket packet) { await this.Send(JsonConvert.SerializeObject(packet)); }
@@ -107,53 +85,6 @@ namespace MixItUp.Base.Util
                 }
             }
             return Task.FromResult(0);
-        }
-
-        protected async Task WaitForWebSocketConnection()
-        {
-            try
-            {
-                while (this.httpListener != null && this.httpListener.IsListening)
-                {
-                    try
-                    {
-                        var hc = await this.httpListener.GetContextAsync();
-                        if (hc.Request.IsWebSocketRequest)
-                        {
-                            if (this.webSocket == null)
-                            {
-                                HttpListenerWebSocketContext wsc = await hc.AcceptWebSocketAsync(null);
-                                this.SetWebSocket(wsc.WebSocket);
-
-                                if (ChannelSession.Settings.DiagnosticLogging)
-                                {
-                                    await this.Send(new WebSocketPacket() { type = "debug" });
-                                }
-
-                                if (this.OnConnectedOccurred != null)
-                                {
-                                    this.OnConnectedOccurred(this, new EventArgs());
-                                }
-
-                                await this.Receive();
-
-                                hc.Response.StatusCode = (int)HttpStatusCode.OK;
-                            }
-                            else
-                            {
-                                hc.Response.StatusCode = (int)HttpStatusCode.Conflict;
-                            }
-                        }
-                        else
-                        {
-                            hc.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        }
-                        hc.Response.Close();
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
-                }
-            }
-            catch (Exception ex) { Logger.Log(ex); }
         }
 
         protected override async Task<WebSocketCloseStatus> Receive()

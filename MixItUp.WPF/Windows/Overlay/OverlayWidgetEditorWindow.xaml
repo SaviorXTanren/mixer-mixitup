@@ -1,0 +1,143 @@
+﻿<Windows:LoadingWindowBase x:Class="MixItUp.WPF.Windows.Overlay.OverlayWidgetEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MixItUp.WPF.Windows.Overlay"
+        xmlns:Controls="clr-namespace:MixItUp.WPF.Controls"
+        xmlns:OverlayControls="clr-namespace:MixItUp.WPF.Controls.Overlay"
+        xmlns:Windows="clr-namespace:MixItUp.WPF.Windows"
+        xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+                           
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"   
+                  
+        Icon="./../../Logo.ico"
+        Title="Overlay Widget - Editor" Height="600" Width="800">
+    <Windows:LoadingWindowBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Windows:LoadingWindowBase.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <MaterialDesign:DialogHost x:Name="MDDialogHost" Identifier="RootDialog" />
+
+        <Grid Grid.Row="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="350" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0" x:Name="NameTextBox" MaterialDesign:HintAssist.Hint="Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+
+                        <ComboBox x:Name="OverlayNameComboBox" Grid.Column="2" Width="200" MaterialDesign:HintAssist.Hint="Overlay To Use" Style="{StaticResource MaterialDesignFloatingHintComboBox}" />
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="20" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Column="0" x:Name="TypeComboBox" SelectionChanged="TypeComboBox_SelectionChanged" MaterialDesign:HintAssist.Hint="Type" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center">Don't Refresh:</TextBlock>
+                        <ToggleButton Grid.Column="4" x:Name="DontRefreshToggleButton" />
+                    </Grid>
+                </Grid>
+
+                <Border Grid.Column="2" Style="{StaticResource DefaultBorder}" HorizontalAlignment="Center" Width="350" Height="190">
+                    <OverlayControls:OverlayItemPositionControl x:Name="ItemPosition" Margin="10" VerticalAlignment="Top" />
+                </Border>
+            </Grid>
+
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+                    <OverlayControls:OverlayTextItemControl x:Name="TextItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayImageItemControl x:Name="ImageItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayYouTubeItemControl x:Name="YouTubeItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayVideoItemControl x:Name="VideoItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayWebPageItemControl x:Name="WebPageItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayHTMLItemControl x:Name="HTMLItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayProgressBarControl x:Name="ProgressBarItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayEventListControl x:Name="EventListItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayGameQueueControl x:Name="GameQueueItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayChatMessagesControl x:Name="ChatMessagesItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayMixerClipControl x:Name="MixerClipItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayLeaderboardControl x:Name="LeaderboardItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayTimerControl x:Name="TimerItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayTimerTrainControl x:Name="TimerTrainItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayStreamBossControl x:Name="StreamBossItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+
+                    <OverlayControls:OverlayGameStatsControl x:Name="GameStatsItem" Visibility="Collapsed" HorizontalAlignment="Center" />
+                </Grid>
+            </ScrollViewer>
+
+            <Grid Grid.Row="4" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="SaveButton" Grid.Column="0" Click="SaveButton_Click">Save</Button>
+            </Grid>
+        </Grid>
+
+        <Controls:LoadingStatusBar x:Name="StatusBar" Grid.Row="1" />
+    </Grid>
+</Windows:LoadingWindowBase>

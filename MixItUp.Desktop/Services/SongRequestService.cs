@@ -88,7 +88,7 @@ namespace MixItUp.Desktop.Services
                 return false;
             }
 
-            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube) && ChannelSession.Services.OverlayServer == null)
+            if (ChannelSession.Settings.SongRequestServiceTypes.Contains(SongRequestServiceTypeEnum.YouTube) && !ChannelSession.Settings.EnableOverlay)
             {
                 return false;
             }
@@ -138,67 +138,64 @@ namespace MixItUp.Desktop.Services
                 }
                 else
                 {
-                    if (ChannelSession.Services.OverlayServer != null)
+                    try
                     {
-                        try
+                        Uri uri = new Uri(ChannelSession.Settings.DefaultPlaylist);
+                        if (uri.Host.EndsWith(YouTubeHost, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            Uri uri = new Uri(ChannelSession.Settings.DefaultPlaylist);
-                            if (uri.Host.EndsWith(YouTubeHost, StringComparison.InvariantCultureIgnoreCase))
+                            NameValueCollection queryParameteters = HttpUtility.ParseQueryString(uri.Query);
+                            if (!string.IsNullOrEmpty(queryParameteters["list"]))
                             {
-                                NameValueCollection queryParameteters = HttpUtility.ParseQueryString(uri.Query);
-                                if (!string.IsNullOrEmpty(queryParameteters["list"]))
+                                using (HttpClientWrapper client = new HttpClientWrapper("https://www.googleapis.com/"))
                                 {
-                                    using (HttpClientWrapper client = new HttpClientWrapper("https://www.googleapis.com/"))
+                                    string pageToken = null;
+                                    do
                                     {
-                                        string pageToken = null;
-                                        do
+                                        string restURL = string.Format("youtube/v3/playlistItems?playlistId={0}&maxResults=50&part=snippet,contentDetails&key={1}", HttpUtility.UrlEncode(queryParameteters["list"]), ChannelSession.SecretManager.GetSecret("YouTubeKey"));
+                                        if (!string.IsNullOrEmpty(pageToken))
                                         {
-                                            string restURL = string.Format("youtube/v3/playlistItems?playlistId={0}&maxResults=50&part=snippet,contentDetails&key={1}", HttpUtility.UrlEncode(queryParameteters["list"]), ChannelSession.SecretManager.GetSecret("YouTubeKey"));
-                                            if (!string.IsNullOrEmpty(pageToken))
+                                            restURL += "&pageToken=" + pageToken;
+                                        }
+                                        HttpResponseMessage response = await client.GetAsync(restURL);
+                                        if (response.StatusCode == HttpStatusCode.OK)
+                                        {
+                                            string content = await response.Content.ReadAsStringAsync();
+                                            JObject jobj = JObject.Parse(content);
+                                            if (jobj["nextPageToken"] != null)
                                             {
-                                                restURL += "&pageToken=" + pageToken;
+                                                pageToken = jobj["nextPageToken"].ToString();
                                             }
-                                            HttpResponseMessage response = await client.GetAsync(restURL);
-                                            if (response.StatusCode == HttpStatusCode.OK)
+                                            else
                                             {
-                                                string content = await response.Content.ReadAsStringAsync();
-                                                JObject jobj = JObject.Parse(content);
-                                                if (jobj["nextPageToken"] != null)
-                                                {
-                                                    pageToken = jobj["nextPageToken"].ToString();
-                                                }
-                                                else
-                                                {
-                                                    pageToken = null;
-                                                }
+                                                pageToken = null;
+                                            }
 
-                                                if (jobj["items"] != null && jobj["items"] is JArray)
+                                            if (jobj["items"] != null && jobj["items"] is JArray)
+                                            {
+                                                JArray items = (JArray)jobj["items"];
+                                                foreach (JToken item in items)
                                                 {
-                                                    JArray items = (JArray)jobj["items"];
-                                                    foreach (JToken item in items)
+                                                    if (item["kind"] != null && item["kind"].ToString().Equals("youtube#playlistItem"))
                                                     {
-                                                        if (item["kind"] != null && item["kind"].ToString().Equals("youtube#playlistItem"))
+                                                        this.playlistItems.Add(new SongRequestItem()
                                                         {
-                                                            this.playlistItems.Add(new SongRequestItem()
-                                                            {
-                                                                ID = item["contentDetails"]["videoId"].ToString(),
-                                                                Name = item["snippet"]["title"].ToString(),
-                                                                Type = SongRequestServiceTypeEnum.YouTube,
-                                                                AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
-                                                            });
-                                                        }
+                                                            ID = item["contentDetails"]["videoId"].ToString(),
+                                                            Name = item["snippet"]["title"].ToString(),
+                                                            Type = SongRequestServiceTypeEnum.YouTube,
+                                                            AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
+                                                        });
                                                     }
                                                 }
                                             }
-                                        } while (!string.IsNullOrEmpty(pageToken));
-                                    }
+                                        }
+                                    } while (!string.IsNullOrEmpty(pageToken));
                                 }
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
                     }
                 }
 
@@ -797,9 +794,10 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (this.currentSong.Type == SongRequestServiceTypeEnum.YouTube)
                 {
-                    if (ChannelSession.Services.OverlayServer != null)
+                    IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
+                    if (overlay != null)
                     {
-                        await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "stop", Volume = ChannelSession.Settings.SongRequestVolume });
+                        await overlay.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "stop", Volume = ChannelSession.Settings.SongRequestVolume });
                         this.youTubeStatus = null;
                     }
                 }
@@ -829,9 +827,11 @@ namespace MixItUp.Desktop.Services
             {
                 await ChannelSession.Services.Spotify.SetVolume(ChannelSession.Settings.SongRequestVolume);
             }
-            if (ChannelSession.Services.OverlayServer != null)
+
+            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
+            if (overlay != null)
             {
-                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "volume", Volume = ChannelSession.Settings.SongRequestVolume });
+                await overlay.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "volume", Volume = ChannelSession.Settings.SongRequestVolume });
             }
         }
 
@@ -853,9 +853,10 @@ namespace MixItUp.Desktop.Services
                 }
                 else if (item.Type == SongRequestServiceTypeEnum.YouTube)
                 {
-                    if (ChannelSession.Services.OverlayServer != null)
+                    IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
+                    if (overlay != null)
                     {
-                        await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "song", Source = item.ID, Volume = ChannelSession.Settings.SongRequestVolume });
+                        await overlay.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "song", Source = item.ID, Volume = ChannelSession.Settings.SongRequestVolume });
                         this.currentSong = item;
                     }
                 }
@@ -883,9 +884,10 @@ namespace MixItUp.Desktop.Services
 
         private async Task PlayPauseOverlaySong(SongRequestServiceTypeEnum type)
         {
-            if (ChannelSession.Services.OverlayServer != null)
+            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
+            if (overlay != null)
             {
-                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = type.ToString(), Action = "playpause", Volume = ChannelSession.Settings.SongRequestVolume });
+                await overlay.SendSongRequest(new OverlaySongRequest() { Type = type.ToString(), Action = "playpause", Volume = ChannelSession.Settings.SongRequestVolume });
             }
         }
 
@@ -928,10 +930,11 @@ namespace MixItUp.Desktop.Services
 
         private async Task<SongRequestItem> GetYouTubeStatus()
         {
-            if (ChannelSession.Services.OverlayServer != null)
+            IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(ChannelSession.Services.OverlayServers.DefaultOverlayName);
+            if (overlay != null)
             {
                 this.youTubeStatus = null;
-                await ChannelSession.Services.OverlayServer.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "status" });
+                await overlay.SendSongRequest(new OverlaySongRequest() { Type = SongRequestServiceTypeEnum.YouTube.ToString(), Action = "status" });
                 for (int i = 0; i < 10 && this.youTubeStatus == null; i++)
                 {
                     await Task.Delay(500);

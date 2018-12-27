@@ -78,6 +78,11 @@ namespace MixItUp.WPF.Controls.Interactive
                 }
             }
 
+            if (this.positionButton == null || this.winnerButton == null)
+            {
+                throw new InvalidOperationException("Could not get position or winner buttons");
+            }
+
             if (this.sparkCost > 0)
             {
                 this.positionButton.cost = this.sparkCost;
@@ -95,7 +100,7 @@ namespace MixItUp.WPF.Controls.Interactive
             {
                 if (this.scene != null && this.winnerButton != null)
                 {
-                    InteractiveControlModel control = null;
+                    InteractiveConnectedButtonControlModel control = null;
 
                     for (int i = 0; i < (maxTime + 1); i++)
                     {
@@ -108,7 +113,7 @@ namespace MixItUp.WPF.Controls.Interactive
                             this.UpdateTimerUI(timeLeft);
                         });
 
-                        control = new InteractiveControlModel() { controlID = this.winnerButton.controlID };
+                        control = new InteractiveConnectedButtonControlModel() { controlID = this.winnerButton.controlID };
                         control.meta["timeleft"] = timeLeft;
                         await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
                     }
@@ -133,7 +138,7 @@ namespace MixItUp.WPF.Controls.Interactive
                             this.canvas.Children.Add(avatar);
                         });
 
-                        control = new InteractiveControlModel() { controlID = this.winnerButton.controlID };
+                        control = new InteractiveConnectedButtonControlModel() { controlID = this.winnerButton.controlID };
                         control.meta["userID"] = winner;
                         control.meta["username"] = username;
                         control.meta["location"] = location;
@@ -158,7 +163,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
                         this.userPoints[user.ID] = point;
 
-                        InteractiveControlModel control = new InteractiveControlModel() { controlID = this.positionButton.controlID };
+                        InteractiveConnectedButtonControlModel control = new InteractiveConnectedButtonControlModel() { controlID = this.positionButton.controlID };
                         control.meta["userID"] = user.ID;
                         control.meta["x"] = point.X;
                         control.meta["y"] = point.Y;

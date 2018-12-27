@@ -1,5 +1,7 @@
 ﻿using Mixer.Base.Model.Chat;
+using Mixer.Base.Model.Clips;
 using Mixer.Base.Model.Interactive;
+using Mixer.Base.Model.Patronage;
 using Mixer.Base.Model.Skills;
 using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Skill;
@@ -45,6 +47,24 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnChatFontSizeChanged != null)
             {
                 GlobalEvents.OnChatFontSizeChanged(null, new EventArgs());
+            }
+        }
+
+        public static event EventHandler<ChatMessageViewModel> OnChatMessageReceived;
+        public static void ChatMessageReceived(ChatMessageViewModel chatMessage)
+        {
+            if (GlobalEvents.OnChatMessageReceived != null)
+            {
+                GlobalEvents.OnChatMessageReceived(null, chatMessage);
+            }
+        }
+
+        public static event EventHandler<Guid> OnChatMessageDeleted;
+        public static void ChatMessageDeleted(Guid messageID)
+        {
+            if (GlobalEvents.OnChatMessageDeleted != null)
+            {
+                GlobalEvents.OnChatMessageDeleted(null, messageID);
             }
         }
 
@@ -111,6 +131,51 @@ namespace MixItUp.Base.Util
             }
         }
 
+        public static event EventHandler<UserViewModel> OnFollowOccurred;
+        public static void FollowOccurred(UserViewModel user)
+        {
+            if (GlobalEvents.OnFollowOccurred != null)
+            {
+                GlobalEvents.OnFollowOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<UserViewModel> OnUnfollowOccurred;
+        public static void UnfollowOccurred(UserViewModel user)
+        {
+            if (GlobalEvents.OnUnfollowOccurred != null)
+            {
+                GlobalEvents.OnUnfollowOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<UserViewModel> OnSubscribeOccurred;
+        public static void SubscribeOccurred(UserViewModel user)
+        {
+            if (GlobalEvents.OnSubscribeOccurred != null)
+            {
+                GlobalEvents.OnSubscribeOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<Tuple<UserViewModel, int>> OnResubscribeOccurred;
+        public static void ResubscribeOccurred(Tuple<UserViewModel, int> user)
+        {
+            if (GlobalEvents.OnResubscribeOccurred != null)
+            {
+                GlobalEvents.OnResubscribeOccurred(null, user);
+            }
+        }
+
+        public static event EventHandler<Tuple<UserViewModel, int>> OnHostOccurred;
+        public static void HostOccurred(Tuple<UserViewModel, int> user)
+        {
+            if (GlobalEvents.OnHostOccurred != null)
+            {
+                GlobalEvents.OnHostOccurred(null, user);
+            }
+        }
+
         public static event EventHandler<UserDonationModel> OnDonationOccurred;
         public static void DonationOccurred(UserDonationModel donation)
         {
@@ -153,6 +218,33 @@ namespace MixItUp.Base.Util
             if (GlobalEvents.OnSkillOccurred != null)
             {
                 GlobalEvents.OnSkillOccurred(null, skill);
+            }
+        }
+
+        public static event EventHandler<PatronageStatusModel> OnPatronageUpdateOccurred;
+        public static void PatronageUpdateOccurred(PatronageStatusModel patronageStatus)
+        {
+            if (GlobalEvents.OnPatronageUpdateOccurred != null)
+            {
+                GlobalEvents.OnPatronageUpdateOccurred(null, patronageStatus);
+            }
+        }
+
+        public static event EventHandler<PatronageMilestoneModel> OnPatronageMilestoneReachedOccurred;
+        public static void PatronageMilestoneReachedOccurred(PatronageMilestoneModel patronageMilestone)
+        {
+            if (GlobalEvents.OnPatronageMilestoneReachedOccurred != null)
+            {
+                GlobalEvents.OnPatronageMilestoneReachedOccurred(null, patronageMilestone);
+            }
+        }
+
+        public static event EventHandler<ClipModel> OnMixerClipCreated;
+        public static void MixerClipCreated(ClipModel clip)
+        {
+            if (GlobalEvents.OnMixerClipCreated != null)
+            {
+                GlobalEvents.OnMixerClipCreated(null, clip);
             }
         }
     }

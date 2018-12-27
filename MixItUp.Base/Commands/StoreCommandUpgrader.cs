@@ -22,6 +22,16 @@ namespace MixItUp.Base.Commands
             {
                 StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(actions);
             }
+
+            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.4.17.0"))
+            {
+                StoreCommandUpgrader.ChangeCounterActionsToUseSpecialIdentifiers(actions);
+            }
+
+            if (StoreCommandUpgrader.IsVersionLessThan(version, "0.4.19.0"))
+            {
+                StoreCommandUpgrader.RestructureNewOverlayActions(actions);
+            }
         }
 
         internal static void SeperateChatFromCurrencyActions(List<ActionBase> actions)
@@ -65,6 +75,58 @@ namespace MixItUp.Base.Commands
                     CounterAction cAction = (CounterAction)action;
 #pragma warning disable CS0612 // Type or member is obsolete
                     cAction.Amount = cAction.CounterAmount.ToString();
+#pragma warning restore CS0612 // Type or member is obsolete
+                }
+            }
+        }
+
+        internal static void RestructureNewOverlayActions(List<ActionBase> actions)
+        {
+            for (int i = 0; i < actions.Count; i++)
+            {
+                ActionBase action = actions[i];
+                if (action is OverlayAction)
+                {
+                    OverlayAction oAction = (OverlayAction)action;
+#pragma warning disable CS0612 // Type or member is obsolete
+                    if (oAction.Effect != null)
+                    {
+                        if (oAction.Effect is OverlayTextEffect)
+                        {
+                            OverlayTextEffect effect = (OverlayTextEffect)oAction.Effect;
+                            oAction.Item = new Model.Overlay.OverlayTextItem(effect.Text, effect.Color, effect.Size, string.Empty, true, false, false, string.Empty);
+                        }
+                        else if (oAction.Effect is OverlayImageEffect)
+                        {
+                            OverlayImageEffect effect = (OverlayImageEffect)oAction.Effect;
+                            oAction.Item = new Model.Overlay.OverlayImageItem(effect.FilePath, effect.Width, effect.Height);
+                        }
+                        else if (oAction.Effect is OverlayVideoEffect)
+                        {
+                            OverlayVideoEffect effect = (OverlayVideoEffect)oAction.Effect;
+                            oAction.Item = new Model.Overlay.OverlayVideoItem(effect.FilePath, effect.Width, effect.Height, 100);
+                        }
+                        else if (oAction.Effect is OverlayYoutubeEffect)
+                        {
+                            OverlayYoutubeEffect effect = (OverlayYoutubeEffect)oAction.Effect;
+                            oAction.Item = new Model.Overlay.OverlayYouTubeItem(effect.ID, effect.StartTime, effect.Width, effect.Height, 100);
+                        }
+                        else if (oAction.Effect is OverlayWebPageEffect)
+                        {
+                            OverlayWebPageEffect effect = (OverlayWebPageEffect)oAction.Effect;
+                            oAction.Item = new Model.Overlay.OverlayWebPageItem(effect.URL, effect.Width, effect.Height);
+                        }
+                        else if (oAction.Effect is OverlayHTMLEffect)
+                        {
+                            OverlayHTMLEffect effect = (OverlayHTMLEffect)oAction.Effect;
+                            oAction.Item = new Model.Overlay.OverlayHTMLItem(effect.HTMLText);
+                        }
+                        oAction.Position = new Model.Overlay.OverlayItemPosition(Model.Overlay.OverlayEffectPositionType.Percentage, oAction.Effect.Horizontal, oAction.Effect.Vertical);
+                        oAction.Effects = new Model.Overlay.OverlayItemEffects((Model.Overlay.OverlayEffectEntranceAnimationTypeEnum)oAction.Effect.EntranceAnimation,
+                            (Model.Overlay.OverlayEffectVisibleAnimationTypeEnum)oAction.Effect.VisibleAnimation, (Model.Overlay.OverlayEffectExitAnimationTypeEnum)oAction.Effect.ExitAnimation,
+                            oAction.Effect.Duration);
+                        oAction.Effect = null;
+                    }
 #pragma warning restore CS0612 // Type or member is obsolete
                 }
             }

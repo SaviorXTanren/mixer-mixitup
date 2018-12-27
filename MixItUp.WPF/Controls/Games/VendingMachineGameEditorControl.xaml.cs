@@ -1,6 +1,7 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
@@ -178,8 +179,10 @@ namespace MixItUp.WPF.Controls.Games
                 this.outcomes.Add(new VendingMachineOutcome("50", currencyCommand, 30, 30, 30));
 
                 CustomCommand overlayCommand = this.CreateBasicChatCommand("@$username opened their capsule and found a dancing Carlton!");
-                overlayCommand.Actions.Add(new OverlayAction(new OverlayImageEffect("https://78.media.tumblr.com/1921bcd13e12643771410200a322cb0e/tumblr_ogs5bcHWUc1udh5n8o1_500.gif",
-                    500, 500, OverlayEffectEntranceAnimationTypeEnum.FadeIn, OverlayEffectVisibleAnimationTypeEnum.None, OverlayEffectExitAnimationTypeEnum.FadeOut, 3, 50, 50)));
+                overlayCommand.Actions.Add(new OverlayAction(ChannelSession.Services.OverlayServers.DefaultOverlayName,
+                    new OverlayImageItem("https://78.media.tumblr.com/1921bcd13e12643771410200a322cb0e/tumblr_ogs5bcHWUc1udh5n8o1_500.gif", 500, 500),
+                    new OverlayItemPosition(OverlayEffectPositionType.Percentage, 50, 50), new OverlayItemEffects(OverlayEffectEntranceAnimationTypeEnum.FadeIn,
+                    OverlayEffectVisibleAnimationTypeEnum.None, OverlayEffectExitAnimationTypeEnum.FadeOut, 3)));
                 this.outcomes.Add(new VendingMachineOutcome("Dancing Carlton", overlayCommand, 30, 30, 30));
             }
 

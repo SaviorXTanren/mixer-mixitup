@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.Model.User;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
@@ -29,7 +30,12 @@ namespace MixItUp.Base.Services
             get
             {
                 double amount = 0;
-                double.TryParse(this.AmountString, out amount);
+                string amountString = this.AmountString;
+                if (!double.TryParse(amountString, out amount))
+                {
+                    amountString = amountString.Replace(".", ",");
+                    double.TryParse(amountString, out amount);
+                }
                 return amount;
             }
         }
@@ -63,6 +69,8 @@ namespace MixItUp.Base.Services
         Task Disconnect();
 
         OAuthTokenModel GetOAuthTokenCopy();
+
+        Task<IEnumerable<StreamlabsDonation>> GetDonations(int maxAmount = 1);
 
         Task SpinWheel();
         
