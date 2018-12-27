@@ -291,20 +291,25 @@ namespace MixItUp.Base.ViewModel.User
                     }
                 }
 
+                if (!this.IsInChat)
+                {
+                    await this.RefreshChatDetails(addToChat: false);
+                }
+
                 await this.SetCustomRoles();
 
                 this.LastUpdated = DateTimeOffset.Now;
             }
         }
 
-        public async Task RefreshChatDetails()
+        public async Task RefreshChatDetails(bool addToChat = true)
         {
             if (!this.IsAnonymous && this.LastUpdated.TotalMinutesFromNow() >= 1)
             {
                 ChatUserModel chatUser = await ChannelSession.Connection.GetChatUser(ChannelSession.Channel, this.ID);
                 if (chatUser != null)
                 {
-                    this.SetChatDetails(chatUser);
+                    this.SetChatDetails(chatUser, addToChat);
                 }
             }
         }
@@ -329,12 +334,15 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
-        public void SetChatDetails(ChatUserModel chatUser)
+        public void SetChatDetails(ChatUserModel chatUser, bool addToChat = true)
         {
-            if (!this.IsAnonymous && chatUser != null)
+            if (chatUser != null)
             {
                 this.SetMixerRoles(chatUser.userRoles);
-                this.IsInChat = true;
+                if (addToChat)
+                {
+                    this.IsInChat = true;
+                }
             }
         }
 
