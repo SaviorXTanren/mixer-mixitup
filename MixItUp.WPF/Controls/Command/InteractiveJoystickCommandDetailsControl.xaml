@@ -29,15 +29,36 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="20" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-                <ComboBox x:Name="JoystickSetupComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Joystick Setup" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" SelectionChanged="JoystickSetupComboBox_SelectionChanged" />
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="2" HorizontalAlignment="Center" />
+                    <TextBox x:Name="SceneTextBox" Grid.Column="0" IsEnabled="False" MaterialDesign:HintAssist.Hint="Scene Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="200" />
+
+                    <TextBox x:Name="NameTextBox" Grid.Column="2" IsEnabled="False" MaterialDesign:HintAssist.Hint="Control Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="20" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="JoystickSetupComboBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Joystick Setup" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" SelectionChanged="JoystickSetupComboBox_SelectionChanged" />
+
+                    <local:UnlockedCommandControl x:Name="UnlockedControl" Grid.Column="2" HorizontalAlignment="Center" />
+                </Grid>
             </Grid>
 
             <Grid Grid.Column="2">

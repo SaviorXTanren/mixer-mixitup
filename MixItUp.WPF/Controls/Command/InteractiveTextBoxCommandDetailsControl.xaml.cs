@@ -47,6 +47,8 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.Control != null)
             {
+                this.SceneTextBox.Text = this.Scene.sceneID;
+                this.NameTextBox.Text = this.Control.controlID;
                 this.SparkCostTextBox.IsEnabled = true;
                 this.SparkCostTextBox.Text = this.Control.cost.ToString();
             }

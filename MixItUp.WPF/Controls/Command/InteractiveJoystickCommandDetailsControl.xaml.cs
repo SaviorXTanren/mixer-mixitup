@@ -55,6 +55,12 @@ namespace MixItUp.WPF.Controls.Command
 
             this.Requirements.HideCooldownRequirement();
 
+            if (this.Control != null)
+            {
+                this.SceneTextBox.Text = this.Scene.sceneID;
+                this.NameTextBox.Text = this.Control.controlID;
+            }
+
             if (this.command != null)
             {
                 this.JoystickSetupComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.SetupType);
