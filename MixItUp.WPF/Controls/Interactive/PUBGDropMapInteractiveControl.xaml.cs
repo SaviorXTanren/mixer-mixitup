@@ -102,7 +102,7 @@ namespace MixItUp.WPF.Controls.Interactive
 
             PUBGMap map = (PUBGMap)this.MapComboBox.SelectedItem;
 
-            InteractiveControlModel control = new InteractiveControlModel() { controlID = this.positionButton.controlID };
+            InteractiveConnectedButtonControlModel control = new InteractiveConnectedButtonControlModel() { controlID = this.positionButton.controlID };
             control.meta["map"] = map.Map;
             await ChannelSession.Interactive.UpdateControls(this.scene, new List<InteractiveControlModel>() { control });
         }
