@@ -206,8 +206,8 @@ namespace MixItUp.Base.Model.Overlay
             replacementSets["TEXT_SIZE"] = ((int)(0.2 * ((double)this.Height))).ToString();
 
             replacementSets["USERNAME"] = boss.UserName;
-            replacementSets["USER_IMAGE"] = boss.AvatarLink;
-            replacementSets["USER_IMAGE_HEIGHT"] = ((int)(0.8 * ((double)this.Height))).ToString();
+            replacementSets["USER_IMAGE"] = "https://mixer.com/_latest/assets/images/main/avatars/default.png"; //boss.AvatarLink;
+            replacementSets["USER_IMAGE_SIZE"] = ((int)(0.8 * ((double)this.Height))).ToString();
 
             replacementSets["HEALTH_REMAINING"] = health.ToString();
             replacementSets["MAXIMUM_HEALTH"] = this.StartingHealth.ToString();

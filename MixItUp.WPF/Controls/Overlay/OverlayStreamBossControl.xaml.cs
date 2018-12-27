@@ -163,7 +163,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.NewBossAnimationComboBox.ItemsSource = EnumHelper.GetEnumNames<OverlayEffectVisibleAnimationTypeEnum>();
             this.NewBossAnimationComboBox.SelectedIndex = 0;
 
-            this.WidthTextBox.Text = "400";
+            this.WidthTextBox.Text = "450";
             this.HeightTextBox.Text = "100";
             this.TextFontComboBox.Text = "Arial";
 
