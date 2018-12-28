@@ -41,7 +41,9 @@
             <TextBlock Grid.Column="0" x:Name="DeductFromUserTextBlock" VerticalAlignment="Center" IsEnabled="False">Deduct From User Running Command:</TextBlock>
             <ToggleButton Grid.Column="2" x:Name="DeductFromUserToggleButton" VerticalAlignment="Center" IsEnabled="False"/>
 
-            <TextBox Grid.Column="4" x:Name="CurrencyUsernameTextBox" Width="200" MaterialDesign:HintAssist.Hint="Target User" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+            <ComboBox Grid.Column="4" x:Name="CurrencyPermissionsAllowedComboBox" Visibility="Collapsed" MaterialDesign:HintAssist.Hint="Users To Apply To" Style="{StaticResource MaterialDesignFloatingHintComboBox}" Width="200" />
+
+            <TextBox Grid.Column="4" x:Name="CurrencyUsernameTextBox" Visibility="Collapsed" Width="200" MaterialDesign:HintAssist.Hint="Target User" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
         </Grid>
     </Grid>
 </local:ActionControlBase>

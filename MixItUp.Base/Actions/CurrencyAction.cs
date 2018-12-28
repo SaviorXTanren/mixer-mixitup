@@ -3,6 +3,7 @@ using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,9 +45,6 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public string Username { get; set; }
-        [DataMember]
-        [Obsolete]
-        public bool GiveToAllUsers { get; set; }
 
         [DataMember]
         public string Amount { get; set; }
@@ -54,22 +52,29 @@ namespace MixItUp.Base.Actions
         public bool DeductFromUser { get; set; }
 
         [DataMember]
-        [Obsolete]
-        public string ChatText { get; set; }
+        public MixerRoleEnum RoleRequirement { get; set; }
 
         [DataMember]
         [Obsolete]
+        public string ChatText { get; set; }
+        [DataMember]
+        [Obsolete]
         public bool IsWhisper { get; set; }
+        [DataMember]
+        [Obsolete]
+        public bool GiveToAllUsers { get; set; }
 
-        public CurrencyAction() : base(ActionTypeEnum.Currency) { }
+        public CurrencyAction() : base(ActionTypeEnum.Currency) { this.RoleRequirement = MixerRoleEnum.User; }
 
-        public CurrencyAction(UserCurrencyViewModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null, bool deductFromUser = false)
+        public CurrencyAction(UserCurrencyViewModel currency, CurrencyActionTypeEnum currencyActionType, string amount, string username = null,
+            MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
             : this()
         {
             this.CurrencyID = currency.ID;
             this.CurrencyActionType = currencyActionType;
             this.Amount = amount;
             this.Username = username;
+            this.RoleRequirement = roleRequirement;
             this.DeductFromUser = deductFromUser;
         }
 
@@ -129,7 +134,10 @@ namespace MixItUp.Base.Actions
                     {
                         foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                         {
-                            receiverUserData.Add(chatUser.Data);
+                            if (chatUser.PrimaryRole >= this.RoleRequirement)
+                            {
+                                receiverUserData.Add(chatUser.Data);
+                            }
                         }
                         receiverUserData.Add((await ChannelSession.GetCurrentUser()).Data);
                     }

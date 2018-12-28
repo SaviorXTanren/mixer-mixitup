@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
 using System.Linq;
+using MixItUp.Base.ViewModel.Requirement;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -24,6 +25,9 @@ namespace MixItUp.WPF.Controls.Actions
         {
             this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
             this.CurrencyActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyActionTypeEnum>().OrderBy(s => s);
+            this.CurrencyPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
+
+            this.CurrencyPermissionsAllowedComboBox.SelectedIndex = 0;
 
             if (this.action != null)
             {
@@ -35,6 +39,7 @@ namespace MixItUp.WPF.Controls.Actions
                 this.CurrencyActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.CurrencyActionType);
                 this.CurrencyAmountTextBox.Text = this.action.Amount.ToString();
                 this.CurrencyUsernameTextBox.Text = this.action.Username;
+                this.CurrencyPermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
                 this.DeductFromUserToggleButton.IsChecked = this.action.DeductFromUser;
             }
             return Task.FromResult(0);
@@ -57,7 +62,18 @@ namespace MixItUp.WPF.Controls.Actions
                         }
                     }
 
-                    return new CurrencyAction(currency, actionType, this.CurrencyAmountTextBox.Text, this.CurrencyUsernameTextBox.Text, this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
+                    MixerRoleEnum roleRequirement = MixerRoleEnum.User;
+                    if (actionType == CurrencyActionTypeEnum.AddToAllChatUsers || actionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                    {
+                        if (this.CurrencyPermissionsAllowedComboBox.SelectedIndex < 0)
+                        {
+                            return null;
+                        }
+                        roleRequirement = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.CurrencyPermissionsAllowedComboBox.SelectedItem);
+                    }
+
+                    return new CurrencyAction(currency, actionType, this.CurrencyAmountTextBox.Text, this.CurrencyUsernameTextBox.Text, roleRequirement,
+                        this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
                 }
             }
             return null;
@@ -82,6 +98,9 @@ namespace MixItUp.WPF.Controls.Actions
                     Visibility.Visible : Visibility.Collapsed;
 
                 this.CurrencyUsernameTextBox.Visibility = (actionType == CurrencyActionTypeEnum.AddToSpecificUser || actionType == CurrencyActionTypeEnum.SubtractFromSpecificUser) ?
+                    Visibility.Visible : Visibility.Collapsed;
+
+                this.CurrencyPermissionsAllowedComboBox.Visibility = (actionType == CurrencyActionTypeEnum.AddToAllChatUsers || actionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers) ?
                     Visibility.Visible : Visibility.Collapsed;
 
                 this.DeductFromUserTextBlock.IsEnabled = this.DeductFromUserToggleButton.IsEnabled =
