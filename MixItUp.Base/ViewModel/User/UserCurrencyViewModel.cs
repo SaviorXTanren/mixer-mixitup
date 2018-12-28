@@ -102,7 +102,10 @@ namespace MixItUp.Base.ViewModel.User
         public string UserRankNameSpecialIdentifier { get { return string.Format("{0}{1}rank", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string Top10SpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string TopRegexSpecialIdentifier { get { return string.Format("{0}\\d+{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string Top10SpecialIdentifier { get { return string.Format("{0}10{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         public UserRankViewModel GetRankForPoints(int points)
         {

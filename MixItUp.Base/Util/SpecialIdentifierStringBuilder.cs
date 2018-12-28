@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -27,15 +28,19 @@ namespace MixItUp.Base.Util
         public const string UptimeSpecialIdentifierHeader = "uptime";
         public const string StartSpecialIdentifierHeader = "start";
 
-        public const string Top10SpecialIdentifierHeader = "top10";
+        public const string TopSpecialIdentifierHeader = "top";
+        public const string TopTimeRegexSpecialIdentifier = "top\\d+time";
+
         public const string UserSpecialIdentifierHeader = "user";
         public const string ArgSpecialIdentifierHeader = "arg";
         public const string StreamerSpecialIdentifierHeader = "streamer";
         public const string TargetSpecialIdentifierHeader = "target";
+
         public const string RandomSpecialIdentifierHeader = "random";
         public const string RandomFollowerSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "follower";
         public const string RandomSubscriberSpecialIdentifierHeader = RandomSpecialIdentifierHeader + "sub";
-        public const string RandomNumberSpecialIdentifier = RandomSpecialIdentifierHeader + "number";
+        public const string RandomNumberRegexSpecialIdentifier = RandomSpecialIdentifierHeader + "number\\d+";
+
         public const string FeaturedChannelsSpecialIdentifer = "featuredchannels";
         public const string CostreamUsersSpecialIdentifier = "costreamusers";
 
@@ -56,7 +61,7 @@ namespace MixItUp.Base.Util
 
         public const string ExtraLifeSpecialIdentifierHeader = "extralife";
 
-        public const string UnicodeSpecialIdentifierHeader = "unicode";
+        public const string UnicodeRegexSpecialIdentifier = "unicode\\d+";
 
         public const string InteractiveTextBoxTextEntrySpecialIdentifierHelpText = "User Text Entered = " + SpecialIdentifierStringBuilder.SpecialIdentifierHeader +
             SpecialIdentifierStringBuilder.ArgSpecialIdentifierHeader + "1text";
@@ -248,7 +253,7 @@ namespace MixItUp.Base.Util
             this.ReplaceSpecialIdentifier("time", DateTimeOffset.Now.ToString("t"));
             this.ReplaceSpecialIdentifier("linebreak", Environment.NewLine);
 
-            if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader))
+            if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader))
             {
                 Dictionary<uint, UserDataViewModel> allUsersDictionary = ChannelSession.Settings.UserData.ToDictionary();
                 allUsersDictionary.Remove(ChannelSession.Channel.user.id);
@@ -258,45 +263,47 @@ namespace MixItUp.Base.Util
 
                 foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values)
                 {
-                    if (this.ContainsSpecialIdentifier(currency.Top10SpecialIdentifier))
+                    if (this.ContainsRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier))
                     {
-                        List<string> currencyUserList = new List<string>();
-                        int userPosition = 1;
-                        foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(10))
+                        this.ReplaceNumberBasedRegexSpecialIdentifier(currency.TopRegexSpecialIdentifier, (total) =>
                         {
-                            currencyUserList.Add($"#{userPosition}) {currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
-                            userPosition++;
-                        }
+                            List<string> currencyUserList = new List<string>();
+                            int userPosition = 1;
+                            foreach (UserDataViewModel currencyUser in allUsers.OrderByDescending(u => u.GetCurrencyAmount(currency)).Take(total))
+                            {
+                                currencyUserList.Add($"#{userPosition}) {currencyUser.UserName} - {currencyUser.GetCurrencyAmount(currency)}");
+                                userPosition++;
+                            }
 
-                        if (currencyUserList.Count > 0)
-                        {
-                            this.ReplaceSpecialIdentifier(currency.Top10SpecialIdentifier, string.Join(", ", currencyUserList));
-                        }
-                        else
-                        {
-                            this.ReplaceSpecialIdentifier(currency.Top10SpecialIdentifier, "No users found.");
-                        }
+                            string result = "No users found.";
+                            if (currencyUserList.Count > 0)
+                            {
+                                result = string.Join(", ", currencyUserList);
+                            }
+                            return result;
+                        });
                     }
                 }
 
-                if (this.ContainsSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time"))
+                if (this.ContainsRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier))
                 {
-                    List<string> timeUserList = new List<string>();
-                    int userPosition = 1;
-                    foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(10))
+                    this.ReplaceNumberBasedRegexSpecialIdentifier(SpecialIdentifierStringBuilder.TopTimeRegexSpecialIdentifier, (total) =>
                     {
-                        timeUserList.Add($"#{userPosition}) {timeUser.UserName} - {timeUser.ViewingTimeShortString}");
-                        userPosition++;
-                    }
+                        List<string> timeUserList = new List<string>();
+                        int userPosition = 1;
+                        foreach (UserDataViewModel timeUser in allUsers.OrderByDescending(u => u.ViewingMinutes).Take(total))
+                        {
+                            timeUserList.Add($"#{userPosition}) {timeUser.UserName} - {timeUser.ViewingTimeShortString}");
+                            userPosition++;
+                        }
 
-                    if (timeUserList.Count > 0)
-                    {
-                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time", string.Join(", ", timeUserList));
-                    }
-                    else
-                    {
-                        this.ReplaceSpecialIdentifier(SpecialIdentifierStringBuilder.Top10SpecialIdentifierHeader + "time", "No users found.");
-                    }
+                        string result = "No users found.";
+                        if (timeUserList.Count > 0)
+                        {
+                            result = string.Join(", ", timeUserList);
+                        }
+                        return result;
+                    });
                 }
             }
 
@@ -570,9 +577,9 @@ namespace MixItUp.Base.Util
                     }
                 }
 
-                if (this.ContainsSpecialIdentifier(RandomNumberSpecialIdentifier))
+                if (this.ContainsRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier))
                 {
-                    this.ReplaceNumberBasedSpecialIdentifier(RandomNumberSpecialIdentifier, (maxNumber) =>
+                    this.ReplaceNumberBasedRegexSpecialIdentifier(RandomNumberRegexSpecialIdentifier, (maxNumber) =>
                     {
                         int number = RandomHelper.GenerateRandomNumber(maxNumber) + 1;
                         return number.ToString();
@@ -580,9 +587,9 @@ namespace MixItUp.Base.Util
                 }
             }
 
-            if (this.ContainsSpecialIdentifier(UnicodeSpecialIdentifierHeader))
+            if (this.ContainsRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier))
             {
-                this.ReplaceNumberBasedSpecialIdentifier(UnicodeSpecialIdentifierHeader, (number) =>
+                this.ReplaceNumberBasedRegexSpecialIdentifier(UnicodeRegexSpecialIdentifier, (number) =>
                 {
                     char uChar = (char)number;
                     return uChar.ToString();
@@ -590,19 +597,24 @@ namespace MixItUp.Base.Util
             }
         }
 
-        public void ReplaceSpecialIdentifier(string identifier, string replacement)
+        public void ReplaceSpecialIdentifier(string identifier, string replacement, bool includeSpecialIdentifierHeader = true)
         {
             replacement = (replacement == null) ? string.Empty : replacement;
             if (encode)
             {
                 replacement = HttpUtility.UrlEncode(replacement);
             }
-            this.text = this.text.Replace(SpecialIdentifierHeader + identifier, replacement);
+            this.text = this.text.Replace(((includeSpecialIdentifierHeader) ? SpecialIdentifierHeader : string.Empty) + identifier, replacement);
         }
 
         public bool ContainsSpecialIdentifier(string identifier)
         {
             return this.text.Contains(SpecialIdentifierHeader + identifier);
+        }
+
+        public bool ContainsRegexSpecialIdentifier(string identifier)
+        {
+            return Regex.IsMatch(this.text, "\\" + SpecialIdentifierHeader + identifier);
         }
 
         public int GetFirstInstanceOfSpecialIdentifier(string identifier, int startIndex)
@@ -679,41 +691,16 @@ namespace MixItUp.Base.Util
             return null;
         }
 
-        private void ReplaceNumberBasedSpecialIdentifier(string header, Func<int, string> replacer)
+        private void ReplaceNumberBasedRegexSpecialIdentifier(string regex, Func<int, string> replacer)
         {
-            int startIndex = 0;
-            do
+            foreach (Match match in Regex.Matches(this.text, "\\" + SpecialIdentifierHeader + regex))
             {
-                startIndex = this.GetFirstInstanceOfSpecialIdentifier(header, startIndex);
-                if (startIndex >= 0)
+                string text = new String(match.Value.Where(c => char.IsDigit(c)).ToArray());
+                if (int.TryParse(text, out int number))
                 {
-                    int endIndex = 0;
-                    for (endIndex = startIndex + header.Length + 1; endIndex < this.text.Length; endIndex++)
-                    {
-                        if (!char.IsDigit(this.text[endIndex]))
-                        {
-                            break;
-                        }
-                    }
-
-                    if (endIndex <= this.text.Length)
-                    {
-                        string specialIdentifier = this.text.Substring(startIndex, endIndex - startIndex).Replace(SpecialIdentifierHeader, "");
-                        if (int.TryParse(specialIdentifier.Replace(header, ""), out int number) && number > 0)
-                        {
-                            this.ReplaceSpecialIdentifier(specialIdentifier, replacer(number));
-                        }
-                        else
-                        {
-                            startIndex = endIndex;
-                        }
-                    }
-                    else
-                    {
-                        startIndex = endIndex;
-                    }
+                    this.ReplaceSpecialIdentifier(match.Value, replacer(number), includeSpecialIdentifierHeader: false);
                 }
-            } while (startIndex > 0);
+            }
         }
     }
 }
