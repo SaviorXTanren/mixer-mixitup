@@ -45,7 +45,6 @@ namespace MixItUp.WPF.Controls.Settings
             if (this.ColorSchemeComboBox.SelectedIndex >= 0)
             {
                 ColorSchemeOption colorScheme = (ColorSchemeOption)this.ColorSchemeComboBox.SelectedItem;
-
                 if (!colorScheme.Name.Equals(App.AppSettings.ColorScheme))
                 {
                     App.AppSettings.SettingsChangeRestartRequired = true;
