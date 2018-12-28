@@ -132,6 +132,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.OnHostBonusTextBox.Text = this.currency.OnHostBonus.ToString();
                 this.OnSubscribeBonusTextBox.Text = this.currency.OnSubscribeBonus.ToString();
 
+                this.MinimumActivityRateTextBox.Text = this.currency.MinimumActiveRate.ToString();
                 this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(this.currency.ResetInterval);
 
                 if (this.currency.IsRank)
@@ -155,6 +156,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.OnHostBonusTextBox.Text = "0";
                 this.OnSubscribeBonusTextBox.Text = "0";
 
+                this.MinimumActivityRateTextBox.Text = "0";
                 this.AutomaticResetComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyResetRateEnum.Never);
             }
 
@@ -595,6 +597,13 @@ namespace MixItUp.WPF.Windows.Currency
                     }
                 }
 
+                int minActivityRate = 0;
+                if (string.IsNullOrEmpty(this.MinimumActivityRateTextBox.Text) || !int.TryParse(this.MinimumActivityRateTextBox.Text, out minActivityRate) || minActivityRate < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The Minimum Activity Rate must be 0 or greater");
+                    return;
+                }
+
                 bool isNew = false;
                 if (this.currency == null)
                 {
@@ -617,6 +626,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.currency.OnHostBonus = onHostBonus;
                 this.currency.OnSubscribeBonus = onSubscribeBonus;
 
+                this.currency.MinimumActiveRate = minActivityRate;
                 this.currency.ResetInterval = EnumHelper.GetEnumValueFromString<CurrencyResetRateEnum>((string)this.AutomaticResetComboBox.SelectedItem);
 
                 this.currency.SpecialIdentifier = SpecialIdentifierStringBuilder.ConvertToSpecialIdentifier(this.currency.Name);

@@ -227,6 +227,11 @@ namespace MixItUp.Base.MixerAPI
                     user = new UserViewModel(channel.userId, channel.token);
                 }
 
+                if (user != null)
+                {
+                    user.UpdateLastActivity();
+                }
+
                 if (e.channel.Equals(ConstellationClientWrapper.ChannelUpdateEvent.ToString()))
                 {
                     if (e.payload["online"] != null)

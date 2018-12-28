@@ -827,6 +827,7 @@ namespace MixItUp.Base.MixerAPI
                     {
                         await user.RefreshDetails();
                     }
+                    user.UpdateLastActivity();
 
                     if (ChannelSession.Settings.PreventUnknownInteractiveUsers && user.IsAnonymous)
                     {

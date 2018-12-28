@@ -386,6 +386,7 @@ namespace MixItUp.Base.MixerAPI
             {
                 await user.RefreshDetails();
             }
+            user.UpdateLastActivity();
 
             ChatMessageViewModel message = ChatMessageViewModel.CreateChatMessageViewModel(messageEvent, user);
 

@@ -173,6 +173,9 @@ namespace MixItUp.Base.ViewModel.User
         }
 
         [JsonIgnore]
+        public DateTimeOffset LastActivity { get; set; }
+
+        [JsonIgnore]
         public DateTimeOffset LastUpdated { get; set; }
 
         [JsonIgnore]
@@ -186,7 +189,7 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public MixerRoleEnum PrimaryRole { get { return this.MixerRoles.Max(); } }
-        
+
         [JsonIgnore]
         public string PrimaryRoleString { get { return EnumHelper.GetEnumName(this.PrimaryRole); } }
 
@@ -269,6 +272,8 @@ namespace MixItUp.Base.ViewModel.User
                 return null;
             }
         }
+
+        public void UpdateLastActivity() { this.LastActivity = DateTimeOffset.Now; }
 
         public async Task RefreshDetails(bool force = false)
         {

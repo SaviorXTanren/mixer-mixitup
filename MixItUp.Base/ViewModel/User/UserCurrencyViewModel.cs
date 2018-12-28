@@ -28,16 +28,22 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public string Name { get; set; }
+
         [DataMember]
         public int AcquireAmount { get; set; }
         [DataMember]
         public int AcquireInterval { get; set; }
         [DataMember]
+        public int MinimumActiveRate { get; set; }
+
+        [DataMember]
         public int OfflineAcquireAmount { get; set; }
         [DataMember]
         public int OfflineAcquireInterval { get; set; }
+
         [DataMember]
         public int MaxAmount { get; set; }
+
         [DataMember]
         public string SpecialIdentifier { get; set; }
 
@@ -69,6 +75,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserCurrencyViewModel()
         {
             this.ID = Guid.NewGuid();
+            this.MinimumActiveRate = 0;
             this.MaxAmount = int.MaxValue;
             this.SpecialIdentifier = string.Empty;
             this.ResetInterval = CurrencyResetRateEnum.Never;
@@ -96,6 +103,9 @@ namespace MixItUp.Base.ViewModel.User
 
         [JsonIgnore]
         public bool IsOfflineIntervalDisabled { get { return this.OfflineAcquireAmount == 0 && this.OfflineAcquireInterval == 0; } }
+
+        [JsonIgnore]
+        public bool HasMinimumActiveRate { get { return this.MinimumActiveRate > 0; } }
 
         [JsonIgnore]
         public string UserAmountSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
@@ -148,24 +158,28 @@ namespace MixItUp.Base.ViewModel.User
             if (this.IsActive)
             {
                 bool bonusesCanBeApplied = (ChannelSession.Channel.online || this.OfflineAcquireAmount > 0);
-                foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
+                DateTimeOffset minActiveTime = DateTimeOffset.Now.Subtract(TimeSpan.FromMinutes(this.MinimumActiveRate));
+                int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
+                if (interval > 0)
                 {
-                    if (!user.Data.IsCurrencyRankExempt)
+                    foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                     {
-                        int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
-                        int interval = ChannelSession.Channel.online ? this.AcquireInterval : this.OfflineAcquireInterval;
-                        if (interval > 0 && (minutes % interval) == 0)
+                        if (!user.Data.IsCurrencyRankExempt && (!this.HasMinimumActiveRate || user.LastActivity > minActiveTime))
                         {
-                            user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
-                            if (bonusesCanBeApplied)
+                            int minutes = ChannelSession.Channel.online ? user.Data.ViewingMinutes : user.Data.OfflineViewingMinutes;
+                            if (minutes % interval == 0)
                             {
-                                if (user.PrimaryRole >= MixerRoleEnum.Mod)
+                                user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
+                                if (bonusesCanBeApplied)
                                 {
-                                    user.Data.AddCurrencyAmount(this, this.ModeratorBonus);
-                                }
-                                else if (user.GetsSubscriberBenefits)
-                                {
-                                    user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                    if (user.PrimaryRole >= MixerRoleEnum.Mod)
+                                    {
+                                        user.Data.AddCurrencyAmount(this, this.ModeratorBonus);
+                                    }
+                                    else if (user.GetsSubscriberBenefits)
+                                    {
+                                        user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                    }
                                 }
                             }
                         }
