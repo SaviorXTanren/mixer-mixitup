@@ -11,10 +11,6 @@ namespace MixItUp.Base.ViewModel.Requirement
     public class RequirementViewModel
     {
         [JsonProperty]
-        [Obsolete]
-        public MixerRoleEnum UserRole { get; set; }
-
-        [JsonProperty]
         public RoleRequirementViewModel Role { get; set; }
 
         [JsonProperty]
@@ -29,11 +25,21 @@ namespace MixItUp.Base.ViewModel.Requirement
         [JsonProperty]
         public ThresholdRequirementViewModel Threshold { get; set; }
 
+        [JsonProperty]
+        public SettingsRequirementViewModel Settings { get; set; }
+
+
+        [JsonProperty]
+        [Obsolete]
+        public MixerRoleEnum UserRole { get; set; }
+
+
         public RequirementViewModel()
         {
             this.Role = new RoleRequirementViewModel();
             this.Cooldown = new CooldownRequirementViewModel();
             this.Threshold = new ThresholdRequirementViewModel();
+            this.Settings = new SettingsRequirementViewModel();
         }
 
         public RequirementViewModel(MixerRoleEnum userRole, int cooldown)
@@ -44,13 +50,14 @@ namespace MixItUp.Base.ViewModel.Requirement
         }
 
         public RequirementViewModel(RoleRequirementViewModel role, CooldownRequirementViewModel cooldown = null, CurrencyRequirementViewModel currency = null,
-            CurrencyRequirementViewModel rank = null, ThresholdRequirementViewModel threshold = null)
+            CurrencyRequirementViewModel rank = null, ThresholdRequirementViewModel threshold = null, SettingsRequirementViewModel settings = null)
         {
             this.Role = role;
             this.Cooldown = (cooldown != null) ? cooldown : new CooldownRequirementViewModel();
             this.Currency = currency;
             this.Rank = rank;
             this.Threshold = (threshold != null) ? threshold : new ThresholdRequirementViewModel();
+            this.Settings = (settings != null) ? settings : new SettingsRequirementViewModel();
         }
 
         public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
@@ -102,6 +109,15 @@ namespace MixItUp.Base.ViewModel.Requirement
             if (this.Rank != null)
             {
                 return this.Rank.DoesMeetRankRequirement(user.Data);
+            }
+            return true;
+        }
+
+        public bool DoesMeetSettingsRequirement(UserViewModel user)
+        {
+            if (this.Settings != null)
+            {
+                return this.Settings.DoesMeetRequirement(user);
             }
             return true;
         }

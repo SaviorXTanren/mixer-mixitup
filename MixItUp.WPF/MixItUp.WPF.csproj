@@ -533,6 +533,9 @@
     <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
       <DependentUpon>RemoteControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Requirement\CurrencyRankRequirementControl.xaml.cs">
+      <DependentUpon>CurrencyRankRequirementControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
     </Compile>
@@ -620,6 +623,9 @@
     </Compile>
     <Compile Include="Controls\Requirement\RoleRequirementControl.xaml.cs">
       <DependentUpon>RoleRequirementControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirement\SettingsRequirementControl.xaml.cs">
+      <DependentUpon>SettingsRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Requirement\ThresholdRequirementControl.xaml.cs">
       <DependentUpon>ThresholdRequirementControl.xaml</DependentUpon>
@@ -1184,6 +1190,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Requirement\CurrencyRankRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Requirement\CurrencyRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1305,6 +1315,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Requirement\RoleRequirementControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirement\SettingsRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

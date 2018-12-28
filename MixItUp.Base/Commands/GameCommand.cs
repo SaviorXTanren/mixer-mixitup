@@ -283,7 +283,7 @@ namespace MixItUp.Base.Commands
 
         protected async Task<bool> PerformNonCooldownRequirementChecks(UserViewModel user)
         {
-            if (await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user))
+            if (await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user) && await this.CheckSettingsRequirement(user))
             {
                 return true;
             }

@@ -23,7 +23,7 @@ namespace MixItUp.WPF.Controls.Requirement
 
         public void HideCurrencyRequirement()
         {
-            this.CurrencyPopup.Visibility = Visibility.Collapsed;
+            this.CurrencyRankRequirement.HideCurrencyRequirement();
         }
 
         public void HideThresholdRequirement()
@@ -31,15 +31,20 @@ namespace MixItUp.WPF.Controls.Requirement
             this.ThresholdPopup.Visibility = Visibility.Collapsed;
         }
 
+        public void HideSettingsRequirement()
+        {
+            this.SettingsPopup.Visibility = Visibility.Collapsed;
+        }
+
         public async Task<bool> Validate()
         {
-            if (this.CurrencyPopup.Visibility == Visibility.Visible)
+            if (this.CurrencyRankRequirement.CurrencyRequirement.Visibility == Visibility.Visible)
             {
-                return await this.CooldownRequirement.Validate() && await this.CurrencyRequirement.Validate() && await this.RankRequirement.Validate() && await this.ThresholdRequirement.Validate();
+                return await this.CooldownRequirement.Validate() && await this.CurrencyRankRequirement.CurrencyRequirement.Validate() && await this.CurrencyRankRequirement.RankRequirement.Validate() && await this.ThresholdRequirement.Validate() && await this.SettingsRequirement.Validate();
             }
             else
             {
-                return await this.CooldownRequirement.Validate() && await this.RankRequirement.Validate() && await this.ThresholdRequirement.Validate();
+                return await this.CooldownRequirement.Validate() && await this.CurrencyRankRequirement.RankRequirement.Validate() && await this.ThresholdRequirement.Validate() && await this.SettingsRequirement.Validate();
             }
         }
 
@@ -48,12 +53,13 @@ namespace MixItUp.WPF.Controls.Requirement
             RequirementViewModel requirement = new RequirementViewModel();
             requirement.Role = this.RoleRequirement.GetRoleRequirement();
             requirement.Cooldown = this.CooldownRequirement.GetCooldownRequirement();
-            if (this.CurrencyPopup.Visibility == Visibility.Visible)
+            if (this.CurrencyRankRequirement.CurrencyRequirement.Visibility == Visibility.Visible)
             {
-                requirement.Currency = this.CurrencyRequirement.GetCurrencyRequirement();
+                requirement.Currency = this.CurrencyRankRequirement.CurrencyRequirement.GetCurrencyRequirement();
             }
-            requirement.Rank = this.RankRequirement.GetCurrencyRequirement();
+            requirement.Rank = this.CurrencyRankRequirement.RankRequirement.GetCurrencyRequirement();
             requirement.Threshold = this.ThresholdRequirement.GetThresholdRequirement();
+
             return requirement;
         }
 
@@ -61,11 +67,11 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             this.RoleRequirement.SetRoleRequirement(requirement.Role);
             this.CooldownRequirement.SetCooldownRequirement(requirement.Cooldown);
-            if (this.CurrencyPopup.Visibility == Visibility.Visible)
+            if (this.CurrencyRankRequirement.CurrencyRequirement.Visibility == Visibility.Visible)
             {
-                this.CurrencyRequirement.SetCurrencyRequirement(requirement.Currency);
+                this.CurrencyRankRequirement.CurrencyRequirement.SetCurrencyRequirement(requirement.Currency);
             }
-            this.RankRequirement.SetCurrencyRequirement(requirement.Rank);
+            this.CurrencyRankRequirement.RankRequirement.SetCurrencyRequirement(requirement.Rank);
             this.ThresholdRequirement.SetThresholdRequirement(requirement.Threshold);
         }
 

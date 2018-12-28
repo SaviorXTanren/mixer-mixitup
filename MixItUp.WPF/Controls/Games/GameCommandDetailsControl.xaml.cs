@@ -110,7 +110,7 @@ namespace MixItUp.WPF.Controls.Games
             this.CurrencyTypeComboBox.SelectedItem = command.Requirements.Currency.GetCurrency();
             this.Requirements.RoleRequirement.SetRoleRequirement(this.existingCommand.Requirements.Role);
             this.Requirements.CooldownRequirement.SetCooldownRequirement(this.existingCommand.Requirements.Cooldown);
-            this.Requirements.RankRequirement.SetCurrencyRequirement(this.existingCommand.Requirements.Rank);
+            this.Requirements.CurrencyRankRequirement.RankRequirement.SetCurrencyRequirement(this.existingCommand.Requirements.Rank);
         }
 
         public async Task<bool> Validate()

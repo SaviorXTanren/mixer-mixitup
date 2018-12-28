@@ -92,6 +92,16 @@ namespace MixItUp.Base.Commands
             return true;
         }
 
+        public virtual async Task<bool> CheckSettingsRequirement(UserViewModel user)
+        {
+            if (!this.Requirements.DoesMeetSettingsRequirement(user))
+            {
+                await this.Requirements.Settings.SendSettingsNotMetWhisper(user);
+                return false;
+            }
+            return true;
+        }
+
         public void ResetCooldown(UserViewModel user) { this.Requirements.ResetCooldown(user); }
 
         protected override async Task<bool> PerformPreChecks(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
@@ -124,8 +134,8 @@ namespace MixItUp.Base.Commands
 
         protected async Task<bool> CheckAllRequirements(UserViewModel user)
         {
-            return (await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)
-                && await this.CheckCurrencyRequirement(user));
+            return await this.CheckCooldownRequirement(user) && await this.CheckUserRoleRequirement(user) && await this.CheckRankRequirement(user)
+                && await this.CheckCurrencyRequirement(user) && await this.CheckSettingsRequirement(user);
         }
     }
 }
