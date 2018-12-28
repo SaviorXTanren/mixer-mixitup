@@ -35,7 +35,9 @@ namespace MixItUp.WPF.Windows.Overlay
         [Name("Stream Boss")]
         StreamBoss,
         [Name("Game Stats")]
-        GameStats
+        GameStats,
+        [Name("Song Requests")]
+        SongRequests
     }
 
     /// <summary>
@@ -150,7 +152,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (this.Widget.Item is OverlayTimerTrain)
                 {
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.TimerTrain);
-                    this.TimerItem.SetItem(this.Widget.Item);
+                    this.TimerTrainItem.SetItem(this.Widget.Item);
                 }
                 else if (this.Widget.Item is OverlayStreamBoss)
                 {
@@ -161,6 +163,11 @@ namespace MixItUp.WPF.Windows.Overlay
                 {
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.GameStats);
                     this.GameStatsItem.SetItem(this.Widget.Item);
+                }
+                else if (this.Widget.Item is OverlaySongRequests)
+                {
+                    this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.SongRequests);
+                    this.SongRequestsItem.SetItem(this.Widget.Item);
                 }
             }
 
@@ -185,6 +192,7 @@ namespace MixItUp.WPF.Windows.Overlay
             this.TimerTrainItem.Visibility = Visibility.Collapsed;
             this.StreamBossItem.Visibility = Visibility.Collapsed;
             this.GameStatsItem.Visibility = Visibility.Collapsed;
+            this.SongRequestsItem.Visibility = Visibility.Collapsed;
             if (this.TypeComboBox.SelectedIndex >= 0)
             {
                 OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
@@ -251,6 +259,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.GameStats)
                 {
                     this.GameStatsItem.Visibility = Visibility.Visible;
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.SongRequests)
+                {
+                    this.SongRequestsItem.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -345,6 +357,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (overlayType == OverlayWidgetTypeEnum.GameStats)
                 {
                     item = this.GameStatsItem.GetItem();
+                }
+                else if (overlayType == OverlayWidgetTypeEnum.SongRequests)
+                {
+                    item = this.SongRequestsItem.GetItem();
                 }
 
                 if (item == null)

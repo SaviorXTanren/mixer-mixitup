@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 namespace MixItUp.WPF.Controls.Overlay
 {
     /// <summary>
-    /// Interaction logic for OverlayGameQueueControl.xaml
+    /// Interaction logic for OverlaySongRequestsControl.xaml
     /// </summary>
-    public partial class OverlayGameQueueControl : OverlayItemControl
+    public partial class OverlaySongRequestsControl : OverlayItemControl
     {
-        private OverlayGameQueue item;
+        private OverlaySongRequests item;
 
-        public OverlayGameQueueControl()
+        public OverlaySongRequestsControl()
         {
             InitializeComponent();
         }
 
-        public OverlayGameQueueControl(OverlayGameQueue item)
+        public OverlaySongRequestsControl(OverlaySongRequests item)
             : this()
         {
             this.item = item;
@@ -27,7 +27,7 @@ namespace MixItUp.WPF.Controls.Overlay
 
         public override void SetItem(OverlayItemBase item)
         {
-            this.item = (OverlayGameQueue)item;
+            this.item = (OverlaySongRequests)item;
 
             this.TotalToShowTextBox.Text = this.item.TotalToShow.ToString();
 
@@ -104,7 +104,7 @@ namespace MixItUp.WPF.Controls.Overlay
             OverlayEffectEntranceAnimationTypeEnum addEventAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectEntranceAnimationTypeEnum>((string)this.AddEventAnimationComboBox.SelectedItem);
             OverlayEffectExitAnimationTypeEnum removeEventAnimation = EnumHelper.GetEnumValueFromString<OverlayEffectExitAnimationTypeEnum>((string)this.RemoveEventAnimationComboBox.SelectedItem);
 
-            return new OverlayGameQueue(this.HTMLText.Text,totalToShow, this.TextFontComboBox.Text, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation);
+            return new OverlaySongRequests(this.HTMLText.Text, totalToShow, this.TextFontComboBox.Text, width, height, borderColor, backgroundColor, textColor, addEventAnimation, removeEventAnimation);
         }
 
         protected override Task OnLoaded()
@@ -123,7 +123,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.WidthTextBox.Text = "400";
             this.HeightTextBox.Text = "100";
             this.TextFontComboBox.Text = "Arial";
-            this.HTMLText.Text = OverlayGameQueue.HTMLTemplate;
+            this.HTMLText.Text = OverlaySongRequests.HTMLTemplate;
 
             if (this.item != null)
             {

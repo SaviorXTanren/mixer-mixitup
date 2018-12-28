@@ -321,7 +321,7 @@ namespace MixItUp.Desktop.Services
 
     public class DiscordService : OAuthServiceBase, IDiscordService, IDisposable
     {
-        public const string ClientBotPermissions = "8";
+        public const string ClientBotPermissions = "14026752";
 
         private const string BaseAddress = "https://discordapp.com/api/";
 

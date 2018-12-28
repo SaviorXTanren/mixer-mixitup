@@ -47,6 +47,9 @@ namespace MixItUp.Desktop.Services
 
     public class SongRequestService : ISongRequestService
     {
+        public const string SpotifyDefaultAlbumArt = "https://developer.spotify.com/assets/branding-guidelines/icon1@2x.png";
+        public const string YouTubeDefaultAlbumArt = "https://www.youtube.com/yt/about/media/images/brand-resources/icons/YouTube_icon_full-color.svg";
+
         private const string SpotifyLinkPrefix = "https://open.spotify.com/track/";
         private const string SpotifyTrackPrefix = "spotify:track:";
 
@@ -129,7 +132,7 @@ namespace MixItUp.Desktop.Services
                                         ID = song.ID,
                                         Name = song.ToString(),
                                         Length = song.Duration,
-                                        AlbumImage = song.Album?.ImageLink
+                                        AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.Spotify, song.Album?.ImageLink)
                                     });
                                 }
                             }
@@ -182,7 +185,7 @@ namespace MixItUp.Desktop.Services
                                                             ID = item["contentDetails"]["videoId"].ToString(),
                                                             Name = item["snippet"]["title"].ToString(),
                                                             Type = SongRequestServiceTypeEnum.YouTube,
-                                                            AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
+                                                            AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.YouTube, item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString())
                                                         });
                                                     }
                                                 }
@@ -581,7 +584,7 @@ namespace MixItUp.Desktop.Services
                                             Name = item["snippet"]["title"].ToString(),
                                             User = user,
                                             Type = SongRequestServiceTypeEnum.YouTube,
-                                            AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
+                                            AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.YouTube, item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString())
                                         }));
                                     }
                                 }
@@ -642,7 +645,7 @@ namespace MixItUp.Desktop.Services
                                         Name = item["snippet"]["title"].ToString(),
                                         Length = (int)timespan.TotalSeconds, User = user,
                                         Type = SongRequestServiceTypeEnum.YouTube,
-                                        AlbumImage = item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString()
+                                        AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.YouTube, item["snippet"]?["thumbnails"]?["high"]?["url"]?.ToString())
                                     });
                                 }
                             }
@@ -742,7 +745,7 @@ namespace MixItUp.Desktop.Services
                                 Name = song.ToString(),
                                 Length = song.Duration,
                                 User = user, Type = SongRequestServiceTypeEnum.Spotify,
-                                AlbumImage = song.Album?.ImageLink
+                                AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.Spotify, song.Album?.ImageLink)
                             });
                         }
                     }
@@ -904,7 +907,7 @@ namespace MixItUp.Desktop.Services
                         ID = currentlyPlaying.ID,
                         Progress = currentlyPlaying.CurrentProgress,
                         Length = currentlyPlaying.Duration,
-                        AlbumImage = currentlyPlaying.Album?.ImageLink
+                        AlbumImage = this.GetAlbumArt(SongRequestServiceTypeEnum.Spotify, currentlyPlaying.Album?.ImageLink)
                     };
 
                     if (currentlyPlaying.IsPlaying)
@@ -944,5 +947,21 @@ namespace MixItUp.Desktop.Services
         }
 
         #endregion Interaction Internal Methods
+
+        private string GetAlbumArt(SongRequestServiceTypeEnum serviceType, string albumArtLink)
+        {
+            if (string.IsNullOrEmpty(albumArtLink))
+            {
+                if (serviceType == SongRequestServiceTypeEnum.Spotify)
+                {
+                    return SongRequestService.SpotifyDefaultAlbumArt;
+                }
+                else if (serviceType == SongRequestServiceTypeEnum.YouTube)
+                {
+                    return SongRequestService.YouTubeDefaultAlbumArt;
+                }
+            }
+            return albumArtLink;
+        }
     }
 }
