@@ -93,7 +93,7 @@
                 </Grid>
             </MaterialDesign:PopupBox>
 
-            <MaterialDesign:PopupBox x:Name="SettingsPopup" Grid.Column="8" ToggleContent="{StaticResource AdditionalSettingsPopupBoxIcon}" Margin="6,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
+            <MaterialDesign:PopupBox x:Name="SettingsPopup" Grid.Column="8" ToggleContent="{StaticResource SettingsPopupBoxIcon}" Margin="6,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
                     <RequirementControls:SettingsRequirementControl x:Name="SettingsRequirement" />
                 </Grid>

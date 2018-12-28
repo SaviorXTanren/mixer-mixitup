@@ -43,6 +43,8 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
+            this.Requirements.HideSettingsRequirement();
+
             this.TextValueSpecialIdentifierTextBlock.Text = SpecialIdentifierStringBuilder.InteractiveTextBoxTextEntrySpecialIdentifierHelpText;
 
             if (this.Control != null)

@@ -16,17 +16,19 @@ namespace MixItUp.WPF.Controls.Requirement
 
         public SettingsRequirementViewModel GetSettingsRequirement()
         {
-            return new SettingsRequirementViewModel();
+            SettingsRequirementViewModel settings = new SettingsRequirementViewModel();
+            settings.DeleteChatCommandWhenRun = this.DeleteChatCommandWhenRunToggleSwitch.IsChecked.GetValueOrDefault();
+            return settings;
         }
 
         public void SetSettingsRequirement(SettingsRequirementViewModel settings)
         {
-
+            this.DeleteChatCommandWhenRunToggleSwitch.IsChecked = settings.DeleteChatCommandWhenRun;
         }
 
-        public async Task<bool> Validate()
+        public Task<bool> Validate()
         {
-            return true;
+            return Task.FromResult(true);
         }
     }
 }

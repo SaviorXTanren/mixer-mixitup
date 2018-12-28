@@ -59,7 +59,7 @@ namespace MixItUp.WPF.Controls.Requirement
             }
             requirement.Rank = this.CurrencyRankRequirement.RankRequirement.GetCurrencyRequirement();
             requirement.Threshold = this.ThresholdRequirement.GetThresholdRequirement();
-
+            requirement.Settings = this.SettingsRequirement.GetSettingsRequirement();
             return requirement;
         }
 
@@ -73,6 +73,7 @@ namespace MixItUp.WPF.Controls.Requirement
             }
             this.CurrencyRankRequirement.RankRequirement.SetCurrencyRequirement(requirement.Rank);
             this.ThresholdRequirement.SetThresholdRequirement(requirement.Threshold);
+            this.SettingsRequirement.SetSettingsRequirement(requirement.Settings);
         }
 
         private void UsageRequirementsHelpButton_Click(object sender, RoutedEventArgs e) { Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Usage-Requirements"); }

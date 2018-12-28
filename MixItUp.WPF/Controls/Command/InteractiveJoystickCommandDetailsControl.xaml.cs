@@ -47,6 +47,8 @@ namespace MixItUp.WPF.Controls.Command
 
         public override Task Initialize()
         {
+            this.Requirements.HideSettingsRequirement();
+
             this.JoystickSetupComboBox.ItemsSource = EnumHelper.GetEnumNames<InteractiveJoystickSetupType>();
             this.UpKeyComboBox.ItemsSource = this.RightKeyComboBox.ItemsSource = this.DownKeyComboBox.ItemsSource = this.LeftKeyComboBox.ItemsSource = EnumHelper.GetEnumNames<InputKeyEnum>().OrderBy(s => s);
 

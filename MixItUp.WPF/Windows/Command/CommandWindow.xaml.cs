@@ -1,7 +1,6 @@
 ﻿using Mixer.Base.Model.Interactive;
 using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
-using MixItUp.Base.Model.Store;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Store;
 using System;

@@ -7,6 +7,9 @@ namespace MixItUp.Base.ViewModel.Requirement
     [DataContract]
     public class SettingsRequirementViewModel
     {
+        [DataMember]
+        public bool DeleteChatCommandWhenRun { get; set; }
+
         public SettingsRequirementViewModel() { }
 
         public bool DoesMeetRequirement(UserViewModel user)
