@@ -441,10 +441,7 @@ namespace MixItUp.Base.MixerAPI
                     Util.Logger.LogDiagnostic(string.Format("Moderation Being Performed - {0}", message.ToString()));
 
                     message.ModerationReason = moderationReason;
-
                     await this.DeleteMessage(message);
-
-                    await user.AddModerationStrike(moderationReason);
 
                     return message;
                 }

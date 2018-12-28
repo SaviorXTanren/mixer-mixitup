@@ -59,18 +59,30 @@ namespace MixItUp.Base.Util
             string reason = await ShouldBeFilteredWordModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
+                if (ChannelSession.Settings.ModerationFilteredWordsApplyStrikes)
+                {
+                    await user.AddModerationStrike(reason);
+                }
                 return reason;
             }
 
             reason = ShouldBeTextModerated(user, text);
             if (!string.IsNullOrEmpty(reason))
             {
+                if (ChannelSession.Settings.ModerationChatTextApplyStrikes)
+                {
+                    await user.AddModerationStrike(reason);
+                }
                 return reason;
             }
 
             reason = ShouldBeLinkModerated(user, text, containsLink);
             if (!string.IsNullOrEmpty(reason))
             {
+                if (ChannelSession.Settings.ModerationBlockLinksApplyStrikes)
+                {
+                    await user.AddModerationStrike(reason);
+                }
                 return reason;
             }
 

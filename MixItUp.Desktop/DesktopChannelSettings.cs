@@ -31,7 +31,7 @@ namespace MixItUp.Desktop
     [DataContract]
     public class DesktopSavableChannelSettings : ISavableChannelSettings
     {
-        public const int LatestVersion = 25;
+        public const int LatestVersion = 26;
 
         [JsonProperty]
         public int Version { get; set; }
@@ -163,6 +163,8 @@ namespace MixItUp.Desktop
         public int ModerationFilteredWordsTimeout5MinuteOffenseCount { get; set; }
         [JsonProperty]
         public MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
+        [JsonProperty]
+        public bool ModerationFilteredWordsApplyStrikes { get; set; }
 
         [JsonProperty]
         public int ModerationCapsBlockCount { get; set; }
@@ -174,11 +176,15 @@ namespace MixItUp.Desktop
         public bool ModerationPunctuationBlockIsPercentage { get; set; }
         [JsonProperty]
         public MixerRoleEnum ModerationChatTextExcempt { get; set; }
+        [JsonProperty]
+        public bool ModerationChatTextApplyStrikes { get; set; }
 
         [JsonProperty]
         public bool ModerationBlockLinks { get; set; }
         [JsonProperty]
         public MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
+        [JsonProperty]
+        public bool ModerationBlockLinksApplyStrikes { get; set; }
 
         [JsonProperty]
         public ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
@@ -457,8 +463,11 @@ namespace MixItUp.Desktop
             this.OverlayWidgetRefreshTime = 5;
 
             this.ModerationFilteredWordsExcempt = MixerRoleEnum.Mod;
+            this.ModerationFilteredWordsApplyStrikes = true;
             this.ModerationChatTextExcempt = MixerRoleEnum.Mod;
+            this.ModerationChatTextApplyStrikes = true;
             this.ModerationBlockLinksExcempt = MixerRoleEnum.Mod;
+            this.ModerationBlockLinksApplyStrikes = true;
             this.ModerationCapsBlockIsPercentage = true;
             this.ModerationPunctuationBlockIsPercentage = true;
             this.ModerationStrike1Command = CustomCommand.BasicChatCommand("Moderation Strike 1", "You have received a moderation strike, you currently have $usermoderationstrikes strike(s)", isWhisper: true);

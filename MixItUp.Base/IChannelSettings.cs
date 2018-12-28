@@ -90,15 +90,18 @@ namespace MixItUp.Base
 
         bool ModerationUseCommunityFilteredWords { get; set; }
         MixerRoleEnum ModerationFilteredWordsExcempt { get; set; }
+        bool ModerationFilteredWordsApplyStrikes { get; set; }
 
         int ModerationCapsBlockCount { get; set; }
         bool ModerationCapsBlockIsPercentage { get; set; }
         int ModerationPunctuationBlockCount { get; set; }
         bool ModerationPunctuationBlockIsPercentage { get; set; }
         MixerRoleEnum ModerationChatTextExcempt { get; set; }
+        bool ModerationChatTextApplyStrikes { get; set; }
 
         bool ModerationBlockLinks { get; set; }
         MixerRoleEnum ModerationBlockLinksExcempt { get; set; }
+        bool ModerationBlockLinksApplyStrikes { get; set; }
 
         ModerationChatInteractiveParticipationEnum ModerationChatInteractiveParticipation { get; set; }
 

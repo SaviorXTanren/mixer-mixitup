@@ -386,10 +386,8 @@ namespace MixItUp.Base.Commands
         {
             if (this.UseChatModeration && arguments.Count() > 0)
             {
-                string moderationReason = await ModerationHelper.ShouldBeModerated(user, arguments.ElementAt(0));
-                if (!string.IsNullOrEmpty(moderationReason))
+                if (!string.IsNullOrEmpty(await ModerationHelper.ShouldBeModerated(user, arguments.ElementAt(0))))
                 {
-                    await user.AddModerationStrike(moderationReason);
                     return;
                 }
             }
