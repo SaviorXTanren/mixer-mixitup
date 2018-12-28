@@ -99,7 +99,13 @@ namespace MixItUp.Base.ViewModel.User
         public string UserAmountSpecialIdentifier { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string UserRankNameSpecialIdentifier { get { return string.Format("{0}{1}rank", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserRankNameSpecialIdentifier { get { return string.Format("{0}rank", this.UserAmountSpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string UserAmountNextSpecialIdentifier { get { return string.Format("{0}next", this.UserAmountSpecialIdentifier); } }
+
+        [JsonIgnore]
+        public string UserRankNextNameSpecialIdentifier { get { return string.Format("{0}nextrank", this.UserAmountSpecialIdentifier); } }
 
         [JsonIgnore]
         public string TopRegexSpecialIdentifier { get { return string.Format("{0}\\d+{1}", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
@@ -113,6 +119,20 @@ namespace MixItUp.Base.ViewModel.User
             if (this.Ranks.Count > 0)
             {
                 rank = this.Ranks.Where(r => r.MinimumPoints <= points).OrderByDescending(r => r.MinimumPoints).FirstOrDefault();
+                if (rank == null)
+                {
+                    rank = UserCurrencyViewModel.NoRank;
+                }
+            }
+            return rank;
+        }
+
+        public UserRankViewModel GetNextRankForPoints(int points)
+        {
+            UserRankViewModel rank = UserCurrencyViewModel.NoRank;
+            if (this.Ranks.Count > 0)
+            {
+                rank = this.Ranks.Where(r => r.MinimumPoints > points).OrderBy(r => r.MinimumPoints).FirstOrDefault();
                 if (rank == null)
                 {
                     rank = UserCurrencyViewModel.NoRank;

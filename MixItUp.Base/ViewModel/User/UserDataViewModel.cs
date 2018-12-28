@@ -55,6 +55,8 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserRankViewModel GetRank() { return this.Currency.GetRankForPoints(this.Amount); }
 
+        public UserRankViewModel GetNextRank() { return this.Currency.GetNextRankForPoints(this.Amount); }
+
         public override bool Equals(object obj)
         {
             if (obj is UserCurrencyDataViewModel)
