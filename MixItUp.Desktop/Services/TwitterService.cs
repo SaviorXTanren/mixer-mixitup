@@ -172,6 +172,18 @@ namespace MixItUp.Base.Services
             catch (Exception ex) { Logger.Log(ex); }
         }
 
+        public async Task UpdateName(string name)
+        {
+            try
+            {
+                using (var twitterCtx = new TwitterContext(this.auth))
+                {
+                    await twitterCtx.UpdateAccountProfileAsync(name, null, null, null, true);
+                }
+            }
+            catch (Exception ex) { Logger.Log(ex); }
+        }
+
         public OAuthTokenModel GetOAuthTokenCopy()
         {
             if (this.token != null)

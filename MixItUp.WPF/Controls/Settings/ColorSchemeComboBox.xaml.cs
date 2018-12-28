@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base.Util;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -6,7 +7,7 @@ using System.Windows.Media;
 
 namespace MixItUp.WPF.Controls.Settings
 {
-    public class ColorSchemeOption
+    public class ColorSchemeOption : IEquatable<ColorSchemeOption>
     {
         public string Name { get; set; }
         public string ColorCode { get; set; }
@@ -15,15 +16,33 @@ namespace MixItUp.WPF.Controls.Settings
 
         public ColorSchemeOption() { }
 
-        public ColorSchemeOption(string name, string colorCode)
+        public ColorSchemeOption(string name)
         {
             this.Name = name;
+        }
+
+        public ColorSchemeOption(string name, string colorCode)
+            : this(name)
+        {
             this.ColorCode = colorCode;
             if (!string.IsNullOrEmpty(this.ColorCode))
             {
                 this.ColorBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom(this.ColorCode));
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ColorSchemeOption)
+            {
+                return this.Equals((ColorSchemeOption)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(ColorSchemeOption other) { return this.Name.Equals(other.Name); }
+
+        public override int GetHashCode() { return this.Name.GetHashCode(); }
     }
 
     /// <summary>
@@ -48,8 +67,14 @@ namespace MixItUp.WPF.Controls.Settings
             this.AvailableColorSchemes.Clear();
             foreach (var kvp in ColorSchemes.ColorSchemeDictionary)
             {
-                this.AvailableColorSchemes.Insert(0, new ColorSchemeOption(kvp.Key, kvp.Value));
+                this.AvailableColorSchemes.Add(new ColorSchemeOption(kvp.Key, kvp.Value));
             }
+        }
+
+        public void RemoveNonThemes()
+        {
+            this.AvailableColorSchemes.Remove(new ColorSchemeOption("Black"));
+            this.AvailableColorSchemes.Remove(new ColorSchemeOption("White"));
         }
 
         public void AddDefaultOption()

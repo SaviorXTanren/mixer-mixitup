@@ -46,6 +46,8 @@ namespace MixItUp.Base.Services
 
         Task SendTweet(string tweet, string imagePath = null);
 
+        Task UpdateName(string name);
+
         OAuthTokenModel GetOAuthTokenCopy();
     }
 }
