@@ -53,7 +53,7 @@ namespace MixItUp.Base.ViewModel.User
     public class UserViewModel : IEquatable<UserViewModel>, IComparable<UserViewModel>
     {
         public const string DefaultAvatarLink = "https://mixer.com/_latest/assets/images/main/avatars/default.png";
-        public const string UserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=64&h=64";
+        public const string UserAvatarLinkFormat = "https://mixer.com/api/v1/users/{0}/avatar?w=128&h=128";
 
         public static IEnumerable<MixerRoleEnum> SelectableBasicUserRoles()
         {
