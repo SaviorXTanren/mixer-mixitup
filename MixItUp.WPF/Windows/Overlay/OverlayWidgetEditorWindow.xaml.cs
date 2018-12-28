@@ -152,7 +152,7 @@ namespace MixItUp.WPF.Windows.Overlay
                 else if (this.Widget.Item is OverlayTimerTrain)
                 {
                     this.TypeComboBox.SelectedItem = EnumHelper.GetEnumName(OverlayWidgetTypeEnum.TimerTrain);
-                    this.TimerItem.SetItem(this.Widget.Item);
+                    this.TimerTrainItem.SetItem(this.Widget.Item);
                 }
                 else if (this.Widget.Item is OverlayStreamBoss)
                 {
