@@ -497,6 +497,9 @@
     <Compile Include="Controls\Overlay\OverlayProgressBarControl.xaml.cs">
       <DependentUpon>OverlayProgressBarControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Overlay\OverlaySongRequestsControl.xaml.cs">
+      <DependentUpon>OverlaySongRequestsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Overlay\OverlayStreamBossControl.xaml.cs">
       <DependentUpon>OverlayStreamBossControl.xaml</DependentUpon>
     </Compile>
@@ -1133,6 +1136,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Overlay\OverlayProgressBarControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Overlay\OverlaySongRequestsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
