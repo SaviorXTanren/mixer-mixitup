@@ -57,12 +57,17 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.Control != null)
             {
-                this.SceneTextBox.Text = this.Scene.sceneID;
                 this.NameTextBox.Text = this.Control.controlID;
+            }
+
+            if (this.Scene != null)
+            {
+                this.SceneTextBox.Text = this.Scene.sceneID;
             }
 
             if (this.command != null)
             {
+                this.SceneTextBox.Text = this.command.SceneID;
                 this.JoystickSetupComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.SetupType);
                 this.JoystickDeadZoneTextBox.Text = (this.command.DeadZone * 100).ToString();
                 this.MouseMovementMultiplierTextBox.Text = this.command.MouseMovementMultiplier.ToString();

@@ -47,7 +47,6 @@ namespace MixItUp.WPF.Controls.Command
 
             if (this.Control != null)
             {
-                this.SceneTextBox.Text = this.Scene.sceneID;
                 this.NameTextBox.Text = this.Control.controlID;
                 this.ButtonTriggerComboBox.IsEnabled = true;
                 this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(InteractiveButtonCommandTriggerType.MouseDown);
@@ -55,8 +54,14 @@ namespace MixItUp.WPF.Controls.Command
                 this.SparkCostTextBox.Text = this.Control.cost.ToString();
             }
 
+            if (this.Scene != null)
+            {
+                this.SceneTextBox.Text = this.Scene.sceneID;
+            }
+
             if (this.command != null)
             {
+                this.SceneTextBox.Text = this.command.SceneID;
                 this.ButtonTriggerComboBox.SelectedItem = EnumHelper.GetEnumName(this.command.Trigger);
                 this.UnlockedControl.Unlocked = this.command.Unlocked;
                 this.Requirements.SetRequirements(this.command.Requirements);
