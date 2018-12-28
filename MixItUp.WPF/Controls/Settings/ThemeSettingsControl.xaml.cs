@@ -26,6 +26,8 @@ namespace MixItUp.WPF.Controls.Settings
             this.BackgroundColorComboBox.ItemsSource = this.availableBackgroundColors;
             this.FullThemeComboBox.ItemsSource = this.availableFullThemes;
 
+            this.ColorSchemeComboBox.RemoveNonThemes();
+
             this.ColorSchemeComboBox.SelectedItem = this.ColorSchemeComboBox.AvailableColorSchemes.FirstOrDefault(c => c.Name.Equals(App.AppSettings.ColorScheme));
             this.BackgroundColorComboBox.SelectedItem = App.AppSettings.BackgroundColor;
             this.FullThemeComboBox.SelectedItem = this.availableFullThemes.FirstOrDefault(t => t.Value.Equals(App.AppSettings.FullThemeName));
