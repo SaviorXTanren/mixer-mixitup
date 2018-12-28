@@ -138,9 +138,13 @@
                         <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Sub/Mod Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="120" />
+                            <TextBox x:Name="SubscriberBonusTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
+
+                            <TextBox x:Name="ModeratorBonusTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Mod Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="80" />
 
                         </Grid>
                     </GroupBox>

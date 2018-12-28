@@ -55,6 +55,7 @@ namespace MixItUp.Desktop.Services
             await DesktopSettingsUpgrader.Version24Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version25Upgrade(version, filePath);
             await DesktopSettingsUpgrader.Version26Upgrade(version, filePath);
+            await DesktopSettingsUpgrader.Version27Upgrade(version, filePath);
 
             DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
             settings.InitializeDB = false;
@@ -356,6 +357,22 @@ namespace MixItUp.Desktop.Services
                 settings.ModerationFilteredWordsApplyStrikes = true;
                 settings.ModerationChatTextApplyStrikes = true;
                 settings.ModerationBlockLinksApplyStrikes = true;
+
+                await ChannelSession.Services.Settings.Save(settings);
+            }
+        }
+
+        private static async Task Version27Upgrade(int version, string filePath)
+        {
+            if (version < 27)
+            {
+                DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
+                await ChannelSession.Services.Settings.Initialize(settings);
+
+                foreach (UserCurrencyViewModel currency in settings.Currencies.Values)
+                {
+                    currency.ModeratorBonus = currency.SubscriberBonus;
+                }
 
                 await ChannelSession.Services.Settings.Save(settings);
             }

@@ -126,6 +126,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.OfflineTimeRateTextBox.Text = this.currency.OfflineAcquireInterval.ToString();
 
                 this.SubscriberBonusTextBox.Text = this.currency.SubscriberBonus.ToString();
+                this.ModeratorBonusTextBox.Text = this.currency.ModeratorBonus.ToString();
 
                 this.OnFollowBonusTextBox.Text = this.currency.OnFollowBonus.ToString();
                 this.OnHostBonusTextBox.Text = this.currency.OnHostBonus.ToString();
@@ -149,6 +150,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.OfflineRateComboBox.SelectedItem = EnumHelper.GetEnumName(CurrencyAcquireRateTypeEnum.Disabled);
 
                 this.SubscriberBonusTextBox.Text = "0";
+                this.ModeratorBonusTextBox.Text = "0";
                 this.OnFollowBonusTextBox.Text = "0";
                 this.OnHostBonusTextBox.Text = "0";
                 this.OnSubscribeBonusTextBox.Text = "0";
@@ -334,20 +336,26 @@ namespace MixItUp.WPF.Windows.Currency
                         {
                             subscriberIDs.Add(user.id);
                         }
+
+                        HashSet<uint> modIDs = new HashSet<uint>();
                         foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.Mod))
                         {
-                            subscriberIDs.Add(user.id);
+                            modIDs.Add(user.id);
                         }
                         foreach (UserWithGroupsModel user in await ChannelSession.Connection.GetUsersWithRoles(ChannelSession.Channel, MixerRoleEnum.ChannelEditor))
                         {
-                            subscriberIDs.Add(user.id);
+                            modIDs.Add(user.id);
                         }
 
                         foreach (UserDataViewModel userData in ChannelSession.Settings.UserData.Values)
                         {
                             int intervalsToGive = userData.ViewingMinutes / this.currency.AcquireInterval;
                             userData.AddCurrencyAmount(this.currency, this.currency.AcquireAmount * intervalsToGive);
-                            if (subscriberIDs.Contains(userData.ID))
+                            if (modIDs.Contains(userData.ID))
+                            {
+                                userData.AddCurrencyAmount(this.currency, this.currency.ModeratorBonus * intervalsToGive);
+                            }
+                            else if (subscriberIDs.Contains(userData.ID))
                             {
                                 userData.AddCurrencyAmount(this.currency, this.currency.SubscriberBonus * intervalsToGive);
                             }
@@ -550,6 +558,13 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                int modBonus = 0;
+                if (string.IsNullOrEmpty(this.ModeratorBonusTextBox.Text) || !int.TryParse(this.ModeratorBonusTextBox.Text, out modBonus) || modBonus < 0)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("The Moderator bonus must be 0 or greater");
+                    return;
+                }
+
                 int onFollowBonus = 0;
                 if (string.IsNullOrEmpty(this.OnFollowBonusTextBox.Text) || !int.TryParse(this.OnFollowBonusTextBox.Text, out onFollowBonus) || onFollowBonus < 0)
                 {
@@ -597,6 +612,7 @@ namespace MixItUp.WPF.Windows.Currency
                 this.currency.OfflineAcquireInterval = offlineTime;
 
                 this.currency.SubscriberBonus = subscriberBonus;
+                this.currency.ModeratorBonus = modBonus;
                 this.currency.OnFollowBonus = onFollowBonus;
                 this.currency.OnHostBonus = onHostBonus;
                 this.currency.OnSubscribeBonus = onSubscribeBonus;

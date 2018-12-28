@@ -574,7 +574,8 @@ namespace MixItUp.WPF.Windows.Wizard
                                 MaxAmount = rankMaxAmount,
                                 OnFollowBonus = rankOnFollowBonus,
                                 OnSubscribeBonus = rankOnSubBonus,
-                                SubscriberBonus = rankSubBonus
+                                SubscriberBonus = rankSubBonus,
+                                ModeratorBonus = rankSubBonus
                             };
 
                             ChannelSession.Settings.Currencies[rankPointsCurrency.ID] = rankPointsCurrency;
@@ -591,7 +592,8 @@ namespace MixItUp.WPF.Windows.Wizard
                             MaxAmount = rankMaxAmount,
                             OnFollowBonus = rankOnFollowBonus,
                             OnSubscribeBonus = rankOnSubBonus,
-                            SubscriberBonus = rankSubBonus
+                            SubscriberBonus = rankSubBonus,
+                            ModeratorBonus = rankSubBonus
                         };
                     }
                 }

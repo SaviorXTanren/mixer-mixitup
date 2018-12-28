@@ -43,6 +43,8 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public int SubscriberBonus { get; set; }
+        [DataMember]
+        public int ModeratorBonus { get; set; }
 
         [DataMember]
         public int OnFollowBonus { get; set; }
@@ -145,6 +147,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             if (this.IsActive)
             {
+                bool bonusesCanBeApplied = (ChannelSession.Channel.online || this.OfflineAcquireAmount > 0);
                 foreach (UserViewModel user in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                 {
                     if (!user.Data.IsCurrencyRankExempt)
@@ -154,9 +157,16 @@ namespace MixItUp.Base.ViewModel.User
                         if (interval > 0 && (minutes % interval) == 0)
                         {
                             user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
-                            if (user.GetsSubscriberBenefits && (ChannelSession.Channel.online || (this.OfflineAcquireAmount > 0)))
+                            if (bonusesCanBeApplied)
                             {
-                                user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                if (user.PrimaryRole >= MixerRoleEnum.Mod)
+                                {
+                                    user.Data.AddCurrencyAmount(this, this.ModeratorBonus);
+                                }
+                                else if (user.GetsSubscriberBenefits)
+                                {
+                                    user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
+                                }
                             }
                         }
                     }
