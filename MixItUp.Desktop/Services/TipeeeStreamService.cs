@@ -12,7 +12,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace MixItUp.Desktop.Services
 {
@@ -112,7 +111,7 @@ namespace MixItUp.Desktop.Services
         }
     }
 
-    public class TipeeeStreamService : OAuthServiceBase, ITipeeeStreamService, IDisposable
+    public class TipeeeStreamService : OAuthServiceBase, ITipeeeStreamService
     {
         private const string BaseAddress = "https://api.tipeeestream.com/v1.0/";
 
@@ -158,22 +157,19 @@ namespace MixItUp.Desktop.Services
                 {
                     JObject payload = new JObject();
                     payload["grant_type"] = "authorization_code";
-                    payload["client_id"] = TiltifyService.ClientID;
+                    payload["client_id"] = TipeeeStreamService.ClientID;
                     payload["client_secret"] = ChannelSession.SecretManager.GetSecret("TipeeeStreamSecret");
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TipeeeStreamService.ListeningURL;
 
-                    this.token = await this.PostAsync<OAuthTokenModel>(string.Format("https://api.tipeeestream.com/oauth/v2/token?client_id={0}d&client_secret={1}&redirect_uri={2}&code={3}&grant_type=authorization_code",
-                        TiltifyService.ClientID, ChannelSession.SecretManager.GetSecret("TipeeeStreamSecret"), HttpUtility.UrlEncode(TipeeeStreamService.ListeningURL), this.authorizationToken), this.CreateContentFromObject(payload), autoRefreshToken: false);
+                    this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/token", this.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
                         token.authorizationCode = this.authorizationToken;
                         token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
 
-                        await this.InitializeInternal();
-
-                        return true;
+                        return await this.InitializeInternal();
                     }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
@@ -215,6 +211,28 @@ namespace MixItUp.Desktop.Services
             return null;
         }
 
+        public async Task<IEnumerable<TipeeeStreamEvent>> GetDonationEvents()
+        {
+            List<TipeeeStreamEvent> results = new List<TipeeeStreamEvent>();
+            try
+            {
+                JObject jobj = await this.GetAsync<JObject>("events?type[]=donation");
+                if (jobj != null && jobj.ContainsKey("datas"))
+                {
+                    JObject data = (JObject)jobj["datas"];
+                    if (data.ContainsKey("items"))
+                    {
+                        foreach (JObject donation in (JArray)data["items"])
+                        {
+                            results.Add(donation.ToObject<TipeeeStreamEvent>());
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            return results;
+        }
+
         protected override async Task RefreshOAuthToken()
         {
             if (this.token != null)
@@ -228,7 +246,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        protected async Task InitializeInternal()
+        protected async Task<bool> InitializeInternal()
         {
             TipeeeStreamUser user = await this.GetUser();
             if (user != null)
@@ -238,12 +256,10 @@ namespace MixItUp.Desktop.Services
                 {
                     this.socket = new TipeeeStreamWebSocketService(this, user.Username, apiKey);
                     await this.socket.Connect();
-                    if (this.socket.Connected)
-                    {
-
-                    }
+                    return this.socket.Connected;
                 }
             }
+            return false;
         }
 
         public void WebSocketConnectedOccurred()
@@ -260,33 +276,5 @@ namespace MixItUp.Desktop.Services
         {
             this.OnDonationOccurred(this, eventData);
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // Dispose managed state (managed objects).
-                    //this.cancellationTokenSource.Dispose();
-                }
-
-                // Free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // Set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

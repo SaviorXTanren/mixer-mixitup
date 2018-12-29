@@ -1,7 +1,9 @@
 ﻿using Mixer.Base.Model.OAuth;
 using MixItUp.Base.Model.User;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -59,10 +61,25 @@ namespace MixItUp.Base.Services
     public class TipeeeStreamUser
     {
         [JsonProperty("avatar")]
-        public string Avatar;
+        public string Avatar { get; set; }
 
         [JsonProperty("username")]
-        public string Username;
+        public string Username { get; set; }
+
+        [JsonProperty("currency")]
+        public JObject Currency { get; set; }
+
+        [JsonProperty("country")]
+        public string Country { get; set; }
+
+        [JsonProperty("providers")]
+        public JArray Providers { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTimeOffset CreatedDate { get; set; }
+
+        [JsonProperty("session_at")]
+        public DateTimeOffset SessionDate { get; set; }
     }
 
     [DataContract]
@@ -95,6 +112,8 @@ namespace MixItUp.Base.Services
 
         Task<TipeeeStreamUser> GetUser();
         Task<string> GetAPIKey();
+
+        Task<IEnumerable<TipeeeStreamEvent>> GetDonationEvents();
 
         OAuthTokenModel GetOAuthTokenCopy();
     }

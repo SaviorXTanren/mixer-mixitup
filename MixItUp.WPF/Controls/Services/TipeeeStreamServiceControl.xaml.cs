@@ -12,9 +12,6 @@ namespace MixItUp.WPF.Controls.Services
     /// </summary>
     public partial class TipeeeStreamServiceControl : ServicesControlBase
     {
-        private string authorizationToken = null;
-        private bool windowClosed = false;
-
         public TipeeeStreamServiceControl()
         {
             InitializeComponent();
@@ -22,7 +19,7 @@ namespace MixItUp.WPF.Controls.Services
 
         protected override async Task OnLoaded()
         {
-            this.SetHeaderText("Tipeee Stream");
+            this.SetHeaderText("TipeeeStream");
 
             if (ChannelSession.Settings.TipeeeStreamOAuthToken != null)
             {
@@ -40,9 +37,6 @@ namespace MixItUp.WPF.Controls.Services
 
         private async void LogInButton_Click(object sender, RoutedEventArgs e)
         {
-            authorizationToken = null;
-            windowClosed = false;
-
             await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
                 await ChannelSession.Services.InitializeTipeeeStream();
@@ -50,7 +44,7 @@ namespace MixItUp.WPF.Controls.Services
 
             if (ChannelSession.Services.TipeeeStream == null)
             {
-                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with Tipeee Stream. Please ensure you approved access for the application in a timely manner.");
+                await MessageBoxHelper.ShowMessageDialog("Unable to authenticate with TipeeeStream. Please ensure you approved access for the application in a timely manner.");
             }
             else
             {
@@ -74,9 +68,5 @@ namespace MixItUp.WPF.Controls.Services
 
             this.SetCompletedIcon(visible: false);
         }
-
-        private void OauthBrowser_OnTokenAcquired(object sender, string e) { this.authorizationToken = e; }
-
-        private void OauthBrowser_Closed(object sender, System.EventArgs e) { this.windowClosed = true; }
     }
 }

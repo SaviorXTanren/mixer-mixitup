@@ -14,7 +14,7 @@
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" TextWrapping="Wrap">Tipeee Stream service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Tipeee Stream and approve Mix It Up to access your information.</TextBlock>
+        <TextBlock Grid.Column="0" TextWrapping="Wrap">TipeeeStream service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to TipeeeStream and approve Mix It Up to access your information.</TextBlock>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid x:Name="ExistingAccountGrid" Visibility="Collapsed">
