@@ -75,16 +75,22 @@ namespace MixItUp.Desktop.Services
                 }
             });
 
-            JObject joinRoomJObj = new JObject();
-            joinRoomJObj["room"] = this.apiKey;
-            joinRoomJObj["username"] = this.username;
-            this.SocketSendWrapper("join-room", joinRoomJObj);
+            this.SocketReceiveWrapper("error", (errorData) =>
+            {
+                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                this.service.WebSocketDisconnectedOccurred();
+            });
 
             this.SocketReceiveWrapper("disconnect", (errorData) =>
             {
                 MixItUp.Base.Util.Logger.Log(errorData.ToString());
                 this.service.WebSocketDisconnectedOccurred();
             });
+
+            JObject joinRoomJObj = new JObject();
+            joinRoomJObj["room"] = this.apiKey;
+            joinRoomJObj["username"] = this.username;
+            this.SocketSendWrapper("join-room", joinRoomJObj);
 
             for (int i = 0; i < 10 && !this.Connected; i++)
             {

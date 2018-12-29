@@ -73,6 +73,14 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     return "Extra Life";
                 }
+                else if (this.OtherEventType == OtherEventTypeEnum.TipeeeStreamDonation)
+                {
+                    return "TipeeeStream";
+                }
+                else if (this.OtherEventType == OtherEventTypeEnum.TreatStreamDonation)
+                {
+                    return "TreatStream";
+                }
                 return "Mixer";
             }
         }
@@ -123,6 +131,8 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GawkBoxDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TiltifyDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TipeeeStreamDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TreatStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispSubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispResubscribed));
         }

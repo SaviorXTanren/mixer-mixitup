@@ -170,6 +170,8 @@ namespace MixItUp.WPF.Controls.Command
                         case OtherEventTypeEnum.GawkBoxDonation:
                         case OtherEventTypeEnum.TiltifyDonation:
                         case OtherEventTypeEnum.ExtraLifeDonation:
+                        case OtherEventTypeEnum.TipeeeStreamDonation:
+                        case OtherEventTypeEnum.TreatStreamDonation:
                             UserDonationModel donation = new UserDonationModel()
                             {
                                 Amount = 12.34,
@@ -183,12 +185,15 @@ namespace MixItUp.WPF.Controls.Command
                                 case OtherEventTypeEnum.GawkBoxDonation: donation.Source = UserDonationSourceEnum.GawkBox; break;
                                 case OtherEventTypeEnum.TiltifyDonation: donation.Source = UserDonationSourceEnum.Tiltify; break;
                                 case OtherEventTypeEnum.ExtraLifeDonation: donation.Source = UserDonationSourceEnum.ExtraLife; break;
+                                case OtherEventTypeEnum.TipeeeStreamDonation: donation.Source = UserDonationSourceEnum.TipeeeStream; break;
+                                case OtherEventTypeEnum.TreatStreamDonation: donation.Source = UserDonationSourceEnum.TreatStream; break;
                             }
 
                             foreach (var kvp in donation.GetSpecialIdentifiers())
                             {
                                 extraSpecialIdentifiers[kvp.Key] = kvp.Value;
                             }
+                            extraSpecialIdentifiers["donationtype"] = "Pizza";
                             break;
                         case OtherEventTypeEnum.MixerSkillUsed:
                             extraSpecialIdentifiers["skillname"] = "Lots of stars";
