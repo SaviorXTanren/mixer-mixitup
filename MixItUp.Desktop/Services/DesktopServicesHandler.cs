@@ -415,9 +415,9 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        public override async Task<bool> InitializeTipeeeStream(string authorizationCode = null)
+        public override async Task<bool> InitializeTipeeeStream()
         {
-            this.TipeeeStream = (ChannelSession.Settings.TipeeeStreamOAuthToken != null) ? new TipeeeStreamService(ChannelSession.Settings.TipeeeStreamOAuthToken) : new TipeeeStreamService(authorizationCode);
+            this.TipeeeStream = (ChannelSession.Settings.TipeeeStreamOAuthToken != null) ? new TipeeeStreamService(ChannelSession.Settings.TipeeeStreamOAuthToken) : new TipeeeStreamService();
             if (await this.TipeeeStream.Connect())
             {
                 this.TipeeeStream.OnWebSocketConnectedOccurred += TipeeeStream_OnWebSocketConnectedOccurred;

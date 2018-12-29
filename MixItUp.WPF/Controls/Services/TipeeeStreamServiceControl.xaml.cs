@@ -45,20 +45,7 @@ namespace MixItUp.WPF.Controls.Services
 
             await this.groupBoxControl.window.RunAsyncOperation(async () =>
             {
-                OAuthWebBrowserWindow oauthBrowser = new OAuthWebBrowserWindow(string.Format(TipeeeStreamService.AuthorizationURL, TipeeeStreamService.ClientID, TipeeeStreamService.ListeningURL), TipeeeStreamService.ListeningURL);
-                oauthBrowser.Closed += OauthBrowser_Closed;
-                oauthBrowser.OnTokenAcquired += OauthBrowser_OnTokenAcquired;
-                oauthBrowser.Show();
-
-                while (!this.windowClosed && string.IsNullOrEmpty(this.authorizationToken))
-                {
-                    await Task.Delay(500);
-                }
-
-                if (!string.IsNullOrEmpty(this.authorizationToken))
-                {
-                    await ChannelSession.Services.InitializeTipeeeStream(authorizationToken);
-                }
+                await ChannelSession.Services.InitializeTipeeeStream();
             });
 
             if (ChannelSession.Services.TipeeeStream == null)

@@ -83,7 +83,7 @@ namespace MixItUp.Base.Services
         public abstract Task<bool> InitializeStreamDeck();
         public abstract Task DisconnectStreamDeck();
 
-        public abstract Task<bool> InitializeTipeeeStream(string authorizationCode = null);
+        public abstract Task<bool> InitializeTipeeeStream();
         public abstract Task DisconnectTipeeeStream();
     }
 }

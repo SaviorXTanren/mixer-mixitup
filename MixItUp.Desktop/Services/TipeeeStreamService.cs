@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Desktop.Services
 {
@@ -117,9 +118,9 @@ namespace MixItUp.Desktop.Services
 
         public const string ClientID = "9611_u5i668t3urk0wcksc84kcgsgckc04wk4ookw0so04kkwgw0cg";
 
-        public const string ListeningURL = "https://mixitupapp.com";
+        public const string ListeningURL = "http://localhost:8919";
 
-        public const string AuthorizationURL = "https://api.tipeeestream.com/oauth/v2/auth?client_id={0}&response_type=code&redirect_uri={1}";
+        public const string AuthorizationURL = "https://api.tipeeestream.com/oauth/v2/auth?client_id={0}&response_type=code&redirect_uri={1}&state=abc123";
         public const string OAuthTokenURL = "https://api.tipeeestream.com/oauth/v2/token";
 
         public event EventHandler OnWebSocketConnectedOccurred = delegate { };
@@ -133,7 +134,7 @@ namespace MixItUp.Desktop.Services
 
         private TipeeeStreamWebSocketService socket;
 
-        public TipeeeStreamService(string authorizationToken) : base(TipeeeStreamService.BaseAddress) { this.authorizationToken = authorizationToken; }
+        public TipeeeStreamService() : base(TipeeeStreamService.BaseAddress) { }
 
         public TipeeeStreamService(OAuthTokenModel token) : base(TipeeeStreamService.BaseAddress, token) { }
 
@@ -150,6 +151,7 @@ namespace MixItUp.Desktop.Services
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
 
+            this.authorizationToken = await this.ConnectViaOAuthRedirect(string.Format(TipeeeStreamService.AuthorizationURL, TipeeeStreamService.ClientID, TipeeeStreamService.ListeningURL));
             if (!string.IsNullOrEmpty(this.authorizationToken))
             {
                 try
@@ -161,7 +163,8 @@ namespace MixItUp.Desktop.Services
                     payload["code"] = this.authorizationToken;
                     payload["redirect_uri"] = TipeeeStreamService.ListeningURL;
 
-                    this.token = await this.PostAsync<OAuthTokenModel>("https://api.tipeeestream.com/oauth/v2/token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                    this.token = await this.PostAsync<OAuthTokenModel>(string.Format("https://api.tipeeestream.com/oauth/v2/token?client_id={0}d&client_secret={1}&redirect_uri={2}&code={3}&grant_type=authorization_code",
+                        TiltifyService.ClientID, ChannelSession.SecretManager.GetSecret("TipeeeStreamSecret"), HttpUtility.UrlEncode(TipeeeStreamService.ListeningURL), this.authorizationToken), this.CreateContentFromObject(payload), autoRefreshToken: false);
                     if (this.token != null)
                     {
                         token.authorizationCode = this.authorizationToken;
