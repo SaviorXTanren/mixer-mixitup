@@ -818,7 +818,7 @@ namespace MixItUp.Base.MixerAPI
                         }
                     }
 
-                    if (user == null || !user.IsInChat)
+                    if (user == null)
                     {
                         user = new UserViewModel(0, "Unknown User");
                         user.InteractiveIDs[e.participantID] = new InteractiveParticipantModel() { sessionID = e.participantID, anonymous = true };
