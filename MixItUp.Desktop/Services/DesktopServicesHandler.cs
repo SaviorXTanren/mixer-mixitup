@@ -444,6 +444,35 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeTreatStream()
+        {
+            this.TreatStream = (ChannelSession.Settings.TreatStreamOAuthToken != null) ? new TreatStreamService(ChannelSession.Settings.TreatStreamOAuthToken) : new TreatStreamService();
+            if (await this.TreatStream.Connect())
+            {
+                this.TreatStream.OnWebSocketConnectedOccurred += TipeeeStream_OnWebSocketConnectedOccurred;
+                this.TreatStream.OnWebSocketDisconnectedOccurred += TipeeeStream_OnWebSocketDisconnectedOccurred;
+                return true;
+            }
+            else
+            {
+                await this.DisconnectTreatStream();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectTreatStream()
+        {
+            if (this.TreatStream != null)
+            {
+                this.TreatStream.OnWebSocketConnectedOccurred -= TipeeeStream_OnWebSocketConnectedOccurred;
+                this.TreatStream.OnWebSocketDisconnectedOccurred -= TipeeeStream_OnWebSocketDisconnectedOccurred;
+
+                await this.TreatStream.Disconnect();
+                this.TreatStream = null;
+                ChannelSession.Settings.TreatStreamOAuthToken = null;
+            }
+        }
+
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");

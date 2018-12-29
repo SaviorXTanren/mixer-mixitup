@@ -211,6 +211,7 @@
     <Compile Include="Services\TiltifyService.cs" />
     <Compile Include="Services\TipeeeStreamService.cs" />
     <Compile Include="Services\TranslationService.cs" />
+    <Compile Include="Services\TreatStreamService.cs" />
     <Compile Include="Services\TwitterService.cs" />
     <Compile Include="Services\AudioService.cs" />
     <Compile Include="Services\DeveloperAPI\WindowsDeveloperAPIService.cs" />

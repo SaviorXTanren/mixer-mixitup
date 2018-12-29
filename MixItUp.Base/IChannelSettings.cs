@@ -40,6 +40,7 @@ namespace MixItUp.Base
         OAuthTokenModel DiscordOAuthToken { get; set; }
         OAuthTokenModel TiltifyOAuthToken { get; set; }
         OAuthTokenModel TipeeeStreamOAuthToken { get; set; }
+        OAuthTokenModel TreatStreamOAuthToken { get; set; }
 
         string StreamDeckDeviceName { get; set; }
 

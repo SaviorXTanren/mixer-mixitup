@@ -34,6 +34,7 @@ namespace MixItUp.Base.Services
         public IStreamDeckService StreamDeck { get; protected set; }
         public IScoutService Scout { get; protected set; }
         public ITipeeeStreamService TipeeeStream { get; protected set; }
+        public ITreatStreamService TreatStream { get; protected set; }
 
         public abstract Task Close();
 
@@ -85,5 +86,8 @@ namespace MixItUp.Base.Services
 
         public abstract Task<bool> InitializeTipeeeStream();
         public abstract Task DisconnectTipeeeStream();
+
+        public abstract Task<bool> InitializeTreatStream();
+        public abstract Task DisconnectTreatStream();
     }
 }

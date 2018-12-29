@@ -68,6 +68,8 @@ namespace MixItUp.Desktop
         public OAuthTokenModel TiltifyOAuthToken { get; set; }
         [JsonProperty]
         public OAuthTokenModel TipeeeStreamOAuthToken { get; set; }
+        [JsonProperty]
+        public OAuthTokenModel TreatStreamOAuthToken { get; set; }
 
         [JsonProperty]
         public string StreamDeckDeviceName { get; set; }
@@ -594,6 +596,10 @@ namespace MixItUp.Desktop
             if (ChannelSession.Services.TipeeeStream != null)
             {
                 this.TipeeeStreamOAuthToken = ChannelSession.Services.TipeeeStream.GetOAuthTokenCopy();
+            }
+            if (ChannelSession.Services.TreatStream != null)
+            {
+                this.TreatStreamOAuthToken = ChannelSession.Services.TreatStream.GetOAuthTokenCopy();
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();
