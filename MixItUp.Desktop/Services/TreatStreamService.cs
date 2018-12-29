@@ -1,12 +1,115 @@
-﻿using System;
-using System.Threading.Tasks;
-using Mixer.Base.Model.OAuth;
+﻿using Mixer.Base.Model.OAuth;
+using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Util;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
 {
+    public class TreatStreamWebSocketService : SocketIOService
+    {
+        public bool Connected { get; private set; }
+
+        private TreatStreamService service;
+        private string socketToken;
+
+        public TreatStreamWebSocketService(TreatStreamService service, string socketToken)
+            : base("https://nodeapi.treatstream.com/", "token=" + socketToken)
+        {
+            this.service = service;
+            this.socketToken = socketToken;
+        }
+
+        public override async Task Connect()
+        {
+            await base.Connect();
+
+            this.SocketReceiveWrapper("connect", (data) =>
+            {
+                this.Connected = true;
+            });
+
+            this.SocketReceiveWrapper("realTimeTreat", (data) =>
+            {
+                if (data != null)
+                {
+                    TreatStreamEvent tsEvent = SerializerHelper.DeserializeFromString<TreatStreamEvent>(data.ToString());
+                    if (tsEvent != null)
+                    {
+                        this.service.DonationOccurred(tsEvent);
+                        Task.Run(async () =>
+                        {
+                            UserDonationModel donation = tsEvent.ToGenericDonation();
+                            GlobalEvents.DonationOccurred(donation);
+
+                            UserViewModel user = new UserViewModel(0, donation.UserName);
+
+                            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                            if (userModel != null)
+                            {
+                                user = new UserViewModel(userModel);
+                            }
+
+                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.TreatStreamDonation));
+                            if (command != null)
+                            {
+                                Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
+                                specialIdentifiers["donationsource"] = EnumHelper.GetEnumName(donation.Source);
+                                specialIdentifiers["donationamount"] = donation.AmountText;
+                                specialIdentifiers["donationmessage"] = donation.Message;
+                                specialIdentifiers["donationtype"] = tsEvent.Title;
+                                await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
+                            }
+                        });
+                    }
+                }
+            });
+
+            this.SocketReceiveWrapper("error", (errorData) =>
+            {
+                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                this.service.WebSocketDisconnectedOccurred();
+            });
+
+            this.SocketReceiveWrapper("disconnect", (errorData) =>
+            {
+                MixItUp.Base.Util.Logger.Log(errorData.ToString());
+                this.service.WebSocketDisconnectedOccurred();
+            });
+
+            for (int i = 0; i < 10 && !this.Connected; i++)
+            {
+                await Task.Delay(1000);
+            }
+
+            if (this.Connected)
+            {
+                this.service.WebSocketConnectedOccurred();
+            }
+        }
+
+        public override async Task Disconnect()
+        {
+            this.Connected = false;
+
+            if (this.socket != null)
+            {
+                this.SocketSendWrapper("disconnect", null);
+            }
+
+            await base.Disconnect();
+        }
+    }
+
     public class TreatStreamService : OAuthServiceBase, ITreatStreamService
     {
         private const string BaseAddress = "https://treatstream.com/api/";
@@ -27,6 +130,8 @@ namespace MixItUp.Desktop.Services
         public bool WebSocketConnectedAndAuthenticated { get; private set; }
 
         private string authorizationToken;
+
+        private TreatStreamWebSocketService socket;
 
         public TreatStreamService() : base(TreatStreamService.BaseAddress) { }
 
@@ -65,9 +170,7 @@ namespace MixItUp.Desktop.Services
                         token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
 
-                        await this.InitializeInternal();
-
-                        return true;
+                        return await this.InitializeInternal();
                     }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
@@ -78,6 +181,29 @@ namespace MixItUp.Desktop.Services
         public async Task Disconnect()
         {
             this.token = null;
+            if (this.socket != null)
+            {
+                await this.socket.Disconnect();
+                this.socket = null;
+            }
+        }
+
+        public async Task<string> GetSocketToken()
+        {
+            try
+            {
+                JObject payload = new JObject();
+                payload["client_id"] = TreatStreamService.ClientID;
+                payload["access_token"] = this.token.accessToken;
+
+                JObject jobj = await this.PostAsync<JObject>("https://treatstream.com/Oauth2/Authorize/socketToken", this.CreateContentFromObject(payload));
+                if (jobj != null && jobj.ContainsKey("socket_token"))
+                {
+                    return jobj["socket_token"].ToString();
+                }
+            }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            return null;
         }
 
         public async Task GetTreats()
@@ -103,9 +229,16 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        protected async Task InitializeInternal()
+        protected async Task<bool> InitializeInternal()
         {
-            await this.GetTreats();
+            string socketToken = await this.GetSocketToken();
+            if (!string.IsNullOrEmpty(socketToken))
+            {
+                this.socket = new TreatStreamWebSocketService(this, socketToken);
+                await this.socket.Connect();
+                return this.socket.Connected;
+            }
+            return false;
         }
 
         public void WebSocketConnectedOccurred()

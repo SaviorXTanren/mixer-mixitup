@@ -68,7 +68,6 @@ namespace MixItUp.Desktop.Services
                                 specialIdentifiers["donationsource"] = EnumHelper.GetEnumName(donation.Source);
                                 specialIdentifiers["donationamount"] = donation.AmountText;
                                 specialIdentifiers["donationmessage"] = donation.Message;
-                                specialIdentifiers["donationimage"] = donation.ImageLink;
                                 await command.Perform(user, arguments: null, extraSpecialIdentifiers: specialIdentifiers);
                             }
                         });

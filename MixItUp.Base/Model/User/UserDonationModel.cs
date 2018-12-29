@@ -17,6 +17,7 @@ namespace MixItUp.Base.Model.User
         [Name("Extra Life")]
         ExtraLife,
         TipeeeStream,
+        TreatStream,
     }
 
     [DataContract]
