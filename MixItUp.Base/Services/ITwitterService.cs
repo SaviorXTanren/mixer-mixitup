@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -12,6 +13,9 @@ namespace MixItUp.Base.Services
     {
         [DataMember]
         public ulong ID { get; set; }
+
+        [DataMember]
+        public ulong UserID { get; set; }
 
         [DataMember]
         public string UserName { get; set; }
@@ -32,6 +36,8 @@ namespace MixItUp.Base.Services
         {
             this.Links = new List<string>();
         }
+
+        public bool IsStreamTweet { get { return this.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.User.username.ToLower()))); } }
     }
 
     public interface ITwitterService
@@ -45,6 +51,8 @@ namespace MixItUp.Base.Services
         Task<IEnumerable<Tweet>> GetLatestTweets();
 
         Task SendTweet(string tweet, string imagePath = null);
+
+        Task<IEnumerable<Tweet>> GetRetweets(Tweet tweet);
 
         Task UpdateName(string name);
 

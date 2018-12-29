@@ -117,6 +117,9 @@ namespace MixItUp.Base.ViewModel.User
         public bool IsInInteractiveTimeout { get; set; }
 
         [DataMember]
+        public string TwitterURL { get; set; }
+
+        [DataMember]
         public GameWispSubscriber GameWispUser { get; set; }
 
         public UserViewModel()
@@ -127,7 +130,7 @@ namespace MixItUp.Base.ViewModel.User
 
         public UserViewModel(UserModel user) : this(user.id, user.username)
         {
-            this.MixerAccountDate = user.createdAt;
+            this.SetMixerUserDetails(user);
         }
 
         public UserViewModel(ChannelModel channel) : this(channel.id, channel.token) { }
@@ -282,8 +285,7 @@ namespace MixItUp.Base.ViewModel.User
                 UserWithChannelModel user = await ChannelSession.Connection.GetUser(this.ID);
                 if (user != null)
                 {
-                    this.MixerAccountDate = user.createdAt;
-                    this.Sparks = (int)user.sparks;
+                    this.SetMixerUserDetails(user);
 
                     this.FollowDate = await ChannelSession.Connection.CheckIfFollows(ChannelSession.Channel, this.GetModel());
                     if (this.IsSubscriber)
@@ -505,6 +507,13 @@ namespace MixItUp.Base.ViewModel.User
         public override int GetHashCode() { return this.ID.GetHashCode(); }
 
         public override string ToString() { return this.UserName; }
+
+        private void SetMixerUserDetails(UserModel user)
+        {
+            this.MixerAccountDate = user.createdAt;
+            this.Sparks = (int)user.sparks;
+            this.TwitterURL = user.social?.twitter;
+        }
 
         private void SetMixerRoles(string[] userRoles)
         {

@@ -34,6 +34,9 @@ namespace MixItUp.Base.Commands
         [Name("TreatStream Donation")]
         TreatStreamDonation = 15,
 
+        [Name("Stream Tweet Retweet")]
+        TwitterStreamTweetRetweet = 20,
+
         [Name("User First Joined")]
         MixerUserFirstJoin = 30,
         [Name("User Unfollowed")]

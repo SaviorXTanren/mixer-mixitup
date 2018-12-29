@@ -195,6 +195,8 @@ namespace MixItUp.WPF.Controls.Command
                             }
                             extraSpecialIdentifiers["donationtype"] = "Pizza";
                             break;
+                        case OtherEventTypeEnum.TwitterStreamTweetRetweet:
+                            break;
                         case OtherEventTypeEnum.MixerSkillUsed:
                             extraSpecialIdentifiers["skillname"] = "Lots of stars";
                             extraSpecialIdentifiers["skilltype"] = EnumHelper.GetEnumName(SkillTypeEnum.Sticker);

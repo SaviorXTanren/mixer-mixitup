@@ -390,7 +390,7 @@ namespace MixItUp.Base.Util
                     this.ReplaceSpecialIdentifier("tweetlatestdate", latestTweetLocalTime.ToString("d"));
                     this.ReplaceSpecialIdentifier("tweetlatesttime", latestTweetLocalTime.ToString("t"));
 
-                    Tweet streamTweet = tweets.FirstOrDefault(t => t.Links.Any(l => l.ToLower().Contains(string.Format("mixer.com/{0}", ChannelSession.User.username.ToLower()))));
+                    Tweet streamTweet = tweets.FirstOrDefault(t => t.IsStreamTweet);
                     if (streamTweet != null)
                     {
                         DateTimeOffset streamTweetLocalTime = streamTweet.DateTime.ToLocalTime();
