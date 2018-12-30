@@ -84,6 +84,10 @@ namespace MixItUp.Base.Model.Overlay
 
         private List<OverlayEventListItem> eventsToAdd = new List<OverlayEventListItem>();
 
+        private HashSet<uint> follows = new HashSet<uint>();
+        private HashSet<uint> hosts = new HashSet<uint>();
+        private HashSet<uint> subs = new HashSet<uint>();
+
         public OverlayEventList() : base(EventListItemType, HTMLTemplate) { }
 
         public OverlayEventList(string htmlText, IEnumerable<EventListItemTypeEnum> itemTypes, int totalToShow, bool resetOnLoad, string textFont, int width, int height,
@@ -186,13 +190,41 @@ namespace MixItUp.Base.Model.Overlay
             this.eventsToAdd.Add(new OverlayEventListItem(name, details));
         }
 
-        private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user) { this.AddEvent(user.UserName, "Followed"); }
+        private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        {
+            if (!this.follows.Contains(user.ID))
+            {
+                this.follows.Add(user.ID);
+                this.AddEvent(user.UserName, "Followed");
+            }
+        }
 
-        private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host) { this.AddEvent(host.Item1.UserName, string.Format("Hosted ({0})", host.Item2)); }
+        private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
+        {
+            if (!this.hosts.Contains(host.Item1.ID))
+            {
+                this.hosts.Add(host.Item1.ID);
+                this.AddEvent(host.Item1.UserName, string.Format("Hosted ({0})", host.Item2));
+            }
+        }
 
-        private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user) { this.AddEvent(user.UserName, "Subscribed"); }
+        private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        {
+            if (!this.subs.Contains(user.ID))
+            {
+                this.subs.Add(user.ID);
+                this.AddEvent(user.UserName, "Subscribed");
+            }
+        }
 
-        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user) { this.AddEvent(user.Item1.UserName, string.Format("Resubscribed ({0} months)", user.Item2)); }
+        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        {
+            if (!this.subs.Contains(user.Item1.ID))
+            {
+                this.subs.Add(user.Item1.ID);
+                this.AddEvent(user.Item1.UserName, string.Format("Resubscribed ({0} months)", user.Item2));
+            }
+        }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.AddEvent(donation.UserName, string.Format("Donated {0}", donation.AmountText)); }
 

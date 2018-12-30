@@ -92,6 +92,10 @@ namespace MixItUp.Base.Model.Overlay
 
         private SemaphoreSlim HealthSemaphore = new SemaphoreSlim(1);
 
+        private HashSet<uint> follows = new HashSet<uint>();
+        private HashSet<uint> hosts = new HashSet<uint>();
+        private HashSet<uint> subs = new HashSet<uint>();
+
         public OverlayStreamBoss() : base(StreamBossItemType, HTMLTemplate) { }
 
         public OverlayStreamBoss(string htmlText, int startingHealth, int width, int height, string textColor, string textFont, string borderColor, string backgroundColor,
@@ -235,13 +239,41 @@ namespace MixItUp.Base.Model.Overlay
             });
         }
 
-        private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user) { await this.ReduceHealth(user, this.FollowBonus); }
+        private async void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        {
+            if (!this.follows.Contains(user.ID))
+            {
+                this.follows.Add(user.ID);
+                await this.ReduceHealth(user, this.FollowBonus);
+            }
+        }
 
-        private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host) { await this.ReduceHealth(host.Item1, (Math.Max(host.Item2, 1) * this.HostBonus)); }
+        private async void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
+        {
+            if (!this.hosts.Contains(host.Item1.ID))
+            {
+                this.hosts.Add(host.Item1.ID);
+                await this.ReduceHealth(host.Item1, (Math.Max(host.Item2, 1) * this.HostBonus));
+            }
+        }
 
-        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user) { await this.ReduceHealth(user, this.SubscriberBonus); }
+        private async void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        {
+            if (!this.subs.Contains(user.ID))
+            {
+                this.subs.Add(user.ID);
+                await this.ReduceHealth(user, this.SubscriberBonus);
+            }
+        }
 
-        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user) { await this.ReduceHealth(user.Item1, this.SubscriberBonus); }
+        private async void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        {
+            if (!this.subs.Contains(user.Item1.ID))
+            {
+                this.subs.Add(user.Item1.ID);
+                await this.ReduceHealth(user.Item1, this.SubscriberBonus);
+            }
+        }
 
         private async void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { await this.ReduceHealth(donation.User, (donation.Amount * this.DonationBonus)); }
 
