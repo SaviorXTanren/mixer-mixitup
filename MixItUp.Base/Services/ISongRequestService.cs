@@ -23,7 +23,7 @@ namespace MixItUp.Base.Services
         All = 10
     }
 
-    public class SongRequestItem
+    public class SongRequestItem : IEquatable<SongRequestItem>
     {
         public string ID { get; set; }
         public string Name { get; set; }
@@ -37,6 +37,17 @@ namespace MixItUp.Base.Services
         public long Length { get; set; }
 
         public int Volume { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is SongRequestItem)
+            {
+                return this.Equals((SongRequestItem)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(SongRequestItem other) { return other != null && this.Type == other.Type && this.ID.Equals(other.ID); }
 
         public override string ToString()
         {

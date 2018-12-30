@@ -92,7 +92,21 @@ namespace MixItUp.Base.Model.Overlay
             {
                 this.songRequestsUpdated = false;
 
-                IEnumerable<SongRequestItem> songRequests = await ChannelSession.Services.SongRequestService.GetAllRequests();
+                List<SongRequestItem> songRequests = new List<SongRequestItem>();
+
+                SongRequestItem currentlyPlaying = await ChannelSession.Services.SongRequestService.GetCurrentlyPlaying();
+                if (currentlyPlaying != null)
+                {
+                    songRequests.Add(currentlyPlaying);
+                }
+
+                foreach (SongRequestItem songRequest in await ChannelSession.Services.SongRequestService.GetAllRequests())
+                {
+                    if (!songRequests.Any(sr => sr.Equals(songRequest)))
+                    {
+                        songRequests.Add(songRequest);
+                    }
+                }
 
                 this.SongRequestUpdates.Clear();
                 this.currentSongRequests.Clear();
