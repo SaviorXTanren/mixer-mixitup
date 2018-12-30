@@ -657,6 +657,9 @@
     <Compile Include="Controls\Services\OverlayServiceControl.xaml.cs">
       <DependentUpon>OverlayServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\PatreonServiceControl.xaml.cs">
+      <DependentUpon>PatreonServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\ServicesControlBase.cs" />
     <Compile Include="Controls\Services\ServicesGroupBoxControl.xaml.cs">
       <DependentUpon>ServicesGroupBoxControl.xaml</DependentUpon>
@@ -1371,6 +1374,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\OverlayServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\PatreonServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

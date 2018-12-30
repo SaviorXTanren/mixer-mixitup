@@ -497,6 +497,30 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializePatreon()
+        {
+            this.Patreon = (ChannelSession.Settings.PatreonOAuthToken != null) ? new PatreonService(ChannelSession.Settings.PatreonOAuthToken) : new PatreonService();
+            if (await this.Patreon.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectPatreon();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectPatreon()
+        {
+            if (this.Patreon != null)
+            {
+                await this.Patreon.Disconnect();
+                this.Patreon = null;
+                ChannelSession.Settings.PatreonOAuthToken = null;
+            }
+        }
+
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");

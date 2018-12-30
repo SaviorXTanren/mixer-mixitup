@@ -197,6 +197,7 @@
     <Compile Include="Services\DiscordService.cs" />
     <Compile Include="Services\GameWispService.cs" />
     <Compile Include="Services\GawkBoxService.cs" />
+    <Compile Include="Services\PatreonService.cs" />
     <Compile Include="Services\ScoutService.cs" />
     <Compile Include="Services\OverlayServiceManager.cs" />
     <Compile Include="Services\RemoteService.cs" />

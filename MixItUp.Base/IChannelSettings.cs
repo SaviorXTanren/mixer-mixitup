@@ -42,6 +42,7 @@ namespace MixItUp.Base
         OAuthTokenModel TipeeeStreamOAuthToken { get; set; }
         OAuthTokenModel TreatStreamOAuthToken { get; set; }
         OAuthTokenModel StreamJarOAuthToken { get; set; }
+        OAuthTokenModel PatreonOAuthToken { get; set; }
 
         string StreamDeckDeviceName { get; set; }
 
