@@ -61,21 +61,6 @@ namespace MixItUp.Base.Actions
 
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
-            if (this.Position == null)
-            {
-#pragma warning disable CS0612 // Type or member is obsolete
-                this.Position = new OverlayItemPosition(OverlayEffectPositionType.Percentage, this.Effect.Horizontal, this.Effect.Vertical);
-#pragma warning restore CS0612 // Type or member is obsolete
-            }
-
-            if (this.Effects == null)
-            {
-#pragma warning disable CS0612 // Type or member is obsolete
-                this.Effects = new OverlayItemEffects((OverlayEffectEntranceAnimationTypeEnum)this.Effect.EntranceAnimation,
-                    (OverlayEffectVisibleAnimationTypeEnum)this.Effect.VisibleAnimation, (OverlayEffectExitAnimationTypeEnum)this.Effect.ExitAnimation, this.Effect.Duration);
-#pragma warning restore CS0612 // Type or member is obsolete
-            }
-
             if (this.WidgetID != Guid.Empty)
             {
                 OverlayWidget widget = ChannelSession.Settings.OverlayWidgets.FirstOrDefault(w => w.Item.ID.Equals(this.WidgetID));
@@ -94,6 +79,19 @@ namespace MixItUp.Base.Actions
             }
             else
             {
+#pragma warning disable CS0612 // Type or member is obsolete
+                if (this.Position == null && this.Effect != null)
+                {
+                    this.Position = new OverlayItemPosition(OverlayEffectPositionType.Percentage, this.Effect.Horizontal, this.Effect.Vertical);
+                }
+                if (this.Effects == null && this.Effect != null)
+                {
+                    this.Effects = new OverlayItemEffects((OverlayEffectEntranceAnimationTypeEnum)this.Effect.EntranceAnimation,
+                        (OverlayEffectVisibleAnimationTypeEnum)this.Effect.VisibleAnimation, (OverlayEffectExitAnimationTypeEnum)this.Effect.ExitAnimation, this.Effect.Duration);
+                }
+                this.Effect = null;
+#pragma warning restore CS0612 // Type or member is obsolete
+
                 string overlayName = (string.IsNullOrEmpty(this.OverlayName)) ? ChannelSession.Services.OverlayServers.DefaultOverlayName : this.OverlayName;
                 IOverlayService overlay = ChannelSession.Services.OverlayServers.GetOverlay(overlayName);
                 if (overlay != null)
