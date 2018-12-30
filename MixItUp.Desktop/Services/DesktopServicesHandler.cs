@@ -473,6 +473,30 @@ namespace MixItUp.Desktop.Services
             }
         }
 
+        public override async Task<bool> InitializeStreamJar()
+        {
+            this.StreamJar = (ChannelSession.Settings.StreamJarOAuthToken != null) ? new StreamJarService(ChannelSession.Settings.StreamJarOAuthToken) : new StreamJarService();
+            if (await this.StreamJar.Connect())
+            {
+                return true;
+            }
+            else
+            {
+                await this.DisconnectStreamJar();
+            }
+            return false;
+        }
+
+        public override async Task DisconnectStreamJar()
+        {
+            if (this.StreamJar != null)
+            {
+                await this.StreamJar.Disconnect();
+                this.StreamJar = null;
+                ChannelSession.Settings.StreamJarOAuthToken = null;
+            }
+        }
+
         private void OverlayServer_OnWebSocketConnectedOccurred(object sender, System.EventArgs e)
         {
             ChannelSession.ReconnectionOccurred("Overlay");

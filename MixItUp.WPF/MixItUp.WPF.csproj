@@ -664,6 +664,9 @@
     <Compile Include="Controls\Services\SpotifyServiceControl.xaml.cs">
       <DependentUpon>SpotifyServiceControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Services\StreamJarServiceControl.xaml.cs">
+      <DependentUpon>StreamJarServiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Services\StreamlabsOBSServiceControl.xaml.cs">
       <DependentUpon>StreamlabsOBSServiceControl.xaml</DependentUpon>
     </Compile>
@@ -1376,6 +1379,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Services\SpotifyServiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Services\StreamJarServiceControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

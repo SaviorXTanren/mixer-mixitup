@@ -11,25 +11,27 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MixItUp.Desktop.Services
 {
-    public class StreamlabsService : OAuthServiceBase, IStreamlabsService, IDisposable
+    public class StreamJarService : OAuthServiceBase, IStreamJarService, IDisposable
     {
-        private const string BaseAddress = "https://streamlabs.com/api/v1.0/";
+        private const string BaseAddress = "https://jar.streamjar.tv/v2/";
 
-        private const string ClientID = "ioEmsqlMK8jj0NuJGvvQn4ijp8XkyJ552VJ7MiDX";
-        private const string AuthorizationUrl = "https://www.streamlabs.com/api/v1.0/authorize?client_id={0}&redirect_uri=http://localhost:8919/&response_type=code&scope=donations.read+socket.token+points.read+alerts.create+jar.write+wheel.write+credits.write";
+        private const string ClientID = "0ff4b414d6ec2296b824cd8a11ff75ff";
+        private const string AuthorizationUrl = "https://control.streamjar.tv/oauth/authorize?response_type=code&client_id={0}&redirect_uri={1}&scopes=channel:tips:view";
+        private const string TokenUrl = "https://jar.streamjar.tv/v2/oauth/authorize";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        public StreamlabsService() : base(StreamlabsService.BaseAddress) { }
+        private StreamJarAccount account;
+        private StreamJarChannel channel;
 
-        public StreamlabsService(OAuthTokenModel token) : base(StreamlabsService.BaseAddress, token) { }
+        public StreamJarService() : base(StreamJarService.BaseAddress) { }
+
+        public StreamJarService(OAuthTokenModel token) : base(StreamJarService.BaseAddress, token) { }
 
         public async Task<bool> Connect()
         {
@@ -46,17 +48,16 @@ namespace MixItUp.Desktop.Services
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
 
-            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamlabsService.AuthorizationUrl, StreamlabsService.ClientID));
+            string authorizationCode = await this.ConnectViaOAuthRedirect(string.Format(StreamJarService.AuthorizationUrl, StreamJarService.ClientID, MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL));
             if (!string.IsNullOrEmpty(authorizationCode))
             {
                 JObject payload = new JObject();
                 payload["grant_type"] = "authorization_code";
-                payload["client_id"] = StreamlabsService.ClientID;
-                payload["client_secret"] = ChannelSession.SecretManager.GetSecret("StreamlabsSecret");
+                payload["client_id"] = StreamJarService.ClientID;
                 payload["code"] = authorizationCode;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>(StreamJarService.TokenUrl, this.CreateContentFromObject(payload), autoRefreshToken: false);
                 if (this.token != null)
                 {
                     token.authorizationCode = authorizationCode;
@@ -77,54 +78,34 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(0);
         }
 
-        public async Task<IEnumerable<StreamlabsDonation>> GetDonations(int maxAmount = 1)
+        public async Task<StreamJarAccount> GetCurrentAccount()
         {
-            List<StreamlabsDonation> results = new List<StreamlabsDonation>();
             try
             {
-                int lastID = 0;
-                while (results.Count < maxAmount)
-                {
-                    string beforeFilter = string.Empty;
-                    if (lastID > 0)
-                    {
-                        beforeFilter = "?before=" + lastID;
-                    }
-
-                    HttpResponseMessage response = await this.GetAsync("donations" + beforeFilter);
-                    JObject jobj = await this.ProcessJObjectResponse(response);
-                    JArray data = (JArray)jobj["data"];
-
-                    if (data.Count == 0)
-                    {
-                        break;
-                    }
-
-                    foreach (var d in data)
-                    {
-                        StreamlabsDonation donation = d.ToObject<StreamlabsDonation>();
-                        lastID = donation.ID;
-                        results.Add(donation);
-                    }
-                }
+                return await this.GetAsync<StreamJarAccount>("account");
             }
             catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
-            return results;
+            return null;
         }
 
-        public async Task SpinWheel()
+        public async Task<StreamJarChannel> GetChannel(string channelName)
         {
-            await this.PostAsync("wheel/spin", new StringContent($"access_token={this.token.accessToken}"));
+            try
+            {
+                return await this.GetAsync<StreamJarChannel>("channels/" + channelName);
+            }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            return null;
         }
 
-        public async Task EmptyJar()
+        public async Task<IEnumerable<StreamJarDonation>> GetDonations()
         {
-            await this.PostAsync("jar/empty", new StringContent($"access_token={this.token.accessToken}"));
-        }
-
-        public async Task RollCredits()
-        {
-            await this.PostAsync("credits/roll", new StringContent($"access_token={this.token.accessToken}"));
+            try
+            {
+                return await this.GetAsync<IEnumerable<StreamJarDonation>>(string.Format("channels/{0}/tips", this.channel.ID.ToString()));
+            }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            return new List<StreamJarDonation>();
         }
 
         protected override async Task RefreshOAuthToken()
@@ -133,12 +114,11 @@ namespace MixItUp.Desktop.Services
             {
                 JObject payload = new JObject();
                 payload["grant_type"] = "refresh_token";
-                payload["client_id"] = StreamlabsService.ClientID;
-                payload["client_secret"] = ChannelSession.SecretManager.GetSecret("StreamlabsSecret");
+                payload["client_id"] = StreamJarService.ClientID;
                 payload["refresh_token"] = this.token.refreshToken;
                 payload["redirect_uri"] = MixerConnection.DEFAULT_OAUTH_LOCALHOST_URL;
 
-                this.token = await this.PostAsync<OAuthTokenModel>("token", this.CreateContentFromObject(payload), autoRefreshToken: false);
+                this.token = await this.PostAsync<OAuthTokenModel>(StreamJarService.TokenUrl, this.CreateContentFromObject(payload), autoRefreshToken: false);
             }
         }
 
@@ -146,20 +126,24 @@ namespace MixItUp.Desktop.Services
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
-            HttpResponseMessage result = await this.GetAsync("socket/token");
-            string resultJson = await result.Content.ReadAsStringAsync();
-            JObject jobj = JObject.Parse(resultJson);
-
+            this.account = await this.GetCurrentAccount();
+            if (this.account != null)
+            {
+                this.channel = await this.GetChannel(this.account.Username);
+                if (this.channel != null)
+                {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
+                    Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                }
+            }
         }
 
         private async Task BackgroundDonationCheck()
         {
-            Dictionary<int, StreamlabsDonation> donationsReceived = new Dictionary<int, StreamlabsDonation>();
+            Dictionary<int, StreamJarDonation> donationsReceived = new Dictionary<int, StreamJarDonation>();
 
-            foreach (StreamlabsDonation donation in await this.GetDonations())
+            foreach (StreamJarDonation donation in await this.GetDonations())
             {
                 donationsReceived[donation.ID] = donation;
             }
@@ -168,12 +152,12 @@ namespace MixItUp.Desktop.Services
             {
                 try
                 {
-                    foreach (StreamlabsDonation slDonation in await this.GetDonations())
+                    foreach (StreamJarDonation sjDonation in await this.GetDonations())
                     {
-                        if (!donationsReceived.ContainsKey(slDonation.ID))
+                        if (!donationsReceived.ContainsKey(sjDonation.ID))
                         {
-                            donationsReceived[slDonation.ID] = slDonation;
-                            UserDonationModel donation = slDonation.ToGenericDonation();
+                            donationsReceived[sjDonation.ID] = sjDonation;
+                            UserDonationModel donation = sjDonation.ToGenericDonation();
                             GlobalEvents.DonationOccurred(donation);
 
                             UserViewModel user = new UserViewModel(0, donation.UserName);
@@ -184,7 +168,7 @@ namespace MixItUp.Desktop.Services
                                 user = new UserViewModel(userModel);
                             }
 
-                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamlabsDonation));
+                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamJarDonation));
                             if (command != null)
                             {
                                 await command.Perform(user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());

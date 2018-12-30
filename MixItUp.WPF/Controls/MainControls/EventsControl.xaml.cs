@@ -81,6 +81,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     return "TreatStream";
                 }
+                else if (this.OtherEventType == OtherEventTypeEnum.StreamJarDonation)
+                {
+                    return "StreamJar";
+                }
                 else if (this.OtherEventType == OtherEventTypeEnum.TwitterStreamTweetRetweet)
                 {
                     return "Twitter";
@@ -137,6 +141,7 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.ExtraLifeDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TipeeeStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TreatStreamDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamJarDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispSubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispResubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));

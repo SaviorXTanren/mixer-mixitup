@@ -33,6 +33,8 @@ namespace MixItUp.Base.Commands
         TipeeeStreamDonation = 14,
         [Name("TreatStream Donation")]
         TreatStreamDonation = 15,
+        [Name("StreamJar Donation")]
+        StreamJarDonation = 16,
 
         [Name("Stream Tweet Retweet")]
         TwitterStreamTweetRetweet = 20,
