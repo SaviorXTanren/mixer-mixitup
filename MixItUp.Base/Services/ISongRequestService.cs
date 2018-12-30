@@ -53,6 +53,8 @@ namespace MixItUp.Base.Services
         {
             return string.Format("{0} - {1} - {2} - {3} - {4} / {5}", this.ID, this.Name, this.Type, this.State, this.Progress, this.Length);
         }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     public interface ISongRequestService
