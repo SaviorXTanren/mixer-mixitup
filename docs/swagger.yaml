@@ -139,7 +139,7 @@ paths:
     get:
       tags:
         - User
-      summary: Gets a list users ordered by viewing time descending
+      summary: Gets a list users ordered by viewing time descending.
       operationId: topUserByViewingTime
       produces:
         - application/json
@@ -181,7 +181,7 @@ paths:
       tags:
         - User
         - Currency
-      summary: Gets a list users ordered by currency quantity descending
+      summary: Gets a list users ordered by currency quantity descending.  Note: The streamer and anyone marked as currency/rank exempt will not be visible in this list.
       operationId: topUserOfCurrency
       produces:
         - application/json
