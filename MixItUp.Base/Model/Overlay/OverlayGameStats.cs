@@ -387,7 +387,7 @@ namespace MixItUp.Base.Model.Overlay
                     case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutLifetime: segment = "blackout.lifetime.all"; break;
                     case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutSoloLifetime: segment = "blackout.lifetime.solo"; break;
                     case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutDuoLifetime: segment = "blackout.lifetime.duo"; break;
-                    case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutSquadLifetime: segment = "lackout.lifetime.quad"; break;
+                    case CallOfDutyBlackOps4GameStatsCategoryTypeEnum.BlackoutSquadLifetime: segment = "blackout.lifetime.quad"; break;
                 }
 
                 Dictionary<string, ScoutStat> stats = await ChannelSession.Services.Scout.GetStats("codbo4", this.user, segment);
