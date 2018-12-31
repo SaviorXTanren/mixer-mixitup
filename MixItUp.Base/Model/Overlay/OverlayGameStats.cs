@@ -83,10 +83,13 @@ namespace MixItUp.Base.Model.Overlay
 
         public virtual string Name { get { return string.Empty; } }
 
+        [DataMember]
         public string Username { get; set; }
 
+        [DataMember]
         public GameStatsPlatformTypeEnum Platform { get; set; }
 
+        [DataMember]
         public string Category { get; set; }
 
         public GameStatsSetupBase() { }

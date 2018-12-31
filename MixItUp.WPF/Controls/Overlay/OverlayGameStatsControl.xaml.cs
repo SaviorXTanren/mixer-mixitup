@@ -150,6 +150,7 @@ namespace MixItUp.WPF.Controls.Overlay
             this.PlatformComboBox.ItemsSource = EnumHelper.GetEnumNames<GameStatsPlatformTypeEnum>();
 
             this.TextFontComboBox.ItemsSource = InstalledFonts.GetInstalledFonts();
+            this.TextSizeComboBox.ItemsSource = OverlayTextItemControl.sampleFontSize.Select(f => f.ToString());
 
             this.BorderColorComboBox.ItemsSource = this.BackgroundColorComboBox.ItemsSource = this.TextColorComboBox.ItemsSource = ColorSchemes.ColorSchemeDictionary.Keys;
 
