@@ -26,7 +26,6 @@ namespace MixItUp.Desktop.Services
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        private StreamJarAccount account;
         private StreamJarChannel channel;
 
         public StreamJarService() : base(StreamJarService.BaseAddress) { }
@@ -76,21 +75,15 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(0);
         }
 
-        public async Task<StreamJarAccount> GetCurrentAccount()
+        public async Task<StreamJarChannel> GetChannel()
         {
             try
             {
-                return await this.GetAsync<StreamJarAccount>("account");
-            }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
-            return null;
-        }
-
-        public async Task<StreamJarChannel> GetChannel(string channelName)
-        {
-            try
-            {
-                return await this.GetAsync<StreamJarChannel>("channels/" + channelName);
+                JArray jarray = await this.GetAsync<JArray>("channels");
+                if (jarray != null && jarray.Count > 0)
+                {
+                    return jarray.First.ToObject<StreamJarChannel>();
+                }
             }
             catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             return null;
@@ -124,18 +117,14 @@ namespace MixItUp.Desktop.Services
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
-            this.account = await this.GetCurrentAccount();
-            if (this.account != null)
+            this.channel = await this.GetChannel();
+            if (this.channel != null)
             {
-                this.channel = await this.GetChannel(this.account.Username);
-                if (this.channel != null)
-                {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
+                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-                    return true;
-                }
+                return true;
             }
             return false;
         }

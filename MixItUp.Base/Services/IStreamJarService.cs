@@ -1,5 +1,4 @@
 ﻿using Mixer.Base.Model.OAuth;
-using Mixer.Base.Util;
 using MixItUp.Base.Model.User;
 using Newtonsoft.Json;
 using System;
@@ -9,22 +8,6 @@ using System.Threading.Tasks;
 
 namespace MixItUp.Base.Services
 {
-    [DataContract]
-    public class StreamJarAccount
-    {
-        [JsonProperty("username")]
-        public string Username { get; set; }
-
-        [JsonProperty("email")]
-        public string Email { get; set; }
-
-        [JsonProperty("role")]
-        public string Role { get; set; }
-
-        [JsonProperty("createdAt")]
-        public DateTimeOffset CreatedAt { get; set; }
-    }
-
     [DataContract]
     public class StreamJarChannel
     {
@@ -36,6 +19,15 @@ namespace MixItUp.Base.Services
 
         [JsonProperty("avatar")]
         public string Avatar { get; set; }
+
+        [JsonProperty("Currency")]
+        public string currency { get; set; }
+
+        [JsonProperty("tipsEnabled")]
+        public bool TipsEnabled { get; set; }
+
+        [JsonProperty("tipsConfigured")]
+        public bool TipsConfigured { get; set; }
 
         [JsonProperty("createdAt")]
         public DateTimeOffset CreatedAt { get; set; }
@@ -99,9 +91,7 @@ namespace MixItUp.Base.Services
 
         Task Disconnect();
 
-        Task<StreamJarAccount> GetCurrentAccount();
-
-        Task<StreamJarChannel> GetChannel(string channelName);
+        Task<StreamJarChannel> GetChannel();
 
         Task<IEnumerable<StreamJarDonation>> GetDonations();
 
