@@ -39,6 +39,10 @@ namespace MixItUp.Base.Model.Overlay
         [DataMember]
         public double SecondsToAdd { get; set; }
 
+        private HashSet<uint> follows = new HashSet<uint>();
+        private HashSet<uint> hosts = new HashSet<uint>();
+        private HashSet<uint> subs = new HashSet<uint>();
+
         public OverlayTimerTrain() : base(TimerTrainItemType, HTMLTemplate) { }
 
         public OverlayTimerTrain(string htmlText, int minimumSecondsToShow, string textColor, string textFont, int textSize, double followBonus,
@@ -114,13 +118,41 @@ namespace MixItUp.Base.Model.Overlay
             return Task.FromResult(replacementSets);
         }
 
-        private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user) { this.SecondsToAdd += this.FollowBonus; }
+        private void GlobalEvents_OnFollowOccurred(object sender, UserViewModel user)
+        {
+            if (!this.follows.Contains(user.ID))
+            {
+                this.follows.Add(user.ID);
+                this.SecondsToAdd += this.FollowBonus;
+            }
+        }
 
-        private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host) { this.SecondsToAdd += (Math.Max(host.Item2, 1) * this.HostBonus); }
+        private void GlobalEvents_OnHostOccurred(object sender, Tuple<UserViewModel, int> host)
+        {
+            if (!this.hosts.Contains(host.Item1.ID))
+            {
+                this.hosts.Add(host.Item1.ID);
+                this.SecondsToAdd += (Math.Max(host.Item2, 1) * this.HostBonus);
+            }
+        }
 
-        private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user) { this.SecondsToAdd += this.SubscriberBonus; }
+        private void GlobalEvents_OnSubscribeOccurred(object sender, UserViewModel user)
+        {
+            if (!this.subs.Contains(user.ID))
+            {
+                this.subs.Add(user.ID);
+                this.SecondsToAdd += this.SubscriberBonus;
+            }
+        }
 
-        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user) { this.SecondsToAdd += this.SubscriberBonus; }
+        private void GlobalEvents_OnResubscribeOccurred(object sender, Tuple<UserViewModel, int> user)
+        {
+            if (!this.subs.Contains(user.Item1.ID))
+            {
+                this.subs.Add(user.Item1.ID);
+                this.SecondsToAdd += this.SubscriberBonus;
+            }
+        }
 
         private void GlobalEvents_OnDonationOccurred(object sender, UserDonationModel donation) { this.SecondsToAdd += (donation.Amount * this.DonationBonus); }
 
