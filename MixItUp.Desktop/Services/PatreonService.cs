@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace MixItUp.Desktop.Services
 {
@@ -16,7 +15,7 @@ namespace MixItUp.Desktop.Services
         private const string BaseAddress = "https://www.patreon.com/api/oauth2/v2/";
 
         private const string ClientID = "SmP5OMjSF0JA2HAa14-so3it_vrs37MBdkd6AQOB8P8PFswXONRwLpzgDDzriTYZ";
-        private const string AuthorizationUrl = "https://www.patreon.com/oauth2/authorize?response_type=code&client_id={0}&redirect_uri={1}&scopes=identity,campaigns,campaigns.members";
+        private const string AuthorizationUrl = "https://www.patreon.com/oauth2/authorize?response_type=code&client_id={0}&redirect_uri={1}&scope=identity%20campaigns%20campaigns.members";
         private const string TokenUrl = "https://www.patreon.com/api/oauth2/token";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
