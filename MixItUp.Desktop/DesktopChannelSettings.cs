@@ -314,6 +314,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         protected Dictionary<Guid, UserCurrencyViewModel> currenciesInternal { get; set; }
+        [JsonProperty]
+        protected Dictionary<Guid, UserInventoryViewModel> inventoriesInternal { get; set; }
 
         [JsonProperty]
         protected Dictionary<string, int> cooldownGroupsInternal { get; set; }
@@ -364,6 +366,7 @@ namespace MixItUp.Desktop
             this.CustomInteractiveSettings = new Dictionary<uint, JObject>();
 
             this.currenciesInternal = new Dictionary<Guid, UserCurrencyViewModel>();
+            this.inventoriesInternal = new Dictionary<Guid, UserInventoryViewModel>();
             this.preMadeChatCommandSettingsInternal = new List<PreMadeChatCommandSettings>();
             this.cooldownGroupsInternal = new Dictionary<string, int>();
             this.chatCommandsInternal = new List<ChatCommand>();
@@ -394,6 +397,8 @@ namespace MixItUp.Desktop
 
         [JsonIgnore]
         public LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; set; }
+        [JsonIgnore]
+        public LockedDictionary<Guid, UserInventoryViewModel> Inventories { get; set; }
 
         [JsonIgnore]
         public LockedDictionary<string, int> CooldownGroups { get; set; }
@@ -488,6 +493,7 @@ namespace MixItUp.Desktop
         {
             this.UserData = new DatabaseDictionary<uint, UserDataViewModel>();
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>();
+            this.Inventories = new LockedDictionary<Guid, UserInventoryViewModel>();
             this.CooldownGroups = new LockedDictionary<string, int>();
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>();
             this.ChatCommands = new LockedList<ChatCommand>();
@@ -508,6 +514,7 @@ namespace MixItUp.Desktop
         public async Task Initialize()
         {
             this.Currencies = new LockedDictionary<Guid, UserCurrencyViewModel>(this.currenciesInternal);
+            this.Inventories = new LockedDictionary<Guid, UserInventoryViewModel>(this.inventoriesInternal);
             this.PreMadeChatCommandSettings = new LockedList<PreMadeChatCommandSettings>(this.preMadeChatCommandSettingsInternal);
             this.CooldownGroups = new LockedDictionary<string, int>(this.cooldownGroupsInternal);
             this.ChatCommands = new LockedList<ChatCommand>(this.chatCommandsInternal);
@@ -615,6 +622,7 @@ namespace MixItUp.Desktop
             }
 
             this.currenciesInternal = this.Currencies.ToDictionary();
+            this.inventoriesInternal = this.Inventories.ToDictionary();
             this.preMadeChatCommandSettingsInternal = this.PreMadeChatCommandSettings.ToList();
             this.cooldownGroupsInternal = this.CooldownGroups.ToDictionary();
             this.chatCommandsInternal = this.ChatCommands.ToList();
@@ -637,18 +645,19 @@ namespace MixItUp.Desktop
 
                 IEnumerable<UserDataViewModel> addedUsers = this.UserData.GetAddedValues();
                 addedUsers = addedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
-                await this.DatabaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts, CustomCommands, Options) VALUES(?,?,?,?,?,?)",
+                await this.DatabaseWrapper.RunBulkWriteCommand("INSERT INTO Users(ID, UserName, ViewingMinutes, CurrencyAmounts, InventoryAmounts, CustomCommands, Options) VALUES(?,?,?,?,?,?,?)",
                     addedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter(DbType.UInt32, u.ID), new SQLiteParameter(DbType.String, value: u.UserName),
                     new SQLiteParameter(DbType.Int32, value: u.ViewingMinutes), new SQLiteParameter(DbType.String, value: u.GetCurrencyAmountsString()),
-                    new SQLiteParameter(DbType.String, value: u.GetCustomCommandsString()), new SQLiteParameter(DbType.String, value: u.GetOptionsString()) }));
+                    new SQLiteParameter(DbType.String, value: u.GetInventoryAmountsString()), new SQLiteParameter(DbType.String, value: u.GetCustomCommandsString()),
+                    new SQLiteParameter(DbType.String, value: u.GetOptionsString()) }));
 
                 IEnumerable<UserDataViewModel> changedUsers = this.UserData.GetChangedValues();
                 changedUsers = changedUsers.Where(u => !string.IsNullOrEmpty(u.UserName));
                 await this.DatabaseWrapper.RunBulkWriteCommand("UPDATE Users SET UserName = @UserName, ViewingMinutes = @ViewingMinutes, CurrencyAmounts = @CurrencyAmounts," +
-                    " CustomCommands = @CustomCommands, Options = @Options WHERE ID = @ID",
+                    " InventoryAmounts = @InventoryAmounts, CustomCommands = @CustomCommands, Options = @Options WHERE ID = @ID",
                     changedUsers.Select(u => new List<SQLiteParameter>() { new SQLiteParameter("@UserName", value: u.UserName), new SQLiteParameter("@ViewingMinutes", value: u.ViewingMinutes),
-                    new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()),
-                        new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
+                    new SQLiteParameter("@CurrencyAmounts", value: u.GetCurrencyAmountsString()), new SQLiteParameter("@InventoryAmounts", value: u.GetInventoryAmountsString()),
+                    new SQLiteParameter("@CustomCommands", value: u.GetCustomCommandsString()), new SQLiteParameter("@Options", value: u.GetOptionsString()), new SQLiteParameter("@ID", value: (int)u.ID) }));
             }
         }
 

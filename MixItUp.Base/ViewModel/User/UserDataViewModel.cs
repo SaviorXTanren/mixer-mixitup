@@ -84,6 +84,50 @@ namespace MixItUp.Base.ViewModel.User
     }
 
     [DataContract]
+    public class UserInventoryDataViewModel : IEquatable<UserInventoryDataViewModel>
+    {
+        [JsonIgnore]
+        public UserDataViewModel User { get; set; }
+
+        [JsonIgnore]
+        public UserInventoryViewModel Inventory { get; set; }
+
+        [DataMember]
+        public Dictionary<Guid, int> Amounts { get; set; }
+
+        public UserInventoryDataViewModel()
+        {
+            this.Amounts = new Dictionary<Guid, int>();
+        }
+
+        public UserInventoryDataViewModel(UserDataViewModel user, UserInventoryViewModel inventory, IDictionary<Guid, int> amounts)
+        {
+            this.User = user;
+            this.Inventory = inventory;
+            this.Amounts = new Dictionary<Guid, int>(amounts);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is UserInventoryDataViewModel)
+            {
+                return this.Equals((UserInventoryDataViewModel)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(UserInventoryDataViewModel other)
+        {
+            return this.User.Equals(other.User) && this.Inventory.Equals(other.Inventory);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Inventory.GetHashCode();
+        }
+    }
+
+    [DataContract]
     public class UserDataViewModel : NotifyPropertyChangedBase, IEquatable<UserDataViewModel>
     {
         [DataMember]
@@ -100,6 +144,9 @@ namespace MixItUp.Base.ViewModel.User
 
         [DataMember]
         public LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel> CurrencyAmounts { get; set; }
+
+        [DataMember]
+        public LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel> InventoryAmounts { get; set; }
 
         [DataMember]
         public LockedList<ChatCommand> CustomCommands { get; set; }
@@ -122,6 +169,7 @@ namespace MixItUp.Base.ViewModel.User
         public UserDataViewModel()
         {
             this.CurrencyAmounts = new LockedDictionary<UserCurrencyViewModel, UserCurrencyDataViewModel>();
+            this.InventoryAmounts = new LockedDictionary<UserInventoryViewModel, UserInventoryDataViewModel>();
             this.CustomCommands = new LockedList<ChatCommand>();
         }
 
@@ -153,7 +201,7 @@ namespace MixItUp.Base.ViewModel.User
         {
             this.ViewingMinutes = int.Parse(dataReader["ViewingMinutes"].ToString());
 
-            if (dataReader["CurrencyAmounts"] != null)
+            if (dataReader.ColumnExists("CurrencyAmounts"))
             {
                 Dictionary<Guid, int> currencyAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, int>>(dataReader["CurrencyAmounts"].ToString());
                 if (currencyAmounts != null)
@@ -168,15 +216,31 @@ namespace MixItUp.Base.ViewModel.User
                 }
             }
 
-            if (dataReader["CustomCommands"] != null && !string.IsNullOrEmpty(dataReader["CustomCommands"].ToString()))
+            if (dataReader.ColumnExists("InventoryAmounts"))
+            {
+                Dictionary<Guid, Dictionary<Guid, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<Guid, int>>>(dataReader["InventoryAmounts"].ToString());
+                if (inventoryAmounts != null)
+                {
+                    foreach (var kvp in inventoryAmounts)
+                    {
+                        if (settings.Inventories.ContainsKey(kvp.Key))
+                        {
+                            UserInventoryViewModel inventory = settings.Inventories[kvp.Key];
+                            this.InventoryAmounts[inventory] = new UserInventoryDataViewModel(this, inventory, kvp.Value);
+                        }
+                    }
+                }
+            }
+
+            if (dataReader.ColumnExists("CustomCommands") && !string.IsNullOrEmpty(dataReader["CustomCommands"].ToString()))
             {
                 this.CustomCommands.AddRange(SerializerHelper.DeserializeFromString<List<ChatCommand>>(dataReader["CustomCommands"].ToString()));
             }
 
-            if (dataReader["Options"] != null && !string.IsNullOrEmpty(dataReader["Options"].ToString()))
+            if (dataReader.ColumnExists("Options") && !string.IsNullOrEmpty(dataReader["Options"].ToString()))
             {
                 JObject optionsJObj = JObject.Parse(dataReader["Options"].ToString());
-                if (optionsJObj["EntranceCommand"] != null)
+                if (optionsJObj.ContainsKey("EntranceCommand") && optionsJObj["EntranceCommand"] != null)
                 {
                     this.EntranceCommand = SerializerHelper.DeserializeFromString<CustomCommand>(optionsJObj["EntranceCommand"].ToString());
                 }
@@ -375,6 +439,16 @@ namespace MixItUp.Base.ViewModel.User
             foreach (UserCurrencyDataViewModel currencyData in this.CurrencyAmounts.Values.ToList())
             {
                 amounts[currencyData.Currency.ID] = currencyData.Amount;
+            }
+            return SerializerHelper.SerializeToString(amounts);
+        }
+
+        internal string GetInventoryAmountsString()
+        {
+            Dictionary<Guid, Dictionary<Guid, int>> amounts = new Dictionary<Guid, Dictionary<Guid, int>>();
+            foreach (UserInventoryDataViewModel inventoryData in this.InventoryAmounts.Values.ToList())
+            {
+                amounts[inventoryData.Inventory.ID] = inventoryData.Amounts;
             }
             return SerializerHelper.SerializeToString(amounts);
         }

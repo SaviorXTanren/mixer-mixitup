@@ -3,6 +3,7 @@ using MixItUp.Base.Actions;
 using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using MixItUp.Desktop.Database;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -368,6 +369,11 @@ namespace MixItUp.Desktop.Services
             {
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
                 await ChannelSession.Services.Settings.Initialize(settings);
+
+                SQLiteDatabaseWrapper databaseWrapper = new SQLiteDatabaseWrapper(((DesktopSettingsService)ChannelSession.Services.Settings).GetDatabaseFilePath(settings));
+
+                await databaseWrapper.RunWriteCommand("ALTER TABLE Users ADD COLUMN InventoryAmounts TEXT");
+                await databaseWrapper.RunWriteCommand("UPDATE Users SET InventoryAmounts = '{ }'");
 
                 foreach (UserCurrencyViewModel currency in settings.Currencies.Values)
                 {

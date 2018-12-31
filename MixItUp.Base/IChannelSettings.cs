@@ -15,6 +15,7 @@ using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 
 namespace MixItUp.Base
 {
@@ -182,6 +183,7 @@ namespace MixItUp.Base
         DatabaseDictionary<uint, UserDataViewModel> UserData { get; }
 
         LockedDictionary<Guid, UserCurrencyViewModel> Currencies { get; }
+        LockedDictionary<Guid, UserInventoryViewModel> Inventories { get; }
 
         LockedDictionary<string, int> CooldownGroups { get; }
 
@@ -204,5 +206,21 @@ namespace MixItUp.Base
 
         LockedDictionary<uint, List<InteractiveUserGroupViewModel>> InteractiveUserGroups { get; }
     }
+
+    public static class DbDataReaderExtensions
+    {
+        public static bool ColumnExists(this DbDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i).Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
 }
 
