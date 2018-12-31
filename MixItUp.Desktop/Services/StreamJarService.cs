@@ -62,9 +62,7 @@ namespace MixItUp.Desktop.Services
                 {
                     token.authorizationCode = authorizationCode;
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    return await this.InitializeInternal();
                 }
             }
 
@@ -122,7 +120,7 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task InitializeInternal()
+        private async Task<bool> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
@@ -135,8 +133,11 @@ namespace MixItUp.Desktop.Services
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                    return true;
                 }
             }
+            return false;
         }
 
         private async Task BackgroundDonationCheck()
