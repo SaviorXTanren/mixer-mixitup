@@ -557,6 +557,22 @@ namespace MixItUp.Base
                     {
                         await ChannelSession.Services.InitializeTiltify();
                     }
+                    if (ChannelSession.Settings.TipeeeStreamOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeTipeeeStream();
+                    }
+                    if (ChannelSession.Settings.TreatStreamOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeTreatStream();
+                    }
+                    if (ChannelSession.Settings.StreamJarOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializeStreamJar();
+                    }
+                    if (ChannelSession.Settings.PatreonOAuthToken != null)
+                    {
+                        await ChannelSession.Services.InitializePatreon();
+                    }
 
                     foreach (CommandBase command in ChannelSession.AllEnabledCommands)
                     {
