@@ -86,7 +86,7 @@
 
             <TextBox Grid.Column="4" x:Name="SubBonusTextBox" MaterialDesign:HintAssist.Hint="Sub Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
-            <TextBox Grid.Column="6" x:Name="DonationBonusTextBox" MaterialDesign:HintAssist.Hint="Donation Bonus (Per Cent)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
+            <TextBox Grid.Column="6" x:Name="DonationBonusTextBox" MaterialDesign:HintAssist.Hint="Donation Bonus" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
             <TextBox Grid.Column="8" x:Name="SparkBonusTextBox" MaterialDesign:HintAssist.Hint="Spark Bonus (Per Spark)" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="125" />
 
