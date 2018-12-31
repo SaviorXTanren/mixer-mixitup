@@ -2,6 +2,7 @@
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.User;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -453,6 +454,7 @@ namespace MixItUp.Base.Model.Overlay
         public int TextSize { get; set; }
 
         private DateTimeOffset lastUpdate = DateTimeOffset.MinValue;
+        private Dictionary<string, string> lastReplacementSets;
 
         public OverlayGameStats() : base(GameStatsItemType, string.Empty) { }
 
@@ -477,25 +479,24 @@ namespace MixItUp.Base.Model.Overlay
 
         public override async Task<OverlayItemBase> GetProcessedItem(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            if (this.lastUpdate.TotalMinutesFromNow() >= 1)
-            {
-                this.lastUpdate = DateTimeOffset.Now;
-                return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
-            }
-            return null;
+            return await base.GetProcessedItem(user, arguments, extraSpecialIdentifiers);
         }
 
         protected override async Task<Dictionary<string, string>> GetReplacementSets(UserViewModel user, IEnumerable<string> arguments, Dictionary<string, string> extraSpecialIdentifiers)
         {
-            Dictionary<string, string> replacementSets = await this.Setup.GetReplacementSets(user, arguments, extraSpecialIdentifiers);
+            if (this.lastUpdate.TotalMinutesFromNow() >= 1 || this.lastReplacementSets == null)
+            {
+                this.lastUpdate = DateTimeOffset.Now;
+                this.lastReplacementSets = await this.Setup.GetReplacementSets(user, arguments, extraSpecialIdentifiers);
+            }
 
-            replacementSets["BACKGROUND_COLOR"] = this.BackgroundColor;
-            replacementSets["BORDER_COLOR"] = this.BorderColor;
-            replacementSets["TEXT_COLOR"] = this.TextColor;
-            replacementSets["TEXT_FONT"] = this.TextFont;
-            replacementSets["TEXT_SIZE"] = this.TextSize.ToString();
+            this.lastReplacementSets["BACKGROUND_COLOR"] = this.BackgroundColor;
+            this.lastReplacementSets["BORDER_COLOR"] = this.BorderColor;
+            this.lastReplacementSets["TEXT_COLOR"] = this.TextColor;
+            this.lastReplacementSets["TEXT_FONT"] = this.TextFont;
+            this.lastReplacementSets["TEXT_SIZE"] = this.TextSize.ToString();
 
-            return replacementSets;
+            return this.lastReplacementSets;
         }
     }
 }
