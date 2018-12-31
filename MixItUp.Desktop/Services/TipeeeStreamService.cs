@@ -45,7 +45,7 @@ namespace MixItUp.Desktop.Services
                 if (data != null)
                 {
                     TipeeeStreamResponse response = SerializerHelper.DeserializeFromString<TipeeeStreamResponse>(data.ToString());
-                    if (response.Event.Equals("donation"))
+                    if (response.Event.Type.Equals("donation"))
                     {
                         this.service.DonationOccurred(response.Event);
                         Task.Run(async () =>
