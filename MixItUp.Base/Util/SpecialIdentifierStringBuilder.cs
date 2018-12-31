@@ -53,6 +53,7 @@ namespace MixItUp.Base.Util
         public const string NextSongIdentifierHeader = "nextsong";
 
         public const string DonationSourceSpecialIdentifier = "donationsource";
+        public const string DonationTypeSpecialIdentifier = "donationtype";
         public const string DonationAmountNumberSpecialIdentifier = "donationamountnumber";
         public const string DonationAmountNumberDigitsSpecialIdentifier = "donationamountnumberdigits";
         public const string DonationAmountSpecialIdentifier = "donationamount";

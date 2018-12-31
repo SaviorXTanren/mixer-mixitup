@@ -149,21 +149,7 @@ namespace MixItUp.Desktop.Services
                         {
                             donationsReceived[sjDonation.ID] = sjDonation;
                             UserDonationModel donation = sjDonation.ToGenericDonation();
-                            GlobalEvents.DonationOccurred(donation);
-
-                            UserViewModel user = new UserViewModel(0, donation.UserName);
-
-                            UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
-                            if (userModel != null)
-                            {
-                                user = new UserViewModel(userModel);
-                            }
-
-                            EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.StreamJarDonation));
-                            if (command != null)
-                            {
-                                await command.Perform(user, arguments: null, extraSpecialIdentifiers: donation.GetSpecialIdentifiers());
-                            }
+                            await EventCommand.ProcessDonationEventCommand(donation, OtherEventTypeEnum.StreamJarDonation);
                         }
                     }
                 }

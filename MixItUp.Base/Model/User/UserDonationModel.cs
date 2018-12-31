@@ -32,6 +32,8 @@ namespace MixItUp.Base.Model.User
         [DataMember]
         public string UserName { get; set; }
         [DataMember]
+        public string Type { get; set; }
+        [DataMember]
         public string Message { get; set; }
         [DataMember]
         public string ImageLink { get; set; }
@@ -66,6 +68,7 @@ namespace MixItUp.Base.Model.User
         {
             Dictionary<string, string> specialIdentifiers = new Dictionary<string, string>();
             specialIdentifiers[SpecialIdentifierStringBuilder.DonationSourceSpecialIdentifier] = EnumHelper.GetEnumName(this.Source);
+            specialIdentifiers[SpecialIdentifierStringBuilder.DonationTypeSpecialIdentifier] = this.Type;
             specialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberDigitsSpecialIdentifier] = (this.Amount * 100).ToString();
             specialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountNumberSpecialIdentifier] = this.Amount.ToString();
             specialIdentifiers[SpecialIdentifierStringBuilder.DonationAmountSpecialIdentifier] = this.AmountText;

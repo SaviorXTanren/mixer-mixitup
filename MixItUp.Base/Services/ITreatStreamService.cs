@@ -41,6 +41,7 @@ namespace MixItUp.Base.Services
 
                 ID = Guid.NewGuid().ToString(),
                 UserName = this.Sender,
+                Type = this.Title,
                 Message = this.Message,
 
                 Amount = 0,
