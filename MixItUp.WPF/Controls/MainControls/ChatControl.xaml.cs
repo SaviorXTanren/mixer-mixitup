@@ -39,55 +39,58 @@ namespace MixItUp.WPF.Controls.MainControls
 
         public async Task Add(UserViewModel user)
         {
-            await this.collectionChangeSemaphore.WaitAndRelease(() =>
+            if (user != null)
             {
-                if (!this.existingUsers.ContainsKey(user.ID))
+                await this.collectionChangeSemaphore.WaitAndRelease(() =>
                 {
-                    this.cachedUserRoles[user.ID] = user.PrimarySortableRole;
-
-                    int insertIndex = 0;
-                    for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
+                    if (!this.existingUsers.ContainsKey(user.ID))
                     {
-                        ChatUserControl userControl = this.collection[insertIndex];
-                        if (userControl != null)
-                        {
-                            UserViewModel currentUser = userControl.User;
-                            if (currentUser != null)
-                            {
-                                if (!this.cachedUserRoles.ContainsKey(currentUser.ID))
-                                {
-                                    this.cachedUserRoles[currentUser.ID] = currentUser.PrimarySortableRole;
-                                }
+                        this.cachedUserRoles[user.ID] = user.PrimarySortableRole;
 
-                                if (this.cachedUserRoles[currentUser.ID] == this.cachedUserRoles[user.ID])
+                        int insertIndex = 0;
+                        for (insertIndex = 0; insertIndex < this.collection.Count; insertIndex++)
+                        {
+                            ChatUserControl userControl = this.collection[insertIndex];
+                            if (userControl != null)
+                            {
+                                UserViewModel currentUser = userControl.User;
+                                if (currentUser != null)
                                 {
-                                    if (!string.IsNullOrEmpty(user.UserName) && currentUser.UserName.CompareTo(user.UserName) > 0)
+                                    if (!this.cachedUserRoles.ContainsKey(currentUser.ID))
+                                    {
+                                        this.cachedUserRoles[currentUser.ID] = currentUser.PrimarySortableRole;
+                                    }
+
+                                    if (this.cachedUserRoles[currentUser.ID] == this.cachedUserRoles[user.ID])
+                                    {
+                                        if (!string.IsNullOrEmpty(user.UserName) && currentUser.UserName.CompareTo(user.UserName) > 0)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    else if (this.cachedUserRoles[currentUser.ID] < this.cachedUserRoles[user.ID])
                                     {
                                         break;
                                     }
                                 }
-                                else if (this.cachedUserRoles[currentUser.ID] < this.cachedUserRoles[user.ID])
-                                {
-                                    break;
-                                }
                             }
                         }
-                    }
 
-                    ChatUserControl control = new ChatUserControl(user);
-                    this.existingUsers[user.ID] = control;
+                        ChatUserControl control = new ChatUserControl(user);
+                        this.existingUsers[user.ID] = control;
 
-                    if (insertIndex < this.collection.Count)
-                    {
-                        this.collection.Insert(insertIndex, control);
+                        if (insertIndex < this.collection.Count)
+                        {
+                            this.collection.Insert(insertIndex, control);
+                        }
+                        else
+                        {
+                            this.collection.Add(control);
+                        }
                     }
-                    else
-                    {
-                        this.collection.Add(control);
-                    }
-                }
-                return Task.FromResult(0);
-            });
+                    return Task.FromResult(0);
+                });
+            }
         }
 
         public async Task<bool> Contains(UserViewModel user)
