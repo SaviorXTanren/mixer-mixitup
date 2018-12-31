@@ -38,9 +38,10 @@ namespace MixItUp.Desktop.Services
                 {
                     await this.RefreshOAuthToken();
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    if (await this.InitializeInternal())
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
@@ -60,9 +61,7 @@ namespace MixItUp.Desktop.Services
                 {
                     token.authorizationCode = authorizationCode;
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    return await this.InitializeInternal();
                 }
             }
 
@@ -141,17 +140,15 @@ namespace MixItUp.Desktop.Services
             }
         }
 
-        private async Task InitializeInternal()
+        private Task<bool> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
-
-            HttpResponseMessage result = await this.GetAsync("socket/token");
-            string resultJson = await result.Content.ReadAsStringAsync();
-            JObject jobj = JObject.Parse(resultJson);
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            return Task.FromResult(true);
         }
 
         private async Task BackgroundDonationCheck()

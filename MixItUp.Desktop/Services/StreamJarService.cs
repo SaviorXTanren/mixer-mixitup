@@ -40,9 +40,10 @@ namespace MixItUp.Desktop.Services
                 {
                     await this.RefreshOAuthToken();
 
-                    await this.InitializeInternal();
-
-                    return true;
+                    if (await this.InitializeInternal())
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }

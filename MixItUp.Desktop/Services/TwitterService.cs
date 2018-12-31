@@ -58,9 +58,10 @@ namespace MixItUp.Base.Services
                     };
                     await singleUserAuth.AuthorizeAsync();
 
-                    await this.InitializeInternal(singleUserAuth);
-
-                    return true;
+                    if (await this.InitializeInternal(singleUserAuth))
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { Logger.Log(ex); }
             }
@@ -88,11 +89,7 @@ namespace MixItUp.Base.Services
                 await pinAuth.AuthorizeAsync();
                 this.authPin = null;
 
-                if (!string.IsNullOrEmpty(pinAuth.CredentialStore.OAuthToken))
-                {
-                    await this.InitializeInternal(pinAuth);
-                    return true;
-                }
+                return await this.InitializeInternal(pinAuth);
             }
             catch (Exception ex) { Logger.Log(ex); }
 
@@ -256,23 +253,26 @@ namespace MixItUp.Base.Services
             return image;
         }
 
-        private Task InitializeInternal(IAuthorizer auth)
+        private Task<bool> InitializeInternal(IAuthorizer auth)
         {
             this.auth = auth;
+            if (!string.IsNullOrEmpty(this.auth.CredentialStore.OAuthToken))
+            {
+                this.token = new OAuthTokenModel();
 
-            this.token = new OAuthTokenModel();
+                this.token.accessToken = this.auth.CredentialStore.OAuthToken;
+                this.token.refreshToken = this.auth.CredentialStore.OAuthTokenSecret;
 
-            this.token.accessToken = this.auth.CredentialStore.OAuthToken;
-            this.token.refreshToken = this.auth.CredentialStore.OAuthTokenSecret;
-
-            this.token.clientID = this.auth.CredentialStore.UserID.ToString();
-            this.token.authorizationCode = this.auth.CredentialStore.ScreenName;
+                this.token.clientID = this.auth.CredentialStore.UserID.ToString();
+                this.token.authorizationCode = this.auth.CredentialStore.ScreenName;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
+                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
-            return Task.FromResult(0);
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
         }
 
         private async Task BackgroundDonationCheck()

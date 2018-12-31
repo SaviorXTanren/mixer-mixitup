@@ -148,9 +148,10 @@ namespace MixItUp.Desktop.Services
             {
                 try
                 {
-                    await this.InitializeInternal();
-
-                    return true;
+                    if (await this.InitializeInternal())
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }

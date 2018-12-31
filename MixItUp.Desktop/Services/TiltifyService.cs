@@ -41,9 +41,10 @@ namespace MixItUp.Desktop.Services
             {
                 try
                 {
-                    await this.InitializeInternal();
-
-                    return true;
+                    if (await this.InitializeInternal())
+                    {
+                        return true;
+                    }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
             }
@@ -66,9 +67,7 @@ namespace MixItUp.Desktop.Services
                         token.AcquiredDateTime = DateTimeOffset.Now;
                         token.expiresIn = int.MaxValue;
 
-                        await this.InitializeInternal();
-
-                        return true;
+                        return await this.InitializeInternal();
                     }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
@@ -129,15 +128,20 @@ namespace MixItUp.Desktop.Services
             return Task.FromResult(0);
         }
 
-        private async Task InitializeInternal()
+        private async Task<bool> InitializeInternal()
         {
             this.cancellationTokenSource = new CancellationTokenSource();
 
             this.user = await this.GetUser();
-
+            if (this.user != null)
+            {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
+                Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+                return true;
+            }
+            return false;
         }
 
         private async Task BackgroundDonationCheck()
