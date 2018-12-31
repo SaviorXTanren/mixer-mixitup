@@ -5,18 +5,18 @@ using MixItUp.Base.Services;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MixItUp.Desktop.Services
 {
     public class PatreonService : OAuthServiceBase, IPatreonService, IDisposable
     {
-        private const string BaseAddress = "https://www.patreon.com/api/oauth2/api/";
+        private const string BaseAddress = "https://www.patreon.com/api/oauth2/v2/";
 
-        private const string ClientID = "8TS-v-eGQQ7odSI6jup4A1-4mWkSarkup2Vn6Na402tfItwDEn-2pW30PVf442Nf";
-        private const string AuthorizationUrl = "https://www.patreon.com/oauth2/authorize?response_type=code&client_id={0}&redirect_uri={1}";
+        private const string ClientID = "SmP5OMjSF0JA2HAa14-so3it_vrs37MBdkd6AQOB8P8PFswXONRwLpzgDDzriTYZ";
+        private const string AuthorizationUrl = "https://www.patreon.com/oauth2/authorize?response_type=code&client_id={0}&redirect_uri={1}&scopes=identity,campaigns,campaigns.members";
         private const string TokenUrl = "https://www.patreon.com/api/oauth2/token";
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -78,7 +78,7 @@ namespace MixItUp.Desktop.Services
         {
             try
             {
-                JObject jobj = await this.GetJObjectAsync("current_user");
+                JObject jobj = await this.GetJObjectAsync("identity?fields%5Buser%5D=created,first_name,full_name,last_name,url,vanity");
                 if (jobj != null && jobj.ContainsKey("data"))
                 {
                     JObject data = (JObject)jobj["data"];
@@ -100,7 +100,7 @@ namespace MixItUp.Desktop.Services
             PatreonCampaign campaign = null;
             try
             {
-                JObject jobj = await this.GetAsync<JObject>("current_user/campaigns?includes=rewards");
+                JObject jobj = await this.GetAsync<JObject>("campaigns?include=tiers,benefits&fields%5Bcampaign%5D=created_at,creation_name,patron_count,published_at&fields%5Btier%5D=amount_cents,description,created_at,patron_count,title,image_url,published,published_at&fields%5Bbenefit%5D=title,benefit_type,rule_type,created_at,is_deleted,is_published");
                 if (jobj != null && jobj.ContainsKey("data"))
                 {
                     JArray dataArray = (JArray)jobj["data"];
@@ -117,15 +117,23 @@ namespace MixItUp.Desktop.Services
                         JArray includedArray = (JArray)jobj["included"];
                         foreach (JObject included in includedArray)
                         {
-                            if (included.ContainsKey("id") && int.TryParse(included["id"].ToString(), out int id) && id > 0 &&
-                                included.ContainsKey("type") && included["type"].ToString().Equals("reward"))
+                            if (included.ContainsKey("id") && int.TryParse(included["id"].ToString(), out int id) && id > 0)
                             {
                                 if (included.ContainsKey("attributes"))
                                 {
                                     JObject attributes = (JObject)included["attributes"];
-                                    PatreonTier tier = attributes.ToObject<PatreonTier>();
-                                    tier.ID = data["id"].ToString();
-                                    campaign.Tiers.Add(tier);
+                                    if (included.ContainsKey("type") && included["type"].ToString().Equals("tier"))
+                                    {
+                                        PatreonTier tier = attributes.ToObject<PatreonTier>();
+                                        tier.ID = data["id"].ToString();
+                                        campaign.Tiers.Add(tier);
+                                    }
+                                    else if (included.ContainsKey("type") && included["type"].ToString().Equals("benefit"))
+                                    {
+                                        PatreonBenefit benefit = attributes.ToObject<PatreonBenefit>();
+                                        benefit.ID = data["id"].ToString();
+                                        campaign.Benefits.Add(benefit);
+                                    }
                                 }
                             }
                         }
@@ -136,15 +144,15 @@ namespace MixItUp.Desktop.Services
             return campaign;
         }
 
-        public async Task<IEnumerable<PatreonPledge>> GetPledges()
+        public async Task<IEnumerable<PatreonCampaignMember>> GetCampaignMembers()
         {
-            List<PatreonPledge> results = new List<PatreonPledge>();
-            string next = string.Format("campaigns/{0}/pledges?include=patron.null", this.campaign.ID);
+            List<PatreonCampaignMember> results = new List<PatreonCampaignMember>();
+            string next = string.Format("campaigns/{0}/members?include=user,currently_entitled_tiers&fields%5Bmember%5D=patron_status,full_name,will_pay_amount_cents&fields%5Buser%5D=created,first_name,full_name,last_name,url,vanity", this.campaign.ID);
             try
             {
                 do
                 {
-                    Dictionary<string, PatreonPledge> currentResults = new Dictionary<string, PatreonPledge>();
+                    Dictionary<string, PatreonCampaignMember> currentResults = new Dictionary<string, PatreonCampaignMember>();
 
                     JObject jobj = await this.GetAsync<JObject>(next);
                     next = null;
@@ -154,7 +162,7 @@ namespace MixItUp.Desktop.Services
                         JArray dataArray = (JArray)jobj["data"];
                         foreach (JObject data in dataArray)
                         {
-                            PatreonPledge pledge = new PatreonPledge();
+                            PatreonCampaignMember pledge = new PatreonCampaignMember();
                             pledge.ID = data["id"].ToString();
 
                             if (data.ContainsKey("attributes"))
@@ -257,7 +265,7 @@ namespace MixItUp.Desktop.Services
                 this.campaign = await this.GetCampaign();
                 if (this.campaign != null)
                 {
-                    IEnumerable<PatreonPledge> pledges = await this.GetPledges();
+                    IEnumerable<PatreonCampaignMember> pledges = await this.GetCampaignMembers();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);

@@ -28,9 +28,6 @@ namespace MixItUp.Base.Services
         [JsonProperty("url")]
         public string Url { get; set; }
 
-        [JsonProperty("email")]
-        public string Email { get; set; }
-
         [JsonProperty("created")]
         public DateTimeOffset Created { get; set; }
 
@@ -43,17 +40,11 @@ namespace MixItUp.Base.Services
         [DataMember]
         public string ID { get; set; }
 
-        [JsonProperty("pledge_sum")]
-        public int PledgeSum { get; set; }
-
         [JsonProperty("patron_count")]
         public int PatronCount { get; set; }
 
         [JsonProperty("creation_name")]
         public string CreationName { get; set; }
-
-        [JsonProperty("creation_count")]
-        public int CreationCount { get; set; }
 
         [JsonProperty("created_at")]
         public DateTimeOffset CreatedAt { get; set; }
@@ -64,7 +55,14 @@ namespace MixItUp.Base.Services
         [DataMember]
         public List<PatreonTier> Tiers { get; set; }
 
-        public PatreonCampaign() { this.Tiers = new List<PatreonTier>(); }
+        [DataMember]
+        public List<PatreonBenefit> Benefits { get; set; }
+
+        public PatreonCampaign()
+        {
+            this.Tiers = new List<PatreonTier>();
+            this.Benefits = new List<PatreonBenefit>();
+        }
     }
 
     [DataContract]
@@ -89,7 +87,7 @@ namespace MixItUp.Base.Services
         public int PatronCount { get; set; }
 
         [JsonProperty("published")]
-        public bool published { get; set; }
+        public bool Published { get; set; }
 
         [JsonProperty("created_at")]
         public DateTimeOffset CreatedAt { get; set; }
@@ -104,10 +102,46 @@ namespace MixItUp.Base.Services
     }
 
     [DataContract]
-    public class PatreonPledge
+    public class PatreonBenefit
     {
         [DataMember]
         public string ID { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("benefit_type")]
+        public string BenefitType { get; set; }
+
+        [JsonProperty("rule_type")]
+        public string RuleType { get; set; }
+
+        [JsonProperty("is_published")]
+        public bool Published { get; set; }
+
+        [JsonProperty("is_deleted")]
+        public bool Deleted { get; set; }
+
+        [JsonProperty("created_at")]
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public PatreonBenefit() { }
+    }
+
+    [DataContract]
+    public class PatreonCampaignMember
+    {
+        [DataMember]
+        public string ID { get; set; }
+
+        [JsonProperty("full_name")]
+        public string FullName { get; set; }
+
+        [JsonProperty("patron_status")]
+        public string PatronStatus { get; set; }
+
+        [JsonProperty("will_pay_amount_cents")]
+        public int AmountToPay { get; set; }
 
         [DataMember]
         public string UserID { get; set; }
@@ -124,7 +158,7 @@ namespace MixItUp.Base.Services
         [JsonIgnore]
         public double Amount { get { return ((double)this.AmountCents) / 100; } }
 
-        public PatreonPledge() { }
+        public PatreonCampaignMember() { }
     }
 
     public interface IPatreonService
@@ -137,7 +171,7 @@ namespace MixItUp.Base.Services
 
         Task<PatreonCampaign> GetCampaign();
 
-        Task<IEnumerable<PatreonPledge>> GetPledges();
+        Task<IEnumerable<PatreonCampaignMember>> GetCampaignMembers();
 
         OAuthTokenModel GetOAuthTokenCopy();
     }
