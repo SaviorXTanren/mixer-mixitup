@@ -50,7 +50,7 @@ namespace MixItUp.Base.Model.User
         {
             get
             {
-                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => u.UserName.Equals(this.UserName, StringComparison.InvariantCultureIgnoreCase));
+                UserDataViewModel userData = ChannelSession.Settings.UserData.Values.FirstOrDefault(u => !string.IsNullOrEmpty(u.UserName) && u.UserName.Equals(this.UserName, StringComparison.InvariantCultureIgnoreCase));
                 if (userData != null)
                 {
                     return new UserViewModel(userData);
