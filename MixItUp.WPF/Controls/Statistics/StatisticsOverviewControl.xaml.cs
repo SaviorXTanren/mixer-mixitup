@@ -35,7 +35,11 @@ namespace MixItUp.WPF.Controls.Statistics
                     {
                         await this.Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            this.RefreshOverview();
+                            try
+                            {
+                                this.RefreshOverview();
+                            }
+                            catch (Exception ex) { Logger.Log(ex); }
                         }));
 
                         await Task.Delay(60000);
