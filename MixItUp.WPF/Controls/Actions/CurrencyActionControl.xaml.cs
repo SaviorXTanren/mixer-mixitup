@@ -62,7 +62,7 @@ namespace MixItUp.WPF.Controls.Actions
                 UserInventoryViewModel inventory = this.GetSelectedInventory();
                 CurrencyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<CurrencyActionTypeEnum>((string)this.CurrencyActionTypeComboBox.SelectedItem);
 
-                if (actionType == CurrencyActionTypeEnum.Reset || !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text))
+                if (actionType == CurrencyActionTypeEnum.ResetForAllUsers || actionType == CurrencyActionTypeEnum.ResetForUser || !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text))
                 {
                     if (actionType == CurrencyActionTypeEnum.AddToSpecificUser)
                     {
@@ -141,7 +141,7 @@ namespace MixItUp.WPF.Controls.Actions
                 this.DeductFromUserTextBlock.IsEnabled = this.DeductFromUserToggleButton.IsEnabled =
                     (actionType == CurrencyActionTypeEnum.AddToSpecificUser || actionType == CurrencyActionTypeEnum.AddToAllChatUsers) ? true : false;
 
-                this.CurrencyAmountTextBox.IsEnabled = (actionType != CurrencyActionTypeEnum.Reset);
+                this.CurrencyAmountTextBox.IsEnabled = (actionType != CurrencyActionTypeEnum.ResetForAllUsers && actionType != CurrencyActionTypeEnum.ResetForUser);
             }
         }
 

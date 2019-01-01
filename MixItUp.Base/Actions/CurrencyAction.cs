@@ -26,7 +26,10 @@ namespace MixItUp.Base.Actions
         [Name("Subtract from all chat users")]
         SubtractFromAllChatUsers,
 
-        Reset
+        [Name("Reset For All Users")]
+        ResetForAllUsers,
+        [Name("Reset For User")]
+        ResetForUser
     }
 
     [DataContract]
@@ -127,7 +130,7 @@ namespace MixItUp.Base.Actions
                     }
                 }
 
-                if (this.CurrencyActionType == CurrencyActionTypeEnum.Reset)
+                if (this.CurrencyActionType == CurrencyActionTypeEnum.ResetForAllUsers)
                 {
                     if (currency != null)
                     {
@@ -136,6 +139,17 @@ namespace MixItUp.Base.Actions
                     else if (inventory != null)
                     {
                         await inventory.Reset();
+                    }
+                }
+                else if (this.CurrencyActionType == CurrencyActionTypeEnum.ResetForUser)
+                {
+                    if (currency != null)
+                    {
+                        user.Data.ResetCurrencyAmount(currency);
+                    }
+                    else if (inventory != null)
+                    {
+                        user.Data.ResetInventoryAmount(inventory);
                     }
                 }
                 else
