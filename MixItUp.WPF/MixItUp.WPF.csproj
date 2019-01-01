@@ -785,6 +785,9 @@
     <Compile Include="Windows\Currency\CurrencyWindow.xaml.cs">
       <DependentUpon>CurrencyWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Currency\InventoryWindow.xaml.cs">
+      <DependentUpon>InventoryWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Favorites\FavoriteGroupWindow.xaml.cs">
       <DependentUpon>FavoriteGroupWindow.xaml</DependentUpon>
     </Compile>
@@ -1595,6 +1598,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Currency\CurrencyWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Currency\InventoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

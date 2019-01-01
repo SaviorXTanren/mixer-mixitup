@@ -146,7 +146,9 @@ namespace MixItUp.WPF.Controls.MainControls
             CurrencyRankInventoryContainer item = (CurrencyRankInventoryContainer)button.DataContext;
             if (item.Inventory != null)
             {
-
+                InventoryWindow window = new InventoryWindow(item.Inventory);
+                window.Closed += Window_Closed;
+                window.Show();
             }
             else
             {
@@ -177,7 +179,9 @@ namespace MixItUp.WPF.Controls.MainControls
 
         private void AddNewInventoryButton_Click(object sender, RoutedEventArgs e)
         {
-
+            InventoryWindow window = new InventoryWindow();
+            window.Closed += Window_Closed;
+            window.Show();
         }
     }
 }

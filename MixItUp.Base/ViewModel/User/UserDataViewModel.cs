@@ -93,20 +93,20 @@ namespace MixItUp.Base.ViewModel.User
         public UserInventoryViewModel Inventory { get; set; }
 
         [DataMember]
-        public Dictionary<Guid, int> Amounts { get; set; }
+        public Dictionary<string, int> Amounts { get; set; }
 
         public UserInventoryDataViewModel()
         {
-            this.Amounts = new Dictionary<Guid, int>();
+            this.Amounts = new Dictionary<string, int>();
         }
 
-        public UserInventoryDataViewModel(UserDataViewModel user, UserInventoryViewModel inventory) : this(user, inventory, new Dictionary<Guid, int>()) { }
+        public UserInventoryDataViewModel(UserDataViewModel user, UserInventoryViewModel inventory) : this(user, inventory, new Dictionary<string, int>()) { }
 
-        public UserInventoryDataViewModel(UserDataViewModel user, UserInventoryViewModel inventory, IDictionary<Guid, int> amounts)
+        public UserInventoryDataViewModel(UserDataViewModel user, UserInventoryViewModel inventory, IDictionary<string, int> amounts)
         {
             this.User = user;
             this.Inventory = inventory;
-            this.Amounts = new Dictionary<Guid, int>(amounts);
+            this.Amounts = new Dictionary<string, int>(amounts);
         }
 
         public override bool Equals(object obj)
@@ -220,7 +220,7 @@ namespace MixItUp.Base.ViewModel.User
 
             if (dataReader.ColumnExists("InventoryAmounts"))
             {
-                Dictionary<Guid, Dictionary<Guid, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<Guid, int>>>(dataReader["InventoryAmounts"].ToString());
+                Dictionary<Guid, Dictionary<string, int>> inventoryAmounts = JsonConvert.DeserializeObject<Dictionary<Guid, Dictionary<string, int>>>(dataReader["InventoryAmounts"].ToString());
                 if (inventoryAmounts != null)
                 {
                     foreach (var kvp in inventoryAmounts)
@@ -425,40 +425,44 @@ namespace MixItUp.Base.ViewModel.User
             return this.InventoryAmounts.GetValueIfExists(inventory, new UserInventoryDataViewModel(this, inventory));
         }
 
-        public int GetInventoryAmount(UserInventoryViewModel inventory, Guid itemID)
+        public int GetInventoryAmount(UserInventoryViewModel inventory, string item)
         {
             UserInventoryDataViewModel inventoryData = this.GetInventory(inventory);
-            if (inventoryData.Amounts.ContainsKey(itemID))
+            if (inventoryData.Amounts.ContainsKey(item))
             {
-                return inventoryData.Amounts[itemID];
+                return inventoryData.Amounts[item];
             }
             return 0;
         }
 
-        public bool HasInventoryAmount(UserInventoryViewModel inventory, Guid itemID, int amount)
+        public bool HasInventoryAmount(UserInventoryViewModel inventory, string item, int amount)
         {
-            return (this.IsCurrencyRankExempt || this.GetInventoryAmount(inventory, itemID) >= amount);
+            return (this.IsCurrencyRankExempt || this.GetInventoryAmount(inventory, item) >= amount);
         }
 
-        public void SetInventoryAmount(UserInventoryViewModel inventory, Guid itemID, int amount)
+        public void SetInventoryAmount(UserInventoryViewModel inventory, string itemName, int amount)
         {
-            UserInventoryDataViewModel inventoryData = this.GetInventory(inventory);
-            inventoryData.Amounts[itemID] = Math.Min(amount, inventoryData.Inventory.MaxAmount);
-        }
-
-        public void AddInventoryAmount(UserInventoryViewModel inventory, Guid itemID, int amount)
-        {
-            if (!this.IsCurrencyRankExempt)
+            if (inventory.Items.ContainsKey(itemName))
             {
-                this.SetInventoryAmount(inventory, itemID, this.GetInventoryAmount(inventory, itemID) + amount);
+                UserInventoryItemViewModel item = inventory.Items[itemName];
+                UserInventoryDataViewModel inventoryData = this.GetInventory(inventory);
+                inventoryData.Amounts[itemName] = Math.Min(amount, item.HasMaxAmount ? item.MaxAmount : inventoryData.Inventory.DefaultMaxAmount);
             }
         }
 
-        public void SubtractInventoryAmount(UserInventoryViewModel inventory, Guid itemID, int amount)
+        public void AddInventoryAmount(UserInventoryViewModel inventory, string item, int amount)
         {
             if (!this.IsCurrencyRankExempt)
             {
-                this.SetInventoryAmount(inventory, itemID, Math.Max(this.GetInventoryAmount(inventory, itemID) - amount, 0));
+                this.SetInventoryAmount(inventory, item, this.GetInventoryAmount(inventory, item) + amount);
+            }
+        }
+
+        public void SubtractInventoryAmount(UserInventoryViewModel inventory, string item, int amount)
+        {
+            if (!this.IsCurrencyRankExempt)
+            {
+                this.SetInventoryAmount(inventory, item, Math.Max(this.GetInventoryAmount(inventory, item) - amount, 0));
             }
         }
 
@@ -503,7 +507,7 @@ namespace MixItUp.Base.ViewModel.User
 
         internal string GetInventoryAmountsString()
         {
-            Dictionary<Guid, Dictionary<Guid, int>> amounts = new Dictionary<Guid, Dictionary<Guid, int>>();
+            Dictionary<Guid, Dictionary<string, int>> amounts = new Dictionary<Guid, Dictionary<string, int>>();
             foreach (UserInventoryDataViewModel inventoryData in this.InventoryAmounts.Values.ToList())
             {
                 amounts[inventoryData.Inventory.ID] = inventoryData.Amounts;

@@ -507,6 +507,13 @@ namespace MixItUp.WPF.Windows.Currency
                     return;
                 }
 
+                UserInventoryViewModel dupeInventory = ChannelSession.Settings.Inventories.Values.FirstOrDefault(c => c.Name.Equals(this.NameTextBox.Text));
+                if (dupeInventory != null)
+                {
+                    await MessageBoxHelper.ShowMessageDialog("There already exists an inventory with this name");
+                    return;
+                }
+
                 int maxAmount = int.MaxValue;
                 if (!string.IsNullOrEmpty(this.MaxAmountTextBox.Text))
                 {
