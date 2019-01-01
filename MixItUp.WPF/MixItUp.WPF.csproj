@@ -552,8 +552,8 @@
     <Compile Include="Controls\MainControls\ChannelControl.xaml.cs">
       <DependentUpon>ChannelControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MainControls\CurrencyAndRankControl.xaml.cs">
-      <DependentUpon>CurrencyAndRankControl.xaml</DependentUpon>
+    <Compile Include="Controls\MainControls\CurrencyRankInventoryControl.xaml.cs">
+      <DependentUpon>CurrencyRankInventoryControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MainControls\GamesControl.xaml.cs">
       <DependentUpon>GamesControl.xaml</DependentUpon>
@@ -1229,7 +1229,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MainControls\CurrencyAndRankControl.xaml">
+    <Page Include="Controls\MainControls\CurrencyRankInventoryControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -90,7 +90,7 @@ namespace MixItUp.WPF
                 await this.MainMenu.AddMenuItem("Action Groups", new ActionGroupControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Action-Groups");
                 await this.MainMenu.AddMenuItem("Remote", new RemoteControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Remote");
                 await this.MainMenu.AddMenuItem("Users", new UsersControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Users");
-                await this.MainMenu.AddMenuItem("Currency & Rank", new CurrencyAndRankControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
+                await this.MainMenu.AddMenuItem("Currency/Rank/Inventory", new CurrencyRankInventoryControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
                 await this.MainMenu.AddMenuItem("Overlay Widgets", new OverlayWidgetsControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Overlay-Widgets");
                 await this.MainMenu.AddMenuItem("Games", new GamesControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Games");
                 await this.MainMenu.AddMenuItem("Giveaway", new GiveawayControl(), "https://github.com/SaviorXTanren/mixer-mixitup/wiki/Giveaways");
