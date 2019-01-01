@@ -287,7 +287,7 @@ namespace MixItUp.Desktop.Services
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
 
-                await Task.Delay(10000);
+                await Task.Delay(30000);
             }
         }
 
