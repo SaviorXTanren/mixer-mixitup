@@ -3,7 +3,6 @@ using Mixer.Base.Util;
 using MixItUp.Base.ViewModel.User;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,6 +38,8 @@ namespace MixItUp.Base.Actions
 
         [DataMember]
         public Guid CurrencyID { get; set; }
+        [DataMember]
+        public Guid InventoryID { get; set; }
 
         [DataMember]
         public CurrencyActionTypeEnum CurrencyActionType { get; set; }
@@ -46,6 +47,8 @@ namespace MixItUp.Base.Actions
         [DataMember]
         public string Username { get; set; }
 
+        [DataMember]
+        public string ItemName { get; set; }
         [DataMember]
         public string Amount { get; set; }
         [DataMember]
@@ -78,26 +81,69 @@ namespace MixItUp.Base.Actions
             this.DeductFromUser = deductFromUser;
         }
 
+        public CurrencyAction(UserInventoryViewModel inventory, CurrencyActionTypeEnum currencyActionType, string itemName, string amount, string username = null,
+            MixerRoleEnum roleRequirement = MixerRoleEnum.User, bool deductFromUser = false)
+            : this()
+        {
+            this.InventoryID = inventory.ID;
+            this.CurrencyActionType = currencyActionType;
+            this.ItemName = itemName;
+            this.Amount = amount;
+            this.Username = username;
+            this.RoleRequirement = roleRequirement;
+            this.DeductFromUser = deductFromUser;
+        }
+
         protected override async Task PerformInternal(UserViewModel user, IEnumerable<string> arguments)
         {
             if (ChannelSession.Chat != null)
             {
-                if (!ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+                UserCurrencyViewModel currency = null;
+                UserInventoryViewModel inventory = null;
+                string systemName = null;
+
+                if (this.CurrencyID != Guid.Empty)
                 {
-                    return;
+                    if (!ChannelSession.Settings.Currencies.ContainsKey(this.CurrencyID))
+                    {
+                        return;
+                    }
+                    currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+                    systemName = currency.Name;
                 }
-                UserCurrencyViewModel currency = ChannelSession.Settings.Currencies[this.CurrencyID];
+
+                if (this.InventoryID != Guid.Empty)
+                {
+                    if (!ChannelSession.Settings.Inventories.ContainsKey(this.InventoryID))
+                    {
+                        return;
+                    }
+                    inventory = ChannelSession.Settings.Inventories[this.InventoryID];
+                    systemName = inventory.Name;
+
+                    if (!inventory.Items.ContainsKey(this.ItemName))
+                    {
+                        return;
+                    }
+                }
 
                 if (this.CurrencyActionType == CurrencyActionTypeEnum.Reset)
                 {
-                    await currency.Reset();
+                    if (currency != null)
+                    {
+                        await currency.Reset();
+                    }
+                    else if (inventory != null)
+                    {
+                        await inventory.Reset();
+                    }
                 }
                 else
                 {
                     string amountTextValue = await this.ReplaceStringWithSpecialModifiers(this.Amount, user, arguments);
                     if (!int.TryParse(amountTextValue, out int amountValue))
                     {
-                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("{0} is not a valid amount of {1}", amountTextValue, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
+                        await ChannelSession.Chat.Whisper(user.UserName, string.Format("{0} is not a valid amount of {1}", amountTextValue, systemName));
                         return;
                     }
 
@@ -144,25 +190,51 @@ namespace MixItUp.Base.Actions
 
                     if ((this.DeductFromUser && receiverUserData.Count > 0) || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromUser)
                     {
-                        if (!user.Data.HasCurrencyAmount(currency, amountValue))
+                        if (currency != null)
                         {
-                            await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, ChannelSession.Settings.Currencies[this.CurrencyID].Name));
-                            return;
+                            if (!user.Data.HasCurrencyAmount(currency, amountValue))
+                            {
+                                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, systemName));
+                                return;
+                            }
+                            user.Data.SubtractCurrencyAmount(currency, amountValue);
                         }
-                        user.Data.SubtractCurrencyAmount(currency, amountValue);
+                        else if (inventory != null)
+                        {
+                            if (!user.Data.HasInventoryAmount(inventory, this.ItemName, amountValue))
+                            {
+                                await ChannelSession.Chat.Whisper(user.UserName, string.Format("You do not have the required {0} {1} to do this", amountValue, this.ItemName));
+                                return;
+                            }
+                            user.Data.SubtractInventoryAmount(inventory, this.ItemName, amountValue);
+                        }
                     }
 
                     if (receiverUserData.Count > 0)
                     {
                         foreach (UserDataViewModel receiverUser in receiverUserData)
                         {
-                            if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                            if (currency != null)
                             {
-                                receiverUser.SubtractCurrencyAmount(currency, amountValue);
+                                if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                                {
+                                    receiverUser.SubtractCurrencyAmount(currency, amountValue);
+                                }
+                                else
+                                {
+                                    receiverUser.AddCurrencyAmount(currency, amountValue);
+                                }
                             }
-                            else
+                            else if (inventory != null)
                             {
-                                receiverUser.AddCurrencyAmount(currency, amountValue);
+                                if (this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromSpecificUser || this.CurrencyActionType == CurrencyActionTypeEnum.SubtractFromAllChatUsers)
+                                {
+                                    receiverUser.SubtractInventoryAmount(inventory, this.ItemName, amountValue);
+                                }
+                                else
+                                {
+                                    receiverUser.AddInventoryAmount(inventory, this.ItemName, amountValue);
+                                }
                             }
                         }
                     }

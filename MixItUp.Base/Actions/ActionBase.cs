@@ -14,7 +14,7 @@ namespace MixItUp.Base.Actions
     public enum ActionTypeEnum
     {
         Chat,
-        [Name("Currency/Rank")]
+        [Name("Currency/Rank/Inventory")]
         Currency,
         [Name("External Program")]
         ExternalProgram,

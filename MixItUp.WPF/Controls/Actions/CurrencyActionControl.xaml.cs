@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Linq;
 using MixItUp.Base.ViewModel.Requirement;
+using System;
+using System.Collections.Generic;
 
 namespace MixItUp.WPF.Controls.Actions
 {
@@ -23,7 +25,10 @@ namespace MixItUp.WPF.Controls.Actions
 
         public override Task OnLoaded()
         {
-            this.CurrencyTypeComboBox.ItemsSource = ChannelSession.Settings.Currencies.Values;
+            List<object> currencyInventoryList = new List<object>();
+            currencyInventoryList.AddRange(ChannelSession.Settings.Currencies.Values);
+            currencyInventoryList.AddRange(ChannelSession.Settings.Inventories.Values);
+            this.CurrencyTypeComboBox.ItemsSource = currencyInventoryList;
             this.CurrencyActionTypeComboBox.ItemsSource = EnumHelper.GetEnumNames<CurrencyActionTypeEnum>().OrderBy(s => s);
             this.CurrencyPermissionsAllowedComboBox.ItemsSource = RoleRequirementViewModel.BasicUserRoleAllowedValues;
 
@@ -31,12 +36,16 @@ namespace MixItUp.WPF.Controls.Actions
 
             if (this.action != null)
             {
-                if (ChannelSession.Settings.Currencies.ContainsKey(this.action.CurrencyID))
+                if (this.action.CurrencyID != Guid.Empty && ChannelSession.Settings.Currencies.ContainsKey(this.action.CurrencyID))
                 {
                     this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Currencies[this.action.CurrencyID];
                 }
-
+                else if (this.action.InventoryID != Guid.Empty && ChannelSession.Settings.Inventories.ContainsKey(this.action.InventoryID))
+                {
+                    this.CurrencyTypeComboBox.SelectedItem = ChannelSession.Settings.Inventories[this.action.InventoryID];
+                }
                 this.CurrencyActionTypeComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.CurrencyActionType);
+                this.InventoryItemNameComboBox.SelectedItem = this.action.ItemName;
                 this.CurrencyAmountTextBox.Text = this.action.Amount.ToString();
                 this.CurrencyUsernameTextBox.Text = this.action.Username;
                 this.CurrencyPermissionsAllowedComboBox.SelectedItem = EnumHelper.GetEnumName(this.action.RoleRequirement);
@@ -49,7 +58,8 @@ namespace MixItUp.WPF.Controls.Actions
         {
             if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyActionTypeComboBox.SelectedIndex >= 0)
             {
-                UserCurrencyViewModel currency = (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
+                UserCurrencyViewModel currency = this.GetSelectedCurrency();
+                UserInventoryViewModel inventory = this.GetSelectedInventory();
                 CurrencyActionTypeEnum actionType = EnumHelper.GetEnumValueFromString<CurrencyActionTypeEnum>((string)this.CurrencyActionTypeComboBox.SelectedItem);
 
                 if (actionType == CurrencyActionTypeEnum.Reset || !string.IsNullOrEmpty(this.CurrencyAmountTextBox.Text))
@@ -72,8 +82,23 @@ namespace MixItUp.WPF.Controls.Actions
                         roleRequirement = EnumHelper.GetEnumValueFromString<MixerRoleEnum>((string)this.CurrencyPermissionsAllowedComboBox.SelectedItem);
                     }
 
-                    return new CurrencyAction(currency, actionType, this.CurrencyAmountTextBox.Text, this.CurrencyUsernameTextBox.Text, roleRequirement,
-                        this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
+                    if (currency != null)
+                    {
+                        return new CurrencyAction(currency, actionType, this.CurrencyAmountTextBox.Text, username: this.CurrencyUsernameTextBox.Text,
+                            roleRequirement: roleRequirement, deductFromUser: this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
+                    }
+                    else if (inventory != null)
+                    {
+                        if (!string.IsNullOrEmpty((string)this.InventoryItemNameComboBox.SelectedItem))
+                        {
+                            string itemName = (string)this.InventoryItemNameComboBox.SelectedItem;
+                            if (inventory.Items.ContainsKey(itemName))
+                            {
+                                return new CurrencyAction(inventory, actionType, itemName, this.CurrencyAmountTextBox.Text, username: this.CurrencyUsernameTextBox.Text,
+                                    roleRequirement: roleRequirement, deductFromUser: this.DeductFromUserToggleButton.IsChecked.GetValueOrDefault());
+                            }
+                        }
+                    }
                 }
             }
             return null;
@@ -85,6 +110,16 @@ namespace MixItUp.WPF.Controls.Actions
             {
                 this.CurrencyActionTypeComboBox.IsEnabled = this.CurrencyUsernameTextBox.IsEnabled = this.CurrencyAmountTextBox.IsEnabled =
                     this.DeductFromUserTextBlock.IsEnabled = this.DeductFromUserToggleButton.IsEnabled = true;
+
+                if (this.GetSelectedInventory() != null)
+                {
+                    this.InventoryItemNameComboBox.Visibility = Visibility.Visible;
+                    this.InventoryItemNameComboBox.ItemsSource = this.GetSelectedInventory().Items.Keys;
+                }
+                else
+                {
+                    this.InventoryItemNameComboBox.Visibility = Visibility.Collapsed;
+                }
             }
         }
 
@@ -108,6 +143,24 @@ namespace MixItUp.WPF.Controls.Actions
 
                 this.CurrencyAmountTextBox.IsEnabled = (actionType != CurrencyActionTypeEnum.Reset);
             }
+        }
+
+        private UserCurrencyViewModel GetSelectedCurrency()
+        {
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyTypeComboBox.SelectedItem is UserCurrencyViewModel)
+            {
+                return (UserCurrencyViewModel)this.CurrencyTypeComboBox.SelectedItem;
+            }
+            return null;
+        }
+
+        private UserInventoryViewModel GetSelectedInventory()
+        {
+            if (this.CurrencyTypeComboBox.SelectedIndex >= 0 && this.CurrencyTypeComboBox.SelectedItem is UserInventoryViewModel)
+            {
+                return (UserInventoryViewModel)this.CurrencyTypeComboBox.SelectedItem;
+            }
+            return null;
         }
     }
 }
