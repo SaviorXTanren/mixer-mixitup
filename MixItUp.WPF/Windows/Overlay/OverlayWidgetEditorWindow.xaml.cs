@@ -291,6 +291,10 @@ namespace MixItUp.WPF.Windows.Overlay
                 string overlayName = (string)this.OverlayNameComboBox.SelectedItem;
 
                 OverlayItemPosition position = this.ItemPosition.GetPosition();
+                if (position == null)
+                {
+                    return;
+                }
 
                 OverlayItemBase item = null;
                 OverlayWidgetTypeEnum overlayType = EnumHelper.GetEnumValueFromString<OverlayWidgetTypeEnum>((string)this.TypeComboBox.SelectedItem);
