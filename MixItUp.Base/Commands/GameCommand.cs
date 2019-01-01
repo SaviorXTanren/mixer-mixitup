@@ -20,26 +20,31 @@ namespace MixItUp.Base.Commands
     [DataContract]
     internal class GameOutcomeProbability { }
 
-    [DataContract]
-    internal class UserCharityGameCommand : GameCommandBase { }
+    internal class OldGameCommandBase : GameCommandBase
+    {
+        public override IEnumerable<CommandBase> GetAllInnerCommands() { return new List<CommandBase>(); }
+    }
 
     [DataContract]
-    internal class OnlyOneWinnerGameCommand : GameCommandBase { }
+    internal class UserCharityGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class IndividualProbabilityGameCommand : GameCommandBase { }
+    internal class OnlyOneWinnerGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class SinglePlayerGameCommand : GameCommandBase { }
+    internal class IndividualProbabilityGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class SpinWheelGameCommand : GameCommandBase { }
+    internal class SinglePlayerGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class CharityGameCommand : GameCommandBase { }
+    internal class SpinWheelGameCommand : OldGameCommandBase { }
 
     [DataContract]
-    internal class GiveGameCommand : GameCommandBase { }
+    internal class CharityGameCommand : OldGameCommandBase { }
+
+    [DataContract]
+    internal class GiveGameCommand : OldGameCommandBase { }
 
     #endregion OLD GAME CLASSES
 
