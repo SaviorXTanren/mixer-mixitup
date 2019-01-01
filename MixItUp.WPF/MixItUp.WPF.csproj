@@ -376,6 +376,9 @@
     <Compile Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml.cs">
       <DependentUpon>UserCurrencyIndividualEditorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Currency\UserInventoryEditorControl.xaml.cs">
+      <DependentUpon>UserInventoryEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml.cs">
       <DependentUpon>BasicTextEntryDialogControl.xaml</DependentUpon>
     </Compile>
@@ -1003,6 +1006,10 @@
     <Page Include="Controls\Currency\UserCurrencyIndividualEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Currency\UserInventoryEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\BasicTextEntryDialogControl.xaml">
       <SubType>Designer</SubType>

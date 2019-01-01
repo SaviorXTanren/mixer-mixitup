@@ -1,19 +1,13 @@
-﻿using Mixer.Base.Model.User;
-using Mixer.Base.Util;
+﻿using Mixer.Base.Util;
 using MixItUp.Base;
-using MixItUp.Base.Actions;
-using MixItUp.Base.Commands;
 using MixItUp.Base.Util;
-using MixItUp.Base.ViewModel.Requirement;
 using MixItUp.Base.ViewModel.User;
-using MixItUp.WPF.Controls.Dialogs;
 using MixItUp.WPF.Util;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -75,18 +69,6 @@ namespace MixItUp.WPF.Windows.Currency
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("https://github.com/SaviorXTanren/mixer-mixitup/wiki/Currency-&-Rank");
-        }
-
-        private void EditItemButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = (Button)sender;
-            UserInventoryItemViewModel item = (UserInventoryItemViewModel)button.DataContext;
-            this.ItemNameTextBox.Text = item.Name;
-            this.ItemMaxAmountTextBox.Text = string.Empty;
-            if (item.HasMaxAmount)
-            {
-                this.ItemMaxAmountTextBox.Text = item.MaxAmount.ToString();
-            }
         }
 
         private void DeleteItemButton_Click(object sender, RoutedEventArgs e)

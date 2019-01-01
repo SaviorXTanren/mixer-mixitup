@@ -79,32 +79,14 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <GroupBox Header="Currency" Grid.Column="0">
-                        <DataGrid x:Name="CurrencyDataGrid" Style="{StaticResource StandardDataGrid}" HeadersVisibility="None">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ContentControl Content="{Binding}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                    <GroupBox Header="Currency / Rank" Grid.Column="0">
+                        <StackPanel x:Name="CurrencyRankStackPanel" />
                     </GroupBox>
 
-                    <GroupBox Header="Rank" Grid.Column="2">
-                        <DataGrid x:Name="RankDataGrid" Style="{StaticResource StandardDataGrid}" HeadersVisibility="None">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="*">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ContentControl Content="{Binding}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                    <GroupBox Header="Inventory" Grid.Column="2">
+                        <ScrollViewer VerticalScrollBarVisibility="Visible" MaxHeight="200">
+                            <StackPanel x:Name="InventoryStackPanel" />
+                        </ScrollViewer>
                     </GroupBox>
                 </Grid>
 
@@ -136,7 +118,7 @@
                 <GroupBox Header="Options" Grid.Row="6">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="40" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
@@ -158,7 +140,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Currency/Rank Exempt:</TextBlock>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center">Currency/Rank/Inventory Exempt:</TextBlock>
                             <ToggleButton Grid.Column="2" x:Name="CurrencyRankExemptToggleButton" Checked="CurrencyRankExemptToggleButton_Checked" Unchecked="CurrencyRankExemptToggleButton_Checked" />
                         </Grid>
 

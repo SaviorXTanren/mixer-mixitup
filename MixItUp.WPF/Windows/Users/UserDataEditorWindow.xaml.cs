@@ -21,9 +21,6 @@ namespace MixItUp.WPF.Windows.Users
 
         private UserViewModel user;
 
-        private ObservableCollection<UserCurrencyIndividualEditorControl> currencies = new ObservableCollection<UserCurrencyIndividualEditorControl>();
-        private ObservableCollection<UserCurrencyIndividualEditorControl> ranks = new ObservableCollection<UserCurrencyIndividualEditorControl>();
-
         private ObservableCollection<ChatCommand> userOnlyCommands = new ObservableCollection<ChatCommand>();
 
         public UserDataEditorWindow(UserDataViewModel userData)
@@ -37,9 +34,6 @@ namespace MixItUp.WPF.Windows.Users
 
         protected override async Task OnLoaded()
         {
-            this.CurrencyDataGrid.ItemsSource = this.currencies;
-            this.RankDataGrid.ItemsSource = this.ranks;
-
             this.UserOnlyChatCommandsListView.ItemsSource = this.userOnlyCommands;
 
             this.CurrencyRankExemptToggleButton.IsChecked = this.user.Data.IsCurrencyRankExempt;
@@ -52,19 +46,18 @@ namespace MixItUp.WPF.Windows.Users
         {
             await this.user.RefreshDetails(force: true);
 
-            this.ranks.Clear();
-            this.currencies.Clear();
+            this.CurrencyRankStackPanel.Children.Clear();
             foreach (UserCurrencyViewModel currency in ChannelSession.Settings.Currencies.Values.ToList())
             {
                 UserCurrencyDataViewModel currencyData = this.user.Data.GetCurrency(currency);
-                if (currencyData.Currency.IsRank)
-                {
-                    this.ranks.Add(new UserCurrencyIndividualEditorControl(currencyData));
-                }
-                else
-                {
-                    this.currencies.Add(new UserCurrencyIndividualEditorControl(currencyData));
-                }
+                this.CurrencyRankStackPanel.Children.Add(new UserCurrencyIndividualEditorControl(currencyData));
+            }
+
+            this.InventoryStackPanel.Children.Clear();
+            foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.ToList())
+            {
+                UserInventoryDataViewModel inventoryData = this.user.Data.GetInventory(inventory);
+                this.InventoryStackPanel.Children.Add(new UserInventoryEditorControl(inventory, inventoryData));
             }
 
             this.UserOnlyChatCommandsListView.Visibility = Visibility.Collapsed;
@@ -92,26 +85,6 @@ namespace MixItUp.WPF.Windows.Users
 
             this.DataContext = null;
             this.DataContext = this.user;
-        }
-
-        private void CurrencyAmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            UserCurrencyDataViewModel currencyData = (UserCurrencyDataViewModel)textBox.DataContext;
-            if (!string.IsNullOrEmpty(textBox.Text) && int.TryParse(textBox.Text, out int amount) && amount >= 0)
-            {
-                this.user.Data.SetCurrencyAmount(currencyData.Currency, amount);
-            }
-        }
-
-        private void RankAmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            UserCurrencyDataViewModel currencyData = (UserCurrencyDataViewModel)textBox.DataContext;
-            if (!string.IsNullOrEmpty(textBox.Text) && int.TryParse(textBox.Text, out int amount) && amount >= 0)
-            {
-                this.user.Data.SetCurrencyAmount(currencyData.Currency, amount);
-            }
         }
 
         private void AddUserOnlyCommandButton_Click(object sender, RoutedEventArgs e)

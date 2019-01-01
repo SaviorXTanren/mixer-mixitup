@@ -81,24 +81,12 @@
                                         <DataGridTextColumn Header="Item Name" Binding="{Binding Name}" IsReadOnly="True" Width="200" />
                                         <DataGridTextColumn Header="Max Amount" Binding="{Binding MaxAmountString}" IsReadOnly="True" Width="120" />
                                         <DataGridTextColumn Header="Special Identifier Item Name" Binding="{Binding SpecialIdentifier}" IsReadOnly="True" Width="200" />
-                                        <DataGridTemplateColumn Header="Options" Width="120">
+                                        <DataGridTemplateColumn Width="65">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="10" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Button x:Name="EditItemButton" Grid.Column="0" Click="EditItemButton_Click" Width="40" HorizontalAlignment="Center">
-                                                            <MaterialDesign:PackIcon Kind="TooltipEdit" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                        </Button>
-
-                                                        <Button x:Name="DeleteItemButton" Grid.Column="2" Click="DeleteItemButton_Click" Width="40" HorizontalAlignment="Center">
-                                                            <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
-                                                        </Button>
-                                                    </Grid>
+                                                    <Button x:Name="DeleteItemButton" Grid.Column="2" Click="DeleteItemButton_Click" Width="40" HorizontalAlignment="Center">
+                                                        <MaterialDesign:PackIcon Kind="Delete" Height="24" Width="24" Margin="-13,-10" Foreground="{StaticResource WhiteColor}" />
+                                                    </Button>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
