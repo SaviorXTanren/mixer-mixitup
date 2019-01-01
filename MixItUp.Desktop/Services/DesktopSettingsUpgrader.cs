@@ -318,15 +318,7 @@ namespace MixItUp.Desktop.Services
                 DesktopChannelSettings settings = await SerializerHelper.DeserializeFromFile<DesktopChannelSettings>(filePath);
                 await ChannelSession.Services.Settings.Initialize(settings);
 
-                List<CommandBase> commands = new List<CommandBase>();
-                commands.AddRange(settings.ChatCommands);
-                commands.AddRange(settings.EventCommands);
-                commands.AddRange(settings.InteractiveCommands);
-                commands.AddRange(settings.TimerCommands);
-                commands.AddRange(settings.ActionGroupCommands);
-                commands.AddRange(settings.GameCommands);
-                commands.AddRange(settings.RemoteCommands);
-                foreach (CommandBase command in commands)
+                foreach (CommandBase command in DesktopSettingsUpgrader.GetAllCommands(settings))
                 {
                     StoreCommandUpgrader.RestructureNewOverlayActions(command.Actions);
                 }
@@ -395,6 +387,31 @@ namespace MixItUp.Desktop.Services
             {
                 return (MixerRoleEnum)(legacyRoleID * 10);
             }
+        }
+
+        private static IEnumerable<CommandBase> GetAllCommands(IChannelSettings settings)
+        {
+            List<CommandBase> commands = new List<CommandBase>();
+            commands.AddRange(settings.ChatCommands);
+            commands.AddRange(settings.EventCommands);
+            commands.AddRange(settings.InteractiveCommands);
+            commands.AddRange(settings.TimerCommands);
+            commands.AddRange(settings.ActionGroupCommands);
+            commands.AddRange(settings.GameCommands);
+            commands.AddRange(settings.RemoteCommands);
+            foreach (UserDataViewModel userData in settings.UserData.Values)
+            {
+                commands.AddRange(userData.CustomCommands);
+                if (userData.EntranceCommand != null)
+                {
+                    commands.Add(userData.EntranceCommand);
+                }
+            }
+            foreach (GameCommandBase gameCommand in settings.GameCommands)
+            {
+                commands.AddRange(gameCommand.GetAllInnerCommands());
+            }
+            return commands;
         }
     }
 
