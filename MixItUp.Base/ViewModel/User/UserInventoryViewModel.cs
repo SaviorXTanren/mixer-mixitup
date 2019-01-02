@@ -99,13 +99,10 @@ namespace MixItUp.Base.ViewModel.User
         public string UserAmountSpecialIdentifierExample { get { return string.Format("{0}{1}<ITEM>", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string UserAmountSpecialIdentifierRegex { get { return string.Format("{0}{1}\\w+", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserAmountSpecialIdentifierHeader { get { return string.Format("{0}{1}", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         [JsonIgnore]
-        public string Top10SpecialIdentifierExample { get { return string.Format("{0}10{1}<ITEM>", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
-
-        [JsonIgnore]
-        public string TopRegexSpecialIdentifier { get { return string.Format("{0}\\d+{1}\\w+", SpecialIdentifierStringBuilder.TopSpecialIdentifierHeader, this.SpecialIdentifier); } }
+        public string UserAllAmountSpecialIdentifier { get { return string.Format("{0}{1}all", SpecialIdentifierStringBuilder.UserSpecialIdentifierHeader, this.SpecialIdentifier); } }
 
         public async Task Reset()
         {

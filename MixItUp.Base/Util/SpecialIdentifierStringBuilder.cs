@@ -648,6 +648,29 @@ namespace MixItUp.Base.Util
                         this.ReplaceSpecialIdentifier(identifierHeader + currency.UserAmountSpecialIdentifier, currencyData.Amount.ToString());
                     }
 
+                    foreach (UserInventoryViewModel inventory in ChannelSession.Settings.Inventories.Values.OrderByDescending(c => c.UserAmountSpecialIdentifierHeader))
+                    {
+                        if (this.ContainsSpecialIdentifier(inventory.UserAmountSpecialIdentifierHeader))
+                        {
+                            UserInventoryDataViewModel inventoryData = userData.GetInventory(inventory);
+                            List<string> allItemsList = new List<string>();
+
+                            foreach (UserInventoryItemViewModel item in inventory.Items.Values.OrderByDescending(i => i.Name))
+                            {
+                                int amount = inventoryData.GetAmount(item);
+                                if (amount > 0)
+                                {
+                                    allItemsList.Add(item.Name + " x" + amount);
+                                }
+
+                                string itemSpecialIdentifier = inventory.UserAmountSpecialIdentifierHeader + item.SpecialIdentifier;
+                                this.ReplaceSpecialIdentifier(itemSpecialIdentifier, amount.ToString());
+                            }
+
+                            this.ReplaceSpecialIdentifier(inventory.UserAllAmountSpecialIdentifier, string.Join(", ", allItemsList.OrderBy(i => i)));
+                        }
+                    }
+
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "time", userData.ViewingTimeString);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "hours", userData.ViewingHoursString);
                     this.ReplaceSpecialIdentifier(identifierHeader + UserSpecialIdentifierHeader + "mins", userData.ViewingMinutesString);

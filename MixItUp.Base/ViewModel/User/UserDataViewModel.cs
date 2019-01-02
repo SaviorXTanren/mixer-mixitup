@@ -109,6 +109,17 @@ namespace MixItUp.Base.ViewModel.User
             this.Amounts = new Dictionary<string, int>(amounts);
         }
 
+        public int GetAmount(UserInventoryItemViewModel item) { return this.GetAmount(item.Name); }
+
+        public int GetAmount(string itemName)
+        {
+            if (this.Amounts.ContainsKey(itemName))
+            {
+                return this.Amounts[itemName];
+            }
+            return 0;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj is UserInventoryDataViewModel)
