@@ -200,6 +200,19 @@ namespace MixItUp.Base.ViewModel.User
         public MixerRoleEnum PrimarySortableRole { get { return this.MixerRoles.Where(r => r != MixerRoleEnum.Follower).Max(); } }
 
         [JsonIgnore]
+        public string Title
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.Data.CustomTitle))
+                {
+                    return this.Data.CustomTitle;
+                }
+                return "No Title";
+            }
+        }
+
+        [JsonIgnore]
         public string MixerAgeString { get { return (this.MixerAccountDate != null) ? this.MixerAccountDate.GetValueOrDefault().GetAge() : "Unknown"; } }
 
         [JsonIgnore]

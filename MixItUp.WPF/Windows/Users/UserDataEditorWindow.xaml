@@ -42,7 +42,9 @@
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="20" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -69,6 +71,11 @@
 
                         <TextBlock Grid.Row="2" Grid.Column="6" VerticalAlignment="Center">Follow Age:</TextBlock>
                         <TextBlock x:Name="FollowAgeTextBlock" VerticalAlignment="Center" Grid.Row="2" Grid.Column="8" Text="{Binding FollowAgeString}" />
+
+                        <TextBox x:Name="CustomTitleTextBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Width="200" Text="{Binding Data.CustomTitle}" MaterialDesign:HintAssist.Hint="Custom Title" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+
+                        <TextBlock Grid.Row="4" Grid.Column="6" VerticalAlignment="Center">Sub Age:</TextBlock>
+                        <TextBlock x:Name="SubAgeTextBlock" VerticalAlignment="Center" Grid.Row="4" Grid.Column="8" Text="{Binding SubscribeAgeString}" />
                     </Grid>
                 </GroupBox>
 

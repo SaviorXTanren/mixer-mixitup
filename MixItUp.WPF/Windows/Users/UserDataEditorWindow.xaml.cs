@@ -1,14 +1,13 @@
-﻿using MixItUp.Base.Commands;
+﻿using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
+using MixItUp.WPF.Controls.Currency;
+using MixItUp.WPF.Windows.Command;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using MixItUp.WPF.Windows.Command;
-using MixItUp.Base;
-using MixItUp.WPF.Controls.Currency;
 
 namespace MixItUp.WPF.Windows.Users
 {

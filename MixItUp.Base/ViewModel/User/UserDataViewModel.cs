@@ -150,6 +150,9 @@ namespace MixItUp.Base.ViewModel.User
         public string UserName { get; set; }
 
         [DataMember]
+        public string CustomTitle { get; set; }
+
+        [DataMember]
         public int ViewingMinutes { get; set; }
 
         [DataMember]
