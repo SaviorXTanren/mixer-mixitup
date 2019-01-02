@@ -527,7 +527,7 @@ namespace MixItUp.Desktop.Services
                 if (changeOccurred)
                 {
                     GlobalEvents.SongRequestsChangedOccurred();
-                    await Task.Delay(2000, tokenSource.Token);
+                    await Task.Delay(3000, tokenSource.Token);
                 }
 
                 await Task.Delay(1000, tokenSource.Token);
