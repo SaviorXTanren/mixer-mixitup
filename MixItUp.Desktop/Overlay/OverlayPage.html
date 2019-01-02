@@ -136,7 +136,11 @@
                             if (typeof callback === 'function') callback(this);
                         });
                     }
-                    else if (typeof callback === 'function') callback(this);
+                    else if (typeof callback === 'function') {
+                        this.each(function () {
+                            callback(this);
+                        })
+                    }
 
                     return this;
                 },
