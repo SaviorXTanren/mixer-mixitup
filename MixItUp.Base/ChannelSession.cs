@@ -269,7 +269,7 @@ namespace MixItUp.Base
             catch (RestServiceRequestException ex)
             {
                 Util.Logger.Log(ex);
-                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, settings.Channel.user.username);
+                result = await ChannelSession.ConnectUser(ChannelSession.StreamerScopes, settings.IsStreamer ? null : settings.Channel.user.username);
             }
             catch (Exception ex)
             {
