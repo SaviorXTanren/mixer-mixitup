@@ -485,6 +485,15 @@ namespace MixItUp.WPF.Controls.MainControls
                         }
                     }
 
+                    if (ChannelSession.Settings.GiveawayRequirements.Inventory != null)
+                    {
+                        if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetInventoryRequirement(message.User))
+                        {
+                            await ChannelSession.Settings.GameQueueRequirements.Inventory.SendNotMetWhisper(message.User);
+                            return;
+                        }
+                    }
+
                     if (!this.enteredUsers.ContainsKey(message.User.ID))
                     {
                         this.enteredUsers[message.User.ID] = new GiveawayUser() { User = message.User, Entries = 0 };

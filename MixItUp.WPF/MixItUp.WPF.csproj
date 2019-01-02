@@ -539,8 +539,8 @@
     <Compile Include="Controls\MainControls\RemoteControl.xaml.cs">
       <DependentUpon>RemoteControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Requirement\CurrencyRankRequirementControl.xaml.cs">
-      <DependentUpon>CurrencyRankRequirementControl.xaml</DependentUpon>
+    <Compile Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml.cs">
+      <DependentUpon>CurrencyRankInventoryRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Requirement\CurrencyRequirementControl.xaml.cs">
       <DependentUpon>CurrencyRequirementControl.xaml</DependentUpon>
@@ -620,6 +620,9 @@
     </Compile>
     <Compile Include="Controls\Command\CommandButtonsControl.xaml.cs">
       <DependentUpon>CommandButtonsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Requirement\InventoryRequirementControl.xaml.cs">
+      <DependentUpon>InventoryRequirementControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Requirement\RankSelectorControl.xaml.cs">
       <DependentUpon>RankSelectorControl.xaml</DependentUpon>
@@ -1219,7 +1222,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Requirement\CurrencyRankRequirementControl.xaml">
+    <Page Include="Controls\Requirement\CurrencyRankInventoryRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1328,6 +1331,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Command\CommandButtonsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Requirement\InventoryRequirementControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

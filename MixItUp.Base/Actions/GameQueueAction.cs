@@ -92,6 +92,12 @@ namespace MixItUp.Base.Actions
                                 return;
                             }
 
+                            if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetInventoryRequirement(user))
+                            {
+                                await ChannelSession.Settings.GameQueueRequirements.Inventory.SendNotMetWhisper(user);
+                                return;
+                            }
+
                             if (!ChannelSession.Settings.GameQueueRequirements.DoesMeetCurrencyRequirement(user) || !ChannelSession.Settings.GameQueueRequirements.TrySubtractCurrencyAmount(user))
                             {
                                 await ChannelSession.Settings.GameQueueRequirements.Currency.SendCurrencyNotMetWhisper(user);

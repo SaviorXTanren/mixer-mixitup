@@ -4,11 +4,11 @@ using System.Windows.Controls;
 namespace MixItUp.WPF.Controls.Requirement
 {
     /// <summary>
-    /// Interaction logic for CurrencyRankRequirementControl.xaml
+    /// Interaction logic for CurrencyRankInventoryRequirementControl.xaml
     /// </summary>
-    public partial class CurrencyRankRequirementControl : UserControl
+    public partial class CurrencyRankInventoryRequirementControl : UserControl
     {
-        public CurrencyRankRequirementControl()
+        public CurrencyRankInventoryRequirementControl()
         {
             InitializeComponent();
         }

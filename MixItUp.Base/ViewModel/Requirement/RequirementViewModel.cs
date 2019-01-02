@@ -23,6 +23,9 @@ namespace MixItUp.Base.ViewModel.Requirement
         public CurrencyRequirementViewModel Rank { get; set; }
 
         [JsonProperty]
+        public InventoryRequirementViewModel Inventory { get; set; }
+
+        [JsonProperty]
         public ThresholdRequirementViewModel Threshold { get; set; }
 
         [JsonProperty]
@@ -47,17 +50,6 @@ namespace MixItUp.Base.ViewModel.Requirement
         {
             this.Role.MixerRole = userRole;
             this.Cooldown.Amount = cooldown;
-        }
-
-        public RequirementViewModel(RoleRequirementViewModel role, CooldownRequirementViewModel cooldown = null, CurrencyRequirementViewModel currency = null,
-            CurrencyRequirementViewModel rank = null, ThresholdRequirementViewModel threshold = null, SettingsRequirementViewModel settings = null)
-        {
-            this.Role = role;
-            this.Cooldown = (cooldown != null) ? cooldown : new CooldownRequirementViewModel();
-            this.Currency = currency;
-            this.Rank = rank;
-            this.Threshold = (threshold != null) ? threshold : new ThresholdRequirementViewModel();
-            this.Settings = (settings != null) ? settings : new SettingsRequirementViewModel();
         }
 
         public async Task<bool> DoesMeetUserRoleRequirement(UserViewModel user)
@@ -109,6 +101,15 @@ namespace MixItUp.Base.ViewModel.Requirement
             if (this.Rank != null)
             {
                 return this.Rank.DoesMeetRankRequirement(user.Data);
+            }
+            return true;
+        }
+
+        public bool DoesMeetInventoryRequirement(UserViewModel user)
+        {
+            if (this.Inventory != null)
+            {
+                return this.Inventory.TrySubtractAmount(user.Data);
             }
             return true;
         }

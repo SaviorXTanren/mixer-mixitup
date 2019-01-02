@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MixItUp.WPF.Controls.Requirement.CurrencyRankRequirementControl"
+﻿<UserControl x:Class="MixItUp.WPF.Controls.Requirement.CurrencyRankInventoryRequirementControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -11,10 +11,14 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <local:CurrencyRequirementControl x:Name="CurrencyRequirement" Grid.Row="0" />
 
         <local:RankRequirementControl x:Name="RankRequirement" Grid.Row="2" />
+
+        <local:InventoryRequirementControl x:Name="InventoryRequirement" Grid.Row="4" />
     </Grid>
 </UserControl>

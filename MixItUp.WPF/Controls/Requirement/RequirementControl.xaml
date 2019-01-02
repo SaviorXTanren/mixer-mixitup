@@ -83,7 +83,7 @@
 
             <MaterialDesign:PopupBox x:Name="CurrencyRankPopup" Grid.Column="4" ToggleContent="{StaticResource CurrencyRankPopupBoxIcon}" Margin="6,0" StaysOpen="True" IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}">
                 <Grid Margin="10">
-                    <RequirementControls:CurrencyRankRequirementControl x:Name="CurrencyRankRequirement" />
+                    <RequirementControls:CurrencyRankInventoryRequirementControl x:Name="CurrencyRankInventoryRequirement" />
                 </Grid>
             </MaterialDesign:PopupBox>
 
