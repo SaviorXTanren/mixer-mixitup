@@ -27,6 +27,8 @@ namespace MixItUp.Base.ViewModel.User
 
         Follower = 30,
 
+        Regular = 35,
+
         Subscriber = 40,
 
         Mod = 50,
@@ -169,7 +171,6 @@ namespace MixItUp.Base.ViewModel.User
                     {
                         this.mixerRoles.Add(MixerRoleEnum.Follower);
                     }
-
                     return new HashSet<MixerRoleEnum>(mixerRoles);
                 }
             }
@@ -458,6 +459,11 @@ namespace MixItUp.Base.ViewModel.User
             {
                 this.Data.OfflineViewingMinutes++;
             }
+
+            if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
+            {
+                this.mixerRoles.Add(MixerRoleEnum.Regular);
+            }
         }
 
         public UserModel GetModel()
@@ -562,6 +568,11 @@ namespace MixItUp.Base.ViewModel.User
                 if (this.mixerRoles.Contains(MixerRoleEnum.ChannelEditor))
                 {
                     this.mixerRoles.Add(MixerRoleEnum.Mod);
+                }
+
+                if (ChannelSession.Settings.RegularUserMinimumHours > 0 && this.Data.ViewingHoursPart >= ChannelSession.Settings.RegularUserMinimumHours)
+                {
+                    this.mixerRoles.Add(MixerRoleEnum.Regular);
                 }
 
                 List<MixerRoleEnum> mixerDisplayRoles = this.mixerRoles.ToList();

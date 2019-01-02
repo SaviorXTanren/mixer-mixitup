@@ -119,6 +119,9 @@ namespace MixItUp.Desktop
         public List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
 
         [JsonProperty]
+        public int RegularUserMinimumHours { get; set; }
+
+        [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
         [JsonProperty]
         public RequirementViewModel GameQueueRequirements { get; set; }

@@ -69,6 +69,8 @@ namespace MixItUp.Base
         bool PreventUnknownInteractiveUsers { get; set; }
         List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
 
+        int RegularUserMinimumHours { get; set; }
+
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }
 
