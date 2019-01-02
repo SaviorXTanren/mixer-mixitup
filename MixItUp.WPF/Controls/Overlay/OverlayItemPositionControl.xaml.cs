@@ -26,32 +26,34 @@ namespace MixItUp.WPF.Controls.Overlay
         public void SetPosition(OverlayItemPosition position)
         {
             this.position = position;
-
-            if (this.position.PositionType == OverlayEffectPositionType.Percentage)
+            if (this.position != null)
             {
-                if (this.position.Horizontal == 25 && this.position.Vertical == 25) { this.TopLeftPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.position.Horizontal == 50 && this.position.Vertical == 25) { this.TopPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.position.Horizontal == 75 && this.position.Vertical == 25) { this.TopRightPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.position.Horizontal == 25 && this.position.Vertical == 50) { this.LeftPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.position.Horizontal == 50 && this.position.Vertical == 50) { this.CenterPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.position.Horizontal == 75 && this.position.Vertical == 50) { this.RightPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.position.Horizontal == 25 && this.position.Vertical == 75) { this.BottomLeftPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.position.Horizontal == 50 && this.position.Vertical == 75) { this.BottomPositionButton_Click(this, new RoutedEventArgs()); }
-                else if (this.position.Horizontal == 75 && this.position.Vertical == 75) { this.BottomRightPositionButton_Click(this, new RoutedEventArgs()); }
+                if (this.position.PositionType == OverlayEffectPositionType.Percentage)
+                {
+                    if (this.position.Horizontal == 25 && this.position.Vertical == 25) { this.TopLeftPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.position.Horizontal == 50 && this.position.Vertical == 25) { this.TopPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.position.Horizontal == 75 && this.position.Vertical == 25) { this.TopRightPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.position.Horizontal == 25 && this.position.Vertical == 50) { this.LeftPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.position.Horizontal == 50 && this.position.Vertical == 50) { this.CenterPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.position.Horizontal == 75 && this.position.Vertical == 50) { this.RightPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.position.Horizontal == 25 && this.position.Vertical == 75) { this.BottomLeftPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.position.Horizontal == 50 && this.position.Vertical == 75) { this.BottomPositionButton_Click(this, new RoutedEventArgs()); }
+                    else if (this.position.Horizontal == 75 && this.position.Vertical == 75) { this.BottomRightPositionButton_Click(this, new RoutedEventArgs()); }
+                    else
+                    {
+                        this.PercentagePositionButton_Click(this, new RoutedEventArgs());
+                    }
+
+                    this.PercentagePositionHorizontalSlider.Value = this.position.Horizontal;
+                    this.PercentagePositionVerticalSlider.Value = this.position.Vertical;
+                }
                 else
                 {
-                    this.PercentagePositionButton_Click(this, new RoutedEventArgs());
+                    this.PixelsPositionButton_Click(this, new RoutedEventArgs());
+
+                    this.PixelPositionHorizontalTextBox.Text = this.position.Horizontal.ToString();
+                    this.PixelPositionVerticalTextBox.Text = this.position.Vertical.ToString();
                 }
-
-                this.PercentagePositionHorizontalSlider.Value = this.position.Horizontal;
-                this.PercentagePositionVerticalSlider.Value = this.position.Vertical;
-            }
-            else
-            {
-                this.PixelsPositionButton_Click(this, new RoutedEventArgs());
-
-                this.PixelPositionHorizontalTextBox.Text = this.position.Horizontal.ToString();
-                this.PixelPositionVerticalTextBox.Text = this.position.Vertical.ToString();
             }
         }
 
