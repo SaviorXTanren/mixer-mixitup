@@ -75,7 +75,7 @@
                         <TextBox x:Name="CustomTitleTextBox" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Width="200" Text="{Binding Data.CustomTitle}" MaterialDesign:HintAssist.Hint="Custom Title" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
 
                         <TextBlock Grid.Row="4" Grid.Column="6" VerticalAlignment="Center">Sub Age:</TextBlock>
-                        <TextBlock x:Name="SubAgeTextBlock" VerticalAlignment="Center" Grid.Row="4" Grid.Column="8" Text="{Binding SubscribeAgeString}" />
+                        <TextBlock x:Name="SubAgeTextBlock" VerticalAlignment="Center" Grid.Row="4" Grid.Column="8" Text="{Binding MixerSubscribeAgeString}" />
                     </Grid>
                 </GroupBox>
 

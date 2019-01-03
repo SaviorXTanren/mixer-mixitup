@@ -62,26 +62,7 @@ namespace MixItUp.Base.ViewModel.Requirement
             }
         }
 
-        public bool DoesMeetRequirement(UserViewModel user)
-        {
-            if (this.MixerRole == MixerRoleEnum.Custom && !string.IsNullOrEmpty(this.CustomRole))
-            {
-                if (this.CustomRole.StartsWith(GameWispTier.MIURolePrefix))
-                {
-                    if (ChannelSession.Services.GameWisp != null && user.GameWispTier != null)
-                    {
-                        GameWispTier requirementTier = ChannelSession.Services.GameWisp.ChannelInfo.GetActiveTiers().FirstOrDefault(t => t.MIURoleName.Equals(this.CustomRole));
-                        return (requirementTier != null && user.GameWispTier.Level >= requirementTier.Level);
-                    }
-                    return false;
-                }
-                return false;
-            }
-            else
-            {
-                return user.PrimaryRole >= this.MixerRole;
-            }
-        }
+        public bool DoesMeetRequirement(UserViewModel user) { return user.HasPermissionsTo(this.MixerRole); }
 
         public async Task SendNotMetWhisper(UserViewModel user)
         {

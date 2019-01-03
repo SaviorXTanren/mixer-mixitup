@@ -194,7 +194,7 @@ namespace MixItUp.Base.Actions
                     {
                         foreach (UserViewModel chatUser in await ChannelSession.ActiveUsers.GetAllWorkableUsers())
                         {
-                            if (chatUser.PrimaryRole >= this.RoleRequirement)
+                            if (chatUser.HasPermissionsTo(this.RoleRequirement))
                             {
                                 receiverUserData.Add(chatUser.Data);
                             }

@@ -172,11 +172,11 @@ namespace MixItUp.Base.ViewModel.User
                                 user.Data.AddCurrencyAmount(this, ChannelSession.Channel.online ? this.AcquireAmount : this.OfflineAcquireAmount);
                                 if (bonusesCanBeApplied)
                                 {
-                                    if (user.PrimaryRole >= MixerRoleEnum.Mod)
+                                    if (user.HasPermissionsTo(MixerRoleEnum.Mod))
                                     {
                                         user.Data.AddCurrencyAmount(this, this.ModeratorBonus);
                                     }
-                                    else if (user.GetsSubscriberBenefits)
+                                    else if (user.HasPermissionsTo(MixerRoleEnum.Subscriber))
                                     {
                                         user.Data.AddCurrencyAmount(this, this.SubscriberBonus);
                                     }

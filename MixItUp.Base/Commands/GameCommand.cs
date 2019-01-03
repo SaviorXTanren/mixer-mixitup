@@ -89,47 +89,31 @@ namespace MixItUp.Base.Commands
             this.Command = command;
         }
 
-        public int GetRoleProbability(MixerRoleEnum role)
+        public int GetRoleProbability(UserViewModel user)
         {
-            if (this.RoleProbabilities.ContainsKey(role))
+            var roleProbabilities = this.RoleProbabilities.Select(kvp => kvp.Key).OrderByDescending(k => k);
+            if (roleProbabilities.Any(r => user.HasPermissionsTo(r)))
             {
-                return this.RoleProbabilities[role];
+                return this.RoleProbabilities[roleProbabilities.FirstOrDefault(r => user.HasPermissionsTo(r))];
             }
-
-            foreach (MixerRoleEnum checkRole in this.RoleProbabilities.Select(kvp => kvp.Key).OrderByDescending(k => k))
-            {
-                if (role >= checkRole)
-                {
-                    return this.RoleProbabilities[checkRole];
-                }
-            }
-
-            return this.RoleProbabilities.LastOrDefault().Value;
+            return this.RoleProbabilities[roleProbabilities.LastOrDefault()];
         }
 
         public int GetPayout(UserViewModel user, int betAmount)
         {
-            return Convert.ToInt32(Convert.ToDouble(betAmount) * this.GetPayoutAmount(user.PrimaryRole));
+            return Convert.ToInt32(Convert.ToDouble(betAmount) * this.GetPayoutAmount(user));
         }
 
-        private double GetPayoutAmount(MixerRoleEnum role)
+        private double GetPayoutAmount(UserViewModel user)
         {
             if (this.RolePayouts.Count > 0)
             {
-                if (this.RolePayouts.ContainsKey(role))
+                var rolePayouts = this.RolePayouts.Select(kvp => kvp.Key).OrderByDescending(k => k);
+                if (rolePayouts.Any(r => user.HasPermissionsTo(r)))
                 {
-                    return this.RolePayouts[role];
+                    return this.RolePayouts[rolePayouts.FirstOrDefault(r => user.HasPermissionsTo(r))];
                 }
-
-                foreach (MixerRoleEnum checkRole in this.RolePayouts.Select(kvp => kvp.Key).OrderByDescending(k => k))
-                {
-                    if (role >= checkRole)
-                    {
-                        return this.RolePayouts[checkRole];
-                    }
-                }
-
-                return this.RolePayouts.LastOrDefault().Value;
+                return this.RolePayouts[rolePayouts.LastOrDefault()];
             }
             return this.Payout;
         }
@@ -322,11 +306,11 @@ namespace MixItUp.Base.Commands
             int cumulativeOutcomeProbability = 0;
             foreach (GameOutcome outcome in outcomes)
             {
-                if (cumulativeOutcomeProbability < randomNumber && randomNumber <= (cumulativeOutcomeProbability + outcome.GetRoleProbability(user.PrimaryRole)))
+                if (cumulativeOutcomeProbability < randomNumber && randomNumber <= (cumulativeOutcomeProbability + outcome.GetRoleProbability(user)))
                 {
                     return outcome;
                 }
-                cumulativeOutcomeProbability += outcome.GetRoleProbability(user.PrimaryRole);
+                cumulativeOutcomeProbability += outcome.GetRoleProbability(user);
             }
             return outcomes.Last();
         }
@@ -451,7 +435,7 @@ namespace MixItUp.Base.Commands
                         if (targetUser != null)
                         {
                             int randomNumber = this.GenerateProbability();
-                            if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                            if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user))
                             {
                                 user.Data.AddCurrencyAmount(currency, betAmount);
                                 targetUser.Data.SubtractCurrencyAmount(currency, betAmount);
@@ -1001,7 +985,7 @@ namespace MixItUp.Base.Commands
                     }
 
                     int randomNumber = this.GenerateProbability();
-                    if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user.PrimaryRole))
+                    if (randomNumber <= this.SuccessfulOutcome.GetRoleProbability(user))
                     {
                         this.winners.Add(this.currentStarterUser);
                         this.currentStarterUser.Data.AddCurrencyAmount(currency, this.currentBetAmount * 2);
@@ -1138,7 +1122,7 @@ namespace MixItUp.Base.Commands
             foreach (var enteredUser in this.enteredUsers)
             {
                 int randomNumber = this.GenerateProbability();
-                if (randomNumber <= this.UserSuccessOutcome.GetRoleProbability(enteredUser.Key.PrimaryRole))
+                if (randomNumber <= this.UserSuccessOutcome.GetRoleProbability(enteredUser.Key))
                 {
                     this.winners.Add(enteredUser.Key);
                     await this.PerformOutcome(enteredUser.Key, new List<string>(), this.UserSuccessOutcome, enteredUser.Value);

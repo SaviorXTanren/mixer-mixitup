@@ -189,8 +189,6 @@ namespace MixItUp.Desktop.Services
                     JObject jobj = await this.GetAsync<JObject>(next);
                     next = null;
 
-                    jobj = await SerializerHelper.DeserializeFromFile<JObject>(@"C:\Users\Matthew\Downloads\campaignMembers.txt");
-
                     if (jobj != null && jobj.ContainsKey("data"))
                     {
                         JArray dataArray = (JArray)jobj["data"];

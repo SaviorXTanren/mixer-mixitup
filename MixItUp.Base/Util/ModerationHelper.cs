@@ -93,7 +93,7 @@ namespace MixItUp.Base.Util
         {
             text = PrepareTextForChecking(text);
 
-            if (user.PrimaryRole < ChannelSession.Settings.ModerationFilteredWordsExcempt)
+            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationFilteredWordsExcempt))
             {
                 if (ChannelSession.Settings.ModerationUseCommunityFilteredWords)
                 {
@@ -131,7 +131,7 @@ namespace MixItUp.Base.Util
         {
             text = PrepareTextForChecking(text);
 
-            if (user.PrimaryRole < ChannelSession.Settings.ModerationChatTextExcempt)
+            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationChatTextExcempt))
             {
                 if (ChannelSession.Settings.ModerationCapsBlockCount > 0)
                 {
@@ -188,7 +188,7 @@ namespace MixItUp.Base.Util
         {
             text = PrepareTextForChecking(text);
 
-            if (user.PrimaryRole < ChannelSession.Settings.ModerationBlockLinksExcempt)
+            if (!user.HasPermissionsTo(ChannelSession.Settings.ModerationBlockLinksExcempt))
             {
                 if (ChannelSession.Settings.ModerationBlockLinks && (containsLink || LinkRegex.IsMatch(text)))
                 {
@@ -213,12 +213,12 @@ namespace MixItUp.Base.Util
                     return true;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.GetsSubscriberBenefits)
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Subscriber && !user.HasPermissionsTo(MixerRoleEnum.Subscriber))
                 {
                     return false;
                 }
 
-                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Moderator && user.PrimaryRole < MixerRoleEnum.Mod)
+                if (ChannelSession.Settings.ModerationChatInteractiveParticipation == ModerationChatInteractiveParticipationEnum.Moderator && user.HasPermissionsTo(MixerRoleEnum.Mod))
                 {
                     return false;
                 }
