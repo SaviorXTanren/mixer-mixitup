@@ -53,15 +53,15 @@ namespace MixItUp.Base.Services
         public DateTimeOffset PublishedAt { get; set; }
 
         [DataMember]
-        public List<PatreonTier> Tiers { get; set; }
+        public Dictionary<string, PatreonTier> Tiers { get; set; }
 
         [DataMember]
-        public List<PatreonBenefit> Benefits { get; set; }
+        public Dictionary<string, PatreonBenefit> Benefits { get; set; }
 
         public PatreonCampaign()
         {
-            this.Tiers = new List<PatreonTier>();
-            this.Benefits = new List<PatreonBenefit>();
+            this.Tiers = new Dictionary<string, PatreonTier>();
+            this.Benefits = new Dictionary<string, PatreonBenefit>();
         }
     }
 
@@ -95,10 +95,16 @@ namespace MixItUp.Base.Services
         [JsonProperty("published_at")]
         public DateTimeOffset PublishedAt { get; set; }
 
+        [DataMember]
+        public HashSet<string> BenefitIDs { get; set; }
+
         [JsonIgnore]
         public double Amount { get { return ((double)this.AmountCents) / 100; } }
 
-        public PatreonTier() { }
+        public PatreonTier()
+        {
+            this.BenefitIDs = new HashSet<string>();
+        }
     }
 
     [DataContract]
@@ -152,11 +158,8 @@ namespace MixItUp.Base.Services
         [DataMember]
         public string TierID { get; set; }
 
-        [DataMember]
-        public int AmountCents { get; set; }
-
         [JsonIgnore]
-        public double Amount { get { return ((double)this.AmountCents) / 100; } }
+        public double Amount { get { return ((double)this.AmountToPay) / 100; } }
 
         public PatreonCampaignMember() { }
     }

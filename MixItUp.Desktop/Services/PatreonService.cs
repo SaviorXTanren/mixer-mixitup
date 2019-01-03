@@ -100,7 +100,7 @@ namespace MixItUp.Desktop.Services
             PatreonCampaign campaign = null;
             try
             {
-                JObject jobj = await this.GetAsync<JObject>("campaigns?include=tiers,benefits&fields%5Bcampaign%5D=created_at,creation_name,patron_count,published_at&fields%5Btier%5D=amount_cents,description,created_at,patron_count,title,image_url,published,published_at&fields%5Bbenefit%5D=title,benefit_type,rule_type,created_at,is_deleted,is_published");
+                JObject jobj = await this.GetAsync<JObject>("campaigns?include=tiers,benefits,tiers.benefits&fields%5Bcampaign%5D=created_at,creation_name,patron_count,published_at&fields%5Btier%5D=amount_cents,description,created_at,patron_count,title,image_url,published,published_at&fields%5Bbenefit%5D=title,benefit_type,rule_type,created_at,is_deleted,is_published");
                 if (jobj != null && jobj.ContainsKey("data"))
                 {
                     JArray dataArray = (JArray)jobj["data"];
@@ -125,14 +125,31 @@ namespace MixItUp.Desktop.Services
                                     if (included.ContainsKey("type") && included["type"].ToString().Equals("tier"))
                                     {
                                         PatreonTier tier = attributes.ToObject<PatreonTier>();
-                                        tier.ID = data["id"].ToString();
-                                        campaign.Tiers.Add(tier);
+                                        tier.ID = id.ToString();
+                                        campaign.Tiers[tier.ID] = tier;
+
+                                        if (included.ContainsKey("relationships"))
+                                        {
+                                            JObject relationships = (JObject)included["relationships"];
+                                            if (relationships.ContainsKey("benefits"))
+                                            {
+                                                JObject benefits = (JObject)relationships["benefits"];
+                                                if (benefits.ContainsKey("data"))
+                                                {
+                                                    JArray benefitsDataArray = (JArray)benefits["data"];
+                                                    foreach (JObject benefitData in benefitsDataArray)
+                                                    {
+                                                        tier.BenefitIDs.Add(benefitData["id"].ToString());
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                     else if (included.ContainsKey("type") && included["type"].ToString().Equals("benefit"))
                                     {
                                         PatreonBenefit benefit = attributes.ToObject<PatreonBenefit>();
-                                        benefit.ID = data["id"].ToString();
-                                        campaign.Benefits.Add(benefit);
+                                        benefit.ID = id.ToString();
+                                        campaign.Benefits[benefit.ID] = benefit;
                                     }
                                 }
                             }
@@ -140,7 +157,11 @@ namespace MixItUp.Desktop.Services
                     }
                 }
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex)
+            {
+                MixItUp.Base.Util.Logger.Log(ex);
+                return null;
+            }
             return campaign;
         }
 
@@ -168,9 +189,10 @@ namespace MixItUp.Desktop.Services
                             if (data.ContainsKey("attributes"))
                             {
                                 JObject attributes = (JObject)data["attributes"];
-                                if (attributes.ContainsKey("amount_cents"))
+                                if (attributes.ContainsKey("will_pay_amount_cents"))
                                 {
-                                    pledge.AmountCents = (int)data["attributes"]["amount_cents"];
+                                    pledge.AmountToPay = (int)attributes["will_pay_amount_cents"];
+                                    pledge.PatronStatus = attributes["patron_status"].ToString();
                                 }
                             }
 
@@ -178,23 +200,27 @@ namespace MixItUp.Desktop.Services
                             {
                                 JObject relationships = (JObject)data["relationships"];
 
-                                if (relationships.ContainsKey("patron"))
+                                if (relationships.ContainsKey("currently_entitled_tiers"))
                                 {
-                                    JObject patron = (JObject)data["patron"];
-                                    if (patron.ContainsKey("data"))
+                                    JObject entitledTiers = (JObject)relationships["currently_entitled_tiers"];
+                                    if (entitledTiers.ContainsKey("data"))
                                     {
-                                        JObject patronData = (JObject)patron["data"];
-                                        pledge.UserID = patronData["id"].ToString();
+                                        JArray entitledTiersData = (JArray)entitledTiers["data"];
+                                        if (entitledTiersData.Count > 0)
+                                        {
+                                            JObject entitledTierData = (JObject)entitledTiersData.First;
+                                            pledge.TierID = entitledTierData["id"].ToString();
+                                        }
                                     }
                                 }
 
-                                if (relationships.ContainsKey("reward"))
+                                if (relationships.ContainsKey("user"))
                                 {
-                                    JObject reward = (JObject)data["reward"];
-                                    if (reward.ContainsKey("data"))
+                                    JObject user = (JObject)relationships["user"];
+                                    if (user.ContainsKey("data"))
                                     {
-                                        JObject rewardData = (JObject)reward["data"];
-                                        pledge.TierID = rewardData["id"].ToString();
+                                        JObject userData = (JObject)user["data"];
+                                        pledge.UserID = userData["id"].ToString();
                                     }
                                 }
                             }
@@ -235,7 +261,11 @@ namespace MixItUp.Desktop.Services
                     }
                 } while (!string.IsNullOrEmpty(next));
             }
-            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+            catch (Exception ex)
+            {
+                MixItUp.Base.Util.Logger.Log(ex);
+                return null;
+            }
             return results;
         }
 
