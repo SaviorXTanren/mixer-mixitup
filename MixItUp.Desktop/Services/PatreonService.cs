@@ -1,10 +1,16 @@
 ﻿using Mixer.Base;
 using Mixer.Base.Model.OAuth;
+using Mixer.Base.Model.User;
+using Mixer.Base.Util;
 using MixItUp.Base;
+using MixItUp.Base.Commands;
 using MixItUp.Base.Services;
+using MixItUp.Base.Util;
+using MixItUp.Base.ViewModel.User;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +27,12 @@ namespace MixItUp.Desktop.Services
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         private PatreonUser user;
-        private PatreonCampaign campaign;
+
+        public  PatreonCampaign Campaign { get; private set; }
+
+        public IEnumerable<PatreonCampaignMember> CampaignMembers { get { return this.members; } }
+        private List<PatreonCampaignMember> members = new List<PatreonCampaignMember>();
+        private Dictionary<string, string> currentMembersAndTiers = new Dictionary<string, string>();
 
         public PatreonService() : base(PatreonService.BaseAddress) { }
 
@@ -168,7 +179,7 @@ namespace MixItUp.Desktop.Services
         public async Task<IEnumerable<PatreonCampaignMember>> GetCampaignMembers()
         {
             List<PatreonCampaignMember> results = new List<PatreonCampaignMember>();
-            string next = string.Format("campaigns/{0}/members?include=user,currently_entitled_tiers&fields%5Bmember%5D=patron_status,full_name,will_pay_amount_cents&fields%5Buser%5D=created,first_name,full_name,last_name,url,vanity", this.campaign.ID);
+            string next = string.Format("campaigns/{0}/members?include=user,currently_entitled_tiers&fields%5Bmember%5D=patron_status,full_name,will_pay_amount_cents&fields%5Buser%5D=created,first_name,full_name,last_name,url,vanity", this.Campaign.ID);
             try
             {
                 do
@@ -177,6 +188,8 @@ namespace MixItUp.Desktop.Services
 
                     JObject jobj = await this.GetAsync<JObject>(next);
                     next = null;
+
+                    jobj = await SerializerHelper.DeserializeFromFile<JObject>(@"C:\Users\Matthew\Downloads\campaignMembers.txt");
 
                     if (jobj != null && jobj.ContainsKey("data"))
                     {
@@ -292,11 +305,9 @@ namespace MixItUp.Desktop.Services
             this.user = await this.GetCurrentUser();
             if (this.user != null)
             {
-                this.campaign = await this.GetCampaign();
-                if (this.campaign != null)
+                this.Campaign = await this.GetCampaign();
+                if (this.Campaign != null)
                 {
-                    IEnumerable<PatreonCampaignMember> pledges = await this.GetCampaignMembers();
-
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     Task.Run(this.BackgroundDonationCheck, this.cancellationTokenSource.Token);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -309,15 +320,59 @@ namespace MixItUp.Desktop.Services
 
         private async Task BackgroundDonationCheck()
         {
+            try
+            {
+                this.members = new List<PatreonCampaignMember>(await this.GetCampaignMembers());
+                foreach (PatreonCampaignMember member in this.members)
+                {
+                    this.currentMembersAndTiers[member.UserID] = member.TierID;
+                }
+            }
+            catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
+
             while (!this.cancellationTokenSource.Token.IsCancellationRequested)
             {
+                await Task.Delay(60000);
+
                 try
                 {
+                    IEnumerable<PatreonCampaignMember> pledges = await this.GetCampaignMembers();
+                    if (pledges.Count() > 0)
+                    {
+                        this.members = pledges.ToList();
+                        foreach (PatreonCampaignMember member in this.members)
+                        {
+                            if (!this.currentMembersAndTiers.ContainsKey(member.UserID) || !this.currentMembersAndTiers[member.UserID].Equals(member.TierID))
+                            {
+                                PatreonTier tier = this.Campaign.GetTier(member.TierID);
+                                if (tier != null)
+                                {
+                                    UserViewModel user = new UserViewModel(0, member.User.LookupName);
 
+                                    UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
+                                    if (userModel != null)
+                                    {
+                                        user = new UserViewModel(userModel);
+                                        user.Data.PatreonUserID = member.UserID;
+                                        user.PatreonUser = member;
+                                    }
+
+                                    EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.PatreonSubscribed));
+                                    if (command != null)
+                                    {
+                                        Dictionary<string, string> extraSpecialIdentifiers = new Dictionary<string, string>();
+                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = tier.Title;
+                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = tier.Amount.ToString();
+                                        extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = tier.ImageUrl;
+                                        await command.Perform(user, arguments: null, extraSpecialIdentifiers: extraSpecialIdentifiers);
+                                    }
+                                }
+                            }
+                            this.currentMembersAndTiers[member.UserID] = member.TierID;
+                        }
+                    }
                 }
                 catch (Exception ex) { MixItUp.Base.Util.Logger.Log(ex); }
-
-                await Task.Delay(30000);
             }
         }
 

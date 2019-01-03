@@ -124,6 +124,9 @@ namespace MixItUp.Base.ViewModel.User
         [DataMember]
         public GameWispSubscriber GameWispUser { get; set; }
 
+        [DataMember]
+        public PatreonCampaignMember PatreonUser { get; set; }
+
         public UserViewModel()
         {
             this.CustomRoles = new HashSet<string>();
@@ -290,6 +293,19 @@ namespace MixItUp.Base.ViewModel.User
             }
         }
 
+        [JsonIgnore]
+        public PatreonTier PatreonTier
+        {
+            get
+            {
+                if (ChannelSession.Services.Patreon != null && this.PatreonUser != null)
+                {
+                    return ChannelSession.Services.Patreon.Campaign.GetTier(this.PatreonUser.TierID);
+                }
+                return null;
+            }
+        }
+
         public void UpdateLastActivity() { this.LastActivity = DateTimeOffset.Now; }
 
         public async Task RefreshDetails(bool force = false)
@@ -340,6 +356,7 @@ namespace MixItUp.Base.ViewModel.User
             if (!this.IsAnonymous)
             {
                 this.CustomRoles.Clear();
+
                 if (ChannelSession.Services.GameWisp != null)
                 {
                     if (this.GameWispUser == null)
@@ -350,6 +367,14 @@ namespace MixItUp.Base.ViewModel.User
                     if (this.GameWispTier != null)
                     {
                         this.CustomRoles.Add(this.GameWispTier.MIURoleName);
+                    }
+                }
+
+                if (ChannelSession.Services.Patreon != null)
+                {
+                    if (this.PatreonUser == null)
+                    {
+                        await this.SetPatreonSubscriber();
                     }
                 }
             }
@@ -409,6 +434,31 @@ namespace MixItUp.Base.ViewModel.User
                     this.Data.GameWispUserID = subscriber.UserID;
                 }
             }
+        }
+
+        public Task SetPatreonSubscriber()
+        {
+            if (ChannelSession.Services.Patreon != null)
+            {
+                IEnumerable<PatreonCampaignMember> campaignMembers = ChannelSession.Services.Patreon.CampaignMembers;
+
+                PatreonCampaignMember patreonUser = null;
+                if (!string.IsNullOrEmpty(this.Data.PatreonUserID))
+                {
+                    patreonUser = campaignMembers.FirstOrDefault(u => u.UserID.Equals(this.Data.PatreonUserID));
+                }
+                else
+                {
+                    patreonUser = campaignMembers.FirstOrDefault(u => u.User.LookupName.Equals(this.UserName, StringComparison.CurrentCultureIgnoreCase));
+                }
+
+                this.PatreonUser = patreonUser;
+                if (patreonUser != null)
+                {
+                    this.Data.PatreonUserID = patreonUser.UserID;
+                }
+            }
+            return Task.FromResult(0);
         }
 
         public async Task AddModerationStrike(string moderationReason = null)

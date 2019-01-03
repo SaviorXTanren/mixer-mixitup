@@ -60,6 +60,10 @@ namespace MixItUp.Base.Util
         public const string DonationMessageSpecialIdentifier = "donationmessage";
         public const string DonationImageSpecialIdentifier = "donationimage";
 
+        public const string PatreonTierNameSpecialIdentifier = "patreontiername";
+        public const string PatreonTierAmountSpecialIdentifier = "patreontieramount";
+        public const string PatreonTierImageSpecialIdentifier = "patreontierimage";
+
         public const string ExtraLifeSpecialIdentifierHeader = "extralife";
 
         public const string UnicodeRegexSpecialIdentifier = "unicode\\d+";

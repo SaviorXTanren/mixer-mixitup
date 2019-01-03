@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
@@ -30,6 +31,19 @@ namespace MixItUp.Base.Services
 
         [JsonProperty("created")]
         public DateTimeOffset Created { get; set; }
+
+        [JsonIgnore]
+        public string LookupName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.Vanity))
+                {
+                    return this.Vanity;
+                }
+                return this.FullName;
+            }
+        }
 
         public PatreonUser() { }
     }
@@ -62,6 +76,15 @@ namespace MixItUp.Base.Services
         {
             this.Tiers = new Dictionary<string, PatreonTier>();
             this.Benefits = new Dictionary<string, PatreonBenefit>();
+        }
+
+        public PatreonTier GetTier(string tierID)
+        {
+            if (!string.IsNullOrEmpty(tierID) && this.Tiers.ContainsKey(tierID) && this.Tiers[tierID].Published)
+            {
+                return this.Tiers[tierID];
+            }
+            return null;
         }
     }
 
@@ -99,7 +122,7 @@ namespace MixItUp.Base.Services
         public HashSet<string> BenefitIDs { get; set; }
 
         [JsonIgnore]
-        public double Amount { get { return ((double)this.AmountCents) / 100; } }
+        public double Amount { get { return Math.Round(((double)this.AmountCents) / 100.0, 2); } }
 
         public PatreonTier()
         {
@@ -159,13 +182,16 @@ namespace MixItUp.Base.Services
         public string TierID { get; set; }
 
         [JsonIgnore]
-        public double Amount { get { return ((double)this.AmountToPay) / 100; } }
+        public double Amount { get { return Math.Round(((double)this.AmountToPay) / 100.0, 2); } }
 
         public PatreonCampaignMember() { }
     }
 
     public interface IPatreonService
     {
+        PatreonCampaign Campaign { get; }
+        IEnumerable<PatreonCampaignMember> CampaignMembers { get; }
+
         Task<bool> Connect();
 
         Task Disconnect();

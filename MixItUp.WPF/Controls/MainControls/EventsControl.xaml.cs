@@ -89,6 +89,10 @@ namespace MixItUp.WPF.Controls.MainControls
                 {
                     return "Twitter";
                 }
+                else if (this.OtherEventType == OtherEventTypeEnum.PatreonSubscribed)
+                {
+                    return "Patreon";
+                }
                 return "Mixer";
             }
         }
@@ -142,9 +146,10 @@ namespace MixItUp.WPF.Controls.MainControls
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TipeeeStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TreatStreamDonation));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.StreamJarDonation));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
+            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.PatreonSubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispSubscribed));
             this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.GameWispResubscribed));
-            this.eventCommands.Add(this.GetEventCommand(OtherEventTypeEnum.TwitterStreamTweetRetweet));
         }
 
         private EventCommandItem GetEventCommand(ConstellationEventTypeEnum eventType)

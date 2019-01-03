@@ -197,6 +197,11 @@ namespace MixItUp.WPF.Controls.Command
                             }
                             extraSpecialIdentifiers["donationtype"] = "Pizza";
                             break;
+                        case OtherEventTypeEnum.PatreonSubscribed:
+                            extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierNameSpecialIdentifier] = "Super Tier";
+                            extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierAmountSpecialIdentifier] = "12.34";
+                            extraSpecialIdentifiers[SpecialIdentifierStringBuilder.PatreonTierImageSpecialIdentifier] = "https://xforgeassets002.xboxlive.com/xuid-2535473787585366-public/b7a1d715-3a9e-4bdd-a030-32f9e2e0f51e/0013_lots-o-stars_256.png";
+                            break;
                         case OtherEventTypeEnum.TwitterStreamTweetRetweet:
                             break;
                         case OtherEventTypeEnum.MixerSkillUsed:

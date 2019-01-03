@@ -26,6 +26,9 @@ namespace MixItUp.Base.Commands
         [Name("GameWisp Resubscribed")]
         GameWispResubscribed = 3,
 
+        [Name("Patreon Subscribed")]
+        PatreonSubscribed = 5,
+
         [Name("Streamlabs Donation")]
         StreamlabsDonation = 10,
         [Name("GawkBox Donation")]

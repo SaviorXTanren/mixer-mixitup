@@ -180,6 +180,9 @@ namespace MixItUp.Base.ViewModel.User
         public uint GameWispUserID { get; set; }
 
         [DataMember]
+        public string PatreonUserID { get; set; }
+
+        [DataMember]
         public uint ModerationStrikes { get; set; }
 
         public UserDataViewModel()
@@ -263,6 +266,7 @@ namespace MixItUp.Base.ViewModel.User
                 this.IsSparkExempt = this.GetOptionValue<bool>(optionsJObj, "IsSparkExempt");
                 this.IsCurrencyRankExempt = this.GetOptionValue<bool>(optionsJObj, "IsCurrencyRankExempt");
                 this.GameWispUserID = this.GetOptionValue<uint>(optionsJObj, "GameWispUserID");
+                this.PatreonUserID = this.GetOptionValue<string>(optionsJObj, "PatreonUserID");
                 this.ModerationStrikes = this.GetOptionValue<uint>(optionsJObj, "ModerationStrikes");
             }
         }
@@ -541,6 +545,7 @@ namespace MixItUp.Base.ViewModel.User
             options["IsSparkExempt"] = this.IsSparkExempt;
             options["IsCurrencyRankExempt"] = this.IsCurrencyRankExempt;
             options["GameWispUserID"] = this.GameWispUserID;
+            options["PatreonUserID"] = this.PatreonUserID;
             options["ModerationStrikes"] = this.ModerationStrikes;
             return options.ToString();
         }
