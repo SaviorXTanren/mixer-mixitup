@@ -78,6 +78,9 @@ namespace MixItUp.Base.Services
             this.Benefits = new Dictionary<string, PatreonBenefit>();
         }
 
+        [JsonProperty]
+        public IEnumerable<PatreonTier> ActiveTiers { get { return this.Tiers.Values.Where(t => t.Published); } }
+
         public PatreonTier GetTier(string tierID)
         {
             if (!string.IsNullOrEmpty(tierID) && this.Tiers.ContainsKey(tierID) && this.Tiers[tierID].Published)

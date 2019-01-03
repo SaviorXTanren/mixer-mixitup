@@ -1,4 +1,5 @@
 ﻿using MixItUp.Base;
+using MixItUp.Base.Services;
 using MixItUp.WPF.Util;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +25,12 @@ namespace MixItUp.WPF.Controls.Services
                 this.ExistingAccountGrid.Visibility = Visibility.Visible;
 
                 this.SetCompletedIcon(visible: true);
+
+                if (ChannelSession.Services.Patreon != null)
+                {
+                    this.MixerSubscriberEquivalentComboBox.ItemsSource = ChannelSession.Services.Patreon.Campaign.ActiveTiers;
+                    this.MixerSubscriberEquivalentComboBox.SelectedItem = ChannelSession.Services.Patreon.Campaign.GetTier(ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent);
+                }
             }
             else
             {
@@ -50,6 +57,8 @@ namespace MixItUp.WPF.Controls.Services
                 this.ExistingAccountGrid.Visibility = Visibility.Visible;
 
                 this.SetCompletedIcon(visible: true);
+
+                this.MixerSubscriberEquivalentComboBox.ItemsSource = ChannelSession.Services.Patreon.Campaign.ActiveTiers;
             }
         }
 
@@ -60,11 +69,21 @@ namespace MixItUp.WPF.Controls.Services
                 await ChannelSession.Services.DisconnectPatreon();
             });
             ChannelSession.Settings.PatreonOAuthToken = null;
+            ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = null;
 
             this.ExistingAccountGrid.Visibility = Visibility.Collapsed;
             this.NewLoginGrid.Visibility = Visibility.Visible;
 
             this.SetCompletedIcon(visible: false);
+        }
+
+        private void MixerSubscriberEquivalentComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.MixerSubscriberEquivalentComboBox.SelectedIndex >= 0)
+            {
+                PatreonTier tier = (PatreonTier)this.MixerSubscriberEquivalentComboBox.SelectedItem;
+                ChannelSession.Settings.PatreonTierMixerSubscriberEquivalent = tier.ID;
+            }
         }
     }
 }

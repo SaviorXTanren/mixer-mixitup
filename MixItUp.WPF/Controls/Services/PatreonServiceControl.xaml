@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MixItUp.WPF.Controls.Services"
-             xmlns:UsersControls="clr-namespace:MixItUp.WPF.Controls.Users"
+             xmlns:MaterialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="10" HorizontalAlignment="Center">
@@ -18,7 +18,15 @@
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid x:Name="ExistingAccountGrid" Visibility="Collapsed">
-                <Button x:Name="LogOutButton" Click="LogOutButton_Click" HorizontalAlignment="Center" Width="90">Log Out</Button>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ComboBox x:Name="MixerSubscriberEquivalentComboBox" Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Mixer Sub Equivalent" SelectionChanged="MixerSubscriberEquivalentComboBox_SelectionChanged" DisplayMemberPath="Name" Width="200" />
+
+                <Button x:Name="LogOutButton" Grid.Row="2" Click="LogOutButton_Click" HorizontalAlignment="Center" Width="90">Log Out</Button>
             </Grid>
 
             <Grid x:Name="NewLoginGrid" Visibility="Collapsed">

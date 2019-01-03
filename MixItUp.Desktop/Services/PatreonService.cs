@@ -352,9 +352,13 @@ namespace MixItUp.Desktop.Services
                                     UserModel userModel = await ChannelSession.Connection.GetUser(user.UserName);
                                     if (userModel != null)
                                     {
-                                        user = new UserViewModel(userModel);
+                                        user = await ChannelSession.ActiveUsers.GetUserByID(userModel.id);
+                                        if (user == null)
+                                        {
+                                            user = new UserViewModel(userModel);
+                                        }
                                         user.Data.PatreonUserID = member.UserID;
-                                        user.PatreonUser = member;
+                                        await user.RefreshDetails(force: true);
                                     }
 
                                     EventCommand command = ChannelSession.Constellation.FindMatchingEventCommand(EnumHelper.GetEnumName(OtherEventTypeEnum.PatreonSubscribed));

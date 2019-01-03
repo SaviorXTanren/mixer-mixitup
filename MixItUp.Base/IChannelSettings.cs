@@ -139,6 +139,8 @@ namespace MixItUp.Base
 
         string DiscordServer { get; set; }
 
+        string PatreonTierMixerSubscriberEquivalent { get; set; }
+
         bool UnlockAllCommands { get; set; }
 
         int ChatFontSize { get; set; }

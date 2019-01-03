@@ -246,6 +246,9 @@ namespace MixItUp.Desktop
         public string DiscordServer { get; set; }
 
         [JsonProperty]
+        public string PatreonTierMixerSubscriberEquivalent { get; set; }
+
+        [JsonProperty]
         public bool UnlockAllCommands { get; set; }
 
         [JsonProperty]
