@@ -9,12 +9,12 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="10" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500" />
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="450" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="180" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" TextWrapping="Wrap">Patreon service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Patreon and approve Mix It Up to access your information.</TextBlock>
+        <TextBlock Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center">Patreon service connectivity allows you to perform actions when a donation is received. When you log in, an authentication webpage will open asking you to log in to Patreon and approve Mix It Up to access your information.</TextBlock>
 
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid x:Name="ExistingAccountGrid" Visibility="Collapsed">
@@ -24,7 +24,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ComboBox x:Name="MixerSubscriberEquivalentComboBox" Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Mixer Sub Equivalent" SelectionChanged="MixerSubscriberEquivalentComboBox_SelectionChanged" DisplayMemberPath="Name" Width="200" />
+                <ComboBox x:Name="MixerSubscriberEquivalentComboBox" Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Mixer Sub Equivalent" SelectionChanged="MixerSubscriberEquivalentComboBox_SelectionChanged" DisplayMemberPath="Title" Width="180" />
 
                 <Button x:Name="LogOutButton" Grid.Row="2" Click="LogOutButton_Click" HorizontalAlignment="Center" Width="90">Log Out</Button>
             </Grid>

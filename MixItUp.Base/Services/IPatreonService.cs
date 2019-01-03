@@ -89,6 +89,15 @@ namespace MixItUp.Base.Services
             }
             return null;
         }
+
+        public PatreonBenefit GetBenefit(string benefitID)
+        {
+            if (!string.IsNullOrEmpty(benefitID) && this.Benefits.ContainsKey(benefitID) && this.Benefits[benefitID].Published && !this.Benefits[benefitID].Deleted)
+            {
+                return this.Benefits[benefitID];
+            }
+            return null;
+        }
     }
 
     [DataContract]
