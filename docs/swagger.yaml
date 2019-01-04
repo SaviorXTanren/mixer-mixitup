@@ -310,6 +310,12 @@ paths:
         - Commands
       summary: Used to run the requested command.
       operationId: runCommand
+      parameters:
+        - name: arguments
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/ListOfStrings'
       produces:
         - application/json
       responses:
@@ -408,12 +414,17 @@ definitions:
     type: array
     items:
       type: string
-          
+
   ListOfMixItUpUsers:
     type: array
     items:
       $ref: '#/definitions/MixItUpUser'
       
+  ListOfStrings:
+    type: array
+    items:
+      type: string
+
   AdjustUserCurrency:
     type: object
     required: [ Amount ]
