@@ -3,6 +3,7 @@ using Mixer.Base.Model.Chat;
 using Mixer.Base.Model.Interactive;
 using Mixer.Base.Model.User;
 using Mixer.Base.Util;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -212,6 +213,13 @@ namespace MixItUp.Base.ViewModel.User
                 {
                     return this.Data.CustomTitle;
                 }
+
+                UserTitleModel title = ChannelSession.Settings.UserTitles.OrderByDescending(t => t.Role).ThenBy(t => t.Months).FirstOrDefault(t => t.MeetsTitle(this));
+                if (title != null)
+                {
+                    return title.Name;
+                }
+
                 return "No Title";
             }
         }
@@ -311,6 +319,8 @@ namespace MixItUp.Base.ViewModel.User
             }
             return this.PrimaryRole >= checkRole;
         }
+
+        public bool ExceedsPermissions(MixerRoleEnum checkRole) { return this.PrimaryRole > checkRole; }
 
         public bool IsEquivalentToMixerSubscriber()
         {

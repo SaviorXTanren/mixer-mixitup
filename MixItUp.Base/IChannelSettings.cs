@@ -7,6 +7,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -70,6 +71,7 @@ namespace MixItUp.Base
         List<InteractiveSharedProjectModel> CustomInteractiveProjectIDs { get; set; }
 
         int RegularUserMinimumHours { get; set; }
+        List<UserTitleModel> UserTitles { get; set; }
 
         bool GameQueueSubPriority { get; set; }
         RequirementViewModel GameQueueRequirements { get; set; }

@@ -13,6 +13,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -22,9 +28,50 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center">"Regular" Status Required Viewing Time:</TextBlock>
-            <TextBox x:Name="RegularUserMinimumHoursTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Total Hours" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" TextChanged="RegularUserMinimumHoursTextBox_TextChanged" />
+            <TextBlock Grid.Column="0" Style="{StaticResource HeaderTextBlock}" VerticalAlignment="Center" Margin="0,15,0,0">"Regular" Status Online Viewing Time:</TextBlock>
+            <TextBox x:Name="RegularUserMinimumHoursTextBox" Grid.Column="2" MaterialDesign:HintAssist.Hint="Required Hours" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="100" TextChanged="RegularUserMinimumHoursTextBox_TextChanged" />
         </Grid>
-        
+
+        <Border Grid.Row="2" Style="{StaticResource DefaultBorder}" />
+
+        <TextBlock Grid.Row="4" Text="User Titles" Style="{StaticResource HeaderTextBlock}" HorizontalAlignment="Center" />
+
+        <Border BorderBrush="{StaticResource PrimaryHueMidBrush}" Grid.Row="6" BorderThickness="1" Width="450">
+            <DataGrid x:Name="UserTitlesDataGrid" Style="{StaticResource StandardDataGrid}" CellStyle="{StaticResource StandardDataGridCell}" HorizontalContentAlignment="Stretch">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="Role" Binding="{Binding RoleString}" IsReadOnly="True" Width="125" />
+                    <DataGridTextColumn Header="Months" Binding="{Binding MonthsString}" IsReadOnly="True" Width="100" />
+                    <DataGridTemplateColumn Width="65">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Grid.Column="6" x:Name="DeleteTitleButton" Margin="-10" Content="{MaterialDesign:PackIcon Delete}" Click="DeleteTitleButton_Click" Width="50" ToolTip="Delete" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <Grid Grid.Row="8" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="TitleNameTextBox" Grid.Column="0" MaterialDesign:HintAssist.Hint="Title Name" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="150" />
+
+            <ComboBox x:Name="TitleRoleComboBox" Grid.Column="2" Width="120" MaterialDesign:HintAssist.Hint="Role" Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="TitleRoleComboBox_SelectionChanged" />
+
+            <TextBox x:Name="TitleMinimumMonthsTextBox" Grid.Column="4" IsEnabled="False" MaterialDesign:HintAssist.Hint="Total Months" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="90" />
+
+            <Button x:Name="AddTitleButton" Grid.Column="6" Click="AddTitleButton_Click">Add</Button>
+        </Grid>
+
     </Grid>
 </local:SettingsControlBase>

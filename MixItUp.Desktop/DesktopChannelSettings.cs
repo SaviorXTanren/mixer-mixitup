@@ -8,6 +8,7 @@ using MixItUp.Base.Model.Interactive;
 using MixItUp.Base.Model.Overlay;
 using MixItUp.Base.Model.Remote;
 using MixItUp.Base.Model.Serial;
+using MixItUp.Base.Model.User;
 using MixItUp.Base.Services;
 using MixItUp.Base.Util;
 using MixItUp.Base.ViewModel.Interactive;
@@ -120,6 +121,8 @@ namespace MixItUp.Desktop
 
         [JsonProperty]
         public int RegularUserMinimumHours { get; set; }
+        [JsonProperty]
+        public List<UserTitleModel> UserTitles { get; set; }
 
         [JsonProperty]
         public bool GameQueueSubPriority { get; set; }
@@ -364,6 +367,7 @@ namespace MixItUp.Desktop
         {
             this.OverlayCustomNameAndPorts = new Dictionary<string, int>();
             this.CustomInteractiveProjectIDs = new List<InteractiveSharedProjectModel>();
+            this.UserTitles = new List<UserTitleModel>();
             this.SerialDevices = new List<SerialDeviceModel>();
             this.RemoteBoards = new List<RemoteBoardModel>();
             this.RemoteSavedDevices = new List<RemoteDeviceModel>();
