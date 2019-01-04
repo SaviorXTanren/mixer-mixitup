@@ -89,8 +89,9 @@ namespace MixItUp.WPF.Controls.Requirement
         {
             InventoryRequirementViewModel requirement = this.GetInventoryRequirement();
 
-            if (ChannelSession.Settings != null)
+            if (ChannelSession.Settings.Inventories.Count > 0)
             {
+                this.EnableDisableToggleSwitch.IsEnabled = true;
                 this.InventoryTypeComboBox.ItemsSource = ChannelSession.Settings.Inventories.Values;
             }
 
