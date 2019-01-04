@@ -215,7 +215,7 @@ namespace MixItUp.Desktop.Services
                     }
                 }
 
-                this.ClearAllRequestsInternal();
+                this.allRequests.Clear();
 
                 this.backgroundThreadCancellationTokenSource = new CancellationTokenSource();
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -230,9 +230,9 @@ namespace MixItUp.Desktop.Services
 
         public async Task Disable()
         {
-            await SongRequestService.songRequestLock.WaitAndRelease(async () =>
+            await SongRequestService.songRequestLock.WaitAndRelease(() =>
             {
-                this.ClearAllRequestsInternal();
+                this.allRequests.Clear();
 
                 if (this.backgroundThreadCancellationTokenSource != null)
                 {
@@ -241,7 +241,10 @@ namespace MixItUp.Desktop.Services
                 }
 
                 this.IsEnabled = false;
+                return Task.FromResult(0);
             });
+
+            GlobalEvents.SongRequestsChangedOccurred();
         }
 
         #region Request Methods
@@ -387,12 +390,6 @@ namespace MixItUp.Desktop.Services
                 return Task.FromResult(0);
             });
 
-            GlobalEvents.SongRequestsChangedOccurred();
-        }
-
-        private void ClearAllRequestsInternal()
-        {
-            this.allRequests.Clear();
             GlobalEvents.SongRequestsChangedOccurred();
         }
 
