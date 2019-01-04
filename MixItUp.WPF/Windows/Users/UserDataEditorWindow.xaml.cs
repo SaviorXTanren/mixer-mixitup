@@ -1,5 +1,6 @@
 ﻿using MixItUp.Base;
 using MixItUp.Base.Commands;
+using MixItUp.Base.Services;
 using MixItUp.Base.ViewModel.User;
 using MixItUp.WPF.Controls.Command;
 using MixItUp.WPF.Controls.Currency;
@@ -80,6 +81,13 @@ namespace MixItUp.WPF.Windows.Users
             {
                 this.NewEntranceCommandButton.Visibility = Visibility.Visible;
                 this.ExistingEntranceCommandButtons.Visibility = Visibility.Collapsed;
+            }
+
+            if (ChannelSession.Services.Patreon != null)
+            {
+                this.PatreonUserComboBox.IsEnabled = true;
+                this.PatreonUserComboBox.ItemsSource = ChannelSession.Services.Patreon.CampaignMembers;
+                this.PatreonUserComboBox.SelectedItem = this.user.PatreonUser;
             }
 
             this.DataContext = null;
@@ -187,6 +195,19 @@ namespace MixItUp.WPF.Windows.Users
         private void SparkExemptToggleButton_Checked(object sender, RoutedEventArgs e)
         {
             this.user.Data.IsSparkExempt = this.SparkExemptToggleButton.IsChecked.GetValueOrDefault();
+        }
+
+        private void PatreonUserComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            this.user.Data.PatreonUserID = null;
+            if (this.PatreonUserComboBox.SelectedIndex >= 0)
+            {
+                PatreonCampaignMember campaignMember = (PatreonCampaignMember)this.PatreonUserComboBox.SelectedItem;
+                if (campaignMember != null)
+                {
+                    this.user.Data.PatreonUserID = campaignMember.UserID;
+                }
+            }
         }
     }
 }

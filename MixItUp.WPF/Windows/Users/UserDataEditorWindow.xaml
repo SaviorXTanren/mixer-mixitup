@@ -133,6 +133,8 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="40" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Custom Entrance Command:</TextBlock>
@@ -161,6 +163,8 @@
                             <TextBlock Grid.Column="0" VerticalAlignment="Center">Spark Exempt:</TextBlock>
                             <ToggleButton Grid.Column="2" x:Name="SparkExemptToggleButton" Checked="SparkExemptToggleButton_Checked" Unchecked="SparkExemptToggleButton_Checked" />
                         </Grid>
+
+                        <ComboBox x:Name="PatreonUserComboBox" Grid.Column="0" Grid.Row="4" IsEnabled="False" IsEditable="True" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingHintComboBox}" MaterialDesign:HintAssist.Hint="Patreon User" SelectionChanged="PatreonUserComboBox_SelectionChanged" DisplayMemberPath="User.LookupName" Width="200" />
 
                     </Grid>
                 </GroupBox>

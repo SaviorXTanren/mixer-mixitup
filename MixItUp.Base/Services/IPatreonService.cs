@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MixItUp.Base.Services
 {
     [DataContract]
-    public class PatreonUser
+    public class PatreonUser : IEquatable<PatreonUser>
     {
         [DataMember]
         public string ID { get; set; }
@@ -46,10 +46,23 @@ namespace MixItUp.Base.Services
         }
 
         public PatreonUser() { }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonUser)
+            {
+                return this.Equals((PatreonUser)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonUser other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     [DataContract]
-    public class PatreonCampaign
+    public class PatreonCampaign : IEquatable<PatreonCampaign>
     {
         [DataMember]
         public string ID { get; set; }
@@ -98,10 +111,23 @@ namespace MixItUp.Base.Services
             }
             return null;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonCampaign)
+            {
+                return this.Equals((PatreonCampaign)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonCampaign other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     [DataContract]
-    public class PatreonTier
+    public class PatreonTier : IEquatable<PatreonTier>
     {
         [DataMember]
         public string ID { get; set; }
@@ -140,10 +166,23 @@ namespace MixItUp.Base.Services
         {
             this.BenefitIDs = new HashSet<string>();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonTier)
+            {
+                return this.Equals((PatreonTier)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonTier other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     [DataContract]
-    public class PatreonBenefit
+    public class PatreonBenefit : IEquatable<PatreonBenefit>
     {
         [DataMember]
         public string ID { get; set; }
@@ -167,10 +206,23 @@ namespace MixItUp.Base.Services
         public DateTimeOffset CreatedAt { get; set; }
 
         public PatreonBenefit() { }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonBenefit)
+            {
+                return this.Equals((PatreonBenefit)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonBenefit other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     [DataContract]
-    public class PatreonCampaignMember
+    public class PatreonCampaignMember : IEquatable<PatreonCampaignMember>
     {
         [DataMember]
         public string ID { get; set; }
@@ -197,6 +249,19 @@ namespace MixItUp.Base.Services
         public double Amount { get { return Math.Round(((double)this.AmountToPay) / 100.0, 2); } }
 
         public PatreonCampaignMember() { }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is PatreonCampaignMember)
+            {
+                return this.Equals((PatreonCampaignMember)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(PatreonCampaignMember other) { return this.ID.Equals(other.ID); }
+
+        public override int GetHashCode() { return this.ID.GetHashCode(); }
     }
 
     public interface IPatreonService
