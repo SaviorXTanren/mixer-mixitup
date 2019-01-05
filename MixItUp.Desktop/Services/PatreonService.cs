@@ -179,7 +179,7 @@ namespace MixItUp.Desktop.Services
         public async Task<IEnumerable<PatreonCampaignMember>> GetCampaignMembers()
         {
             List<PatreonCampaignMember> results = new List<PatreonCampaignMember>();
-            string next = string.Format("campaigns/{0}/members?include=user,currently_entitled_tiers&fields%5Bmember%5D=patron_status,full_name,will_pay_amount_cents&fields%5Buser%5D=created,first_name,full_name,last_name,url,vanity", this.Campaign.ID);
+            string next = string.Format("campaigns/{0}/members?include=user,currently_entitled_tiers&fields%5Bmember%5D=patron_status,full_name,will_pay_amount_cents,currently_entitled_amount_cents,lifetime_support_cents&fields%5Buser%5D=created,first_name,full_name,last_name,url,vanity", this.Campaign.ID);
             try
             {
                 do
@@ -203,6 +203,8 @@ namespace MixItUp.Desktop.Services
                                 if (attributes.ContainsKey("will_pay_amount_cents"))
                                 {
                                     pledge.AmountToPay = (int)attributes["will_pay_amount_cents"];
+                                    pledge.CurrentAmountPaying = (int)attributes["currently_entitled_amount_cents"];
+                                    pledge.LifetimeAmountPaid = (int)attributes["lifetime_support_cents"];
                                     pledge.PatronStatus = attributes["patron_status"].ToString();
                                 }
                             }
@@ -236,9 +238,21 @@ namespace MixItUp.Desktop.Services
                                 }
                             }
 
-                            if (!string.IsNullOrEmpty(pledge.ID) && !string.IsNullOrEmpty(pledge.UserID) && !string.IsNullOrEmpty(pledge.TierID))
+                            if (!string.IsNullOrEmpty(pledge.ID) && !string.IsNullOrEmpty(pledge.UserID))
                             {
-                                currentResults[pledge.UserID] = pledge;
+                                if (string.IsNullOrEmpty(pledge.TierID) && pledge.CurrentAmountPaying > 0)
+                                {
+                                    PatreonTier tier = this.Campaign.ActiveTiers.OrderByDescending(t => t.AmountCents).FirstOrDefault(t => pledge.CurrentAmountPaying >= t.AmountCents);
+                                    if (tier != null)
+                                    {
+                                        pledge.TierID = tier.ID;
+                                    }
+                                }
+
+                                if (!string.IsNullOrEmpty(pledge.TierID))
+                                {
+                                    currentResults[pledge.UserID] = pledge;
+                                }
                             }
                         }
 
